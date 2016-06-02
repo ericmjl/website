@@ -1,0 +1,29 @@
+title: Dividing People into Small Groups with Python
+---
+author: Eric J. Ma
+---
+body:
+
+In our Bible Study small group, I have found through empirical observation that when the group size is large (\>5 people) and homogeneous (all guys/girls, all believers, all Bible study leaders), Bible study tends to be either too flat or too chatty, too boring or too distracted, and all-round just not beneficial for learning. On the other hand, when the group is small (3-5 people) and diverse (guys & girls, baptized + seekers together, counsellors spread out), learning takes place. (Outside of Bible study groups, I find this to be true anyways, and doing it this way prevents the formation of exclusivist insider-groups.)
+
+It’s challenging to do this division by hand though, as there can always be subtle biases that creep in. So I decided to use a bit of information theory and Python to do this division in an unbiased fashion. The result? My own hand-crafted [small group](https://github.com/ericmjl/small-group) web app that keeps track of group members in a larger group, and uses a simple genetic algorithm for shuffling them into optimally diverse groups of people.
+
+The data categories used are simple, and by no means do I use this to “categorize” people for privileges, they’re only used for assigning responsibilities in the group. We use gender (M, F), faith status (baptized, believer, seeker, unknown), and role (facilitator, counsellor, none). The algorithm essentially works as such:
+
+1. Determine the number of small groups to keep the group size within 3-5 people.
+2. Randomly distribute individuals across the groups, by first distributing the facilitators, and then everybody else.
+3. Until max number of tries has been reached:
+	1. **Scoring Step:** Compute Shannon entropy within each group, and sum up Shannon entropy scores across each category, across all groups.
+	2. **Proposal Step:** Propose to swap two random individuals.
+	3. **Comparison Step:** Compute new Shannon entropy score under the swap. If it does not decrease Shannon entropy and passes the “exclusion criteria”, accept swap. Else, pass.
+4. Return all the small groups.
+
+A note on the comparison step: In other algorithms I’ve seen, acceptance is conditional if and only if the score (Shannon entropy) is increased, but in this case, not decreasing is ‘good enough’. I have my engineer hat on. 
+
+I added a way to include “exclusion criteria”, such as the scenario where it would be inappropriate to put two people in the same group, for example, where there is a simmering conflict in the midst, or where the relationship between the two could be distracting to learning. Right now, that functionality is baked into the back-end, but I am designing an implementation to make it accessible through the front-end.
+
+The web app is written in Python, and uses only two packages: `tinydb` ([link](https://pypi.python.org/pypi/tinydb)) and `Flask` ([link](http://flask.pocoo.org)). Front-end uses HTML with `Jinja2` ([link](http://jinja.pocoo.org/docs/dev/)) templating and [Bootstrap](http://getbootstrap.com/css/) CSS. I wrote the GUI using `Flask` because I didn’t need fancy stuff that Django offered, and was simple enough for me to run locally. I opted for `tindyb` only because it was an even simpler, lightweight version of a database (as a JSON) file, and was sufficient for what I needed too. Of course, I’m quite sure this can be re-implemented in Django/SQLite, and made infinitely more fancy :). The code for `small-group` is available on [GitHub](http://github.com/ericmjl/small-group), along with instructions for how to use it. Enjoy!
+---
+pub_date: 2016-05-31
+---
+twitter_handle: ericmjl

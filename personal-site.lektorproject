@@ -1,0 +1,8 @@
+[project]
+name = Eric J. Ma's Personal Website
+locale = en_US
+
+[servers.digital_ocean]
+name = Digital Ocean
+enabled = yes
+target = rsync://doroot/var/www/html
