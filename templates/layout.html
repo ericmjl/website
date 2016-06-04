@@ -2,6 +2,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- CSS and JS imports -->
+<!-- Import Open Sans -->
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -9,12 +12,38 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
-{# Leave this at the end: these are local overrides. #}
+<!-- Leave this at the end: these are local overrides. -->
 <link rel="stylesheet" href="{{ '/static/local-overrides.css'|url }}">
 
+<title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
+
+<nav class="navbar navbar-collapse" id="navbar">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li {% if this._path == '/' %} class="active"{% endif %}>
+        <a href="{{ '/'|url }}">Home</a>
+      </li>
+      {# Add in internal pages. #}
+        {% for href, title in [
+          ['/blog', 'Blog'],
+          ['/research', 'Research'],
+          ['/projects', 'Open Source Projects'],
+          ['/cv', 'CV'],
+        ] %}
+          <li {% if this.is_child_of(href) %} class="active" {% endif %}>
+            <a href="{{ href|url }}">{{ title }}</a>
+          </li>
+        {% endfor %}
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  {% block body %}{% endblock %}
+</div>
+
+<!--
 <div class="container">
-  <title>{% block title %}Welcome{% endblock %} — Eric's Personal Site</title>
   <body>
     <div class="col-xs-12">
       <header>
@@ -24,44 +53,26 @@
         <p><i>To whom much is given, much is expected. (Luke 12:48)</i></p>
         {# <ul class="nav nav-pills nav-fluid"> #}
         <ul class="nav nav-pills">
-          <li {% if this._path == '/' %} class="active"{% endif %}>
-            <a href="{{ '/'|url }}">Home</a>
-          </li>
-          {# Add in internal pages. #}
-          {% for href, title in [
-            ['/blog', 'Blog'],
-            ['/research', 'Research'],
-            ['/projects', 'Open Source Projects'],
-            ['/cv', 'CV'],
-          ] %}
-            <li {% if this.is_child_of(href) %} class="active" {% endif %}>
-              <a href="{{ href|url }}">{{ title }}</a>
-            </li>
-          {% endfor %}
         </ul>
       </header>
     </div>
-    {# <div class="col-xs-2"></div> #}
     <div class="col-xs-12">
-      {% block body %}{% endblock %}
       <hr>
     </div>
-    {# <div class="col-xs-2"></div> #}
   </body>
-</div>
-<div class="container">
-  <footer>
-      <ul class="nav nav-pills">
-        {# Add in external pages. #}
-        {% for href, title in [
-          ['https://www.linkedin.com/in/ericmjl', 'LinkedIn'],
-          ['http://twitter.com/ericmjl', 'Twitter'],
-          ['http://github.com/ericmjl', 'GitHub'],
-          ['http://stackoverflow.com/users/1274908/ericmjl', 'Stack Overflow'],
-          ['http://shortwhale.com/ericmjl', 'Contact Me']
-        ] %}
-          <li><a href="{{ href }}">{{ title }}</a></li>
-        {% endfor %}
-      </ul>
-  </footer>
-</div>
+</div> 
+-->
+{# <footer> #}
+    {# <ul class="nav nav-pills"> #}
+      {# Add in external pages. #}
+      {# {% for href, title in [ #}
+        {# ['https://www.linkedin.com/in/ericmjl', 'LinkedIn'], #}
+        {# ['http://twitter.com/ericmjl', 'Twitter'], #}
+        {# ['http://github.com/ericmjl', 'GitHub'], #}
+        {# ['http://stackoverflow.com/users/1274908/ericmjl', 'Stack Overflow'], #}
+        {# ['http://shortwhale.com/ericmjl', 'Contact Me'] #}
+      {# ] %} #}
+        {# <li><a href="{{ href }}">{{ title }}</a></li> #}
+      {# {% endfor %} #}
+    {# </ul> #}
+{# </footer> #}
