@@ -11,6 +11,10 @@ a:hover {
     color: #33bbdf;
 }
 
+nav.brand {
+    font-family: 'Open Sans', sans-serif;
+}
+
 header, footer, div.page {
     width: 760px;
     margin: 0 auto;
@@ -37,10 +41,10 @@ header nav ul li {
     padding: 0;
 }
 
-div.page {
-    background: white;
+.container-fluid {
+    max-width: 800px;
 }
 
-div.container-fluid {
-    max-width: 800px;
+.navbar-toggle .icon-bar{
+    background-color: #2a99b6;
 }

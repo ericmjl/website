@@ -6,14 +6,14 @@
 <!-- CSS and JS imports -->
 <!-- Import Open Sans font -->
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<!-- JQuery import -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<!-- JQuery import -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 <!-- Leave this at the end: these are local overrides. -->
 <link rel="stylesheet" href="{{ '/static/local-overrides.css'|url }}">
 
@@ -21,22 +21,32 @@
 
 <nav class="navbar navbar-collapse" id="navbar">
   <div class="container-fluid">
-    <ul class="nav navbar-nav">
-      <li {% if this._path == '/' %} class="active"{% endif %}>
-        <a href="{{ '/'|url }}">Home</a>
-      </li>
-      {# Add in internal pages. #}
-        {% for href, title in [
-          ['/blog', 'Blog'],
-          ['/research', 'Research'],
-          ['/projects', 'Open Source Projects'],
-          ['/cv', 'CV'],
-        ] %}
-          <li {% if this.is_child_of(href) %} class="active" {% endif %}>
-            <a href="{{ href|url }}">{{ title }}</a>
-          </li>
-        {% endfor %}
-    </ul>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#my_navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ '/'|url }}">Eric J. Ma</a>
+    </div>
+    <div class="collapse navbar-collapse" id="my_navbar">
+      <ul class="nav navbar-nav">
+        {# <li {% if this._path == '/' %} class="active"{% endif %}> #}
+          {# <a href="{{ '/'|url }}">Home</a> #}
+        {# </li> #}
+        {# Add in internal pages. #}
+          {% for href, title in [
+            ['/blog', 'Blog'],
+            ['/research', 'Research'],
+            ['/projects', 'Open Source Projects'],
+            ['/cv', 'CV'],
+          ] %}
+            <li {% if this.is_child_of(href) %} class="active" {% endif %}>
+              <a href="{{ href|url }}">{{ title }}</a>
+            </li>
+          {% endfor %}
+      </ul>
+    </div>
   </div>
 </nav>
 
@@ -44,37 +54,32 @@
   {% block body %}{% endblock %}
 </div>
 
-<!--
-<div class="container">
-  <body>
-    <div class="col-xs-12">
-      <header>
-        <h1>
-          Eric J. Ma
-        </h1>
-        <p><i>To whom much is given, much is expected. (Luke 12:48)</i></p>
-        {# <ul class="nav nav-pills nav-fluid"> #}
-        <ul class="nav nav-pills">
-        </ul>
-      </header>
+<nav class="navbar navbar-collapse" id="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer_bar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
-    <div class="col-xs-12">
-      <hr>
+    <div class="collapse navbar-collapse" id="footer_bar">
+      <ul class="nav navbar-nav">
+        {# Add in external pages. #}
+        {% for href, title in [
+          ['https://www.linkedin.com/in/ericmjl', 'LinkedIn'],
+          ['http://twitter.com/ericmjl', 'Twitter'],
+          ['http://github.com/ericmjl', 'GitHub'],
+          ['http://stackoverflow.com/users/1274908/ericmjl', 'Stack Overflow'],
+          ['http://shortwhale.com/ericmjl', 'Contact Me']
+        ] %}
+          <li><a href="{{ href }}">{{ title }}</a></li>
+        {% endfor %}
+      </ul>
     </div>
-  </body>
-</div> 
--->
+  </div>
+</nav>
+
 {# <footer> #}
-    {# <ul class="nav nav-pills"> #}
-      {# Add in external pages. #}
-      {# {% for href, title in [ #}
-        {# ['https://www.linkedin.com/in/ericmjl', 'LinkedIn'], #}
-        {# ['http://twitter.com/ericmjl', 'Twitter'], #}
-        {# ['http://github.com/ericmjl', 'GitHub'], #}
-        {# ['http://stackoverflow.com/users/1274908/ericmjl', 'Stack Overflow'], #}
-        {# ['http://shortwhale.com/ericmjl', 'Contact Me'] #}
-      {# ] %} #}
-        {# <li><a href="{{ href }}">{{ title }}</a></li> #}
-      {# {% endfor %} #}
-    {# </ul> #}
+    
 {# </footer> #}
