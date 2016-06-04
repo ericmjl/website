@@ -1,0 +1,31 @@
+title: Tests-Enabled Science
+---
+author: Eric J. Ma
+---
+body:
+
+In the software development world, I learned about the importance of writing tests for one’s software. Since then, I have incorporated this habit in my own work, where as part of my more recent work, I write tests for the software I write to conduct scientific research.
+
+This has got me thinking about why tests are such an effective tool. I think there’s got to be at least a few reasons.
+
+1. Tests effectively are a contract between current and future selves. My current self is writing a contract that has to be enforced by changes made by my future self. If future self makes changes that break the contract, tests will catch them. Of course, this all assumes that the conditions under which the contract was written still hold true. If they change, then the contract can be broken.
+1. Tests force my current self to be explicit about what exactly I am writing. This is much better than slapping together a script in a quick-and-dirty fashion. (Granted, there is a time and place for quick-and-dirty scripts.)
+1. When done with (semi-)automatic testing frameworks, such as `py.test`, the test suite is automatically run from start to finish. This reduces the cognitive load of running the tests one-by-one, and reinforces the cohesiveness of the code logic.
+
+Okay, so what exactly do I mean by tests? Here’s a few thoughts.
+
+1. **Data integrity tests.** By this, I mean tests that are situated in the directory where the data reside, that encode known properties of the data. For example:
+    1. Number of rows.
+    1. Number of columns.
+    1. The column names.
+    1. The hash of each row of data.
+    1. The hash of each column of data.
+1. **Unit tests.** By this, I mean tests that are written that ensure that a function does exactly what it’s expected to do. This is the most common concept of a test. This is applicable to:
+    1. Code that are written to manipulate data.
+    1. Code written that are part of a software package or software utility developed.
+
+While it takes time, I think computational scientists should write tests for their code as a matter of routine practice. Not sure if good test writing is enforceable, but it should definitely be done more.
+---
+pub_date: 2016-03-15
+---
+twitter_handle: ericmjl

@@ -11,10 +11,6 @@ a:hover {
     color: #33bbdf;
 }
 
-nav.brand {
-    font-family: 'Open Sans', sans-serif;
-}
-
 header, footer, div.page {
     width: 760px;
     margin: 0 auto;
@@ -40,11 +36,12 @@ header nav ul li {
     margin: 0 8px 0 0;
     padding: 0;
 }
-
 .container-fluid {
-    max-width: 800px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 800px; /* or 950px */
 }
-
 .navbar-toggle .icon-bar{
     background-color: #2a99b6;
 }
+

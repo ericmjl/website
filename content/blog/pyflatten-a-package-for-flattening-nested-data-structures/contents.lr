@@ -1,0 +1,15 @@
+title: PyFlatten: A package for flattening nested data structures
+---
+author: Eric J. Ma
+---
+body:
+
+Yesterday, I released <a href="https://pypi.python.org/pypi/pyflatten/">PyFlatten</a> to PyPI - it's a utility that can flatten nested data structures (e.g. list of lists; dictionaries of lists of tuples) into a single 1-by-N vector, while also returning an 'unflattener' function that can restore the original data structure from the flattened version.
+
+The <a href="https://pypi.python.org/pypi/pyflatten/">source code</a> are available on GitHub, where I make clear that I can't take credit for writing the code - I can only credit myself for factoring it out of <a href="https://github.com/HIPS/autograd">autograd</a> for others to use. The real heroes are <a href="http://people.seas.harvard.edu/~dduvenaud/">David Duvenaud</a>, <a href="http://users.physics.harvard.edu/~maclaurin/">Dougal Maclaurin</a>, and <a href="http://people.csail.mit.edu/mattjj/">Matt Johnson</a> of the <a href="http://hips.seas.harvard.edu">Harvard Intelligent &amp; Probabilistic Systems</a> group. With David's permission I am releasing it for public use.
+
+Hope it comes in handy for whatever your project is!
+---
+pub_date: 2016-05-16
+---
+twitter_handle: ericmjl

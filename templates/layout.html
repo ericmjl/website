@@ -19,45 +19,37 @@
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 
+<div class="container-fluid">
 <nav class="navbar navbar-collapse" id="navbar">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#my_navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="{{ '/'|url }}">Eric J. Ma</a>
-    </div>
-    <div class="collapse navbar-collapse" id="my_navbar">
-      <ul class="nav navbar-nav">
-        {# <li {% if this._path == '/' %} class="active"{% endif %}> #}
-          {# <a href="{{ '/'|url }}">Home</a> #}
-        {# </li> #}
-        {# Add in internal pages. #}
-          {% for href, title in [
-            ['/blog', 'Blog'],
-            ['/research', 'Research'],
-            ['/projects', 'Open Source Projects'],
-            ['/cv', 'CV'],
-          ] %}
-            <li {% if this.is_child_of(href) %} class="active" {% endif %}>
-              <a href="{{ href|url }}">{{ title }}</a>
-            </li>
-          {% endfor %}
-      </ul>
-    </div>
+  <div class="navbar-header container-fluid">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#local-links">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="{{ '/'|url }}">Eric J. Ma</a>
+  </div>
+  <div class="collapse navbar-collapse" id="local-links">
+    <ul class="nav navbar-nav">
+      {% for href, title in [
+        ['/blog', 'Blog'],
+        ['/research', 'Research'],
+        ['/open-source-projects', 'Open Source Projects'],
+        ['/cv', 'CV'],
+      ] %}
+        <li {% if this.is_child_of(href) %} class="active" {% endif %}>
+          <a href="{{ href|url }}">{{ title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
   </div>
 </nav>
+{% block body %}{% endblock %}
 
-<div class="container-fluid">
-  {% block body %}{% endblock %}
-</div>
-
-<nav class="navbar navbar-collapse" id="navbar">
-  <div class="container-fluid">
+<nav class="navbar navbar-collapse" id="footer-nav">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer_bar">
+        <!-- The next 3 lines are the 3 lines that are in the menu bar -->
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -65,7 +57,7 @@
     </div>
     <div class="collapse navbar-collapse" id="footer_bar">
       <ul class="nav navbar-nav">
-        {# Add in external pages. #}
+        <!-- Add in external pages. -->
         {% for href, title in [
           ['https://www.linkedin.com/in/ericmjl', 'LinkedIn'],
           ['http://twitter.com/ericmjl', 'Twitter'],
@@ -77,9 +69,4 @@
         {% endfor %}
       </ul>
     </div>
-  </div>
-</nav>
-
-{# <footer> #}
-    
-{# </footer> #}
+</class="container-fluid">

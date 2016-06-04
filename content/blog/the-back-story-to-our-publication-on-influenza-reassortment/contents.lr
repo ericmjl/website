@@ -1,0 +1,129 @@
+title: The back-story to our publication on influenza reassortment.
+---
+author: Eric J. Ma
+---
+body:
+
+For the reader of a newly-published article, all that we see is precisely that - the article itself. We rarely get to hear about the back-story of that paper, or the choices that were made, the struggles involved, and the emotional ride taken. I thought I’d take the time to document what the back-story to our manuscript on <a href="http://biorxiv.org/content/early/2016/03/22/033514">influenza reassortment</a> was like. Hopefully, it’ll let other junior trainees know that nobody’s alone in the struggle.
+
+Now, where shall I start…?
+
+<!--more-->
+
+I think the best part to start is when we first conceived the idea. My advisor, Jon Runstadler, had just taken me on. Because I joined only at the end of my 2nd year, I had some catching up to do.
+
+The problem of influenza reassortment had started to catch my eye. From my reading of the literature, reassortment was implicated in all known pandemics. The problem of predicting reassortment sounded like something impactful (in the sense of being practical, not prestigious) that I could dedicate my time to. I also happened to learn about the Influenza Research Database, which housed a large dataset of sequenced influenza genomes. I thought, “How great might it be if we could identify every reassortant virus in the database? We could possibly predict the next pandemic!” In retrospect, it’s a naive idea to think that we can identify every single one of them accurately and use that data alone to predict pandemics. But my lack of knowledge on phylogenetics, reassortment, and influenza biology gave me enough ignorance to knuckle on. (I happen to believe that sufficient ignorance is necessary for creative breakthroughs.)
+
+Fast-forward two years later, the following things happen:
+<ol>
+    <li><strong>Committee Meeting 1:</strong> I get a lecture from my committee about the importance of simulated data for a computational study. I was a complete newcomer to computational research at that point, so it was a sorely needed reminder.</li>
+    <li><strong>October 2013:</strong> <a href="https://sph.uth.edu/justinbahl/">Dr. Justin Bahl</a>, an expert in the use of Bayesian phylogenetic methods, gives us a masterclass on how to use BEAST, and I bounce some of my ideas off him. Huge learning opportunity!</li>
+    <li><strong>December 2013:</strong> After hundreds of hours of debugging, I hack some <a href="https://d3js.org/">d3.js</a> code to visualize reassortment! We get some nice bouncy reassortment + clonal transmission trees. And then I vow to avoid Javascript as much as possible…</li>
+    <li><strong>June 2014:</strong> After hundreds of hours of debugging, I manage to reproduce, using our reassortment detection method, known reassortant viruses. Hooray!</li>
+    <li><strong>September 2014:</strong> After hundreds of hours of debugging, I finally manage to get my code running on a download of the IRD. And then I figure out that I need better software engineering skills…</li>
+    <li><strong>December 2014:</strong> With little debugging needed, we manage to show that the method we’re using essentially is a very, very good approximation to a phylogenetic reconstruction. Ooh yeah!</li>
+    <li><strong>February 2015:</strong> Jon suggests that I start writing up a manuscript. I re-run the code on a fresh download of the database, with some refactoring done, and it still works! At this point, I still don’t know what the story is…</li>
+    <li><strong>June 2015:</strong> After some exploratory analysis, I realize that the dataset on hand and the identification of reassortant viruses is an awesome grounding for an ecological study of influenza evolution. That becomes the story that we write up.</li>
+</ol>
+
+<hr />
+
+<h3>Let the Submissions Begin</h3>
+As I was writing, I had in mind a number of target journals for the paper. Because of the nature of the story, and balancing the desire to go open access, I had a vague shortlist that included a group of microbiology, ecology, and genetics journals. But when I discussed it with Jon, the first place we were going to submit the article to was revealed to me.
+
+<em><a href="http://www.nature.com/index.html">Nature</a>.</em>
+
+Alrighty… The stakes are raised!
+
+I go about formatting the paper for Nature. It takes about 1 month to check that everything is in order, including the cover letter, the figures, the Jupyter notebooks. One afternoon, in Jon’s office, we submit the paper together.
+
+11 days later, Nature editorially declines the manuscript.
+
+Looking back on Jon’s forwarded email to me, it’s the best words I could have heard given that this was the first rejection manuscript rejection letter I had ever received. <em>“Well, it’s their loss.”</em>
+
+In the declination letter, the Nature editors inform us that a new journal, <a href="http://www.nature.com/nmicrobiol/">Nature Microbiology</a>, is in the process of being setup. Since it’s a convenient option, and the editors suggested it, we go ahead with the option.
+
+We have a quick discussion on a backup journal. I suggest <a href="https://elifesciences.org/">eLife</a>, because they’re a new journal, is open-access, has broad readership, supports new researchers (e.g. with reference letters), doesn’t have nit-picky formatting requirements, and all-in-all had a great up-and-coming reputation. We agree to go with that if Nature Microbiology rejects.
+
+8 days later, Nature Microbiology editorially declines the manuscript.
+
+I spend another week or two reformatting for eLife, and getting everything in order.
+
+4 days later, eLife contacts us!
+
+Their editors <em>actually read through the whole paper</em>, and had concerns about sampling biases, and asked for specific analyses as a check. (This incidentally re-kickstarted a long discussion in our lab about how to deal with sampling biases, which as far as I can see, has been largely ignored by the influenza phylogeneticists.) As I’m flying around on conferences, I end up needing about a month to get everything in order, and confer with Jon long-distance. There’s a lot of thinking, debating, arguing that goes on in the wee hours of the night after conference stuff. (I think I was at SciPy 2015 at this point.) After re-submitting the manuscript to them, we wait.
+
+1 day later, eLife’s editors respond back.
+
+<em>”Man, this stings…”</em> I remember thinking that when I saw the decision letter. In the heat of the moment, I remember feeling like I was punched in the stomach. Was all that effort for naught? What did we do wrong this time round?
+
+In retrospect, and in fairness to their efforts, eLife’s editors were the only ones I’ve seen that, despite rejecting the manuscript, actually gave our’s a fair reading. They even went into my Github repository and crunched numbers. For me, that’s earned my respect, and I still would highly recommend them as a top destination journal. Jon also mentioned that it was a good sign that the editors took the manuscript seriously enough to consider it and read it in-depth. We interpreted this as a sign of general interest. (If the eLife editors read this, I am happy to be corrected on this thought.) <em>Forge on.</em>
+
+After this rejection, I conferred with Jon a bit, and he’s still convinced that it should go to a broad readership journal. I take a day off to get a breather, to reflect on the whole thing so far. 3 editorial rejections, it’s not a nice feeling. I realize that the eLife editors were really hung up on one of the figures, which really wasn’t the main point of the paper. I decide that the paper needs a rewrite, with additional analysis to address the eLife editors’ concerns.
+
+I ask Jon for a month to rewrite the manuscript. It’s about August/September, and the new academic year is starting. Not that it matters for me at this point; the calendar year is starting to look the same regardless.
+
+In doing the rewrite, I took a look at the four figures in the paper. There was 1a-d, 2a-d, 3a-g, 4a-b. Of all of those, only 3c and 4a were necessary. Everything else was <a href="http://fluffyguy.com/">fluffy-ness</a>. I was on my first phase of weight loss back then, so I think that this “cut the fluff” way of thinking was pre-eminent in my mind. I rewrite the paper, and tried to make it more focused and streamlined, perhaps… <em>essential</em>. I send it to Jon, and after editing, he informs me of his next target destination.
+
+<em><a href="http://www.sciencemag.org/">Science</a></em>.
+
+I make further reworks, condensing it to below 2,500 words, and we upload the manuscript. It’s now about the end of November.
+
+A few days later, Science declines the manuscript.
+
+By this point, having gone through the low point of eLife’s rejection, and having the badge of honor of being rejected from Nature, I’m starting to get impervious to journal rejections. This one didn’t affect my emotions much. I confer again with Jon, and propose a list of backup journals. The only broad readership journal I had on my original list was <a href="http://www.pnas.org/">PNAS</a>, so I proposed that, followed by something along the likes of <a href="http://journals.plos.org/plospathogens/">PLOS Pathogens</a>, <a href="http://www.nature.com/ismej/index.html">ISME Journal</a>, <a href="http://www.cell.com/current-biology/home">Current Biology</a>, <a href="http://www.genetics.org/">Genetics</a>, <a href="http://www.nature.com/hdy/index.html">Heredity</a>, <a href="http://jid.oxfordjournals.org/">Journal of Infectious Disease</a> (I’m going by memory now, and not double-checking any email trace as I did for the above narrative.)
+
+Jon thinks that <a href="http://www.cell.com/cell-host-microbe/home">Cell Host Microbe</a> might be worth a shot. I did some homework on it, and thought it might be good too, but I was reluctant to waste time on reformatting the paper only to be editorially rejected again. Jon then suggests doing a pre-submission inquiry using the abstract.
+
+2 days later, Cell Host Microbe declines.
+
+We go ahead with the plan, and I format everything for PNAS. My hopes aren’t high; at this point, I’m just happy to have the paper reviewed somewhere, so that I can get feedback to make it better. That’s all I want. Borne out of this frustration and desire, I ask Jon for permission to post the manuscript to BioRxiv, and he agrees. I also run the paper by the BE Communications Lab, to see if it makes sense to a fellow biologist.
+
+Around mid-December, we submit the paper to PNAS.
+
+While waiting, I busy myself with a side project to help with a seal sampling project that’s ongoing - hacking together a seal monitoring device using Raspberry Pi computers, Bluetooth LE beacons, and Raspberry Pi camera modules stuck into food containers and mounted on garden poles. For me, it’s basically an excuse (ahem, <em>reason</em>) to play with a bunch of Raspberry Pi computers, but doing something useful and contributing to the research group while at it. One day, I’ll write a blog post on it.
+
+On 1 Feb 2016, I get an forwarded email from Jon. <em>”This is good. Several things to work on and discuss in the reviewers' comments. Take a look and let's find time to lay out a plan to tackle.”</em>
+
+I look through the reviewer’s comments. A few points popped out immediately:
+<ol>
+    <li>There’s no 3rd reviewer. <em>There’s no fabled 3rd reviewer. There’s no 3rd reviewer!</em></li>
+    <li>Reviewer 1 was very detailed, gave very constructive comments on how to improve the clarity of the manuscript, and was instrumental in shaping the extent to which we could claim the conclusions in the paper. Jon’s own words: “My faith in the peer review process has been restored.”</li>
+    <li>Reviewer 1 also helped us discover where I left a chunk of the methods out. Very crucial! Because I was getting too familiar with the manuscript, I was skimming over things; my co-authors were also too familiar with the work as well to have picked on it. We had spent tons of time going over and over the paper.</li>
+    <li>Reviewer 2 was very encouraging, and basically recommended it for publication. Reviewer 2 was brief, but nonetheless gave constructive criticisms on the paper as well.</li>
+</ol>
+This was so much more than I had expected! I was braced for scathing reviews on sampling biases, comparisons of inadequacy to phylogenetic methods, making over-reaching claims… and had my own dreams (nightmares?) of having to deal with comments on those points yet not being able to find a way to do so. Either way, I was very encouraged by these comments, and promptly bunkered down in the library, Starbucks, and the Broad, writing code and prose to address their review points.
+
+Over the course of the month, I meet with Jon about 2 more times to make sure the responses are on-target. After finishing everything, I also run the response letter past the <a href="https://be.mit.edu/communicationlab">BE Communications Lab</a> again, which helped further in structuring our response to the toughest point of review. (I am happy to report that we have acknowledged their help in the paper.)
+
+On March 9th, we re-submit the paper back to PNAS.
+
+In the intervening time, I start getting nervous again. What if all of this effort was for nothing? What if, even after all the favourable reviews, the editor still says no? What if I bombed the response letter? I try imagining the most probable scenarios, but regardless of the minute probabilities of it happening, none speak emotionally louder than another rejection letter. I try blocking it out. As a distraction, I go up to Harvard and start embarking on applying deep learning to protein graphs from the <a href="http://hips.seas.harvard.edu/">HIPS</a> group instead, learning from a fellow UBC alum &amp; Canadian <a href="https://scholar.google.com/citations?user=ZLpO3XQAAAAJ">David Duvenaud</a>, who is my mentor up there.
+
+On March 30th, the decision comes back. I’m sitting in the middle of a seminar when I have this sudden urge to check my email. There’s only one unread message in my Inbox at that time, and it’s titled “PNAS MS# 2015-22921R Decision Notification”. My heart is thumping, what will it say?
+<blockquote>March 30, 2016
+
+Title: "Reticulate evolution is favored in influenza niche switching"
+
+Tracking #: 2015-22921R
+
+Authors: Ma et al.
+
+Dear Dr. Ma,
+
+We are pleased to inform you that the PNAS Editorial Board has given final approval of your article for publication…</blockquote>
+Big! Smiles! Everywhere! Jumps! Up! And! Down!
+
+So, I'm not Dr. Ma yet, but hopefully close to there. (If I cross that finish line, I’m opting for an ScD title, just because.) It’s a project taken from conception to completion. From start to finish. From scratch to final product. In the short-term, the most important hurdle has been crossed. The feelings that of (firstly) exhilaration, then relief, then pure unbridled joy.
+
+I inform my co-authors by email. Later in the day, I learn that my classmate Daniel also had a publication accepted in PNAS on the exact same day. Double the joy, as we shared the news over lunch.
+
+<hr />
+
+And so that's the back story! All the rejections, the ups and downs, the nervousness, the rejoicing… But to have it end in an acceptance letter is a wonderful result. I am thankful to my advisor <a href="runstadlerlab.mit.edu">Jon</a>, my co-authors <a href="https://www.linkedin.com/in/nichola-j-hill-82917834">Nichola</a>, <a href="https://www.linkedin.com/in/justin-zabilansky-95390b3b">Justin</a> and <a href="https://www.linkedin.com/in/kyle-yuan-98ba6544">Kyle</a>, who helped shape the story, and who contributed code and data. Final thanks to the two reviewers who helped strengthen the logic of the manuscript, who raised thoughtful questions, and pointed out logical and linguistic gaps in the paper.
+
+At this point, it feels as if a large burden has been lifted off my shoulder, and I can take a much needed break and reflect on stuff I’ve learned. As for that, I will detail that in the next blog post. Meanwhile, I am riding momentum on a newer project that I launched a while back, to predict phenotype from genotype. <strong>Onward!</strong>
+---
+pub_date: 2016-04-07
+---
+twitter_handle: ericmjl

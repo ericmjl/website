@@ -1,0 +1,40 @@
+title: R for Statistics, Python for Data Processing?
+---
+author: Eric J. Ma
+---
+body:
+
+I’ve heard this refrain many times. However, the distinction never really made sense to me.
+
+R and Python are merely programming languages. You don’t have to do stats in R and data processing in Python. You can do data processing in R, and statistics in Python.
+
+<em>What is R?</em> It’s a programming language designed by statisticians, and so there’s tons of one-liner functions to do stats easily.
+
+<em>What is Python?</em> It’s a programming language that’s really well-designed for general purpose computing, so it’s really expressive, and others can build tools on top of it.
+
+<em>What is data processing?</em> I don’t think I can do justice to its definition here, but I’ll offer my own simple take: making data usable for other programming functions.
+
+<em>What is statistics?</em> I think statistics, at its core, is really about describing/summarizing data, and figuring out how probable our data came from some model of randomness. That’s all it is, and it’s all about playing with numbers, really. There’s nothing more than that. <em>Technically, you can do statistics in any programming language, because technically, all programming languages deal with numbers...</em>
+
+Which brings me to the point I want to make - as long as you have data, and you’re doing data science, you <em>technically</em> can use any language for it; the differences are not in the language itself, but in the ecosystem, ease-of-use, and other aspects.
+
+Other bloggers have written about <a href="http://www.r-bloggers.com/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">the benefits</a> of using a single language, which include:
+<ol>
+	<li>No cognitive costs associated with syntax switching (the biggest reason for me).</li>
+	<li>No need to worry about interfacing between languages.</li>
+	<li>No need to pepper file I/O calls throughout the code for each portion of the project that uses its own language.</li>
+</ol>
+So how do you choose? Here’s my criteria (beyond simply Python and R):
+<ol>
+	<li>What is the larger context of your project? Do you have colleagues you are interfacing with? What languages are they using?</li>
+	<li>Are there packages that allow you to do stuff related to your project in a quick-and-dirty fashion?</li>
+	<li>Is the language able to use other language’s packages?</li>
+	<li>How mature is the package ecosystem for your language? Do you foresee using other packages as your project expands?</li>
+</ol>
+So I hope the point is clear: it isn’t so much that “R is for statistics and Python is for data processing”. I think commoner programmers have to get that dogma out of their heads. It’s simply that R was designed by statisticians for doing statistics, while an ecosystem of Python tools sprung up to do data processing. Nowadays, as the R-blogger <a href="http://www.r-bloggers.com/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">mentioned</a>, Python can also do a ton of stuff that R can do, because packages are being written that replicate R package functionality and more, such as how <a href="http://www.continuum.io">Continuum Analytics</a> (awesome company!) wrote the <a href="http://bokeh.pydata.org">bokeh</a> package that allows us Pythonistas to deploy web-based data visualizations. Likewise, R can do a ton of stuff that used to be the domain of Python, and it's getting a lot of corporate support from Microsoft. So choose according to your needs.
+
+After all, as Wes McKinney <a href="http://wesmckinney.com/blog/the-problem-with-the-data-science-language-wars/">wrote</a>, the real problem isn't R vs. Python. It's the ability to move data seamlessly.
+---
+pub_date: 2016-03-13
+---
+twitter_handle: ericmjl

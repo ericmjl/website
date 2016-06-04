@@ -1,0 +1,70 @@
+title: Lessons learned from publishing the reassortment paper
+---
+author: Eric J. Ma
+---
+body:
+
+The paper can be found here (<a href="http://biorxiv.org/content/early/2016/03/22/033514">preprint</a>, freely available; accepted at PNAS and in press).
+
+In no order of importance, here are the things I would tell myself to do from the start.
+
+**Lesson 1. Computational work requires simulated data.**
+
+Creating simulated data is paramount. Just as writing an idea down for an audience forces out the details, creating simulated data for an algorithm forces out the assumptions.
+
+**Lesson 2. Use pre-submission inquiries!**
+
+Don’t waste time formatting papers for journals. Write it up, write the abstract, and use pre-submission inquiries to rapidly iterate over the journals that are likely to accept or reject the paper.
+
+**Lesson 3. Use pre-print servers.**
+
+Scientists funded by public money should have their work disseminated back to the public in due time. Put written work on pre-print servers; Knowledge Without Barriers is worth it! In fact, it may even pay off to be radical, and write the whole paper in the open.
+
+**Lesson 4. Dare to try for a wide audience.**
+
+If not for Jon’s encouragement, I might not have had the guts to try for the broad readership journals. In most cases, I know it won’t pay off; in this case, I’m thankful it did.
+
+**Lesson 5. Writing with clarity is difficult.**
+
+Crafting the scientific narrative around the data was a difficult iterative process. It was difficult taking that step of chopping off a ton of derivative data that did not contribute to the scientific insight being conveyed, but in the end, I think it was necessary.
+
+**Lesson 6. The non-linear path in science is real.**
+
+Israeli scientist Uri Alon described the <a href="https://www.ted.com/talks/uri_alon_why_truly_innovative_science_demands_a_leap_into_the_unknown?language=en">non-linear path</a> that a scientist takes. At the outset, I first thought of the scientific narrative to this project as being “a better reassortment finding algorithm”, and that’s where and how I focused my efforts (small datasets, simulations). It later changed to “here’s the state of reassortment in the IRD”, and that was reflected in expanded data scope and optimizations (hacks, really) to work with computing clusters and large datasets.
+
+But only later I realized the really exciting problem we were solving was “quantifying reticulate evolution importance in context of ecological niche switching”, a broadly general problem with great basic scientific interest (if nonetheless lacking in public health importance).
+
+Therein lies the tension of all creative work. One needs to convince people of one’s direction early on. Yet, later on, the direction may pivot, and one needs to be ready for that, and to convince stakeholders in it.
+
+**Lesson 7. A first-draft template for scientific project management.**
+
+I now think of it as a “folder” of stuff that should be kept together, version controlled, and done openly. This is just a first draft, still evolvable.
+
+1. Data - everything collected and used, in its raw-est form available.</li>
+2. Code - for processing data, and for generating figures.
+    1. New software packages should be kept as a sub-folder, isolated from the rest of the work.</li>
+    1. Software packages, for the scientist, are essentially code written that provide functions written to do the similar stuff over and over.</li>
+1. Protocols - for experimental work.</li>
+1. Manuscript - written openly as the work progresses.</li>
+
+**Lesson 8: The transferrable things a graduate student has to learn.**
+
+By this, I mean stuff beyond the “good’ol do-your-experiments/write-your-code properly”. This is an incomplete list, hoping to expand it further.
+
+1. Prioritizing time to get the most important stuff done, not merely being efficient in crossing off todo lists.
+1. Saying “no” to good stuff, to leave time to say “yes” to the best stuff. (same as the above point, really.)
+1. Learning how to craft a narrative that ties data together logically, and connects the data to a specifically important problem.
+1. Leveraging others’ strengths to achieve common goals, and expanding one’s own strengths.
+1. Learning how to learn and apply new things really quickly. (Something I’d like to expand on later.)
+
+**Lesson 9: Keep writing.**
+
+Ultimately, the end product of our work is a written piece. Therefore, early on, start writing the narrative as an abstract. Get the narrative out there. And then rewrite and expand on the narrative until it is self-coherent, coherent with the data, and connects to an important problem.
+
+**Lesson 10: The problem space is infinite.**
+
+I don’t believe that scientific competition is healthy. The problem space is infinite; the narrative space is as well. Getting scooped is not something to be worried about. Work openly, and rapidly advance your work on hand.
+---
+pub_date: 2016-04-07
+---
+twitter_handle: ericmjl
