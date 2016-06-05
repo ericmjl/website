@@ -1,0 +1,42 @@
+title: Semantic Versioning for Papers: A Manifesto
+---
+author: Eric J. Ma
+---
+body:
+
+In writing the current paper I’m working on, I have decided to adopt a semantic versioning scheme for each draft of the paper. There’s probably a ton out there, and I think I got a bit fed up with other versioning schemes where people tag on \_INITIALS to the end of the file. Moreover, I found value in tracking the evolution of the paper - in other words, how does the final product look compared to the original? Therefore, I thought, why not adopt a numbering system that semantically makes sense, the same way that it works for code?
+
+Shamelessly copying http://semver.org, here’s my proposed scheme.
+
+Given a version number MAJOR.MINOR.PATCH, for a prose body of text, increment the:
+
+1. MAJOR version after each submission, to keep track of the number of times a paper has been submitted.
+2. MINOR version after each:
+	3. re-arrangement of logic, 
+	4. large word-smithing or rephrasing of things, and
+	5. addition of new insights compared to the previous version
+3. PATCH version after making:
+	4. grammatical or spelling changes
+	5. substitute individual words for other words
+
+I will note that formatting is intentionally not dealt with here, but is assumed to be part of the MAJOR version increment when formatting a manuscript for submission. This is because a writer ought not to be concerned with formatting in the writing stages. A writer ought to be most concerned with getting his/her thoughts into prose form. 
+
+Now, for the figures, which I believe should be developed in parallel but separately from the text. 
+
+Given a version number MAJOR.MINOR.PATCH, for a document that lays out the organization of figures, increment the:
+
+1. MAJOR version after each submission.
+2. MINOR version after each:
+	3. addition, removal or rearrangement of figures,
+	4. changing of figure representations (i.e. scatterplot changed to 2D histogram),
+	5. major changes to the figure caption/legend
+6. PATCH version after each:
+	7. grammatical or spelling changes, in the figure caption/legend,
+	8. minor word substitutions or additions/deletions in the figure caption/legend,
+	9. resizing of figures for aesthetic purposes.
+
+So far, I have tried to keep the figure versions in sync with the text versions to keep things really simple. This system has worked well, as I usually do an export of both the text and the figures at the same time, incrementing whichever needs to be incremented accordingly. When this first manuscript is done, next steps would be to run a ‘diff’ to see how the final version differs from version 0.1.0. Can’t wait for that to happen!
+---
+pub_date: 2015-04-03
+---
+twitter_handle: ericmjl
