@@ -1,0 +1,34 @@
+title: Test All Your Data!
+---
+author: Eric J. Ma
+---
+body:
+
+On Monday, I gave my first ever lighting talk at the Boston Python meetup. Though I was kinda nervous right before the talk, overall, I found it to be really fun! My main message was that we should write tests for our data when doing data analysis.
+
+What’s the benefits?
+
+1. Things that should be true about the data at this point, and in the future, will be formally coded in an automatically runnable script.
+2. If the data ever needs to change, this serves as an automated way of having a sanity check in place prior to running data analysis.
+3. If the data ever changes inadvertently, we have tests to ensure data integrity.
+
+My slides are attached here (<a href="http://www.ericmajinglong.com/wp-content/uploads/2015/06/Test-All-The-Data.pdf">Test All The Data!</a>), hopefully they’ll come in handy to someone, someday. Or maybe to you, my reader. :-)
+
+### Q&A
+
+From memory, these were some of the questions that I fielded right after the talk.
+
+**Q: What happens if your data cannot fit in memory?**
+A: Try reading in just a random subset of the data, just the head, just the tail, or streaming it row/line by row/line.
+
+**Q: When do you know you have enough tests written before you can begin doing other things, such as modelling?**
+A: You don’t. Just keep writing them. You’ll never have enough tests. You will discover more assumptions about your data as you go along, which you can code up in your test script.
+
+**Q: What’s your general workflow for writing tests?**
+A: Data analysis occupies a big chunk of my time. If I am thinking about the data, I will realize I have assumptions I’m making about the data. At those moments of realization is the best time to jot down the assumption to be encoded. Sometimes the epiphanies come in the shower or while sitting on the toilet bowl or eating a burrito. Have a notebook handy :).
+
+Prior to embarking on the data analysis journey, I will run `py.test`. Following data analysis, I will run those tests one more time. At the end of adding in a test, I will also run `py.test`. It’s now become a reflex.
+---
+pub_date: 2015-06-24
+---
+twitter_handle: ericmjl

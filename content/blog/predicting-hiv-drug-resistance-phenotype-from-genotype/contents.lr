@@ -1,0 +1,72 @@
+title: Predicting HIV Drug Resistance Phenotype from Genotype
+---
+author: Eric J. Ma
+---
+body:
+
+**Note to Reader:** I’d highly suggest reading this blog post on the left half of your screen, and have the <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/Predict%20HIV%20Genotype%20from%20Phenotype%20-%20Custom%20Funcs.ipynb">Jupyter notebook</a> on the right half of your screen. Makes things a bit easier to follow.
+
+I recently have been writing a proposal to conduct some experiments to predict viral RNA polymerase activity, in some standardized unit, from protein genotype. The main application of this would be to be able to conduct quantitative surveillance in a precise fashion. For example, with HIV, as treatment progresses, the virus accumulates mutations that confer resistance. For a physician treating a patient infected with HIV, would it be possible to determine, from sequence data alone, what would be the degree of predicted viral resistance for that patient’s virus?
+
+Knowing fully that this problem has been tackled many times in the past from multiple angles, I wanted to know how easily I could set up an ML workflow to go from sequence to predicted drug resistance. The goal of this blog post is to document how easy it was for me to get up and running, using Python packages really well-written Python packages.
+
+## Raw Code
+
+All of my code can be found on my Github <a href="https://github.com/ericmjl/hiv-resistance-prediction">repository</a>. You can also jump directly to the <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/Predict%20HIV%20Genotype%20from%20Phenotype%20-%20Custom%20Funcs.ipynb">Jupyter notebook</a> that I reference code from in this article.
+
+## Data Source and Preprocessing
+
+I sourced the data from the <a href="http://hivdb.stanford.edu">Stanford HIV Drug Resistance Database</a>. Specifically, I downloaded the <a href="http://hivdb.stanford.edu/pages/genopheno.dataset.html">high quality, filtered set</a> of Genotype-to-Phenotype mappings, for protease inhibitors, nucleoside reverse transcriptase inhibitors, and non-nucleoside reverse transcriptase inhibitors. I wrote a few custom functions to preprocess the data, including the following steps:
+
+1. Replacing all "`-`" characters with the consensus sequences. I am guessing that they use the "`-`" character in place to help highlight where the mutations are; much more human readable.
+2. Removing sequences that had more than one mutation present. Mostly a function of being lazy than anything else.
+2. Removing sequences with ambiguous amino acids. These are a bit harder to deal with down the road. From biological background knowledge, it’s unlikely that excluding them would be detrmimental.
+3. Dropping all conserved amino acid positions. They add nothing to the analysis.
+4. Binarizing the columns. This transforms the letters of the amino acid into a first-pass feature set, in which the binarized columns indicate whether or not an amino acid is present at a given position or not.
+
+These are found in my <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/custom_funcs.py">custom_funcs.py</a> module, which I imported into the Jupyter notebooks. Having futzed around for about a day copying/pasting blocks of code, I refactored the code into separate functions for readability, so that only the “business logic” is shown in the notebook.
+
+## Train/Test Split
+
+It is a standard practice to split the dataset into a training and test set. K-fold cross-validation is quite easy to do using `scikit-learn`. Given an `X` and a `Y` matrix, to split it into `X_train`, `X_test`, `Y_train`, and `Y_test`, simply do the function call:
+
+`X_train, X_test, Y_train, Y_test = train_test_split(X_binarized, Y) `
+
+## Model Training
+
+To train models, I used the <a href="http://scikit-learn.org/stable/">scikit-learn</a> package to help. It’s useful to note that `scikit-learn` has a consistent API - every regressor model has a `MODEL.fit()` and a `MODEL.predict()` function. This ‘modular’ style allowed me to wrap the series of function calls into single-line functions, and thus quickly try out a variety of models to see what out-of-box predictive power would be. Using the Random Forest Regressor as an example, I wrapped up the training and plotting phases:
+
+`# Model Training`
+`kwargs = {'n_jobs':-1, 'n_estimators':1000}`
+`rfr, rfr_preds, rfr_mse, rfr_r2 = cf.train_model(*tts_data, model=RandomForestRegressor, modelargs=kwargs)`
+
+`# Plotting`
+`cf.scatterplot_results(rfr_preds, Y_test, rfr_mse, rfr_r2, DRUG, 'Rand. Forest', figsize=std)`
+
+Here, `cf` simply refers to the `custom_funcs.py` module I wrote to refactor out the repetitive boilerplate code needed.
+
+The ensemble learners also include feature importances, i.e. an identification of the columns in the data that best predict the outcome of interest. I wrapped the feature importances code to make it easy to plot:
+
+`cf.barplot_feature_importances(rfr, DRUG, 'Rand. Forest', figsize=std)`
+
+In particular, I used the ensemble learners, which are known to be pretty powerful for learning tasks. And for comparison, I pitted them against a number of linear models as well. As you can see in the notebooks, the ensemble learners outperformed the linear models, at least for a binarized amino acid feature set. This makes intuitive sense - protein sequence to function is non-linear, and highly contextual.
+
+## Neural Networks!
+
+One of the things I wanted to highlight here was how <a href="http://danielnouri.org">Daniel Nouri’s</a> <a href="https://github.com/dnouri/nolearn">nolearn</a> package made it easy for me to start experimenting with neural networks. By no means am I a deep learning expert - I consider myself too algebra-blind (but by no means code-blind!) to learn the math behind it all. However, I know that my learning style of diving into the deep end and doing a lot of hands-on trials would help me get a fairly good intuitive grasp of how to do it. So after futzing around on a GPU cluster for a few days trying to get it configured right, I got `theano`, `lasagne` and `nolearn` up and running. (Note: A GPU makes light(er) work of training artificial neural nets. CPUs take around 5-10x more time. Highly recommended to use a GPU with neural nets. Shout-out to my PhD thesis committee member, Mark Bathe, for giving me access to his lab's GPU machine!)
+
+`nolearn`’s API is, by design, really close to the `scikit-learn` API. I find this to be a great thing - since neural networks are basically ML models, we get the familiar `neural_net.fit()` and `neural_net.predict()` function calls. (The importance of great APIs! Thank you, @dnouri!) The API also makes specifying a neural network architecture quite easy. For example, in the simple feed-forward network architecture that I show in the Jupyter notebook, network layers are specified as a list of parameters, and each layer’s properties can be specified by using named parameters that sync up with the specified names. The comments in my Jupyter notebook in some of the layers show my (rather simple) efforts in experimenting with different architectures. To note, the original structure of the feed-forward network is directly lifted from <a href="http://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/">Daniel Nouri's tutorial</a>, so big thanks to him for publishing it!
+
+FWIW, I also learned from other experienced Pythonistas (shout out to Rick Landau!) for teaching me *not* to use binary features on neural networks, something I happily disregarded for this first pass. But I’ve nonetheless still remembered that lesson! And in future iterations, probably I will try to change to non-binary features.
+
+## Summary &amp; Future Work
+
+So to summarize, the `scikit-learn` API makes it pretty easy to get my hands dirty doing machine learning. By keeping a `scikit-learn`-like API, `nolearn` also does a great job of keeping neural nets accessible.
+
+What else do I think can be done? Well, there’s one idea I’ve been thinking about, to improve the regression score beyond what experimental error in the dataset may limit us to. Think convolutional networks (convnets) and their data input requirements. Basically, most image recognition convnets need a 2D image. But what if I used a convnet that can take in a 3D image instead? Calculating a numerical value, such as the electrostatic charge at every grid point in a static, modelled 3D protein structure, may be much more informative than simply using binarized amino acid columns. A recent paper that I read in <a href="http://www.biomedcentral.com/1471-2164/15/S5/S1">BMC genomics</a> (say "yay" for open access!) uses a computationally efficient shortcut representation to get structural features encoded as well, with great success; I would definitely be game for implementing their version as a first pass as well.
+
+Apart from that, it's insufficient to run only on a single train/test split. There will always be unavoidable biases in the trained model. Training `k`-fold splits `k` times is a common practice I've heard. In papers I've read, usually k-fold splits are trained k times, and the standard deviation reported. I can imagine also doing it n times, to get a better feel for the generalization error (assuming the data are representative of the population).
+---
+pub_date: 2015-09-28
+---
+twitter_handle: ericmjl

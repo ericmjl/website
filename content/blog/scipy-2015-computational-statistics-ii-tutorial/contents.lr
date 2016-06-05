@@ -1,0 +1,31 @@
+title: SciPy 2015: Computational Statistics II Tutorial
+---
+author: Eric J. Ma
+---
+body:
+
+The final tutorial that I sat in today was the intermediate computational statistics tutorial. This was led by Chris Fonnesbeck, prof at Vanderbilt University, fellow Vancouverite, also one of the maintainers of the PyMC3 package.
+
+### Tutorial Content
+
+In this tutorial, Chris covered:
+
+1. Data cleaning/preparation - using <code>pandas</code>.
+1. Density estimation - using the <code>numpy</code> and <code>scipy</code> packages; mechanics: method of moments and maximum likelihood estimators.
+1. Fitting regression models.
+
+### Tutorial Pace
+
+The initial part of the tutorial was heavily <code>pandas</code> oriented. I think it was useful for the fairly large fraction of the class that was not well-versed with <code>pandas</code>. In my own case, however, I skipped forward to the second notebook in order to explore a bit. The time spent on <code>pandas</code> was about 1 hr 45 minutes; we only got to the second topic at 2:45 pm.
+
+The latter parts were quite useful. I think the mechanics of thinking through statistical modelling problems isn’t commonly emphasized in stats classes. As such, just like I had mentioned in my review of the first tutorial, the mechanics on “how to do stuff” proved to be really helpful.
+
+### Overall Thoughts
+
+This was the one that I was particularly anticipating, as I was hoping to learn the mechanics of doing Bayesian statistical analysis in PyMC3. However, the tutorial content was not that, possibly because this material was already covered last year and recorded (for YouTube posterity). Instead, I was pleasantly surprised by the content covered here instead. Definitely was an expansion of my thinking.
+
+Two full days of learning has been quite an intellectual adventure! Many thanks to all of the tutorial leaders for their preparation and hard work; count me as one more person who’s learned lots!
+---
+pub_date: 2015-07-07
+---
+twitter_handle: ericmjl

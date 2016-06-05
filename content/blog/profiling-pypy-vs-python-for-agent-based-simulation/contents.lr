@@ -1,0 +1,222 @@
+title: Profiling PyPy vs. Python for Agent-Based Simulation
+---
+author: Eric J. Ma
+---
+body:
+
+## Outline
+
+1. Introduction:
+    1. Motivation
+    1. Model description
+    1. Link to code
+1. Environment Setup
+1. Performance
+    1. Python vs. PyPy on one parameter set.
+    1. Vary number of hosts, record time.
+
+## Introduction
+
+As part of my PhD dissertation, I wanted to investigate the role of host ecology on the generation of reassortant viruses. Knowing myself to be a fairly algebra-blind person, I decided that an agent-based model (ABM) was going to be much more manageable than writing ODEs. (Actually, the real reason is that I"m modelling discrete states, rather than continuous states, but yes, I will admit that I do take longer than your average programmer with algebra.)
+
+### Model Description
+Starting with our intuition of host-pathogen interactions, I implemented a custom ABM using Python classes - "Hosts" and "Viruses".
+
+#### Viruses
+
+"Viruses" had two segments, representing a segmented virus (like the Influenza or Lassa virus), each with a color (red or blue), and can infect Hosts (which are likewise red or blue). Viruses that are of a particular color prefer to infect hosts of the same color, but can still infect hosts of of a different colour, just at a lower probability. If two viruses are present in the same host, then there can be, at some small probability, the opportunity for gene sharing to occur.
+
+One of the virus' segments determines host immunity; if the virus encounters a host which has immunity against its color, then the probability of infection drastically decreases, and it is likely that the virus will eventually be cleared.
+
+#### Hosts
+
+"Hosts" are where viruses replicate. Hosts gain immunity to one of the segment's colors, after a set number of days of infection. When a host gains immunity to a particular virus color, it can much more successfully fend off a new infection with that same color. Hosts also interact with one another. They may have a strong preference for a host of the same color, a.k.a. homophily.
+
+### Code
+
+My code for the simulations can be found on <a href="http://github.com/ericmjl/reassortment-simulator">this Github repository</a>. The details of the simulation are still a work in progress, as these ideas are still early stage. My point on this blog post here will be to try to compare PyPy against CPython on performance. However, I do welcome further comments on the modelling, if you've taken the time to read through my code.
+
+Code for the statistical draws can be found on <a href="http://github.com/ericmjl/pypy_stats">this other Github repository</a>.
+<h2 id="environment-setup">Environment Setup</h2>
+My CPython environment is managed by <code>conda</code>. (Highly recommended! Download <a href="https://www.continuum.io/downloads">here</a>. Make sure to get Python 3!)
+
+I installed <code>pypy</code> and <code>pypy3</code> under my home directory on Ubuntu Linux, and ensured that my bash shell <code>$PATH</code> variable also pointed to <code>~/pypy[3]/bin</code>.
+
+## Performance
+
+Let's take a look at the performance of the CPython vs. PyPy using pure-Python code.
+
+### Default parameters
+
+I first started with 1000 agents in the simulation, with the simulation running for 150 time steps.
+
+Under these circumstances, on an old Asus U30J with 8GB RAM and an SSD hard disk, Core i3 2.27GHz, executing the simulation with PyPy required only 13.4 seconds, while executing with CPython required 110.5 seconds. 10x speedup.
+
+### Varying number of hosts in the model
+
+I wanted to measure the time complexity of the simulation as a function of the number of hosts. Therefore, I varied the number of hosts from 100 to 1600, in steps of 300.
+
+Partial (mostly because of laziness) results are tabulated below. (Yes, this degree of laziness would never fly in grad school.)
+
+<table><colgroup> <col /> <col /> <col /> <col /> <col /> <col /> <col /> </colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Agents</th>
+<th style="text-align: left;">PyPy Trial 1</th>
+<th style="text-align: left;">PyPy Trial 2</th>
+<th style="text-align: left;">PyPy Trial 3</th>
+<th style="text-align: left;">CPython Trial 1</th>
+<th style="text-align: left;">CPython Trial 2</th>
+<th style="text-align: left;">CPython Trial 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1000</td>
+<td style="text-align: left;">13.4</td>
+<td style="text-align: left;">12.8</td>
+<td style="text-align: left;">12.9</td>
+<td style="text-align: left;">110.5</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">700</td>
+<td style="text-align: left;">8.63</td>
+<td style="text-align: left;">9.02</td>
+<td style="text-align: left;">8.65</td>
+<td style="text-align: left;">53.7</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">4.35</td>
+<td style="text-align: left;">4.33</td>
+<td style="text-align: left;">4.66</td>
+<td style="text-align: left;">18.2</td>
+<td style="text-align: left;">18.2</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">100</td>
+<td style="text-align: left;">1.03</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.17</td>
+<td style="text-align: left;">1.47</td>
+<td style="text-align: left;">1.48</td>
+<td style="text-align: left;">1.45</td>
+</tr>
+</tbody>
+</table>
+
+As we can see, PyPy wins when the number of iterations is large.
+
+### Statistical Draws
+
+I use statistical Bernoulli trials (biased coin flips) extensively in the simulation. Yet, one thing that is conspicuously unavialable to PyPy users (in an easily installable format) is the scientific Python stack. Most of that boils down to <code>numpy</code>. Rather than fiddle with trying to get <code>numpy</code>, <code>scipy</code> and other packages installed, I re-implemented my own <code>bernoulli</code> function.
+    ```python
+    from random import random
+
+    class bernoulli(object):
+        """
+        docstring for bernoulli
+        """
+        def __init__(self, p):
+            super(bernoulli, self).__init__()
+            self.p = p
+            
+        def rvs(self, num_draws):
+            draws = []
+            for i in range(num_draws):
+                draws.append(int(random() &gt; self.p))
+        
+            return draws
+
+This is <em>almost</em> a drop-in replacement for <code>scipy.stats.bernoulli</code>. (The API isn't exactly the same.) I wanted to know whether the calling <code>bernoulli</code> function I wrote performed better than calling on the <code>scipy.stats</code> function. I therefore setup a series of small tests to determine at what scale of function calls it makes more sense to use PyPy vs. CPython.
+
+I then wrote a simple block of code that times the Bernoulli draws. For the PyPy version:
+    ```python
+    from stats.bernoulli import bernoulli
+    from time import time
+
+    start = time()
+    bern_draws = bernoulli(0.5).rvs(10000)
+    mean = sum(bern_draws) / len(bern_draws)
+    end = time()
+
+    print(end - start)</code></pre>
+    And for the CPython/scipy version:
+    <pre><code>from scipy.stats import bernoulli
+    from time import time
+
+    start = time()
+    bern_draws = bernoulli(0/5).rvs(10000)
+    mean = sum(bern_draws) / len(bern_draws)   
+    end = time()
+
+    print(end - start)
+
+<table><colgroup> <col /> <col /> <col /> <col /> <col /> <col /> <col /> </colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Bernoulli Draws</th>
+<th style="text-align: center;">PyPy + Custom (1)</th>
+<th style="text-align: center;">PyPy + Custom (2)</th>
+<th style="text-align: center;">PyPy + Custom (3)</th>
+<th style="text-align: center;">CPython + SciPy (1)</th>
+<th style="text-align: center;">CPython + SciPy (2)</th>
+<th style="text-align: center;">CPython + SciPy (3)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1000000</td>
+<td style="text-align: center;">0.271</td>
+<td style="text-align: center;">0.241</td>
+<td style="text-align: center;">0.206</td>
+<td style="text-align: center;">0.486</td>
+<td style="text-align: center;">0.513</td>
+<td style="text-align: center;">0.481</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">100000</td>
+<td style="text-align: center;">0.0437</td>
+<td style="text-align: center;">0.0421</td>
+<td style="text-align: center;">0.0473</td>
+<td style="text-align: center;">0.0534</td>
+<td style="text-align: center;">0.0794</td>
+<td style="text-align: center;">0.0493</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">10000</td>
+<td style="text-align: center;">0.0311</td>
+<td style="text-align: center;">0.0331</td>
+<td style="text-align: center;">0.0345</td>
+<td style="text-align: center;">0.00393</td>
+<td style="text-align: center;">0.00410</td>
+<td style="text-align: center;">0.00387</td>
+</tr>
+</tbody>
+</table>
+
+As we can see, <code>scipy</code> is quite optimized, and outperforms at lower number of statistical draws. Things only become better for PyPy as the number of draws increases.
+
+### Summary
+
+Some things that I've learned from this exercise:
+
+1. For pure-Python code, PyPy can serve as a drop-in replacement for CPython.
+1. Because of the JIT compiler, PyPy is blazing fast when doing iterations!
+1. <code>numpy</code> is not, right now, easily <code>pip</code>-installable. Because of this, the rest of the Scientific Python stack is also not <code>pip</code>-installable in a PyPy environment. (I will admit to still being a learner here - I wouldn't be able to articulate why <code>numpy</code> doesn't work with PyPy out-of-the-box. Experts chime in please?)
+
+Some things I hope will happen:
+
+1. Let's port the scientific Python stack code to make it PyPy compatible! (Yeah, wishful thinking...)
+1. Alternatively, let's hope the <code>numba</code> project allows JIT compilation when using Python objects instead.
+
+As is the usual case for me, starting a new project idea gave me the impetus to try out a new thing, as I wouldn't have to risk breaking workflows that have worked for existing projects. If you find yourself in the same spot, I would encourage you to try out PyPy, especially for pure-Python code (i.e. no external libraries are used).
+---
+pub_date: 2015-11-28
+---
+twitter_handle: ericmjl

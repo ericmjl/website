@@ -1,0 +1,33 @@
+title: SciPy 2015: Geospatial Data Tutorial
+---
+author: Eric J. Ma
+---
+body:
+
+This morning, I attended the Geospatial Data tutorial. It wasn’t a filled lecture hall, but that was likely because the topic is a bit more specialized. That said, I think it was a tutorial with great content. Part of my own research work may eventually incorporate working with geospatial data - to predict influenza viral reassortment, in particular. Therefore, I was looking forward to learning more about the packages that are used to read and manipulate geospatial data. This tutorial provided the overview I was looking for.
+
+## Tutorial Content
+
+In this tutorial, we were taught how to inspect and manipulate geospatial data in a *Pythonic* fashion.
+
+The first thing we learned was how to inspect geospatial data using the `fiona` package. Most important point I learned was that geospatial data is usually stored as a GeoJSON format.
+
+The second thing we learned was the `shapely` package, which allowed us to draw arbitrary shapes and perform set operations on them. This one went smoothly, and I found the trivial examples provided to actually be quite instructive and informative.
+
+The third thing we learned was `rasterio`, where we learned how to load raster images of geographic regions, and combine them with their geographic metadata.
+
+The final thing that I picked up was `geopandas`. Arguably the easiest portion to follow, I was also pleasantly surprised as to how many common/intuitive operations that I could think of were also represented in the API.
+
+## Tutorial Pace
+
+I hit a snag using the `fiona` and `rasterio` packages, so I eventually settled on following the tutorial on the projector screen instead.
+
+Apart from that, it was the `geopandas` section that was the easiest to follow, as the API was very similar to the `pandas` API.
+
+## Other Thoughts
+
+Overall, I think this tutorial was a great overview of the packages that can be used to read and manipulate geospatial data. I can tell that our tutorial leader, Kelsey, placed quite a bit of effort in preparing the variety of data sets and examples. Perhaps a bit more environment testing prior to the tutorial may have helped us; I was getting tripped up quite a bit on `fiona` and `rasterio` installation. On a separate note, I’ve noticed that most of the installation or usage issues came because of libraries not being found/linked properly. That may be a burden for the package authors to address, rather than the tutorial leaders.
+---
+pub_date: 2015-07-07
+---
+twitter_handle: ericmjl
