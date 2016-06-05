@@ -1,0 +1,39 @@
+title: SciPy 2015: Bokeh & Blaze Tutorial
+---
+author: Eric J. Ma
+---
+body:
+
+I sat in the Bokeh/Blaze tutorial this afternoon. It was a challenging tutorial, but a good one nonetheless. I could tell that our tutorial leader, <a href="http://chdoig.github.io/">Christine</a>, put in quite a bit of effort in preparing the tutorial content, so kudos to her on that! And the rest of the <a href="http://bokeh.pydata.org/en/latest/">bokeh</a> team were on hand to support her, and act as TAs for us, so this was also a plus point for <a href="http://continuum.io/">Continuum Analytics</a>.
+
+## Tutorial Pace
+
+Initially it was challenging for most of the crowd. I had futzed around a bit with `bokeh` before, so the first three exercises were straightforward. But the rest of the package was a bit cryptic, especially for someone like me coming from the `matplotlib` world. I actually wonder if the way the objects are organized mirrors `matplotlib` somehow? For example, in `matplotlib`, we have the `figure` object, the `Axes` objects, and then all of the other objects that the `Axes` object contains as the plot is being drawn. It seemed like the `bokeh` objects are organized in a similar fashion, giving coders quite a bit of flexibility in creating a plot.
+
+Anyways, I digress. The tutorial pace was fast initially, but Christine toned it back a bit. We got quite a bit of opportunity to try our hand at coding nonetheless. I think API familiarity was the biggest issue for us in the crowd; I am guessing that if we were more familiar with the API, then we would be able to more easily figure out the coding patterns that are used, and thus have more success in our own attempts at the tutorial content.
+
+Towards the end of the `bokeh` portion of the tutorial, I found it helpful that Christine pushed her content to Github, so that we could follow along without worrying too much about falling behind on the coding content. I think in the case of plots, I’m of two minds on whether it’s better to modify existing code or to try writing it from scratch - I guess they each have their own pedagogical place. As for the `blaze` portion, because the `blaze` API is so similar to the `pandas` API, I found it very easy to follow along as well.
+
+## Tutorial Content
+
+My biggest takeaways were three-fold.
+
+The first takeaway was how the API exposed allows for a high-level, medium-level and low-level construction of web figures.
+
+The second takeaway was how to do dynamically-updating plots, at least at a basic level. That said, it still isn’t intuitive just yet, maybe the API design has to be a bit more matured for it to be so. That said, I’m stoked to learn more about how to do it!
+
+The final takeaway was how to convert between different data sources. The `blaze` API is pretty cool - I hope they continue to mirror the `pandas` API!
+
+## Other Thoughts
+
+There were a lot of questions raised during the tutorial, particularly on package features. For example, convenience on doing particular operations was a big one. Can it be made easier to do callbacks without the server? Can it be made easier to make different types plots? Can it be made more intuitive to modify a particular part of the figure (i.e. styling)?
+
+I hope the `bokeh` team is listening! On our part in the community, I think it’s important also to keep identifying these issues, and posting them on their Github repository. I will begin to make this a habit myself :).
+
+One thing that I think might help is to have some illustration of what objects are being drawn to the screen, and their attributes that are modifiable. That would really help with getting familiar with the API. I remember struggling massively through the `matplotlib` API, simply because I couldn’t map object name to figure element and vice-versa. I’ve put in a Github issue; for my coming projects, I’m thinking of developing a web-based “live figure” to break the mould of academic publishing. Static figures have their place, but live “dynamic” figures for time-aware studies also have their place too, and those figures’ most important, time-sensitive insights cannot be adequately summarized by a static version - e.g. spread of Ebola as the outbreak progresses.
+
+Overall, I’m really glad I took this tutorial, and I’m looking forward to building my next set of datavizs’ in Bokeh!
+---
+pub_date: 2015-07-06
+---
+twitter_handle: ericmjl

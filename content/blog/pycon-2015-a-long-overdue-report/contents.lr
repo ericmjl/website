@@ -1,0 +1,38 @@
+title: PyCon 2015 - A Long-Overdue Report
+---
+author: Eric J. Ma
+---
+body:
+
+This year, I had the privilege of attending PyCon 2015 as a tutorial instructor again. Unlike last year, which was an eye-opener for me, this year, I decided to take a more educational approach, and set a goal to learn as much new things about programming in Python that I didn't previously know.
+
+### Old/New things I re-/learned
+
+In no order of importance:
+
+1. Inspired by JakeVDP’s talk: Use `numpy` functions whenever possible! And try to cast your data/analysis problems in terms of matrices for massive speedups. Re-implementing one problem that I had tried, I experienced a million-fold speedup using `numpy` compared to pure Python loops. A million fold!
+2. Testing, a practice primarily found in the software development world, is really important for data analytics! I will have a blog post on this coming.
+3. The top data scientists’ workflows sometimes involve weird things like “averaging” multiple models. I think this is simultaneously a blessing and a curse. A blessing because it gets us answers that we need; a curse because it tells us nothing about how the world works. Maybe I’m a bit too much of a scientist. (Update: Booz Allen Hamilton speaker @ today's ODSC said we have to know how the world works, and not just stop at describe what the world looks like. The best comment I've heard to date!)
+4. Network analysis is a trending topic, given the tutorials and talks that I saw. I will update my network analysis tutorial and re-apply for next year as a tutorial instructor. I do wish I could have gone for Sarah Guido’s tutorial.
+5. Continuum Analytics is a company with vision and doing exciting stuff. Props to Travis and his team! I love what they’re doing, building tools for developers and analytics people. I wish them many good years ahead as a company! :)
+6. `bokeh`, built by Continuum Analytics, is pretty awesome.
+
+### Incidents and Infections
+
+I had a norovirus infection, and was suffering the symptoms (diarrhea, fever, and fatigue) on the bus to MTL. The symptoms persisted right up to the point my tutorial was due to start. Miraculously, thank God for that, I was able to hold on throughout the tutorial without needing to go to the bathroom once - and I don’t think I passed it to anybody. I collapsed on a couch outside the lunch area in the afternoon, and was spotted by security… “Monsieur? Monsieur?” I hastily grabbed my badge and uttered, “Oui, oui, Pycon!”, which readily stress-tested the extent of my French language knowledge. At thtat point, I went back to the hotel and collapsed again, for 16 hours.
+
+### Cool People
+
+Again, in no particular order:
+
+1. Travis Oliphant and Peter Wang, Continuum Analytics
+2. Jake van der Plas, eScience Institute @ UW
+3. Stuart Williams and Ruben Orduz, Tutorial Coordinators
+
+### Feelings
+
+I’d do PyCon 2016! Hopefully I will have new things that I can share with the community next year. I’m also hoping to be able to do a network analysis &amp; statistics tutorial at SciPy 2016, wherever that may be held.
+---
+pub_date: 2015-05-29
+---
+twitter_handle: ericmjl

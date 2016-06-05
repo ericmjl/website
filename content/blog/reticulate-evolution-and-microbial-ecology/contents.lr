@@ -1,0 +1,70 @@
+title: Reticulate Evolution and Microbial Ecology
+---
+author: Eric J. Ma
+---
+body:
+
+I am happy to announce that, with my advisor's (Jon Runstadler, MIT) approval, I've uploaded my first 1st-author paper to <a href="http://biorxiv.org/content/early/2015/12/02/033514">BioRXiv</a>. This may sound surprising, to document and write about the paper pre-peer review, rather than after being formally accepted after peer-preview in a journal. This choice is borne out of two desires.
+
+Firstly, I am fed up with having the editorial process decide whether my work can be sent for peer evaluation, based on some perceived notion of broad impact or editorial alignment. This manuscript has gone through four editorial rejections and (hopefully not) counting…  I acknowledge that “4” is a small number, but my patience and tolerance level for bureaucratic delays is very low, and I think the editorial process is a big reason delaying the work from review. After internal review and public presentation in talks and posters, peer review and evaluation is the final step in getting my work evaluated in the public domain. Really, it’s about getting feedback on whether what I’ve worked on constitutes sufficiently rigorous scientific work or not. I’d like to know that earlier rather than later, and I do not believe that editors should be the gatekeepers of this process. Pre-print servers let me release the work to the public domain without tough barriers to break down, which help me achieve this goal.
+
+Secondly, I’m really, like *really*, excited about the results in this paper, regardless of what others think about its impact. It’s hard to contain this PhD candidate’s enthusiasm for his work. I’m particularly proud of the work done here, especially the code written from scratch to answer this question, with everything written and designed to be reproducible. Thus, much like an artist has a natural drive towards showcasing work s/he is proud of, I have this desire to get it out there. I hope you enjoy it.
+
+## Manuscript in Brief
+
+**Title:** Reticulate evolution is favoured in microbial niche switching.
+
+**Question being answered:** Can we measure how important reticulate evolutionary processes that result in gene exchange are in enabling microbes to switch between ecological niches?
+
+**tl;dr answer**: Yes we can, and when switching ecological niches, the ability to exchange genes is more important the greater the difference between the niches.
+
+**Definitions:**
+I think some definitions are required before I proceed.
+
+- *Reticulate evolution*: A non-tree-like evolutionary trajectory. It involves processes like recombination, reassortment, horizontal gene transfer, sexual reproduction etc. In this paper, we detect reassortment amongst influenza A viruses.
+- *Ecological niche*: Ecology is the study of organisms and their interactions with one another and their environment. Organisms occupy certain niches - such as particular habitats, producing and consuming particular combinations of nutrients. In this paper, an ecological niche is defined as a particular host species of the influenza A virus.
+- *Switching*: When a microbe switches ecological niches, it has either entered a new ecological niche - different environment, a new set of host species it interacts with etc. In this paper, we define niche switching as switching between different hosts, as the host is the environment for the influenza A virus.
+
+**Brief Background:**
+
+In the field of ecology, there’s this idea that gene exchange between two microbes can lead to genetic diversity, and lead to fitness advantages in new environments. To the best of my knowledge, this idea has not been tested explicitly (and I am happy to be corrected on this). In our paper, we sought to **test whether, in switching between different host species, gene shuffling between influenza A viruses was more prevalent than clonal transmission**. If so, it would allude to a broader principle that reticulate evolutionary events are important when microbes change ecological niches.
+
+**Why should we care?**
+
+Why should we care about this problem that, seemingly, only microbes have to deal with? Well, we know that microbes and human health intersect, and this is borne out in the scientific literature. Specifically with the influenza virus, every new pandemic virus that has emerged in human populations has been shown to be a reassortant virus. It looks quite clear to me that reticulate evolution intersects with host and microbe ecology, impacting human health.
+
+**How did we answer the scientific question at hand?**
+
+To do this, we used data from the Influenza Research Database, which houses influenza sequence data augmented with collection date and host species metadata. This makes it a really suitable dataset to answer the broader question, “Is reticulate evolution is favoured in ecological niche switches?”. This is because of a few reasons. Firstly, it is a densely-sampled dataset with a global scope, which allows us to detect rare reassortment events. Secondly, we can trace source-sink paths through different host species, by using time and genetic data. Finally, influenza can undergo reassortment, which is its reticulate evolutionary process.
+
+To answer the broader question, we first had to figure out which viruses were reassortant, and where they came from. Our method involves using a phylogenetic heuristic method, which has been previously published, and which we modified to detect reticulate evolutionary events. We basically ask, “What are the sources of segments for each influenza virus?” We try to make sure that all segments for one “sink” virus isolate are traceable back to one older “source” isolate, ensuring that the two isolates are of maximal similarity possible across all 8 segments. That sink virus would be denoted as a clonally transmitted virus, resulting from “**clonal descent**”. However, if a “source pair”, i.e. two viruses donating part of their genome, could improve the summed similarity score, then we denote that sink virus as the reassortant virus, resulting from “**reassortment descent**”.
+
+How do we represent the data? This is done as a directed graph of influenza A virus isolates (nodes), and two types of descent (edges): clonal and reassortment. If there are more than one plausible clonal or reassortment source, then the corresponding edges are weighted accordingly, such that the sum of edges into one node is equal to 1. This encodes our knowledge of one virus being the result of one possible reassortment event, or one clonal transmission event.
+
+**What did we find?**
+
+We show in our supplementary data that our method and representation together well-approximates the phylogenetic relationships calculated by more sophisticated Bayesian methods, and that it captures known patterns of influenza transmission and ‘famous’ reassortant viruses. In some sense, the method we adapted can scale better compared to Bayesian methods, especially when the number of viral taxa are large, and I think it can represent reticulate events better than trees. However, I will state that Bayesian phylogenetic inference is still the gold-standard for representing evolution on a single gene/trait.
+
+We then wanted to assess whether reassortment was over-represented when hosts were identical or different. To calculate this, we looked all edges where the source and sink hosts were identical, and compared them to edges where the source and sink hosts were different. When source and sink hosts were different, the proportion of edges that represented reassortment events were over-represented compared to a null model of host species labels on the viral nodes being permuted. When they were identical, reassortment was under-represented compared to the null.
+
+We then wanted to know whether at different host group interfaces, reassortment was over- or under-represented compared to a null model. We found that once again, reassortment was under-represented compared to the null when the virus jumped between hosts of the same group, and over-represented when jumping between different host groups.
+
+Finally, we wanted to know whether the degree of dissimilarity between two hosts mattered. We used data from the Barcode of Life Database to identify the host’s cytochrome oxidase I genes, and measured percentage dissimilarity as a metric of the degree of host dissimilarity. Here, we found that as hosts become more different, reassortment was more prominently featured during those switches.
+
+**So what does this all mean?**
+
+All-in-all, we find that reticulate evolutionary processes are indeed important in microbe ecology. Scientifically, I think the novelty here lies in quantitatively defining the importance of the ability to shuffle genes when a microbe changes ecological contexts, with the change quantitatively defined as well. From a public health perspective, if I were allowed to put on my “divergent thinking” hat, one direct application of this knowledge would be to quantify the “reticulate potential” of a pathogen - how easily it can acquire and share genes. This may inform which pathogens we would want to perform deeper disease surveillance on.
+
+**Where can I view this paper, code, and data?**
+
+In line with open science principles, we have uploaded all of the code used in the analysis to Zenodo. Their DOIs are referenced in the manuscript.
+
+The paper is available [here](http://biorxiv.org/content/early/2015/12/02/033514) on BioRXiv.
+
+The data are publicly available on the [Influenza Research Database](www.fludb.org).
+
+I hope you enjoy reading it!
+---
+pub_date: 2015-12-03
+---
+twitter_handle: ericmjl

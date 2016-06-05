@@ -1,0 +1,52 @@
+title: Software Engineering Skills for Data Analytics
+---
+author: Eric J. Ma
+---
+body:
+
+When you think about software engineering skills, you probably don't think about the analytics types, or data scientist (DS) teams. This is a reasonable thought. Data scientists aren't in the business of building software, they're in the business of using software to analyze data. That said, I think it's still important for a data scientist (or analytics person, for that matter), to know some basic software engineering skills. Here's the why, followed by the what.
+
+Why should an analytics person who uses code to perform analysis care about good software engineering practices?
+
+1. It will help you write better, reusable analysis code.
+1. It will help you when you come back to your analysis code later on.
+1. It will help you integrate with software teams that you may have to work with.
+1. It will help you share the tools that you end up developing.
+
+What basic skills should one at least be knowledgeable about, if not able to implement?
+
+1. **Defining specifications:** being able to create specific and precise descriptions of what's needed, using standardized language.
+1. **Refactoring:** being able to pull out chunks of code that are repeated, to turn them into function calls.
+1. **Writing unit/data tests:** being able to write tests that ensure the integrity of a function or a block of data.
+1. **Packaging and distribution:** being able to share the code, with other people.
+1. **Version control:** being able to keep track of every meaningful change made to the  code or data.
+1. **Documentation:** being able to explain to someone other than yourself what the software tool or analysis code is all about.
+1. **Continual automated testing &amp; integration:** having a continuous integration system automatically run the necessary software and data tests, and report code testing coverage.
+
+------
+
+Here's where I see them being implemented.
+
+**Building your own tools**
+
+Sometimes, the tools that you need to get your work done aren't already written, or they're scattered about. You'll need to write your own tools to get your job done. The history of some Python packages, like `numpy`, `pandas` or `seaborn` were born out of this necessity. Here, the ability to use good software engineering practices as described above will make a huge difference when trying to orient newcomers to the tool and help new contributors jump in easily. And even if you don't end up sharing the code with others, if you still end up reusing your code, all of the above practices will help with codebase maintenance.
+
+**Developing your analysis pipeline**
+
+Your analysis pipeline is the sequence of steps that are needed to get from raw data to interpretable data to insights. Along the way, you may encounter blocks of code that get copy/pasted elsewhere. Or, you might find yourself writing a series of functions that always take the same inputs - necessitating your own OOP-based tool. Knowing good software engineering practices will help you keep your code clean, readable, and reusable across your analysis pipeline. It'll also help others interpret and verify your data analysis steps. Documentation, in this realm, is particularly important.
+
+Data tests, are something software engineers don't do, but you might wish to. Data tests that run on continuous integration platforms serve as an automatically-enforced contract between you, your data provider, and your data delivery. If anything changes, continuous integration should catch it early on, and not later. An example of a data test is ensuring that the number of columns/rows stays the same, or that a hash of the original data file hasn't changed (i.e. data integrity).
+
+**Integrating with Data Products**
+
+Data scientists in industry don't work in a vacuum: there is usually a software product waiting at the end. Those software products are (hopefully) maintained with good software engineering practices. Getting good at the practice of good software engineering will help lubricate communication and workflows with the software engineers who may be responsible for integrating the new algorithm or analysis pipeline. Even in the academic or government world, where the end product may not be a monolithic system but a series of, perhaps, web dashboards, knowing good software engineering practices will ease the transition from analytics to product.
+
+---------
+
+Of course, any good thing done too much will become a bad thing. Don't over-specify straight from the start, start with something clear enough. Don't over-refactor if it isn't necessary. Don't worry about finding every test case, just test enough so the most common bugs are caught. Or use something like Hypothesis to do property-based testing. (The maintainer threw in the towel recently, citing financial reasons, I think, but as it stands it's already pretty darn good.) Don't package every last tool you develop, only share what's necessary. And over-indulging on documentation can take away from good coding. Write enough for yourself to review your code, and let others help you refine it if it's actually needed. Tracking every little minor change is also probably overdoing it.
+
+Happy coding!
+---
+pub_date: 2015-08-18
+---
+twitter_handle: ericmjl

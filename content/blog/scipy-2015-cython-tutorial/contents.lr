@@ -1,0 +1,31 @@
+title: SciPy 2015: Cython Tutorial
+---
+author: Eric J. Ma
+---
+body:
+
+This morning, I sat in the Cython tutorial by Kurt Smith, of Enthought, at SciPy 2015. We’re only halfway in at the time of starting the writing, but it has been a really useful tutorial!
+
+### Tutorial Content
+
+Kurt has designed this tutorial to be an intermediate tutorial, where participants are expected to have had some experience with Python before.
+
+During this tutorial, we covered two practical ways to speed up Python code. One is to declare Python variables, functions or objects as C types using the `cdef` statement, and the other is to simply wrap existing C code.
+
+### Tutorial Pace
+
+It was a very well-paced tutorial, and Kurt did a great job of structuring the content such that each exercise followed roughly the same pattern. We spent approximately 20-30 minutes on each section, partly because of the really advanced questions (from my point of view) that other participants asked.
+
+### Coding Practice
+
+We got four activities to get used to doing things. Each practice activity was small but not trivial - basically adding the `cdef` declarations or writing the wrapper code, not needing to write complex algorithms.
+
+### Reflections
+
+Already in the first half of the tutorial, I think I have gained two superpowers. The first is that I can speed up my own code without needing to write C, if I need to, simply by adding `cdef` and `cpdef` statements where needed. The second is that I can use pre-existing C code that others have written if I need to. Both ways, I can easily speed up my computation with minimal effort. Having Python under my belt to do scientific computing was already a superpower; now, faster Python is also in the repertoire!
+
+From an education standpoint, I think it is also true that knowing the “howto” steps is really important in learning programming. For the majority of scientists, why certain things work on the computer might not be as important as knowing how to make certain things work - as computational scientists, we’re most interested in getting answers, and preferably getting them fast. The simple and structured examples, helped a lot with this.
+---
+pub_date: 2015-07-06
+---
+twitter_handle: ericmjl
