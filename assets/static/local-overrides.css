@@ -65,3 +65,17 @@ hr.fancy:before {
   border-radius: 20px; 
 }
 
+.carousel-indicators {
+  height: 100%;
+  top: 5px;
+}
+
+.carousel-indicators li {
+  background-color: #8c8b8b;
+}
+
+.carousel-indicators .active {
+  background-color: #169bbd;
+}
+
+/*style="bottom: -50px; margin-bottom: 50px*/
