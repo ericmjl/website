@@ -1,9 +1,36 @@
 {% extends "layout.html" %}
 {% block title %}Projects{% endblock %}
 {% block body %}
-{% for project in this.children %}
-    <h3>{{ project.title }}</h3>
-    <p>{{ project.description }}</p>
-    <p><a href="{{ project.link }}">{{ project.resource }}</a></p>
-{% endfor %}
+<div id="projectsCarousel" class="carousel slide">
+  
+<!-- Carousel indicators -->
+  <ol class="carousel-indicators">
+    {% for project in this.children %}
+      <li data-target="#projectsCarousel" data-slide-to="{{ loop.index - 1}}" {% if loop.index == 1 %} class="active" {% endif %}</li>
+    {% endfor %}
+  </ol>
+
+  <!-- Left/Right navigation for projects -->
+  <a class="left" href="#projectsCarousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+  </a>
+  <a class="right pull-right" href="#projectsCarousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+  </a>
+
+  <div class="carousel-inner" role="listbox">
+    <!-- All of the projects -->
+    {% for project in this.children %}
+      <div class="item {% if loop.index == 1 %}active{% endif %}">
+        <div>
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.description }}</p>
+          <p>
+            <a href="{{ project.link }}">{{ project.resource }}</a>
+          </p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
