@@ -2,7 +2,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <!-- CSS and JS imports -->
 <!-- Import Open Sans font -->
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -16,55 +15,26 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <!-- Leave this at the end: these are local overrides. -->
 <link rel="stylesheet" href="{{ '/static/local-overrides.css'|url }}">
-
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
-
 <div class="container-fluid">
-<nav class="navbar navbar-collapse" id="navbar">
-  <div class="navbar-header container-fluid">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#local-links">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="{{ '/'|url }}">Eric J. Ma</a>
-  </div>
-  <div class="collapse navbar-collapse" id="local-links">
-    <ul class="nav navbar-nav">
-      {% for href, title in [
-        ['/blog', 'Blog'],
-        ['/research', 'Research'],
-        ['/open-source-projects', 'Open Source Projects'],
-        ['/cv', 'CV'],
-      ] %}
-        <li {% if this.is_child_of(href) %} class="active" {% endif %}>
-          <a href="{{ href|url }}">{{ title }}</a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-</nav>
-{% block body %}{% endblock %}
-
-<nav class="navbar navbar-collapse" id="footer-nav">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer_bar">
-        <!-- The next 3 lines are the 3 lines that are in the menu bar -->
+  <nav class="navbar navbar-collapse" id="navbar">
+    <div class="navbar-header container-fluid">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#local-links">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+      <a class="navbar-brand" href="{{ '/'|url }}">Eric J. Ma</a>
     </div>
-    <div class="collapse navbar-collapse" id="footer_bar">
+    <div class="collapse navbar-collapse" id="local-links">
       <ul class="nav navbar-nav">
-<<<<<<< HEAD
         {% for link in bag('nav')['header'] %}
-          <li {% if this.is_child_of(link['href']) %} 
-                class="nav-item active" 
-              {% else %}
-                class="nav-item"
-              {% endif %}>
-            <a class="nav-link" href="{{ link['href']|url }}">{{ link['title'] }}</a>
+          <li {% if this.is_child_of(link['href']) %}
+            class="nav-item active"
+          {% else %}
+            class="nav-item"
+          {% endif %}>
+            <a href="{{ link['href']|url }}">{{ link['title'] }}</a>
           </li>
         {% endfor %}
       </ul>
@@ -77,19 +47,21 @@
   </body>
   <hr>
   <nav class="navbar navbar-collapse" id="footer-nav">
-      <div class="navbar-header">
-        <button class="navbar-toggler hidden-sm-up pull-right" type="button" data-toggle="collapse" data-target="#footer-nav">
-          &#9776;
-        </button>
-      </div>
-      <div class="collapse navbar-toggleable-xs" id="footer_bar">
-        <ul class="nav navbar-nav">
-          {% for link in bag('nav')['footer'] %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+    <div class="navbar-header container-fluid">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#local-links">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="local-links">
+      <ul class="nav navbar-nav">
+        {% for link in bag('nav')['footer'] %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </nav>
 </div>
