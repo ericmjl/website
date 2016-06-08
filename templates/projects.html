@@ -1,20 +1,11 @@
 {% extends "layout.html" %}
 {% block title %}Projects{% endblock %}
 {% block body %}
-  {% for projects in this.children|batch(3) %}
-    <br>
-    <div class="card-deck">
-      {% for project in projects %}
-        <div class="card" style="width: 14.5rem">
-          <div class="card-block">
-            <p class="card-header">{{ project.title }}</p>
-            <p class="card-text">{{ project.description }}</p>
-            <div>
-              <a href="{{ project.link }}">{{ project.resource }}</a>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% endfor %}
+{% for project in this.children %}
+  {# <div class="col-xs-4"> #}
+    <h3>{{ project.title }}</h3>
+    <p>{{ project.description }}</p>
+    <p><a href="{{ project.link }}">{{ project.resource }}</a></p>
+  {# </div> #}
+{% endfor %}
 {% endblock %}
