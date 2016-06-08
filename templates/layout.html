@@ -31,7 +31,7 @@
               {% else %}
                 class="nav-item"
               {% endif %}>
-            <a href="{{ link['href']|url }}">{{ link['title'] }}</a>
+            <a class="nav-link" href="{{ link['href']|url }}">{{ link['title'] }}</a>
           </li>
         {% endfor %}
       </ul>
@@ -45,14 +45,16 @@
   <hr>
   <nav class="navbar navbar-collapse" id="footer-nav">
       <div class="navbar-header">
-        <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#header-nav">
+        <button class="navbar-toggler hidden-sm-up pull-right" type="button" data-toggle="collapse" data-target="#footer-nav">
           &#9776;
         </button>
       </div>
       <div class="collapse navbar-toggleable-xs" id="footer_bar">
         <ul class="nav navbar-nav">
           {% for link in bag('nav')['footer'] %}
-            <li class="nav-item"><a href="{{ link['href'] }}">{{ link['title'] }}</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
+            </li>
           {% endfor %}
         </ul>
       </div>
