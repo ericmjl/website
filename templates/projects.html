@@ -3,7 +3,7 @@
 {% block body %}
 <div id="projectsCarousel" class="carousel slide">
   
-<!-- Carousel indicators -->
+  <!-- Carousel indicators -->
   <ol class="carousel-indicators">
     {% for project in this.children %}
       <li data-target="#projectsCarousel" data-slide-to="{{ loop.index - 1}}" {% if loop.index == 1 %} class="active" {% endif %}</li>
