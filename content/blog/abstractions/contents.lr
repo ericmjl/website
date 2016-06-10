@@ -1,0 +1,15 @@
+title: Abstractions
+---
+author: Eric J. Ma
+---
+body:
+
+Matt Johnson (of HIPS) had an interesting comment on Wednesday. 
+
+LLVM's relationship to machine code is a bit like Deep Learning's relationship to Bayesian models. Deep learning abstracts out details into a reliable black box, unlike Bayesian models in which all details need to be known. Likewise, LLVM abstracts out machine code in a reliable fashion, so that higher level programming languages don't have to think about that stuff.
+
+Interesting.
+---
+pub_date: 2016-06-10
+---
+twitter_handle: ericmjl
