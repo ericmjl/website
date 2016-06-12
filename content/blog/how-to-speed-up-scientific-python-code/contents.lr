@@ -62,7 +62,7 @@ Only for the brave of heart! A simple way to continue writing Python-ish code th
 
 **Upsides:** I’ve done a head-to-head `numpy` vs. Cython version  of what I’m trying to do. 25X speed-up. And again, easily installable by `conda`. (It’s probably clear by now that I’m a Continuum Analytics fanboi.)
 
-**Downside:** Have to learn a new-ish language with some intricacies in order to really get the massive speed-ups. I initially could only write Cython code that didn’t break, but would end up with little speed-up (1-1.5X max). Going faster needed more tweaking.
+**Downside:** Have to learn a new-ish language with some intricacies in order to really get the massive speed-ups. I initially could only write Cython code that didn’t break, but would end up with little speed-up (1-1.5X max). Going faster needed a lot more tweaking, probably lots more practice.
 
 ------
 
