@@ -28,6 +28,7 @@
       <a class="navbar-brand" href="{{ '/'|url }}">Eric J. Ma</a>
     </div>
     <div class="collapse navbar-collapse" id="local-links">
+      <!-- Automatic navigation -->
       <ul class="nav navbar-nav">
         {% set root = site.get('/') %}
         {% for child in root.children %}
