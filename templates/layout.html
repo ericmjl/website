@@ -29,14 +29,11 @@
     </div>
     <div class="collapse navbar-collapse" id="local-links">
       <ul class="nav navbar-nav">
-        {% for link in bag('nav')['header'] %}
-          <li {% if this.is_child_of(link['href']) %}
-            class="nav-item active"
-          {% else %}
-            class="nav-item"
-          {% endif %}>
-            <a href="{{ link['href']|url }}">{{ link['title'] }}</a>
-          </li>
+        {% set root = site.get('/') %}
+        {% for child in root.children %}
+            <li>
+                <a href="{{ child|url }}">{{ child.title }}</a>
+            </li>
         {% endfor %}
       </ul>
     </div>
