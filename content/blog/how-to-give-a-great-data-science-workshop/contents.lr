@@ -1,0 +1,43 @@
+title: How to give a great Data Science Workshop
+---
+author: Eric J. Ma
+---
+body:
+
+I recently was asked by [Dr. Hugo Bowne-Anderson](http://www.hugobowneanderson.com) (a really chill guy, who probably would insist that I drop the "Dr.") to contribute some of my thoughts on what makes a great data science workshop. Having been on both sides as an instructor and a learner, here's some of my thoughts.
+
+**What distinguishes a Data Science Workshop from a Data Science talk or lecture?**
+
+I think the distinguishing mark of a data science workshop is that the instructor will make sure that there is hands-on coding involved. The only exception to this that I have experienced was in [Bang Wong's](http://clearscience.info/wp/) workshop on data visualization, where we did group discussion instead. In both cases, participant involvement is very important. 
+
+**What are the 3 most important qualities for a great Data Science Workshop to have and the 3 most important for it to NOT have? Why (one sentence on each quality)?**
+
+My top 3 important qualities are:
+
+1. **Interactive & hands-on:** in line with the MIT motto [*Mens et Manus*](https://libraries.mit.edu/mithistory/institute/seal-of-the-massachusetts-institute-of-technology/), the best workshops apply theory soon after learning it.
+2. **Targeted:** The best workshops have their difficulty tailored to their audience’s skill level.
+3. **Expandable knowledge:** Ideally, the workshop isn’t the end of learning; the best workshops point students to other resources to further the learning.
+
+It should be evident that the opposites of the above should be avoided, but I’ll put out a few ideas of common good teaching practices that might (paradoxically) be best avoided in a workshop setting:
+
+1. **Repetition:** I think there should be as little conceptual repetition as possible; while it’s good for learning, but I think it’s not suited for a workshop setting, where I think the goal is a “sufficiently deep introductory survey” (an oxymoron of terms).
+2. **Lecturing:** This is admittedly tricky; there has to be enough lecturing, but not too much, and I think the best instructors intersperse them sparingly throughout the workshop.
+3. **Handling questions:** Questions are great during the breaks and after, but I’ve seen that the best instructors, and most cooperative students as well, defer their tougher and more detailed questions till a later time.
+
+**How do you avoid losing your audience in the 1st 5 minutes?**
+
+The most important thing I learned was to keep the energy high. My verbal and body language have to show that I'm excited to share my knowledge, thrilled to meet everybody present, and eager to continue the conversation afterwards. The best instructors that I’ve seen, such as [Allen Downey](http://www.allendowney.com), do this. Following that, I think it’s important to set expectations, to clarify what will and won’t be covered. 
+
+**What tools/software/resources do you use when giving a Workshop? What tools/software do you ask your attendees to use?**
+
+The topic I teach the most has been [network/graph analysis fundamentals](https://github.com/ericmjl/Network-Analysis-Made-Simple), using the [NetworkX](https://networkx.github.io) API to introduce these ideas. For this, I use [Python](https://www.python.org) (and the [scientific Python stack](http://scipy.org), in particular), the [Jupyter notebook](http://jupyter.org), and `git` on [GitHub](https://github.com). I like using the [RISE plugin](https://github.com/damianavila/RISE) for Jupyter, which instantly turns my code and markdown cells into slides that I can advance through. Everybody complains about font sizes being too small; RISE solves that instantly for the notebook, and I can spice up the theme by changing the CSS.
+
+Apart from that, where possible, I try to make use of sticky notes. It’s something I picked up from my [Software](http://software-carpentry.org) & [Data Carpentry](http://www.datacarpentry.org) instructor training. Green stands for "I'm good to go!", while red stands for "I'm in need of some help."
+
+**What would you like to find in a “How to teach a great Data Science Workshop” article?**
+
+I’d like to see real feedback from students about their instructors. Nothing beats having direct feedback from the participants. I’d also like to see a list of questions that instructors should ask themselves (or have a coach-like figure ask them) after each workshop, so that we can train ourselves to focus on the most important aspects of teaching.
+---
+pub_date: 2016-06-14
+---
+twitter_handle: ericmjl
