@@ -1,0 +1,17 @@
+title: New Network Analysis Logo!
+---
+author: Eric J. Ma
+---
+body:
+
+I just finished reworking the examples that I'm using for my [Network Analysis tutorial](https://github.com/ericmjl/Network-Analysis-Made-Simple), and I managed to create a representative logo for it! :)
+
+![new-logo](./custom-logo.png)
+
+Inspired by Giles Hall, who hashed people's names to create uniquely procedurally-generated snowflakes (implying that everybody's a special snowflake, that is) ([talk](https://youtu.be/UwL-ncEr-_I)). In this case, I wrote a function that computes a numerical hash of a person's name, which is then parsed into a string to determine the order in which each of those network diagrams are added on.
+
+More details can be found in [this notebook](https://github.com/ericmjl/Network-Analysis-Made-Simple/blob/master/8.%20One%20More%20Thing....ipynb)!
+---
+pub_date: 2016-06-24
+---
+twitter_handle: ericmjl
