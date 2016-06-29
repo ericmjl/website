@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "macros/project.html" import render_project %}
 {% block title %}{{ this.title }}{% endblock %}
 {% block body %}
   <div id="projectsCarousel" class="carousel slide">
@@ -9,7 +10,7 @@
         <li data-target="#projectsCarousel" data-slide-to="{{ loop.index - 1}}" {% if loop.index == 1 %} class="active" {% endif %}</li>
       {% endfor %}
     </ol>
-
+    
     <!-- Left/Right navigation for projects -->
     <a class="left" href="#projectsCarousel" role="button" data-slide="prev">
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -22,14 +23,7 @@
       <!-- All of the projects -->
       {% for project in this.children %}
         <div class="item {% if loop.index == 1 %}active{% endif %}">
-          <div>
-            <h3>{{ project.title }}</h3>
-            <p><i>{{ project.type }}</i></p>
-            <p>{{ project.description }}</p>
-            <p>
-              <a href="{{ project.link }}">{{ project.resource }}</a>
-            </p>
-          </div>
+        {{ render_project(project) }}
         </div>
       {% endfor %}
     </div>
