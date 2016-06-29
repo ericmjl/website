@@ -1,0 +1,11 @@
+{% macro render_project(project) %}
+  <!-- <div class="blog-post"> -->
+  <div>
+    <h3>{{ project.title }}</h3>
+    <p><i>{{ project.type }}</i></p>
+    <p>{{ project.description }}</p>
+    <p>
+    <a href="{{ project.link }}">{{ project.resource }}</a>
+    </p>
+  </div>
+{% endmacro %}
