@@ -1,0 +1,31 @@
+{% macro render_slideshow(page) %}
+<h3>{{ page.title }}</h3>
+<div id="testimonialsCarousel" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <!--
+  <ol class="carousel-indicators">
+    {% for img in page.attachments.images %}
+        <li data-target="#carousel-example-generic" data-slide-to="{{ loop.index - 1 }}" {% if loop.index == 1 %} class="active" {% endif %}></li>
+    {% endfor %}
+  </ol>
+  -->
+
+  <!-- Left/Right navigation for projects -->
+  <a class="left" href="#testimonialsCarousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+  </a>
+  <a class="right pull-right" href="#testimonialsCarousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+  </a>
+
+  <!-- Slides -->
+  <div class="carousel-inner" role="listbox">
+  {% for img in page.attachments.images %}
+    <div {% if loop.index == 1 %} class="item active" {% else %} class="item" {% endif %} align="center">
+      <img src="{{ img.thumbnail(400, 400)|url }}" alt="">
+    </div>
+  {% endfor %}
+  </div>
+</div>
+
+{% endmacro %}
