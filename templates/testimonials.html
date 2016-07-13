@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% from "macros/slideshow.html" import render_slideshow %}
+{% block title %}{{ this.title }}{% endblock %}
+
+{% block body %}
+  <p>I have led tutorials and workshops, and below are the original tutorial feedback from participants. Sticky notes FTW!</p>
+
+
+  {% for page in this.children %}
+    <h3><a href=" {{ page|url }}">{{ page.title}}</a></h3>
+  {% endfor %}
+{% endblock %}

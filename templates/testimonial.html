@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.title }}{% endblock %}
+{% from "macros/slideshow.html" import render_slideshow %}
+{% block body %}
+  {{ render_slideshow(this) }}
+{% endblock %}
