@@ -1,0 +1,45 @@
+name: lektor
+channels:
+- ericmjl
+- defaults
+- conda-forge
+dependencies:
+- openssl=1.0.2h=1
+- pip=8.1.2=py27_0
+- python=2.7.12=1
+- readline=6.2=2
+- setuptools=23.0.0=py27_0
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- wheel=0.29.0=py27_0
+- zlib=1.2.8=3
+- pip:
+  - argh==0.26.2
+  - babel==2.3.4
+  - cffi==1.7.0
+  - click==6.6
+  - cryptography==1.4
+  - enum34==1.1.6
+  - exifread==2.1.2
+  - flask==0.11.1
+  - idna==2.1
+  - inifile==0.3
+  - ipaddress==1.0.16
+  - itsdangerous==0.24
+  - jinja2==2.8
+  - lektor==2.3
+  - markupsafe==0.23
+  - mistune==0.7.3
+  - ndg-httpsclient==0.4.1
+  - pathtools==0.1.2
+  - pyasn1==0.1.9
+  - pycparser==2.14
+  - pyopenssl==16.0.0
+  - pytz==2016.4
+  - pyyaml==3.11
+  - requests==2.10.0
+  - six==1.10.0
+  - watchdog==0.8.3
+  - werkzeug==0.11.10
+prefix: /Users/ericmjl/anaconda/envs/lektor
+
