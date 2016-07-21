@@ -1,0 +1,32 @@
+title: Jupyter Lab
+---
+author: Eric J. Ma
+---
+body:
+
+[Jupyter Lab](https://github.com/jupyter/jupyterlab) was announced at SciPy 2016! And oh my, this is an exciting development.
+
+It currently is a very alpha-stage project, and so it didn't work on my Mac, but it worked beautifully on my Linux machine. Here's two screenshots.
+
+[![Notebook, IPython console, and an attempt to run Jupyter Lab from the internal IPython console.](./jupyterlab-1-small.png)](./jupyterlab-1.png)
+
+[![With the Qt console open.](./jupyterlab-2-small.png)](./jupyterlab-2.png)
+
+A few interesting things pop out:
+
+1. The Terminal emulator respects my `.bashrc`! (I have custom colouring for the prompt specified there.)
+1. I can actually run `jupyter lab` from inside the Terminal emulator. This is bordering on inception...
+1. The layout in the 2nd screenshot just rocks.
+
+I can foresee how launching into an interface like this may prove to be handy for end users.
+
+1. We have the Qt console handy as a scratch pad. No need to trouble the Jupyter devs to do scratchpad cells anymore!
+1. Because I can have a Terminal emulator *and* a file browser nearby on the same screen, I don't have to go switching windows (read: switching contexts, i.e. bad idea) to find out the path of some file.
+1. Because the developers enabled a command palette (in the style of Sublime Text and Atom), this makes it easier to keep my fingers on the keyboard.
+1. Even amidst all of this, the notebook still lives on.
+
+I think the stuff that's going on with the Jupyter team is really amazing. Kudos to Brian Granger for making open source software central to his tenure package at Cal Poly, and for leading an awesome team on this project.
+---
+pub_date: 2016-07-19
+---
+twitter_handle: ericmjl
