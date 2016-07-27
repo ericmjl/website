@@ -1,0 +1,36 @@
+title: Notetaking and writing using Atom
+---
+author: Eric J. Ma
+---
+body:
+
+I recently have been trying out the [Atom](https://atom.io/) text editor for writing. While its load times are slower than [Sublime Text](https://www.sublimetext.com/), it overall is a solid text editor. Being free doesn't hurt it either, and being open source and hackable means that (theoretically) I can also extend it the way Sublime Text is extendable too. 
+
+Today, I focused on making progress with the Genomic Surveillance whitepaper I'm writing. (Back story - I'm writing this whitepaper to help consolidate ideas and in planning for next career steps.) In particular, I thought of test-driving a system that I cooked up in my head for powering through a section of text.
+
+This system looks as such:
+
+1. I determine what information needs to be conveyed.
+1. I spend a few hours creating a bullet-point summaries of each paper, but only w.r.t. the necessary information that needs to be conveyed.
+1. I spend another few hours crafting the prose version of the text.
+1. I then build the final PDF as necessary.
+
+The key difference in this experiment compared to my previous attempts is that I am now choosing to write a single section in a purposeful fashion, meaning that my reading is also directed towards a purpose and not merely for the sake of broadening my scope of knowledge (that requires a different type of reading strategy, IMO). On reflection, I think this helps me waste less time reading in-depth things that aren't actually going to be helpful. That skill of strategically and selectively identifying relevant literature to read is something we pick up during graduate school.
+
+Anyways, back to the writing process.
+
+I first wrote the bullet points on their own.
+
+[![Bullet-point summary of each paper.](./notetaking-small.png)](./notetaking.png)
+
+A few hours later, once I was done with that, I switched to a two-pane view, and kept the notes on the right and prose on the left. 
+
+[![Writing mode.](./writing-small.png)](./writing.png)
+
+A few hours later, I had a draft version written!
+
+As a side benefit, Atom's interface was quite gorgeous. I'm using the default theme, and the default colour scheme easily highlights citations, headers, bullet points/numbers and bold/italicized text. I also totally dig the gutter highlighting that shows me where things have been changed. This is definitely one of Atom's current strengths over Sublime Text. ST currently allows users or packages to set syntax *and* background colour together, but it's never really been obvious to me how to change font colours based on markdown status. The other benefit is that the file explorer on the left hand side has icons, which really helps navigation.
+---
+pub_date: 2016-07-27
+---
+twitter_handle: ericmjl
