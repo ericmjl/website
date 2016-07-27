@@ -1,0 +1,202 @@
+title: Sparse Matrix Multiplication in Python 3
+---
+author: Eric J. Ma
+---
+body:
+
+Sparse matrix multiplication shows up in many places, and in Python, it's often handy to use a sparse matrix representation for memory purposes.
+
+One thing nice about the newest version of Python 3 is the `@` operator, which takes two matrices and multiplies them. While `numpy` has had the `np.dot(mat1, mat2)` function for a while, I think `mat1 @ mat2` can be a more expressive way of expressing the matrix multiplication operation. One hidden benefit of the `@` operator: it handles `scipy.sparse` matrices pretty well!
+
+Consider the following binary matrix in a dense format:
+
+```
+In [7]: dense = np.random.binomial(n=1, p=0.1, size=(10, 10))
+
+In [8]: dense
+Out[8]:
+array([[0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+       [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 0, 1, 0, 1, 1, 0, 0, 0, 0]])
+```
+We can convert that matrix to a sparse format:
+
+```
+In [9]: sparse = csr_matrix(dense)
+
+In [10]: sparse
+Out[10]:
+<10x10 sparse matrix of type '<class 'numpy.int64'>'
+	with 14 stored elements in Compressed Sparse Row format>
+```
+
+Let's say now that we want to multiply it against a random matrix. Let's first instantiate the random matrix:
+
+```
+In [11]: rand = np.random.random(size=(10, 1))
+
+In [12]: rand
+Out[12]:
+array([[ 0.07692164],
+       [ 0.96495678],
+       [ 0.03917639],
+       [ 0.00568423],
+       [ 0.62973733],
+       [ 0.09481768],
+       [ 0.97617109],
+       [ 0.58497563],
+       [ 0.85287145],
+       [ 0.76737415]])
+```
+
+Cool! So, starting with the `np.dot()` operation...
+
+```
+In [13]: np.dot(dense, rand)
+Out[13]:
+array([[ 1.54993241],
+       [ 0.        ],
+       [ 0.80655054],
+       [ 0.96495678],
+       [ 0.07692164],
+       [ 0.04486062],
+       [ 0.58497563],
+       [ 0.        ],
+       [ 0.07692164],
+       [ 0.84065304]])
+```
+
+Because `np.dot` doesn't natively recognize `scipy.sparse` matrices, when we try to do the matrix multiplication, we get...
+
+```
+In [14]: np.dot(sparse, rand)
+Out[14]: /Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/compressed.py:296: SparseEfficiencyWarning: Comparing sparse matrices using >= and <= is inefficient, using <, >, or !=, instead.
+  "using <, >, or !=, instead.", SparseEfficiencyWarning)
+
+array([[ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>]], dtype=object)
+```
+
+Totally not what we wanted! On the other hand, if we used the `@` operator...
+
+```
+In [15]: sparse @ rand
+Out[15]:
+array([[ 1.54993241],
+       [ 0.        ],
+       [ 0.80655054],
+       [ 0.96495678],
+       [ 0.07692164],
+       [ 0.04486062],
+       [ 0.58497563],
+       [ 0.        ],
+       [ 0.07692164],
+       [ 0.84065304]])
+```
+
+Exactly what we wanted! 
+
+The reverse multiplication, in which we take a `(10x1)` matrix and try to multiply it with a `(10x10)` matrix, should fail:
+
+```
+In [16]: np.dot(rand, dense)
+----------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-17-5abc172f5ef1> in <module>()
+----> 1 np.dot(rand, dense)
+
+ValueError: shapes (10,1) and (10,10) not aligned: 1 (dim 1) != 10 (dim 0)
+```
+
+With the `scipy.sparse` matrix being multiplied in `np.dot`, however, it doesn't work out to the correct answer...
+
+```
+In [17]: np.dot(rand, sparse)
+Out[17]: /Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/compressed.py:296: SparseEfficiencyWarning: Comparing sparse matrices using >= and <= is inefficient, using <, >, or !=, instead.
+  "using <, >, or !=, instead.", SparseEfficiencyWarning)
+
+array([[ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>],
+       [ <10x10 sparse matrix of type '<class 'numpy.float64'>'
+	with 14 stored elements in Compressed Sparse Row format>]], dtype=object)
+```
+
+On the other hand, the `@` matrix multiplier catches the error perfectly!
+
+```
+In [18]: rand @ sparse
+----------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-18-4aa22b6b8f2e> in <module>()
+----> 1 rand @ sparse
+
+/Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/base.py in __rmatmul__(self, other)
+    402             raise ValueError("Scalar operands are not allowed, "
+    403                              "use '*' instead")
+--> 404         return self.__rmul__(other)
+    405
+    406     ####################
+
+/Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/base.py in __rmul__(self, other)
+    386             except AttributeError:
+    387                 tr = np.asarray(other).transpose()
+--> 388             return (self.transpose() * tr).transpose()
+    389
+    390     #####################################
+
+/Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/base.py in __mul__(self, other)
+    353
+    354             if other.shape[0] != self.shape[1]:
+--> 355                 raise ValueError('dimension mismatch')
+    356
+    357             result = self._mul_multivector(np.asarray(other))
+
+ValueError: dimension mismatch
+```
+
+I hope I've provided one more piece of evidence in favour of switching to Python 3!
+---
+pub_date: 2016-07-24
+---
+twitter_handle: ericmjl
