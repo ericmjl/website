@@ -3,14 +3,14 @@
 {% block title %}{{ this.title }}{% endblock %}
 {% block body %}
   <div id="projectsCarousel" class="carousel slide">
-    
+
     <!-- Carousel indicators -->
     <ol class="carousel-indicators">
       {% for project in this.children %}
         <li data-target="#projectsCarousel" data-slide-to="{{ loop.index - 1}}" {% if loop.index == 1 %} class="active" {% endif %}</li>
       {% endfor %}
     </ol>
-    
+
     <!-- Left/Right navigation for projects -->
     <a class="left" href="#projectsCarousel" role="button" data-slide="prev">
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
