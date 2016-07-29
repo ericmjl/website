@@ -1,11 +1,32 @@
 {% macro render_project(project) %}
-  <!-- <div class="blog-post"> -->
   <div>
     <h3>{{ project.title }}</h3>
     <p><i>{{ project.type }}</i></p>
     <p>{{ project.description }}</p>
     <p>
-    <a href="{{ project.link }}">{{ project.resource }}</a>
+      <a href="{{ project.link }}">{{ project.resource }}</a>
     </p>
+  </div>
+{% endmacro %}
+
+
+{% macro render_accordion(project, iter) %}
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="heading{{ iter }}">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ iter }}" aria-expanded="true" aria-controls="collapse{{ iter }}">
+          {{ project.title }}
+        </a>
+      </h4>
+    </div>
+    <div id="collapse{{ iter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ iter }}">
+      <div class="panel-body">
+        <p><i>{{ project.type }}</i></p>
+
+        <p>{{ project.description }}</p>
+
+        <p><b>Resource:</b> <a href="{{ project.link }}">{{ project.resource }}</a></p>
+      </div>
+    </div>
   </div>
 {% endmacro %}
