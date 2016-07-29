@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% from "macros/project.html" import render_accordion %}
+{% block title %}{{ this.title }}{% endblock %}
+{% block body %}
+
+<p>My open source contributions are listed below. Please click on any header to view it.</p>
+
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+    {% for project in this.children %}
+      {{ render_accordion(project, loop.index) }}
+    {% endfor %}
+  </div>
+{% endblock %}
