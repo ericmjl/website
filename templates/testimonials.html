@@ -5,8 +5,25 @@
 {% block body %}
   <p>I have led tutorials and workshops, and below are the original tutorial feedback from participants. Sticky notes FTW!</p>
 
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
 
   {% for page in this.children %}
-    <h3><a href=" {{ page|url }}">{{ page.title}}</a></h3>
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="heading{{ loop.index }}">
+        <h4 class="panel-title">
+          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+            {{ page.title }}
+          </a>
+        </h4>
+      </div>
+      <div id="collapse{{ loop.index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ loop.index }}">
+        <div class="panel-body">
+          {{ render_slideshow(page) }}
+        </div>
+      </div>
+    </div>
+    <!-- <h3><a href=" {{ page|url }}">{{ page.title}}</a></h3> -->
+
   {% endfor %}
+  </div>
 {% endblock %}
