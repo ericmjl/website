@@ -1,0 +1,26 @@
+title: nxviz
+---
+date: 2016-08-15
+---
+description:
+
+I am consolidating my Hive Plot and Circos Plot implementations into a single visualization package. Design goals include:
+
+- A rational naming system (where not already existent) for each plot.
+    - Hive Plots
+    - Circos Plots
+    - Panel Plots (with Horizontal/Vertical orientations)
+    - Arc Plots
+    - ...and more!
+- A declarative API for each type of plot, the user to delcare:
+    - Node positioning
+    - Node size (area, radius)
+    - Node colour
+    - Edge colour
+    - Edge linewidth
+---
+type: Open Source Package
+---
+link: https://github.com/ericmjl/nxviz/
+---
+resource: GitHub Repository
