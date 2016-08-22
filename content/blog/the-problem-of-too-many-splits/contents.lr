@@ -1,0 +1,70 @@
+title: The problem of too many splits?
+---
+author: Eric J. Ma
+---
+body:
+
+I recently followed an interesting Twitter conversation, in which one tweet struck me as surprising:
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/jakevdp">@jakevdp</a> <a href="https://twitter.com/data_hope">@data_hope</a> It&#39;s not too late to use and improve common tools.<br><br>Too many splits: Py2/Py3, pip/conda, CPython/pypy/jython/pyston</p>&mdash; Gael Varoquaux (@GaelVaroquaux) <a href="https://twitter.com/GaelVaroquaux/status/765420719782109184">August 16, 2016</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+(I'd recommend following the full Twitter conversation in order to get a full view of Gael Varoquaux's opinions; don't vilify or exalt a person on the basis of one tweet.)
+
+If I understand Gael's opinion correctly (and I'm open to being corrected here), he must be of the opinion that having a multitude of splits is confusing for the community, new users, and the likes. He must also be of the opinion that tools really should be consolidated such that there is, according to the Zen of Python, "one and preferably only one way of doing things".
+
+If those are his sentiments, I agree with the former, but not necessarily the latter. I'll outline why, but before I go on, let's quickly review what are all the options available to Pythonistas.
+
+*Language + Interpreter*
+
+CPython is the de-facto Python implementation that everybody loves (e.g. the implementation is ported to all major platforms) and hates (the GIL!). But PyPy exists, with its JIT compilation experiment, and then Jython, IronPython, and a multitude of smaller experimental Python implementations. And then there's Cython, which isn't really Python and isn't really C but a mish-mash of the two, to complicate things further! So the base interpreter and language (I've mixed the two here) seem to be suffering from confusing splits. Which do we use?
+
+*Packaging*
+
+Then there's `pip` and `conda`. `pip` installs stuff from PyPI, which is currently an open publishing platform for Python packages, while `conda` installs stuff from Anaconda cloud; conda-forge, which hosts many PyPI packages that are also built into `conda` packages, is currently a curated set, and is currently used more as a package redistributor to the three major platforms.
+
+`pip` only installs Python stuff; `conda` installs any binary, and is language- and platform-agnostic, and is very widely used by the PyData sub-community of Pythonistas. `pip` used to have problems with packages like `scipy` and `numpy`; now it's less of an issue with the Wheel packaging system. 
+
+`conda` admittedly *can* get confusing sometimes; I worked on `bokeh` for a bit at the PyCon 2016 sprints, and `conda` installed `npm`, Javascript's package manager. So I have, right now, a JS package manager inside the `conda` package manager which plays nicely with the Python-only package manager...
+
+Not to mention, if you're on Ubuntu, there's `apt-get` for package installation that is linux-specific, but cross-language. If you're on a Mac, then it's `homebrew` that is the equivalent platform-specific, language-agnostic tool.
+
+*Data Visualization*
+
+Ah, another confusing. There's the venerable `matplotlib`. And then there's `bokeh`, `altair`, `holoviews`, `seaborn`, `plotly`... Oh my! Which do we go with?!
+
+*Web Development*
+
+Let's not get started on this one. Flask and Django; we have a running joke at Boston Python that Flask and Django developers shouldn't sit together at Project Nights!
+
+*Py2/3*
+
+And then, of course, there's Python 2 and Python 3, one split that really created a big split in the community; there are some Python folks who see no need to go to Python 3 unless absolutely forced to (Armin Ronacher, I think, is one), and then there are those who fully advocate for moving on (Jake Vanderplas, for example, and myself). 
+
+So, how do we go forward? Conda + Py3 + CPython? `pip` + Py2 + PyPy? Permit C-extensions?
+
+I won't claim to know what's the best, though I will state my preference for `conda` + Py3 + PyPy (oh, if only it could be this way!). Put more generally, "whatever works, but while also being setup to evolve with a community". As an example, I'm tooled up for working with the PyData crowd (`conda` + Py3 + CPython), and I trust that the general direction of the PyData crowd will more or less be concordant with the broader Python community, so I don't worry so much about incompatibilities with the broader Python community. Moreover, I often use some web development tools for toy projects, and so I end up using `pip` anyways, and `conda` is engineered to play nicely with `pip`, so I'm happy there too.
+
+But why do I disagree with Gael that the state of things *ought* to be consolidated?
+
+I disagree because I see the splits as being indicative of different groups of people trying to actively solve a diverse multitude of problems. In other words, I see this diversification of tools as a suite of hypotheses that are being tested.
+
+Sure, `pip` works well, and is being actively developed, but PyData folks sometimes need to use tools from other languages because none *currently* exist in Python, and so `conda` is testing the hypothesis that Python can be used to make a better cross-language *and* cross-platform package manager. 
+
+Sure, CPython is the most stable and performant interpreter, but PyPy (and other JIT interpreters) are testing the hypothesis that we can make a stable, language-compliant interpreter without all of the type checking overhead of the CPython implementation. In fact, I think I remember hearing (admittedly 2nd hand) the claim that the Python BDFL said that PyPy is probably the way forward.
+
+Python 3, as a language design specification, is the ongoing hypothesis test that there will be new language features that the Python community will love. I'm guessing that some are backwards-incompatible, so that necessitates a new version number and hence a split.
+
+So what I think is this - let the hypotheses be tested! If people like it, the hypothesis is validated. If people don't, it's falsified, and we move on. 
+
+Also, vibrancy in the language and tooling brings this diversification. The pragmatist in me is actually glad that there's this many splits, because it means that people's specific problems are being solved, and that in the long-run, *as long as there's constant community communication*, some of these specific problems may eventually be recognized as common problems that get spread, while others remain as actively maintained niche tools. It's a totally okay situation for the Python community to be in!
+
+Finally, and this is more pedantic... in the Zen of Python, it's "preferably" but not "mandatory".
+
+So how do we solve the "confusion" problem? I think this is less a technical thing, and more a community thing. It's time to start writing guidebooks! "Your guidebook to the Python community." Have some opinionated authors come together and put together a series of roadmaps for getting up-and-running with Python, based on how they've set up their own Python computing environments. Newcomers can rely on these "guidebooks" to get up and running, and over time, they'll pick up what they need to know to get their jobs done. What's more important, in my mind, is that there's constant community communication to ensure that confusion doesn't become a big issue; confusion will always be there, but communication can help mitigate it.
+
+In summary, I'd advocate for pragmatic solutions over ideological stances (used in the good sense); the ideological stance that there should be preferably only one way of doing things is good, because it's an expressed desire for universality and simplicity, which have their inherent goodness as well, but it just may not be pragmatic *right now*. That's totally cool! Let's take the time as a community to figure out if we can get there, and if so, how, and if not, then what we have is already pretty darn good. :-)
+---
+pub_date: 2016-08-16
+---
+twitter_handle: ericmjl
