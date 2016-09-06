@@ -1,0 +1,32 @@
+title: Hack a Gel Imaging Enclosure
+---
+author: Eric J. Ma
+---
+body:
+
+Last week, following a power outage, the expensive gel doc machine & its computer failed. (It's also one floor up.) And so, we decided to just take a photo with our phones - and it turned out just fine.
+
+So, as things turn out, we don't need a $3000 gel imager to get an image of the gels. But if we think carefully about what a gel imager really is, it's a light box on the bottom, a camera on the top, and a box that shrouds the lighting to make imaging easier. If we have a computer that can send the images anywhere, even better. Guess what? All of that can be hacked together for less than $100.
+
+Feeling inspired by Google Cardboard, I took some cardboard boxes, and cut out five 24 cm<sup>2</sup> square pieces out of old cardboard boxes, and taped them together in a "+" configuration. I then taped them together to form a 24 cm<sup>3</sup> illuminator. On the middle square piece, I cut out a small square hole, big enough for an iPhone 6+ camera to peer into. This turns out to be about just the right size for the transilluminator that we have, with the right amount of elevation for the phone to capture the entire illuminator at one shot.
+
+Here's a few images of how it looks.
+
+![Gel box.](./gel-box.jpg)
+
+![Phone on top of gel box.](./phone-box.jpg)
+
+And for those who are curious what the final, cropped gel image looks like:
+
+![Image of gel.](./gel.jpg)
+
+**Bill of Materials:**
+
+1. Smart phone: An old Moto E with 5 megapixels rear camera should suffice. $70.
+1. Cardboard box: Free; price may be higher if actually welded/laser-cut/3D-printed instead.
+
+IORodeo has a commercially-available [gel imaging enclosure](http://archive.iorodeo.com/content/smartphone_enclosure) available for $330, but I'm not quite sure what the value really is apart from having a nice premium finish - and it doesn't even come with the smart phone.
+---
+pub_date: 2016-09-06
+---
+twitter_handle: ericmjl
