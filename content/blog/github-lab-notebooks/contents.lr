@@ -1,0 +1,27 @@
+title: GitHub Lab Notebooks
+---
+author: Eric J. Ma
+---
+body:
+
+A new UROP, Vivian Zhong, has joined the Runstadler lab! She is working with Islam and I on a project that is directly related to the broader problem of genotype-phenotype.
+
+For this project, I decided to try and experiment with GitHub and Markdown files as our lab notebook. Our repository is [here](https://github.com/ericmjl/protein-systematic-characterization). The reasoning is as such:
+
+1. **Open science!** The GitHub repository is a publicly available repository. This was a design choice. We're holding ourselves to the standard that science funded by the public should be accessible to the public. Scooping? A previous advisor of mine told me to never be worried about being scooped, because the space of interesting problems is always larger than what we can see. Plus, we claim priority with the time-stamped changes recorded on GH.
+1. **Full record keeping.** All history of changes committed into the repository are stored. I can recall each and every contribution that Vivian has made, which will make things much easier down the road if and when this gets written up as a paper.
+1. **Collaboration.** Because our lab notebook is digital, everybody involved in the project can contribute to the lab notebook. I can keep track of progress remotely, and answer/raise questions whenever they come up. 
+1. **Review.** A nice feature on GitHub is that I can add line comments, meaning I can specifically pinpoint where I think there may be issues in record keeping or experimental design. The Pull Request model for working really helps here, because as a gatekeeper, I can maintain a specified standard for record keeping.
+1. **Flexibility & Search.** We essentially use the file system as a database, meaning we're not limited by the linear nature of a traditional lab notebook. This means we can organize the notebook more logically, and search for whatever we need inside the repository.
+
+What are some of the downsides that I'm anticipating?
+
+1. As with all digital lab notebooks, there's a gap between doing the experiment and recording it. Nothing really beats pen & paper for this.
+1. Git allows for changing of history (e.g. squashing commits, editing messages). This isn't the *most* ideal, but at least it's not possible to change the content of changes.
+1. It's a good thing we're not working with patient data. I'm quite sure HIPAA rules would prevent us from operating a publicly available lab notebook.
+
+We'll report back on how it goes at the end of the academic year!
+---
+pub_date: 2016-09-06
+---
+twitter_handle: ericmjl
