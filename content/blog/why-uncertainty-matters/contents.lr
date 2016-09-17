@@ -1,0 +1,19 @@
+title: Why Uncertainty Matters
+---
+author: Eric J. Ma
+---
+body:
+
+Uncertainty is part and parcel of the process of doing science; in effect it's a [currency of science](http://www.senseaboutscience.org/data/files/resources/127/SAS012_MSU_ONLINE.pdf). What scientists do is essentially quantitatively measure or qualitatively describe some property of the natural, physical world. Because of the limitations of our instrumentation, uncertainty in our measurements will crop up. 
+
+Quantified uncertainty is especially important, because we can use it to identify which parts of the world we need to measure more, if the data are not useful enough for something practical. For example, does the uncertainty surrounding a predicted drug resistance value encompass a clinically-relevant cutoff (the cut-off problem)? If it does, perhaps we need to measure again to gain more precision in our estimated drug resistance value.
+
+Machine learning models are becoming important in science, but uncertainty isn't explicitly incorporated in most of the off-the-shelf tools that are available (e.g. `scikit-learn`). This is a limitation of the current state-of-the-art tools, but is by no means a reason not to use them. That said, without uncertainty being modelled and propagated from measurement to data to prediction, we run into the "cut-off" problem with predicted values - what if a prediction had a large uncertainty around it, and encompassed an actionable cut-off value? And what if the action taken were incorrect on the basis of the false certainty surrounding a prediction?
+
+If we don't take the "black-box" ML approach, and instead decide to compose our own models that try to explain the world, the model prediction ± uncertainty may not overlap with our measurement ± uncertainty. This tells us that our model has missing parts that cannot explain the data fully, and the model needs to be extended.
+
+And so I think uncertainty matters. It matters because it tells us where we need more data. It matters because uncertainty can help inform whether or not we can be confident in taking action given the data. It matters because it can help tell us whether our models of the world are good enough at explaining the data collected. For these reasons, and many more, I think uncertainty really matters.
+---
+pub_date: 2016-09-16
+---
+twitter_handle: ericmjl
