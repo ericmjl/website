@@ -6,9 +6,9 @@ body:
 
 Recently found a very good article on the ArXiv about Bayesian estimation for difference in sample means. Loved the fact that someone's done the work so that I don't have to!
 
-The paper essentially explores how a Bayesian estimation (BEST) is essentially much, much better than traditional Null Hypothesis Significance Testing (NHST), and the author provides a good number of convincing arguments for this. The author basically covers the most commonly-used case in the experimental sciences - inter-comparison between an experimental and control group. I'd recommend reading it; here's a link to the paper: http://www.indiana.edu/~kruschke/articles/Kruschke2013JEPG.pdf
+The paper essentially explores how a Bayesian estimation (BEST) is essentially much, much better than traditional Null Hypothesis Significance Testing (NHST), and the author provides a good number of convincing arguments for this. The author basically covers the most commonly-used case in the experimental sciences - inter-comparison between an experimental and control group. I'd recommend reading the paper ([link](http://www.indiana.edu/~kruschke/articles/Kruschke2013JEPG.pdf)).
 
-While skimming through it, I then found a PyMC3 recipe, as usual, provided by the awesome [Thomas Wiecki](http://twiecki.github.io/) and Chris Fonnesbeck (http://stronginference.com/). https://pymc-devs.github.io/pymc3/notebooks/BEST.html
+While skimming through it, I then found a [PyMC3 recipe](https://pymc-devs.github.io/pymc3/notebooks/BEST.html), as usual, provided by the awesome [Thomas Wiecki](http://twiecki.github.io/) and [Chris Fonnesbeck](http://stronginference.com/). 
 
 It makes me wonder... given how Bayesian inference is much more natural than Frequentist inference, why isn't this used more often?
 ---
