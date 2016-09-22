@@ -1,0 +1,23 @@
+title: Paper Review
+---
+author: Eric J. Ma
+---
+body:
+
+I recently reviewed a paper for PLOS Computational Biology. This was my first ever scientific paper review, and so I did my best to be constructive and helpful to the authors, just as other reviewers were for my first lead author publication. I had seen stinging reviews of my colleague's work, those that made it look like the reviewer had an agenda and didn't bother reading the paper properly. Hence, I was determined to have this review not just objectively, but also constructively.
+
+I also signed off on the review, having been convinced of the need for a more transparent review system. I'm not sure how much my single contribution will make, but I think it's still the right thing to do.
+
+Because of confidentiality reasons, I can't discuss what the specific topic of the paper was, who the authors were, and what affiliation they had. However, I think I am allowed to describe (in broad general terms) some of the more prominent episodes of thought that went through my mind as I did the review. (If the editor contacts me at a later time and says this post isn't allowed either, I'll be the first to take it private into my own reflections...)
+
+Essentially the manuscript was about a new algorithm as applied to biology. As I was writing the review, I was constantly reminded of some mistakes I had made early on in my PhD training w.r.t. computational work. The first was the need for simulation data, which was not provided. Another one was to avoid claims of computational efficiency unless I had conducted a formal analysis of my algorithm's order of complexity. The authors had made both of these mistakes, and I hope that my review pointed it out in a way that didn't "sting" (I've seen those, they hurt, my colleagues have been victims of those reviews before.)
+
+One of PLOS Computational Biology's requirements for their journal article is that a new software method yields insight into some biological problem. My evaluation of the paper was that it wasn't clear what the biological problem was, and I thought it might help the authors by suggesting a few questions that I thought could be answered by their algorithm. As it turns out, the 2nd reviewer also concurred.
+
+The 2nd reviewer had a sharper eye for statistical issues than I did. Looking back, I was clearly more focused on the algorithm and its utility; I had swept aside statistical issues, partly because of a lack of confidence. Thankfully the 2nd reviewer addressed the question of whether there was statistical evidence for confidence in the conclusions. Just from reading the reviewer's comments, I think I've learned more about how to approach the stats question.
+
+I was sad, though, that the editors ultimately decided on a rejection; I had only requested for a major revision, and had tried my best to specify what would be necessary and what would be "good-to-have". The authors' topic is close to my heart, and I genuinely enjoyed seeing that there's a competing algorithm that worked faster than my own. Looking through Reviewer 2's comments, it must be the case that Reviewer 2 (who remained anonymous) recommended a rejection. I hope the authors find a good place to put their paper; the rejection always will sting, but I hope that at least I was able to help them make their work better.
+---
+pub_date: 2016-09-22
+---
+twitter_handle: ericmjl
