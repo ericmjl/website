@@ -1,0 +1,23 @@
+title: Boxplot or Violin Plot?
+---
+author: Eric J. Ma
+---
+body:
+
+The same data, different visualizations.
+
+Here's the box plot version:
+
+![Data plotted using Seaborn's box plot.](./accuracy-boxplot.png)
+
+And here's the violin plot version.
+
+![Data plotted using Seaborn's violin plot.](./accuracy-violinplot.png)
+
+Which is more appropriate, and why?
+
+I think the Box Plot is more suited for clearly delineating ranges: (min, max), (IQR), and medians, whereas the Violin Plot is more suited for visualizing the distribution of data, including the possibility of bi-/multi-modality.
+---
+pub_date: 2016-09-27
+---
+twitter_handle: ericmjl
