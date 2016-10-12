@@ -1,0 +1,21 @@
+title: GitHub Lab Notebooks: Update
+---
+author: Eric J. Ma
+---
+body:
+
+It's been about 2 months since starting up with the [GitHub lab notebooks](https://github.com/ericmjl/protein-systematic-characterization) for a project that I'm coordinating. Here's some thoughts on it.
+
+Firstly, version control systems are really powerful as a backup system! Already more than once I've been able to [salvage work](https://github.com/ericmjl/protein-systematic-characterization/pull/33) that was accidentally over-written.
+
+Secondly, GitHub offers some pretty neat settings that ensure the integrity of a lab notebook and provide for peer review of lab experimental reports. I have my GitHub repo's master branch on lockdown, meaning all new changes to it have to be pulled in from other forks, and the submitter cannot be the reviewer that approves it. With my UROP student now added as a collaborator on the repository, basically we have to approve each other's work before being allowed to merge into master, and can add requests for minor additions that will make the lab experimental report easier to follow. It's akin to signing off on a lab notebook, basically, meaning that the person responsible for the experiment and the person responsible for checking the experiment are both provisioned and tracked.
+
+Thirdly, we've already used the fact that the lab notebook is completely public and online, and therefore completely available 24/7, to [check for mistakes](https://github.com/ericmjl/protein-systematic-characterization/pull/30) made in previous reports or as-of-yet non-replicable results. Mistakes will always be made, and some results will turn out to be non-replicable, so it's okay to make them once or twice (but not repeatedly, of course); the more important part is that it's publicly recorded, and discussed either in the merging portion or as an issue. 
+
+Because everything is digitally recorded, and everything is also distributed, in the event that, say, GitHub goes down, there's at least multiple backups on local computers and local computer backups to restore snapshots of the work. (We will lose all of the commenting history, of course, if GH goes down.)
+
+Because our lab reports use Markdown files with descriptive file names, it's actually possible to write scripts that automatically produce indexes of all experiments conducted for easier browsing. I'm looking forward to seeing what else can be built on top of the file system with version control.
+---
+pub_date: 2016-10-12
+---
+twitter_handle: ericmjl

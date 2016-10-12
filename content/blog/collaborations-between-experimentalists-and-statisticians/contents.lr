@@ -1,0 +1,25 @@
+title:
+
+Collaborations Between Experimentalists and Statisticians 
+---
+author: Eric J. Ma
+---
+body:
+
+I just saw an awesome pair of blog posts by [Roger Peng](http://simplystatistics.org/2013/10/09/the-care-and-feeding-of-your-scientist-collaborator/) and [Elizabeth Matsui](http://simplystatistics.org/2013/10/08/the-care-and-feeding-of-the-biostatistician/), detailing how scientists and statisticians can work together more effectively. Highly recommended read! In the duration of my PhD, I've been one of two resident statisticians for our research group (it's a relative expertise thing - I know enough to be dangerous), and so the article really resonated with me. Here's my summary.
+
+Firstly, both ought to take the time to learn each others' core concepts and methods. For the experimentalist, learn some basics about distributions of a random variable and what 'inference' really means beyond p=0.05 (FYI, p<0.05 ≠ inference). For the statistician, take the time to learn some of the basic (bio)chemistry, the experimental setup, and how difficult it is to collect data.
+
+Secondly, have some patience! Both sides will need some time to learn the ins-and-outs of the data collection, analysis, inference reasoning process and the likes. 
+
+Thirdly, involve the statistician earlier on in a collaboration, not towards the end. The statistician can help make sense of the scientific question in terms of the data collected, and thus can help with the experimental design. 
+
+Fourthly, and this point really matters for PIs, give the statistician sufficient support, particularly on the grants. 1% effort doesn't cut it. Even 5% is on the low side of reasonable. Something more like 10-20% effort makes more sense.
+
+Finally, a statistician's primary goal should be to advance the science through the proper deployment of statistics. A scientist's primary goal is to help identify the most important problems of a (sub-(sub-))field to solve. Together as collaborators, they can find the right experimental design towards this pair of goals.
+
+I'll add in a pointer of my own here - as a statistician, it really shouldn't be about helping your scientist collaborator find "what's significant", which (ahem) often means p<0.05. My view of inference has, over the past year, turned Bayesian, and I'm now increasingly confident in the notion that Bayesian-style reasoning is not only the most natural way to reason through the data, it's actually the right way to do inference on scientific data. Given priors, some perhaps uninformative, about the state of nature, our goal in science is to compute the probability distribution over some parameters of nature.
+---
+pub_date: 2016-10-11
+---
+twitter_handle: ericmjl
