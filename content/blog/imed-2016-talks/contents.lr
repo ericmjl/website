@@ -1,0 +1,56 @@
+title: IMED 2016 - Talks
+---
+author: Eric J. Ma
+---
+body:
+
+Today (Day 1) was the day that talks and posters really started. Hackathon participants missed the first day, in which there was a plenary session of "high-level speakers". A bit of a pity to miss it, but that's okay - the hackathon was more fun.
+
+After delivering the Animal Village hackathon pitch once more in the morning with my teammate Emily Iacobucci, I hung around to learn more about what people in the Emerging Infectious Diseases & Surveillance community are thinking about. I was most interested in what set of tools were being developed, and what problems they solved. Below are my summarized notes.
+
+**Talks**
+
+For the talks, I focused mostly on the experimental and data collection tools being developed. Also attended one talk on forecasting new emerging diseases - this is like the holy grail of infectious diseases - can we predict where new outbreaks are going to happen? Also in development are genetic tools to manipulate *any* virus. Key tools I took note of included:
+
+- Number of different viral hosts is a great predictor of spillover into humans. | [paper][sci-rep]
+- Genetic systems for [pseudotyping][pstype]. | [paper (paywall)][pstype-paper]
+- Syndromic and/or search surveillance software and participatory community surveillance by patients/lay people ([PODD][podd]/[Flu Near You][fny]) and physicians ([UpToDate][utd])
+
+[sci-rep]: http://www.nature.com/articles/srep14830
+[pstype]: https://en.wikipedia.org/wiki/Pseudotyping
+[pstype-paper]: https://www.ncbi.nlm.nih.gov/pubmed/25936665
+[fny]: https://flunearyou.org/
+[podd]: http://www.skollglobalthreats.org/tag/podd/
+[utd]: http://www.uptodate.com/home
+
+**Posters**
+
+For the posters, I mainly caught three posters that dealt with data and modelling; most of the other posters were about some specific outbreak in some specific animal or some specific region. These are all good and such; it's just that my nature inclines me towards generalizable topics:
+
+- Validation of NA-Fluor assay for clinical use: most interested because of genotype-phenotype problem I'm tackling.
+- Data sharing by the [International Diseases Data Observatory][iddo]: an interesting one where I learned that data governance has to be done right to get people to share data.
+- Modelling of disease spread using airplane travel data, by [EcoHealth Alliance][eca]
+
+[iddo]: https://www.iddo.org/
+[eca]: http://www.ecohealthalliance.org/
+
+------
+
+**Update from Day 2**
+
+The talks that I picked to hear today were centred mostly on data and antimicrobial resistance (AMR). Highlights include the following:
+
+1. European CDC has a network of AMR surveillance efforts that are going on. I think a lot of it has to be organically grown in individual nations, and can't be forced upon.
+1. Data sharing ethics: Representatives from the Wellcome Trust, WHO, and European CDC gave an overview of the principles behind best open data sharing practices, issues and challenges currently faced, and ethics.
+1. Principles for data sharing:
+    1. Using data to help communities be prepared for an outbreak.
+    1. Speed but not at the cost of issues of "justice" (e.g. not inadvertently marginalizing groups in interest of speed)
+    1. Identifying appropriate level of risk that society can bear.
+    1. Building relationships and confidence.
+    1. Moving focus away from ownership of data to providing a fair and just system for data recognition.
+
+Apart from this, I sat in on Eddy Rubin's talk on the global virome (more like "stood in", it was standing room only). I am convinced that taking a "sequencing everything" approach is likely going to be the key for predictive surveillance. The next step is whether we'll be able to interpret risk from the genome or not, but that'll be the focus of my next post.
+---
+pub_date: 2016-11-05
+---
+twitter_handle: ericmjl
