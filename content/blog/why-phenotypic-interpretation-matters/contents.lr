@@ -1,0 +1,55 @@
+title: Why Phenotypic Interpretation Matters
+---
+author: Eric J. Ma
+---
+body:
+
+At IMED 2016, I heard a lot of talks surrounding surveillance efforts. Most of it has been syndromic surveillance, because that's what's currently collectable. For digital disease surveillance, search queries (a marker of "interest" in a disease) are used as a proxy for probable presence of a disease.
+
+These are good for real-time surveillance, but I think it's not good enough from the standpoint of accuracy and understanding mechanism.
+
+For accuracy, syndromic surveillance and search queries are n<sup>th</sup>-degree manifestations of underlying causes. Multiple different pathogens can present the same symptoms. Upticks in searches for a given symptom or pathogen may have multiple underlying causes, though "hearing of the disease" and "being concerned about it" may be related to certain diagnoses and local spread of information. 
+
+Found data can help act as a very early sentinel to a problem, and can guide us by providing leads to follow-up, but for understanding mechanism, neither tell us how a new virus is going to be dangerous. 
+
+In other words, while fast and rapid and local, syndromic surveillance and digital disease surveillance remains a reactive endeavour, because we can't mechanistically forecast risk from the data. 
+
+On the other hand, genomic data is often collected with the intention of understanding pathogen dynamics, as we have well-developed phylogenetic tools for this. However, we still rely on single point mutations, identified in small-scale, one-off, ad-hoc, [insert-some-dashed-phrase-that-expresses-frustration] studies, and basically treat the limited amount of evidence as gospel. I am quite sure that is not the right way to do phenotypic interpretation of genomic data.
+
+If we're going to make disease surveillance a **proactive** endeavour, I am convinced that the disease surveillance world will need a paradigm shift, and investment in infrastructure. By predictive, this is what I mean:
+
+1. Calculating what has a high probability of jumping into humans.
+1. Phenotypically testing those viruses without using live viruses (concept of pseudotyping).
+1. Using genomic information to predict phenotype.
+
+Here's how I see it happening, given everything I've learned at IMED 2016:
+
+**(1) Sequence everything, in animals that interface with humans**
+
+60-70% of new infections are going to be zoonotic in nature. To know what might be coming up, use metagenomics to sequence animal species in geographic areas that humans, *prior* to the host switch event. To me, this is a no-brainer. Long-term serial sampling is going to be key.
+
+**(2) Leverage pseudotyping technologies and genetic systems, and automation, to create systematic phenotyping platforms**
+
+Doing so will allow us to phenotypically test components of a virus for a particular step in its life cycle, such as speed of entry into a cell, or resistance to a drug. With rapid DNA synthesis & assembly technologies, we should be able to experimentally measure a virus' epidemiologically-relevant phenotype within 24 hours of an outbreak. We should also be able to rapidly generate large-scale genotype-phenotype data for machine learning.
+
+What would be relevant phenotypes? I can think of a few, broken down basically to "druggability" and "life cycle steps":
+
+1. For druggable proteins, measure drug resistance. It has high epidemiological relevance, and hence, value.
+1. For viruses targetable by drugs and not alike, measure cellular entry capability.
+1. For identified polymerase complexes, measure replication capacity.
+1. For cellular release machinery, if identified, measure release.
+1. If there's others already existing for which the case can be made for systematic phenotyping, scale the assay up.
+
+**(3) Develop machine learning tools that allow for learning of structural properties that determine epi-relevant protein phenotype**
+
+By doing so, we can explicitly model epistasis in a protein, and therefore account for epistatic interactions explicitly when developing learning algorithms that map genotype to phenotype. With this kind of technology coupled to the ability to sequence a virus within hours of sample collection, we'll be able to cut down the time for phenotypic interpretation from the order of a day (because of experimentation required) to seconds (because it's a computational prediction). By going Bayesian, we can even model uncertainty in final predictions, thereby aiding decision-making under uncertainty.
+
+----
+
+In conjunction with the "sequence everything" approach, systematic phenotyping and deep learning will allow us to move to a "predictive" paradigm because it'll give us the ability to rationally predict the phenotypic risk of a virus before it even jumps into humans. I see this as an infrastructural project: requiring up-front commitment of time and money. Yet, we know that investments in infrastructure always pay off dividends in a myriad of ways, from time saved to lives saved. 
+
+Something I learned from IMED 2016, however, is that epidemiology is an old discipline, and with old disciplines comes a certain tunnel vision on how things should be done. It'll be up to a new and creative generation (i.e. us) to convince the funders and old guard that our new way will add value to the discipline.
+---
+pub_date: 2016-11-06
+---
+twitter_handle: ericmjl
