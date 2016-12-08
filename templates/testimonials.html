@@ -9,13 +9,13 @@
 
   {% for page in this.children %}
     <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="heading{{ loop.index }}">
-        <h4 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+      <a class="accordion-toggle collapsed"role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+        <div class="panel-heading" role="tab" id="heading{{ loop.index }}">
+          <h4 class="panel-title">
             {{ page.title }}
-          </a>
-        </h4>
-      </div>
+          </h4>
+        </div>
+      </a>
       <div id="collapse{{ loop.index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ loop.index }}">
         <div class="panel-body">
           {{ render_slideshow(page) }}
