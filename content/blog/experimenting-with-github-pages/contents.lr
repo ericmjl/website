@@ -1,0 +1,35 @@
+title: Experimenting with GitHub Pages
+---
+author: Eric J. Ma
+---
+body:
+
+I've been playing a ton with GitHub pages recently, and so far, I've been impressed! My main use case has been in creating places where I can host Reveal.js slides online, and showcasing some writing that I've put together that doesn't fit in my "blog" format. My [GitHub page][ghpage] showcases some of the best.
+
+[ghpage]: https://ericmjl.github.io/
+
+Along the way, I've learned a ton. Here's some of the highlights.
+
+Firstly, I learned about standardizing project templates using [`cookiecutter`][cookiecutter], a Python package available on conda-forge and the cheese shop (PyPI). Initially, I tried hacking my own cookiecutter-ish hodge-podge of scripts, particularly for downloading the necessary components for [Reveal.js][reveal], but that didn't really work out, and I was eventually confused by my own logic. `cookiecutter` eliminated all of the confusion, and was really easy to operate.
+
+[reveal]: https://github.com/hakimel/reveal.js/
+[cookiecutter]: https://github.com/audreyr/cookiecutter
+
+Secondly, because I was able to nail down a template for building Reveal.js slides, I managed to convert two of my previous talks (a [Journal Club][jc] on the Earth's virome, and the other my [Big Data Boston meetup talk][bdbos], which were written in Markdown and converted to PDF, into Reveal.js versions. I dug a bit into the SASS toolchain, and found that Reveal.js used SCSS files that were then compiled to CSS, and made a few minor tweaks that standardized the font sizing to something more in-line with my tastes. I also used the GitHub pages to host an "HTML notes" copy of the slides that the audience can use to follow along.
+
+[jc]: https://ericmjl.github.io/uncovering-earths-virome/
+[bdbos]: https://ericmjl.github.io/big-data-boston-2016/
+
+Thirdly, in the process of building the HTML notes, I created a CSS style that I ended up liking quite a lot, and it formed the basis of all of the pages that I ended up creating. The learning journey picking up the CSS specification was quite enjoyable, as things showed an immediate, one-to-one mapping between code and placement on the HTML canvas. This type of 'immediate', closed-loop feedback is important for learning stuff. When I had to go offline, thankfully there was [DevDocs][devdocs] where I could look up all of the styling options available to different types of HTML.
+
+[devdocs]: http://devdocs.io/
+
+All in all, quite a fun experience! I have also put up my cookiecutter templates for [talks] and [writing] on GitHub, alongside a tutorial for the [slides][slides-tutorial], with the hope that it's useful for others!
+
+[talks]: https://github.com/ericmjl/cookiecutter-talk
+[writing]: https://github.com/ericmjl/cookiecutter-writing
+[slides-tutorial]: https://ericmjl.github.io/easy-talk-slides-and-notes/
+---
+pub_date: 2016-12-15
+---
+twitter_handle: ericmjl
