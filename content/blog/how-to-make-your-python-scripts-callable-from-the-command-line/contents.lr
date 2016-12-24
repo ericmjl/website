@@ -1,0 +1,83 @@
+title: How to make your Python scripts callable from the command-line
+---
+author: Eric J. Ma
+---
+body:
+
+So you've written this awesome Python module/script that does awesome stuff, but now you want to call it from the command line. I'm going to show you how to make this happen.
+
+First off, create your Python script. Below, borrowing from the [Click][click] package documentation, I'm going to show a script that is just slightly more complex than a simple "hello world".
+
+[click]: http://click.pocoo.org/5/
+
+```python
+# helloworld.py
+import click
+
+@click.command()
+@click.option('--count', default=1, help='Number of greetings.')
+@click.option('--name', prompt='Your name',
+              help='The person to greet.')
+def hello(count, name):
+    """Simple program that greets NAME for a total of COUNT times."""
+    for x in range(count):
+        click.echo('Hello %s!' % name)
+
+if __name__ == '__main__':
+    hello()
+```
+
+Let's say this script is saved as `helloworld.py` in your project directory:
+
+```
++-- my_project/
+    +-- helloworld.py
+    +-- LICENSE
+    +-- README.md
+    +-- setup.py
+```
+
+What you'd want to put in your `setup.py` script is the following:
+
+```python
+from setuptools import setup
+
+
+def readfile(filename):
+    with open(filename, 'r+') as f:
+        return f.read()
+
+
+setup(
+    name="helloworld",
+    version="2016.12.24",
+    description="",
+    long_description=readfile('README.md'),
+    author="Eric J. Ma",
+    author_email="ericmajinglong@gmail.com",
+    url="",
+    py_modules=['helloworld'],
+    license=readfile('LICENSE'),
+    entry_points={
+        'console_scripts': [
+            'aloha = helloworld:hello'
+        ]
+    },
+)
+```
+
+The key magic point here is `entry_points`. What this portion is effectively saying is, "attach the 'hello' function under the `helloworld` script to the console command `aloha`. (I'm being playful here for clarity; it may make much more sense to name your console command the same name as the Python module you're distributing.)
+
+Now, if you open a new terminal session, you can run `helloworld.py` using the `aloha` command, and use all of the command-line arguments that Click provides:
+
+```bash
+$ aloha --count 3
+Your name: Eric
+Hello Eric!
+Hello Eric!
+Hello Eric!
+```
+---
+pub_date: 2016-12-24
+---
+twitter_handle: ericmjl
