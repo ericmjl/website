@@ -1,0 +1,398 @@
+title: My Flask app-building sprint
+---
+author: Eric J. Ma
+---
+body:
+
+# Overview
+
+This winter, I decided to embark on a coding project purely for fun. In preparation to build my own Raspberry Pi photo display, I wanted to build an easily-installable, portable (across operating systems) and completely hackable stand-alone image displayer. This project ended up being an awesome way to get myself familiarized with a wide variety of concepts in web development, software packaging, and software distribution. I learned a ton, and I want to share the process behind it.
+
+The design goals were as follows:
+
+1. It does one and only one thing well: run the app from any directory, and show the photos in that directory in a random order.
+1. It has to be easily distributable. I chose to use `pip` as my distribution mechanism, partly because of familiarity, partly be cause it is sufficiently ubiquitous (with Python).
+1. It should be completely hackable. My source code is up on [GitHub][imgdisplay]. Anybody can fork it, hack it, and redistribute it. Go for it - it's BSD-3 licensed!
+
+[imgdisplay]: https://github.com/ericmjl/imgdisplay
+
+The philosophical goals were pretty simple. Learn how to do the whole stack from scratch, and be free from commercial, closed-source software constraints by being free to build exactly what I need from reusable components.
+
+# Writing the App Logic
+
+My choice of tools were as follows:
+
+- `Python` 3.5
+- `Flask`: great framework for web development in Python. Provides glue between Python and HTML.
+- `pywebview`: provides native GUI wrappers for each platform.
+- `click`: awesome framework for command-line options.
+
+My thought process here was as such: write the user-facing interface using HTML, and write application logic in Python, and we get automatic cross-platform portability. Run the app from the command-line, which is the lowest-common denominator for running applications.
+
+I structured my app as follows:
+
+```
++ imgdisplay/
+    + imgdisplay/
+        + __init__.py
+        + imgdisplay.py  # this is where the main application logic is found.
+        + static/
+            + styling.css
+        + templates/
+            + img.html
+    + .gitignore
+    + LICENSE
+    + MANIFEST.in
+    + README.md
+    + requirements.txt
+    + setup.py
+```
+
+By most standards, this (at least in the eyes of pros) is probably a very, very simple Flask app.
+
+The app logic was the first part that I tackled. Let's start with the file `imgdisplay.py`.
+
+```python
+from flask import Flask, render_template, send_from_directory
+from random import choice
+
+import webview
+import click
+import os
+import threading
+import sys
+
+# Section (A)
+tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'templates')
+app = Flask(__name__, template_folder=tmpl_dir)
+
+
+# Section (B)
+@app.route('/')
+def hello():
+    files = [f for f in os.listdir(os.getcwd()) if f[-4:] == '.jpg']
+    if files:
+        image = choice(files)
+        return render_template('img.html', image=image)
+    else:
+        return render_template('img.html', error='No images in directory')
+
+
+# Section (C)
+@app.route('/image/<path:imgname>')
+def random_image(imgname):
+    return send_from_directory(os.getcwd(), imgname, as_attachment=True)
+
+
+# Section (D)
+@click.command()
+@click.option('--port', default=5000, help='Port number')
+@click.option('--host', default='localhost', help='Host name')
+def start_server(port, host):
+    # Architected this way because my console_scripts entry point is at
+    # start_server.
+
+    kwargs = {'host': host, 'port': port}
+    t = threading.Thread(target=app.run, daemon=True, kwargs=kwargs)
+    t.start()
+
+    webview.create_window("PiPhoto Display",
+                          "http://127.0.0.1:{0}".format(port))
+
+    sys.exit()
+
+
+# Section (E)
+if __name__ == '__main__':
+
+    start_server()
+```
+
+Here's my commentary on each of the sections.
+
+## Section A: Flask boilerplate.
+
+```python
+tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'templates')
+app = Flask(__name__, template_folder=tmpl_dir)
+```
+
+Here, we instantiate a Flask instance called `app`. The `tmpl_dir` variable was later added on, because I later learned that Flask apps had to look within the project directory for the `templates` folder; this variable ensures that the correct template directory path is specified.
+
+## Section B: Main application logic.
+```python
+@app.route('/')
+def hello():
+    files = [f for f in os.listdir(os.getcwd()) if f[-4:] == '.jpg']
+    if files:
+        image = choice(files)
+        return render_template('img.html', image=image)
+    else:
+        return render_template('img.html', error='No images in directory')
+```
+
+This is Flask's "hello world" function expanded. What we're doing here is reading a list of `.jpg` files from the bash shell's current working directory. If there are images present, we tell choose one file, and tell Flask to render the template (`render_template`) `img.html` passing in an `image` to the `image` keyword argument. If none, we pass in an error text message to the `error` keyword argument.
+
+If this were a more complicated app, we would probably move to an MVC-like model, where the application logic would be in an importable module adjacent to the rendering code. Here, because the logic is simple enough, and only really amounts to three lines of Python, it's simple enough to not require placing it in a separate Python module.
+
+I think at this point, it's best to show how these will get rendered. Below is `img.html`, the template that is being used.
+
+```html
+<!doctype html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styling.css') }}">
+<meta http-equiv="refresh" content="5">
+</head>
+
+<body>
+    <div>
+        {% if image %}
+          <img src="{{ url_for('random_image', imgname=image) }}"></img>
+        {% endif %}
+
+        {% if error %}
+          <p style="color:white">
+              {{ error }}
+          </p>
+        {% endif %}
+    </div>
+</body>
+```
+
+Flask uses `jinja2` templating - what this basically means is that we can insert Python-like code into other text-based files, allowing for passed in values to be substituted. For example, consider the block below:
+
+```html
+{% if error %}
+  <p style="color:white">
+      {{ error }}
+  </p>
+{% endif %}
+```
+
+What this is essentially saying is: if the "error" keyword from `render_template` is not a null value, fill in the value passed to the `error` keyword (`{{ error }}`).
+
+What about the header? It's got something much more complicated in there, the `url_for` function.
+
+```html
+<!doctype html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styling.css') }}">
+<meta http-equiv="refresh" content="5">
+</head>
+```
+
+What this is saying here is render the URL for (`url_for`) the static directory to load the CSS file `styling.css`, which allows us to use the static CSS file to style the user interface appropriately. If you inspect the HTML source after rendering, you will see that it maps to `/static/styling.css`.
+
+What about the image?
+
+```html
+{% if image %}
+  <img src="{{ url_for('random_image', imgname=image) }}"></img>
+{% endif %}
+```
+
+It's a bit complicated, so let me try my best to explain what's going on. This uses the `url_for` function, which is Flask magic for saying, "render the URL for a particular function" (`{{ url_for('random_image',...`), while passing in the necessary keywords arguments to that function (`... imgname=image) }}`). But... where did the `random_image` function come from, and why is it's keyword arguments named as `imgname`?
+
+Well, that's the best segue into Section C.
+
+## Section C: random_image...?!
+
+If by the end of my own explanation you don't get it, don't worry. The inner workings remain a bit of black magic to me still. Here's the code:
+
+```python
+@app.route('/image/<path:imgname>')
+def random_image(imgname):
+    return send_from_directory(os.getcwd(), imgname, as_attachment=True)
+```
+
+This function is what is called in the `img.html` template. The function takes in an image name `imgname` keyword argument, which is then passed to Flask's `send_from_directory()` function. Here, we are essentially saying, "get the file `imgname` from the directory `os.getcwd()`, as an attachment (`as_attachment=True`), and send it to Flask."
+
+Somehow, this provides the correct way to send the image file to the browser renderer.
+
+**Side note:** Figuring this out turned out to be the better of a whole day's worth of debugging and reading through the Flask package documentation, plus another half a day on Stack Overflow trying to figure out the right coding patterns. Once I figured this out, almost everything else fell into place for the minimum-viable-product version of the app.
+
+## Section D: Execution
+```python
+@click.command()
+@click.option('--port', default=5000, help='Port number')
+@click.option('--host', default='localhost', help='Host name')
+def start_server(port, host):
+    # Architected this way because my console_scripts entry point is at
+    # start_server.
+
+    kwargs = {'host': host, 'port': port}
+    t = threading.Thread(target=app.run, daemon=True, kwargs=kwargs)
+    t.start()
+
+    webview.create_window("PiPhoto Display",
+                          "http://{0}:{1}".format(host, port))
+
+    sys.exit()
+```
+
+This part of the code was totally inspired by [Joe Dorocak][joecodeswell], but I had to modify it a little bit to fit my use case (using `console_scripts` as part of the `entry_points`). The idea here for this code is to create a new thread that runs the app, and then use pywebview to open a new GUI window that loads the appropriate URL. The other big idea is that I could invoke `imgdisplay` from the command-line using the call:
+
+[joecodeswell]: https://joecodeswell.wordpress.com/2016/08/09/flask-with-pywebview-example/
+
+```bash
+$ imgdisplay
+```
+
+In order to do so, everything that needs to happen when executing has to happen within the function that the `imgdisplay` bash command is mapped to; which happens to be `start_server`. Joe's example puts all of the logic under `if __name__ == __main__`, because the assumption there is that the code is executed by running:
+
+```bash
+$ python imgdisplay.py
+```
+
+According to the design goals stated above, the former fulfills the goals better than the latter, because in the latter, I would have to copy `imgdisplay.py` into the directory that I needed. Therefore, I had to hack Joe's example a tiny bit to get it to work the way I wanted. If there's a better way to do it, I'd love to hear!
+
+
+## Section E: Execution
+```python
+if __name__ == '__main__':
+
+    start_server()
+```
+
+This is boilerplate, but in case anybody wants to run the script from the main project folder (`imgdisplay/`), for whatever reason, they'd be able to.
+
+# Styling
+
+I did my prototyping using Chrome on macOS Sierra. The order in which I presented the code above corresponded roughly to the order in which the code became more and more complex. I had to iterate between coding + testing in the browser. Styling was a pretty fun part of the iteration process. Here's my CSS code:
+
+```css
+html {
+    height: 600px;
+}
+
+body {
+    font-family: "PT Sans";
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: 100%;
+    background: black;
+}
+
+div {
+    max-width: 100%;
+    max-height: 600px;
+    text-align: center;
+}
+
+div > img {
+    max-height: 600px;
+    max-width: 100%;
+}
+```
+
+The idea behind the styling was to make the image stand out by using a black background, while making sure that the height of the image stayed a maximum of 600 px. In the future, I'd like this to be an adjustable parameter... or maybe not. We'll see.
+
+# Packaging for Distribution
+
+This is one of the places where I've had a number of spectacular failures in the past, particularly because Python's packaging documentation is, in my opinion, out of line with the Zen of Python's philosophy of "there should be preferably one and only one way of doing things". I think what's missing from the official documentation is clear-cut examples for packaging Python packages, modules, and command-line programs, and examples of where they mix. If I get a chance in the future, I might contribute that.
+
+## Setup Script
+
+Anyways, here's the setup script:
+
+```python
+from setuptools import setup, find_packages
+
+
+def readfile(filename):
+    with open(filename, 'r+') as f:
+        return f.read()
+
+
+setup(
+    name="imgdisplay",
+    version="2016.12.26.19.35",
+    description="A command-line app to slideshow photos in a directory.",
+    long_description=readfile('README.md'),
+    author="Eric J. Ma",
+    author_email="my_email",
+    url="https://github.com/ericmjl/imgdisplay",
+    install_requires=['click==6.6',
+                      'Flask==0.11.1',
+                      'pywebview==1.3',
+                      ],
+    packages=find_packages(),
+    license=readfile('LICENSE'),
+    entry_points={
+        'console_scripts': [
+            'imgdisplay=imgdisplay.imgdisplay:start_server'
+        ]
+    },
+    package_data={
+        'static': 'imgdisplay/static/*',
+        'templates': 'imgdisplay/templates/*',
+    },
+    include_package_data=True,
+)
+```
+
+Before we go on, please ignore my version numbering system. It's essentially the current date and time... While I know semantic versioning and the likes, for this single project, I decided to go simple and not worry about more complex stuff.
+
+There's a few key stuff I learned here.
+
+Firstly, the big highlight: making my package command-line accessible.
+
+```python
+entry_points={
+    'console_scripts': [
+        'imgdisplay=imgdisplay.imgdisplay:start_server'
+    ]
+},
+```
+
+What this is saying is "map the `start_server()` function to the command `imgdisplay`". That creates the `imgdisplay` magic command that runs the app, because the entirety of the execution logic is contained in that function.
+
+Secondly, including static data:
+
+```python
+package_data={
+    'static': 'imgdisplay/static/*',
+    'templates': 'imgdisplay/templates/*',
+},
+include_package_data=True,
+```
+
+This is **very, very important** for running the Flask app. The `static` and `templates` folders are default folders that Flask automatically looks for. These have to be packaged and distributed together in order for the app to work properly.
+
+## Building Distribution
+
+To build the distribution at the command line, according to [Plank & Whittle's][plankwhittle] website, there are two options for Python packages: a binary file, which contains only Python code, and a source distribution, which contains Python code + other files packaged in. Flask apps can only be distributed as a source distribution, so binary distributions are out of luck. I made the mistake of uploading a binary distribution to PyPI, and that cost me hours of debugging to get out of it, which I finally did. So here's the "correct" set of commands needed to avoid this headache:
+
+[plankwhittle]: http://www.plankandwhittle.com/packaging-a-flask-web-app/
+
+```bash
+$ cd /path/to/project
+$ # execute the following line only if dist/ exists and there's stuff inside
+$ rm dist/*
+$ # the following command builds the source distribution
+$ python setup.py sdist
+$ # the following command uploads the package to PyPI!!!!!!!!
+$ twine upload dist/*
+$ # you will be prompted for username & password to PyPI
+$ # remove stuff under dist/* to keep it clean for updates.
+$ rm dist/*
+```
+
+At all costs, **do not run** `python setup.py sdist bdist_wheel`. This works for other pure Python packages, but not for Flask apps that are bundled with static files.
+
+# Summary
+
+With that, that was it! Through this project, I was able to learn more about the insides of Python packaging & distribution, making my Python tools accessible through the command line, developing web & cross-platform interfaces, and working with really popular frameworks (Flask, click, pywebview). Big learning journey, only made possible because of some time taken off to let my mind wander away from other real work.
+
+Do I see this fitting in with my current work? Yep, absolutely. There's some times in research where nothing beats building a prototype of a final product that I'm envisioning, for example, the front-end to a
+
+I'd love to get feedback on how it could be improved, but more importantly, contributions are really welcome! Please be kind in feedback, I'm still a relative newbie with web development, so keeping things positive would help keep things encouraging. Hope you enjoyed the post!
+
+---
+pub_date: 2016-12-27
+---
+twitter_handle: ericmjl
