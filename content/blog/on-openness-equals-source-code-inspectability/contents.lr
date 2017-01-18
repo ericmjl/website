@@ -1,0 +1,21 @@
+title: On "Openness = Source Code Inspectability"
+---
+author: Eric J. Ma
+---
+body:
+
+One tenet of open science is the notion of "being able to inspect the source code". It's a good, lofty goal, but it comes with a big assumption that I think needs to be made clear.
+
+This assumption is that scientists who are reviewing papers that incorporate code are capable of accurately interpreting the source code in a reasonable amount of time, have a sufficient working knowledge of the language that the work is implemented in, while also possessing sufficient domain knowledge to review the paper. 
+
+That middle point is the current sore point. In certain fields, such as artificial intelligence/machine learning and computational biology (both my pet fields), this is not an issue, as the substrate of scientific work is code. On the other hand, there's the scenario of experimental work that is analyzed with custom code. Here, the substrate of the scientific work is not primarily the code, it is the experiment. Reviewers who evaluate this type of work may not necessarily have the expertise to inspect the source code of the pipeline. I am not aware of journals whose editors make the extra effort to solicit a team of reviewers capable of covering both experimental design and code inspection.
+
+To be just a tad more pedantic, I'd insist that code inspection is important. Having myself reviewed a paper for PLoS Computational Biology, I was interested in the *accuracy* of the implementation (done in R), not simply whether I could re-run the code and obtain the same results (*reproducibility*).
+
+(Side note: though I'm a Python person, I'd be happy to review R code, though I would do so with the recognition that I'm not as well-versed in R idioms and coding patterns as I am with Python's. I'd be less-than-fully-qualified under the "sufficient working knowledge" criteria.)
+
+In summary, my claim here is that openness requires more scientists who are also technically qualified, in order to achieve the goal of reproducibility + veracity. Without the ability to inspect source code, we're only left with reproducibility, which is not good enough.
+---
+pub_date: 2017-01-03
+---
+twitter_handle: ericmjl
