@@ -14,7 +14,11 @@ The goal of the contest was "to build a visualization of the UCI forest dataset 
 
 What I eventually built were two things. The first one was a linked scatter-plot dashboard to visualize how the quantitative variables varied with one another and how they grouped by forest cover type. Here, the user can select the two variables that they want to visualize together, using drop-down menus.
 
+[![Bokeh scatterplot](./bokehscatter-small.png)](./bokehscatter-full.png)
+
 The second one was a bar chart showing the mutual information between the categorical variable values and the forest cover type. Here, the user can select from over 40+ variables, and their mutual information score will be displayed as one of the bars in the bar chart.
+
+[![Bokeh select](./bokehselect-small.png)](./bokehselect-full.png)
 
 As usual, I copied heavily from the examples and then modified it for my own use. Breaking the copied app helped me figure out where my cognitive blind spots were.
 
@@ -24,7 +28,7 @@ Firstly, I finally have wrapped my head around callback functions and their use 
 
 Secondly, I finally figured out how non-intimidating Bokeh server really is. It's like... Flask, except for data visualizations. And it takes care of most of the HTML hard lifting for the data visualization portion.
 
-Thirdly, I finally implemented 'linked plots', in which the axes scales or data selections are shared across plots. I noticed it works when using the mid-level "plotting" interface, but doesn't work when using the high-level "charts" interface. Definitely something to keep in mind.
+Thirdly, I finally got 'linked plots' working, in which the axes scales or data selections are shared across plots. I noticed it works when using the mid-level "plotting" interface, but doesn't work when using the high-level "charts" interface. Definitely something to keep in mind.
 
 Fourthly, I saw how Bokeh server allows us to write custom Python code for callbacks. At least for me, it's much more user-friendly this way, as I find JS idioms to be a bit wonky. Maybe I'm just not used to them. Either way, being able to use custom Python means I'm able to do things like filtering Pandas DataFrames before pushing the data onto the plot.
 
