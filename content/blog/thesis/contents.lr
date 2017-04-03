@@ -1,0 +1,19 @@
+title: Thesis
+---
+author: Eric J. Ma
+---
+body:
+
+I've finally turned in a polished draft of my thesis ([HTML](http://ericmjl.github.io/thesis) or [PDF](http://www.ericmjl.com/cv/thesis.pdf)) to my committee! My thesis topic is on the development of an algorithm to identify reassortant influenza viruses from large sequence databases, and its application to the study of influenza's evolution and ecology.
+
+Well, actually, it was last week when I finished it, but I've been doing the job hunt the past week that I've delayed on writing this blog post.
+
+Apart from the written summary of the work that I've been doing, I wanted to simultaneously write for PDFs and for the web, so I started assembling a software toolchain that compiles my raw markdown files, converts figures from PDF to JPG, and simultaneously builds the PDF and the HTML versions. A lot of Python packages, including [`csv2md`](https://github.com/mplewis/csvtomd), the [pandoc-xnos](https://github.com/tomduck/pandoc-xnos) series, and non-Python tools, including ImageMagick (https://www.imagemagick.org/script/index.php).
+
+Yes, I know I could have done most of this with Authorea, but being me, building things and doing reverse engineering is also kind of fun! (Especially for learning purposes.)
+
+I hope you enjoy my thesis!
+---
+pub_date: 2017-03-28
+---
+twitter_handle: ericmjl
