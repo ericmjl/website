@@ -1,0 +1,50 @@
+title: Managing conda environments
+---
+author: Eric J. Ma
+---
+body:
+
+I recently got around to hacking a system for managing my `conda` environments better. Previously, my coding projects mostly relied on one master environment (with exceptions, e.g. `bokeh` development, or my Network Analysis Made Simple tutorial), but conflicts started cropping up. Thus, I decided to separate out my environments. However, keeping track of which environments go with which projects began getting tedious. 
+
+I thus decided to automate some of the steps involved in maintaining environments, and keep everything centrally managed so my brain doesn't overload. It involves a bit of GitHub and a bit of bash scripting, but altogether gives a ton of flexibility and control over keeping my environments updated.
+
+I start by keeping a central repository of `conda` environment YAML specifications. Mine is kept [here](https://github.com/ericmjl/conda-envs). Each YAML specification includes just the minimum set of packages that I need; `conda` manages the dependencies. 
+
+For example, my environment specification for Bayesian statistical analyses looks as such:
+
+```yaml
+name: bayesian  # for Bayesian analysis
+channels: !!python/tuple
+- conda-forge
+- defaults
+- ericmjl
+dependencies:
+- python=3.6
+- matplotlib
+- numpy
+- pandas
+- scipy
+- seaborn
+- pymc3
+- jupyter
+- jupyterlab
+```
+
+Now, I've not pinned specific versions here, because I like to keep up with the latest stable releases. However, if version pinning is desired, it's totally possible to pin specific packages to particular versions, using the same syntax as I did for `python=3.6`. 
+
+In each project repository, I have an `update_env.sh` script, that looks something like this:
+
+```bash
+wget https://raw.githubusercontent.com/ericmjl/conda-envs/master/lektor.yml -O environment.yml
+conda env update -f environment.yml
+```
+
+The key idea here is that I download only the relevant YAML file, export it as a generic `environment.yml` file, and then run the `conda env update` command on it to keep the environment up-to-date.
+
+Now, here's the magic. I hacked Christine Doig's `conda-auto-env` script  to execute `update_env.sh`, and then auto-activate the environment. 
+
+If my environment needs change, I can always update the environment YAML spec file (e.g. `lektor.yml`, or `bayesian.yml`) in the central repository, and use that to automatically update individual project environments.
+---
+pub_date: 2017-05-03
+---
+twitter_handle: ericmjl
