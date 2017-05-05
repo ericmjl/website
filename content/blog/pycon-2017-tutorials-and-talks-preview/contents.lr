@@ -1,0 +1,25 @@
+title: PyCon 2017: Tutorials and Talk Preview!
+---
+author: Eric J. Ma
+---
+body:
+
+This year, I'll be at PyCon 2017 presenting two tutorials and one talk! I'm very excited to be attending!
+
+The first tutorial I will deliver is on network analysis. The GitHub repository is [online][nams], and is the most mature of the three. This will be my 3rd year teaching the tutorial; I first developed the material in 2015, and have been refining it ever since. This year, I have great help from Mridul Seth, a student from India who has also been doing network analysis.
+
+[nams]: https://github.com/ericmjl/Network-Analysis-Made-Simple
+
+The second tutorial I will be leading is on testing practices for data science. The GitHub repository is [online][dtest], and will cover the use of automated tests for checking code and data integrity, as well as the use of visualization methods in EDA to sanity-check the data. The material is still in development right now, and I'm hoping to get good feedback from the Boston Python community when I dry-run it locally in the Boston area.
+
+[dtest]: https://github.com/ericmjl/data-testing-tutorial
+
+My talk will be on Bayesian statistical analysis using PyMC3. As usual, the materials are available online on [GitHub][bayes]. In it, I will cover the two most common types of statistical analysis problems - parameter estimation and comparison of treatment with controls, and demonstrate the process of reasoning through model building, implementing it in PyMC3, and interpreting the data.
+
+[bayes]: https://github.com/ericmjl/bayesian-stats-talk
+
+Really excited to be making three contributions back to the Python community. I've benefited much from the use of Python tools, and every PyCon I learn something new, so this is my little way of giving back!
+---
+pub_date: 2017-05-04
+---
+twitter_handle: ericmjl
