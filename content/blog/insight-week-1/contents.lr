@@ -1,0 +1,31 @@
+title: Insight Week 1
+---
+author: Eric J. Ma
+---
+body:
+
+Insight's Week 1 is done! Here's some of my thoughts so far.
+
+Firstly, the Fellows at Insight is very fast at learning things. Everybody is either a PhD or MD, some have done post-doctoral work, and even fewer have become professors, but everybody is interested in doing data stuff, and are very fast at picking up new things. I think at the same time, we're also good at thinking strategically upon being given feedback; once an idea sounds infeasible, new ideas come out of the pivot or even switch.
+
+Secondly, I see now the importance of developing a great data product. I think of a data product in terms of the **input data**, the **transformation** applied to the data, and the **insight** returned from the data. Think of it as a Python function:
+
+```
+def data_product(data):
+    insight = transformation(data)
+    return insight
+```
+
+Most of the "data products" being developed are consumer-facing type projects that a user can interact with, but a small number of them, mine included, are "dashboard-style" products that can continually ingest continually updated data and return continually updated insights. Both are good ideas.
+
+Thirdly, I've become clear on the importance of first clearly defining the problem we want to solve, and then working backwards to define what we build, particularly for the **m**inimum **v**iable **p**roduct (MVP). This way of thinking keeps us agile, and prevents us from being stuck in a rut. 
+
+Fourthly, other fellows know lots of good stuff that I've been able to learn about. For example, in deep learning, there's been a few steps I wasn't sure about w.r.t. convolutional neural networks in autoencoders. One other fellow, a post-doc from UC Berkeley, gave me the master-class run-through on what happens at the vector/matrix level with convolutional neural networks.
+
+------
+
+Thus far, really nice. I've noticed we don't generally end up competing with one another, and the atmosphere is very collaborative. We're working with one another, talking with one another, building trust and the likes. I'm looking forward to the coming weeks!
+---
+pub_date: 2017-06-02
+---
+twitter_handle: ericmjl

@@ -1,0 +1,30 @@
+title: Insight Week 2
+---
+author: Eric J. Ma
+---
+body:
+
+This week has been intense, mostly because I knew in advance that I'd be spending two days wearing a fancy hat, funky robe, and yellow sash. Because I was missing two days of Insight, I had to get my Minimum Viable Product (MVP) out by Wednesday - thankfully, I did!
+
+If you've followed my blog post series on Insight (this is the 2nd post), my project is forecasting influenza sequences. This week, I hacked out my MVP and deployed it to [Heroku](https://fluforecaster.herokuapp.com/) as a hybrid HTML report + dashboard. I also picked up and incorporated a few new things along the way.
+
+The first is the use of tooltips on my Bokeh plots. Bokeh is really powerful, and in some of the exploratory analyses, I desired having tooltips as a UI element to help a reader (who might need some introduction) understand the nature of the problem and the data involved.
+
+The second is further mastery of Bootstrap CSS & JS. Now, Insight's Program Directors have told us clearly that we're not gunning to become front-end designers (and the likes). Keeping that in mind, I still think it's important to know at least one front-end framework well enough to produce pleasant-looking interactive tools or reports - knowing front-end elements potentiates us to communicate with front-end designers on final data products. 
+
+For the MVP, I tried further experiments with the Grid layout and Modal JS. The key idea behind Grid layouts was easier to grasp - prioritize rows, then columns. 
+
+With the Modal, stepping back for a moment, my goal was to display the science behind the project. However, it gets really technical. My audience is probably going to fall into one of two personas: the "business person" who just wants to see the final result and doesn't really care about the techniques, and the "technical person" who wants to dig deeper. I chose to use the Modal effect to satisfy both. The scientific methods are described at a high level on the main page, and the Modal element is used to show further information, graphics, and the likes.
+
+The third was deployment to Heroku itself! [David Baumgold](https://www.davidbaumgold.com/) first showed me how to use Heroku at PyCon 2016, but I could never wrap my head around it at first. I think I didn't understand how "deployment" worked. A year later, stuff that DB taught me came to fruition, as I hacked on deploying a minimal Flask app to Heroku with my younger brother. That gave me enough of the Heroku-specific concepts to hack together the necessary `requirements.txt` and `Procfile` files to deploy Flu Forecaster to the web. 
+
+For next week, these are my plans:
+- Solve the problem of "average sequences per quarter" being ~10 amino acids different from actual sequences. Two approaches I'm thinking of:
+    - Use GPflow to train a Sparse Variational GP regressor on my dataset. This should allow me to scale up the forecasts beyond 67 quarters and into 700+ weeks, which is a greater time resolution and thus will give me greater sequence resolution in forecasts.
+    - Try forecasting variance in addition to mean coordinates. This will give me a full probability distribution to sample from, which may allow me to stick with PyMC3 and quarterly forecasts.
+
+Still not sure which of the above two approaches are the better one, so I'll be sure to give each a shot.
+---
+pub_date: 2017-06-10
+---
+twitter_handle: ericmjl
