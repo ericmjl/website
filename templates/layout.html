@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
@@ -9,13 +10,20 @@
 
     <!-- Google Analytics -->
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-      ga('create', 'UA-12498603-2', 'auto');
-      ga('send', 'pageview');
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
     </script>
 
     <!-- ClustrMaps Tracking -->
@@ -23,56 +31,48 @@
 </head>
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
-<div class="container-fluid">
-    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-        <div class="navbar-header container-fluid">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#local-links">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+<body class="body">
+
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <!-- Automatic navigation -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ '/'|url }}">Home</a>
+                </li>
+                {% set root = site.get('/') %} {% for child in root.children %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ child|url }}">{{ child.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
-    <div class="collapse navbar-collapse" id="local-links">
-      <!-- Automatic navigation -->
-      <ul class="nav navbar-nav">
-          <li>
-              <a href="{{ '/'|url }}">Home</a>
-          </li>
-        {% set root = site.get('/') %}
-        {% for child in root.children %}
-            <li>
-                <a href="{{ child|url }}">{{ child.title }}</a>
-            </li>
-        {% endfor %}
-      </ul>
+    </nav>
+
+    <div class="container">
+        {% block body %}{% endblock %}
     </div>
-  </nav>
-  <hr>
-  <!-- <h2>{{ this.title }}</h2> -->
-  <body class="body">
-    {% block body %}{% endblock %}
+
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-bottom">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                {% for link in bag('nav')['footer'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
     <!-- Boostrap JS imports -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-  </body>
-  <hr>
-  <nav class="navbar navbar-collapse" id="footer-nav">
-    <div class="navbar-header container-fluid">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#external-links">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="external-links">
-      <ul class="nav navbar-nav">
-        {% for link in bag('nav')['footer'] %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </nav>
-</div>
+
+</body>
