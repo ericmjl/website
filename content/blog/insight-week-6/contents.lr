@@ -1,0 +1,31 @@
+title: Insight Week 6
+---
+author: Eric J. Ma
+---
+body:
+
+We had a short week this week because of the long July 4th weekend (Happy Birthday, America!).
+
+Wednesday was my second demo day, this time at MGH. There were 8 of us demoing at MGH's Clinical DS team, and I really enjoyed the interaction with them. The team asked of me two technical questions about Flu Forecaster, both of which were analogous to other questions I had heard before. After the demo, we hung out with the team and chatted a bit about their latest projects.
+
+In the afternoon, I focused on doing the data challenge and leetcode exercises; in the evening, I (at the last minute) signed up for back-to-back behavioral and ML interview practice sessions. It was good to chat with the alumni helping with the sessions, as I learned much more about their thought process. In the future, I'll probably be called on to interview other people, and I will definitely draw on my experiences here.
+
+On Thursday we had more prep. I helped with mock interviewing by being an observer for Xi and an interviewer for Angela. The role-playing with Angela was an interesting one for me. I tried playing the role of a conversational but technically-competent interviewer. Also asked questions genuinely out of curiosity too. I think that combined with Angela's outgoing personality kept the conversation enjoyable for all three of our spectators.
+
+In the late afternoon, an NYC session alum came by and gave us a session on data challenges. The exercise he gave was quite neat - basically, given one categorical output column and a slew of other feature columns, train the best model that has the highest accuracy score. Oh, the twist? Do it in 25 minutes.
+
+The key point from this exercise was to have us get prepared for an on-site data challenge. The on-site data challenge mainly helps the hiring team check that we have the necessary coding chops to work with the team. It also lets them see how we perform under time constraints. The most important thing is to deliver a model with some form of results. Iterating fast is very important. Thus, it helps to push out fast one model that works.
+
+On Friday, we did another round of the interview simulator. I thought it was better run this time round. The mutual feedback from one another is very helpful. I was tasked with a stats question, which I melded into a hybrid stats + CS question, thus modelling what I had received when I was interviewed at Verily. FWIW, the question I asked was to define bootstrap resampling (sampling with replacement), implement it using the Python standard library, and discuss the scenarios where it becomes a useful thing.
+
+If tasked with a similar one for the next time, I will probably ask about writing a function to sample from a Bernoulli distribution using only the Python standard library. It's useful to know how to implement these statistical draws when it's not easy or impossible to use other libraries. (I had to do it when trying out the PyPy interpreter a few years back, and didn't want to mess with installing `numpy` for PyPy.)
+
+I liked a few of the other questions asked as well - for example, the knapsack problem posed by Steve: Given a set of produce items, each with their own value and weight (in Kg), and a knapsack that can only carry a maximum weight of produce, find the set of produce that will maximize value at the market.
+
+That afternoon, we slowed things down a bit. Regardless of how much we benefit from them, the interview simulators nonetheless are tiring. But that's the key point - interviews are day-long, exhausting endeavours that test stamina and ability to switch between contexts (both technical and social). The simulator aims to simulate that.
+
+Looking forward to next week. For me it'll be a short one, because I'll be at SciPy 2017 to lead a Network Analysis tutorial. Also hoping to represent Insight well!
+---
+pub_date: 2017-07-08
+---
+twitter_handle: ericmjl
