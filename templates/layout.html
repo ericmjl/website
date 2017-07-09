@@ -4,23 +4,8 @@
     <meta charset="utf-8">
     <!-- CSS and JS imports -->
 
-    <!-- Import PT Sans font -->
-    <link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
-
-    <!-- JQuery import -->
-    <script src="/static/jquery/jquery.min.js"></script>
-
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="/static/js/bootstrap.min.js"></script>
-
-    <!-- Leave this at the end: these are local overrides. -->
-    <link rel="stylesheet" href="{{ '/static/local-overrides.css'|url }}">
+    <!-- Bootstrap v4alpha Imports -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
     <!-- Google Analytics -->
     <script>
@@ -39,15 +24,14 @@
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 <div class="container-fluid">
-  <nav class="navbar navbar-collapse" id="navbar">
-    <div class="navbar-header container-fluid">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#local-links">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <!-- <a class="navbar-brand" href="{{ '/'|url }}">Eric J. Ma</a> -->
-    </div>
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+        <div class="navbar-header container-fluid">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#local-links">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
     <div class="collapse navbar-collapse" id="local-links">
       <!-- Automatic navigation -->
       <ul class="nav navbar-nav">
@@ -67,6 +51,10 @@
   <!-- <h2>{{ this.title }}</h2> -->
   <body class="body">
     {% block body %}{% endblock %}
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
   </body>
   <hr>
   <nav class="navbar navbar-collapse" id="footer-nav">
