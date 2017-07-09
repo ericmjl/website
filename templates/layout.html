@@ -8,6 +8,13 @@
     <!-- Bootstrap v4alpha Imports -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+    </style>
+
     <!-- Google Analytics -->
     <script>
         (function(i, s, o, g, r, a, m) {
@@ -32,7 +39,6 @@
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 <body class="body">
-
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -43,7 +49,8 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ '/'|url }}">Home</a>
                 </li>
-                {% set root = site.get('/') %} {% for child in root.children %}
+                {% set root = site.get('/') %}
+                {% for child in root.children %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ child|url }}">{{ child.title }}</a>
                 </li>
@@ -51,7 +58,6 @@
             </ul>
         </div>
     </nav>
-
     <div class="container">
         {% block body %}{% endblock %}
     </div>
