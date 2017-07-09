@@ -1,0 +1,33 @@
+title: Insight Week 5
+---
+author: Eric J. Ma
+---
+body:
+
+First off, Happy Canada Day!
+
+Week 5 is primarily focused on interview prep as a bunch of us go out for our demos.
+
+We kicked off Monday with an interview prep field day. The main areas of focus for us were CS fundamentals, machine learning, SQL, and behavioral interviewing. I found SQL to be my weakest point, and I'll definitely be focusing a lot of efforts on there. I had a chance to explain gradient descent and regularization using algebra - something I never thought I would do! 
+
+On Tuesday, Fellows began going outside for demos. My first demo will be at Boston Health Economics this Thursday, followed by (in no particular order) MGH, Biogen, Merck, OM1, and Immuneering. Definitely looking forward to presenting Flu Forecaster to them!
+
+On the side, we also started thinking through computer science fundamentals problems, and doing data analytics challenges. CS fundamentals are what you think it would be, covering data structures and algorithms. I found myself to be particularly fond of recursion, and implemented a recursive algorithm for something that could be solved in linear time without recursion. It was good to see my biases, and to try my hand at implementing the same thing in fundamentally two different styles. 
+
+In the evening, Nick (one of the fellows) gave us a run through on SQL. It was very useful to have his perspective, which was basically that most of the problems we will encounter involve some degree of nested searches, and that we have to work backwards from what we want. I also had a good perspective from my alumni mentor on how to approach describing my thesis to interviewers. 
+
+On Wednesday, the interview prep continued with more coding challenges, demo trips, and fellow-led workshops. Together with Jeff and Jigar, we led a deep learning fundamentals workshop, in which we went through how deep learning works for feed forward neural networks and convolutions neural networks. 
+
+Thursday came my first demo, which was at Boston Health Economics. Overall, I thought the demo session went well, and that Catherine, our host, kept engaged with the presentations. I very much appreciate her intellect. Additionally, I took the approach of "free styling it" (of course conditioned on having previously rehearsed it enough times), which resulted in a demo presentation that was overall smoother than what I had previously delivered 
+
+Apart from that, we continued our interview prep. This involved more CS fundamentals for me, getting more practice with common algorithms, and finishing the coding exercises that Ivan gave us. 
+
+On Friday, we did an interview simulator, in which we practiced interviewing one another. This gave me a better view into the thought process that an interviewer might be going through, particularly when conducting a technical interview. From prior experience interviewing, I remembered that my most pleasant interviews were with individuals who kept the atmosphere positive, encouraging, and provided hints along the way. Thus, I tried to conduct the mock interviews in the same way. 
+
+In the afternoon, I gave a very short workshop on how to write Pythonic code, which covered [`PEP8`](https://www.python.org/dev/peps/pep-0008/#introduction) (which is now check-able using [`pycodestyle`](https://github.com/PyCQA/pycodestyle)). It was fun seeing everybody go, "Whoa! Atom can do that?!" and then promptly going ahead to clean up their code according to the `flake8` linter's recommendations. 
+
+Interspersed throughout the week, I made an effort to summarize my thesis work a bit more. I think I have a few ways/hooks to explain it to a 'recruiter without a technical background', a 'computer scientist without biology background', and a 'biologist without a computing background'. Making it concise with a good "hook" was the hardest part, but I think I have something good now.
+---
+pub_date: 2017-07-01
+---
+twitter_handle: ericmjl
