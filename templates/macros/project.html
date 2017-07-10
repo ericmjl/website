@@ -1,13 +1,13 @@
 {% macro render_project(project) %}
-<div>
     <h3>{{ project.title }}</h3>
     <p><i>{{ project.type }}</i></p>
     <p>{{ project.description }}</p>
     <p>
         <a href="{{ project.link }}">{{ project.resource }}</a>
     </p>
-</div>
-{% endmacro %} {% macro render_accordion(project, iter) %}
+{% endmacro %}
+
+{% macro render_accordion(project, iter) %}
 <div class="card">
     <div class="card-header" role="tab" id="heading{{ iter }}">
         <h4 class="mb-0">
