@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block title %}{{ this.title }}{% endblock %}
 {% block body %}
-  <h3>{{ this.title }}</h3>
-  <p>{{ this.description }}</p>
-  <a href="{{ this.link }}">{{ this.resource }}</a>
+<div class="project-container">
+    <h3>{{ this.title }}</h3>
+    <p>{{ this.description }}</p>
+    <p>Learn More: <a href="{{ this.link }}">{{ this.resource }}</a></p>
+</div>
 {% endblock %}
