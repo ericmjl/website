@@ -1,13 +1,55 @@
 {"header": [
-    {"title": "Home", "href": "/"},
-    {"title": "Blog", "href": "/blog"},
-    {"title": "Research", "href": "/research"},
-    {"title": "Open Source Projects", "href": "/open-source-projects"},
-    {"title": "CV", "href": "/cv"}],
+    {
+        "title": "Home",
+        "href": "/",
+        "icon": "fa-home"
+    },
+    {
+        "title": "Resume",
+        "href": "/resume",
+        "icon": "fa-file-text"
+    },
+    {
+        "title": "Blog",
+        "href": "/blog",
+        "icon": "fa-rss"
+    },
+    {
+        "title": "Open Source",
+        "href": "/open-source",
+        "icon": "fa-code"
+    },
+    {
+        "title": "Projects",
+        "href": "/projects",
+        "icon": "fa-briefcase"
+    },
+    {
+        "title": "Teaching",
+        "href": "/teaching",
+        "icon": "fa-university"
+    }
+    ],
  "footer": [
-    {"title": "LinkedIn", "href": "https://www.linkedin.com/in/ericmjl"},
-    {"title": "Twitter", "href": "http://twitter.com/ericmjl"},
-    {"title": "GitHub", "href": "http://github.com/ericmjl"},
-    {"title": "Stack Overflow", "href": "http://stackoverflow.com/users/1274908/ericmjl"}, 
-    {"title": "Contact Me", "href": "http://shortwhale.com/ericmjl"}]
+    {
+        "title": "LinkedIn",
+        "href": "https://www.linkedin.com/in/ericmjl",
+        "icon": "fa-linkedin"},
+    {
+        "title": "Twitter",
+         "href": "http://twitter.com/ericmjl",
+         "icon": "fa-twitter"},
+    {
+        "title": "GitHub",
+         "href": "http://github.com/ericmjl",
+         "icon": "fa-github"},
+    {
+        "title": "Stack Overflow",
+         "href": "http://stackoverflow.com/users/1274908/ericmjl",
+         "icon": "fa-stack-overflow"},
+    {
+        "title": "Contact Me",
+         "href": "http://shortwhale.com/ericmjl",
+         "icon": "fa-envelope-o"}
+    ]
 }
