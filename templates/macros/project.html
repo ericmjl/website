@@ -1,32 +1,28 @@
 {% macro render_project(project) %}
-  <div>
+<div class="project-container">
     <h3>{{ project.title }}</h3>
-    <p><i>{{ project.type }}</i></p>
     <p>{{ project.description }}</p>
-    <p>
-      <a href="{{ project.link }}">{{ project.resource }}</a>
-    </p>
-  </div>
+    {% if project.resource and project.link %}
+        <p>Learn More: <a href="{{ project.link }}">{{ project.resource }}</a></p>
+    {% endif %}
+</div>
 {% endmacro %}
 
-
 {% macro render_accordion(project, iter) %}
-  <div class="panel panel-default">
-    <a class="accordion-toggle collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ iter }}" aria-expanded="true" aria-controls="collapse{{ iter }}">
-      <div class="panel-heading" role="tab" id="heading{{ iter }}">
-        <h4 class="panel-title">
-          {{ project.title }}
+<div class="card">
+    <div class="card-header" role="tab" id="heading{{ iter }}">
+        <h4 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ iter }}" aria-expanded="false" aria-controls="collapse{{ iter }}">
+                {{ project.title }}
+            </a>
         </h4>
-      </div>
-    </a>
-    <div id="collapse{{ iter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ iter }}">
-      <div class="panel-body">
-        <p><i>{{ project.type }}</i></p>
-
-        <p>{{ project.description }}</p>
-
-        <p><b>Resource:</b> <a href="{{ project.link }}">{{ project.resource }}</a></p>
-      </div>
     </div>
-  </div>
+    <div id="collapse{{ iter }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ iter }}">
+        <div class="card-block">
+            <p><i>{{ project.type }}</i></p>
+            <p>{{ project.description }}</p>
+            <p><b>Resource:</b> <a href="{{ project.link }}">{{ project.resource }}</a></p>
+        </div>
+    </div>
+</div>
 {% endmacro %}
