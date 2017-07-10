@@ -35,6 +35,9 @@
 
     <!-- ClustrMaps Tracking -->
     <script type="text/javascript" id="clstr_globe" src="//cdn.clustrmaps.com/globe.js?d=nhKoDpoTjWz4pC6CwI-fSy4hPoJ1uXwTLCfMCT3OK_8"></script>
+
+    <!-- FontAwesome embed -->
+    <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script>
 </head>
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
@@ -48,13 +51,7 @@
             <ul class="navbar-nav mr-auto">
                 {% for link in bag('nav')['header'] %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
-                </li>
-                {% endfor %}
-                {% set root = site.get('/') %}
-                {% for child in root.children %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ child|url }}">{{ child.title }}</a>
+                    <a class="nav-link" href="{{ link['href'] }}"><i class="fa {{ link['icon'] }}" aria-hidden="true"></i> {{ link['title'] }}</a>
                 </li>
                 {% endfor %}
             </ul>
@@ -72,7 +69,7 @@
             <ul class="navbar-nav mr-auto">
                 {% for link in bag('nav')['footer'] %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
+                    <a class="nav-link" href="{{ link['href'] }}"><i class="fa {{ link['icon'] }}" aria-hidden="true"></i> {{ link['title'] }}</a>
                 </li>
                 {% endfor %}
             </ul>
