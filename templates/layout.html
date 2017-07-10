@@ -39,16 +39,18 @@
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 <body class="body">
-    <nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top">
+    <nav class="navbar navbar-toggleable navbar-light bg-faded fixed-top">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="local-links">
             <!-- Automatic navigation -->
             <ul class="navbar-nav mr-auto">
+                {% for link in bag('nav')['header'] %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ '/'|url }}">Home</a>
+                    <a class="nav-link" href="{{ link['href'] }}">{{ link['title'] }}</a>
                 </li>
+                {% endfor %}
                 {% set root = site.get('/') %}
                 {% for child in root.children %}
                 <li class="nav-item">
@@ -62,7 +64,7 @@
         {% block body %}{% endblock %}
     </div>
 
-    <nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-bottom">
+    <nav class="navbar navbar-toggleable navbar-light bg-faded fixed-bottom">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
