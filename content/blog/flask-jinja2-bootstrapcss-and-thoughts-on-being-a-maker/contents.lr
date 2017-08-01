@@ -4,19 +4,22 @@ author: Eric J. Ma
 ---
 body:
 
-I recently built a <a href="http://github.com/ericmjl/flu-gibson-webui/">front-end GUI</a> for one of my projects, which is a <a href="http://github.com/ericmjl/flu-gibson/">primer calculator</a> for doing Gibson assembly with influenza segments.
+I recently built a [front-end GUI][gui] for one of my projects, which is a [primer calculator][primer] for doing Gibson assembly with influenza segments.
 
-(<em>small detour</em>) The back-drop to this is that 7 years after the invention of the Gibson assembly method in the synthetic biology world (where I used to be), influenza researchers are still stuck with restriction cloning. If they switched to the Gibson (and other seamless) assembly methods, their time wasted on troubleshooting restriction cloning could be drastically reduced. I wrote this simple utility to help bridge that gap.
+[gui]: http://github.com/ericmjl/flu-gibson-webui/
+[primer]: http://github.com/ericmjl/flu-gibson/
+
+(*small detour*) The back-drop to this is that 7 years after the invention of the Gibson assembly method in the synthetic biology world (where I used to be), influenza researchers are still stuck with restriction cloning. If they switched to the Gibson (and other seamless) assembly methods, their time wasted on troubleshooting restriction cloning could be drastically reduced. I wrote this simple utility to help bridge that gap.
 
 I had learned HTML many years back. I think I was still a teenager back then. So coming back to it now, I was both delighted and surprised to see the many new developments in the markup language.
 
-Anyways, I built the FluGibson web interface with two intents. Firstly, for it to be a quick-and-dirty, simple utility that an experimental influenza researcher could use in their day-to-day. The user provides a nucleotide sequence and a name for that DNA part (something that’s convenient for the user to remember), and selects a standard plasmid backbone that the flu community uses. It returns a series of cloning primers and sequencing primers, and a PCR protocol for amplifying the DNA parts using the Phusion polymerase. Secondly, for it to be a prototype of a tool that I hope gets implemented in the <a href="www.fludb.org/">Influenza Research Database</a>, where a researcher can do a one-click computation (and maybe even ordering) of the primers needed to clone an influenza segment from cDNA.
+Anyways, I built the FluGibson web interface with two intents. Firstly, for it to be a quick-and-dirty, simple utility that an experimental influenza researcher could use in their day-to-day. The user provides a nucleotide sequence and a name for that DNA part (something that’s convenient for the user to remember), and selects a standard plasmid backbone that the flu community uses. It returns a series of cloning primers and sequencing primers, and a PCR protocol for amplifying the DNA parts using the Phusion polymerase. Secondly, for it to be a prototype of a tool that I hope gets implemented in the [Influenza Research Database][ird], where a researcher can do a one-click computation (and maybe even ordering) of the primers needed to clone an influenza segment from cDNA.
+
+[ird]: www.fludb.org/
 
 The FluGibson front-end is a Flask app, and as such runs in any modern browser. The backend is the FluGibson Python package that I wrote; it’s still a bit incomplete in terms of the examples, but given time, I’ll get those fixed up.
 
 Being a maker, rather than a consumer, is a very empowering thing. Being a maker enables me to build what I need to have built to do what I need to get done. It takes time to learn the skill, but in the end I think it pays off. I’d like to encourage whoever’s reading this blog, go be a maker. Go make stuff that you think has tangible value for the world. It’s fun, it’s emotionally rewarding, and may bring a financial return. :-)
-
-&nbsp;
 ---
 pub_date: 2016-03-18
 ---

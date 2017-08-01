@@ -64,6 +64,7 @@ It basically took me one morning's worth of time invested in tooling this up, bu
 ```json    
     "pandoc-path": "/path/to/pandoc",
 ```
+
 ```json
       "PDF": {
         "scope": {
@@ -110,7 +111,7 @@ Get started by adding the YAML headers in the document (Figure {@fig:yaml-header
 
 Specifically, the format of what I have above is:
 
-```markdown
+```md
 ----
 title: "My Title Here"
 author: 
@@ -128,7 +129,7 @@ More details on what metadata can be stored in the headers can be found on the [
 
 Citations are done in Markdown by inserting:
 
-```markdown
+```md
    [@citekey]
 ```
 
@@ -142,18 +143,21 @@ Note that the way I had configured Pandoc (above) for PDF outputs was to use the
 
 Within ST3, we can use the Command Palette to quickly generate the PDF output desired. Steps are:
 
-1. Select Pandoc (Figure {@fig:cmd-pandoc})
-1. Select PDF as the output (Figure {@fig:cmd-pdf})
-1. Inspect that gorgeous PDF! (Figure {@fig:view-output})
-1. Check your references! (Figure {@fig:view-references})
+Select Pandoc
 
-![Command Palette: Select Pandoc.](cmd-01-pandoc.png){#fig:cmd-pandoc}
+![Command Palette: Select Pandoc.](cmd-01-pandoc.png)
 
-![Command Palette: Select PDF.](cmd-02-pdf.png){#fig:cmd-pdf}
+Select PDF as the output
 
-![Look at this gorgeous output!](cmd-03-output.png){#fig:view-output}
+![Command Palette: Select PDF.](cmd-02-pdf.png)
 
-![Look at those perfectly Nature-formatted references!](cmd-04-references.png){#fig:view-references}
+Inspect that gorgeous PDF!
+
+![Look at this gorgeous output!](cmd-03-output.png)
+
+Check your references!
+
+![Look at those perfectly Nature-formatted references!](cmd-04-references.png)
 
 Just to show how the figures get numbered correctly (I don't have any in the draft whitepaper I'm writing), you can inspect the [source code for this blog post](blog-source.md), and the associated [pdf file](blog-post.pdf). Note how I've not numbered anything except the associated files. It's pretty cool.
 
