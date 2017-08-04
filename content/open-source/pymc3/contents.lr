@@ -1,0 +1,9 @@
+title: PyMC3
+---
+description: I found a bug in PyMC3's multinomial random variate sampler, related to floating point precision issues while moving numbers from the GPU to the CPU, when working on my [Bayesian analysis recipes repository](https://github.com/ericmjl/bayesian-analysis-recipes). Specifically, we get probability values that sum to infinitesimally larger than one. I thus submitted a patch that fixed that converts the probabilities to `float64` precision and re-normalizes the probabilities to 1, before using them for random sampling.
+---
+link: https://github.com/pymc-devs/pymc3/pull/2470
+---
+resource: Pull Request
+---
+sort_key: 1

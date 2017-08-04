@@ -1,0 +1,25 @@
+title: Open Source Software
+---
+author: Eric J. Ma
+---
+body:
+
+Open source software is awesome, and I've just been thoroughly convinced of why.
+
+Today, I put in a [PR][pm] to PyMC3. This was a bug fix related to the PyMC3 multinomial distribution's random variates generator, which uses `numpy`'s multinomial under the hood, which arose from floating point precision errors.
+
+I first encountered this bug last week, when I started trying out the use of PyMC3 on my GPU tower. GPU stuff is tricky. One of the issues relates to floating point precision. I'm not well-versed enough on this to write intelligently about the underlying causes, but one thing I learned is that GPUs prefer 32-bit floating point precision (`float32`), while modern CPUs can handle 64-bit (`float64`). (I'm sure this will change in the future.) In the vast majority of "large number" computations, it's no big deal, but when we deal with small numbers (decimals in the thousandths range and smaller), addition errors can crop up.
+
+This was the exact problem I was facing. I had some numbers crunching on the GPU in `float32` space. Then, I had to pass them back to `numpy`'s multinomial, which implicitly converts everything to `float64`. Because multinomial takes in a list of `p`s (probabilities) that must sum to one, I was getting issues with my list of `p`s summing to just infinitesimally (in computation land) greater than one. I dug around on-and-off for about a week to look for a solution, but none came. Instead, I had to rely on a small hack that I didn't like, adding a 1 millionth value to the sum and renormalizing probabilities... but that felt hacky and unprincipled.
+
+The fix was inspired by someone else's problems that was discussed on `numpy`'s repository. The trick was to convert the numbers from `float32` to `float64` first and re-compute the probabilities in `float64` precision. I implemented that locally, and everything worked! I quickly ran two of the most relevant tests in the test suite, and they both passed. So I pushed up to GitHub and submitted a PR on this (after checking in with the lead devs on their issue tracker) - and it was just merged tonight!
+
+[pm]: https://github.com/pymc-devs/pymc3/pull/2470
+
+If PyMC3's and `numpy`'s code bases were not open source, with issues discussed openly, I would not have been able to figure out a possible fix to the issues with the help of other people. Also, I wouldn't have been able to patch the codebase locally first to see if it solved my own problems. I also wouldn't have access to the test suite to check that nothing was broken. All-in-all, working with an open source codebase was instrumental to getting this fix implemented. 
+
+Big shout-out to the PyMC devs I interacted with on this - Colin & Junpeng. Thank you for being so encouraging and helpful!
+---
+pub_date: 2017-08-02
+---
+twitter_handle: ericmjl
