@@ -1,0 +1,28 @@
+title: Reading & Writing Docs: The Overlooked Programming Skill?
+---
+author: Eric J. Ma
+---
+body:
+
+I recently read a blog article by DataCamp's CTO (Dieter) on how to scale their projects and their engineering team - it's a [great read][scaling]! In the article, Dieter states that the only way to scale an engineering team is to have well-written docs. I can see the benefits to doing it this way - we minimize the number of channels that any coder needs to use to find out information; the docs should be the place where the intent and technical detail of the code are simultaneously documented alongside usage examples.
+
+[scaling]: https://medium.com/datacamp/technical-vision-part-1-5f016c163340
+
+Thus, in the final weeks up to starting my new job at Novartis as a Data Scientist, I decided to make sure I have the practice of writing, reading and publishing docs as good as muscle memory. I can already envision cases where, while conducting and building analyses, I end up writing a bunch of generally-useful functions that should be documented as well. What I write may eventually need to be used by someone else, including my future self; keeping track of how exactly a function is intended to be used is going to be very useful. 
+
+I think reading and writing docs is an overlooked skill in programming. It's probably because this isn't a test of "creative capacity" (i.e. can you build something new), which is the "sexy" thing. It's more a test of "maintenance capacity" - and this is given less value and importance in the coding world. But it's incredibly important - many basic problems can be solved by reading the docs... but also, so many problems can be avoided by writing really good docs! The onus is on both parties - package maintainers *and* developers - to write *and* read good docs.
+
+But writing good docs is a tough job! I absolutely agree with this. There are different styles through which developers read docs - some prefer examples, while others just want to see function definitions - and it's very difficult to cater to every style. I personally think starting off with the style one's most comfortable with, and then gradually accepting community contributions, is the right way to go.
+
+One package that I maintain, [`nxviz`][nxviz], used to not have any docs written apart from that single file in the README. Thanks to my friend [Remi Picone][remi], I was able to learn how to configure Sphinx to get my docs working through copying [his example repository][remi_repo]. Through that, I configured Sphinx to build docs on my nxviz project - and finally got it going! You can find it on [RTFD][nvdocs].
+
+[nxviz]: http://github.com/ericmjl/nxviz
+[remi]: https://www.linkedin.com/in/rempic/
+[remi_repo]: https://github.com/rempic/Image-Features-Extraction
+[nvdocs]: http://nxviz.readthedocs.io/en/latest/
+
+Learning this was really fun - looking forward to putting up more docs!
+---
+pub_date: 2017-08-24
+---
+twitter_handle: ericmjl
