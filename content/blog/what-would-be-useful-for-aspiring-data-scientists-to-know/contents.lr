@@ -1,0 +1,137 @@
+title: What would be useful for aspiring data scientists to know?
+---
+author: Eric J. Ma
+---
+body:
+
+I originally titled this post, "What you need to know to become a data scientist", but I backed off from having such an authoritative post title for I wanted to keep things opinionated without being pompous :).
+
+Data Science (DS) is a hot field, and I'm going to be starting my new role doing DS at Novartis in September. As an aside, what makes me most happy about this role is that I'm going to do DS in the context of the life sciences (one of the "hard sciences")!
+
+Now that I have secured a role, some people have come to ask me questions about how I made the transition into DS and into the industry in general. I hope to provide answers to those questions in this blog post, and that you, the reader, find it useful.
+
+I will structure this blog post into two sections: 
+
+1. **What do I need to know and how do I go about it?**
+1. **What do I need to do?**
+
+Ready? Here we go :)
+
+----- 
+
+First off, let's talk about what I think you, an aspiring data scientist, needs to know, and how to go about learning it.
+
+### Topic 1: Statistical Learning
+
+**Statistical learning methods** are going to top the list. From the standpoint of "topics to learn", there's a laundry list one can write - all of the ML methods in `scikit-learn`, neural networks, statistical inference methods and more. It's also very tempting to go through that laundry list of terms, learn how they work underneath, and call it a day there. I think that's all good, but only if that material is learned while in the service of picking up the meta-skill of **statistical thinking**. This includes:
+
+1. Thinking about data as being sampled from a generative model parameterized by probability distributions (my Bayesian fox tail is revealed!), 
+1. Identifying biases in the data and figuring out how to use sampling methods to help correct those biases (e.g. bootstrap resampling, downsampling), and 
+1. Figuring out when your data are garbage enough that you shouldn't proceed with inference and instead think about experimental design.
+
+That meta-skill of statistical thinking can only come with practice. Some only need a few months, some need a few years. (I needed about a year's worth of self-directed study during graduate school to pick it up.) ***Having a project that involves this is going to be key!*** A good introduction to statistical thinking for data science can be found in a [SciPy 2015 talk by Chris Fonnesbeck](https://www.youtube.com/watch?v=TGGGDpb04Yc), and working through the two-part computational statistics tutorial by him and Allen Downey ([Part 1](https://www.youtube.com/watch?v=fMycLa1bsno), [Part 2](https://www.youtube.com/watch?v=heFaYLKVZY4)) helped me a ton.
+
+**Recommendation & Personal Story:** Nothing beats practice. This means finding ways to apply statistical learning methods to projects that you already work on, or else coming up with new projects to try. I did this in graduate school: my main thesis project was not a machine learning-based project. However, I found a great [PLoS Computational Biology paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3794897/) implementing Random Forests to identify viral hosts from protein sequence, and it was close enough in research topic that I spent two afternoons re-implementing it using `scikit-learn`, and presenting it during our lab's Journal Club session. I then realized the same logic could be applied to predicting drug resistance from protein sequence, and re-implemented a few other HIV drug resistance papers before finally learning and applying a fancier deep learning-based method that had been developed at Harvard to the same problem.
+
+### Topic 2: Software Engineering
+
+**Software engineering** (SE), to the best of my observation, is about three main things: (a) learning how to abstract and organize ideas in a way that is logical and humanly accessible, (b) writing good code that is well-tested and documented, and (c) being familiar with the ever-evolving ecosystem of packages. SE is important for a data scientist, because models that are making predictions often are put into production systems and used beyond just the DS themselves. 
+
+Now, I don't think a data scientist has to be a seasoned software engineer, as most companies have SE teams that a data scientist can interface with. However, having some experience building a software product can be *very helpful* for lubricating the interaction between DS and SE teams. Having a logical structure to your code, writing basic tests for it, and providing sufficiently detailed documentation, are all things that SE types will very much appreciate, and it'll make life much easier for them when coming to code deployment and helping with maintenance. (Aside: I strongly believe a DS should take primary responsibility for maintenance, and *not* the SE team, and only rely on the SE team as a fallback, say, when people are sick or on vacation.)
+
+**Recommendation & Personal Story:** Again, nothing beats practice here. Working on your own projects, whether work-related or not, will help you get a feel for these things. I learned my software engineering concepts from participating in open source contributions. The first was a contribution to `matplotlib` documentation, where I first got to use Git (a version control system) and Travis CI (a continuous integration system). It was there that I also got my first taste of software testing. The next year, I quickly followed it up with a small contribution to `bokeh`, and then decided at SciPy 2016 to build `nxviz` for my Network Analysis Made Simple tutorials. `nxviz` became my first independent software engineering project, and also my "capstone" project for that year of learning. All-in-all, getting practice was instrumental for my learning process.
+
+### Topic 3: Industry-Specific Business Cases
+
+This is something I learned from my time at Insight, and is non-negotiable. Data Science does not exist in a vacuum; it is primarily in the service of solving business problems. At Insight, Fellows get exposure to business case problems from a variety of industries, thanks to the Program Directors' efforts in collecting feedback from Insight alumni who are already Data Scientists in the industry.
+
+I think business cases show up in interviews as a test of a candidate's **imaginative capacity and/or experience**: can the candidate demonstrate (a) the creativity needed in solving tough business problems, and (b) the passion for solving those problems? Neither of these are easy to fake when confronted with a well-designed business case. In my case, it was tough for me to get excited about data science in an advertisement technology firm, and was promptly rejected right after an on-site business case. 
+
+It's important to note that these business cases are very industry specific. Retail firms will have a distinct need from marketing firms, and both will be very distinct from healthcare and pharmaceutical companies. 
+
+**Recommendation & Personal Story:** For aspiring data scientists, I recommend prioritizing the general industry area that you're most interested in targeting. After that, start going to meet-ups and talking with people about the kinds of problems they're solving - for example, I started going to a [Quantitative Systems Pharmacology](#) meet-up to learn more about quantitative problems in the pharma research industry; I also presented a talk & poster at a conference organized by Applied BioMath, where I knew lots of pharma scientists would be present. I also started reading through scientific journals (while I still had access to them through the MIT Libraries), and did a lot of background reading on the kinds of problems being solved in drug discovery. 
+
+### Topic 4: CS Fundamentals
+
+CS fundamentals really means things like algorithms and data structures. I didn't do much to prepare for this. The industry I was targeting didn't have a strong CS legacy/tradition, unlike most other technology firms doing data science (think the Facebooks, Googles, and Amazons), which do. Thus, I think CS fundamentals are mostly important for cracking interviews, and while problems involving CS fundamentals certainly can show up at work, unless something changes, they probably won't occupy a central focus of data science roles for a long time. 
+
+**Recommendation & Personal Story:** As I don't really like "studying to the test", I didn't bother with this - but that also meant I was rejected from tech firms that I did apply to (e.g. I didn't pass Google Brain's phone interview). Thus, if you're really interested in those firms, you'll probably have to spend a lot of time getting into the core data structures in computer science (not just Python). Insight provided a great environment for us Fellows to learn these topics; that said, it's easy to over-compensate and neglect the other topics. Prioritize accordingly - based on your field/industry of experience.
+
+----- 
+
+Now, let's talk about things you can start doing from now on that will snowball your credibility for entering into a role in data science. To be clear, these recommendations are made with a year-long time horizon in mind - these are not so much "crack-the-interview" tips as they are "prepare yourself for the transition" strategies.
+
+### Strategy 1: Create novel and useful material, and share it freely
+
+This is very important, as it builds a personal portfolio of projects that showcase your technical skill. A friend of mine, Will Wolf, did a self-directed [Open Source Masters](http://willwolf.io/2016/07/29/my-open-source-machine-learning-masters-in-casablanca-morocco/), where he not only delved deeply into learning data science topics, but also set about [writing blog posts](http://willwolf.io/) that explained tough and difficult concepts for others to understand, and showcased data projects that he was hacking on while learning his stuff. 
+
+Another friend of mine, Jon Charest, wrote a blog post doing a [network analysis about metal bands](http://jonchar.net/2016/05/20/exploring-metal-subgenres-with-python.html) and their shared genre labels - along the way producing a great Jupyter Notebook and network visualizations that yielded contributions to `nxviz`! Starting with that project, he did a few more, and eventually landed a role as a data scientist at Mathworks.
+
+Apart from blog posts, giving technical talks is another great way to showcase your technical mastery. I had created the Network Analysis Made Simple tutorials, inspired by Allen Downey's X Made Simple series, as a way of solidifying my knowledge on graph theory and complex systems, and a very nice side product was recognition that I had capabilities in computation, resulting in more opportunities - my favourite being becoming a DataCamp instructor on Network Analysis! 
+
+A key here is to create materials that are **accessible**.  Academic conferences likely won't cut it for accessibility - they're often not recorded, and not published to the web, meaning people can't find it. On the other hand, blog posts are publicly accessible, as are PyCon/SciPy/JupyterCon/PyData videos. Another key is to produce **novel** material - simple rehashes aren't enough; they have to bring value to someone else's. Your materials only count if people can find you and they expand someone's knowledge.
+
+A few other data scientists, I think, will concur very strongly with this point; Brandon Rorher has an [excellent blog post](https://brohrer.github.io/imposter_syndrome.html) on this.
+
+### Strategy 2: Talk with people inside and adjacent to industries that you're interested in.
+
+The importance of learning from other people cannot be understated. If you're releasing novel and accessible material, then you'll find this one to be much easier, as your credibility w.r.t. technical mastery will already be there - you'll have opportunities to bring value to industry insiders, and you can take that opportunity to get inside information on the kinds of problems that are being solved there. That can really help you strategize the kinds of new material that you make, which feeds back into a positive cycle.
+
+Talking with people in adjacent industries and beyond is also very important. I think none put it better than Francois Chollet in his tweet:
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">It&#39;s better to be curious about many things beyond your field -- the more topics you&#39;ve explored, the broader your inspiration in your field</p>&mdash; François Chollet (@fchollet) <a href="https://twitter.com/fchollet/status/903103206812655621">August 31, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+The main thing here is to have a breadth of ideas to draw on for inspiration when solving your own problem at hand. I had a first-hand taste of it when trying to solve the drug resistance problem (see above) - which turned out to be my introduction into the deep learning world proper!
+
+### Strategy 3: Learn Python
+
+Yes, I put this as a strategy rather than as a topic, mainly because programming languages are kind of arbitrary, and as such are less about whether a language is superior to others and more about whether you can get stuff done with that language.
+
+I suggest Python only because I've tasted for myself the triumphant feeling of being able to do all of the following:
+
+- environment setup (`conda`), 
+- data extraction and cleaning (`pandas`) 
+- modelling (`scikit-learn`, `PyMC3`, `keras`) 
+- visualization (`matplotlib`, `bokeh`, `searborn`), 
+- deployment (`Flask`)
+
+in one language. That's right - one language! (Sprinkling in a bit of HTML/CSS/JS in deployment, and bash in environment setup, of course.)
+
+There's very few languages with the flexibility of Python, and having a team converse in one language simply reduces that little bit of friction that comes from reading another language. There's a ton of productivity gains to be had! It's not the fastest, it's not the most elegant, but over the years, it's adopted the right ideas and built a large community developers, as such many people have built on it and used it to solve all manners of problems they're facing - heck, I even found a package that converts between traditional and simplified Chinese!
+
+It takes time to learn the language well enough to write good code with it, and nothing beats learning Python apart from actually building a project with it - I hope this idea of "building stuff" is now something ingrained in you after reading this post!
+
+### Strategy 4: Find a community of people
+
+When it comes to building a professional network and making friends, nothing beats going through a shared experience of thick & thin together with other people. Data science, being a really new thing, is a growing community of people, and being plugged into the community is going to be important for learning new things.
+
+The Insight Summer 2017 class did this - we formed a closely-knit community of aspiring data scientists, cheered each other on, and coached each other on topics that were of interest. I know that this shared experience with other Insighters will give us a professional network that we can tap into in the future!
+
+----- 
+
+### Conclusions
+
+Alrighty, to conclude, here's the topics and strategies outlined above.
+
+Topics to learn:
+
+1. **Must-have:** Statistical learning & statistical thinking
+1. **Good-to-have:** Software engineering
+1. **Good-to-have:** Business case knowledge
+1. **Dependency, Optional:** CS Fundamentals
+
+Strategies:
+
+1. **Proven:** Make novel and useful materials and freely release them - teaching materials & projects!
+1. **Very Useful:** Learn from industry insiders.
+1. **Very Useful:** Learn Python.
+1. **Don't Forget:** Build community.
+
+All-in-all, I think it boils back down to the fundamentals of living in a society: it's still about **creating real value for others**, and **receiving commensurate recognition** (not always money, by the way) for what you've delivered. Tips and tricks can sometimes get us ahead by a bit, but the fundamentals matter the most. 
+
+For aspiring data scientists, some parting words: build useful stuff, learn new things, demonstrate that you can deliver value using data analytics and work with others using the same tools, and good luck on your job hunt!
+---
+pub_date: 2017-08-31
+---
+twitter_handle: ericmjl
