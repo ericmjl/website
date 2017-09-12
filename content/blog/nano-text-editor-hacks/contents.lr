@@ -1,0 +1,63 @@
+title: nano text editor hacks
+---
+author: Eric J. Ma
+---
+body:
+
+Much as I've embraced the [Atom text editor](https://atom.io/), there are times when the GUI isn't accessible to us, and we are forced to use a Terminal-based text editor.
+
+Now, I'm not one of those crazy types who use emacs or vim - those are the real seasoned pros. (I still don't know how to exit vim, btw.) As such, my terminal editor of choice remains the venerable `nano`. Here's some hacks that I recently figured out, to make text editing much easier in `nano`. 
+
+**(1) Syntax highlighting**
+
+This is such a big one! Syntax highlighting seriously helps a ton. If you're on a Mac, make sure you install `homebrew`'s version of `nano` - you can look at my [dotfiles][dotfilesL41] or run the command:
+
+```
+$ brew install nano
+```
+
+Then, edit your `~/.nanorc` file to look something like this:
+
+```
+include /usr/local/share/nano/python.nanorc  # gives you Python syntax highlighting
+include /usr/local/share/nano/sh.nanorc  # gives you bash shell syntax highlighting
+```
+
+Next time you use `nano` (from your user account), syntax highlighting should be enabled!
+
+You can find a sample [.nanorc] file on my GitHub [dotfiles] repository
+
+[dotfilesL41]: https://github.com/ericmjl/dotfiles/blob/master/install.sh#L41
+[dotfiles]: https://github.com/ericmjl/dotfiles/
+[.nanorc]: https://github.com/ericmjl/dotfiles/blob/master/.nanorc-mac
+
+**(2) Keyboard Shortcuts**
+
+Here's a laundry list of keyboard shortcuts I've muscle-memorized:
+
+* `Ctrl-x`: quits. There will be a prompt to save the file if it's been modified.
+    * I usually end up doing `Ctrl-x-y-Enter`.
+* `Ctrl-v` scrolls down a page
+* `Ctrl-y` scrolls up a page
+* `Ctrl-w` searches the document for a term that you type in (think "where")
+* `Ctrl-k` cuts the line
+* `Ctrl-u` pastes a cut line
+* `Ctrl-^` (i.e. `Ctrl-Shift-6` on macOS keyboards) starts a "select" cursor.
+    * You can use arrow keys to expand or shrink the selection, which can then be cut and pasted.
+* `Ctrl-c` cancels any commands that are 'active'.
+* `Ctrl-o` activates the "save file" dialogue - lets you save your state without quitting.
+
+**(3) Persistence**
+
+`nano`, being not as fancy as `vim` or `emacs`, means it doesn't have the concept of sessions. Doesn't matter - use [`tmux`] to persist!
+
+[`tmux`]: https://github.com/tmux/tmux/wiki
+
+----
+
+All-in-all, the biggest one that aids in writing on a terminal editor is syntax highlighting. I wrote this blog post in `nano`, and being able to visually see different parts of my text highlighted according to their meaning has made writing much easier.
+
+---
+pub_date: 2017-09-11
+---
+twitter_handle: ericmjl
