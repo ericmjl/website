@@ -1,0 +1,13 @@
+title: Visualize Large Datasets by Sampling
+---
+author: Eric J. Ma
+---
+body:
+
+Sometimes, you need to visualize a large dataset, but it takes a ton of time to render it or compute the necessary transforms.
+
+If your samples are statistically sampled independently of one another (i.e. basically not timeseries), and the goals are to do some statistical visualizations, then it's basically valid to visualize a downsampled set of the dataset.
+
+I recently encountered this point at work. After running a clustering analysis, I wanted to see a pair plot of the distribution of features in each cluster. However, with cluster sizes ranging from 200-2 million, rendering times were taking a long time for the large sized clusters. I thus decided to downsample the large clusters to a maximum of 2,000 data points. Instantly, render times improved.
+---
+twitter_handle: ericmjl
