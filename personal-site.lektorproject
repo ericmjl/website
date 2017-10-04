@@ -1,6 +1,7 @@
 [project]
 name = Eric J. Ma's Personal Website
 locale = en_US
+url = http://www.ericmjl.com/
 
 [servers.digital_ocean]
 name = Digital Ocean
@@ -10,3 +11,4 @@ target = rsync://doroot/var/www/html/ericmjl.com
 [packages]
 lektor-markdown-header-anchors = 0.1
 lektor-markdown-highlighter = 0.1
+lektor-atom = 0.2
