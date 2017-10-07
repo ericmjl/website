@@ -5,6 +5,7 @@
 {% block body %}
   {% for child in this.pagination.items %}
     {{ render_blog_post(child, from_index=true) }}
+    <p><i>Did you enjoy this blog post? <a href="{{ child|url }}#disqus">Let's discuss more</a>!</i></p>
     <hr class="fancy">
   {% endfor %}
 
