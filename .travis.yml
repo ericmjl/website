@@ -1,0 +1,7 @@
+language: python
+python: 3.5
+install: "pip install Lektor"
+script: "lektor build"
+deploy:
+    provider: script
+    script: "lektor deploy digital_ocean"
