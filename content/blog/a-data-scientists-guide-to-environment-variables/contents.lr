@@ -132,11 +132,13 @@ $ echo $HOME
 
 **If you have to deal with C++ libraries**, then knowing your `LD_LIBRARY_PATH` environment variable is going to be very important. I'm not well-versed enough in this to espouse on it intelligently, so I would defer to [this website](http://xahlee.info/UnixResource_dir/_/ldpath.html) for more information on best practices for using the `LD_LIBRARY_PATH` variable.
 
+**If you're working with Spark**, then the `PYSPARK_PYTHON` environment variable would be of interest. This essentially tells Spark which Python to use for both its driver and its workers; you can also set the `PYSPARK_DRIVER_PYTHON` to be separate from the `PYSPARK_PYTHON` environment variable, if needed. 
+
 ### Hacking your environment variables
 
 This is where the most fun happens! Follow along for some stuff you might be able to do by hacking your environment variables.
 
-**Hack #1: Enable access to PyPy.** I occasionally keep up with the development of PyPy, but because PyPy is not yet the default Python interpreter, and is not yet `conda install`-able, I have to put it in its own `$HOME/pypy/bin` directory. To enable access to the PyPy interpreter, I have to make sure that my `/path/to/pypy` is present in the `PATH` environment variable. 
+**Hack #1: Enable access to PyPy.** I occasionally keep up with the development of PyPy, but because PyPy is not yet the default Python interpreter, and is not yet `conda install`-able, I have to put it in its own `$HOME/pypy/bin` directory. To enable access to the PyPy interpreter, I have to make sure that my `/path/to/pypy` is present in the `PATH` environment variable, but at a lower priority than my regular CPython interpreter.
 
 **Hack #2: Enable access to other language interpreters/compilers.** This is analogous to PyPy. I once was trying out Lua's JIT interpreter to use Torch for deep learning, and needed to add a path to there in my `.bashrc`. 
 
