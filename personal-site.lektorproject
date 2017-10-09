@@ -8,7 +8,7 @@ name = Digital Ocean
 enabled = yes
 target = rsync://doroot/var/www/html/ericmjl.com
 
-[servers.github]
+[servers.ghpages]
 name = GitHub Pages
 target = ghpages://ericmjl/ericmjl.github.io
 
