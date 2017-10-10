@@ -10,7 +10,7 @@ target = rsync://doroot/var/www/html/ericmjl.com
 
 [servers.ghpages]
 name = GitHub Pages
-target = ghpages+https://ericmjl/ericmjl.github.io
+target = ghpages://ericmjl/ericmjl.github.io
 
 [packages]
 lektor-markdown-header-anchors = 0.1
