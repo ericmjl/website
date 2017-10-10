@@ -1,0 +1,117 @@
+title: Recursive Programming and DAGs
+---
+author: Eric J. Ma
+---
+body:
+
+Over the past few days, I've found myself using recursive programming to implement a "model specification" system with inheritance for deep learning. The goal here is to enable reproducible computational experiments for particular deep learning hyperparameter sets. Reproducibility is something I learned from the Software/Data Carpentry initiative, thus I wanted to ensure that my own work was reproducible, even if it's not (because of corporate reasons) open-able, because it's the right thing to do. 
+
+So, how do these "model spec" files work? I call them "experiment profiles", and they specify a bunch of things: **model architecture**, **training parameters**, and **data tasks**. These experiment profiles are stored in YAML files on disk. A profile essentially looks like the following (dummy examples provided, naturally):
+
+```yaml
+# Name: default.yaml
+parent: null
+data_tasks:
+    tasks: [task1, task2, task3]
+model_architecture:
+    hidden_layers: [20, 20, 20]
+    hidden_dropouts: [0.1, 0.2, 0.3]
+training_parameters:
+    optimizer: "sgd"
+    optimizer_options:
+        n_epochs: 20
+```
+
+In this YAML file, the key-value pairs essentially match the API of the tooling I've built on top of Keras' API to make myself more productive. (From the example, it should be clear that we're dealing with only feed-forward neural networks and nothing else more complicated.) The key here (pun unintended) is that I have a `parent` key-value pair that specifies another experiment profile that I can inherit from. 
+
+Let's call the above example `default.yaml`. Let's say I want to run another computational experiment that uses the `adam` optimizer instead of plain vanilla `sgd`. Instead of re-specifying the entire YAML file, by implementing an inheritance scheme, I can re-specify only the optimizer and optimizer_options.
+
+```yaml
+# Name: adam.yaml
+parent: "default.yaml"
+training_parameters:
+    optimizer: "adam"
+```
+
+Finally, let's say I find out that 20 epochs (inherited from `default.yaml`) is too much for Adam - after all, Adam is one of the most efficient gradient descent algorithms out there - and I want to change it to 3 epochs instead. I can do the following:
+
+```yaml
+# Name: adam-3.yaml
+parent: "adam.yaml"
+training_parameters:
+    optimizer_options:
+        n_epochs: 3
+```
+
+Okay, so specifying YAML files with inheritance is all good, but how do I ensure that I get the entire parameter set out correctly, without writing verbose code? This is where the power of recursive programming comes in. Using recursion, I can solve this problem with **a single function that calls itself on one condition, and returns a result on another condition**. That's a recursive function in its essence.
+
+The core of this problem is traversing the inheritance path, from `adam-3.yaml` to `adam.yaml` to `default.yaml`. Once I have the inheritance path specified, loading the YAML files as a dictionary becomes the easy part.
+
+How would this look like in code? Let's take a look at an implementation.
+
+```python
+import yaml 
+
+def inheritance_path(yaml_file, path):
+    """
+    :param str yaml_file: The path to the yaml file of interest.
+    :param list path: A list specifying the existing inheritance path. First
+        entry is the file of interest, and parents are recursively appended to
+        the end of the list.
+    """
+    with open(yaml_file, 'r+') as f:
+        p = yaml.load(f)
+        if p['parent'] is None:
+            return path
+        else:
+            path.append(p['parent'])
+            return inheritance_path(p['parent'], path)
+```
+
+The most important part of the function is in the `if`/`else` block. If I have reached the "root" of the inheritance path, (that is, I have hit `default.yaml` which has no parent), then I return the `path` traversed. Otherwise, I return into the `inheritance_path` function call again, but with an updated `path` list, and a different `yaml_file` to read. It's a bit like doing a `while` loop, but in my opinion, a bit more elegant aesthetically.
+
+Once I've gotten the path list, I can finally load the parameters using a single function that calls on `inheritance_path`.
+
+```python
+def load_params(yaml_file):
+    path = inheritance_path(yaml_file, [yaml_file])
+    p = dict(data_tasks=dict(), 
+             model_architecture=dict(), 
+             training_parameters=dict())
+    for fn in path[::-1]:  # go in reverse!
+        with open(fn, 'r+') as f:
+            for k, v in yaml.load(f).items():
+                if k in p.keys():
+                    p[k].update(v)
+    return p
+```
+
+This is the equivalent of traversing a Directed Acyclic Graph (DAG), or in some special cases, a tree data structure, but in a way where we don't have to know the entire tree structure ahead of time. The goal is to reach the root from any node:
+
+```
+root
+    |- A
+        |- B
+        |- C
+            |- D
+            |- E
+    |- F
+        |- G
+        |- H
+        |- I 
+            |- J
+```
+
+Also, because we only have one pointer in each YAML file to its parent, we have effectively created a "Linked List" that we can use to trace a path back to the "root" node, along the way collecting the information that we need together. By using this method of traversal, we only need to know the neighbors, and at some point (however long it takes), we will reach the root.
+
+```
+D -> C -> A -> root
+E -> C -> A -> root
+J -> I -> F -> root
+```
+
+If you were wondering why linked lists, trees and other data structures might be useful as a data scientist, I hope this illustrates on productive example!
+---
+pub_date: 2017-10-10
+---
+twitter_handle: ericmjl
