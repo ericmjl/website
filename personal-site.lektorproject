@@ -14,9 +14,7 @@ target = ghpages://ericmjl/ericmjl.github.io
 
 [servers.gh_https]
 name = GitHub Pages
-target = ghpages+https://ericmjl/ericmjl.github.io
-username = LEKTOR_DEPLOY_USERNAME
-password = LEKTOR_DEPLOY_PASSWORD
+target = ghpages+https://ericmjl/website
 
 [packages]
 lektor-markdown-header-anchors = 0.1
