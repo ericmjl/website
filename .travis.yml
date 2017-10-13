@@ -1,7 +1,16 @@
 language: python
-python: 3.5
+python: 2.7
 install: "pip install Lektor"
 script: "lektor build"
 deploy:
     provider: script
     script: "lektor deploy gh_https"
+    on:
+        branch: source
+branches:
+  only:
+    - source
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/.cache/lektor/builds
