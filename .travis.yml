@@ -5,11 +5,6 @@ script: "lektor build"
 deploy:
     provider: script
     script: "lektor deploy gh_https"
-    on:
-        branch: source
-branches:
-  only:
-    - source
 cache:
   directories:
     - $HOME/.cache/pip
