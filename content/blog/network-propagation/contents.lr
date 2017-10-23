@@ -24,11 +24,7 @@ Network propagation follows this intuition: Imagine nodes contain information, a
 
 An animation of how this works is shown below.
 
-TODO: make animation - a video on YouTube.
-
 If you take my DataCamp course, you'll learn that networks can be represented as matrices on a computer. The adjacency matrix can be a 1/0 (i.e. binary) matrix that describes how nodes (rows and columns) are connected, and nodes can have their own vector of information (i.e. whether they are "seed" nodes or not). As it turns out, network propagation has a very nice matrix representation:
-
-TODO: make figure - one round of network propagation.
 
 ## How to implement network propagation
 
