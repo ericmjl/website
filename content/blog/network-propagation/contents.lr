@@ -43,6 +43,10 @@ matrix([[ 0.,  0.,  1.,  1.,  1.],
         [ 1.,  0.,  1.,  1.,  0.]])
 ```
 
+This basically corresponds to the following graph:
+
+![](./graph.png)
+
 Great! Now, let's mark out some "seed" nodes. These are the "nodes" of interest. To represent this, we use a binary vector - each slot in the vector represents one node in the graph. Let's start by highlighting two nodes, the second and third one:
 
 ```python
