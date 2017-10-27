@@ -1,0 +1,34 @@
+title: Random Forests: A Good Default Model?
+---
+author: Eric J. Ma
+---
+body:
+
+I've been giving this some thought, and wanted to go out on a limb to put forth this idea:
+
+**I think Random Forests (RF) are a good "baseline" model to try, after establishing a "random" baseline case.**
+
+(Clarification: I'm using RF as a shorthand for "forest-based ML algorithms", including XGBoost etc.)
+
+Before I go on, let me first provide some setup.
+
+Let's say we have a two-class classification problem. Assume everything is balanced. One "dumb baseline"" case is a coin flip. The other "dumb baseline" is predicting everything to be one class. Once we have these established, we can go to a "baseline" machine learning model.
+
+Usually, people might say, "go do logistic regression (LR)" as your first baseline model for classification problems. It sure is a principled choice! Logistic regression is geared towards classification problems, makes only linear assumptions about the data, and identifies directional effects as well. From a practical perspective, it's also very fast to train. 
+
+But I've found myself more and more being oriented towards using RFs as my baseline model instead of logistic regression. Here are my reasons:
+
+1. Practically speaking, any modern computer can train a RF model with ~1000+ trees in not much more time than it would need for an LR model.
+1. By using RFs, we do not make linearity assumptions about the data.
+1. Additionally, we don't have to scale the data (one less thing to do).
+1. RFs will automatically learn non-linear interaction terms in the data, which is not possible without further feature engineering in LR.
+1. As such, the out-of-the-box performance using large RFs with default settings is often very good, making for a much more intellectually interesting challenge in trying to beat that classifier.
+1. With `scikit-learn`, it's a one-liner change to swap out LR for RF. The API is what matters, and as such, drop-in replacements are easily implemented!
+
+Just to be clear, I'm not advocating for throwing away logistic regression altogether. There are moments where interpretability is needed, and is more easily done by using LR. In those cases, LR can be the "baseline model", or even just back-filled in after training the baseline RF model for comparison.
+
+Random Forests were the darling of the machine learning world before neural networks came along, and even now, remain the tool-of-choice for colleagues in the cheminformatics world. Given how easy they are to use now, why not just start with them?
+---
+pub_date: 2017-10-27
+---
+twitter_handle: ericmjl
