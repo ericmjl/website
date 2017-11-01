@@ -1,0 +1,17 @@
+title: Always Check Your Data
+---
+author: Eric J. Ma
+---
+body:
+
+True story, just happened today. I was trying to fit a Poisson likelihood to estimate event cycle times (in discreet weeks). For certain columns, everything went perfectly fine. Yet for other columns, I was getting negative infinity’s likelihoods, and was banging my head over this problem for over an hour and a half. 
+
+As things turned out, those columns that gave me negative infinity likelihood initializations were doing so because of negative values in the data. Try fitting a Poisson likelihood, which only has positive support, on that! 
+
+![](https://i.imgflip.com/1yl6ki.jpg)
+
+This lost hour and a half was a good lesson in data checking/testing: **always be sure to sanity check basic stats associated with the data - bounds (min/max), central tendency (mean/median/mode) and spread (variance, quartile range) - always check!**
+---
+pub_date: 2017-10-31
+---
+twitter_handle: ericmjl
