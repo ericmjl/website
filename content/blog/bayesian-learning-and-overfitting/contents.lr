@@ -1,0 +1,27 @@
+title: Bayesian Learning and Overfitting
+---
+author: Eric J. Ma
+---
+body:
+
+Yesterday, after I did my Boston Bayesians dry run talk, there was a point raised that I had only heard of once before: Bayesian learning methods don't overfit. Which means we're allowed to use all the data on hand. The point holds for simple Bayesian networks, and for more complicated deep neural nets.
+
+Though I believe it, I wasn't 100% convinced of this myself, so I decided to check it up. I managed to get my hands on Radford Neal's book, Bayesian Learning for Neural Networks, and found the following quotable paragraphs:
+
+*It is a common belief, however, that restricting the complexity of the models used for such tasks is a good thing, not just because of the obvious computational savings from using a simple model, but also because it is felt that too complex a model will overfit the training data, and perform poorly when applied to new cases. This belief is certainly justified if the model parameters are estimated by maximum likelihood. I will argue here that concern about overfitting is not a good reason to limit complexity in a Bayesian context.*
+
+A few paragraphs later, after explaining the frequentist procedure:
+
+*From a Bayesian perspective, adjusting the complexity of the model based on the amount of training data makes no sense. A Bayesian defines a model, selects a prior, collects data, computes the posterior, and then makes predictions. There is no provision in the Bayesian framework for changing the model or the prior depending on how much data was collected. If the model and prior are correct for a thousand observations, they are correct for ten observations as well (though the impact of using an incorrect prior might be more serious with fewer observations). In practice, we might sometimes switch to a simpler model if it turns out that we have little data, and we feel that we will consequently derive little benefit from using a complex, computationally expensive model, but this would be a concession to practicality, rather than a theoretically desirable procedure.*
+
+Finally, in the following section after describing how neural networks are built:
+
+*In a Bayesian model of this type, the role of the hyperparameters controlling the priors for weights is roughly analogous to the role of a weight decay constant in conventional training. With Bayesian training, values for these hyperparameters (more precisely, a distribution of values) can be found without the need for a validation set.*
+
+This seems to dovetail well with the following convoluted intuition that I've had: **if I fit a Bayesian model on the "training" set of the data, then update it with the "test" set, it's equivalent to just training with the whole dataset. With wide priors, if I fit with a smaller dataset, my posterior distribution will be wider than if I fit with the entire dataset. So... where possible, just train with the entire dataset.** That said, I've not had sufficient grounding in Bayesian stats (after all, still a newcomer) to justify this. 
+
+I certainly have more reading/learning to do here. Looks like something neat to explore in the short-term.
+---
+pub_date: 2017-11-16
+---
+twitter_handle: ericmjl
