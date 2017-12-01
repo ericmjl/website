@@ -8,6 +8,14 @@ name = Digital Ocean
 enabled = yes
 target = rsync://doroot/var/www/html/ericmjl.com
 
+[servers.gh_ssh]
+name = GitHub Pages
+target = ghpages://ericmjl/ericmjl.github.io
+
+[servers.gh_https]
+name = GitHub Pages
+target = ghpages+https://ericmjl/ericmjl.github.io
+
 [packages]
 lektor-markdown-header-anchors = 0.1
 lektor-markdown-highlighter = 0.2
