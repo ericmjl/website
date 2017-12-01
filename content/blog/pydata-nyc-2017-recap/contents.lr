@@ -26,6 +26,8 @@ The second was the use of the energy plots in PyMC3, where if the "energy transi
 
 The third was the use of the Gelman-Rubin statistic to measure the in-chain vs. between-chain variation; measures close to 1 are generally considered good.
 
+Check out the talk slides [here](http://austinrochford.com/resources/talks/nba-fouls-pydata-nyc-2017.slides.html#/).
+
 ### `scikit-learn`-compatible model stacking
 
 This talk was a great one because it shows how to use model stacking (also known as "ensembling", a technique commonly used in Kaggle competitions) to enable better predictions. 
@@ -34,9 +36,13 @@ Conceptually, model stacking works like this: I train a set of model individuall
 
 Civis Analytics has released their implementation of model stacking in their [GitHub repository](https://github.com/civisanalytics/civisml-extensions), and it's available on PyPI. The best part of it? They didn't try inventing a new API, they kept a `scikit-learn`-compatible API. Kudos to them!
 
+Check out the repository [here](https://github.com/civisanalytics/civisml-extensions).
+
 ### Stream Processing with Dask
 
 Matthew Rocklin, as usual, gave an entertaining and informative talk on the use of Streamz, a lightweight library he built, to explore the use of Dask for streaming applications. The examples he gave were amazing showcases of the library's capabilities. Given the right project, I'd love to try this out!
+
+Check out his slides [here](http://matthewrocklin.com/slides/pydata-nyc-2017.html#/).
 
 ### Asynchronous Python: A Gentle Introduction
 
@@ -50,6 +56,8 @@ This talk was by Nicole Carlson, and she did a tremendously great job delivering
 
 One thing I can't emphasize enough is that from a user experience standpoint, it's super important to follow idioms that people are used to. What Nicole did in this talk is to show how we can provide such idioms to end-users, rather than inventing a slightly modified wheel. Props to her for that!
 
+Her slides are online [here]().
+
 ### An Attempt at Demystifying Bayesian Deep Learning
 
 This talk was my own, put at the end of the 2nd day. The title definitely contributed to the hype. I popped into the room early, but then left for the restroom. When I got back, there was a lineup in the front door and in the back door. Totally unexpected. That said, big credit to the Boston Bayesians organizers Jordi and Colin, who let me do the talk as a rehearsal for PyData, so I felt very grounded. 
@@ -58,9 +66,7 @@ The talk went mostly smoothly. I think I was channeling my colleague, Brant Pete
 
 Having done the talk, I now realize how much people will appreciate a lighthearted and lightweight introduction to a topic that's very dense and filled with jargon. Conference speakers, we need to do more of this!
 
-From an emotional standpoint, many people brought me joy with their positive comments on the visuals and structure of the talk. Others put out positive comments on Twitter, which I collected together in a Moment. It was very encouraging, especially on this deep learning journey that I'm on right now. 
-
-<a class="twitter-moment" href="https://twitter.com/i/moments/924970479869448193?ref_src=twsrc%5Etfw">Memory: Bayesian Deep Learning Demystified</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+From an emotional standpoint, many people brought me joy with their positive comments on the visuals and structure of the talk. Others put out positive comments on Twitter, which I collected together in a [Twitter Moment](https://twitter.com/i/moments/924970479869448193?ref_src=twsrc%5Etfw). It was very encouraging, especially on this deep learning journey that I'm on right now. 
 
 ## Tutorials 
 
@@ -68,9 +74,13 @@ From an emotional standpoint, many people brought me joy with their positive com
 
 This was something I totally didn't realize was possible before - we can create interactive `matplotlib` figures very easily! I have cloned the repository, and I think it'll be neat to hack on some projects at work to use this.
 
+The tutorial repository can be found [here](https://github.com/tacaswell/interactive_mpl_tutorial).
+
 ### Linear Regression Three Ways
 
 This one was by Colin Carroll, a software engineer at the MIT Media Lab (previously at Kensho). I sat in and learned a good deal of math from him. One thing new I learned was how we can specify a model without requiring the use of observed variables. Any sampling we do will take into account the hierarchical and mathematical relationships we've done. This makes it neat to implement Bayesian nets to test how things will look under different scenarios!
+
+His tutorial repository can be found [here](https://github.com/ColCarroll/pydata_nyc2017).
 
 ### Top-To-Bottom, Line-By-Line
 
