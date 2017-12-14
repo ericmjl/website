@@ -1,0 +1,39 @@
+title: Visual Studio Code: A New Microsoft?
+---
+author: Eric J. Ma
+---
+body:
+
+During my week attending PyData NYC 2017, which was effectively a mini-mini-sabbatical from work, I got a chance to try out Visual Studio Code. Part of it was curiosity, having seen so many PyData participants using it; part of it was because of Steve Dowell, a core CPython contributor who works at Microsoft, who mentioned about the Python-friendly tools they added into VSCode.
+
+I think VSCode is representative of a new Microsoft.
+
+But first, let me describe what using it is like.
+
+## User Interface
+
+First off, the UI is beautiful. It's impossible to repeat enough how important the UI is. With minimal configuration, I made it basically match Atom's UI, which I had grown used to. It has an integrated terminal, and the colours are... wow. That shade of green, blue and red are amazing, ever just so slightly muted compared to the Terminal or iTerm. The background shade of black matches well with the rest of VSCode, and the colour scheme is changeable to match that of Atom's. The design feels... just right. Wow!
+
+## Git Integration
+
+Secondly, the integration with Git rivals Atom; in fact, there's a one-click "sync" button! It also has nice `git commit -am` analog where I can add and commit all of the files simultaneously.
+
+## Intellisense
+
+Thirdly, IntelliSense is just amazing! I like how I can use it to look up a function signature just by mousing over the function name.
+
+## Open Source
+
+Finally, it’s fully open source and back able, in the same vein as Atom, minus the bloat that comes from building on top of electron. Impressive stuff!
+
+## Other Thoughts
+
+Now, on the new Microsoft.
+
+Only at the recent PyData NYC did I learn that Microsoft has hired almost half of the core CPython developers! Not only that, they are encouraged to continue their contributions into the CPython code base. In my view, that’s a pretty awesome development! It means the Python programming language will continue to have a strong corporate backing while also enjoying community support. Its a sign of a healthy ecosystem, IMO, and also a sign of Microsoft’s support for Open Source Software!
+
+I’m more and more impressed by what Microsoft is doing for the Open Source community. I’m hoping they’ll continue up with this!!
+---
+pub_date: 2017-12-13
+---
+twitter_handle: ericmjl
