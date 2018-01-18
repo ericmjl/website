@@ -1,0 +1,25 @@
+title: PyMC3 docs + Weibull patches merged!
+---
+author: Eric J. Ma
+---
+body:
+
+I recently had a few PRs merged into the PyMC3 codebase. Really happy about it, and just like my previous bug fix, I thought I'd share a bit about how those PRs came about.
+
+The [first PR](https://github.com/pymc-devs/pymc3/pull/2789) was an update to the docs on when to specify precision and when to specify standard deviation. They're related, so only one has to be specified, but I sometimes am sloppy when reading the docs and didn't pick up on that. Thus, I added a few lines to make sure this was crystal clear to sloppy readers like me.
+
+The [next PR](https://github.com/pymc-devs/pymc3/pull/2799) was an update to the Mixture model docs, in which I added an example of the new API for specifying components of mixture models. It previously wasn't clear how to do this, as there were no examples provided, so I put in a documentation PR specifying examples.
+
+The [final PR](https://github.com/pymc-devs/pymc3/pull/2804) was a patch to the Weibull distribution. I wanted to play around with trying mixture Weibulls at work, but mixture Weibulls wouldn't work because it didn't have a mode specified. I checked on Wikipedia, and found that Weibull's mode is conditional on the value of its parameters, and thus put in a PR to make this happen. [Trying it out on some simulated/toy data](https://github.com/ericmjl/bayesian-analysis-recipes/blob/master/notebooks/mixture-model.ipynb), it worked! Thus, the devs allowed it to be merged.
+
+A few lessons I've learned along the way:
+
+**(1) Docs are an awesome place to start.** In fact, I made a few formatting mistakes in my first and second PRs that gave an opportunity for another guy to fix! Nothing is too small to be made as a contribution. FWIW, my first contribution to open source software were documentation fixes for `matplotlib`, and that was a superb learning journey!
+
+**(2) Friendly maintainers are crucial.** The PyMC dev team can basically be described as, "generally super nice!" From the online and in-person interactions I've had with them, there's little in the way of egos, they're always learning, always being generally helpful. If they weren't that way, I very likely would have second thoughts trying putting in a PR there.
+
+**(3) Open source lets me fix bugs I find.** This lets me work at the pace that I need to, without having to wait for commercial vendors to provide update patches. If the patch that I find turns out to be useful for others, then the work I did can possibly save a ton of people's time as well. Win-win scenario!
+---
+pub_date: 2018-01-18
+---
+twitter_handle: ericmjl
