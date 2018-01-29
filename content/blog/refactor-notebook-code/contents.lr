@@ -1,0 +1,17 @@
+title: Refactor Notebook Code
+---
+author: Eric J. Ma
+---
+body:
+
+Jupyter notebooks that are filled with complex analyses can get unwieldy. Refactoring repeated code out into functions placed in modules should be standard practice, but from the sampling of Jupyter notebooks I've seen, I don't think this is standard practice.
+
+When should code be refactored? As soon as we start copying/pasting it! Making sure I have self-contained functions ensures that lingering state in my notebook doesn't cause unexpected behaviour. (Side note: learning the "functional" programming mindset can be very useful here!)
+
+But won't this slow down my pace? Isn't it faster to just copy and paste the code, and tweak what I need? Yes, but a small speed hit is going to be traded for a massive bump in rigour. Just today, I saw the effects of "lingering state" in my notebooks causing my plots to display different things before and after refactoring. It's not a good sign for any analysis if this happens.
+
+In short, refactor your code.
+---
+pub_date: 2018-01-29
+---
+twitter_handle: ericmjl
