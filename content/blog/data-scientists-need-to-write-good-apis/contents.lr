@@ -1,0 +1,15 @@
+title: Data scientists need to write good APIs
+---
+author: Eric J. Ma
+---
+body:
+
+I had a breakthrough in my work today. This was not some scientific epiphany, but just breaking through a wall in my progress. Today's breakthrough  was totally enabled by writing my class definitions in a way that made sense, and by writing class methods that enabled me to express my ideas in a literate fashion.
+
+Logical class definitions and methods, refactored functions... these should be reflexive habits, but unfortunately, this isn't always the case with data science. We get so caught up in writing the code to make that plot that we forget to refactor out so that the block of code isn't brittle. But that brittle code means that my future self will loathe my current self for not writing that code robustly.
+
+In other words, write good APIs.
+---
+pub_date: 2018-02-13
+---
+twitter_handle: ericmjl
