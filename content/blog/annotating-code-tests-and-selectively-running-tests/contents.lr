@@ -1,0 +1,34 @@
+title: Annotating code tests and selectively running tests
+---
+author: Eric J. Ma
+---
+body:
+
+I just learned about a neat trick when using `pytest` - the ability to "mark" tests with metadata, and the ability to selectively run groups of marked tests.
+
+Here's an example:
+
+```python
+import pytest
+
+@pytest.mark.slow  # annotate it as a "slow" test
+def test_that_runs_slowly():
+    ....
+
+@pytest.mark.slow  # annotate test as a "slow" test.
+@pytest.mark.integration  # annotate test as being an "integration" test
+def test_that_does_integration():
+    ....
+```
+
+What's really cool here is that I can selectively run slow tests or selectively run integration tests:
+
+```bash
+$ py.test -m "slow"   # only runs "slow" tests
+$ py.test -m "integration"  # only runs "integration" tests
+$ py.test -m "not integration"  # only runs tests that are not "integration" tests.
+```
+---
+pub_date: 2018-02-25
+---
+twitter_handle: ericmjl
