@@ -1,0 +1,91 @@
+title: Consolidate your scripts using click
+---
+author: Eric J. Ma
+---
+body:
+
+## Overview
+
+`click` is amazing! It's a Python package that allows us to add a command-line interface (CLI) to our Python scripts easily. This blog post is a data scientist-oriented post on how we can use `click` to build useful tools for ourselves. In this blog post, I want to focus on how we can better organize our scripts.
+
+I have found myself sometimes writing custom scripts to deal with custom data transforms. Having them refactored out into a library of modular functions can really help with maintenance. However, I still end up with multiple scripts that might not have a naturally logical organization... except for the fact that they are scripts that I run from time to time! Rather than have them scattered in multiple places, why not have them put together into a single `.py` file, with options that are callable from the command line instead?
+
+## Template
+
+Here's a template for organizing all those messy scripts using  `click`.
+
+```python
+import click
+
+
+@click.group()
+def main():
+    pass
+
+
+@main.command()
+def script1():
+    """
+    Makes stuff happen.
+    """
+    # do stuff that was originally in script 1
+    click.echo('script 1 was run!')  # click.echo is recommended by the click authors.
+
+
+@main.command()
+def script2():
+    """Makes more stuff happen."""
+    # do stuff that was originally in script 2.
+    print('script 2 was run!')  # we can run print instead of click.echo as well!
+
+if __name__ == '__main__':
+    cli()
+```
+
+## How to use
+
+Let's call this new meta-script `jobs.py`, and make it executable.
+
+```bash
+$ chmod +x jobs.py
+```
+
+To execute it at the command line, we now a help command for free:
+
+```bash
+$ ./jobs.py --help
+Usage: jobs.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  script1  Makes stuff happen.
+  script2  Makes more stuff happen.
+```
+
+We can also use just one script with varying commands to control the execution of what was originally two different `.py` files.
+
+```bash
+$ ./jobs.py script1
+script 1 was run!
+$ ./jobs.py script2
+script 2 was run!
+```
+
+Instead of versioning multiple `.py` files, we now only have to keep track of one file where all non-standard custom stuff goes!
+
+## Details
+
+Here's what's going on under the hood.
+
+With the decorator `@click.group()`, we have exposed the `main()` function from the command line as a "group" of commands that are callable from the command line. What this does is then "wrap" the `main()` function (somehow), such that now it can be used to decorate another function (in our case, `script1` and `script2`) using the decorator syntax `@main.command()`.
+
+## Recap
+
+- Consolidate disparate Python scripts into a single `.py`  file, wrapping them inside a callable function.
+- Use `click` to expose them to the end-user (yourself, or others) at the command line.
+---
+pub_date: 2018-03-30
+---
+twitter_handle: ericmjl
