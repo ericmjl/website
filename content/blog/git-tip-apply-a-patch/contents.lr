@@ -1,0 +1,143 @@
+title: Git Tip: Apply a Patch
+---
+author: Eric J. Ma
+---
+body:
+
+I learned a new thing this weekend: we apparently can apply a patch onto a branch/fork using `git apply [patchfile]`.
+
+There's a few things to unpack here. First off, what's a `patchfile`?
+
+The long story cut short is that a `patchfile` is nothing more than a plain text file that contains all information about `diffs` between one commit and another. If you've ever used the `git diff` command, you'll know that it will output a `diff` between the current state of a repository, and the last committed state. Let's take a look at an example.
+
+Say we have a file, called `my_file.txt`. In a real world example, this would be parallel to, say, a `.py` module that you've written. After a bunch of commits, I have a directory structure that looks like this:
+
+```bash
+$ ls
+total 8
+drwxr-xr-x   4 ericmjl  staff   128B Jun 17 10:26 ./
+drwx------@ 19 ericmjl  staff   608B Jun 17 10:26 ../
+drwxr-xr-x  12 ericmjl  staff   384B Jun 17 10:27 .git/
+-rw-r--r--   1 ericmjl  staff    68B Jun 17 10:26 my_file.txt
+```
+
+The contents of `my_file.txt` are as follows:
+
+```bash
+$ cat my_file.txt
+Hello! This is a text file.
+
+I have some text written inside here.
+```
+
+Now, let's say I edit the text file by adding a new line and removing one line.
+
+```bash
+$ cat my_file.txt
+Hello! This is a text file.
+
+I have some text written inside here.
+
+This is a new line!
+```
+
+If I looked at the "diff" between the current state of the file and the previous committed state of the file:
+
+```diff
+$ git diff my_file.txt
+diff --git a/my_file.txt b/my_file.txt
+index a594a37..d8602e1 100644
+--- a/my_file.txt
++++ b/my_file.txt
+@@ -1,4 +1,4 @@
+ Hello! This is a text file.
+
+-I have some text written inside here.
++This is a new line!
+
+```
+
+While this may look intimidating at first, the key thing that one needs to look at is the `+` and `-`. The `+` signals that there is an addition of one line, and the `-` signals the removal of one line.
+
+Turns out, I can export this as a file.
+
+```bash
+$ git diff my_file.txt > /tmp/patch1.txt
+$ cat /tmp/patch1.txt
+diff --git a/my_file.txt b/my_file.txt
+index a594a37..d8602e1 100644
+--- a/my_file.txt
++++ b/my_file.txt
+@@ -1,4 +1,4 @@
+ Hello! This is a text file.
+
+-I have some text written inside here.
++This is a new line!
+```
+
+Now, let's simulate the scenario where I accidentally discarded those changes in the repository. A real-world analogue happened to me while contributing to CuPy: I had a really weird commit history, and couldn't remember how to rebase, so I exported the patch from my GitHub pull request (more on this later) and applied it following the same conceptual steps below.
+
+```bash
+$ git checkout -- my_file.txt
+```
+
+Now, the repository is in a "cleaned" state -- there are no changes made:
+
+```bash
+$ git status
+On branch master
+nothing to commit, working tree clean
+```
+
+Since I have saved the diff as a file, I can apply it onto my project:
+
+```bash
+$ git apply /tmp/patch1.txt
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   my_file.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+Looking at the diff again, I've recovered the changes that were lost!
+
+```diff
+$ git diff
+diff --git a/my_file.txt b/my_file.txt
+index a594a37..d8602e1 100644
+--- a/my_file.txt
++++ b/my_file.txt
+@@ -1,4 +1,4 @@
+ Hello! This is a text file.
+
+-I have some text written inside here.
++This is a new line!
+```
+
+Don't forget to commit and push!
+
+## How to export a patch from GitHub?
+
+I mentioned earlier that I had exported the patch file from GitHub and then applied it on a re-forked repository. How does one do that? It's not as hard as you think.
+
+Here's the commands below with comments.
+
+```bash
+# Download the patch from the pull request URL.
+# Replace curly-braced elements with the appropriate names.
+# Export it to /tmp/patch.txt.
+$ wget https://github.com/{repo_owner}/{repo}/pull/{pr_number}.patch -O /tmp/patch.txt
+
+# Now, apply the patch to your project
+$ git apply /tmp/patch.txt
+```
+
+---
+pub_date: 2018-06-17
+---
+twitter_handle: ericmjl
