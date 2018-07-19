@@ -1,0 +1,40 @@
+title: Bayesian Estimation, Group Comparison, and Workflow
+---
+author: Eric J. Ma
+---
+body:
+
+Over the past year, having learned about Bayesian inference methods, I finally see how estimation, group comparison, and model checking build upon each other into this really elegant framework for data analysis.
+
+## Parameter Estimation
+
+The foundation of this is "estimating a parameter". In a typical situation, we are most concerned with the parameter of interest. It could be a population mean, or a population variance. If there's a mathematical function that links the input variables to the output (a.k.a. "link function"), then the parameters of the model are that function's parameters. The key point here is that the atomic activity of Bayesian analysis is the estimation of a parameter, and its associated uncertainty. 
+
+## Comparison of Groups
+
+Building on that, we can then estimate parameters for more than one group of things. As a first pass, we could assume that each of the groups are unrelated, and thus "independently" (I'm trying to avoid overloading this term) estimate parameters per group under this assumption. Alternatively, we could assume that the groups are related to one another, and thus use a "hierarchical" model to estimate parameters for each group. 
+
+Once we've done that, what's left is the comparison of parameters between the groups. The simplest activity is to compare the posterior distributions' 95% highest posterior densities, and check to see if they overlap. Usually this is done for the mean, or for regression parameters, but the variance might also be important to check as well.
+
+## Model Check
+
+Rounding off this framework is model checking: how do we test that the model is a good one? The bare minimum that we should do is simulate data from the model - it should generate samples whose distribution looks like the actual data itself. If it doesn't, then we have a problem, and need to go back and rework the model structure until it does.
+
+Could it be that we have a model that only fits the data on hand (overfitting)? Potentially so - and if this is the case, then our best check is to have an "out-of-sample" group. While a train/test/validation split might be useful, the truest test of a model is new data that has been collected.
+
+## Thoughts
+
+These three major steps in Bayesian data analysis workflows did not come together until recently; they each seemed disconnected from the others. Perhaps this was just an artefact of how I was learning them. However, I think I've finally come to a unified realization: Estimation is necessary before we can do comparison, and model checking helps us build confidence in the estimation and comparison procedures that we use.
+
+## Summary
+
+When doing Bayesian data analysis, the key steps that we're performing are: 
+
+1. Estimation
+2. Comparison
+3. Model Checking
+
+---
+pub_date: 2018-07-16
+---
+twitter_handle: ericmjl
