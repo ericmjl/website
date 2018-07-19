@@ -2,17 +2,23 @@ title: Bayesian Estimation, Group Comparison, and Workflow
 ---
 author: Eric J. Ma
 ---
+tags:
+
+bayesian
+statistics
+data science
+---
 body:
 
 Over the past year, having learned about Bayesian inference methods, I finally see how estimation, group comparison, and model checking build upon each other into this really elegant framework for data analysis.
 
 ## Parameter Estimation
 
-The foundation of this is "estimating a parameter". In a typical situation, we are most concerned with the parameter of interest. It could be a population mean, or a population variance. If there's a mathematical function that links the input variables to the output (a.k.a. "link function"), then the parameters of the model are that function's parameters. The key point here is that the atomic activity of Bayesian analysis is the estimation of a parameter, and its associated uncertainty. 
+The foundation of this is "estimating a parameter". In a typical situation, we are most concerned with the parameter of interest. It could be a population mean, or a population variance. If there's a mathematical function that links the input variables to the output (a.k.a. "link function"), then the parameters of the model are that function's parameters. The key point here is that the atomic activity of Bayesian analysis is the estimation of a parameter, and its associated uncertainty.
 
 ## Comparison of Groups
 
-Building on that, we can then estimate parameters for more than one group of things. As a first pass, we could assume that each of the groups are unrelated, and thus "independently" (I'm trying to avoid overloading this term) estimate parameters per group under this assumption. Alternatively, we could assume that the groups are related to one another, and thus use a "hierarchical" model to estimate parameters for each group. 
+Building on that, we can then estimate parameters for more than one group of things. As a first pass, we could assume that each of the groups are unrelated, and thus "independently" (I'm trying to avoid overloading this term) estimate parameters per group under this assumption. Alternatively, we could assume that the groups are related to one another, and thus use a "hierarchical" model to estimate parameters for each group.
 
 Once we've done that, what's left is the comparison of parameters between the groups. The simplest activity is to compare the posterior distributions' 95% highest posterior densities, and check to see if they overlap. Usually this is done for the mean, or for regression parameters, but the variance might also be important to check as well.
 
@@ -28,7 +34,7 @@ These three major steps in Bayesian data analysis workflows did not come togethe
 
 ## Summary
 
-When doing Bayesian data analysis, the key steps that we're performing are: 
+When doing Bayesian data analysis, the key steps that we're performing are:
 
 1. Estimation
 2. Comparison

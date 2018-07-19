@@ -12,6 +12,8 @@ In my two SciPy 2018 co-taught tutorials, I made the case that ECDFs provide ric
 1. It is more difficult to hide multiple modes.
 1. We can easily identify repeat values.
 
+What are ECDFs? ECDFs stand for the "empirical cumulative distribution function", and they map every data point in the dataset to a quantile, which is a number between 0 and 1 that indicates the cumulative fraction of data points smaller than that data point itself.
+
 To illustrate, let's take a look at the following plots.
 
 ```python
@@ -70,3 +72,9 @@ I credit Justin Bois (Caltech) for teaching me about ECDFs, and Hugo Bowne-Ander
 pub_date: 2018-07-14
 ---
 twitter_handle: ericmjl
+---
+tags:
+
+statistics
+visualization
+data science
