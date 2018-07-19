@@ -2,15 +2,25 @@ title: My Latent Dissatisfaction with Modern ML
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data science
+machine learning
+deep learning
+causal inference
+casality
+graph theory
+probability
+---
 body:
 
 It took reading Judea Pearl's "The Book of Why", and Jonas Peters' mini-course on causality, for me to finally figure out why I had this lingering dissatisfaction with modern machine learning. It's because modern machine learning (deep learning included) is most commonly used as a tool in the service of finding correlations, and is not concerned with understanding systems.
 
-Perhaps this is why Pearl writes of modern ML as basically being "curve fitting". I tend to believe he didn't write those words in a dismissive way, though I might be wrong about it. Regardless, I think there is an element of truth to that statement. 
+Perhaps this is why Pearl writes of modern ML as basically being "curve fitting". I tend to believe he didn't write those words in a dismissive way, though I might be wrong about it. Regardless, I think there is an element of truth to that statement.
 
 Linear models seek a linear combination of correlations between input variables and their targets. Tree-based models essentially seek combinations of splits in the data, while deep learning models are just stacked compositions of linear models with nonlinear functions applied to their outputs. As Keras author Francois Chollet wrote, [deep learning can be thought of as basically geometric transforms of data from one data manifold to another](https://blog.keras.io/the-limitations-of-deep-learning.html).
 
-(For convenience, I've divided the ML world into linear models, tree-based models, and deep learning models. Ensembles, like Random Forest, are just that: ensembles composed of these basic models.) 
+(For convenience, I've divided the ML world into linear models, tree-based models, and deep learning models. Ensembles, like Random Forest, are just that: ensembles composed of these basic models.)
 
 Granted, curve fitting is actually very useful: much of image deep learning has found pragmatic use: image search, digital pathology, self-driving cars, and more. Yet, in none of these models is the notion of causality important. This is where these models are dissatisfying: they do not provide the tools to help us interrogate these questions in a structured fashion. I think it's reasonable to say that these models are essentially concerned with conditional probabilities. As written by Ferenc Huszár, [conditional probabilities are different from interventional probabilities](http://www.inference.vc/untitled/) (ok, I mutilated that term).
 
