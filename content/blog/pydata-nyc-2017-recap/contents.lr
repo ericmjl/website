@@ -2,15 +2,21 @@ title: PyData NYC 2017 Recap
 ---
 author: Eric J. Ma
 ---
+tags:
+
+pydata
+conferences
+python
+---
 body:
 
 With that, we’ve finished PyData NYC! Here's some of my highlights of the conference.
 
 ## Keynotes
 
-There were three keynotes, one each by Kerstin Kleese van Dam, Thomas Sargent, and Andrew Gelman. Interestingly enough, they didn't do what I would expect most academics to do -- give talks highlighting the accomplishments of their research groups. Rather, Kerstin gave a talk that highlighted the use of PyData tools at Brookhaven National Labs. Thomas Sargent gave a philosophical talk on what economic models really are (they're "games", in a mathematical sense), and I took back the importance of being able to implement models, otherwise, "you're just bull\*\*\*\*\*ing". 
+There were three keynotes, one each by Kerstin Kleese van Dam, Thomas Sargent, and Andrew Gelman. Interestingly enough, they didn't do what I would expect most academics to do -- give talks highlighting the accomplishments of their research groups. Rather, Kerstin gave a talk that highlighted the use of PyData tools at Brookhaven National Labs. Thomas Sargent gave a philosophical talk on what economic models really are (they're "games", in a mathematical sense), and I took back the importance of being able to implement models, otherwise, "you're just bull\*\*\*\*\*ing".
 
-Andrew Gelman surprised me the most - he gave a wide-ranging talk about the problems we have in statistical analysis workflows. He emphasized that "robustness checks" are basically scams, because they're basically methods whose purpose is reassurance. He had a really cool example that highlighted that we need to understand our models by modifying our models, perhaps even using a graph of models to identify perturbations to our model that will help us understand our model. He also peppered his talk with anecdotes about how he made mistakes in his analysis workflows. I took home a different philosophy of data analysis: when we evaluate how "good" a model is, the operative question is, "compared against what?" 
+Andrew Gelman surprised me the most - he gave a wide-ranging talk about the problems we have in statistical analysis workflows. He emphasized that "robustness checks" are basically scams, because they're basically methods whose purpose is reassurance. He had a really cool example that highlighted that we need to understand our models by modifying our models, perhaps even using a graph of models to identify perturbations to our model that will help us understand our model. He also peppered his talk with anecdotes about how he made mistakes in his analysis workflows. I took home a different philosophy of data analysis: when we evaluate how "good" a model is, the operative question is, "compared against what?"
 
 ## Talks
 
@@ -18,9 +24,9 @@ The talks were, for me, the highlight of the conference. A lot of good learning 
 
 ### Analyzing NBA Foul Calls using Python
 
-This talk by the prolific PyMC blogger Austin Rochford is one that I really enjoyed. The take-home that I got from him was towards the end of his talk, in which I picked up three ways to diagnose probabilistic programming models. 
+This talk by the prolific PyMC blogger Austin Rochford is one that I really enjoyed. The take-home that I got from him was towards the end of his talk, in which I picked up three ways to diagnose probabilistic programming models.
 
-The first was the use of residuals - which I now know can be used for classification problems as well as regression problems. 
+The first was the use of residuals - which I now know can be used for classification problems as well as regression problems.
 
 The second was the use of the energy plots in PyMC3, where if the "energy transition" and "marginal energy distribution" plots match up (especially in the tails), then we know that the NUTS sampler did a great job.
 
@@ -30,7 +36,7 @@ Check out the talk slides [here](http://austinrochford.com/resources/talks/nba-f
 
 ### `scikit-learn`-compatible model stacking
 
-This talk was a great one because it shows how to use model stacking (also known as "ensembling", a technique commonly used in Kaggle competitions) to enable better predictions. 
+This talk was a great one because it shows how to use model stacking (also known as "ensembling", a technique commonly used in Kaggle competitions) to enable better predictions.
 
 Conceptually, model stacking works like this: I train a set of model individually on a problem, and use the predictions from those models as features for a meta-model. The meta-model should perform, at worst, on par with the best model inside the ensemble, but may also perform better. This idea was first explored in Polley and van der Laan's work, available [online](http://biostats.bepress.com/ucbbiostat/paper266).
 
@@ -46,13 +52,13 @@ Check out his slides [here](http://matthewrocklin.com/slides/pydata-nyc-2017.htm
 
 ### Asynchronous Python: A Gentle Introduction
 
-This talk, delivered by James Cropcho, defined what asynchronous programming was all about. For me, things finally clicked at the end when I asked him for an example of how asynchronous programming would be done in data analytics workflows -- to which he responded, "If you're querying for data and then performing a calculation, then async is a good idea." 
+This talk, delivered by James Cropcho, defined what asynchronous programming was all about. For me, things finally clicked at the end when I asked him for an example of how asynchronous programming would be done in data analytics workflows -- to which he responded, "If you're querying for data and then performing a calculation, then async is a good idea."
 
-The idea behind this is as such: web queries written serially are often "blocking", meaning we can't do anything while we wait for the web query to return. If we want to do a calculation on the returned data point, we have to wait for it to return first. On the other hand, if written asynchronously, we could potentially do a calculation on the previous data point while waiting for the current result to return, shaving the total time off potentially by some considerable fraction. 
+The idea behind this is as such: web queries written serially are often "blocking", meaning we can't do anything while we wait for the web query to return. If we want to do a calculation on the returned data point, we have to wait for it to return first. On the other hand, if written asynchronously, we could potentially do a calculation on the previous data point while waiting for the current result to return, shaving the total time off potentially by some considerable fraction.
 
 ### Turning PyMC3 into `scikit-learn`
 
-This talk was by Nicole Carlson, and she did a tremendously great job delivering this talk. In it, she walked through how to wrap a PyMC3 model inside a `scikit-learn` estimator, including details on how to implement the `.fit()`, `.predict()`, and `.predict_proba()` methods. The code in [her repository](https://github.com/parsing-science/ps-toolkit/blob/master/ps_toolkit/pymc3_models/HLR.py) provides a great base example to copy from. 
+This talk was by Nicole Carlson, and she did a tremendously great job delivering this talk. In it, she walked through how to wrap a PyMC3 model inside a `scikit-learn` estimator, including details on how to implement the `.fit()`, `.predict()`, and `.predict_proba()` methods. The code in [her repository](https://github.com/parsing-science/ps-toolkit/blob/master/ps_toolkit/pymc3_models/HLR.py) provides a great base example to copy from.
 
 One thing I can't emphasize enough is that from a user experience standpoint, it's super important to follow idioms that people are used to. What Nicole did in this talk is to show how we can provide such idioms to end-users, rather than inventing a slightly modified wheel. Props to her for that!
 
@@ -60,15 +66,15 @@ Her slides are online [here]().
 
 ### An Attempt at Demystifying Bayesian Deep Learning
 
-This talk was my own, put at the end of the 2nd day. The title definitely contributed to the hype. I popped into the room early, but then left for the restroom. When I got back, there was a lineup in the front door and in the back door. Totally unexpected. That said, big credit to the Boston Bayesians organizers Jordi and Colin, who let me do the talk as a rehearsal for PyData, so I felt very grounded. 
+This talk was my own, put at the end of the 2nd day. The title definitely contributed to the hype. I popped into the room early, but then left for the restroom. When I got back, there was a lineup in the front door and in the back door. Totally unexpected. That said, big credit to the Boston Bayesians organizers Jordi and Colin, who let me do the talk as a rehearsal for PyData, so I felt very grounded.
 
-The talk went mostly smoothly. I think I was channeling my colleague, Brant Peterson, with his sense of humour during that time. There was one really hilarious hiccup - right after mentioning that I wouldn't overdo the "math" and "equations", I accidentally opened an adjacent tab with an alternate version of the slides... with, surprise surprise, a math equation on it! During the Q&A, when I shared the point of not needing to do train/test splits in Bayesian analysis, I could sense the jaws dropping and eyes widening in disbelief; more than just a handful of people came up and asked for the reference later on. 
+The talk went mostly smoothly. I think I was channeling my colleague, Brant Peterson, with his sense of humour during that time. There was one really hilarious hiccup - right after mentioning that I wouldn't overdo the "math" and "equations", I accidentally opened an adjacent tab with an alternate version of the slides... with, surprise surprise, a math equation on it! During the Q&A, when I shared the point of not needing to do train/test splits in Bayesian analysis, I could sense the jaws dropping and eyes widening in disbelief; more than just a handful of people came up and asked for the reference later on.
 
 Having done the talk, I now realize how much people will appreciate a lighthearted and lightweight introduction to a topic that's very dense and filled with jargon. Conference speakers, we need to do more of this!
 
-From an emotional standpoint, many people brought me joy with their positive comments on the visuals and structure of the talk. Others put out positive comments on Twitter, which I collected together in a [Twitter Moment](https://twitter.com/i/moments/924970479869448193?ref_src=twsrc%5Etfw). It was very encouraging, especially on this deep learning journey that I'm on right now. 
+From an emotional standpoint, many people brought me joy with their positive comments on the visuals and structure of the talk. Others put out positive comments on Twitter, which I collected together in a [Twitter Moment](https://twitter.com/i/moments/924970479869448193?ref_src=twsrc%5Etfw). It was very encouraging, especially on this deep learning journey that I'm on right now.
 
-## Tutorials 
+## Tutorials
 
 ### Interactive `matplotlib` Figures
 
@@ -88,7 +94,7 @@ This one was led by the ever-entertaining, ever-surprising James Powell. I wish 
 
 ## Overall Thoughts
 
-I'm glad I made it to PyData NYC 2017 this year. Made many new friends and connections, and caught up with old friends in the PyData community. As always, learned a ton as well! 
+I'm glad I made it to PyData NYC 2017 this year. Made many new friends and connections, and caught up with old friends in the PyData community. As always, learned a ton as well!
 ---
 pub_date: 2017-11-30
 ---
