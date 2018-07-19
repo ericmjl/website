@@ -73,7 +73,7 @@
             <ul class="navbar-nav mr-auto">
                 {% for link in bag('nav')['footer'] %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}"><i class="fa {{ link['icon'] }}" aria-hidden="true"></i> {{ link['title'] }}</a>
+                    <a class="nav-link" href="{{ link['href'] }}"><i class="{{ link['icon'] }}" aria-hidden="true"></i> {{ link['title'] }}</a>
                 </li>
                 {% endfor %}
             </ul>
