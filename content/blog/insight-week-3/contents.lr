@@ -2,6 +2,12 @@ title: Insight Week 3
 ---
 author: Eric J. Ma
 ---
+tags:
+
+insight data science
+data science
+job hunt
+---
 body:
 
 This week was a week of polishing our final products and getting them in shape for our demos. Pushing a product to final production really involves a lot of nitty-gritty tweaking. In this blog post, I'll detail some of what I had to work on.
@@ -12,7 +18,7 @@ My [final product][fluforecaster] a hybrid web dashboard + blog post. Behind the
 
 Another important thing is the user experience (UX) when interacting with my hybrid blog post + dashboard. Unlike this blog or one written in Medium (the blog of choice for Insight), I have interactive elements in the post, which meant I had to hand-craft the HTML for the page. In plotting the figures on the page, there are a set of functions in the backend that are run before the page is rendered. These compute the necessary JS for interactive web plots. They have to run fast enough, otherwise Heroku will timeout. Introducing code to plot the bounding boxes above slowed the loading time of the page beyond the 30 second limit Heroku imposed. As such, I had to carefully profile my code (mostly manually, with timing statements printed to console) to isolate the slow part, rewrite the implementation for speed, and re-deploy to Heroku. This took another good 3-4 hours, all to shave off dozens of seconds. The things we do with our lives!
 
-Throughout the week, a lot of other Fellows were getting their web demos set up. A lot of questions regarding Bokeh and Flask were flying around. Because of the discussion, I think I have a much better grasp over the programming model involved in making Bokeh work with Flask. Basically there's a bunch of plotting computation that is needed to get the JavaScript computer by Bokeh, and then through Jinja2 templating and HTML divs, we can put the final plot in the HTML canvas. A few more rounds of practice and I should be able to commit it to memory. 
+Throughout the week, a lot of other Fellows were getting their web demos set up. A lot of questions regarding Bokeh and Flask were flying around. Because of the discussion, I think I have a much better grasp over the programming model involved in making Bokeh work with Flask. Basically there's a bunch of plotting computation that is needed to get the JavaScript computer by Bokeh, and then through Jinja2 templating and HTML divs, we can put the final plot in the HTML canvas. A few more rounds of practice and I should be able to commit it to memory.
 
 The final part is in getting the presentation overall looking polished and understandable. This involves many tasks, from tweaking the text to making static figures and more. I have spent time with column layouts and configuring modals to get my page content looking overall fresh and yet also informative. Requires a lot of thought!
 ---
