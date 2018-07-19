@@ -2,13 +2,21 @@ title: nano text editor hacks
 ---
 author: Eric J. Ma
 ---
+tags:
+
+programming
+nano
+text editor
+coding snippets
+
+---
 body:
 
 Much as I've embraced the [Atom text editor](https://atom.io/), there are times when the GUI isn't accessible to us, and we are forced to use a Terminal-based text editor.
 
-Now, I'm not one of those crazy types who use emacs or vim - those are the real seasoned pros. (I still don't know how to exit vim, btw.) As such, my terminal editor of choice remains the venerable `nano`. Here's some hacks that I recently figured out, to make text editing much easier in `nano`. 
+Now, I'm not one of those crazy types who use emacs or vim - those are the real seasoned pros. (I still don't know how to exit vim, btw.) As such, my terminal editor of choice remains the venerable `nano`. Here's some hacks that I recently figured out, to make text editing much easier in `nano`.
 
-**(1) Syntax highlighting**
+## (1) Syntax highlighting
 
 This is such a big one! Syntax highlighting seriously helps a ton. If you're on a Mac, make sure you install `homebrew`'s version of `nano` - you can look at my [dotfiles][dotfilesL41] or run the command:
 
@@ -31,7 +39,7 @@ You can find a sample [.nanorc] file on my GitHub [dotfiles] repository
 [dotfiles]: https://github.com/ericmjl/dotfiles/
 [.nanorc]: https://github.com/ericmjl/dotfiles/blob/master/.nanorc-mac
 
-**(2) Keyboard Shortcuts**
+## (2) Keyboard Shortcuts
 
 Here's a laundry list of keyboard shortcuts I've muscle-memorized:
 
