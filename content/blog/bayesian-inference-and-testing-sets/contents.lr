@@ -2,13 +2,19 @@ title: Bayesian Inference & Testing Sets
 ---
 author: Eric J. Ma
 ---
+tags:
+
+bayesian
+statistics
+data science
+---
 body:
 
 This topic recently came up again on the [PyMC3 discourse](https://discourse.pymc.io/t/do-we-need-a-testing-set/759/5). I had an opportunity to further clarify what I was thinking about when I first uttered the train/test split comment [at PyData NYC](https://www.youtube.com/watch?v=s0S6HFdPtlA).
 
-After a little while, my thoughts for a layperson are a bit clearer, and I thought I'd re-iterate them here. 
+After a little while, my thoughts for a layperson are a bit clearer, and I thought I'd re-iterate them here.
 
-1. Model specification uncertainty: Did we get the conditional relationships correct? Did we specify enough of the explanatory variables? 
+1. Model specification uncertainty: Did we get the conditional relationships correct? Did we specify enough of the explanatory variables?
 1. Model parameter uncertainty: Given a model, can we quantify the uncertainty in the parameter values?
 
 These are different uncertainties to deal with. We must be clear: where we are pretty sure about the model spec, Bayesian inference is about quantifying the uncertainty in the parameter values. Under this paradigm, if we use more data, we get narrower posterior distributions, and if we use less data, we get wider posterior distributions. If we split the data, we're just feeding in fewer data points to the model; if we don't, then we're just feeding in more data points.
