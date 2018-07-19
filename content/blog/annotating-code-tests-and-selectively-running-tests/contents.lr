@@ -2,6 +2,12 @@ title: Annotating code tests and selectively running tests
 ---
 author: Eric J. Ma
 ---
+tags:
+
+programming
+python
+testing
+---
 body:
 
 I just learned about a neat trick when using `pytest` - the ability to "mark" tests with metadata, and the ability to selectively run groups of marked tests.

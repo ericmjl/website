@@ -2,6 +2,11 @@ title: Female Doctors are Better than Male Doctors - For Real?
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data science
+statistics
+---
 body:
 
 For real. Read on for the statistical perspective on why.
@@ -17,7 +22,7 @@ If you check the main figure on the paper, it'll look like this:
 Peeking into the text for a bit more context for mortality (it's roughly the same magnitude difference elsewhere).
 
 > **Physician Sex and Patient Mortality**
-> 
+>
 > The final sample for the analyses of 30-day mortality rates included 1 583 028 hospitalizations treated by 57 896 physicians. Overall 30-day mortality for the entire sample was 179 162 (11.32%). Patients cared for by female physicians had lower 30-day mortality than did patients treated by male physicians (10.82% vs 11.49%; risk difference [RD], –0.67%; 95% CI, –0.80% to –0.54%; P < .001; number needed to treat [NNT] to prevent 1 death, 149) after accounting for patient characteristics (Table 2). The difference in mortality persisted after adjustment for hospital fixed effects (female physicians, 10.91% vs male physicians, 11.46%; adjusted RD, –0.55%; 95% CI, –0.67% to –0.42%; P < .001; NNT, 182). Further adjusting for physician characteristics had a limited effect on these results (female physicians, 11.07% vs male physicians, 11.49%; adjusted RD, –0.43%; 95% CI –0.57% to –0.28%; P < .001; NNT, 233).
 
 If you look at just the difference between the two 'treatment' groups (male-treated vs. female-treated patients), there only seems to be a 0.42% difference in mortality rates after controlling for hospital patient characteristics, hospital fixed effects, physician characteristics, length of stay, use of care, discharge location, patient volume, and physicians’ years of practice. Damn, that's a really small difference! The effect size (here improperly defined as ratio of larger to smaller) is only 1.03. Hardly an effect worth mentioning, isn't it?

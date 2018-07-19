@@ -2,11 +2,18 @@ title: Always Check Your Data
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data science
+data analysis
+statistics
+bayesian
+---
 body:
 
-True story, just happened today. I was trying to fit a Poisson likelihood to estimate event cycle times (in discreet weeks). For certain columns, everything went perfectly fine. Yet for other columns, I was getting negative infinity’s likelihoods, and was banging my head over this problem for over an hour and a half. 
+True story, just happened today. I was trying to fit a Poisson likelihood to estimate event cycle times (in discreet weeks). For certain columns, everything went perfectly fine. Yet for other columns, I was getting negative infinity’s likelihoods, and was banging my head over this problem for over an hour and a half.
 
-As things turned out, those columns that gave me negative infinity likelihood initializations were doing so because of negative values in the data. Try fitting a Poisson likelihood, which only has positive support, on that! 
+As things turned out, those columns that gave me negative infinity likelihood initializations were doing so because of negative values in the data. Try fitting a Poisson likelihood, which only has positive support, on that!
 
 ![](https://i.imgflip.com/1yl6ki.jpg)
 
