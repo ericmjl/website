@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Tags{% endblock %}
+
+{% block body %}
+<h1><i class="fas fa-tag"></i> {{ this.tag }}</h1>
+<ul>
+  {% for i in this.items %}
+    <li><a href="{{ i|url }}">{{ i.pub_date }}: {{ i.title }}</a></li>
+  {% else %}
+    <li><em>No items.</em></li>
+  {% endfor %}
+</ul>
+{% endblock %}

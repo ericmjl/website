@@ -1,12 +1,16 @@
 {% macro render_blog_post(post, from_index=false) %}
-  <!-- <div class="blog-post"> -->
+  <!-- Import stylesheet -->
   <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
   <div>
+
+  <!-- Set title style -->
   {% if from_index %}
     <h1><a href="{{ post|url }}">{{ post.title }}</a></h1>
   {% else %}
     <h1>{{ post.title }}</h1>
   {% endif %}
+
+  <!-- Append author -->
   <p class="meta">
     written by
     {% if post.twitter_handle %}
@@ -16,7 +20,20 @@
       {{ post.author }}
     {% endif %}
     on {{ post.pub_date }}
+  {% if post.tags %}
   </p>
+  <!-- Append tags after author -->
+  <p>
+      {% for t in post.tags -%}
+      <i class="fas fa-tag"></i>
+      <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
+          {{ t }}
+      </a>
+      {% endfor %}
+  </p>
+  {% endif %}
+
+  <!-- Put post body -->
   {{ post.body }}
   </div>
 {% endmacro %}
