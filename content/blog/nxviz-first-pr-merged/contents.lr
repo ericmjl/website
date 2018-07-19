@@ -2,13 +2,21 @@ title: nxviz first PR merged!
 ---
 author: Eric J. Ma
 ---
+tags:
+
+software engineering
+data visualization
+nxviz
+graph theory
+data science
+---
 body:
 
-With thanks to [@KassnerNora](https://twitter.com/KassnerNora), [`nxviz`](https://github.com/ericmjl/nxviz) has a new feature! Now, it is possible to specify the data to use to colour edges. Previously, this was available in the API but was not working as I had not the time to implement it. 
+With thanks to [@KassnerNora](https://twitter.com/KassnerNora), [`nxviz`](https://github.com/ericmjl/nxviz) has a new feature! Now, it is possible to specify the data to use to colour edges. Previously, this was available in the API but was not working as I had not the time to implement it.
 
 Now, with [Nora's PR](https://github.com/ericmjl/nxviz/pull/260) merged in, users can declare their edges to be coloured by some edge metadata key! In addition to that, Nora included a `seaborn` colour palette that may be useful for drawing other edge colours. The API remains a declarative API, giving users an easy way to specify how they want rational graph plots to be made.
 
-Thank you for the contribution, Nora! 
+Thank you for the contribution, Nora!
 ---
 pub_date: 2018-02-21
 ---
