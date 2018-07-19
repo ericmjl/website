@@ -2,6 +2,15 @@ title: Principles of Network Visualization
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data visualization
+data science
+nxviz
+graph visualization
+network science
+
+---
 body:
 
 I use networks as part of my research, and visualization is a very important part of it. The problem with network visualizations is that most people default to node-link diagrams that end up looking like [hairballs](https://duckduckgo.com/?q=network+visualization+hairball&t=osx&ia=web).
@@ -21,7 +30,7 @@ Once the `(x, y)` coordinates for each node are computed, drawing edges is a muc
 3. Colouring lines to convey grouping of edges.
 4. Highlights, such as using different line styles, thickness, or colour (as long as they are not used to convey other things), to accentuate edges of interest.
 
-Finally, it may be better to show panels of subsets of the graph, rather than the whole graph itself, rather than shove the entire graph into one visualization. This is because extracting subsets of edges (and even just the relevant nodes) and displaying them on separate plots reduces visual clutter. 
+Finally, it may be better to show panels of subsets of the graph, rather than the whole graph itself, rather than shove the entire graph into one visualization. This is because extracting subsets of edges (and even just the relevant nodes) and displaying them on separate plots reduces visual clutter.
 
 Hive Plots and Circos Plots are two examples of network visualizations done well, for they conform to these principles. They will both be available in the [`nxviz`](https://github.com/ericmjl/nxviz) package that I will be co-developing, and I hope to use `nxviz` to highlight these details. I think there are other creative layouts as well, such as Arc Plots and Parallel Line Plots that can help us gain a more rational view of the structure of our network data.
 
@@ -31,7 +40,7 @@ From an API design perspective, the “grammar”-based API that specifies how t
 h = HivePlot(nodes, edges, node_groupby=groupby_key, node_colorby=colorby_key, edge_colorby=colorby_key)
 h.draw()
 ```
-The user need not specify how individual nodes are coloured, as long as the `groupby_key` is present in the metadata. Likewise for node colours and edge colours. 
+The user need not specify how individual nodes are coloured, as long as the `groupby_key` is present in the metadata. Likewise for node colours and edge colours.
 
 Implementing this into `nxviz`, I think, is going to be a really challenging, fun and rewarding thing to do!
 ---
