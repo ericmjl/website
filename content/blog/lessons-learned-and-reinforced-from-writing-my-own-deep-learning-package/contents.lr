@@ -2,19 +2,27 @@ title: Lessons learned and reinforced from writing my own deep learning package
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data science
+deep learning
+message passing neural networks
+software engineering
+graph theory
+---
 body:
 
-At work, I’ve been rolling my own deep learning package to experiment with graph convolutional neural networks. I did this because in graph-centric deep learning, an idea I picked up from this paper, the inputs, convolution kernels, and much more, are being actively developed, and the standard APIs don’t fit with this kind of data. 
+At work, I’ve been rolling my own deep learning package to experiment with graph convolutional neural networks. I did this because in graph-centric deep learning, an idea I picked up from this paper, the inputs, convolution kernels, and much more, are being actively developed, and the standard APIs don’t fit with this kind of data.
 
-Here’s lessons I learned (and reinforced) while doing this. 
+Here’s lessons I learned (and reinforced) while doing this.
 
 ## `autograd` is an amazing package
 
-I am using `autograd` to write my neural networks. `autograd` provides a way to automatically differentiate `numpy` code. As long as I write the forward computation up to the loss function, `autograd` will be able to differentiate the loss function w.r.t. all of the parameters used, thus providing the direction to move parameters to minimize the loss function. 
+I am using `autograd` to write my neural networks. `autograd` provides a way to automatically differentiate `numpy` code. As long as I write the forward computation up to the loss function, `autograd` will be able to differentiate the loss function w.r.t. all of the parameters used, thus providing the direction to move parameters to minimize the loss function.
 
-## Deep learning is nothing more than chaining elementary differentiable functions 
+## Deep learning is nothing more than chaining elementary differentiable functions
 
-Linear regression is nothing more than a dot product of features with weights and adding bias terms. Logistic regression just chains the logistic function on top of that. Anything deeper than that is what we might call a neural network. 
+Linear regression is nothing more than a dot product of features with weights and adding bias terms. Logistic regression just chains the logistic function on top of that. Anything deeper than that is what we might call a neural network.
 
 One interesting thing that I've begun to ponder is the shape of the loss function, and how it changes when I change model architecture, activation functions, and more. I can't speak intelligently about it right now, but from observing the training performance live (I update a plot of predictions vs. actual values at the end of `x` training epochs), different combinations of activation functions seem to cause different behaviours of the outputs, and there's no first-principles reason why that I can think of. All-told, pretty interesting :).
 
@@ -28,7 +36,7 @@ Even though I'm doing my best already with matrix math (and hopefully getting be
 
 ## Graph convolutions have a connection to network propagation
 
-I will probably explore this a bit more deeply in another blog post, but yes, as I explore the math involved in doing graph convolutions, I'm noticing that there's a deep connection there. The short story is basically "convolutions propagate information across nodes" in almost exactly the same way as "network propagation methods share information across nodes", through the use of a kernel defined by the adjacency matrix of a graph. 
+I will probably explore this a bit more deeply in another blog post, but yes, as I explore the math involved in doing graph convolutions, I'm noticing that there's a deep connection there. The short story is basically "convolutions propagate information across nodes" in almost exactly the same way as "network propagation methods share information across nodes", through the use of a kernel defined by the adjacency matrix of a graph.
 
 Ok, that's a lot of jargon, but I promise I will explore this topic at a later time.
 
