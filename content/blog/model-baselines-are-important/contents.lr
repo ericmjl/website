@@ -2,15 +2,22 @@ title: Model Baselines Are Important
 ---
 author: Eric J. Ma
 ---
+tags:
+
+machine learning
+data science
+deep learning
+automl
+---
 body:
 
-For any problem that we think is machine learnable, having a sane baseline is really important. It is even more important to establish them early. 
+For any problem that we think is machine learnable, having a sane baseline is really important. It is even more important to establish them early.
 
 Today at ODSC, I had a chance to meet both Andreas Mueller and Randy Olson. Andreas leads [`scikit-learn`](http://scikit-learn.org/stable/) development, while Randy was the lead developer of [TPOT](https://github.com/EpistasisLab/tpot), an AutoML tool. To both of them, I told a variation of the following story:
 
-I had spent about 1.5 months building and testing a graph convolutions neural network model to predict RNA cleavage by an enzyme. I was suffering from a generalization problem - this model class would never generalize beyond the training samples for my problem on hand, even though I saw the same model class perform admirably well for small molecules and proteins. 
+I had spent about 1.5 months building and testing a graph convolutions neural network model to predict RNA cleavage by an enzyme. I was suffering from a generalization problem - this model class would never generalize beyond the training samples for my problem on hand, even though I saw the same model class perform admirably well for small molecules and proteins.
 
-Together with an engineer at NIBR, we brainstormed a baseline with some simple features, and threw a random forest model at it. Three minutes later, after implementing everything, we had a model that generalized and outperformed my implementation of graph CNNs. Three days later, we had an AutoML (TPOT) model that beat the random forest. After further discussion, we realize then that the work that we did is sufficiently publishable even without the fancy graph CNNs. 
+Together with an engineer at NIBR, we brainstormed a baseline with some simple features, and threw a random forest model at it. Three minutes later, after implementing everything, we had a model that generalized and outperformed my implementation of graph CNNs. Three days later, we had an AutoML (TPOT) model that beat the random forest. After further discussion, we realize then that the work that we did is sufficiently publishable even without the fancy graph CNNs.
 
 I think there’s a lesson in establishing baselines and MVPs early on!
 ---
