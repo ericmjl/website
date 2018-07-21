@@ -2,6 +2,11 @@ title: The problem of too many splits?
 ---
 author: Eric J. Ma
 ---
+tags:
+
+python
+data science
+---
 body:
 
 I recently followed an interesting Twitter conversation, in which one tweet struck me as surprising:
@@ -23,7 +28,7 @@ CPython is the de-facto Python implementation that everybody loves (e.g. the imp
 
 Then there's `pip` and `conda`. `pip` installs stuff from PyPI, which is currently an open publishing platform for Python packages, while `conda` installs stuff from Anaconda cloud; conda-forge, which hosts many PyPI packages that are also built into `conda` packages, is currently a curated set, and is currently used more as a package redistributor to the three major platforms.
 
-`pip` only installs Python stuff; `conda` installs any binary, and is language- and platform-agnostic, and is very widely used by the PyData sub-community of Pythonistas. `pip` used to have problems with packages like `scipy` and `numpy`; now it's less of an issue with the Wheel packaging system. 
+`pip` only installs Python stuff; `conda` installs any binary, and is language- and platform-agnostic, and is very widely used by the PyData sub-community of Pythonistas. `pip` used to have problems with packages like `scipy` and `numpy`; now it's less of an issue with the Wheel packaging system.
 
 `conda` admittedly *can* get confusing sometimes; I worked on `bokeh` for a bit at the PyCon 2016 sprints, and `conda` installed `npm`, Javascript's package manager. So I have, right now, a JS package manager inside the `conda` package manager which plays nicely with the Python-only package manager...
 
@@ -39,7 +44,7 @@ Let's not get started on this one. Flask and Django; we have a running joke at B
 
 *Py2/3*
 
-And then, of course, there's Python 2 and Python 3, one split that really created a big split in the community; there are some Python folks who see no need to go to Python 3 unless absolutely forced to (Armin Ronacher, I think, is one), and then there are those who fully advocate for moving on (Jake Vanderplas, for example, and myself). 
+And then, of course, there's Python 2 and Python 3, one split that really created a big split in the community; there are some Python folks who see no need to go to Python 3 unless absolutely forced to (Armin Ronacher, I think, is one), and then there are those who fully advocate for moving on (Jake Vanderplas, for example, and myself).
 
 So, how do we go forward? Conda + Py3 + CPython? `pip` + Py2 + PyPy? Permit C-extensions?
 
@@ -49,13 +54,13 @@ But why do I disagree with Gael that the state of things *ought* to be consolida
 
 I disagree because I see the splits as being indicative of different groups of people trying to actively solve a diverse multitude of problems. In other words, I see this diversification of tools as a suite of hypotheses that are being tested.
 
-Sure, `pip` works well, and is being actively developed, but PyData folks sometimes need to use tools from other languages because none *currently* exist in Python, and so `conda` is testing the hypothesis that Python can be used to make a better cross-language *and* cross-platform package manager. 
+Sure, `pip` works well, and is being actively developed, but PyData folks sometimes need to use tools from other languages because none *currently* exist in Python, and so `conda` is testing the hypothesis that Python can be used to make a better cross-language *and* cross-platform package manager.
 
 Sure, CPython is the most stable and performant interpreter, but PyPy (and other JIT interpreters) are testing the hypothesis that we can make a stable, language-compliant interpreter without all of the type checking overhead of the CPython implementation. In fact, I think I remember hearing (admittedly 2nd hand) the claim that the Python BDFL said that PyPy is probably the way forward.
 
 Python 3, as a language design specification, is the ongoing hypothesis test that there will be new language features that the Python community will love. I'm guessing that some are backwards-incompatible, so that necessitates a new version number and hence a split.
 
-So what I think is this - let the hypotheses be tested! If people like it, the hypothesis is validated. If people don't, it's falsified, and we move on. 
+So what I think is this - let the hypotheses be tested! If people like it, the hypothesis is validated. If people don't, it's falsified, and we move on.
 
 Also, vibrancy in the language and tooling brings this diversification. The pragmatist in me is actually glad that there's this many splits, because it means that people's specific problems are being solved, and that in the long-run, *as long as there's constant community communication*, some of these specific problems may eventually be recognized as common problems that get spread, while others remain as actively maintained niche tools. It's a totally okay situation for the Python community to be in!
 

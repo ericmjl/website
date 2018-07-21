@@ -2,6 +2,14 @@ title: Open Source Software
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data science
+open source
+gpu
+bayesian
+statistics
+---
 body:
 
 Open source software is awesome, and I've just been thoroughly convinced of why.
@@ -16,7 +24,7 @@ The fix was inspired by someone else's problems that was discussed on `numpy`'s 
 
 [pm]: https://github.com/pymc-devs/pymc3/pull/2470
 
-If PyMC3's and `numpy`'s code bases were not open source, with issues discussed openly, I would not have been able to figure out a possible fix to the issues with the help of other people. Also, I wouldn't have been able to patch the codebase locally first to see if it solved my own problems. I also wouldn't have access to the test suite to check that nothing was broken. All-in-all, working with an open source codebase was instrumental to getting this fix implemented. 
+If PyMC3's and `numpy`'s code bases were not open source, with issues discussed openly, I would not have been able to figure out a possible fix to the issues with the help of other people. Also, I wouldn't have been able to patch the codebase locally first to see if it solved my own problems. I also wouldn't have access to the test suite to check that nothing was broken. All-in-all, working with an open source codebase was instrumental to getting this fix implemented.
 
 Big shout-out to the PyMC devs I interacted with on this - Colin & Junpeng. Thank you for being so encouraging and helpful!
 ---

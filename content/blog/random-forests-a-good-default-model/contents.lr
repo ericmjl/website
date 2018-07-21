@@ -2,6 +2,13 @@ title: Random Forests: A Good Default Model?
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data science
+machine learning
+random forest
+
+---
 body:
 
 I've been giving this some thought, and wanted to go out on a limb to put forth this idea:
@@ -14,7 +21,7 @@ Before I go on, let me first provide some setup.
 
 Let's say we have a two-class classification problem. Assume everything is balanced. One "dumb baseline"" case is a coin flip. The other "dumb baseline" is predicting everything to be one class. Once we have these established, we can go to a "baseline" machine learning model.
 
-Usually, people might say, "go do logistic regression (LR)" as your first baseline model for classification problems. It sure is a principled choice! Logistic regression is geared towards classification problems, makes only linear assumptions about the data, and identifies directional effects as well. From a practical perspective, it's also very fast to train. 
+Usually, people might say, "go do logistic regression (LR)" as your first baseline model for classification problems. It sure is a principled choice! Logistic regression is geared towards classification problems, makes only linear assumptions about the data, and identifies directional effects as well. From a practical perspective, it's also very fast to train.
 
 But I've found myself more and more being oriented towards using RFs as my baseline model instead of logistic regression. Here are my reasons:
 
