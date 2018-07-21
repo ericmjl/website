@@ -2,9 +2,14 @@ title: Recursive Programming and DAGs
 ---
 author: Eric J. Ma
 ---
+tags:
+
+programming
+code snippets
+---
 body:
 
-Over the past few days, I've found myself using recursive programming to implement a "model specification" system with inheritance for deep learning. The goal here is to enable reproducible computational experiments for particular deep learning hyperparameter sets. Reproducibility is something I learned from the Software/Data Carpentry initiative, thus I wanted to ensure that my own work was reproducible, even if it's not (because of corporate reasons) open-able, because it's the right thing to do. 
+Over the past few days, I've found myself using recursive programming to implement a "model specification" system with inheritance for deep learning. The goal here is to enable reproducible computational experiments for particular deep learning hyperparameter sets. Reproducibility is something I learned from the Software/Data Carpentry initiative, thus I wanted to ensure that my own work was reproducible, even if it's not (because of corporate reasons) open-able, because it's the right thing to do.
 
 So, how do these "model spec" files work? I call them "experiment profiles", and they specify a bunch of things: **model architecture**, **training parameters**, and **data tasks**. These experiment profiles are stored in YAML files on disk. A profile essentially looks like the following (dummy examples provided, naturally):
 
@@ -22,7 +27,7 @@ training_parameters:
         n_epochs: 20
 ```
 
-In this YAML file, the key-value pairs essentially match the API of the tooling I've built on top of Keras' API to make myself more productive. (From the example, it should be clear that we're dealing with only feed-forward neural networks and nothing else more complicated.) The key here (pun unintended) is that I have a `parent` key-value pair that specifies another experiment profile that I can inherit from. 
+In this YAML file, the key-value pairs essentially match the API of the tooling I've built on top of Keras' API to make myself more productive. (From the example, it should be clear that we're dealing with only feed-forward neural networks and nothing else more complicated.) The key here (pun unintended) is that I have a `parent` key-value pair that specifies another experiment profile that I can inherit from.
 
 Let's call the above example `default.yaml`. Let's say I want to run another computational experiment that uses the `adam` optimizer instead of plain vanilla `sgd`. Instead of re-specifying the entire YAML file, by implementing an inheritance scheme, I can re-specify only the optimizer and optimizer_options.
 
@@ -50,7 +55,7 @@ The core of this problem is traversing the inheritance path, from `adam-3.yaml` 
 How would this look like in code? Let's take a look at an implementation.
 
 ```python
-import yaml 
+import yaml
 
 def inheritance_path(yaml_file, path):
     """
@@ -75,8 +80,8 @@ Once I've gotten the path list, I can finally load the parameters using a single
 ```python
 def load_params(yaml_file):
     path = inheritance_path(yaml_file, [yaml_file])
-    p = dict(data_tasks=dict(), 
-             model_architecture=dict(), 
+    p = dict(data_tasks=dict(),
+             model_architecture=dict(),
              training_parameters=dict())
     for fn in path[::-1]:  # go in reverse!
         with open(fn, 'r+') as f:
@@ -98,7 +103,7 @@ root
     |- F
         |- G
         |- H
-        |- I 
+        |- I
             |- J
 ```
 

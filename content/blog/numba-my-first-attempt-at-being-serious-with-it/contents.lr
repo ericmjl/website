@@ -2,6 +2,14 @@ title: Numba: My first attempt at being serious with it
 ---
 author: Eric J. Ma
 ---
+tags:
+
+numba
+open source
+data science
+optimization
+coding snippets
+---
 body:
 
 This evening, I saw a Tweet about using `numba`, and I thought, it's about time I give it a proper shot. I had been solving some dynamic programming problems just for fun, and I thought this would be a good test case for `numba`'s capabilities.
@@ -17,7 +25,7 @@ n = 200
 arr = np.random.randint(low=0, high=100, size=n**2).reshape(n, n)
 ```
 
-I then wrote out my solution, and wrapped it in two versions of the function call: one native and one numba-JIT'd. 
+I then wrote out my solution, and wrapped it in two versions of the function call: one native and one numba-JIT'd.
 
 ```python
 # Let's collect apples.
@@ -39,7 +47,7 @@ def collect_apples(arr):
                 val_up = 0
             sum_apples[row, col] = arr[row, col] + max(val_left, val_up)
     return sum_apples
-        
+
 def collect_apples_nonjit(arr):
     sum_apples = np.zeros(shape=arr.shape)
     for row in range(arr.shape[0]):

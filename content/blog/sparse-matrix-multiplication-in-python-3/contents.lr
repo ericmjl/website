@@ -2,6 +2,13 @@ title: Sparse Matrix Multiplication in Python 3
 ---
 author: Eric J. Ma
 ---
+tags:
+
+data science
+python
+sparse matrix
+linear algebra
+---
 body:
 
 Sparse matrix multiplication shows up in many places, and in Python, it's often handy to use a sparse matrix representation for memory purposes.
@@ -119,7 +126,7 @@ array([[ 1.54993241],
        [ 0.84065304]])
 ```
 
-Exactly what we wanted! 
+Exactly what we wanted!
 
 The reverse multiplication, in which we take a `(10x1)` matrix and try to multiply it with a `(10x10)` matrix, should fail:
 
