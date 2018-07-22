@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}Tags{% endblock %}
+
+{% block body %}
+<h1><i class="fas fa-tag"></i> Tags</h1>
+{% set blogposts = site.query('/blog') %}
+{% set tags = [] %}
+{% for post in blogposts %}
+  {% for tag in post.tags if tag not in tags %}
+    <!-- {{ tags.append(tag) }} -->
+  {% endfor %}
+{% endfor %}
+
+<ul>
+  {% for tag in tags|sort %}
+    <li><a href="{{ site.url_path }}/blog/tag/{{ tag }}">{{ tag }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}
