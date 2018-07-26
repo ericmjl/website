@@ -1,0 +1,46 @@
+title: SciPy 2018
+---
+author: Eric J. Ma
+---
+tags:
+
+scipy
+conferences
+python
+---
+body:
+
+It's been about two weeks since SciPy 2018 ended, and I've finally found some breathing room to write about it.
+
+SciPy 2018 is the 4th year I've made it to the conference, my first one being SciPy 2015 (not 2014, as I had originally incorrectly remembered). The conference has grown over the years that I've attended it!
+
+## Organizing
+
+This year, I served again as the Financial Aid Co-Chair with Scott Collis and Celia Cintas. It brings me joy to be able to help bring others to the conference, much as I was a few years back when I was still a graduate student.
+
+Building upon last year's application process, where we implemented blinded reviews, this year, we improved the review process so that it was much less tedious and more user-friendly for reviewers, i.e. myself, Celia, Scott and our two committee reviewers, Kasia and Patrick.
+
+The review process can always be improved; we still have some work to do. One would be making the application less intimidating for under-represented individuals. Two might be reworking how we quantify how good our selections are; rather than some aggregate "total" score, it might be that we ought to optimize for a breadth of worthy contributions to the community. Finally, we definitely want to ensure that our focus is on FinAid's mission: to enable us to bring deserving and new people to the conference who otherwise might not have the resources!
+
+## Tutorials
+
+I did two tutorials, one with Hugo and one with Mridul. The one with Mridul was on Network Analysis, and the one with Hugo was on Bayesian statistics. Over the years, I've developed muscle memory on Network Analysis, so it felt very natural to me. Bayesian statistics and probabilistic programming was a new topic for myself and Hugo; as such, I spent proportionally more time preparing for that tutorial instead.
+
+What was pleasantly surprising for me was that Bayesian statistics was gaining a ton of popularity, and this tutorial just happened to be there at the right time. I had a lot of one-on-one chats with tutorial participants after the tutorial and during the conference days, where we talked about the application of Bayesian methods to problems that they had encountered. There's a lot to do until people can generally communicate about data problems using Bayesian methods, but I think we're at an upwards-inflection point right now!
+
+## Conference
+
+I missed the talks mostly because I was doing the Tejas Room track (sit in the Tejas room and chat with people). I nonetheless had a very fruitful and fun time doing so!
+
+To make up for lost time, I put together a [playlist][playlist] of things I'd like to catch up on later.
+
+[playlist]: https://www.youtube.com/playlist?list=PLW01hpWnEtbTORVE7o70mZqB7IVVjOr4E
+
+## Sprints
+
+For the first time ever, I stayed on to sprint! However, I also simultaneously caught a conference bug, so I was basically knocked out for the second day of sprints. For this year's sprints, I implemented a declarative interface for geographic graph visualizations in nxviz, where node placement is prioritized according by geographic information. The intent here isn't to replace geospatial analysis packages, but rather to provide a quick, `seaborn`-like view into a graph's geographical structure. Once a user has a feel for the data, if nothing more is needed, they can use the graph as is; otherwise, they can move onto a different package. 
+
+---
+pub_date: 2018-07-26
+---
+twitter_handle: ericmjl
