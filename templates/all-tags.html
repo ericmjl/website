@@ -9,7 +9,7 @@
 {% for post in blogposts %}
   {% for tag in post.tags if tag not in tags %}
     <!-- has to be kept in comments, otherwise line gets exposed in HTML -->
-    <!-- {{ tags.append(tag) }} -->
+    {% do tags.append(tag) %}
   {% endfor %}
 {% endfor %}
 
