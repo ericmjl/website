@@ -17,6 +17,10 @@ For example, concatenating a few columns together oftentimes lets us create an u
 
 On the other hand, deconcatenating columns into multiple columns can be useful when our index is used to store metadata. (This really shouldn't be happening, but... sometimes that's just how the world works right now...)
 
+Here's an example of how it works:
+
+![](./carbon.png)
+
 To install `pyjanitor`, grab it from PyPI:
 
 ```python
