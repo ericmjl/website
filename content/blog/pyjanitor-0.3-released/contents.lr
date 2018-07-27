@@ -1,0 +1,38 @@
+title: pyjanitor 0.3 released!
+---
+author: Eric J. Ma
+---
+body:
+
+A new release of [`pyjanitor`](https://github.com/ericmjl/pyjanitor) is out!
+
+Two new features that I have added in include:
+
+1. Concatenating column names into a single column, such that each item is separated by a delimiter.
+1. Deconcatenating a column into multiple columns, separating on the basis of a delimiter.
+
+Both of these tasks come up frequently in data preparation.
+
+For example, concatenating a few columns together oftentimes lets us create an unique index based sample properties.
+
+On the other hand, deconcatenating columns into multiple columns can be useful when our index is used to store metadata. (This really shouldn't be happening, but... sometimes that's just how the world works right now...)
+
+To install `pyjanitor`, grab it from PyPI:
+
+```python
+$ pip install pyjanitor
+```
+
+The conda-forge build will be coming soon!
+
+---
+tags:
+
+open source
+pyjanitor
+data science
+---
+
+pub_date: 2018-07-27
+---
+twitter_handle: ericmjl
