@@ -1,14 +1,19 @@
 title: Flu Forecaster
 ---
-description:
+body:
+
+#### description ####
+text:
 
 <iframe src="https://docs.google.com/presentation/d/1GHSUZHxxEATvhhffTnpjJIoKW65ZJ0NeQ3M4hh_fYzI/embed?start=false&loop=false&delayms=10000" frameborder="0" width="480" height="299" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
 As part of my Insight project, I built Flu Forecaster, a project that aims to forecast influenza sequence evolution using deep learning. In it, I used a combination of variational autoencoders (VAEs) to translate time-stamped influenza protein sequences into a continuous coordinate space, and then used gaussian process regression to forecast future continuous coordinates that could be translated back to sequence space.
----
-link: https://fluforecaster.herokuapp.com/
----
-resource: Interactive Blog Post
+
+#### resource ####
+label: Interactive Blog Post
+----
+url: https://fluforecaster.herokuapp.com/
+
 ---
 sort_key: 1
 ---

@@ -1,6 +1,17 @@
 title: PyMC3
 ---
-description:
+description: 
+---
+link: 
+---
+resource: 
+---
+sort_key: 2
+---
+body:
+
+#### description ####
+text:
 
 I have made multiple PRs to PyMC3, which were bug fixes, documentation and small feature additions.
 
@@ -15,9 +26,7 @@ I contributed small changes to the docs, to make it super clear that precision a
 ### Feature Addition
 
 I contributed the definition of a "mode" for the Weibull distribution, so that I could use it in a Mixture Weibull.
----
-link: https://github.com/pymc-devs/pymc3/pulls?utf8=%E2%9C%93&q=is%3Apr+author%3Aericmjl+
----
-resource: Pull Requests
----
-sort_key: 2
+#### resource ####
+label: Please click here to see the pull requests.
+----
+url: https://github.com/pymc-devs/pymc3/pulls?utf8=%E2%9C%93&q=is%3Apr+author%3Aericmjl+

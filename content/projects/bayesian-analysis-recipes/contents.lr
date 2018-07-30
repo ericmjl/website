@@ -1,8 +1,10 @@
 title: Bayesian Analysis Recipes
 ---
-description:
+body:
 
-I once saw a probability estimate with mean 0.8 and variance 0.3. From that point onwards, I knew frequentist estimates could be horribly wrong, and decided to go Bayesian.
+#### description ####
+
+text: I once saw a probability estimate with mean 0.8 and variance 0.3. From that point onwards, I knew frequentist estimates could be horribly wrong, and decided to go Bayesian.
 
 As part of my learning journey, I decided to make publicly available a GitHub repository of Bayesian statistical analysis recipes in PyMC3 featuring models and data that I've seen elsewhere. Most of them I implemented from scratch, to get familiar with PyMC3 syntax and to get familiar with the logic of Bayesian statistical modelling.
 
@@ -11,9 +13,8 @@ Some models that are implemented here include:
 - Neural networks
 - Linear regression
 - Hierarchical modelling
----
-link: https://github.com/ericmjl/bayesian-analysis-recipes
----
-resource: GitHub Repository
+
+#### github ####
+url: https://github.com/ericmjl/bayesian-analysis-recipes
 ---
 sort_key: 0
