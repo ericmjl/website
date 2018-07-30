@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.title }}{% endblock %}
+{% block body %}
+<div class="row" id="name-contact-row">
+    <div class="col-12" id="name-contact-col">
+        <h1 align="center">
+            Eric J. Ma
+        </h1>
+        <p align="center">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+            <a href="http://shortwhale.com/ericmjl">Email</a>
+            |
+            <i class="fa fa-phone" aria-hidden="true"></i>
+            <a href="tel:857-209-1375">857-209-1375</a>
+            |
+            <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+            <a href="http://www.linkedin.com/in/yourusername">LinkedIn</a>
+            |
+            <i class="fab fa-github" aria-hidden="true"></i>
+            <a href="https://github.com/ericmjl">GitHub</a>
+            |
+            <i class="fa fa-globe" aria-hidden="true"></i>
+            <a href="https://ericmjl.github.io/">Personal Website</a>
+            |
+            <i class="fa fa-map-marker" aria-hidden="true"></i>
+            North Quincy, MA
+        </p>
+    </div>
+</div>
+
+<!-- Skills -->
+<div class="row" id="skills-row">
+  <div class="col-12" id="skills-col">
+    <h2>
+      <i class="fa fa-wrench" aria-hidden="true"></i>
+      Skills
+    </h2>
+    <ul>
+      {% for blk in this.body.blocks %}
+        {% if blk._flowblock == "resume-skills" %}
+          <li><b>{{ blk.label }}:</b> {{ blk. skills }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<!-- Experience -->
+<div class="row" id="experience-title-row">
+  <div class="col-12" id="experience-title-col">
+    <h2>
+      <i class="fa fa-code" aria-hidden="true"></i>
+      Experience
+    </h2>
+  </div>
+</div>
+{% for blk in this.body.blocks %}
+  {% if blk._flowblock == "resume-experience" %}
+    {{ blk }}
+  {% endif %}
+{% endfor %}
+
+<!-- Education -->
+<div class="row" id="education-title-row">
+  <div class="col-12" id="education-title-col">
+    <h2>
+      <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+      Education
+    </h2>
+  </div>
+</div>
+{% for blk in this.body.blocks %}
+  {% if blk._flowblock == "resume-education" %}
+    {{ blk }}
+  {% endif %}
+{% endfor %}
+
+{% endblock %}
