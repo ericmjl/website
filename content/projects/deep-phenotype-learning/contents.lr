@@ -1,8 +1,9 @@
 title: Deep Phenotype Learning
 ---
-description:
+body:
+#### description ####
 
-In order to achieve real-time surveillance, we need machine learning models with high learning capacity that are also highly interpretable. I am currently working on extending [neural fingerprints](http://arxiv.org/abs/1509.09292) to protein structures using convolutions on graph-structured data. In the process, we are writing a graph convolution implementation as a Python package, as well as a software package for converting protein 3-D structures into its corresponding "protein interaction graph" representation. While these tools are developed with the goal of deep learning in mind, we also anticipate their general use as well.
+text: In order to achieve real-time surveillance, we need machine learning models with high learning capacity that are also highly interpretable. I am currently working on extending [neural fingerprints](http://arxiv.org/abs/1509.09292) to protein structures using convolutions on graph-structured data. In the process, we are writing a graph convolution implementation as a Python package, as well as a software package for converting protein 3-D structures into its corresponding "protein interaction graph" representation. While these tools are developed with the goal of deep learning in mind, we also anticipate their general use as well.
 
 *Software:*
 

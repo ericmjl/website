@@ -1,8 +1,21 @@
 title: matplotlib
 ---
-date:
+date: 
 ---
-description:
+description: 
+---
+link: 
+---
+resource: 
+---
+type: Code
+---
+sort_key: 4
+---
+body:
+
+#### description ####
+text:
 
 I contributed to the [`matplotlib` enhancement proposal 12](https://github.com/matplotlib/matplotlib/blob/1572a7e53ae255e7adda55b3a84d708b226edaa6/doc/devel/MEP/MEP12.rst), which proposed reorganizing the examples gallery to make it easier for `matplotlib` users to find relevant examples.
 
@@ -18,11 +31,7 @@ statements to explicit
 import matplotlib.pyplot as plt
 import numpy as np
 ```
----
-link: https://github.com/matplotlib/matplotlib/pulls?q=is%3Apr+author%3Aericmjl+is%3Aclosed
----
-resource: Pull Requests
----
-type: Code
----
-sort_key: 4
+#### resource ####
+label: Please click here to see the pull requests.
+----
+url: https://github.com/matplotlib/matplotlib/pulls?q=is%3Apr+author%3Aericmjl+is%3Aclosed
