@@ -1,255 +1,112 @@
-_model: html
----
-title: Resume
+_model: resume
 ---
 body:
 
-        <div class="container">
-            <div class="row" id="name-contact-row">
-                <div class="col-12" id="name-contact-col">
-                    <h1 align="center">
-                        Eric
+#### resume-skills ####
+label: Languages and Tools
+----
+skills: Python, HTML, CSS, bash scripting, git, Illustrator, Indesign, Photoshop
+#### resume-skills ####
+label: Packages
+----
+skills: Pandas, PyMC3 (Bayesian statistics), Flask, scikit-learn, scikit-image, Keras, NetworkX, Mesa
+#### resume-skills ####
+label: ML/Stats
+----
+skills: Network science, variational autoencoders, random forests, Bayesian inference, graphical models, agent-based models
+#### resume-skills ####
+label: Life Sciences
+----
+skills: Microbiology, virology, biochemistry, molecular biology
+#### resume-experience ####
+company: Novartis Institutes for Biomedical Research (NIBR)
+----
+title: Investigator I
+----
+city: Cambridge MA
+----
+start_date: September 2017
+----
+end_date: Present
+----
+description:
 
-                            J.
+- Investigator in the Scientific Data Analysis (SDA) team reporting to [Mark Borowsky](https://www.linkedin.com/in/borowsky/) and [Holger Hoefling](https://www.linkedin.com/in/holger-hoefling-8418905/).
+- Performed internal consulting projects and expanded the SDA Statistical Learning initiative with colleagues.
+- Developed parameterized Bayesian agent-based models of internal project portfolio for scenario planning purposes, using PyMC3 and Mesa.
+- Authored custom deep learning package to train graph convolutional neural networks to predict structural determinants of RNA cutting.
+#### resume-experience ####
+company: Insight Data Science
+----
+title: Health Data Science Fellow
+----
+city: Boston, MA
+----
+start_date: June 2017
+----
+end_date: August 2017
+----
+description:
 
-                        Ma
-                    </h1>
-                    <p align="center">
-                        <i class="fa fa-envelope" aria-hidden="true"></i>
-                        <a href="http://shortwhale.com/ericmjl">Email</a>
-                        |
-                        <i class="fa fa-phone" aria-hidden="true"></i>
-                        <a href="tel:857-209-1375">857-209-1375</a>
-                        |
-                        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-                        <a href="http://www.linkedin.com/in/yourusername">LinkedIn</a>
-                        |
-                        <i class="fab fa-github" aria-hidden="true"></i>
-                        <a href="https://github.com/ericmjl">GitHub</a>
-                        |
-                        <i class="fa fa-globe" aria-hidden="true"></i>
-                        <a href="https://ericmjl.github.io/">Personal Website</a>
-                        |
-                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                        North Quincy, MA
-                    </p>
-                </div>
-            </div>
-            <hr>
-            <div class="row" id="skills-row">
-                <div class="col-12" id="skills-col">
-                    <h2>
-                        <i class="fa fa-wrench" aria-hidden="true"></i>
-                        Skills
-                    </h2>
-                    <ul>
+- Built [Flu Forecaster](https://fluforecaster.herokuapp.com/), a machine learning-powered system that forecasts flu sequences six months out, to better prepare for manufacturing of vaccine strains.
+- Implemented a variational autoencoder (deep learning model) to learn a continuous representation of 14,455 influenza hemagglutinin protein sequences, and trained a Gaussian process model on the continuous representation to predict new flu sequences.
+- Developed interactive blog post using Flask and Bootstrap, and deployed to Heroku and GitHub.
+- Led peer workshops on [web development](https://github.com/ericmjl/minimal-flask-example), deep learning and [code style](https://github.com/ericmjl/pycodestyle-tutorial).
+#### resume-experience ####
+company: Massachusetts Institute of Technology
+----
+title: ScD Candidate
+----
+city: Cambridge, MA
+----
+start_date: August 2011
+----
+end_date: May 2017
+----
+description:
 
-                            <li>
-                                <b>Languages and Tools:</b> Python, HTML, CSS, bash scripting, git, Illustrator, Indesign, Photoshop
-                            </li>
+- Developed a scalable, network-based phylogenetic heuristic algorithm for detecting reassortant influenza viruses using 18,632 fully sequenced virus genomes that improved our capacity to detect reassortment events by two orders of magnitude.
+- The algorithm was used in a lead-author study (published in [PNAS](http://www.pnas.org/content/113/19/5335.full)) providing systematic evidence that genome shuffling is important for host switching, and a co-authored study (published in [Ecology Letters](http://onlinelibrary.wiley.com/doi/10.1111/ele.12629/abstract)) that showed that reassortment is a strategy for viral gene persistence in wild animal reservoirs.
+- Contributed [reproducible data analysis](https://github.com/runstadler-lab/Seal-H3N8-Image-Analysis) for colleagues through fluorescent image quantification and genomic analysis in studies that refuted binding properties of novel influenza viruses.
+- Performed [Bayesian statistical modelling](https://github.com/ericmjl/mia-stats/blob/master/sterilization/sterilization.ipynb) for colleagues testing the efficacy of phone sterilization tools.
+- Delivered tutorials and talks on Network Analysis and Bayesian statistical methods at annual Python conferences, including PyCon, SciPy, and PyData.
+#### resume-experience ####
+company: The University of British Columbia
+----
+title: Undergraduate Researcher
+----
+city: Vancouver, BC
+----
+start_date: June 2006
+----
+end_date: May 2010
+----
+description:
 
-                            <li>
-                                <b>Packages:</b> Pandas, PyMC3 (Bayesian statistics), Flask, scikit-learn, scikit-image, Keras, NetworkX, Mesa
-                            </li>
-
-                            <li>
-                                <b>ML/Stats:</b> Network science, variational autoencoders, random forests, Bayesian inference, graphical models, agent-based models
-                            </li>
-
-                            <li>
-                                <b>Life Sciences:</b> Microbiology, virology, biochemistry, molecular biology
-                            </li>
-
-                    </ul>
-                </div>
-            </div>
-            <hr>
-            <div class="row" id="experience-row">
-                <div class="col-12">
-                    <h2>
-                        <i class="fa fa-code" aria-hidden="true"></i>
-                        Experience
-                    </h2>
-                </div>
-                <div class="container" id="experience-details">
-
-                    <div class="row" id="Novartis Institutes for Biomedical Research (NIBR)-title-row">
-                        <div class="col-9">
-                            <p align="left">
-                                <b>Novartis Institutes for Biomedical Research (NIBR), Investigator I, Cambridge MA</b>
-                            </p>
-                        </div>
-                        <div class="col-3">
-                            <p align="right">
-                                <b>September 2017-Present</b>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row" id="Novartis Institutes for Biomedical Research (NIBR)-data-row">
-                        <div class="col-12" id="Novartis Institutes for Biomedical Research (NIBR)-data-col">
-                            <ul>
-<li>Investigator in the Scientific Data Analysis (SDA) team reporting to <a href="https://www.linkedin.com/in/borowsky/">Mark Borowsky</a>.</li>
-<li>Performed internal consulting projects and expanded the SDA Statistical Learning initiative with colleagues.</li>
-<li>Developed parameterized Bayesian agent-based models of internal project portfolio for scenario planning purposes, using <a href="http://docs.pymc.io">PyMC3</a> and <a href="https://github.com/projectmesa/mesa">Mesa</a>.</li>
-<li>Authored custom deep learning package to train graph convolutional neural networks to predict structural determinants of RNA cutting.</li>
-</ul>
-                        </div>
-                    </div>
-
-                    <div class="row" id="Insight Data Science-title-row">
-                        <div class="col-9">
-                            <p align="left">
-                                <b>Insight Data Science, Health Data Science Fellow, Boston MA</b>
-                            </p>
-                        </div>
-                        <div class="col-3">
-                            <p align="right">
-                                <b>June 2017-August 2017</b>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row" id="Insight Data Science-data-row">
-                        <div class="col-12" id="Insight Data Science-data-col">
-                            <ul>
-<li>Built <a href="https://fluforecaster.herokuapp.com">Flu Forecaster</a>, a machine learning-powered system that forecasts flu sequences six months out, to better prepare for manufacturing of vaccine strains.</li>
-<li>Implemented a variational autoencoder (deep learning model) to learn a continuous representation of 14,455 influenza hemagglutinin protein sequences, and trained a Gaussian process model on the continuous representation to predict new flu sequences.</li>
-<li>Developed interactive blog post using Flask and Bootstrap, and deployed to Heroku and GitHub.</li>
-<li>Led peer workshops on <a href="https://github.com/ericmjl/minimal-flask-example">web development</a>, deep learning and <a href="https://github.com/ericmjl/pycodestyle-tutorial">code style</a>.</li>
-</ul>
-                        </div>
-                    </div>
-
-                    <div class="row" id="Massachusetts Institute of Technology-title-row">
-                        <div class="col-9">
-                            <p align="left">
-                                <b>Massachusetts Institute of Technology, ScD Candidate, Cambridge MA</b>
-                            </p>
-                        </div>
-                        <div class="col-3">
-                            <p align="right">
-                                <b>August 2011-May 2017</b>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row" id="Massachusetts Institute of Technology-data-row">
-                        <div class="col-12" id="Massachusetts Institute of Technology-data-col">
-                            <ul>
-<li>Developed a scalable, network-based phylogenetic heuristic algorithm for detecting reassortant influenza viruses using 18,632 fully sequenced virus genomes that improved our capacity to detect reassortment events by two orders of magnitude.</li>
-<li>The algorithm was used in a lead-author study (published in <a href="http://www.pnas.org/content/113/19/5335.full">PNAS</a>) providing systematic evidence that genome shuffling is important for host switching, and a co-authored study (published in <a href="http://onlinelibrary.wiley.com/doi/10.1111/ele.12629/abstract">Ecology Letters</a>) that showed that reassortment is a strategy for viral gene persistence in wild animal reservoirs.</li>
-<li>Contributed <a href="https://github.com/runstadler-lab/Seal-H3N8-Image-Analysis">reproducible data analysis</a> for colleagues through fluorescent image quantification and genomic analysis in studies that refuted binding properties of novel influenza viruses.</li>
-<li>Performed <a href="https://github.com/ericmjl/mia-stats/blob/master/sterilization/sterilization.ipynb">Bayesian statistical modelling</a> for colleagues testing the efficacy of phone sterilization tools.</li>
-<li>Delivered tutorials and talks on Network Analysis and Bayesian statistical methods at annual Python conferences, including PyCon, SciPy, and PyData.</li>
-</ul>
-                        </div>
-                    </div>
-
-                    <div class="row" id="The University of British Columbia-title-row">
-                        <div class="col-9">
-                            <p align="left">
-                                <b>The University of British Columbia, Undergraduate Researcher, Vancouver BC</b>
-                            </p>
-                        </div>
-                        <div class="col-3">
-                            <p align="right">
-                                <b>June 2006-May 2010</b>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row" id="The University of British Columbia-data-row">
-                        <div class="col-12" id="The University of British Columbia-data-col">
-                            <ul>
-<li>Investigated the role of T cells in intestinal inflammation and fibrosis in a Salmonella typhimurium-induced model of gut inflammation, leading to First Prize Poster (<a href="https://www.evernote.com/l/AANJS_A9iKZAMLGYqJDduTxiiI2ZNf43zHM">Rising Stars of Research 2008</a>) and Best Talk (Multidisciplinary Undergraduate Research Conference 2009) awards.</li>
-<li>Co-founded the <a href="http://2009.igem.org/Team:British_Columbia">first UBC International Genetically Engineered Machines (iGEM) team</a>, where we achieved a Gold status standing in our first year of competition.</li>
-<li>Served as a <a href="https://science.ubc.ca/students/spac">Peer Academic Coach</a>, guiding first- and second-year students towards academic success through building good habits on learning strategies and time management.</li>
-</ul>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <hr>
-            <div class="row" id="education-row">
-                <div class="col-12" id="education-title-row">
-                    <h2>
-                        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                        Education
-                    </h2>
-                </div>
-                <div class="container">
-
-                        <div class="row" id="Sc.D.-row">
-                            <div class="col-9">
-                                <p align="left"><b>Sc.D.</b>, Department of Biological Engineering, Massachusetts Institute of Technology, Cambridge MA</p>
-                            </div>
-                            <div class="col-3">
-                                <p align="right">
-                                    <b>August 2011-May 2017</b>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="row" id="B.Sc.-row">
-                            <div class="col-9">
-                                <p align="left"><b>B.Sc.</b>, Integrated Sciences, The University of British Columbia, Cambridge MA</p>
-                            </div>
-                            <div class="col-3">
-                                <p align="right">
-                                    <b>June 2006-May 2010</b>
-                                </p>
-                            </div>
-                        </div>
-
-
-                </div>
-            </div>
-            <hr>
-            <div class="row" id="publications-row">
-                <div class="col-12" id="publications-title-row">
-                    <h2><i class="fa fa-bookmark"></i> Publications</h2>
-                    <ul>
-
-                            <li>
-                                Evaluation of 6 Methods for Aerobic Bacterial Sanitization of Smartphones. <i>Journal of the American Association for Laboratory Animal Science</i>  (2017). <a href="https://www.ncbi.nlm.nih.gov/pubmed/29402348">[link]</a>
-                            </li>
-
-                            <li>
-                                Reassortment of influenza A viruses in wild birds in Alaska before H5 clade 2.3. 4.4 outbreaks. <i>Emerging Infectious Diseases</i>  (2017). <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367406/">[link]</a>
-                            </li>
-
-                            <li>
-                                A real-time surveillance dashboard for monitoring viral phenotype from sequence. <i>International Journal of Infectious Diseases</i>  (2016). <a href="http://www.ijidonline.com/article/S1201-9712(16)31510-7/abstract">[link]</a>
-                            </li>
-
-                            <li>
-                                Evidence of seasonality in a host-pathogen system: Influenza across the annual cycle of wild birds. <i>Integrative and Comparative Biology</i>  (2016). <a href="http://www.sicb.org/meetings/2016/schedule/abstractdetails.php?id=502">[link]</a>
-                            </li>
-
-                            <li>
-                                A point mutation in the polymerase protein PB2 allows a reassortant H9N2 influenza isolate of wild-bird origin to replicate in human cells. <i>Infection, Genetics and Evolution</i>  (2016). <a href="https://www.sciencedirect.com/science/article/pii/S156713481630137X">[link]</a>
-                            </li>
-
-                            <li>
-                                New England harbor seal H3N8 influenza virus retains avian-like receptor specificity. <i>Scientific Reports</i>  (2016). <a href="https://www.nature.com/articles/srep21428">[link]</a>
-                            </li>
-
-                            <li>
-                                Ecosystem interactions underlie the spread of avian influenza a viruses with pandemic potential. <i>PLOS Pathogens</i>  (2016). <a href="http://onlinelibrary.wiley.com/doi/10.1111/ele.12629/abstract">[link]</a>
-                            </li>
-
-                            <li>
-                                Transmission of influenza reflects seasonality of wild birds across the annual cycle. <i>Ecology Letters</i>  (2016). <a href="http://onlinelibrary.wiley.com/doi/10.1111/ele.12629/abstract">[link]</a>
-                            </li>
-
-                            <li>
-                                Reticulate evolution is favored in influenza niche switching. <i>PNAS</i>  (2016). <a href="http://www.pnas.org/content/113/19/5335.full">[link]</a>
-                            </li>
-
-                            <li>
-                                Genetic characterization of a rare H12N3 avian influenza virus isolated from a green-winged teal in Japan. <i>Virus Genes</i>  (2015). <a href="https://link.springer.com/article/10.1007/s11262-014-1162-9">[link]</a>
-                            </li>
-
-                    </ul>
-                </div>
-            </div>
-
-        </div>
+- Investigated the role of T cells in intestinal inflammation and fibrosis in a Salmonella typhimurium-induced model of gut inflammation, leading to First Prize Poster ([Rising Stars of Research 2008](https://www.evernote.com/l/AANJS_A9iKZAMLGYqJDduTxiiI2ZNf43zHM)) and Best Talk (Multidisciplinary Undergraduate Research Conference 2009) awards.
+- Co-founded the first [UBC International Genetically Engineered Machines (iGEM) team](http://2009.igem.org/Team:British_Columbia), where we achieved a Gold status standing in our first year of competition.
+- Served as a [Peer Academic Coach](https://science.ubc.ca/students/spac), guiding first- and second-year students towards academic success through building good habits on learning strategies and time management.
+#### resume-education ####
+school: Massachusetts Institute of Technology
+----
+department: Biological Engineering
+----
+degree: Sc.D.
+----
+city: Cambridge, MA
+----
+start_date: August 2011
+----
+end_date: May 2017
+#### resume-education ####
+school: The University of British Columbia
+----
+department: Integrated Sciences
+----
+degree: B.Sc.
+----
+city: Vancouver, BC
+----
+start_date: June 2006
+----
+end_date: May 2010
