@@ -1,0 +1,31 @@
+title: nxviz 0.5 released!
+---
+author: Eric J. Ma
+---
+body:
+
+A new version of nxviz is released!
+
+In this update, I have added a declarative interface for visualizing geographically-constrained graphs. Here, nodes in a graph have their placement constrained by longitude and latitude.
+
+An example of how to use it is below:
+
+[![nxviz geoplots](./carbon-small.png)](./carbon-original.png)
+
+In the GeoPlot constructor API, the keyword arguments `node_lat` and `node_lon` specify which node metadata are to be used to place nodes on the x- and y- axes.
+
+By no means do I intend for GeoPlot to replace more sophisticated analysis methods; like `seaborn`, the interface is declarative; for me, the intent is to provide a very quick-and-dirty way for an end user to visualize graphs with spatially constrained nodes.
+
+Please enjoy!
+---
+pub_date: 2018-08-01
+---
+tags:
+
+nxviz
+visualization
+data science
+software
+open source
+---
+twitter_handle: ericmjl
