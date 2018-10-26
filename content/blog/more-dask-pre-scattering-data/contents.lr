@@ -54,6 +54,10 @@ Not really disadvantages (as I can't think of any), just some things to note:
 
 1. You need to know how much memory my data requires, and have to request for at least that amount of memory first per worker node at the the `SGECluster` instantiation step.
 2. Pre-scattering sometimes takes a bit of time, but I have not seen it take as much time as having the scheduler handle everything.
+
+## Acknowledgments
+
+Special thanks goes to [Matt Rocklin](https://matthewrocklin.com), who answered my question on [StackOverflow](https://stackoverflow.com/questions/52997229/is-there-an-advantage-to-pre-scattering-data-objects-in-dask), which in turn inspired this blog post.
 ---
 pub_date: 2018-10-26
 ---
