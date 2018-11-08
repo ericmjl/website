@@ -57,14 +57,11 @@ on it accordingly, and hence take appropriate actions.
 ## Prior Experience
 
 I have experienced this modeling loop that Mike Betancourt describes (in his [Principled 
-Bayesian Workflow notebook][notebook]) more than once. One involved count data, with a data 
+Bayesian Workflow notebook](https://github.com/betanalpha/jupyter_case_studies/blob/master/principled_bayesian_workflow/principled_bayesian_workflow.ipynb)) more than once. One involved count data, with a data 
 scientist from TripAdvisor last year at the SciPy conference; another involved estimating 
 cycle time distributions at work, and yet another involved a whole 4-parameter dose-response 
 curve. In each scenario, model fitting and critique took hours at the minimum; I’d also note 
 that with real world data, I didn’t necessarily get to the "win" was looking for. 
-
-[notebook]: 
-https://github.com/betanalpha/jupyter_case_studies/blob/master/principled_bayesian_workflow/principled_bayesian_workflow.ipynb
 
 With the count data, the TripAdvisor data scientist and I reached a point where after 5 
 rounds of tweaking his model, we had a model that fit the data, and described a data 
