@@ -1,0 +1,44 @@
+title: Solving Problems Actionably
+---
+author: Eric J. Ma
+---
+body:
+
+There's a quote by John Tukey that has been a recurrent theme at work.
+
+<blockquote class="blockquote">
+<p>It's better to solve the right problem approximately than to solve the wrong problem exactly.</p>
+</blockquote>
+
+Continuing on the theme of quoting two Georges:
+
+<blockquote class="blockquote"> 
+<p>All models are wrong, but some are more useful than others.</p>
+</blockquote>
+
+H/T Allen Downey for pointing out that our minds think alike. 
+
+I have been working on a modelling effort for colleagues at work. There were two curves involved, and the second depended on the first one.
+
+In both cases, I started with a simple model, and made judgment calls along the way as to whether to continue improving the model, or to stop there because the current iteration of the model was sufficient enough to act on. With first curve, the first model was actionable for me. With the second curve, the first model I wrote clearly wasn't good enough to be actionable, so I spent lots more rounds of iteration on it.
+
+But wait, how does one determine "actionability"? 
+
+## Actionability
+
+**For myself**, it has generally meant that I'm confident enough in the results to take the next modelling step. My second curves depended on the first curves, and after double-checking multiple ways, I thought the first curve fits, though not perfect, were good enough when applied across a large number of samples that I could instead move on to the second curves.
+
+**For others**, particularly at my workplace, it generally means a scientist can make a decision about what next experiment to run.
+
+## Insight's MVP Influence
+
+Going through Insight Data Science drilled into us an instinct for developing an MVP for our problem before going on to perfect it. I think that general model works well. My project's final modelling results will be the result of chains of modelling assumptions at every step. Documenting those steps clearly, and then being willing to revisit those assumptions, is going always a good thing.
+---
+pub_date: 2018-11-13
+---
+tags:
+
+data science
+insight data science
+---
+twitter_handle: ericmjl
