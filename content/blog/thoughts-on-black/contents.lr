@@ -1,0 +1,32 @@
+title: Thoughts on Black
+---
+author: Eric J. Ma
+---
+body:
+
+Having used Black for quite a while now, I have a hunch that it will continue to surpass its current popularity amongst projects.
+
+It's one thing to be opinionated about things that matter for a project, but don't matter personally. Like code style. It's another thing to actually build a tool that, with one command, realizes those opinions in (milli)seconds. That's exactly what Black does.
+
+At the end of the day, it was, and still is, a tool that has a very good human API - that of convenience.
+
+By being opinionated about what code *ought* to look like, `black` has very few configurable parameters. Its interface is very simple. *Convenient.*
+
+By automagically formatting *every* Python file in subdirectories (if not otherwise configured so), it makes code formatting quick and easy. *Convenient.*
+
+In particular, by being opinionated about conforming to community standards for code style with Python, `black` ensures that formatted code is consistently formatted and thus easy to read. *Convenient!*
+
+Because of this, I highly recommend the use of `black` for code formatting.
+
+```
+pip install black
+```
+---
+pub_date: 2018-11-12
+---
+tags:
+
+python
+code style
+---
+twitter_handle: ericmjl
