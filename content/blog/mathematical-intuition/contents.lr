@@ -1,0 +1,42 @@
+title: Mathematical Intuition
+---
+author: Eric J. Ma
+---
+body:
+
+Last week, I picked up Jeremy Kun's book, "A Programmer's Introduction to Mathematics". In it, I finally found an explanation for my frustrations when reading math papers:
+
+> What programmers would consider “sloppy” notation is one symptom of the problem, but there there are other expectations on the reader that, for better or worse, decelerate the pace of reading. Unfortunately I have no solution here. Part of the power and expressiveness of mathematics is the ability for its practitioners to overload, redefine, and omit in a suggestive manner. Mathematicians also have thousands of years of “legacy” math that require backward compatibility. Enforcing a single specification for all of mathematics—a suggestion I frequently hear from software engineers—would be horrendously counterproductive.
+
+Reading just *that* paragraph explained, in such a lucid manner, how my frustrations reading mathematically-oriented papers, stemmed from mismatched expectations. I come into a paper thinking like a software engineer. Descriptive variable names (as encouraged by Python), which are standardized as well, with structured abstractions providing a hierarchy of logic between chunks of code... No, mathematicians are more like Shakespeare - or perhaps linguists - in that they will take a symbol and imbibe it with a subtly new meaning or interpretation inspired by a new field. That "L" you see in one field of math doesn't always exactly mean the same thing in another field.
+
+## Biology vs. Math?
+
+The contrast is stark when compared against reading a biology paper. With a biology paper, if you know the key wet-bench experiment types (and there's not that many), you can essentially get the gist of a paper by reading the abstract and dissecting the figures, which, granted, are described and labelled with field-specific jargon, but are at least descriptive names. With a math-oriented paper, the equations are the star, and one has to really grok each element of the equations to know what they mean. It means taking the time to dissect each equation and ask what each symbol is, what each group of symbols means, and how those underlying ideas connect with one another and with other ideas. It's not unlike a biology paper, but requiring a different kind of patience, one that I wasn't trained in.
+
+## Learning to Learn by Teaching
+
+As Jeremy Kun wrote in his book, programmers do have some sort of a leg-up when it comes to reading and understanding math. It's a bit more than what Kun wrote, I think - yes, many programming ideas have deep mathematical connections. But I think there's more. 
+
+One thing we know from research into how people learn is that teaching someone something is an incredible way to learn that something. From my prior experience, the less background a student has in a material, the more demands are placed on the teacher's understanding of the material, as we work out how the multiple representations in our head to try to communicate it to them. 
+
+As it turns out, we programmers have the ultimate dumb "student" available at our fingertips: Our computers! By implementing mathematical ideas in code, we are essentially "teaching" the computer to do something mathematical. Computers are not smart; they are programmed to do exactly what we input to them. If we get an idea wrong, our implementation of the math will likely be wrong. That fundamental law of computing shows up again: Garbage in, garbage out. 
+
+## Hierarchy of Ideas
+
+More than just that, when we programmers implement a mathematical idea in code, we can start putting our "good software engineering" ideas into place! It helps the math become stickier when we can see, through code, the hierarchy of concepts that are involved. 
+
+An example, for me, comes from the deep learning world. I had an attempt dissecting two math-y deep learning papers last week. Skimming through the papers didn't do much good for my understanding of the paper. Neither did trying to read the paper like I do a biology paper. Sure, I could perhaps just read the ideas that the authors were describing in prose, but I had no intuition on which to base a proper critique of the idea's usefulness. It took implementing those papers in Python code, writing tests for them, and using abstractions that I had previously written, to come to a place where I felt like the ideas in the paper were a flexibly wieldable tool in my toolkit.
+
+Reinventing the wheel, such that we can learn the wheel, can in fact help us decompose the wheel so that we can do other new things with it. Human creativity is such a wonderful thing!
+---
+pub_date: 2018-12-09
+---
+tags:
+
+deep learning
+bayesian
+math
+data science
+---
+twitter_handle: ericmjl
