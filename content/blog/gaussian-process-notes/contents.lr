@@ -1,0 +1,28 @@
+title: Gaussian Process Notes
+---
+author: Eric J. Ma
+---
+body:
+
+I first learned GPs about two years back, and have been fascinated by the idea. I learned it through a video by David MacKay, and managed to grok it enough that I could put it to use in simple settings. That was reflected in my [Flu Forecaster project](https://fluforecaster.herokuapp.com), in which my GPs were trained only on individual latent spaces.
+
+Recently, though, I decided to seriously sit down and try to grok the math behind GPs (and other machine learning models). To do so, I worked through [Nando de Freitas' YouTube videos on GPs](https://youtu.be/4vGiHC35j9s). (Super thankful that he has opted to put these videos up online!) 
+
+The product of this learning is two-fold. Firstly, I have added a [GP notebook](https://github.com/ericmjl/bayesian-analysis-recipes/blob/master/notebooks/gp-test.ipynb) to my [Bayesian analysis recipes](https://github.com/ericmjl/bayesian-analysis-recipes) repository. 
+
+Secondly, I have also put together some hand-written notes on GPs. (For those who are curious, I first hand-wrote them on paper, then copied them into my iPad mini using a Wacom stylus. We don't have the budget at the moment for an iPad Pro!) They can be downloaded [here](./gaussian-processes.pdf).
+
+Some lessons learned:
+
+- Algebra is indeed a technology of sorts (to quote Jeremy Kun's book). Being less sloppy than I used to be gives me the opportunity to connect ideas on the page to ideas in my head, and express them more succinctly.
+- Grokking the math behind GPs at the minimum requires one thing: remembering, or else knowing how to derive, the formula for how to get the distribution parameters of a multivariate Gaussian conditioned on some of of its variables.
+- Once I grokked the math, implementing a GP using only NumPy was trivial; also, extending it to higher dimensions was similarly trivial!
+---
+pub_date: 2018-12-16
+---
+tags:
+
+data science
+bayesian
+---
+twitter_handle: ericmjl
