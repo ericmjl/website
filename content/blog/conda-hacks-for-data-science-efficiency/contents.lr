@@ -1,0 +1,148 @@
+title: Conda hacks for data science efficiency
+---
+author: Eric J. Ma
+---
+body:
+
+The `conda` package manager has, over the years, become an integral part of my workflow. I use it to manage project environments, and have built a bunch of very simple hacks around it that you can adopt too. I'd like to share them with you, alongside the rationale for using them. 
+
+## Hack #1: Set up your `.condarc`
+
+**Why?** It will save you a few keystrokes each time you want to do something with `conda`. For example, in my `.condarc`, I have the following:
+
+```yaml
+# Set the channels that the `conda install` command will 
+# automatically search through.
+channels:
+  - defaults
+  - conda-forge
+  - ericmjl
+
+# Always accept installation. Is convenient, but always 
+# double-check!
+always_yes: true
+```
+
+For more information on how to configure your `.condarc`, check the [online documentation](https://conda.io/docs/user-guide/configuration/use-condarc.html)!
+
+## Hack #2: Use one environment spec file per project
+
+This assumes that you have the habit of putting all files related to one project inside one folder, using subdirectories for finer-grained organization.
+
+**Why?** It will ensure that you have one version-controlled, authoritative specification for the packages that are associated with the project. This is good for (1) reproducibility, as you can send it to a colleague and have them reproduce the environment, and (2) will enable Hack #3, which I will showcase afterwards.
+
+```yaml
+# file name: environment.yml
+
+# Give your project an informative name
+name: project-name
+
+# Specify the conda channels that you wish to grab packages from, in order of priority.
+channels:
+- defaults
+- conda-forge
+- ericmjl
+
+# Specify the packages that you would like to install inside your environment. Version numbers are allowed, and conda will automatically use its dependency solver to ensure that all packages work with one another.
+dependencies:
+- python=3.7
+- conda
+- jupyterlab
+- scipy
+- numpy
+- pandas
+- pyjanitor
+- pandas
+# There are some packages which are not conda-installable. You can put the pip dependencies here instead.
+- pip:
+	- tqdm  # for example only, tqdm is actually available by conda.
+```
+
+A hack that I have related to this is that I use TextExpander shortcut to populate a starting environment spec file. 
+
+Additionally, if I want to install a new package, rather than simply typing `conda install <packagename>`, I will add the package to the environment spec file, and then type `conda env update -f environment.yml`, as more often than not, my default is to continue using the package I added.
+
+For more details on what the environment spec file is all about, [read the online docs](https://conda.io/docs/user-guide/tasks/manage-environments.html#create-env-file-manually)!
+
+## Hack 3: use `conda-auto-env`
+
+Written by [Christine Doig](https://chdoig.github.io), [`conda-auto-env`](https://github.com/chdoig/conda-auto-env) is a bash hack that enables you to automatically activate an environment once you enter into a project directory, *as long as an `environment.yml` file already exists in the directory*. If the environment does not already exist, then `conda-auto-env` will automatically create one based on the `environment.yml` file in your project directory.
+
+**Why?** If you have many projects that you are working on, then it will greatly reduce the amount of effort used to remember which project to activate.
+
+`conda-auto-env` looks like this:
+
+```bash
+# File: .conda-auto-env
+#!/bin/bash
+
+function conda_auto_env() {
+  if [ -e "environment.yml" ]; then
+    # echo "environment.yml file found"
+    ENV=$(head -n 1 environment.yml | cut -f2 -d ' ')
+    # Check if you are already in the environment
+    if [[ $PATH != *$ENV* ]]; then
+      # Check if the environment exists
+      conda activate $ENV
+      if [ $? -eq 0 ]; then
+        :
+      else
+        # Create the environment and activate
+        echo "Conda env '$ENV' doesn't exist."
+        conda env create -q
+        conda activate $ENV
+      fi
+    fi
+  fi
+}
+
+export PROMPT_COMMAND=conda_auto_env
+```
+
+To use it, you have two options. You can either copy/paste the whole original script into your `.bashrc`, or you can put it in a file called `.conda-auto-env`, and source it from your `.bashrc`. I recommend the latter, as it makes managing your `.bashrc` easier:
+
+```bash
+# File: .bashrc
+source /path/to/.conda-auto-env
+```
+
+## Hack 4: hijack bash aliases for `conda` commands
+
+I use aliases to save myself a few keystrokes whenever I'm at the terminal. This is a generalizable bash hack, but here it is as applied to `conda` commands. 
+
+Anyways, these are the commands that I use most often, which I have found it useful to alias:
+
+```bash
+# File: .aliases
+alias ceu="conda env update"
+alias cl="conda list"
+alias ci="conda install"
+alias cr="conda remove"
+```
+
+Make sure your aliases don't clash with existing commands that you use!
+
+Then, source `.aliases` in your `. bashrc`:
+
+```bash
+# File: .bashrc
+source /path/to/.aliases
+```
+
+Now, all of your defined aliases will be available in your bash shell. 
+
+The idea/pattern, as I mentioned earlier, is generalizable beyond just bash commands. (I have `ls` aliased for `exa`, and `l` aliased for `ls` - the epitome of laziness!)
+
+## Conclusion
+
+I hope you found these bash and `conda` hacks to be useful. Hopefully they will help you become more productive and efficient!
+---
+pub_date: 2018-12-25
+---
+tags:
+
+data science
+conda
+hacks
+---
+twitter_handle: ericmjl
