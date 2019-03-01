@@ -1,0 +1,75 @@
+title: Pair Coding: Why and How for Data Scientists
+---
+author: Eric J. Ma
+---
+body:
+
+## Introduction
+
+While at work, I've been experimenting with pair coding with other data science-oriented colleagues. My experiences tell me that this is something extremely valuable to do. I'd like to share here the "why" and the "how" on pair coding, but focused towards data scientists.
+
+## What is pair coding?
+
+Pair coding is a form of programming where two people work together on a single code base together. It usually involves one person on the keyboard and another talking through the problem and observing for issues, such as syntax, logic, or code style. Occasionally, they may swap who is on the keyboard. In other words, one is the "creator", and the other is the "critic" (but in a positive, constructive fashion).
+
+## What's your history with pair coding?
+
+I was inspired by a few places. Firstly, there are a wealth of blog posts detailing the potential benefits and pitfalls of pair coding, in a software developer's context. (A quick Google search will lead you to them.) Secondly, I had, at work, experimented with "pair hacking" sessions, which involved more than coding, including white-boarding a problem to get a feel for its scope, and it turned out to be pretty productive. Thirdly, I was inspired by [a New Yorker article on Jeff and Sanjay](https://www.newyorker.com/magazine/2018/12/10/the-friendship-that-made-google-huge), in which part of it chronicled how they worked as a pair to solve the toughest problems at Google.
+
+Now, because I'm not a software engineer by training, and because don't have extensive experience beforehand, and because there are no data-science-oriented resources for pair coding that I have read before (I'd love to read them if you know of any!), I've had to be adapt what I read for software development to a data science context.
+
+## What are the potential benefits of pair coding?
+
+I can see at least the following benefits, if not more that I have yet to discover:
+
+1. Instant peer review over data science logic and code. Because we are talking through a problem while coding it up, we can instantly check whether our logic is correct against each other.
+2. Knowledge transfer. In my experience, I've had productive pair-coding sessions with another colleague who has a better grasp of the project than I do. Hence, I contribute & teach the technical component, while I also learn the broader project context better.
+3. Building trust. We all know that the more closely you work with someone, the more rough corners get rubbed off.
+
+## What pre-requisites do you see for a productive pair programming session?
+
+1. A long, continuous, and uninterrupted time slot (at least 2-3 hours in length) to maintain continuity.
+1. A defined goal or question that we are seeking to answer - keeps us focused on what needs to be done.
+1. That goal should also be plausibly achievable within the 2-3 hour timeframe. 
+1. Large monitors for both parties to look at, or a code-sharing platform where both can see the code without needing to physically huddle.
+1. A place where we can talk without feeling hindered.
+1. No impromptu interruptions from other individuals.
+1. Complementary and intersecting skillsets.
+1. Open-minded individuals who are willing to learn. (Ego-free.)
+
+## Where does pair coding differ for data scientists vs. software engineers?
+
+I think the differences at best are subtle, not necessarily overt.
+
+The biggest difference that I can think of might be in clarity. To the best of my knowledge, software engineers work with pretty well-defined requirements. The only hiccups that I can imagine that may occur are in unforeseen logic/code blockers. Data scientists, on the other hand, often are exploring and defining the requirements as things go along. In other words, we are working with more unknowns than a software engineer might.
+
+An example is a model I built with a colleague at work that involved groups of groups of samples. We weren't able to envision the final model right at the beginning, and code towards it. Rather, we built the model iteratively, starting with highly simplifying assumptions, discussing which ones to refine, and iteratively building the model as we went forward. 
+
+Perhaps a related difference is that as data scientists, because of potentially greater uncertainty surrounding the final product, we may end up talking more about project direction than one would as a software engineer. But that's probably just a minor detail.
+
+## Do you have any memorable quotes from the New Yorker article?
+
+Yes, a number of them.
+
+One on scaling things up.
+
+<blockquote class="blockquote">
+<p>Alan Eustace became the head of the engineering team after Rosing left, in 2005. “To solve problems at scale, paradoxically, you have to know the smallest details,” Eustace said.</p>
+</blockquote>
+
+Another on pair programming as an uncommon practice:
+
+<blockquote class="blockquote">
+<p>“I don’t know why more people don’t do it,” Sanjay said, of programming with a partner.</p>
+<p>“You need to find someone that you’re gonna pair-program with who’s compatible with your way of thinking, so that the two of you together are a complementary force,” Jeff said.</p>
+</blockquote>
+---
+pub_date: 2019-03-01
+---
+tags:
+
+data science
+programming
+best practices
+---
+twitter_handle: ericmjl
