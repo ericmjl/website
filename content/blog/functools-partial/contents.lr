@@ -1,0 +1,88 @@
+title: Functools Partial
+---
+author: Eric J. Ma
+---
+body:
+
+If you’ve done Python programming for a while, I think it pays off to know some little tricks that can improve the readability of your code and decrease the amount of repetition that goes on.
+
+One such tool is `functools.partial`. It took me a few years after my first introduction to `partial` before I finally understood why it was such a powerful tool. 
+
+Essentially, what `partial` does is it wraps a function and sets a keyword argument to a constant. That’s it. What do we mean?
+
+Here’s a minimal example. Let’s say we have a function `f`, not written by me, but provided by someone else.
+
+```python
+def f(a, b):
+    result = # do something with a and b.
+    return result
+```
+
+In my code, let’s say that I know that the value that `b` takes on in my app is always the tuple `(1, 'A')`. I now have a few options. The most obvious is assign the tuple `(1, 'A')` to a variable, and pass that in on every function call:
+
+```python
+b = (1, 'A')
+result1 = f(a=1, b=b)
+# do some stuff.
+result2 = f(a=15, b=b)
+# do more stuff.
+# ad nauseum
+N = # set value of N
+resultN = f(a=N, b=b)
+```
+
+The other way I could do it is use `functools.partial` and just set the keyword argument `b` to equal to the tuple directly.
+
+```python
+from functools import partial
+f_ = partial(f, b=(1, 'A'))
+```
+
+Now, I can repeat the code above, but now only worrying about the keyword argument `a`:
+
+```python
+result1 = f_(a=1)
+# do some stuff.
+result2 = f_(a=15)
+# do more stuff.
+# ad nauseum
+N = # set value of N
+resultN = f_(a=N)
+```
+
+And there you go, that’s basically how `functools.partial` works in a nutshell.
+
+Now, where have I used this in real life?
+
+The most common place I have used it is in Flask. I have built Flask apps where I need to dynamically keep my Bokeh version synced up between the Python and JS libraries that get called. To ensure that my HTML templates have a consistent Bokeh version, I use the following pattern:
+
+```python
+from bokeh import __version__ as bkversion
+from flask import render_template, Flask
+from functools import partial 
+
+render_template = partial(render_template, bkversion=bkversion)
+
+# Flask app boilerplate
+app = Flask(__name__)
+
+
+@app.route('/')
+def home():
+    return render_template('index.html.j2')
+```
+
+Now, because I always have `bkversion` pre-specified in `render_template`, I never have to repeat it over every `render_template` function call.
+---
+pub_date: 2019-03-22
+---
+tags:
+
+python
+hacks
+tips and tricks
+data science
+productivity
+coding
+---
+twitter_handle: ericmjl
