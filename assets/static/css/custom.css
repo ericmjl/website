@@ -14,3 +14,7 @@
 .blockquote p{margin-left: 20px;}
 
 .blockquote footer {margin-left: 20px;}
+
+/* Set max width of images using CSS. This also makes all images responsive up
+to the width of the device. */
+img { width: 100%; max-width: 600px; }
