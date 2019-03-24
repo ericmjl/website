@@ -1,0 +1,51 @@
+title: Variance Explained
+---
+author: Eric J. Ma
+---
+body:
+
+Variance explained, as a regression quality metric, is one that I have begun to like a lot, especially when used in place of a metric like the correlation coefficient (r<sup>2</sup>).
+
+Here's variance explained defined:
+
+$$1 - \frac{var(y_{true} - y_{pred})}{var(y_{true})}$$
+
+Why do I like it? It’s because this metric gives us a measure of the scale of the error in predictions relative to the scale of the data.
+
+The numerator in the fraction calculates the variance in the errors, in other words, the *scale of the errors*. The denominator in the fraction calculates the variance in the data, in other words, the *scale of the data*. By subtracting the fraction from 1, we get a number upper-bounded at 1 (best case), and unbounded towards negative infinity.
+
+Here's a few interesting scenarios.
+
+- If the scale of the errors is small relative to the scale of the data, then variance explained will be close to 1.
+- If the scale of the errors is about the same scale as the data, then the variance explained will be around 0. This essentially says our model is garbage.
+- If the scale of the errors is greater than the scale of the data, then the variance explained will be negative. This is also an indication of a garbage model.
+
+A thing that is *really nice* about variance explained is that it can be used to compare related machine learning tasks that have different unit scales, for which we want to compare how good one model performs across all of the tasks. Mean squared error makes this an apples-to-oranges comparison, because the unit scales of each machine learning task is different. On the other hand, variance explained is unit-less.
+
+Now, we know that single metrics can have failure points, as does the coefficient of correlation r^2^, as shown in Ansecombe's quartet and the Datasaurus Dozen:
+
+![Ansecombe's quartet, taken from Autodesk Research](https://d2f99xq7vri1nk.cloudfront.net/Anscombe_1_0_0.png)
+
+*Fig. 1: Ansecombe's quartet, taken from Autodesk Research*
+
+![Datasaurus Dozen, taken from Revolution Analytics](https://blog.revolutionanalytics.com/downloads/DataSaurus%20Dozen.gif)
+
+*Fig. 2: Datasaurus Dozen, taken from Revolution Analytics*
+
+One place where the variance explained can fail is if the predictions are systematically shifted off from the true values. Let's say prediction was shifted off by 2 units.
+
+$$var(y_{true} - y_{pred}) = var([2, 2, ..., 2]) = 0$$
+
+There's no variance in errors, even though they are systematically shifted off from the true prediction. Like r<sup>2</sup>, variance explained will fail here.
+
+As usual, [Ansecombe's quartet](https://en.wikipedia.org/wiki/Anscombe%27s_quartet), as does [The Datasaurus Dozen](https://www.autodeskresearch.com/publications/samestats), gives us a pertinent reminder that visually inspecting your model predictions is always a good thing!
+
+---
+pub_date: 2019-03-24
+---
+tags:
+
+data science
+machine learning
+---
+twitter_handle: ericmjl
