@@ -1,0 +1,12 @@
+trigger:
+- master 
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- script: pip install git+https://github.com/lektor/lektor.git
+  name: Install Lektor
+  
+- script: lektor build
+  name: Build website
