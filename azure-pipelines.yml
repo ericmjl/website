@@ -5,11 +5,11 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: pip install --upgrade pip
-  displayName: Upgrade pip
+- script: conda env create -f environment.yml
+  displayName: Create environment
 
 - script: pip install git+https://github.com/lektor/lektor.git
-  displayName: Install Lektor
+  displayName: Install latest Lektor
   
 - script: lektor build
   displayName: Build website
