@@ -5,6 +5,9 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
+- script: pip install --upgrade pip
+  displayName: Upgrade pip
+
 - script: pip install git+https://github.com/lektor/lektor.git
   displayName: Install Lektor
   
