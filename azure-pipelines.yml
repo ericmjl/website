@@ -6,7 +6,7 @@ pool:
 
 steps:
 - script: pip install git+https://github.com/lektor/lektor.git
-  name: Install Lektor
+  displayName: Install Lektor
   
 - script: lektor build
-  name: Build website
+  displayName: Build website
