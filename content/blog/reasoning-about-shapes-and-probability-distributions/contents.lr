@@ -1,0 +1,48 @@
+title: Reasoning about Shapes and Probability Distributions
+---
+author: Eric J. Ma
+---
+body:
+
+I’m here with the PyMC4 dev team and Tensorflow Probability developers Rif, Brian and Chris in Google Montreal, and have found the time thus far to be an amazing learning opportunity. 
+
+Prior to this summit, it never dawned on me how interfacing tensors with probability distributions could be such a minefield of overloaded ideas and terminology. Yet, communicating clearly about tensors is important, because if problems can be cast into a tensor-space operation, vectorization can help speed up many operations that we wish to handle. I wanted to share a bit about something new about tensors that I learned here: the different types of shapes involved in a probabilistic programming language.
+
+Let’s start by thinking about a few questions involving the most venerable distribution of them all: the Gaussian, also known as the Normal distribution.
+
+Let’s start by thinking about a single draw from a standard Gaussian. Drawing one number from the standard Gaussian yields a scalar. In tensor space, a scalar is a rank 0 tensor, and this colloquially means that there’s no dimensions involved. If we drew out the distribution, and drew out the process of drawing numbers from the distribution, it might look like the following:
+
+
+What if we were to draw two numbers from this one Gaussian? We could use a vector with two slots to represent those draws. However, the elementary *event* of drawing a single number did not fundamentally change when we drew two numbers, as we merely repeated the same *event* to draw two. With my hands waving in the air, I will claim that this holds true even with K *samples* drawn from the distribution.
+
+Now, what if I had a second Gaussian, say, with a different mean and/or variance? If I were to draw one number from the first Gaussian alongside one number from the second Gaussian, and then concatenate them into a vector, we can represent this as us drawing numbers from independent Gaussians. In this case, we may argue that per distribution, the elementary shape of the *event* did not change. However, since we have a *batch* of two distributions, this contributes to the final shape of the tensor. Again, with much waving of my hands in the air, this should extend to more than two distributions. The illustration below should help clarify how this is different from the first.
+
+
+Now, what if we had a multivariate Gaussian, with two variates? This makes for a very interesting case! The elementary *event* drawn from this multivariate Gaussian is a two-element vector, not a scalar, which means that its shape is apparently identical to the case where we have a single pair of numbers drawn from a batch of two independent Gaussians! Yet, we know that semantically, these two apparently same-shaped draws are shaped semantically differently. The two independent Gaussians individually have elementary *event* shapes that are scalar, but when drawn as a *batch* of two, that is when their shape of `(2,)` forms. On the other hand, the multivariate Gaussian cannot have its two numbers drawn independent of one another (unless this is the special case of diagonal-only covariance - in which case, this is equivalent to independent Gaussians). Hence, the elementary *event* shape is not scalar, but vector (or more generally, same rank tensor as the mean vector), but the *batch* has only a single distribution, hence it has a scalar batch shape. 
+
+
+To summarize, here are the various kinds of shapes, defined:
+
+**Event shape:** The atomic shape of a single event/observation from the distribution (or batch of distributions of the same family).
+
+**Batch shape:** The atomic shape of a single sample of observations from one or more distributions *of the same family*. As an example, we can’t have a batch of a Gaussian and a Gamma distribution together, but we can have a batch of more than one Gaussians.
+
+**Sample shape:** The shape of a bunch of samples drawn from the distributions.
+
+And finally, here’s the full spread of possibilities, using one or two draws, uni- or bi-variate Gaussians, and one or two batches of distributions as an illustration. 
+
+![](./shapes-blog-post-md.png)
+
+Special thanks goes to fellow PyMC devs, Ravin Kumar, Brandon Willard, Colin Carroll, and Peadar Coyle, who provided feedback on the figure over a late-night tea/dinner/bar session at the end of Day 2.
+---
+pub_date: 2019-05-29
+---
+tags:
+
+bayesian
+probabilistic programming
+tensors
+data science
+probability distributions
+---
+twitter_handle: ericmjl
