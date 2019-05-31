@@ -47,6 +47,44 @@ And finally, here’s the full spread of possibilities, using one or two draws, 
 ![](./shapes-blog-post-md.png)
 
 Special thanks goes to fellow PyMC devs, Ravin Kumar, Brandon Willard, Colin Carroll, and Peadar Coyle, who provided feedback on the figure over a late-night tea/dinner/bar session at the end of Day 2.
+
+## Why Shapes Matter: Broadcasting
+
+Why do these different shapes matter? Well, it matters most when we are thinking about broadcasting in a semantically-consistent fashion, particularly when considering batches and events. When it comes to implementing a tensor library with probability distributions as first-class citizens, reasoning about these shapes properly can really help with implementing an API that end-users can grok in a reasonable fashion. 
+
+Let’s return to the simple case where we have two different types of shape `(2,)` Gaussians declared: a batch of two Gaussians, and a bivariate Gaussian. One useful thought experiment is to think about the computation of the log probability of a vector of two numbers, `X = (x1, x2)`, where `x1` and `x2` are not necessarily the same numbers. 
+
+In the case of the bivariate Gaussians, how many log probabilities should we return? In this case, it makes semantic sense to return only one number, because in a bivariate Gaussian, the two numbers could not have been drawn independent of each other, and hence the log probability has to be computed with consideration to the full joint distribution.
+
+In the case of the batch of two Gaussians, how many log probabilities should we return? Is it one number, or is it two? Semantically, it makes sense to return two numbers, because we are evaluating `x1` against the first Gaussian, and `x2` against the second Gaussian in the batch of Gaussians. Most crucially, this differs from the bivariate case, because by structuring our Gaussians in a batch, we are essentially declaring our intent to evaluate their log probabilities independent of each other. 
+
+Borrowing from the above master figure, here's the a figure that shows how likelihood computations happen:
+
+![](./likelihood-computation.png)
+
+*To compute the likelihood over the data, we multiply the likelihoods of each of the individual data points. You will noticed that essentially, in each case, the dimension we intend to collapse is the `sample` dimension - and that means keeping track of the sample dimension is extremely important! Also important to note is that we do *not* intend to collapse the `batch` dimension, as it does not carry the same statistical meaning as a `sample` from a distribution, but is a tensor computation construct.*
+
+## Other Scenarios
+
+There are more scenarios where reasoning about shapes in a *semantic* manner becomes super important! Here’s a sampling of them, posed as questions and then maybe some suggested answers or further questions.
+
+If I now asked to evaluate the log probability of `x1` only, how should broadcasting of `x1` happen on the bivariate Gaussian, and on the batch of two Gaussians? Perhaps in this trivial case, it would be tempting to automatically broadcast the same scalar number... but wait! In the case of the bivariate Gaussian, how do we know that the end-user has not forgotten to supply the second number?
+
+If I have a batch of two bivariate Gaussians, hence effectively creating a (batch shape = 2, event shape = 2) vector of bivariate distributions, and I ask to evaluate the log probability of a matrix of values `((x1, x2), (x3, x4))`, in which way do we orient the values? Do we assume that `(x1, x2)` are to be evaluated against the first Gaussian, or `(x1, x3)` are to be evaluated against the first Gaussian? (We don’t have to worry about `(x1, x4)`, because to the average user, it is unreasonable whichever way we look.)
+
+Both these examples illustrate an inherent difficulty to thinking about tensor shapes without reference to what each of the dimensions mean. 
+
+## Improving Shape Semantics
+
+What could we do, then, to improve the semantic understandability of tensor shapes? 
+
+One solution would be to name tensor axes by what they mean. The `xarray` project does exactly that! However, it can’t be used in differential computing, because (to the best of my knowledge), there is no automatic differentiation system that works with it. 
+
+In addition, there’s `namedtensor` from Harvard NLP that aims to provide an analogous solution to the problem, though I find it a pity that they chose to implement it against `pytorch` rather than to create an extension to the idiomatic `numpy` instead. 
+
+The TensorFlow Probability team also has a solution, in which they separate the three types of shapes explicitly, though no naming happens on a per-axis basis. 
+
+I think there are great ideas in all three, and when I take a birds-eye view of the scientific computing ecosystem in Python as both a developer and end-user, I’d love to see the NumPy API, which is idiomatic and widely used and built on top of, become aware of each of these types of designs, something akin to NEP-18, the array function dispatching protocol that allows NumPy APIs to be called on other tensor libraries.
 ---
 pub_date: 2019-05-29
 ---
