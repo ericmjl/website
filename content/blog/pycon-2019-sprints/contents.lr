@@ -1,0 +1,165 @@
+title: PyCon 2019 Sprints
+---
+author: Eric J. Ma
+---
+body:
+
+This year was the first year that I decided to lead a sprint! The sprint I led was for `pyjanitor`, a package that I developed with my colleague, Zach Barry, and a remote collaborator in NYC, Sam Zuckerman (whom I've never met in person!). This being the first sprint I've ever led, I think I was lucky to stumble upon a few ideas that made for a productive, collaborative, and most importantly, fun sprint. 
+
+## pyjanitor?
+
+I'm going to deliver a talk on `pyjanitor` later in the year, so I'll save the details for that talk. The short description of `pyjanitor` is that if you have `pandas` one-liners that are difficult to remember, they should become a function in `pyjanitor`; if you have a 10-liner that you always copy/paste from another source, they should become a function in `pyjanitor`.
+
+## Sprints?
+
+Code sprints are a part of PyCon, and it's basically one to four days of intense and focused software development on a single project.
+
+Project sprint leads first pitch their projects at the "*Sprintros*", where they indicate what days they will be sprinting, and at what times. The next day, we indicate on which rooms our projects will be sprinting. Volunteers from the conference, who would like to make an open source project contribution, then identify projects they would like to come sprint with. 
+
+In some senses, there's no way for a sprint leader to know how popular their sprint will be *a priori*. We have to be prepared to handle a range of scenarios from sprinting with just one other person to sprinting with a crowd.
+
+## Structure
+
+### Preparation
+
+In preparation for the sprint, I absorbed many lessons learned over the years of sprinting on others' projects.
+
+The most obvious one was to ensure that every sprinter had something to do right from the get-go. Having a task from the get-go keeps sprinters, especially newcomers, engaged right from the beginning. This motivated the requirement to make a doc fix before making a code fix. (You can read more below on how we made this happen.) I wrote out this requirement in a number of places, and by the time the sprint day rolled by, this rolled off pretty naturally. 
+
+The second thing that I did to prep was to triage existing issues and label them as being beginner- or intermediate-friendly, and whether they were doc, infrastructure, or code contributions.
+
+Those two things were the my highest priority preparation for the sprint, and I think that helped a ton.
+
+### Doc Fixes
+
+This sprint, I gave the structure some thought, and settled on the following: Before making a code contribution, I required a docs contribution. 
+
+Docs contributions could be of any scale:
+
+- A typographical, grammatical, or spelling error.
+- A docstring that was unclear.
+- Installation/setup instructions that are unclear.
+- A sentence/phrase/word choice that didn't make sense.
+- New example/tutorial notebooks using the library.
+
+I think this worked well for the following reasons:
+
+1. New contributors must read the docs before developing on the project, and hence become familiar with the project.
+2. There's always something that can be done better in the docs, and hence, there is something that can be immediately acted on.
+3. The task is a pain point personally uncovered by the contributor, and hence the contributor has the full context of the problem. 
+3. The docs don't break the code/tests, and hence doc contributions are a great way make a contribution without wrestling with more complex testing.
+4. Starting *everybody* who has never worked on `pyjanitor` on docs is an egalitarian way of on-boarding every newcomer, beginner and experienced individuals alike. Nobody gets special treatment.
+
+For each individual's contribution, I asked them to first raise an issue on the GitHub issue tracker describing the contribution that they would like to make, and then clearly indicate in the comments that they would like to work on it. Then, they would go through the process of doing the documentation fix, from forking the repository, cloning it locally, creating a new branch, making edits, committing, pushing, and PR-ing. 
+
+If two people accidentally ended up working on the same docs issue, I would assess the effort of the later one, and if it was substantial enough, I would allow them to consider it done, and move onto a different issue. 
+
+Going forth, as the group of contributors expands, I will enforce this "docs-first" requirement only for newcomer sprinters, and request experienced ones to help manage the process.
+
+### Code Contributions
+
+Once the docs contributions were done, sprinters were free to either continue with more docs contributions, or provide a code contribution. 
+
+Code contributions could be of one of the following:
+
+1. New function contributions.
+2. Cleaner implementations of existing functions.
+4. Restructuring of existing functions.
+3. Identification of functions to deprecate (very important!)
+4. Infrastructural changes to docs, build system, and more.
+
+The process for doing this was identical to docs: raise an issue, claim it, and then make a new branch with edits, and finally PR it. 
+
+## My Role
+
+For both days, we had more than 10 people sprint on `pyjanitor`. Many who were present on the 1st day (and didn't have a flight to catch) came back on the 2nd day. As such, I actually didn't get much coding done. Instead, I took on the following roles:
+
+1. Q&A person: Answering questions about what would be acceptable contributions, technical (read: git) issues, and more.
+2. Issue labeller and triage-r: I spent the bulk of my downtime (and pre-/post-sprint time) tagging issues on the GitHub issue tracker and marking them as being available or unavailable for hacking on, and tagging them with whether they were docs-related, infrastructure-related, or code enhancements. 
+3. Code reviewer: As PRs came in, I would conduct code reviews on each of them, and would discuss with them where to adjust the code to adhere to code style standards. 
+4. Continuous integration pipeline babysitter: Because I had just switched us off from Travis CI to Azure Pipelines, I was babysitting the pipelines to make sure nothing went wrong. (Spoiler: something did!) 
+5. Green button pusher: Once all tests passed, I would hit the big green button to merge PRs!
+
+If I get to sprint with other experienced contributors at the sprints, I would definitely like to have some help with the above.
+
+## Thoughts
+
+### Making sprints human-friendly
+
+I tried out a few ideas, which I hope made the sprints just that little bit more human-friendly.
+
+1. Used large Post-It easel pads to write out commonly-used commands at the terminal.
+2. Displayed claimed seating arrangements at the morning, and more importantly, get to know every sprinter's name.
+3. Announcing every PR to the group that was merged and what the content was, followed by a round of applause.
+4. Setting a timer for 5 minutes before lunch so that they could all get ahead in the line.
+5. I used staff privileges to move the box of leftover bananas into our sprint room. :)
+
+I think the applause is the most encouraging part of the process. Having struggled through a PR, however big or small, and having group recognition for that effort, is super encouraging, especially for first-time contributors. I think we need to encourage this more at sprints. 
+
+### Relinquishing control
+
+The only things about the pyjanitor project that I'm unwilling to give up on are: good documentation of what a function does, that a function should do one thing well, and that it be method-chainable. Everything else, including functionality, is an open discussion that we can have!
+
+One PR I particularly enjoyed was that from Lucas, who PR'd in a logo for the project on the docs page. He had the idea to take the hacky broomstick I drew on the big sticky note (as a makeshift logo), redraw it as a vector graphic in Inkscape, and PR it in as the (current) official logo on the docs.
+
+More broadly, I deferred to the sprinters' opinions on docs, because I recognized that I'd have old eyes on the docs, and wouldn't be able to easily identify places where the docs could be written more clearly. Eventually, a small, self-organizing squad of 3-5 sprinters ended up becoming the unofficial docs squad, rearranging the structure of the docs, building automation around it, and better organizing and summarizing the information on the docs. 
+
+In more than a few places, if there were a well-justified choice for the API (which really meant naming the functions and keyword arguments), I'd be more than happy to see the PR happen. Even if it is evolved away later, the present codebase and PRs that led to it provided the substrate for better evolution of the API!
+
+### A new Microsoft
+
+This year, I switched from Travis CI to Azure Pipelines. In particular, I was attracted to the ability to build on all three major operating systems, Windows, macOS, and Linux, on the free tier. 
+
+Microsoft had a booth at PyCon, in which Steve Dowell led an initiative to get us set up with Azure-related tools. Indeed, as a major sponsor of the conference, this was one of the best swag given to us. Super practical, relationship- and goodwill-building. Definitely not lesser than the Adafruit lunchboxes with electronics as swag!
+
+### Hiccups
+
+Naturally, not everything was smooth sailing throughout. I did find myself a tad expressing myself in an irate fashion at times with the amount of context switching that I was doing, especially switching between talking to different sprinters one after another. (I am very used to long stretches hacking on one problem.) One thing future sprinters could help with, which I will document, is to give me enough ramp-up context around their problem, so that I can quickly pinpoint what other information I might need. 
+
+The other not-so-smooth-sailing thing was finding out that Azure sometimes did not catch errors in a script block! My unproven hypothesis at this point is that if I have four commands executed in a script block, and if any of the first three fail but the last one passes, the entire script block will behave as if it passes. This probably stems from the build system looking at only the last exit code to determine exit status. Eventually, after splitting each check into individual steps, linting and testing errors started getting caught automatically! (Automating this is much preferred to me running the `black` code formatter in my head.)
+
+Though the above issue is fixed, I think I am still having issues getting `pycodestyle` and `black` to work on the Windows builds. Definitely looking forward to hearing from Azure devs what could be done here!
+
+## Suggestions
+
+I'm sure there's ways I could have made the sprint a bit better.  I'd love to hear them if there's something I've missed! Please feel free to comment below.
+
+## Sprinter Acknowledgement
+
+I would like to thank all the sprinters who joined in this sprint. Their GitHub handles are below:
+
+- @HectorM14 (who was remote!)
+- @jekwatt
+- @kurtispinkney
+- @lphk92
+- @jonnybazookatone
+- @SorenFrohlich
+- @dave-frazzetto
+- @dsouzadaniel
+- @Eidhagen
+- @mdini
+- @kimt33
+- @jack-kessler-88
+- @NapsterInBlue
+- @jk3587
+- @ricky-lim
+- @catherinedevlin
+- @StephenSchroed
+
+And as always, big thanks to my collaborators on the repository:
+
+- @zbarry
+- @szuckerman
+
+---
+pub_date: 2019-05-08
+---
+tags:
+
+pycon
+software development
+sprint
+open source
+
+---
+twitter_handle: ericmjl
