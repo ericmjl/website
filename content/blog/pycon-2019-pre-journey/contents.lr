@@ -1,0 +1,39 @@
+title: PyCon 2019 Pre-Journey
+---
+author: Eric J. Ma
+---
+body:
+
+I'm headed out to [PyCon 2019]! This year, I will be co-instructing two tutorials, one on network analysis and one on Bayesian statistics, and delivering one talk on Bayesian statistics.
+
+[PyCon 2019]: https://us.pycon.org/2019
+
+The first tutorial on [network analysis] is based on [material that I first developed](https://github.com/ericmjl/Network-Analysis-Made-Simple) 5 years ago, and have continually updated. I've enjoyed teaching this tutorial because it represents a different way of thinking about data - in other words, relationally. This year, I will be a co-instructor for [Mridul], who has kindly agreed to step up and teach it this year at PyCon. The apprentice has exceeded the master!
+
+[network analysis]: https://us.pycon.org/2019/schedule/presentation/70/
+[Mridul]: https://twitter.com/Mridul_Seth
+
+The second tutorial on [Bayesian statistics] is based on [material co-developed][bayesian_material] with [Hugo Bowne-Anderson][hugo]. Hugo is a mathematician by training, a pedagogy master, and data science aficionado. Like myself, he is a fan of Bayesian statistical modelling methods, and we first debuted the tutorial past year at SciPy. We're super excited for this one!
+
+[Bayesian statistics]: https://us.pycon.org/2019/schedule/presentation/77/
+[bayesian_material]: https://github.com/ericmjl/bayesian-stats-modelling-tutorial
+[hugo]: https://twitter.com/hugobowne
+
+The talk that I will deliver is on [Bayesian statistical analysis of case/control tests][bayestalk]. In particular, I noticed a content gap in the data science talks, where case/control comparisons were limited to one case and one control. One epiphany I came to was that if we use Bayesian methods to analyze our data, there's no particular reason to limit ourselves to one case and one control; we can flexibly model multiple cases vs. one control, or even multiple cases vs multiple different controls in the same analysis, in a fashion that is flexible and principled.
+
+[bayestalk]: https://us.pycon.org/2019/schedule/presentation/174/
+
+My final involvement with PyCon this year is as Financial Aid Chair. This is the first year that I'm leading the FinAid effort; during previous years, I had learned a ton from the previous chair Karan Goel. My co-chairs this year are Denise Williams and Jigyasa Grover; I'm looking forward to meeting them in 3D!
+
+All-in-all, I'm looking forward to another fun year at PyCon!
+---
+pub_date: 2019-04-29
+---
+tags:
+
+pycon
+python
+data science
+conferences
+---
+twitter_handle: ericmjl
