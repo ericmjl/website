@@ -12,15 +12,15 @@ This time round, armed with an iPad Pro (11”), I decided to test again how muc
 
 ## Software Development
 
-I develop [`pyjanitor`] as a tool that I use in my daily work, and as part of my open source software portfolio. When I’m on my MacBook or Pro, or on my Linux desktop at home, I usually work with VSCode for it’s integrated terminal, superb syntax highlighting, git integration, code completion with Kite, and more. 
+I develop [`pyjanitor`](https://pyjanitor.readthedocs.io) as a tool that I use in my daily work, and as part of my open source software portfolio. When I’m on my MacBook or Pro, or on my Linux desktop at home, I usually work with VSCode for it’s integrated terminal, superb syntax highlighting, git integration, code completion with Kite, and more. 
 
-Moving to iOS, VSCode is not available, and that immediately means to rely on Terminal-based tools to get my work done. I ponied up for [Blink Shell], and found it to pay off immediately. Having enabled remote access on my Linux tower at home, I was thrilled to learn that Blink supports [`mosh`], and when paired with [`tmux`], it is a superb solution for maintaining persistent shells across spotty internet conditions. 
+Moving to iOS, VSCode is not available, and that immediately means to rely on Terminal-based tools to get my work done. I ponied up for [Blink Shell](https://www.blink.sh/), and found it to pay off immediately. Having enabled remote access on my Linux tower at home, I was thrilled to learn that Blink supports [`mosh`](https://mosh.org/), and when paired with [`tmux`](https://github.com/tmux/tmux), it is a superb solution for maintaining persistent shells across spotty internet conditions. 
 
 A while ago, I also configured `nano` with syntax highlighting. As things turned out, syntax highlighting has the biggest effect on my productivity compared to other text editor enhancements (e.g. code completion, git integration, etc.). After I mastered most of `nano`'s shortcut keys, I found I could be productive at coding in just `nano` itself. Even though missing out on the usual assistive tools meant I was coding somewhat slower, the pace was still acceptable; moreover, relying less on those tools helped me develop a muscle memory for certain API calls. I also found myself becoming more effective because the single window idioms of iOS meant I was focusing on the programming task at hand, rather than getting distracted while looking at docs in a web browser (a surprisingly common happening for me!). 
 
 ## Data Analysis
 
-For data analysis, Jupyter notebooks are the tool of my choice, for their interactive nature, and the ability to weave a narrative throughout the computation. Jupyter Lab is awesome for this task, but it’s poorly supported on mobile Safari. To use Jupyter notebooks in iOS, the best offering at the moment is [Juno], with its ability to connect to a Jupyter server accessible through an IP address or URL. This does require payment, though, and I gladly ponied up for that as well. 
+For data analysis, Jupyter notebooks are the tool of my choice, for their interactive nature, and the ability to weave a narrative throughout the computation. Jupyter Lab is awesome for this task, but it’s poorly supported on mobile Safari. To use Jupyter notebooks in iOS, the best offering at the moment is [Juno](https://juno.sh), with its ability to connect to a Jupyter server accessible through an IP address or URL. This does require payment, though, and I gladly ponied up for that as well. 
 
 I run a Jupyter server on my Linux tower at home. Because it has a GPU installed on it, when I am accessing the machine through Juno, my iPad suddenly has access to a full-fledged, fully-configured GPU as part of the compute environment! Coupled with the responsiveness of Juno, this makes for a fairly compelling setup to do Python programming on an iPad. 
 
@@ -49,6 +49,7 @@ Even with the issues detailed above, there’s still much to love about doing mo
 ## Concluding Thoughts
 
 This test has been quite instructive. As usual, tooling is superbly important for productivity; investing in the right tools makes it worthwhile. Granted, none of this comes cheap or for free, naturally. Given the future directions of iOS, I think it’s shaping up to be a real contender for productivity!
+
 ---
 pub_date: 2019-06-14
 ---
