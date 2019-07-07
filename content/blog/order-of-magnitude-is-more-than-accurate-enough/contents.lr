@@ -1,0 +1,43 @@
+title: Order of magnitude is more than accurate enough
+---
+author: Eric J. Ma
+---
+body:
+
+When I was in [Science One](https://scienceone.ubc.ca/) at UBC in 2006, our Physics professor, [Mark Halpern](https://www.phas.ubc.ca/users/mark-halpern), said a quotable statement that has stuck for many years.
+
+> Order of magnitude is more than accurate enough.
+
+At the time, that statement rocked the class, myself included. We were classically taught that significant digits are significant, and that we have to keep track of them. But Mark’s quote seemed to throw all of that caution and precision in Physics into the wind. Did what we learn in Physics lab class not matter?
+
+Turns out, there was one highly instructive activity that still hasn’t left my mind. We were asked, during a recitation, to estimate how many days the city of Vancouver could be powered for if we took a piece of chalk and converted its entire mass into energy. This clearly required estimation of chalk mass and Vancouver daily energy consumption, both of which we had no way of accurately knowing.
+
+Regardless, I took it upon myself to carry significant digits in our calculation, while my recitation partner, Charles Au, was fully convinced that this wasn’t necessary, and so did all calculations order-of-magnitude. We debated and agreed upon what assumptions we needed to arrive at a solution, and then proceeded to do the same calculations, one with significant digits, the other without.
+
+We reached the same conclusion.
+
+More precisely, I remember obtaining a result along the lines of $6.2 \cdot 10^3$ days, while Charles obtained $10^4$ days. On an order of magnitude, more or less equivalent. 
+
+In retrospect, I shouldn’t have been so surprised. Mark is an astrophysicist, and at that scale, 1 or 2 significant digits might not carry the most importance; rather, getting into the right ballpark might be more important. At the same time, the recitation activity was a powerful first-hand experience of that last point: getting into the right ballpark first.
+
+At the same time, I was also missing a second perspective, which then explains my surprise at Mark’s quote. Now that I’ve gone the route of more statistics-oriented work, I see a similar theme showing up. John Tukey said something along these lines:
+
+> Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.
+
+The connection to order of magnitude estimates should be quite clear here. If we’re on an order of magnitude correct on the right questions, we can always refine the answer further. If we’re precisely answering the wrong question, God help us.
+
+What does this mean for a data scientist? For one, it means that means approximate methods are usually good enough practically to get ourselves into the right ballpark; we can use pragmatic considerations to decide whether we need a more complicated model or not. It also means that when we’re building data pipelines, minimum viable products, which help us test whether we’re answering the right question, matter more than the fanciest deep learning model.
+
+So yes, to mash those two quotes together:
+
+> Order of magnitude estimates on the right question are more useful than precise quantifications on the wrong question. 
+---
+pub_date: 2019-07-07
+---
+tags:
+
+data science
+estimation
+statistics
+---
+twitter_handle: ericmjl
