@@ -1,0 +1,59 @@
+title: SciPy 2019 Post-Conference
+---
+author: Eric J. Ma
+---
+body:
+
+It’s my last day in Austin, TX, having finished a long week of conferencing at [SciPy 2019](https://www.scipy2019.scipy.org/). This trip was very fruitful and productive! At the same time, I’m ready for a quieter change - meeting and talking with people does take a drain on my brain, and I have a mildly strong preference for quiet time over interaction time.
+
+## Tutorials
+
+I participated in the tutorials as an instructor for three tutorials, which I think have become my “data science toolkit”: [Bayesian statistical modeling](https://www.youtube.com/watch?v=2wvt6GPZl1U), network analysis, and [deep learning](https://www.youtube.com/watch?v=JPBz7-UCqRo). 
+
+Of the three, the one I had the most fun teaching was the deep learning one. The goal of that tutorial was to peel back a layer behind the frameworks and see what’s going on. To reinforce this and make it all concrete, we live coded a deep learning framework prototype, and it worked! (I didn’t plan for it, and so I was quite nervous while doing it, but we pulled it off as a class, and I think it reinforced the point about revealing what goes on underneath a framework.
+
+I also had a lot of fun teaching the Bayesian statistical modeling tutorial, which I had co-created with Hugo Bowne-Anderson, and as always, my personal “evergreen” tutorial on Network Analysis always brings me joy, especially when we reach the end and talk about graphs and matrices. I think the material connecting linear algebra to graph concepts is one that the crowd enjoys, and I might emphasize it more going forth at the SciPy tutorials.
+
+## Talks
+
+This year, [I delivered a talk on`pyjanitor`](https://www.youtube.com/watch?v=sSIT0rJh2OM). Excluding lightning talks, this is probably the first time I’ve started my slides one day before having to deliver it (yikes!). Granted, I’ve had the outline in my head for a long time now, I guess having to do the talk was good impetus to actually get it done.
+
+Apart from that, there’s a rich selection of talks at SciPy from which I think we can screen at work over lunches (Data Science YouTube). I particularly like [the talk](https://www.youtube.com/watch?v=J_aymk4YXhg) on [Optuna](https://optuna.org/), a framework for hyperparameter optimization, and I think I’ll be using this tool going forwards.
+
+## Sprints
+
+I did a sprint on `pyjanitor` with my colleague Zach Barry. This sprint, we had about 20+ sprinters join us, the vast majority of them being first-time sprinters. 
+
+One thing that stuck for me, this time round, is how even first-timers have different degrees of experience. Some know `git` while most others don’t; most don’t have any prior experience with [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow). I had an interaction that led me to realize it’s very important to state meaningfully what “beginner” means in concrete terms. For example, a “beginner” `pyjanitor` contributor is probably a `pandas` user, may or may not have used `git` before, probably doesn’t know GitFlow. A common prerequisite quality amongst contributors would probably be that they would have the patience to 
+
+1. Read the documentation,
+2. Attempt at least one pass digesting the documentation, and 
+3. Ask questions regarding the intent behind something before asking for a change.
+
+In terms of the things accomplished at this sprint, contributions mainly revolved around:
+
+- Improving language in the docs,
+- New functions, and
+- New example notebooks.
+
+In addition to `pyjanitor` sprinting, special thanks goes to [Felipe Fernandes](https://twitter.com/ocefpaf), who helped me [get `jax` up onto conda-forge](https://anaconda.org/conda-forge/jax)! SciPy is really the place where we can get to meet people *and* get things done. 
+
+## Career advice learned
+
+While at SciPy, I had a chance to talk with Eric Jones, CEO of Enthought. Having described my current role at work, he mentioned how having a team like the one I’m on parked inside IT gives us a very unique position to connect data science work across the organization to the consumers of our data products. When I raised to him my frustrations regarding our infatuation with vendors *when FOSS alternatives clearly exist*, his advice in return was essentially this:
+
+<blockquote class="blockquote">
+<p>Focus on leveling-up your colleagues skills and knowledge, keep pushing the education piece at work, and don’t worry about the money that gets spent on tooling.</p>
+</blockquote>
+
+Having thought about this, I agree. Over time, we should let the results speak. At the same time, I want to help create the environment that I would like to work in: where my colleagues use the same tooling stack, are hacker-types, aren’t afraid to dig deep into the “computer stuff” and into the biology/chemistry, and have the necessary skill + desire to design machine learning systems to systematically accelerate discovery science.
+---
+pub_date: 2019-07-15
+---
+tags:
+
+conference
+scipy2019
+data science
+---
+twitter_handle: ericmjl
