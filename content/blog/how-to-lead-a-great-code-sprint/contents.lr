@@ -1,0 +1,98 @@
+title: How to lead a great code sprint
+---
+author: Eric J. Ma
+---
+body:
+
+This blog post is the first in a series of two blog posts on participating in code sprints, and is the culmination of two other blog posts I’ve written on leading a sprint. In this post, I’ll be writing it from the perspective of what a sprint participant might appreciate from a sprint leader.
+
+## Write good docs
+
+Documentation scales you, the package maintainer. Good docs let others get going without needing your intervention, while bad docs create more confusion. Write good docs ahead-of-time on:
+
+- The purpose and scope of the project.
+- How to get setup for contributing
+- What contributors should look out for when contributing, including:
+	- Code style
+	- Function scope
+	- Documentation requirements
+	- Testing requirements
+- How contributors can contribute without necessarily providing code
+
+## Require documentation as a first contribution
+
+This may not necessarily apply to all projects, but for small-ish enough projects, this might be highly relevant. Requiring documentation contributions as the first contribution has a few nice side effects for newcomer contributors:
+
+1. This enforces familiarity with the project before making contributions.
+2. It’s a very egalitarian way to kick-off the sprints, reducing the probability of sprinter anxiety from falling behind.
+3. This reduces the burden of new contributions for first-time sprinters: docs do not break code!
+4. Apart from being non-intimidating, it can sometimes give rise to repetitive tasks that newcomer sprinters with which newcomers can practice git workflow.
+
+## Make clear who should sprint with your project
+
+Mismatched expectations breed frustration; hence, making clear what pre-requisite knowledge participants should have can go a long way to reducing frustrations later on. 
+
+Drawing on my `pyjanitor` experience, I would want participants to at the minimum be me of the following:
+1. `pandas` users who have frustrations with the library, and would like to make contributions, or
+2. Individuals who wish to make a documentation contribution and don’t mind doing a fine-toothed pass over the docs to figure out what is unclear in the docs.
+
+Defining your so-called “sprint audience” ahead-of-time can go a long way to making the sprint productive and friendly.
+
+## Communicate priorities of the project
+
+Sprinters want to know that their contributions are going to be valued. Though it is easy to say, “come talk with me before you embark on a task”, the reality is that you, the sprint lead, are likely going to be extremely overbooked. One way to get around this, I think, is to have a high-level list of priorities for the sprint, which can help sprinters better strategize which tasks to tackle. Communicate this on a whiteboard, large sticky notes, or online Wiki page that you can direct people to.
+
+## Have a publicly-viewable “file lock”
+
+Merge conflicts will inadvertently show up if multiple people are contributing to the same file simultaneously. It helps to have a publicly-viewable “file lock” on, say, a whiteboard or large sticky notes, so that we know who is working on what file. This helps prevent you, the sprint lead, from accidentally getting two people to work on the same file, and then having to resolve merge conflicts later.
+
+In the `pyjanitor` sprints, I frequently approved two people working on the same notebook; resolving merge conflicts in the notebook JSON later proved to be a big pain! This lesson was one learned hard.
+
+## Encourage contribution of life-like examples
+
+If there are new package users in the crowd who want to get familiar with the package, then encouraging them to contribute life-like examples is a great way to have them make a contribution! This has some nice side effects:
+
+1. In creating the example, they may find limitations in the package that could form the substrate of future contributions.
+2. By using the library in the creation of an example, they become users of the project themselves.
+
+## Celebrate every contribution
+
+This one is particularly important for first-time contributors. Oftentimes, they have never done standard Gitflow, and that is intimidating enough. So it doesn’t matter if the contribution is nothing more than deleting an unnecessary plural `s` or correcting a broken URL. We should celebrate that contribution, because they have now learned how to make a contribution (regardless of type), and can repeat the unfamiliar Gitflow pattern until they have it muscle memorized.
+
+At the SciPy sprints, for the `pyjanitor` project, once a contributor’s PR finished building and passed all checks, I brought my iPad over to their table to let them hit the Big Green Button on GitHub. This is one touch I am quite confident our sprinters loved!
+
+## Recognize and assign non-code tasks
+
+While code contributions are useful, I think a great way to encourage them to help out would be to have them help with non-code contributions. A few examples include:
+
+- Debugging others’ setups
+- Triaging/tagging issues on your issue tracker
+- Talking with sprinters to help them prioritize
+- Social media sprinting for the project
+
+This is because you, the sprinter, might have your hands full helping beginners, and so having as much help as possible is extremely helpful to you. Be sure, of course, the acknowledge them in some public way that expresses your appreciation of their effort, because they might not necessarily get into the commit record (which, by the way, is not the only way to keep track of contributions).
+
+## Stay humble and calm
+
+In open source software development, it is hard to find contributors who are willing to sustain an effort, and so any contributions are generally welcome (barring those that are clearly out of scope). Hence, as far as it is humanly possible, I would be inclined to express appreciation for contributors’ contributions. 
+
+One of the PyMC maintainers, [Colin Carroll](https://colindcarroll.com), said something of a contribution that I wanted to make that stuck with me. The gist of it was as follows:
+
+> It’s a contribution from someone who is willing, and I’d take that any day. 
+
+So yes, even though we may see our project as providing an opportunity for newcomers to contribute, the fact that they are willing to contribute is even more so an important thing to recognize! Gratitude makes more sense than entitlement here.
+
+Staying calm is also important. It’s easy to get irritated because of all of the context switching that happens. Leverage the help you can get from your sprint co-leads to help shoulder the load. If you take good care of your mental state, you can help make the sprints fun and productive for others.
+---
+pub_date: 2019-07-21
+---
+tags:
+
+software development
+sprint
+code sprint
+open source
+community
+community developmentm
+---
+twitter_handle: ericmjl
