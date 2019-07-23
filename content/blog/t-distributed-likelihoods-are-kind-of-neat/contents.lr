@@ -10,7 +10,7 @@ If we plot the probability density functions of the T distribution with varying 
 
 [![Student T distributions with varying degrees of freedom.](./t-distributions.png)](./t-distributions.png)
 
-Notice that when $df=1$, the T distribution is identical to the Cauchy distribution, and that as $df$ increases, it gradually becomes more and more like the Normal distribution. At $df=30$, it is thought to be approximately enough Gaussian.
+Notice that when $df=1$, the T distribution is identical to the Cauchy distribution, and that as $df$ increases, it gradually becomes more and more like the Normal distribution. At $df=30$, we can consider it to be approximately enough Gaussian.
 
 On its own, this is already quite useful; when placed in the context of a hierarchical Bayesian model, that’s when it gets even more interesting! In a hierarchical Bayesian model, we are using samples to estimate group-level parameters, but constraining group parameters to vary mostly like each other, unless evidence in the data suggests otherwise. If we allow the $df$ parameter to vary, then if some groups look more Cauchy while other groups look more Gaussian, this can be flexibly captured in the model. 
 ---
