@@ -13,7 +13,7 @@ Here are the key ideas:
 2. Use Panel’s `serve` command to test the app locally. It’s actually quite magical - the serve command can actually parse a Jupyter notebook and serve it up on a local web server.
 3. When you’ve confirmed that everything is working properly locally, Heroku is a great deployment option. Using the default Python buildpack and a `requirements.txt` file, one can easily specify the exact Python environment for deployment.
 
-As a pedagogical implementation, I put up a [minimal panel app on GitHub](https://github.com/ericmjl/minimal-panel-app), and also [served it up on Heroku](https://minimal-panel.herokuapp.com). Come check it out! I hope it’s useful for you.
+As a pedagogical implementation, I put up a [minimal panel app on GitHub](https://github.com/ericmjl/minimal-panel-app), and also [served it up on Heroku](https://minimal-panel-app.herokuapp.com). Come check it out! I hope it’s useful for you.
 ---
 pub_date: 2019-07-26
 ---
