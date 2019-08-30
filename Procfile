@@ -1,1 +1,1 @@
-web: lektor serve --port 8999
+web: lektor serve --port $PORT
