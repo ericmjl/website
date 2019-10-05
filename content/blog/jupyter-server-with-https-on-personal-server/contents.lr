@@ -1,0 +1,64 @@
+title: Jupyter Server with HTTPS on Personal Server
+---
+author: Eric J. Ma
+---
+body:
+
+Recording this for myself, since I did it once and probably don't have the brain bandwidth to remember this through repetition.
+
+I have known how to run a "public" Jupyter server (password-protected, naturally), but one thing I've struggled with was getting HTTPS working.
+
+Turns out, the `letsencrypt` instructions aren't that bad on Jupyter's docs. I just was ignorant in the past, and didn't know enough about Linux to get this working right.
+
+The key here is creating a `letsencrypt` certificate, and making sure file permissions are set correctly.
+
+First off, go to the [Certbot page](https://certbot.eff.org). Select the type of website you're running and operating system. For Jupyter, I chose "None of the Above" and "Ubuntu 18.04 LTS (bionic)" (even though I'm technically on Ubuntu 19). (Here's a [shortcut link](https://certbot.eff.org/lets-encrypt/ubuntubionic-other) to the instructions if you're in the same situation.)
+
+On my system (Ubuntu-based), I used the following commands to install `certbot`:
+
+```bash
+# Add repository
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+
+# Install certbot
+sudo apt-get install certbot
+
+# Run certbot
+sudo certbot certonly --standalone
+```
+
+Follow the instructions. `certbot` will install into a protected directory. In my case, it was `/etc/letsencrypt/live/<mywebsite>/`.
+
+Here, a problem will show up. That directory above is not accessible by a Jupyter server run under a user other than `root`. But a desired property of running Jupyter servers is that we don't have to use `sudo` to run it. How can we solve this? Basically, by making sure that the certificate is readable by a non-`root` user.
+
+What I did, then, was to copy the files that were created by `certbot` into a location under my home directory. For security by obscurity, I'm naturally not revealing its identity. Then, I changed ownership of those files to my username:
+
+```bash
+pwd  # you should be in the directory where the certbot-created files are located
+su -
+chown <myusername> *.pem  # changes ownership of those files
+```
+
+Finally, I went into my Jupyter config (`~/.jupyter/jupyter_notebook_config.py`, this is well-known), and edited the two lines that specified the "certfile" and the "keyfile":
+
+```python
+c.NotebookApp.certfile = u'/absolute/path/to/your/certificate/mycert.pem'
+c.NotebookApp.keyfile = u'/absolute/path/to/your/certificate/mykey.key'
+```
+
+If this helps you, leave me a note in the comments below. :)
+---
+pub_date: 2019-10-05
+---
+tags:
+
+jupyter
+dataops
+devops
+data science
+---
+twitter_handle: ericmjl
