@@ -62,7 +62,7 @@ Borrowing from the above master figure, here's the a figure that shows how likel
 
 ![](./likelihood-computation.png)
 
-*To compute the likelihood over the data, we multiply the likelihoods of each of the individual data points. You will noticed that essentially, in each case, the dimension we intend to collapse is the `sample` dimension - and that means keeping track of the sample dimension is extremely important! Also important to note is that we do *not* intend to collapse the `batch` dimension, as it does not carry the same statistical meaning as a `sample` from a distribution, but is a tensor computation construct.*
+*To compute the likelihood over the data, we multiply the likelihoods of each of the individual data points (or since we're doing computation on a computer, we sum the log probabilities). You will noticed that essentially, in each case, the dimension we intend to collapse is the `sample` dimension - and that means keeping track of the sample dimension is extremely important! Also important to note is that we do *not* intend to collapse the `batch` dimension, as it does not carry the same statistical meaning as a `sample` from a distribution, but is a tensor computation construct.*
 
 ## Other Scenarios
 
