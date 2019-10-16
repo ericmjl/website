@@ -1,0 +1,62 @@
+title: Dokku: Building an internal Heroku at work
+---
+author: Eric J. Ma
+---
+body:
+
+At work, we don’t have a service that has the simplicity of Heroku. Part of it is that we’re still behind what’s available for free in my FOSS life (both commercial and FOSS offerings), and cybersecurity tends to be a gatekeeper against adoption of new things, which is a reality I have to face at work. 
+
+BUT! I am unwilling to simply bow down to this secnario. “There’s got to be a better way.” 
+
+What does that mean? It means if we want a Heroku-like thing internally, we have to hack together workarounds.
+
+Enter [Dokku](http://dokku.viewdocs.io/dokku/)!
+
+What is it? It’s a FOSS implementation of the functionality that Heroku provides. It’s only slightly more involved than Heroku, and gives us a really nice taste of what’s possible with Heroku.
+
+Dokku claims to be the “smallest PaaS implementation you’ve ever seen”, and I fully believe it. The maintainers have done a wonderful thing, making the installation process as simple and clean as possible. I’ve successfully installed it on a bare DigitalOcean droplet and on my home Linux tower. I’ve also successfully installed it in EC2 instances at work, albeit needing a few minor modifications to the script they provide.
+
+## Why would I want to use Dokku?
+
+Taking Dokku on my DigitalOcean droplet as an example, what it effectively provides is a self-hosted Heroku. 
+
+This means you can get 95% of the convenience that Heroku offers, except done in-house. This can be handy if you’ve got cybersecurity standing in the way of awesome convenience, or if finance isn’t willing to shell out the moolah.
+
+## What can we do with Dokku?
+
+Here’s a few neat things that we can do.
+
+1. We can provision a database to run on the same compute node as the app, and then link them together. If your compute node is “beefy” enough (RAM/CPU/storage-wise) to handle both the database and the app (and I mean, I’m confident that most disposable apps aren’t going to be at a large scale), then it can be pretty handy, because it means we save on latency.
+2. We can deploy apps using either Heroku buildpacks (which look for Procfiles) or using Dockerfiles. Docker containers can be easier to maintain if we have a large and/or complex `conda` environment, in my opinion, as we can reuse the existing environment spec, but Procfiles are much nicer for smaller projects. This fits with the paradigm of “declaring what you need”, rather than “programming what you need”. 
+3. Because Dokku is managing everything through isolated Docker containers, we can actually enter into a Docker container and muck around to debug, without worrying about breaking the broader system. I realize now how neat it is to have containerization, but without a unified front-end interface to manage the containers, networking interfaces, and environment variables, it’s tough to keep everything straight. Dokku provides that front-end interface.
+
+## What are you deploying right now?
+
+On my DigitalOcean box, which I use for personal projects, I have deployed both the “Getting Started” Ruby app that Heroku provides as well as a [minimal app](minimal-panel.ericmjl.com) showcasing a minimal dashboard using [Panel](panel.pyviz.org). 
+
+The easy part was getting Dokku up and running. The hard part, though, was getting URLs and DNSs right. It took some debugging to get that work correctly. 
+
+In particular, Dokku uses a concept called virtual hosts (`VHOSTS`) to route from the Dokku host to individual containers. For example, to get `minimal-panel.ericmjl.com` up and running correctly, I had to ensure that `*.ericmjl.com` was routed to my DigitalOcean box. 
+
+## How have we used this at work?
+
+At work, I just finished prototyping the use of Dokku on EC2. In particular, I was able to deploy both Dockerfile-based and Procfile-based projects. Once again, getting a domain was the most troublesome part of this project; spinning up an EC2 instance and configuring it became easy using a simple Bash script which we executed on each test spin-up machine. 
+
+## What changes between Heroku and Dokku?
+
+The biggest thing I found is that I need to at least have SSH-access to the compute box that is running Dokku. This is because what we would usually configure on Heroku’s web interface (e.g. environment variables), we would instead configure using `dokku`’s command-line interface via SSH. Hence, not being afraid of the CLI is important.
+
+## What’s your verdict?
+
+If you know Heroku, Dokku gets you 95% of the convenience you’re used to, plus quite a bit more flexibility to customize it to your own compute environment.
+---
+pub_date: 2019-09-07
+---
+tags:
+
+data apps
+data science
+devops
+deployment
+---
+twitter_handle: ericmjl
