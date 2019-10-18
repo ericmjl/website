@@ -1,0 +1,62 @@
+title: Caching Long-Running Function Results
+---
+author: Eric J. Ma
+---
+body:
+
+I found this nifty tool for caching the results of long-running functions: [`cachier`](https://pypi.org/project/cachier/). This is useful when we’re building, say, Python applications for which quick interactions are necessary, or for caching the results of a long database query.
+
+How do we use it? Basically it’s nothing more than a decorator!
+
+Let’s imagine I have a long-running function as below.
+
+```python
+def long_running_function(arg1, arg2):
+    # stuff happens
+	return result
+```
+
+Turns out, if you have a need to cache the result in a lightweight fashion, you can simply add `cachier`:
+
+```python
+from cachier import cachier
+
+@cachier()
+def long_running_function(arg1, arg2):
+	# stuff happens
+	return result
+```
+
+The result is stored in your home directory, so the cache is accessible to you.
+
+One nice thing `cachier` also offers is the ability to set a time duration after which the cache goes stale. This can be useful in situations where you know that you need to refresh the cache, such as a database query that may go stale because of new data added into it. This is done by specifying the `stale_after` keyword argument:
+
+```python
+from cachier import cachier
+from datetime import timedelta
+
+# Re-cache result after 1 week.
+@cachier(stale_after=timedelta(weeks=1))
+def long_running_function(arg1, arg2):
+	# stuff happens
+	return result
+```
+
+If you need to reset the cache manually, you can always do:
+
+```python
+long_running_function.clear_cache()
+```
+
+There are other advanced features that `cachier` provides, and so I’d encourage you to go and take a look at it!
+---
+pub_date: 2019-10-18
+---
+tags:
+
+python
+tips
+optimization
+packages
+---
+twitter_handle: ericmjl
