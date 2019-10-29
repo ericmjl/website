@@ -1,0 +1,80 @@
+title: “AI will not solve medicine”
+---
+author: Eric J. Ma
+---
+body:
+
+Those who think “AI will solve medicine” are delusional.
+I say this as a practitioner of machine learning in drug discovery and development.
+
+First things first, “AI” is an overused term.
+We should stop using it, especially in medicinal research.
+
+Now, my thoughts are more sanguine.
+The real value proposition of machine learning models in drug development
+is to navigate chemical, sequence, pathway, and knowledge space
+faster and smarter than we might otherwise do so
+without machine learning methods.
+It’s a modeling tool, and nothing more than that.
+It’s a tool for helping the human collective make better decisions than without it,
+but it’s also a double-edged sword.
+We can use the tool and then constrain our thinking because we have that tool,
+because we want to continue using that tool.
+Or we can use the tool to our advantage
+and liberate our mind to think of other things.
+
+This thought was sparked off by an email that I was on at work.
+A molecule was approved for _continued investigation_ (not even “go for safety trials”!),
+and 63 people were on that email.
+Imagine the number of people
+who are involved in getting a molecule past all research-phase checkpoints
+_and_ all 3 clinical trial checkpoints.
+_Hint: Many people are involved._
+
+As I combed through the names on that email,
+the number of machine learners was vastly outnumbered by the number of colleagues
+who toiled daily at the bench,
+wrangling with even more uncertainty than that we have at our computers.
+We machine learners work in service of them,
+delivering insights and prioritized directions,
+just as they toil to generate the data that our data-hungry models need.
+It’s a symbiotic relationship.
+
+What do all of those 63 people work on?
+
+Some make the molecules.
+Others design the assays to test the molecules in.
+Yet others design the assays to find the target to then develop the assay for.
+It’s many layers of human creativity in the loop.
+I can’t automate the entirety of their work with my software tools, but I can augment them.
+I mean, yeah, I can find a new potential target,
+but ultimately it's a molecular biologist
+who develops the assay, especially if that assay has never existed before.
+
+There are others who professionally manage the progress of the project.
+There’s sufficient complexity at the bench
+and in the silicon chips
+that we can’t each keep track of the big picture.
+Someone has to do that, and keep everybody focused.
+
+And then there’s the handful of us who deal with numbers and mainly just numbers.
+Yes, it’s a handful.
+I counted them on my fingers.
+We do have an outsized impact compared to our numbers,
+but that’s because we can get computers to do our repetitive work for us.
+At the bench, robots are harder to work with.
+Having been at the bench before and failing badly at it,
+I can very much empathize with how tedious the work is.
+It’s expensive to collect that data,
+so the onus is on us computation types to get help navigate “data space” more smartly.
+---
+pub_date: 2019-10-29
+---
+tags:
+
+data science
+drug development
+artificial intelligence
+medicine
+---
+twitter_handle: ericmjl
