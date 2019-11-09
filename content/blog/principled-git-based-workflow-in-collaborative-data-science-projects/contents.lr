@@ -6,7 +6,11 @@ body:
 
 Having worked with GitFlow on a data science project and coming to a few epiphanies with it, I decided to share some of my thoughts [in an essay](https://ericmjl.github.io/essays-on-data-science/workflow/gitflow/).
 
-I hope you enjoy it; writing the essay was also a great opportunity for me to pick up more advanced features of `pymdownx`, a package that extends Markdown syntax with other really cool features.
+One of my thoughts here is that most data scientists aren't resistant to using GitFlow (and more generally, just being more intentional about what gets worked on) because it's a bad idea, but because there's a lack of incentives to do so. In there, I try to address this concern.
+
+And because GitFlow does require knowledge of Git, it can trigger an, "Oh no, one more thing to learn!" response. These things do take time to learn, yes, but I see it also as an investment of time with a future payoff.
+
+Apart from that, I hope you enjoy the essay; writing it was also a great opportunity for me to pick up more advanced features of `pymdownx`, a package that extends Markdown syntax with other really cool features.
 ---
 pub_date: 2019-11-09
 ---
