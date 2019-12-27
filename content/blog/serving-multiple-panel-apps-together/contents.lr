@@ -1,0 +1,36 @@
+title: Serving multiple Panel apps together
+---
+author: Eric J. Ma
+---
+body:
+
+I learned a new thing today! If I have a bunch of small dashboard-like utilities, `panel`, which uses the `bokeh` server behind the scenes, can serve up multiple files together from the same server.
+
+Here's an example. Assume I have the following directory structure:
+
+```
+|- /
+  |- app1.py
+  |- app2.py
+  |- app3.py
+```
+
+If I start a Panel server here using:
+
+```bash
+panel serve *.py
+```
+
+Then all of the apps will be served up, with a default Bokeh landing page provided to link to each of the apps.
+
+Doing so lets us build multiple little utilities that can help ourselves and our colleagues be more productive!
+---
+pub_date: 2019-12-26
+---
+tags:
+
+data science
+dashboarding
+python
+---
+twitter_handle: ericmjl
