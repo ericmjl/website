@@ -19,11 +19,23 @@ If I start a Panel server here using:
 
 ```bash
 panel serve *.py
+# or, to be selective
+panel serve src1.py src2.py src3.py
+```
+
+If you have a bunch of Jupyter notebooks, the analogous command is:
+
+```bash
+panel serve *.ipynb
+# or, to be selective:
+panel serve nb1.ipynb nb2.ipynb nb3.ipynb 
 ```
 
 Then all of the apps will be served up, with a default Bokeh landing page provided to link to each of the apps.
 
 Doing so lets us build multiple little utilities that can help ourselves and our colleagues be more productive!
+
+For an example of this, check out the [minimal panel app](https://minimal-panel-app.herokuapp.com/home) I built to record these ideas. (Source code is available [here](https://github.com/ericmjl/minimal-panel-app).)
 ---
 pub_date: 2019-12-26
 ---
