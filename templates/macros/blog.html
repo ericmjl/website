@@ -1,38 +1,43 @@
+{% macro render_blog_header(post, from_index=false) %}
+<!-- Set title style -->
+{% if from_index %}
+<h3><a href="{{ post|url }}">{{ post.title }}</a></h3>
+{% else %}
+<h3>{{ post.title }}</h3>
+{% endif %}
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    {% if post.twitter_handle %}
+    <a href="https://twitter.com/{{ post.twitter_handle
+                    }}">{{ post.author or post.twitter_handle }}</a>
+    {% else %}
+    {{ post.author }}
+    {% endif %}
+    on {{ post.pub_date }}
+    {% if post.tags %}
+  </p>
+  <p>
+    <!-- Append tags after author -->
+    {% for t in post.tags -%}
+    <i class="fas fa-tag"></i>
+    <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
+      {{ t }}
+    </a>
+    {% endfor %}
+  </p>
+  {% endif %}
+</small>
+{% endmacro %}
+
 {% macro render_blog_post(post, from_index=false) %}
 <!-- Import stylesheet -->
 <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
 <div>
+  {{ render_blog_header(post, from_index) }}
 
-  <!-- Set title style -->
-  {% if from_index %}
-  <h1><a href="{{ post|url }}">{{ post.title }}</a></h1>
-  {% else %}
-  <h1>{{ post.title }}</h1>
-  {% endif %}
-
-  <!-- Append author -->
-  <small class="text-muted">
-    <p>
-      written by
-      {% if post.twitter_handle %}
-      <a href="https://twitter.com/{{ post.twitter_handle
-                    }}">{{ post.author or post.twitter_handle }}</a>
-      {% else %}
-      {{ post.author }}
-      {% endif %}
-      on {{ post.pub_date }}
-      {% if post.tags %}
-      |
-      <!-- Append tags after author -->
-      {% for t in post.tags -%}
-      <i class="fas fa-tag"></i>
-      <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
-        {{ t }}
-      </a>
-      {% endfor %}
-    </p>
-    {% endif %}
-  </small>
   <!-- Put post body -->
   {{ post.body }}
 </div>
@@ -44,29 +49,7 @@
 <div class="card bg-dark">
   <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
   <div class="card-body">
-    <h3><a href="{{ post|url }}">{{ post.title }}</a></h3>
-    <small class="text-muted">
-      <p>
-        written by
-        {% if post.twitter_handle %}
-        <a href="https://twitter.com/{{ post.twitter_handle
-                }}">{{ post.author or post.twitter_handle }}</a>
-        {% else %}
-        {{ post.author }}
-        {% endif %}
-        on {{ post.pub_date }}
-        {% if post.tags %}
-        |
-        <!-- Append tags after author -->
-        {% for t in post.tags -%}
-        <i class="fas fa-tag"></i>
-        <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
-          {{ t }}
-        </a>
-        {% endfor %}
-      </p>
-      {% endif %}
-    </small>
+    {{ render_blog_header(post) }}
     {% if post.summary %}
     <p class="card-text">{{ post.summary }}</p>
     <small class="text-muted">
