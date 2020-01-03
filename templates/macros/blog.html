@@ -3,7 +3,7 @@
 {% if from_index %}
 <h3><a href="{{ post|url }}">{{ post.title }}</a></h3>
 {% else %}
-<h3>{{ post.title }}</h3>
+<h1>{{ post.title }}</h1>
 {% endif %}
 
 <!-- Append author -->
@@ -49,7 +49,7 @@
 <div class="card bg-dark">
   <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
   <div class="card-body">
-    {{ render_blog_header(post) }}
+    {{ render_blog_header(post, from_index=True) }}
     {% if post.summary %}
     <p class="card-text">{{ post.summary }}</p>
     <small class="text-muted">
