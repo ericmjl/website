@@ -1,59 +1,63 @@
-{% macro render_project(project) %}
+{% macro render_project_card(project) %}
 <div class="col mb-4">
-    <div class="card bg-dark h-100">
-        {% for blk in project.body.blocks %}
+  <div class="card bg-dark h-100">
+    {% for blk in project.body.blocks %}
 
-        {% if blk._flowblock == "youtube" %}
-        <div class="card-header">
-            {{ blk }}
-        </div>
-        {% endif %}
-        {% endfor %}
-        <div class="card-body">
-            <h5 class="card-title">{{ project.title }}</h5>
-            {{ project.summary }}
-            {% for blk in project.body.blocks %}
-
-            {% if blk._flowblock == "resource" %}
-            <a href="{{ blk.url }}" class="card-link">{{ blk.label }}</a>
-            {% endif %}
-
-            {% if blk._flowblock == "github" %}
-            <a href="{{ blk.url }}" class="card-link">GitHub Repository</a>
-            {% endif %}
-
-            {% if blk._flowblock == "notebooks" %}
-            <a href="{{ blk.url }}" class="card-link">Notebooks</a>
-            {% endif %}
-
-            {% if blk._flowblock == "slides" %}
-            <a href="{{ blk.url }}" class="card-link">Slides</a>
-            {% endif %}
-
-            {% endfor %}
-        </div>
+    {% if blk._flowblock == "youtube" %}
+    <div class="card-header">
+      {{ blk }}
     </div>
+    {% endif %}
+    {% endfor %}
+    <div class="card-body">
+      <h5 class="card-title">{{ project.title }}</h5>
+      {{ project.summary }}
+      {% for blk in project.body.blocks %}
+
+      {% if blk._flowblock == "resource" %}
+      <a href="{{ blk.url }}" class="card-link">{{ blk.label }}</a>
+      {% endif %}
+
+      {% if blk._flowblock == "github" %}
+      <a href="{{ blk.url }}" class="card-link">GitHub Repository</a>
+      {% endif %}
+
+      {% if blk._flowblock == "notebooks" %}
+      <a href="{{ blk.url }}" class="card-link">Notebooks</a>
+      {% endif %}
+
+      {% if blk._flowblock == "slides" %}
+      <a href="{{ blk.url }}" class="card-link">Slides</a>
+      {% endif %}
+
+      {% endfor %}
+      <a href="{{ project|url }}" class="card-link">Details</a>
+    </div>
+  </div>
 </div>
 
 {% endmacro %}
 
 
-{% macro render_accordion(project, iter) %}
-<div class="card" style="width: 18rem;">
-    <div class="card-header" role="tab" id="heading{{ iter }}">
-        <h4 class="mb-0">
-            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ iter }}"
-                aria-expanded="false" aria-controls="collapse{{ iter }}">
-                {{ project.title }}
-            </a>
-        </h4>
-    </div>
-    <div id="collapse{{ iter }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ iter }}">
-        <div class="card-block">
-            <p><i>{{ project.type }}</i></p>
-            <p>{{ project.description }}</p>
-            <p><b>Resource:</b> <a href="{{ project.link }}">{{ project.resource }}</a></p>
-        </div>
-    </div>
+{% macro render_project(project) %}
+<div class="card bg-dark">
+  {% for blk in project.body.blocks %}
+  {% if blk._flowblock == "youtube" %}
+  <div class="card-header bg-dark">
+    {{ blk }}
+  </div>
+  {% endif %}
+  {% endfor %}
+  <div class="card-body bg-dark">
+    <h4 class="cart-title">{{ project.title }}</h4>
+    {% for blk in project.body.blocks %}
+    {% if blk._flowblock != "youtube" %}
+    {{ blk }}
+    {% endif %}
+    {% endfor %}
+  </div>
+  <div class="card-footer">
+    <small class="text-muted">{{ project.category }}</small>
+  </div>
 </div>
 {% endmacro %}
