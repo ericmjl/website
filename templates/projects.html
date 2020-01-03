@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
-{% from "macros/project.html" import render_project %}
+{% from "macros/project.html" import render_project, render_project_card %}
 {% block title %}{{ this.title }}{% endblock %}
 
 {% block body %}
 <div class="row row-cols-1 row-cols-md-3">
     {% for project in this.children %}
     {% if project.visible == "Visible" %}
-    {{ render_project(project) }}
+    {{ render_project_card(project) }}
     {% endif %}
     {% endfor %}
 </div>
