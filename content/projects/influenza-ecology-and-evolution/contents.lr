@@ -3,19 +3,24 @@ title: Influenza Ecology & Evolution
 body:
 
 #### description ####
-
 text:
+
 With its segmented genome, influenza viruses can reassort with other influenza viruses to produce hybrid progeny. Think of it as being like shuffling a red and a blue deck of cards in a box, and picking out each member of the suite at random.
 
 As part of my thesis work, I developed an phylogenetic heuristic algorithm to identify reassortant influenza viruses. Using this method, my colleagues and I were able to show that reassortment is over-represented (relative to a null model) when crossing between viral hosts; additionally, the more evolutionarily distant two viral hosts were, the more over-represented reassortment was.
 
 This may generalize across domains of life, where reticulate evolution enables organisms to more easily switch between ecological niches.
-
 #### resource ####
-url: http://ericmjl.github.io/thesis
 label: Thesis
-
+----
+url: http://ericmjl.github.io/thesis
 ---
 sort_key: 3
 ---
 _model: project
+---
+category: Grad School
+---
+summary: Figuring out if genome shuffling is important for influenza host switching.
+---
+visible: Visible
