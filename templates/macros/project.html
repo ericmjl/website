@@ -12,6 +12,8 @@
     <div class="card-body">
       <h5 class="card-title">{{ project.title }}</h5>
       {{ project.summary }}
+    </div>
+    <div class="card-footer">
       {% for blk in project.body.blocks %}
 
       {% if blk._flowblock == "resource" %}
@@ -32,6 +34,7 @@
 
       {% endfor %}
       <a href="{{ project|url }}" class="card-link">Details</a>
+
     </div>
   </div>
 </div>
