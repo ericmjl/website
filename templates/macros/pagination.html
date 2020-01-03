@@ -1,15 +1,29 @@
 {% macro render_pagination(pagination) %}
-  <div class="pagination">
-    {% if pagination.has_prev %}
-      <a href="{{ pagination.prev|url }}">&laquo; Previous</a>
-    {% else %}
-      <span class="disabled">&laquo; Previous</span>
-    {% endif %}
-    | {{ pagination.page }} |
-    {% if pagination.has_next %}
-      <a href="{{ pagination.next|url }}">Next &raquo;</a>
-    {% else %}
-      <span class="disabled">Next &raquo;</span>
-    {% endif %}
-  </div>
+<div class="btn-group" role="group" aria-label="pagination">
+  {% if pagination.page > 1 %}
+  <a href="/blog" class="btn btn-secondary">&laquo;</a>
+  {% else %}
+  <a href="/blog" class="btn btn-secondary disabled">&laquo;</a>
+  {% endif %}
+
+  {% if pagination.has_prev %}
+  <a href="{{ pagination.prev|url }}" class="btn btn-secondary">&lt;</a>
+  {% else %}
+  <span class="btn btn-secondary disabled">&laquo;</span>
+  {% endif %}
+
+  <span class="btn btn-secondary disabled">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+
+  {% if pagination.has_next %}
+  <a href="{{ pagination.next|url }}" class="btn btn-secondary">&gt;</a>
+  {% else %}
+  <span class="btn btn-secondary disabled">&gt;</span>
+  {% endif %}
+
+  {% if pagination.page == pagination.pages %}
+  <a href="/blog/page/{{ pagination.pages }}" class="btn btn-secondary disabled">&raquo;</a>
+  {% else %}
+  <a href="/blog/page/{{ pagination.pages }}" class="btn btn-secondary">&raquo;</a>
+  {% endif %}
+</div>
 {% endmacro %}
