@@ -4,10 +4,6 @@ author: Eric J. Ma
 ---
 body:
 
-## Summary
-
-In this blog post, I'll detail how I created a 3D printed QR code that can be used to help guests get on our home guest network in geek style. This part will detail the creation of a QR code with Python. The next part will detail how I created a program to generate 3D printable blocks. The final part will detail how I created a hybrid command line app and Flask app from the same code base, using `click` and `Flask`.
-
 ## The Project
 
 Over the weekend, I embarked on a project to create a 3D printed QR code that guests at our house could scan to gain access to our guest wireless network.
@@ -91,7 +87,7 @@ Now, if you remember that QR codes are just "ASCII strings encoded in a 2D barco
 
 Stay tuned for the coming blog posts!
 ---
-pub_date: 
+pub_date: 2018-09-01
 ---
 tags:
 
@@ -100,3 +96,5 @@ qr codes
 python
 ---
 twitter_handle: ericmjl
+---
+summary: In this blog post, I'll detail how I created a 3D printed QR code that can be used to help guests get on our home guest network in geek style. This part will detail the creation of a QR code with Python. The next part will detail how I created a program to generate 3D printable blocks. The final part will detail how I created a hybrid command line app and Flask app from the same code base, using `click` and `Flask`.
