@@ -56,9 +56,8 @@
         {% endif %}
         on {{ post.pub_date }}
         {% if post.tags %}
-      </p>
-      <!-- Append tags after author -->
-      <p>
+        |
+        <!-- Append tags after author -->
         {% for t in post.tags -%}
         <i class="fas fa-tag"></i>
         <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
@@ -67,7 +66,6 @@
         {% endfor %}
       </p>
       {% endif %}
-
     </small>
 
     <p class="card-text">{{ post.body }}
