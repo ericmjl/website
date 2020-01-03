@@ -45,12 +45,39 @@
   <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
   <div class="card-body">
     <h1><a href="{{ post|url }}">{{ post.title }}</a></h1>
+    <small class="text-muted">
+      <p>
+        written by
+        {% if post.twitter_handle %}
+        <a href="https://twitter.com/{{ post.twitter_handle
+                }}">{{ post.author or post.twitter_handle }}</a>
+        {% else %}
+        {{ post.author }}
+        {% endif %}
+        on {{ post.pub_date }}
+        {% if post.tags %}
+      </p>
+      <!-- Append tags after author -->
+      <p>
+        {% for t in post.tags -%}
+        <i class="fas fa-tag"></i>
+        <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
+          {{ t }}
+        </a>
+        {% endfor %}
+      </p>
+      {% endif %}
+
+    </small>
+
     <p class="card-text">{{ post.body }}
     </p>
-    <p class="card-text">
-      <i>Did you enjoy this blog post? <a href="{{ post|url }}#disqus">Let's discuss more</a>!
-      </i>
-    </p>
+    <small class="text-muted">
+      <p class="card-text">
+        <i>Did you enjoy this blog post? <a href="{{ post|url }}#disqus">Let's discuss more</a>!
+        </i>
+      </p>
+    </small>
 
   </div>
 </div>
