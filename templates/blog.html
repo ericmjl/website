@@ -1,13 +1,16 @@
 {% extends "layout.html" %}
-{% from "macros/blog.html" import render_blog_post %}
+{% from "macros/blog.html" import render_blog_post, render_blog_card %}
 {% from "macros/pagination.html" import render_pagination %}
 {% block title %}Blog{% endblock %}
 {% block body %}
-  {% for child in this.pagination.items %}
-    {{ render_blog_post(child, from_index=true) }}
-    <p><i>Did you enjoy this blog post? <a href="{{ child|url }}#disqus">Let's discuss more</a>!</i></p>
-    <hr class="fancy">
-  {% endfor %}
 
-  {{ render_pagination(this.pagination) }}
+
+{% for child in this.pagination.items %}
+{#  {{ render_blog_post(child, from_index=true) }}  #}
+{{ render_blog_card(child) }}
+<div>
+  <hr>
+</div>
+{% endfor %}
+{{ render_pagination(this.pagination) }}
 {% endblock %}
