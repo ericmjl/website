@@ -73,12 +73,12 @@
       <a href="{{ post|url }}">Read on...</a>
     </small>
     {% else %}
-    <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
-      <a href="{{ post|url }}">(read more)</a>
-    </p>
+    <div>
+      <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
+        <a href="{{ post|url }}">(read more)</a>
+      </p>
+    </div>
     {% endif %}
-
   </div>
 </div>
-
 {% endmacro %}

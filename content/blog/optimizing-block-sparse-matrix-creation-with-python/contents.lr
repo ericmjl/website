@@ -4,6 +4,13 @@ author: Eric J. Ma
 ---
 body:
 
+# Introduction
+
+At work, I recently encountered a neat problem. I'd like to share it with you all.
+
+One of my projects involves graphs; specifically, it involves taking individual graphs and turning them into one big graph. If you've taken my Network Analysis Made Simple workshops before, you'll have learned that graphs can be represented as a matrix, such as the one below:
+
+
 
 
 ```python
@@ -24,13 +31,6 @@ sns.set_style('white')
 %matplotlib inline
 %config InlineBackend.figure_format = 'retina'
 ```
-
-# Introduction
-
-At work, I recently encountered a neat problem. I'd like to share it with you all.
-
-One of my projects involves graphs; specifically, it involves taking individual graphs and turning them into one big graph. If you've taken my Network Analysis Made Simple workshops before, you'll have learned that graphs can be represented as a matrix, such as the one below:
-
 
 ```python
 G = nx.erdos_renyi_graph(n=10, p=0.2)
