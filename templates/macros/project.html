@@ -1,24 +1,30 @@
 {% macro render_project(project) %}
-<div class="project-container">
-    <h3>{{ project.title }}</h3>
-    <!-- {% if project.resource and project.link %} -->
-        <!-- <p>Learn More: <a href="{{ project.link }}">{{ project.resource }}</a></p> -->
-    <!-- {% endif %} -->
-
-    {% if project.body %}
-      {% for blk in project.body.blocks %}
-          {{ blk }}
-      {% endfor %}
-    {% endif %}
-
+<div class="col mb-4">
+    <div class="card bg-dark h-100">
+        <div class="card-body">
+            <h5 class="card-title">{{ project.title }}</h5>
+            {{ project.summary }}
+            {% for blk in project.body.blocks %}
+            {% if blk._flowblock == "resource" %}
+            <a href="{{ blk.url }}" class="card-link">{{ blk.label }}</a>
+            {% endif %}
+            {% if blk._flowblock == "github" %}
+            <a href="{{ blk.url }}" class="card-link">GitHub Repository</a>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 </div>
+
 {% endmacro %}
 
+
 {% macro render_accordion(project, iter) %}
-<div class="card">
+<div class="card" style="width: 18rem;">
     <div class="card-header" role="tab" id="heading{{ iter }}">
         <h4 class="mb-0">
-            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ iter }}" aria-expanded="false" aria-controls="collapse{{ iter }}">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ iter }}"
+                aria-expanded="false" aria-controls="collapse{{ iter }}">
                 {{ project.title }}
             </a>
         </h4>
