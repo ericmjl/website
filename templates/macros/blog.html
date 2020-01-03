@@ -1,39 +1,58 @@
 {% macro render_blog_post(post, from_index=false) %}
-  <!-- Import stylesheet -->
-  <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
-  <div>
+<!-- Import stylesheet -->
+<link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
+<div>
 
   <!-- Set title style -->
   {% if from_index %}
-    <h1><a href="{{ post|url }}">{{ post.title }}</a></h1>
+  <h1><a href="{{ post|url }}">{{ post.title }}</a></h1>
   {% else %}
-    <h1>{{ post.title }}</h1>
+  <h1>{{ post.title }}</h1>
   {% endif %}
 
   <!-- Append author -->
   <p class="meta">
     written by
     {% if post.twitter_handle %}
-      <a href="https://twitter.com/{{ post.twitter_handle
+    <a href="https://twitter.com/{{ post.twitter_handle
         }}">{{ post.author or post.twitter_handle }}</a>
     {% else %}
-      {{ post.author }}
+    {{ post.author }}
     {% endif %}
     on {{ post.pub_date }}
-  {% if post.tags %}
+    {% if post.tags %}
   </p>
   <!-- Append tags after author -->
   <p>
-      {% for t in post.tags -%}
-      <i class="fas fa-tag"></i>
-      <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
-          {{ t }}
-      </a>
-      {% endfor %}
+    {% for t in post.tags -%}
+    <i class="fas fa-tag"></i>
+    <a href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
+      {{ t }}
+    </a>
+    {% endfor %}
   </p>
   {% endif %}
 
   <!-- Put post body -->
   {{ post.body }}
+</div>
+{% endmacro %}
+
+
+
+{% macro render_blog_card(post) %}
+<div class="card bg-dark">
+  <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
+  <div class="card-body">
+    <h1><a href="{{ post|url }}">{{ post.title }}</a></h1>
+    <p class="card-text">{{ post.body }}
+    </p>
+    <p class="card-text">
+      <i>Did you enjoy this blog post? <a href="{{ post|url }}#disqus">Let's discuss more</a>!
+      </i>
+    </p>
+
   </div>
+</div>
+
 {% endmacro %}
