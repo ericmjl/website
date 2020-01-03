@@ -1,16 +1,35 @@
 {% macro render_project(project) %}
 <div class="col mb-4">
     <div class="card bg-dark h-100">
+        {% for blk in project.body.blocks %}
+
+        {% if blk._flowblock == "youtube" %}
+        <div class="card-header">
+            {{ blk }}
+        </div>
+        {% endif %}
+        {% endfor %}
         <div class="card-body">
             <h5 class="card-title">{{ project.title }}</h5>
             {{ project.summary }}
             {% for blk in project.body.blocks %}
+
             {% if blk._flowblock == "resource" %}
             <a href="{{ blk.url }}" class="card-link">{{ blk.label }}</a>
             {% endif %}
+
             {% if blk._flowblock == "github" %}
             <a href="{{ blk.url }}" class="card-link">GitHub Repository</a>
             {% endif %}
+
+            {% if blk._flowblock == "notebooks" %}
+            <a href="{{ blk.url }}" class="card-link">Notebooks</a>
+            {% endif %}
+
+            {% if blk._flowblock == "slides" %}
+            <a href="{{ blk.url }}" class="card-link">Slides</a>
+            {% endif %}
+
             {% endfor %}
         </div>
     </div>
