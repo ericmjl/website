@@ -6,18 +6,22 @@
   <a href="/blog" class="btn btn-secondary disabled">&laquo;</a>
   {% endif %}
 
-  {% if pagination.has_prev %}
-  <a href="{{ pagination.prev|url }}" class="btn btn-secondary">&lt;</a>
-  {% else %}
-  <span class="btn btn-secondary disabled">&laquo;</span>
+  {% if pagination.page - 2 > 1 %}
+  <a href="/blog/page/{{ pagination.page - 2 }}/" class="btn btn-secondary">{{ pagination.page - 2 }}</a>
   {% endif %}
 
-  <span class="btn btn-secondary disabled">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+  {% if pagination.has_prev %}
+  <a href="{{ pagination.prev|url }}" class="btn btn-secondary">{{ pagination.page - 1 }}</a>
+  {% endif %}
+
+  <span class="btn btn-secondary disabled">{{ pagination.page }}</span>
 
   {% if pagination.has_next %}
-  <a href="{{ pagination.next|url }}" class="btn btn-secondary">&gt;</a>
-  {% else %}
-  <span class="btn btn-secondary disabled">&gt;</span>
+  <a href="{{ pagination.next|url }}" class="btn btn-secondary">{{ pagination.page + 1 }}</a>
+  {% endif %}
+
+  {% if pagination.page + 2 < pagination.pages %}
+  <a href="/blog/page/{{ pagination.page + 2 }}/" class="btn btn-secondary">{{ pagination.page + 2 }}</a>
   {% endif %}
 
   {% if pagination.page == pagination.pages %}
