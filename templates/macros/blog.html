@@ -16,9 +16,9 @@
     {{ post.author }}
     {% endif %}
     on {{ post.pub_date }}
+
     {% if post.tags %}
-  </p>
-  <p>
+    | tags:
     <!-- Append tags after author -->
     {% for t in post.tags -%}
     <i class="fas fa-tag"></i>
@@ -43,6 +43,19 @@
 {% endmacro %}
 
 
+{% macro render_reading_time(post) %}
+{% set post_length = post.body|striptags|wordcount %}
+{% set time_unit = "minutes" %}
+
+{% set reading_time = post_length // 200 + 1 %}
+
+{% if reading_time == 1 %}
+{% set time_unit = "minute" %}
+{% endif %}
+
+({{ post_length }} words, approximately {{ reading_time }} {{ time_unit }} reading time)
+{% endmacro %}
+
 
 {% macro render_blog_card(post) %}
 <div class="card bg-dark">
@@ -53,12 +66,16 @@
     <p class="card-text">{{ post.summary }}</p>
     <small class="text-muted">
       <a href="{{ post|url }}">Read on...</a>
+      {{ render_reading_time(post) }}
     </small>
     {% else %}
     <div>
       <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
         <a href="{{ post|url }}">(read more)</a>
       </p>
+      <small class="text-muted">
+        {{ render_reading_time(post) }}
+      </small>
     </div>
     {% endif %}
   </div>
