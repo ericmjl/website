@@ -1,0 +1,83 @@
+title: Build your digital profile as a data scientist
+---
+author: Eric J. Ma
+---
+body:
+
+I have received questions from others on how to build a digital profile for career development. Everybody’s going to have a unique path, and what I think I can offer are observations on what I think have been helpful for myself and others who have enjoyed similar successes in getting started. My hope is that these pointers, which come from self-reflection over the past two years of work, help you.
+
+## The maybe-timeless and cross-industry principles
+
+First off, here are some things that I think are timeless principles in the job search, and are probably true for a large swathe of professional roles.
+
+Firstly, nobody owes me their time or a job; **I have a lot of leeway to make it as easy as possible for others to say, “Yes, I would like to have you on board”**. Naturally, this statement ignores structural privileges and inequalities that exist in society, so I would be realistic in what I can accomplish. That said, it's usually a good prior to assume that everybody is busy, and that you need to properly advertise what you can offer.
+
+In line with the same idea, I start with the presumption that nobody has the spare time to think deeply about a candidate when there are many other things in one's mind. The corollary is that **it is on me to frame how I want others to view me**.
+
+## Data science-specific things
+
+Now, for a data science role, being able to demonstrate the following can only help, not hurt, your application and candidacy:
+
+1. Ability to use your skills to solve real problems of value.
+2. Good coding practices.
+3. Good storytelling and communication ability.
+4. Proficiency with building "products" that aid in decision-making.
+5. Ability to work collaboratively with others.
+
+In data science, “value” usually means saving money. Saving time = saving money, in case that was not clear. Hence, automation _is_ valuable.
+
+Good coding practices are important: I have an [essay collection](https://ericmjl.github.io/essays-on-data-science/software-skills/) on them, if you need a resource to get started.
+
+Communication skills are universally important in professional roles, and data science is no different.
+
+What does enhance communication is the ability to build interactive tools that guide a busy decision-maker towards ethical and profitable choices (hopefully in that order). Good value judgment is needed here!
+
+## Where are prospective hiring teams going to look?
+
+This comes from `n=7` candidates for (I think) 3 candidate searches at work that I was involved in. The order in which I was looking was:
+
+1. Resume
+2. LinkedIn
+3. GitHub
+4. Personal website
+5. Google Scholar
+6. Old/current research group website
+
+The resume is what you turn in. Make sure it's clean, readable, and that it concisely captures exactly what you're looking to communicate to the hiring team: how you're going to be a good fit for the role.
+
+When I looked at LinkedIn, I was, quite interestingly, looking at their social network. Who might they plausibly know? At least for the team I'm on, I know credentials and certifications matter less than evidence of projects done, which brings me to the next place...
+
+GitHub. I was looking for evidence of candidates' ability to code. A well fleshed-out GitHub profile with publicly browsable repositories and a contribution record that is mostly your own makes it so much easier to see your coding style. I also looked for evidence of familiarity with packages, continuous integration tooling, good version control, and collaborations with other package developers. 
+
+Your projects that demonstrate the data science skills above should be prominently featured on your profile page. Project types that, in contemporary times, communicate these skills well include:
+
+1. Data products that you've built
+2. Teaching material that you've made
+3. Contributions you've made to other repositories, in particular pull requests and issues politely raised.
+
+I looked at Google Scholar as well to get a flavour for a candidate's prior research work. It's an indication of one's domain expertise, and _possibly_ an indicator of the kinds of problems one will gravitate towards. (This last point has been at least true for myself; however, for one jumping from, say, biological data science to flight data science, this will be much less relevant.) 
+
+The diversity of one's collaborators also helps paint a picture: did you specialize in work with one other person all of your academic career, or did you work in large teams, or did you work mostly solo? (Don't put a value judgment so quickly: each has their own strengths.)
+
+A candidate's old research group is something I would check only out of curiosity, just to know more. 
+
+## The kitchen sink of tips
+
+**Tip #1:** if you put your source code on GitHub, always include in the README why the repository exists, and a guide to how to use the repository. It is a marker of "sociable working style": in other words, you're able to think of how others are going to interact with things that you've created. (Using others' tools happens all the time at work!)
+
+**Tip #2:** If you put a notebook up in your repository, be sure to make the repo [Binder-friendly](https://mybinder.org/). It doesn't take much: environment spec file is all thats needed!
+---
+pub_date: 2020-01-04
+---
+summary:
+
+I have received questions from others on how to build a digital profile for career development. Everybody’s going to have a unique path, and what I think I can offer are observations on what I think have been helpful for myself and others who have enjoyed similar successes in getting started. My hope is that these pointers, which come from self-reflection over the past two years of work, help you.
+
+---
+tags:
+
+career development
+job hunt
+data science
+---
+twitter_handle: ericmjl
