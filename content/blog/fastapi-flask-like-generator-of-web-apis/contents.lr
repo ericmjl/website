@@ -1,0 +1,30 @@
+title: FastAPI: Flask-like generator of web APIs
+---
+author: Eric J. Ma
+---
+body:
+
+I test-drove [FastAPI](https://fastapi.tiangolo.com/) yesterday, and true to it's name, it's fast! And when the developers say fast, they mean it in at least two ways:
+
+1. It's fast to execute.
+2. It's fast to develop an API.
+
+I'd like to write about the second point.
+
+Prior to FastAPI, my development framework of choice to build a web API would have been Flask (though I will admit, I have only developed web apps, not web APIs before). My familiarity with Flask turned out to be extremely helpful for learning FastAPI: its own API tracks very closely with Flask! Many of the same idioms, including instantiating a `FastAPI` object and using `@app.route`  decorators with string interpolation in the URIs, carry over. This is the first way that FastAPI makes API development fast: **by using existing idioms**.
+
+Prior to FastAPI, I did have reservations about developing a web API using Flask because I wasn't sure how to provide sufficient documentation to API users/testers on how to use it. (Have you seen Swagger APIs _without_ example usage documentation? Frustrating!) Turns out, FastAPI **parses your docstrings to provide API docs**. This means you can provide an example usage inside the routing function, and on the `/docs` endpoint, all they will render on the API docs!
+
+So in summary, FastAPI is a very productive tool to use for developing APIs. I highly recommend you check it out once you hit the appropriate opportunity!
+---
+pub_date: 2020-01-07
+---
+summary: Have you heard of [FastAPI](https://fastapi.tiangolo.com/)? I didn't until a recent project at work, and I finally got a chance to test-drive it. Come read on to learn more about why it's _fast_!
+---
+tags:
+
+software development
+web
+data science
+---
+twitter_handle: ericmjl
