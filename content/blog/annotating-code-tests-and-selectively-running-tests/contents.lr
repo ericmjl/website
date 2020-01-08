@@ -39,3 +39,5 @@ $ py.test -m "not integration"  # only runs tests that are not "integration" tes
 pub_date: 2018-02-25
 ---
 twitter_handle: ericmjl
+---
+summary: In this blog post, let me share with you how we can selectively run a test using `pytest`'s machinery.
