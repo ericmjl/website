@@ -3,7 +3,8 @@
 {% block title %}{{ this.title }}{% endblock %}
 
 {% block body %}
-<div class="row row-cols-1 row-cols-md-3">
+<!-- <div class="row row-cols-1 row-cols-md-3"> -->
+<div class="row row-cols-md-3">
     {% for project in this.children %}
     {% if project.visible == "Visible" %}
     {{ render_project_card(project) }}
@@ -12,64 +13,3 @@
 </div>
 
 {% endblock %}
-
-
-<!-- <style media="screen">
-    .carousel-indicators {
-        height: 0%;
-        top: 0px;
-    }
-
-    .carousel-indicators li {
-        background-color: #999;
-        background-color: rgba(70, 70, 70, .25);
-    }
-
-    .carousel-indicators .active {
-        background-color: #444;
-    }
-
-    .carousel-item {
-        padding-top: 15px;
-    }
-
-    .carousel-inner {
-        padding-left: 50px;
-        padding-right: 50px;
-    }
-
-    .carousel-control-prev {
-        margin-left: -75px;
-    }
-
-    .carousel-control-next {
-        margin-right: -75px;
-    }
-
-</style> -->
-<!-- <div id="projectsCarousel" class="carousel slide" data-ride="carousel"> -->
-
-<!-- Carousel indicators -->
-<!-- <ol class="carousel-indicators">
-        {% for project in this.children %}
-        <li data-target="#projectsCarousel" data-slide-to="{{ loop.index - 1}}" {% if loop.index == 1 %} class="active"
-            {% endif %}</li> {% endfor %} </ol> <div class="carousel-inner" role="listbox"> -->
-<!-- All of the projects -->
-<!-- {% for project in this.children %}
-            <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
-                <div class="">
-                </div>
-            </div>
-            {% endfor %}
-</div> -->
-<!-- Saving this for later. -->
-<!-- <a class="carousel-control-prev" href="#projectsCarousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#projectsCarousel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a> -->
-
-<!-- </div> -->
