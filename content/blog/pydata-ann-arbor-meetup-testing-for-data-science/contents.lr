@@ -1,0 +1,62 @@
+title: PyData Ann Arbor Meetup: Testing for Data Science
+---
+author: Eric J. Ma
+---
+body:
+
+I had the privilege of being invited to deliver a talk at the PyData Ann Arbor meetup this January, held at TD Ameritrade. My hosts, [Sean Law](https://seanlaw.github.io/), [Rose Putler](https://www.linkedin.com/in/roseputler/) and [Ben Zaitlen](https://twitter.com/quasiben) were very welcoming and inviting, and I enjoyed my time in Ann Arbor (or A2, as the locals seem to call it).
+
+## The Talk
+
+The talk I delivered was on testing for data scientists. ([Slides are available here](https://ericmjl.github.io/testing-for-data-scientists/)), and the [YouTube video is up too](https://www.youtube.com/watch?time_continue=632&v=5RKuHvZERLY&feature=emb_logo). The topic stemmed from a long-standing problem that I had seen: untested code that I depended on slowing later analyses down because I did not have the confidence that it would behave correctly outside of the original situations I used it in.
+
+To communicate this point, I used two examples from work I had done before: one being the use of an automagic testing system, Hypothesis, to ferret out bugs in my code for me, and the other being the use of tests on our data schema to make the creation and caching of views robust and dependable.
+
+## The Community
+
+The PyData Ann Arbor community has some very dedicated members. There was someone who drove a whole 1.5 hours across the US-Canada border from Windsor, ON to listen in on the talk; another came by from a town 53 minutes away. Sean plays the role that [Ned Batchelder](https://nedbatchelder.com/) has done for the Boston Python User Group, and has really fostered a wonderful community here. I was really honored by the dedication that they possessed.
+
+There were also a bunch of people I had never met in person,  with whom I had interacted with online, with whom I finally got a chance to interact with in-person. It was great to meet some of them, including [Bradley Dice](https://bradleydice.com/) (U of M PhD student) and [Kyle Eaton](https://www.linkedin.com/in/kyleweaton/) (a UX engineer at Superconductive Health who is closely affiliated with the Great Expectations project).
+
+## The Food
+
+Ann Arbor, according to Sean, has quite the foodie scene. It is quite true, even as a land-locked midwestern university town.
+
+On the first afternoon here, I went to this restaurant called [Hola Seoul](https://holaseoul.com/), which served Korean-Mexican fusion food. On my second day here, I had Panera for breakfast (not knowing anything better), skipped lunch, but went out with the PyData organizers to [Slurping Turtle](http://slurpingturtle.com/annarbor/) for some  very delicious sushi, fried chicken, and spicy miso ramen. And on my third day here, I decided to enjoy: smoked salmon and avocado omelette at [Cafe Zola](http://www.cafezola.com/content/) (it was expensive… but _worth  it_), and [Sava’s](https://savasannarbor.com/) for a late lunch with Ben (NVIDIA) and Logan (TD Ameritrade).
+
+## Career Chat with Sean
+
+A few hours before the talk, I had a free-ranging chat with Sean about the problems we tackle in our respective roles. Here’s a smattering of thinking and talking points from our conversation.
+
+We share an “internal consulting” role at work, where both our teams’ missions are to spearhead new initiatives. His team is explicitly tasked with feeling out what’s upcoming in the next 5 years, POC-ing it, and seeing how it best fits in TD’s systems. It’s a very similar type of role that I’m in. 
+
+I shared with him the frustrations I had battling what I saw was  unnecessary vendor tech. We both seemed to agree that front-liners and decision-makers not operating in the same circles was  an important reason for this phenomena.
+
+I also learned a few lessons from Sean that I think I need to emphasize more at work:
+
+1. A relentless focus on generating wins for other teams.
+2. Strategically cycling between quick wins for credibility, and parlaying that into longer-term (but riskier) wins for the organization.
+3. Coffee talk tours throughout the company to spread good ideas.
+4. Minimizing surprises on colleagues (especially nasty ones; pleasant surprises are ok though).
+5. Strategically holding back on “just doing everything”, and instead letting colleagues co-create, to generate a sense of ownership over the final product.
+
+## The Miscellaneous 
+
+I was picked up by a limo to and from the hotel. While extremely comfortable, I was definitely pleasantly surprised, to the point of being a little bit not used to it.
+
+Delta Airlines was half-empty on the way over, but really full on the way back. Either way, my impressions are that without the WiFi access for free, they can’t beat JetBlue for me. That said, PyData Ann Arbor paid for the flight and lodging, so I won’t complain, it was still a comfortable flight nonetheless.
+
+This was my first time ever being in Michigan!
+---
+pub_date: 2020-01-16
+---
+summary: I went to Ann Arbor, MI, to give a talk on testing for data science, and I wanted to share a bit about what Ann Arbor, the PyData community in SE Michigan, and the food here was like.
+---
+tags:
+
+pydata
+data science
+testing
+software skills
+---
+twitter_handle: ericmjl
