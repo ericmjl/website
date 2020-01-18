@@ -1,0 +1,238 @@
+title: Create your own auto-publishing slides with reveal-md and Travis CI
+---
+author: Eric J. Ma
+---
+body:
+
+For my PyData Ann Arbor Meetup talk, I decided to use [`reveal-md`](https://github.com/webpro/reveal-md) and a Markdown file to generate my slides. Here, I'd like to write about how I used `reveal-md` and Travis CI to continually publish my slides as I updated them, thus making them accessible to everybody on the web.
+
+## What is `reveal-md`?
+
+`reveal-md` is nothing more than a live web server for that converts Markdown files into `reveal.js` slides that can be hosted via a web server, static site, or PDF.
+
+## Why `reveal-md`?
+
+I much prefer to use Markdown to write my slides, as doing so comes with one big benefit: I am focused on the content that I want to deliver, and not the less important details that are easy to screw up (animations, positioning, etc.). Constraining what's accessible to me forces me to be extremely clear and succinct on what I'm trying to communicate. And if I really desired anything fancier, I could weave in some HTML with no issue.
+
+## Create your own auto-publishing `reveal-md` slides!
+
+Let’s walk through the steps needed to make this a reality for you!
+
+### Create a new repository
+
+On GitHub, create a new repository that has a nice and informative name. (For now, we’ll just refer to that repository as `my-talk` for convenience.)
+
+### Get setup locally
+
+To get setup, you need to make sure that `reveal-md` is on your `PATH`. I choose to use `conda` environments to manage my packages, so I have a slightly convoluted way of doing this, by using `conda` to install `nodejs` (which installs the `npm` node package manager), followed by using the node package manager to install `reveal-md`. We first start by preparing an `environment.yml` specification file that `conda` can use to build your environment:
+
+```yaml
+name: my_talk
+channels:
+- conda-forge
+dependencies:
+- python=3.8
+- nodejs
+```
+
+Now, we can execute the installation commands.
+
+```bash
+# Installation commands
+
+# Create environment
+conda env create -f environment.yml
+
+# Activate environment
+conda activate my_talk
+
+# Install reveal-md
+npm install -g reveal-md
+```
+
+To learn more about `conda` hacks that can improve your efficiency, I [have a blog post](https://ericmjl.github.io/blog/2018/12/25/conda-hacks-for-data-science-efficiency/) that you can reference.
+
+### Write your slides
+
+Before we go onto the automation, it’s important that you get a feel for the workflow so you know what’s being automated.
+
+Let’s write a simple Markdown file that has two slides:
+
+```md
+----
+title: My Fancy Talk!
+----
+
+# My Fancy Talk
+
+Speaker Name
+
+Date
+
+----
+
+## Hello!
+```
+
+Save it as `slides.md`. The filename isn’t special, it’s just convenient to remember.
+
+To see more of what `reveal.js` can do, check out the [RevealJS GitHub repository](https://github.com/hakimel/reveal.js)!
+
+### Preview your slides
+
+To serve it up, run the following command at your terminal:
+
+```bash
+reveal-md slides.md  # replace with the filename of your slides
+```
+
+Your browser should now pop open, and your slides will be there! `reveal.js` made simple, thanks to `reveal-md`.
+
+### Continue editing your slides
+
+Now, you can continue editing your slides, keeping in mind the following pointers.
+
+Firstly, `---` (three of them) denotes horizontal slide transition, while `----` (four of them) denotes vertical slide transitions. Use this to organize your content.
+
+Secondly, to progressively reveal pointers on a slide, you need to add the following HTML comment right after the element. For example, to show bullet points progressively:
+
+```md
+- Bullet Point 1
+<!-- .element class="fragment" -->
+- Bullet Point 2
+<!-- .element class="fragment" -->
+```
+
+### Aside: fancier items
+
+If you need fancier things, you can weave in HTML at your own convenience. For example, I embedded an HTML table to organize [`imcmc`](https://github.com/ColCarroll/imcmc) logos that I had previously compiled.
+
+### Get Travis CI setup
+
+You’ll now want to create a `.travis.yml`, which commands Travis to do things. It’s generally nothing more than a collection of bash commands that are executed in order. An example Travis configuration file from my [data science testing talk](https://ericmjl.github.io/testing-for-data-scientists) looks like this:
+
+```yaml
+language: python
+python:
+    # We don't actually use the Travis Python, but this keeps it organized.
+    - "3.5"
+install:
+    # We do this conditionally because it saves us some downloading if the
+    # version is the same.
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - export PATH="$HOME/miniconda/bin:$PATH"
+    - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+    - conda update -q conda
+
+    # Useful for debugging any issues with conda
+    - conda info -a
+
+    # Install Python and required packages.
+    - conda env create -f environment.yml
+    - source activate testing-for-data-scientists
+
+    # Install reveal-md
+    - npm install -g reveal-md
+
+
+script:
+    # Create the docs directory. This is where we will be publishing from
+    # (see the "deploy" section below).
+    - mkdir -p docs/
+    # Use reveal-md to generate static docs.
+    - reveal-md slides.md --static docs --disable-auto-open --theme white
+    - cp -r assets docs/.
+    # Use reveal-md to generate PDF.
+    - reveal-md slides.md --disable-auto-open --theme white --print slides.pdf
+    - cp slides.pdf docs/.
+
+
+# This is an example to deploy to a branch through Travis.
+deploy:
+    provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+    keep-history: true
+    # We read the master branch
+    on:
+        branch: master
+    # Take the docs/ directory
+    local-dir: docs
+    # Publish to the gh-pages branch
+    target-branch: gh-pages
+    verbose: true
+
+```
+
+You’ll notice that the commands we want Travis to execute are basically the same as those we executed manually. The only difference now is that we command `reveal-md` to build a static site under the directory `site/`, which we then command Travis to push to GitHub pages.
+
+In the `deploy` section, we are specifying to Travis that we want all of the content under the directory `site/` to be pushed to the `gh-pages` branch of our repository. (We have not yet connected Travis to our repo; that will happen next, so sit tight!)
+
+Notice also the `$GITHUB_TOKEN` environment variable: we need to declare that as well. The `GITHUB_TOKEN` is an authentication token that GitHub will recognize when Travis CI pushes the `site/` directory to `gh-pages`. Because underneath the hood we are using `bash` syntax in the YAML file, when we declare the `GITHUB_TOKEN`, we do it without the `$` symbol, but when we need to grab it from the environment, we include the `$` symbol, just as in regular plain old `bash`.
+
+### Get a GitHub deploy token
+
+Under your repository settings, generate a deploy/“personal access” token. Exact docs are [here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line), so in the spirit of “don’t repeat yourself” and “learn to read the docs”, I will encourage you to read them.
+
+Once you have generated a deploy key, copy them somewhere - you will need it later. (Tip: also make sure you don’t accidentally save it to disk!)
+
+### Connect Travis CI to your repository
+
+On Travis CI, connect your Travis CI account to GitHub, and then enable Travis to look for changes on the `my-talk` repository. Generally, this is done by going to your user settings, and searching for “Legacy Services Integration”, then toggling the checkbox to enable it on your `my-talk` repository.
+
+Once that is done, go into the Travis CI settings for the repository. Navigate to the “Environment Variables” section, and declare the `GITHUB_TOKEN` there. Be sure to keep it hidden from the output!
+
+### Turn on GitHub pages
+
+To turn on GitHub pages, we are going to stick to a pretty sane and widely-used set of practices when interacting with GitHub repositories and static sites.
+
+Firstly, on the GitHub repository for `my-talk`, create a new branch (using the web interface or through the CLI) called `gh-pages`. This time round, the name is definitely special, as GitHub recognizes this branch as a legitimate GitHub pages branch to serve content from.
+
+Secondly, go to the **repository** settings (not your user settings), and ensure that GitHub pages is enabled for the repository. Usually, adding the `gh-pages` branch will result in this option being  automagically turned on.
+
+Now, run:
+
+```yaml
+git add slides.md environment.yml .travis.yml
+git commit -m "first commit"
+git push
+```
+
+Your slides, environment config, and Travis CI config files are now pushed to GitHub.
+
+### Check on Travis
+
+Travis is now going to be building your slides and pushing them to the `gh-pages` branch. If all goes well, you will see the slides show up at the URL: `https://your_username.github.io/my-talk`. (Naturally, replace `your_username` with your GitHub username, and `my-talk` with your repository name.
+
+## Debugging builds
+
+In case the build fails, you can inspect the output. Any errors are basically your standard bash `stderr`, so if you know how to debug error messages, you should be able to debug issues with the build.
+
+## Beyond this
+
+Going beyond serving up `reveal.js` slides, Travis hooked up to GitHub pages can help you build static sites very easily. 
+
+If you use a static site generator (such as [Lektor](https://www.getlektor.com/), [Hugo](https://gohugo.io/), [Pelican](https://blog.getpelican.com/), [Gatsby](https://www.gatsbyjs.org/) or [Nikola](https://getnikola.com/)), then you can create websites whose sources are fully under your control, 100% customizable, and fast to load. I do not blog on Medium because I desire full control over the display of my blog content, and I want to be able to take it anywhere I desire, without relying on a platform that might lock my content in. My personal website uses Lektor + Travis to push to GitHub pages; please feel free to look at [the source](https://github.com/ericmjl/website) and raid the repo for anything you’d like!
+
+_Addendum: I learned today from a fellow friend Nathan Matias that Netflix’s blog posts on Medium have been paywalled. Another reason for us to take back hosting of slides and blog content into our own hands!_
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Today I learned the <a href="https://twitter.com/netflix?ref_src=twsrc%5Etfw">@netflix</a> tech blog posts are paywalled by Medium and I may have to take their post off my syllabus.<br><br>Now I wonder if they paywalled posts which I intend to be freely available. Have any of you found that Medium was unexpectedly charging people for your work?</p>&mdash; J. Nathan Matias (@natematias) <a href="https://twitter.com/natematias/status/1218244174299963392?ref_src=twsrc%5Etfw">January 17, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+
+---
+pub_date: 2020-01-18
+---
+summary:
+
+[Hugo Bowne-Anderson][hugo], a long-time collaborator and friend in the PyData community, asked in passing about whether I would write a blog post detailing how to set up Travis CI to continually publish my Markdown-sourced slides to the web. I gladly obliged, and I hope you find it useful!
+
+[hugo]: https://hugobowne.github.io/
+---
+tags:
+
+data science
+presentation skills
+continuous integration
+---
+twitter_handle: ericmjl
