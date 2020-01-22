@@ -13,6 +13,8 @@
             padding-bottom: 70px;
         }
     </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
 
     {% block highlighting %}
     {% endblock %}
@@ -58,7 +60,7 @@
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 <body class="body">
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -76,7 +78,7 @@
         {% block body %}{% endblock %}
     </div>
 
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
