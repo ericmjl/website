@@ -32,8 +32,6 @@
 {% endmacro %}
 
 {% macro render_blog_post(post, from_index=false) %}
-<!-- Import stylesheet -->
-<link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
 <div>
   {{ render_blog_header(post, from_index) }}
 
@@ -58,8 +56,7 @@
 
 
 {% macro render_blog_card(post) %}
-<div class="card bg-dark">
-  <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
+<div class="card bg-dark-nord">
   <div class="card-body">
     {{ render_blog_header(post, from_index=True) }}
     {% if post.summary %}

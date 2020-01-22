@@ -1,6 +1,6 @@
 {% macro render_project_card(project) %}
 <div class="col mb-4">
-  <div class="card bg-dark h-100">
+  <div class="card bg-dark-nord h-100">
     {{ render_card_header(project) }}
 
     <div class="card-body">
@@ -36,7 +36,7 @@
 {% endmacro %}
 
 {% macro render_card_header(project) %}
-<div class="card-img-top bg-dark">
+<div class="card-img-top bg-dark-nord">
   {{ render_youtube(project) }}
 </div>
 {% endmacro %}
@@ -51,9 +51,9 @@
 
 
 {% macro render_project(project) %}
-<div class="card bg-dark">
+<div class="card bg-dark-nord">
   {{ render_card_header(project) }}
-  <div class="card-body bg-dark">
+  <div class="card-body bg-dark-nord">
     <h4 class="cart-title">{{ project.title }}</h4>
     {% for blk in project.body.blocks %}
     {% if blk._flowblock != "youtube" %}
