@@ -41,7 +41,15 @@ body {
 }
 
 a {
-    color: var(--nord10);
+    color: var(--nord8);
+}
+
+.author {
+    color: var(--nord13);
+}
+
+.tags {
+    color: var(--nord9);
 }
 
 code {
@@ -64,7 +72,7 @@ code {
 
 img {
   background-color: var(--nord6);
-  padding: 20px;
+  padding: 10px;
   margin-left: auto;
   margin-right: auto;
   display: block;
