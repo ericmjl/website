@@ -28,8 +28,8 @@ body {
 }
 
 pre {
-  background-color: #eee;
-  border: 1px solid #999;
+  background-color: var(--nord4);
+  /* border: 1px solid #999; */
   display: block;
   padding: 20px;
 }
@@ -60,4 +60,13 @@ code {
 
 .blockquote {
     background-color: var(--nord2);
+}
+
+img {
+  background-color: var(--nord6);
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+
 }
