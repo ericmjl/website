@@ -1,17 +1,17 @@
-
-
 <!doctype html>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <!-- Bootstrap v4beta Imports -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style media="screen">
         body {
             padding-top: 70px;
             padding-bottom: 70px;
         }
+
     </style>
     <!-- Import stylesheet -->
     <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
@@ -21,9 +21,9 @@
 
     <!-- Google Analytics -->
     <script>
-        (function(i, s, o, g, r, a, m) {
+        (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function() {
+            i[r] = i[r] || function () {
                 (i[r].q = i[r].q || []).push(arguments)
             }, i[r].l = 1 * new Date();
             a = s.createElement(o),
@@ -42,7 +42,11 @@
 
     <!-- FontAwesome embed -->
     <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/custom.css">
@@ -50,7 +54,7 @@
     <!-- Mathjax -->
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
-    </script>
+        </script>
 
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
@@ -59,16 +63,20 @@
 </head>
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
+
 <body class="body">
     <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="local-links">
             <ul class="navbar-nav mr-auto">
                 {% for link in bag('nav')['header'] %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}"><i class="fa {{ link['icon'] }}" aria-hidden="true"></i> {{ link['title'] }}</a>
+                    <a class="nav-link" href="{{ link['href'] }}"><i class="fa {{ link['icon'] }}"
+                            aria-hidden="true"></i> {{ link['title'] }}</a>
                 </li>
                 {% endfor %}
             </ul>
@@ -79,21 +87,30 @@
     </div>
 
     <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="external-links">
             <ul class="navbar-nav mr-auto">
                 {% for link in bag('nav')['footer'] %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}"><i class="{{ link['icon'] }}" aria-hidden="true"></i> {{ link['title'] }}</a>
+                    <a class="nav-link" href="{{ link['href'] }}"><i class="{{ link['icon'] }}" aria-hidden="true"></i>
+                        {{ link['title'] }}</a>
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </nav>
     <!-- Boostrap JS imports -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 </body>
