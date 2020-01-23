@@ -1,3 +1,5 @@
+@import "nord.css";
+
 .blockquote {border-left:5px solid #E6E6E6;margin-bottom:25px}
 .blockquote .square {width:100px;min-height:50px;margin-right:22px;text-align:center!important;background-color:#E6E6E6;padding:20px 0}
 .blockquote .blockquote-primary {border-color:#357EBD}
@@ -26,14 +28,45 @@ body {
 }
 
 pre {
-  background-color: #eee;
-  border: 1px solid #999;
+  background-color: var(--nord4);
+  /* border: 1px solid #999; */
   display: block;
   padding: 20px;
 }
 
 html,
 body {
-  color: #FFFFFF;
-  background-color: #333;
+  color: var(--nord4);
+  background-color: var(--nord0);
+}
+
+a {
+    color: var(--nord10);
+}
+
+code {
+    color: var(--nord11);
+}
+
+.bg-dark-nord {
+    background-color: var(--nord1);
+
+}
+
+.btn-secondary-nord {
+    color: var(--nord4);
+    background-color: var(--nord2);
+}
+
+.blockquote {
+    background-color: var(--nord2);
+}
+
+img {
+  background-color: var(--nord6);
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+
 }
