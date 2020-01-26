@@ -43,6 +43,9 @@ body {
 a {
     color: var(--nord8);
 }
+a:hover  {
+    color: var(--nord13);
+}
 
 .author {
     color: var(--nord13);
