@@ -1,3 +1,7 @@
+addons:
+  ssh_known_hosts: 
+    - github.com
+    - ssh.github.com
 language: python
 python: 3.6
 install:
@@ -17,10 +21,12 @@ install:
   # Activate environment
   - source activate lektor
 
-script: "lektor build"
+script: 
+  - lektor build
 deploy:
     provider: script
-    script: "lektor deploy gh_https"
+    script:
+      - lektor deploy gh_https --username $GH_USERNAME --password $GH_PASSWORD
 cache:
   directories:
     - $HOME/.cache/pip
