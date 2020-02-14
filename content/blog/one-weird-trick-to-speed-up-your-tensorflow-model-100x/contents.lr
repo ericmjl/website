@@ -94,7 +94,13 @@ So, does the reimplementation work in the same way as the original?
 Absolutely. We passed an _attrappe_ (Google it, it’s German) sequence through the model, 
 and checked that the reps were identical to the original - which they were. 
 But don’t take my word for it, 
-check out the [preprint](https://elarkk.github.io/jax-unirep/) we wrote to document this.
+check out the [draft preprint](https://elarkk.github.io/jax-unirep/) we wrote to document this!
+Meanwhile, in case you don't want to click over and read our hard work, 
+here's the figure linked from the source. 
+(It's only off by a bit because we added a delta
+to make the two representations visible.)
+
+![Congruence between the reps.](https://elarkk.github.io/jax-unirep/figures/rep_trace_lf.png)
 
 Besides that, 
 we also added tests and elaborate docstrings 
@@ -113,8 +119,11 @@ Given JAX’s automatic compilation to GPU and TPU,
 the speed improvements we could obtain might be even better, 
 though we have yet to try it out. 
 Again, don't take my word at it - 
-check out the [preprint](https://elarkk.github.io/jax-unirep/) 
+check out the [draft preprint](https://elarkk.github.io/jax-unirep/) 
 if you're curious!
+The exact figure, though is below.
+
+![Speed comparison between the original and `jax`-based reimplementation.](https://elarkk.github.io/jax-unirep/figures/speed_comparison.png#center)
 
 I suspect that by reimplementing the model in NumPy, 
 we basically eliminated the TensorFlow graph compilation overhead, 
