@@ -8,7 +8,9 @@ steps:
 - bash: echo "##vso[task.prependpath]$CONDA/bin"
   displayName: Add conda to PATH.
 
-- script: conda env create -f environment.yml
+- script: |
+    conda env create -f environment.yml
+    conda init bash
   displayName: Create environment.
 
 - script: |
