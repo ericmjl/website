@@ -74,7 +74,9 @@ we then defined the function that processes a single sequence.
 To do this, we took advantage of the `jax.lax` submodule’s `scan` function, 
 which literally “scans” the RNN cell over the entire sequence 
 the way TensorFlow’s RNN cell would be scanned. 
-This basically is a vectorized for-loop. 
+<del>This basically is a vectorized for-loop.</del>
+Thanks to Stephan Hoyer [pointing out my conceptual error here](https://twitter.com/shoyer/status/1228416820119400448);
+`lax.scan` is a compiled for-loop with known number of iterations.
 Together, that defined the function call that processes a single sequence. 
 This, incidentally, gives us the “batch-“ or “sample-wise” RNN function, 
 `mlstm1900_batch`.
@@ -254,7 +256,9 @@ Rather than try to go end-to-end,
 it makes more sense to produce modular parts that fit well with one another. 
 The mantra I like to keep in mind here is:
 
-> Modularity and composability give us the flexibility for creativity.
+<blockquote class="blockquote">
+<p>Modularity and composability give us the flexibility for creativity.</p>
+</blockquote>
 
 And if creativity is not the heart of research, what then is?
 
@@ -311,11 +315,13 @@ and sharing knowledge between peers.
 I hope you enjoyed reading about our journey reimplementing UniRep in JAX. 
 Keep in mind that JAX isn't necessarily always going to speed up your TF model 100X; 
 I'm clearly being facetious in writing it that way. 
-JAX and TF share XLA underneath the hood, 
-and XLA is really the secret sauce that makes the models execute fast. 
-The only difference is TF1.x needed this compilation time, 
-while JAX does it just-in-time (when ordered to do so). 
-That said, because JAX gets us autodiff on the NumPy API, 
+<del>JAX and TF share XLA underneath the hood,</del>
+Matt Johnson pointed out that JAX uses XLA by default,
+while TF does not,
+yet XLA is really the secret sauce that makes the models execute fast.
+<del>The only difference is TF1.x needed this compilation time, 
+while JAX does it just-in-time (when ordered to do so).</del>
+Because JAX gets us autodiff on the NumPy API, 
 it's a super productive research and teaching tool 
 with a familiar API to many Pythonistas. 
 My hope is this post encourages you to try it out; happy experimenting!
