@@ -1,0 +1,214 @@
+title: Resources for learning Python during COVID-19
+---
+author: Eric J. Ma
+---
+body:
+
+With COVID-19 on hand, you might have some time to go deeper into Python programming.
+
+I'd like to recommend some resources for you, in case you wish to brush up, learn, or go deeper.
+
+## [DataCamp](https://www.datacamp.com/)
+
+If you're a complete beginner, I recommend going with DataCam.
+I say this with a full up-front disclosure that I'm a data camp instructor,
+and if you make it to the Network Analysis courses, then I benefit from you.
+(If you don't, then I don't.)
+
+The reasons why I recommend DataCamp is:
+
+- They have a hosted compute environment that you use,
+thus freeing you from the potentially tricky task of navigating
+how best to install Python on your local system,
+and letting you focus on learning Python.
+- The exercises are designed in such a way to be bite-sized,
+so you can pace yourself through the curriculum.
+A little practice every day goes a very long way to picking it up.
+This I know because I also had to design the network analysis curricula the same way.
+- There are clearly delineated specializations for both R and Python programmers,
+and psychologically, it can be very rewarding to navigate a pre-defined path for a learner, thus easier to keep up the learning.
+(This is also a very smart business strategy that ed-tech firms use.)
+- Beyond just the beginner-oriented courses, they go all the way up to the core PyData stack through to deep learning. 
+- Finally, there are example projects that they recommend to you when you've passed the pre-requisite courses, thus giving you more practice.
+
+The reason why you wouldn't want to go with DataCamp is because you have to pay for it,
+and maybe because you don't trust the words of someone who has a conflict of interest.
+(I don't blame you, I'd take the same position.)
+
+You might need to discuss with your management if your team is going to sponsor your learning.
+
+## [Coursera](https://www.coursera.org/)
+
+Coursera has a wide range of offerings for learning Python,
+and they are completely free with certification
+if your organization sponsors it (my current employer Novartis includes this as a perk).
+(Otherwise, it's just free - also hard to beat.)
+Just on the basis of price I would not hesitate to recommend it.
+
+That said, there's a lot of courses to choose from.
+
+- The well-reviewed ones, that also come as a series, generally are from the University of Michigan.
+- JHU also provides some neat ones, such as "Python for Genomic Data Science".
+- As a prior (i.e. having not seen the course content), I would avoid the ones by IBM and other big firms.
+Prior experience has told me they're likely not hands-on (though I might be wrong).
+
+One of the bigger issues here is that you might need to learn how to set up your own Python programming environment.
+For this, consult your friendly neighborhood [parsertongue](https://www.reddit.com/r/ProgrammerHumor/comments/7pxp2b/parsertongue/) speaker
+(i.e. a colleague who knows Python) to help you.
+
+## [Think Python](https://greenteapress.com/wp/think-python-2e/)
+
+Think Python is an online book by Allen Downey,
+a professor of computer science and more at the Olin College of Engineering in Needham, MA.
+Allen is also a fellow Python community educator,
+and has generously let me test-drive my deep learning tutorials at his classes.
+
+In this book, Allen leverages the friendliness of the Python programming language to teach you basic computing concepts.
+
+Allen is incredibly generous, and has made the book freely available online, though you can buy it via Amazon or O'Reilly Media.
+
+He's got other titles for those who already know Python:
+
+- [Think Stats](https://greenteapress.com/thinkstats/): Statistics taught using computation.
+- [Think Bayes](https://greenteapress.com/wp/think-bayes/): _Bayesian_ statistics (YAY!) taught using computation.
+(I used this book to get brushed up on Bayesian inference when in grad school.)
+- [Think Complexity](http://greenteapress.com/complexity/): A computation-oriented introduction to data science.
+This book actually kickstarted half of my doctoral thesis.
+
+## [Automate the Boring Stuff with Python](https://automatetheboringstuff.com/)
+
+This is a book by a Python friend of mine, Al Swiegart, whom I met at the annual PyCon USA.
+
+In this book, Al teaches you how to use Python code
+to automate all the boring, repetitive stuff that you encounter in your day-to-day work on a computer.
+It's this kind of project, which directly impacts your day-to-day,
+that can keep your motivation levels high while learning.
+
+Al is also incredibly generous, and has made the book freely available online,
+and sometimes gives away the physical book for free.
+But as it's one of his income sources, I'd encourage you to buy the book
+(just as I did, even though I don't really need to read it anymore). 
+
+## [e2eML by Brandon Rohrer](https://end-to-end-machine-learning.teachable.com/courses)
+
+This is an online course created by Brandon Rohrer,
+who is a data scientist at iRobot (the maker of those fancy robot vacuums!).
+
+Brandon is pretty active on social media, and is a fellow education enthusiast.
+(I sometimes wish my current role could include formal classroom teaching as part of my professional goals.)
+With this online course, he brings you through one opinionated path to getting good with machine learning and data science.
+As a pre-requisite, you should know how to set up your own Python programming environment,
+as there's no hosted computing environment for you.
+
+## Your Own Project
+
+If you're proficient with some basic Python, and in particular, have learned how to use `pandas`,
+then you might want to take the time to re-do an analysis that you did once, except now done in `pandas` and Python.
+
+Doing so will get you lots of practice in what _actual_ day-to-day data science programming looks like, where you:
+
+- encounter new error messages you've never seen before,
+- have to learn how to ask the "right" questions to debug them,
+- might end up pinging a friend/colleague to help you,
+- end up knowing deeply how to solve that problem, because **you** encountered it for yourself.
+
+If possible, write a blog post as well, to document your learning journey, especially explaining how you solved the problem.
+I have found this to be an incredibly effective way of making that thing I just learned stick in memory.
+
+## SciPy/PyCon conferences
+
+The SciPy and PyCon conferences are two annual Python conferences that I have attended since grad school,
+and they have a wealth of resources available for learners.
+
+There are YouTube playlists available for each of them
+([SciPy](https://www.youtube.com/user/EnthoughtMedia/playlists?view=50&sort=dd&shelf_id=1)
+and [PyCon](https://www.youtube.com/channel/UCxs2IIVXaEHHA4BtTiWZ2mQ)).
+PyCon has a new YouTube channel each year, while SciPy uses Enthought Media's own channel.
+
+If you dig deep enough, my tutorials are available online as well, freely available for anybody to watch.
+(I link them from my [personal website](https://ericmjl.github.io/teaching/) if you want a shortcut there...
+alrighty, enough of my shameless self-promotion.)
+
+Some videos that have been helpful in my own learning journey:
+
+- [Computational Statistics 1 by Allen Downey](https://youtu.be/fMycLa1bsno)
+- [Computational Statistics 2 by Chris Fonnesbeck](https://youtu.be/heFaYLKVZY4)
+(Chris Fonnesbeck is an ex-Vanderbilt biostatistics professor who quit and joined the Yankees.
+He is also the creator and BDFL of PyMC, for which I help out with development.)
+- [Parallelizing Scientific Python with Dask by Jim Crist & co.](https://youtu.be/mbfsog3e5DA)
+(Dask is a highly productive tool for interactive parallel data science!)
+- [Pandas for Data Analysis by Daniel Chen](https://youtu.be/oGzU688xCUs).
+(Dan Chen and I are often mistaken for each other. He also has a good book for `pandas`.)
+
+The YouTube videos are quite good for those who have some basic knowhow on managing their own Python environments.
+There are some beginner-friendly ones that show you how to get started with Python too.
+In particular, [this playlist](https://www.youtube.com/watch?v=pB3BFP001co&list=PLytH1Th3ORyNIBPyOQg20CsVhVIJh1u2a)
+should cover everything for you.
+
+## Other notes
+
+### Setting up Python locally
+
+Thus far, I've alluded to "setting up your own Python environment" many times.
+To demystify what I mean by that, it really boils down to installing
+the [Anaconda distribution](https://www.anaconda.com/distribution/) of Python more than anything else.
+(**Don't download the Python 2.7 version, it's outdated!**)
+The Anaconda Python distribution, distributed by the distribution namesake Anaconda,
+solved a lot of Python packaging problems that weren't actively being solved in the early 2010s,
+and "robustified" the distribution of Python packages.
+I myself was once skeptical about using it,
+until I screwed up my own system Python installation and broke iPhoto.
+That's when I finally bit the bullet and installed it - and never looked back since.
+
+### Jupyter
+
+You might encounter the name "Jupyter", and think that "Jupyter" provides packages.
+This is incorrect - Jupyter is the name of an ecosystem of tools that data scientists use,
+and it covers
+
+- a computation notebook ("Jupyter Notebook") where you can weave code, prose, and figures together,
+- connectors to computation engines ("Kernels"), such as a Python or R or Scala language kernel,
+that in turn houses the packages you install, and
+- an integrated development environment ("Jupyter Lab"), which provides you the interface for coding in the browser.
+
+IPython is the precursor monolith project to Jupyter, and it was primarily focused on the computation engine and notebook.
+
+Hope that disambiguates the terms for you.
+
+### The Most Important Trick For Learning...
+
+...is nothing more than getting practice every single day.
+
+Even if it's only for a single DataCamp exercise, getting that practice in _daily_ is important for mastery.
+Otherwise, your time spent learning now will simply go to waste,
+filed away in the "I guess I learned it" cabinet never to be retrieved and tested again.
+If you want the knowledge to stick, you need to increase the odds that you'll get practice every day.
+
+If you have a project you need to solve, you increase the odds that you'll get practice every day.
+
+If you have sunken costs (time or money) into a course, you increase the odds that you'll practice every day.
+
+If you have a community of learners to learn with, you increase the odds that you'll practice every day.
+
+If you have a resource person with whom you click that you can ask questions of, you increase the odds that you'll practice every day.
+
+### Other resources
+
+I clearly have a biased view of the world; if you have other resources for learning Python, don't hesitate to DM me or share them with your friends!
+
+## Finally...
+
+Stay safe, y'all. Stay indoors, stay away from other people, and keep washing your hands!
+---
+pub_date: 2020-03-25
+---
+summary: During the COVID-19 outbreak period, you might find yourself with a good chunk of time to pick up Python. It's an incredibly productive language to learn! At the same time, the wealth of resources out there can be intimidating. Here's my opinionated list of resources in 2020 that could be handy for you. And if you have others, be sure to share!
+---
+tags:
+
+covid19
+python
+learning
+data science
+---
+twitter_handle: ericmjl
