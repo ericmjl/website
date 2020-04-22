@@ -1,0 +1,128 @@
+title: Use pyprojroot and Python’s pathlib to manage your data paths!
+---
+author: Eric J. Ma
+---
+body:
+
+If you adopt a proper organizational structure for your data projects,
+then each project gets its own directory (i.e. a clean and isolated "workspace")
+and its own isolated analysis environment (e.g. a `conda` environment).
+
+In that workspace, your directory structure might look like this:
+
+```text
+project/
+- data/
+- notebooks/
+- src/
+- setup.py
+- README
+```
+
+As such, your notebook are all going to be in a different directory from your data.
+This is one way that keeps the mind sane: 
+you might have subdirectories in the `notebooks/` directory
+that you use to organize the notebooks further,
+yet you have multiple notebooks that use the same file,
+leading to brittle path linking.
+After all in one notebook, you might do:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("data.csv")
+```
+
+But in another notebook that lives in a different directory,
+to link to the dataset, you might have to do:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("../other_dir/data.csv")
+```
+
+The potential for confusion is just immense here.
+
+A better way is to provide one authoritative path to a particular dataset that you can use.
+For example:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("../data/data.csv")
+```
+
+But even that is a bit tricky: if you move the notebook for whatever good reason,
+the path to the data might break.
+It’s still brittle.
+We need a better way to resolve paths.
+
+Enter `pyprojroot`.
+Written by my fellow PyData conference doppleganger Daniel Chen,
+it provides a `here` function that will resolve to your project root directory (hence the package name).
+The original was written in R (`rprojroot`),
+and it’s a wonderful tool for data scientists.
+Let’s see it in action:
+
+```python
+import pandas as pd
+from pyprojroot import here
+
+df = pd.read_csv(here() / "data/data.csv")
+```
+
+And _voila_!
+No fragile relative paths,
+and no perpetually long chains of `../../..`!
+Just nice and clean resolution to your project root.
+
+How does it work?
+What `pyprojroot` does underneath the hood is
+recursively climb the file tree until it finds
+one of a set of pre-specified files
+that are commonly found in a project’s root directory.
+For example, `.git` is a common one.
+For Python packages, `setup.py` is another.
+
+If your project doesn’t “fit” any of the conventions assumed,
+or if you have a fancier structure,
+you can always add a `.here()` to your project root,
+and configure the `project_files` keyword argument
+so that `here` only looks for that one authoritative file:
+
+```python
+import pandas as pd
+from pyprojroot import here
+
+root = here(project_files=[".here"])
+
+df = pd.read_csv(root / "data/data.csv")
+```
+
+And what _exactly_ is the `here` function returning?
+Well, it’s returning a `pathlib.Path` object,
+which has some seriously clever patching
+to allow it to work with the `/` operator
+to represent paths in native Python code!
+
+Now, let us all toast to cleaner path resolution in our data projects!
+---
+pub_date: 2020-04-21
+---
+summary:
+
+Are file paths driving you crazy in your data science project repository?
+Come read how you can use `pyprojroot` and Python’s `pathlib`
+to help make life a tad easier.
+You’ll love this new tool in your toolkit!
+---
+tags:
+
+data science
+pathlib
+python
+packages
+tools
+---
+twitter_handle: ericmjl
