@@ -1,0 +1,75 @@
+title: What are lambda expressions in Python?
+---
+author: Eric J. Ma
+---
+body:
+
+Inspired by a conversation I had with a colleague who is learning Python, I wanted to write down an explainer of what "lambda expressions" are in Python.
+
+You might have seen lambda expressions in someone else's Python code, which looks like such:
+
+```python
+lambda x: x % 2 == 0
+```
+
+This, actually, is the equivalent of writing a function that we might name `is_even`:
+
+```python
+def is_even(x):
+    return x % 2 ==0
+```
+
+Here's an explainer of the _anatomy_ of the lambda function.
+
+- `lambda` tells Python that we're constructing a function.
+- The signature of the function, meaning, the arguments the function takes in, is given by everything between `lambda` and `:`. In our example, the signature of the function is `x`, meaning the function only takes in a single argument, `x`.
+- The stuff the function returns is everything after the `:`. In our case, it's the boolean result of `x % 2 == 0`.
+
+So a lambda function _basically_ equivalent to a Python function. The key difference here is that it is considered "anonymous", in that we have not given it an explicit name. 
+
+Let me explain. When we use the following pattern:
+
+```python
+def func_name(arg1, arg2):
+    return something
+```
+
+the function has a name, given by `func_name`.
+
+However, when we do a lambda function:
+
+```python
+lambda arg1, arg2: something
+```
+
+this function doesn't have a name. Hence, the term "anonymous".
+
+But what's the use of a lambda function if all it does is nothing more than be "anonymous"? Well, one place I have used lambda functions is when I determine that a function that I want to implement is a simple one-liner that can get slotted in anywhere. For example, in `pyjanitor`, when transforming a column to see whether it's even:
+
+```python
+df = data.transform_column("my_column", lambda x: x % 2 == 0, "is_even")
+```
+
+That would be less verbose than:
+
+```python
+def is_even(x):
+    return x % 2 == 0
+
+
+df = data.transform_column("my_column", is_even, "is_even")
+```
+
+RealPython has a great article which also details [the appropriate uses of lambda expressions](https://realpython.com/python-lambda/#appropriate-uses-of-lambda-expressions); definitely check it out!
+---
+pub_date: 2020-05-17
+---
+summary: In this blog post, I'll show you what lambda expressions are, and where we might use them in a data science setting.
+---
+tags:
+
+python
+programming
+lambda expression
+---
+twitter_handle: ericmjl
