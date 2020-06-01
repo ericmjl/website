@@ -1,0 +1,28 @@
+title: VSCode Development Containers
+---
+author: Eric J. Ma
+---
+body:
+
+It's been about four days since I first discovered the idea of "development containers", and I'm absolutely hooked.
+
+We know that "containers", such as Docker or Singularity containers, give us operating system-level "virtualization". Or in other words, it gives us completely isolated *runtime* environments.
+
+Development containers take this idea one step further, and provide us with isolated *development* environments. This actually can take down the time needed for a newcomer to the project to get up and running with software *development*. They don't have to configure anything. In VSCode, simply "open a repository in a remote container" (a command palette command), and ensure that they have Docker running locally. Boom! Start developing.
+
+I added dev containers to `pyjanitor`, my personal website, my Essays collection, and also started using Dockerhub to _prebuild_ the containers so that a newcomer _just has to pull the container and go!_ This stands in contrast to building the container locally, which is a power drain (if on battery) and can take time.
+
+I plan to do more of this at work, so I can onboard interns and new colleagues onto a project much faster. I also got running _remote_ development containers, i.e. containers that are running on my slightly more powerful remote GPU tower, but the VSCode client is running locally on my puny little 12" MacBook. The future is looking bright! :)
+---
+pub_date: 2020-05-31
+---
+summary: A mini-advertisement, completely unpaid and totally unsolicited, for the use of remote "development" containers on VSCode, with a little pro-tip about pre-building containers sprinkled in for good measure!
+---
+tags:
+
+docker
+containers
+software engineering
+skills
+---
+twitter_handle: ericmjl
