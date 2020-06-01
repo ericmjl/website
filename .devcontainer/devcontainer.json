@@ -18,15 +18,14 @@
     ],
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [
+        8999,
         8000,
-        8001,
-        8002,
-        8003,
-        8004,
-        8005
+        8001
     ],
     // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": ["lektor build"]
+    "postCreateCommand": [
+        "lektor build"
+    ]
     // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
     // "remoteUser": "vscode"
 }
