@@ -1,0 +1,37 @@
+title: Easy `matplotlib` animations
+---
+author: Eric J. Ma
+---
+body:
+
+Recently, [`celluloid`][celluloid]caught my eye: it's a package that lets you create `matplotlib` animations easily!
+
+If you need a dead-simple example to convince you to check it out, here's one lifted straight from the repository:
+
+```python
+from matplotlib import pyplot as plt
+from celluloid import Camera
+
+fig = plt.figure()
+camera = Camera(fig)
+for i in range(10):
+    plt.plot([i] * 10)
+    camera.snap()
+animation = camera.animate()
+```
+
+But seriously though, if you use the workhorse Python drawing package `matplotlib` for anything,
+this package can be considered to be one of those "great tricks to have" in your bag!
+---
+pub_date: 2020-05-26
+---
+summary: I recently stumbled upon a package that makes animations _dead simple_. Check it out!
+---
+tags:
+
+matplotlib
+python
+data visualization
+animation
+---
+twitter_handle: ericmjl
