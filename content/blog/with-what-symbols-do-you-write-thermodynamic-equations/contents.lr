@@ -1,0 +1,58 @@
+title: With what symbols do you write thermodynamic equations?
+---
+author: Eric J. Ma
+---
+body:
+
+_A rant [egged on](https://twitter.com/vboykis/status/1270401190124310529) by [Vicki Boykis](https://twitter.com/vboykis) after reading her [excellent essay on model deployment](http://veekaybee.github.io/2020/06/09/ml-in-prod/)._
+
+/beginrant
+
+When I was in my first year of undergrad, I was in a special first-year program in which the sciences were taught as an integrated unit. (The program, [Science One](https://scienceone.ubc.ca/), was quite influential in my learning journey in learning across disciplinary silos.) There, the lecturers would coordinate their use of terminology and symbols in equations. The reason? They recognized that having defined, precise, and consistent terminology reduced learner confusion, increased retention, and aided in us linking key _concepts_. In other words, because they knew that symbolism and choice of words mattered, they were able to more easily teach the things that _mattered more_.
+
+One example of this was in thermodynamics. Heat, energy, and entropy have quite specific definitions, and in certain pedagogical traditions, they have the same equation forms but use different symbols. When we learned thermodynamics, we avoided all of that confusion by simply adopting the physicist's set of symbols. Nobody argued about it, because though the form changed, the "spirit" of the matter was preserved.
+
+Well, fast forward 14 years later, it appears the machine learning world has yet to learn the same lessons taught in Science One. No big deal, after all, Science One only educated 80 students at a time. But I think it's worth  writing about, because we might end up with a new generation of data scientists who can't tell the difference between inference and inference.
+
+Wait, what?! "You're willing to die on the _inference_ hill?!" 
+
+In some ways, not. You might want to keep doing what you do, but hear me out. _I got reasonz, yo._
+
+The following items are key components to a statistical modelling/machine learning workflow: (a) input data, (b) model/structure, (c) parameters to learn, and (d) output data. One can frame statistical learning methods in terms of a "direction" w.r.t. the output data (d). "Simulation"/"prediction" refer to the forward direction of going from (a-c) to (d), while "inference" or "learning" refer to the backward direction of going from (a, c, d) to (b). We use distinct terms because they are distinct and, in fact, basically opposite subclasses of the larger thing of calculating 1 thing from the other 3.
+
+"Inference", then, has a specific definition in the quantitative sciences, rooted in its use in statistics. It refers to "inferring" the parameters of a model, given data. It is distinct from simple "guessing", in that there are criteria (maximum likelihood, for example) for evaluating how good individual inferred values are. 
+
+The term "inference", however, has been  co-opted incorrectly by deep learning practitioners to refer to the task of _generating_ or _predicting_ what an output should be, given known input data and model structure + parameters. We are starting to hear the term  mis-used all the time: "At inference time...", "When performing inference...". How this came about, I do not know, but I have a hypothesis that the first few people who  co-opted the term were genuinely trying to make _some_ form of linguistic connection between the statistics and machine learning worlds. I shall not try to, ahem, _infer their intents from observed behaviour_ here though. :)
+
+But imagine the poor statistician trying to decipher what the machine learner is trying to say when they read the term, "at inference time..." It's like the chemist staring at the physicist's heat equation and being ever so subtly thrown off by symbol mismatch! Likewise, the statistician stands to be tripped up by the _completely opposite_ use of "inference" when reading a machine learning paper. 
+
+So what's the big deal here? Languages evolve, don't they?
+
+Yes! But surely that's not the only criteria for letting words slip? If words and their precise meanings do not matter, we might as well `#abolish #communication`! (If you disagree with me, go ahead and decipher what I _really_ mean by that, since my words didn't matter and I can evolve the language anyways...)
+
+Statistics and machine learning are extremely interrelated fields. Machine learning research built upon statistical foundations and has given statistics practitioners new model classes to work with and tooling to perform inference on models more easily (I'm thinking about things like automatic differentiation!). Both fields stand to learn a ton from one another, but also stand to lose a lot without precise and consistent vocabulary. If you accept the premise (and, if I may dare claim, _very common mental model_) of directionality w.r.t. the output data,  then using the same term to refer to opposite-direction procedures is _bewilderingly_ confusing! Especially for learners of both domains. 
+
+What's the solution going forth? 
+
+The unfortunate reality is that the  co-opting of the term has already happened. The optimistic reality is that [there are individuals who are merely "accepting of the fact but don't necessarily like/agree with it"](https://twitter.com/PhDemetri/status/1270396350195212289). Much like I push back on the use of "aye eye" at work, I think we can push our colleagues to a better standard of communication: lucid, consistent, precise, and concise.
+
+If you _still_ want to use the term inference for "forward prediction/simulation", then prefix or suffix it [with some word.](https://twitter.com/ryanstravis/status/1270400888885202948) Call it "output inference" if you'd like. But make it distinct from "parameter inference". (I just set an example, so there.)
+
+![](https://media1.tenor.com/images/4b7d6e1687f09ba7fafd2d13b71321da/tenor.gif?itemid=15798788)
+
+If you agree, please share the message around.
+
+/endrant
+---
+pub_date: 2020-06-09
+---
+summary: How in the world did "inference" come to mean "prediction" amongst deep learners? I have no idea, but I do have a rant.
+---
+tags:
+
+deep learning
+machine learning
+statistics
+rants
+---
+twitter_handle: ericmjl
