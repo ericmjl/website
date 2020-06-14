@@ -1,0 +1,78 @@
+title: P(A,B) to P(H,D)??
+---
+author: Eric J. Ma
+---
+body:
+
+Bayes' rule looks like this:
+
+$$P(A|B) = 
+\frac{P(B|A)P(A)}
+{P(B)}
+$$
+
+It is a natural result that comes straight from the rules of probability,
+being that the joint distribution of two random variables
+can be written in two equivalent ways:
+
+$$P(A, B) = P(A|B)P(B) = P(B|A)P(A)$$
+
+Now, I have encountered in many books write,
+regarding the application of Bayes' rule to statistical modelling,
+something along the lines of the following:
+
+<blockquote class="blockquote">
+<p>
+Now, there is an alternative _interpretation_ of Bayes' rule,
+one that replaces the symbol "A" with "Hypothesis",
+and "B" with the "Data", such that we get:
+
+$$P(H|D) = \frac{P(D|H)P(H)}{P(D)}$$
+</p>
+</blockquote>
+
+At first glance, nothing seems wrong about this statement,
+but I did remember having a lingering nagging feeling
+that there was a logical jump unexplained here.
+
+More specifically, that logical jump yielded the following question: _Why are we allowed to take this interpretation?_
+
+It took asking the question to a mathematician friend, Colin Carroll,
+to finally "grok" the idea.
+Let me try to explain.
+
+## Spaces of models and data
+
+We have to think back to the fundamental idea of possible spaces.
+
+If we set up a Bernoulli probability distribution with parameter $p$,
+then the space of possible probability distributions that we could instantiate is infinite!
+This result should not surprise you: $p$ can take on any one of an infinite set of values between 0 and 1, each one giving a different instantiated Bernoulli.
+As such, a `Bernoulli(p)` hypothesis is drawn from a (very large) space of possible `Bernoulli(p)`s,
+or more abstractly, hypotheses, thereby giving us a $P(H)$.
+
+Moreover, consider our data.
+The Bernoulli data that came to us, which for example might be `0, 1, 1, 1, 0`,
+were drawn from a near-infinite space of possible configurations of data.
+First off, there's no reason why we always have to have three 1s and two 0s in five draws;
+it could have been five 1s or five 0s.
+Secondly, the order of data (though it doesn't really matter in this case)
+for three 1s and two 0s might well have been different.
+As such, we have the $P(D)$ interpretation.
+
+As a modelling decision, we _choose_ to say
+that our data and model are jointly distributed,
+thus we have the _joint distribution_
+between model and data, $P(H, D)$.
+---
+pub_date: 2020-06-14
+---
+summary: What gives us the logical leap from a joint distribution $P(A, B)$ _in abstract_, to the more tangible $P(H, D)$ (for hypothesis and data? Here's an excerpt from a tutorial in the making about Bayesian statistics.
+---
+tags:
+
+bayesian
+data science
+statistical inference
+---
+twitter_handle: ericmjl
