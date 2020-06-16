@@ -33,7 +33,7 @@ that there was a logical jump unexplained here.
 
 More specifically, that logical jump yielded the following question: _Why are we allowed to take this interpretation?_
 
-It took asking the question to a mathematician friend, Colin Carroll,
+It took asking the question to a mathematician friend, [Colin Carroll](https://colindcarroll.com/),
 to finally "grok" the idea.
 Let me try to explain.
 
@@ -60,6 +60,9 @@ As a modelling decision, we _choose_ to say
 that our data and model are jointly distributed,
 thus we have the _joint distribution_
 between model and data, $P(H, D)$.
+
+And once we have the joint distribution between model and data,
+we can begin to reason about Bayes' rule on it.
 ---
 pub_date: 2020-06-14
 ---
