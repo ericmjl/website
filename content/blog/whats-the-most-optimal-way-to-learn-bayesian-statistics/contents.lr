@@ -1,0 +1,39 @@
+title: What's the most optimal way to learn Bayesian statistics?
+---
+author: Eric J. Ma
+---
+body:
+
+I've been reflecting on the way I learned statistics, and I think I learned it in a flawed fashion.
+
+Traditionally, statistics is taught in the format of performing hypothesis tests to infer whether there's a difference between groups, or to learn the parameters of some curve.
+
+Learning statistics in this direction leads to __a ton__ of confusion, because we're taught _the shortcut to the answer_, rather than the first-principles way of thinking about a problem. We end up with the "standard t-test" and multiple confusing names for regression modelling, masquerading as canned procedures that can be used on any problem. (OK, that's a bit of a stretch, but please do tell me you were _at least tempted to use the t-test in a situation where you just had to crank out an analysis_...)
+
+After seeing the following tweet from Michael Betancourt...
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Unpopular opinion: regression models are _much_ harder to use well than generative models of an actual data generating process and consequently should not be the first and only modeling techniques that many people are taught.</p>&mdash; \mathfrak{Michael &quot;El Muy Muy&quot; Betancourt} (@betanalpha) <a href="https://twitter.com/betanalpha/status/1272358065447329792?ref_src=twsrc%5Etfw">June 15, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+...I realized that the only reason why [Markov Models and their variants][hmm] clicked for me was thinking through the data generating process. The only reason why hierarchical models clicked for me was stepping through the data generating process on a real problem and linking them to statistical parameters. Without thinking through the data generating process, none of those models made any sense.
+
+[hmm]: https://ericmjl.github.io/essays-on-data-science/machine-learning/markov-models/
+
+In some sense, thinking through the data generating process is _an extremely natural thing to do_. It's like telling a story about how our data came into being, and we know that telling stories is _exactly_ what humans are great at. Storytelling helps us reason about the world. There should be no reason why we don't use statistical storytelling to reason about our problems.
+
+Worrying _first_ about the data generating process and then about the inferential procedure makes statistical inference less of a black box and more of a natural conclusion of statistical storytelling. We become less concerned with whether something is "significant", and instead more concerned with whether we "got the model right". 
+
+To put this into concrete action, I've been working on an alternative introduction to probabilistic programming and Bayesian inference that is lighter on math than most introductions, involves a lot of verbal storytelling, and goes heavier than most introductions in its use of programming. Here we practice the skill of hypothesizing a data generating story and translating that into the language of probability distributions, which can then be translated into SciPy stats Python code. Stay tuned!
+---
+pub_date: 2020-06-15
+---
+summary: I've been reflecting on the way I learned statistics, and I think I learned it in a flawed fashion. In response to this reflection, I've began reworking an introduction to Bayesian statistical inference that focuses on statistical story telling. Read on to find out more!
+---
+tags:
+
+bayesian statistics
+bayesian
+data science
+statistics
+inference
+---
+twitter_handle: ericmjl
