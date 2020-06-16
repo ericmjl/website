@@ -8,9 +8,7 @@ Variance explained, as a regression quality metric, is one that I have begun to 
 
 Here's variance explained defined:
 
-<p>
 $$1 - \frac{var(y_{true} - y_{pred})}{var(y_{true})}$$
-</p>
 
 Why do I like it? It’s because this metric gives us a measure of the scale of the error in predictions relative to the scale of the data.
 
@@ -36,9 +34,7 @@ Now, we know that single metrics can have failure points, as does the coefficien
 
 One place where the variance explained can fail is if the predictions are systematically shifted off from the true values. Let's say prediction was shifted off by 2 units.
 
-<p>
 $$var(y_{true} - y_{pred}) = var([2, 2, ..., 2]) = 0$$
-</p>
 
 There's no variance in errors, even though they are systematically shifted off from the true prediction. Like r<sup>2</sup>, variance explained will fail here.
 

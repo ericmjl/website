@@ -24,7 +24,7 @@ I sourced the data from the <a href="http://hivdb.stanford.edu">Stanford HIV Dru
 3. Dropping all conserved amino acid positions. They add nothing to the analysis.
 4. Binarizing the columns. This transforms the letters of the amino acid into a first-pass feature set, in which the binarized columns indicate whether or not an amino acid is present at a given position or not.
 
-These are found in my <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/custom_funcs.py">custom_funcs.py</a> module, which I imported into the Jupyter notebooks. Having futzed around for about a day copying/pasting blocks of code, I refactored the code into separate functions for readability, so that only the “business logic” is shown in the notebook.
+These are found in my <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/custom_funcs.py">custom_funcs.py</a> module, which I imported into the Jupyter notebooks. Having futzed around for about a day copying/pasting blocks of code, I refactored the code into separate functions for readability, so that only the "business logic" is shown in the notebook.
 
 ## Train/Test Split
 

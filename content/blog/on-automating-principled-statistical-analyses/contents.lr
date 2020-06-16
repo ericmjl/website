@@ -4,19 +4,19 @@ author: Eric J. Ma
 ---
 body:
 
-I’ve been known to rant against the t-test, because I see it as a canned statistical test that most scientists “just” reach for. From a statistical viewpoint, reaching for the t-test by default is unprincipled because our data may not necessarily fulfill the Gaussian-distributed assumptions of the t-test.
+I’ve been known to rant against the t-test, because I see it as a canned statistical test that most scientists "just" reach for. From a statistical viewpoint, reaching for the t-test by default is unprincipled because our data may not necessarily fulfill the Gaussian-distributed assumptions of the t-test.
 
 That isn’t to say, though, that I’m against automated statistical analyses.
 
 If there’s a data generating process that will need continual analysis, and we are aware that these processes can be broadly standardized enough that we can use a single statistical model across multiple groups and/or samples, then we might be able to automate the analysis method used.
 
-An example from my line of work is standardized high throughput (and/or large-scale) measurements with the same randomized experimental structure. If the high throughput measurement assay stays the same from project to project, and is a standardized assay measurement, then we should be able to use a single statistical model across all samples in the assay. 
+An example from my line of work is standardized high throughput (and/or large-scale) measurements with the same randomized experimental structure. If the high throughput measurement assay stays the same from project to project, and is a standardized assay measurement, then we should be able to use a single statistical model across all samples in the assay.
 
-I have done this with large-scale electrophysiology measurements, where we quantified electrophysiological curve decay constants as a function of molecule concentrations, and wrote a custom hierarchical Bayesian model for the data. In another project, my colleagues and I built a hierarchical Bayesian model for enzyme catalysis efficiency. In both cases, because we had confidence that the data generating process was constant over time, we could write a program through which we fed in standardized data and from which we obtained robust, regularized estimates of our quantities of interest. 
+I have done this with large-scale electrophysiology measurements, where we quantified electrophysiological curve decay constants as a function of molecule concentrations, and wrote a custom hierarchical Bayesian model for the data. In another project, my colleagues and I built a hierarchical Bayesian model for enzyme catalysis efficiency. In both cases, because we had confidence that the data generating process was constant over time, we could write a program through which we fed in standardized data and from which we obtained robust, regularized estimates of our quantities of interest.
 
 Counterfactually, if we had _just_ picked some quantity and gone with the t-test (or worse, used t-test assumptions with multiple hypothesis correction), we would have likely made a number of errors in our automated analyses that would compound in our later decision-making steps. More pedestrian would have been the fact that I would not have been able to properly defend what we were doing in front of a properly-trained statistician who knows how to use likelihoods in appropriate situations. (Our data didn’t necessarily have t-distributed likelihoods!)
 
-There’s always this “smell test” that we can do. **The “likelihood smell test” is a good one.**
+There’s always this "smell test" that we can do. **The "likelihood smell test" is a good one.**
 
 In conclusion, automating a principled statistical analysis is fine, as long as the data generating process is more or less constant. Reaching for a canned test by default is not.
 

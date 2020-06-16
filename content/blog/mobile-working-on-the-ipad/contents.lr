@@ -6,23 +6,23 @@ body:
 
 A few years ago, I test-drove mobile work using my thesis as a case study, basically challenging myself with the question: how much of my main thesis paper could I write on iOS (specifically, an iPad Mini)? Back then, iOS turned out to be a superb tool for the writing phase (getting ideas into a text editor), and a horrible one for final formatting before submitting a paper to a journal (inflexible). Now, don’t get me wrong, though - I would still use it as part of my workflow if I were to do it again!
 
-Fast-forward a few years, I now do more programming in a data science context than I do formal writing, and the tooling for software development and data analysis on iOS has improved greatly. I thought I’d challenge myself with an experiment: how much of development and analytics could I do on an iPad, especially the Mini? 
+Fast-forward a few years, I now do more programming in a data science context than I do formal writing, and the tooling for software development and data analysis on iOS has improved greatly. I thought I’d challenge myself with an experiment: how much of development and analytics could I do on an iPad, especially the Mini?
 
-This time round, armed with an iPad Pro (11”), I decided to test again how much one can do on iOS, once again.
+This time round, armed with an iPad Pro (11"), I decided to test again how much one can do on iOS, once again.
 
 ## Software Development
 
-I develop [`pyjanitor`](https://pyjanitor.readthedocs.io) as a tool that I use in my daily work, and as part of my open source software portfolio. When I’m on my MacBook or Pro, or on my Linux desktop at home, I usually work with VSCode for it’s integrated terminal, superb syntax highlighting, git integration, code completion with Kite, and more. 
+I develop [`pyjanitor`](https://pyjanitor.readthedocs.io) as a tool that I use in my daily work, and as part of my open source software portfolio. When I’m on my MacBook or Pro, or on my Linux desktop at home, I usually work with VSCode for it’s integrated terminal, superb syntax highlighting, git integration, code completion with Kite, and more.
 
-Moving to iOS, VSCode is not available, and that immediately means to rely on Terminal-based tools to get my work done. I ponied up for [Blink Shell](https://www.blink.sh/), and found it to pay off immediately. Having enabled remote access on my Linux tower at home, I was thrilled to learn that Blink supports [`mosh`](https://mosh.org/), and when paired with [`tmux`](https://github.com/tmux/tmux), it is a superb solution for maintaining persistent shells across spotty internet conditions. 
+Moving to iOS, VSCode is not available, and that immediately means to rely on Terminal-based tools to get my work done. I ponied up for [Blink Shell](https://www.blink.sh/), and found it to pay off immediately. Having enabled remote access on my Linux tower at home, I was thrilled to learn that Blink supports [`mosh`](https://mosh.org/), and when paired with [`tmux`](https://github.com/tmux/tmux), it is a superb solution for maintaining persistent shells across spotty internet conditions.
 
-A while ago, I also configured `nano` with syntax highlighting. As things turned out, syntax highlighting has the biggest effect on my productivity compared to other text editor enhancements (e.g. code completion, git integration, etc.). After I mastered most of `nano`'s shortcut keys, I found I could be productive at coding in just `nano` itself. Even though missing out on the usual assistive tools meant I was coding somewhat slower, the pace was still acceptable; moreover, relying less on those tools helped me develop a muscle memory for certain API calls. I also found myself becoming more effective because the single window idioms of iOS meant I was focusing on the programming task at hand, rather than getting distracted while looking at docs in a web browser (a surprisingly common happening for me!). 
+A while ago, I also configured `nano` with syntax highlighting. As things turned out, syntax highlighting has the biggest effect on my productivity compared to other text editor enhancements (e.g. code completion, git integration, etc.). After I mastered most of `nano`'s shortcut keys, I found I could be productive at coding in just `nano` itself. Even though missing out on the usual assistive tools meant I was coding somewhat slower, the pace was still acceptable; moreover, relying less on those tools helped me develop a muscle memory for certain API calls. I also found myself becoming more effective because the single window idioms of iOS meant I was focusing on the programming task at hand, rather than getting distracted while looking at docs in a web browser (a surprisingly common happening for me!).
 
 ## Data Analysis
 
-For data analysis, Jupyter notebooks are the tool of my choice, for their interactive nature, and the ability to weave a narrative throughout the computation. Jupyter Lab is awesome for this task, but it’s poorly supported on mobile Safari. To use Jupyter notebooks in iOS, the best offering at the moment is [Juno](https://juno.sh), with its ability to connect to a Jupyter server accessible through an IP address or URL. This does require payment, though, and I gladly ponied up for that as well. 
+For data analysis, Jupyter notebooks are the tool of my choice, for their interactive nature, and the ability to weave a narrative throughout the computation. Jupyter Lab is awesome for this task, but it’s poorly supported on mobile Safari. To use Jupyter notebooks in iOS, the best offering at the moment is [Juno](https://juno.sh), with its ability to connect to a Jupyter server accessible through an IP address or URL. This does require payment, though, and I gladly ponied up for that as well.
 
-I run a Jupyter server on my Linux tower at home. Because it has a GPU installed on it, when I am accessing the machine through Juno, my iPad suddenly has access to a full-fledged, fully-configured GPU as part of the compute environment! Coupled with the responsiveness of Juno, this makes for a fairly compelling setup to do Python programming on an iPad. 
+I run a Jupyter server on my Linux tower at home. Because it has a GPU installed on it, when I am accessing the machine through Juno, my iPad suddenly has access to a full-fledged, fully-configured GPU as part of the compute environment! Coupled with the responsiveness of Juno, this makes for a fairly compelling setup to do Python programming on an iPad.
 
 ## Pros and Cons of iPad-based Development
 
@@ -32,19 +32,19 @@ Overall, the experience has been positive, but there have been some challenges, 
 
 **Remote server required:** Firstly, because we are essentially using the iPad as a thin client to a remote server, one must either pay for a remote development server in the cloud, or go through the hassle of setting up a development machine that one can SSH into. This may turn off individuals who either are loathe to rent a computer, or don’t have the necessary experience to setup a remote server on their own.
 
-**iOS Multi-Windowing:** It’s sometimes non-trivial to check up source code or function signatures (API docs, really) on the sidebar browser window in iOS. Unlike macOS, in which I have a number of shortcut keys that will let me launch and/or switch between apps, the lack of this capability on iOS means I find myself slowed down because I have to use a bunch of swiping gestures to get to where I need to be. (`Cmd-tab` seems to be the only exception, for it activates the app switcher, but the number of apps in the app switcher remembers is limited.) 
+**iOS Multi-Windowing:** It’s sometimes non-trivial to check up source code or function signatures (API docs, really) on the sidebar browser window in iOS. Unlike macOS, in which I have a number of shortcut keys that will let me launch and/or switch between apps, the lack of this capability on iOS means I find myself slowed down because I have to use a bunch of swiping gestures to get to where I need to be. (`Cmd-tab` seems to be the only exception, for it activates the app switcher, but the number of apps in the app switcher remembers is limited.)
 
 ### Pros
 
-Even with the issues detailed above, there’s still much to love about doing mobile development work on an iOS device. 
+Even with the issues detailed above, there’s still much to love about doing mobile development work on an iOS device.
 
-**iOS Speed:** On the latest hardware, iOS is speedy. Well, even that is a bit of an understatement. I rarely get lags while typing in Blink and Juno, and even when I do, I can usually pin it down to network latency more than RAM issues. 
+**iOS Speed:** On the latest hardware, iOS is speedy. Well, even that is a bit of an understatement. I rarely get lags while typing in Blink and Juno, and even when I do, I can usually pin it down to network latency more than RAM issues.
 
 **Focus:** This is the biggest win. Because iOS makes it difficult to switch contexts, this is actually an upside for work that involves creating things. Whether it’s someone who is drawing, producing videos, editing photos, writing blog posts, or creating code, the ability to focus on the context at hand is tremendous for producing high quality work. Here, iOS is actually a winner for focused productivity.
 
-**Mobility:** The second upside would be that of battery life, and hence mobility, by extension. My 12” MacBook is super mobile, yes, but macOS appears to have issues restraining battery drainage when the lid is closed. By contrast, iOS seems to have fewer issues with this. The battery life concerns mean I’m carrying my mouse, charger and dongle with me all the time, and I’ll get the equivalent of range anxiety when I take only my laptop. 
+**Mobility:** The second upside would be that of battery life, and hence mobility, by extension. My 12" MacBook is super mobile, yes, but macOS appears to have issues restraining battery drainage when the lid is closed. By contrast, iOS seems to have fewer issues with this. The battery life concerns mean I’m carrying my mouse, charger and dongle with me all the time, and I’ll get the equivalent of range anxiety when I take only my laptop.
 
-**Keyboard Experience:** The keyboard experience on the Smart Keyboard Folio is surprisingly good! It’s tactile, and is fully covered, so we won’t have issues arise due to dust getting underneath the keys, like my little MacBook had. 
+**Keyboard Experience:** The keyboard experience on the Smart Keyboard Folio is surprisingly good! It’s tactile, and is fully covered, so we won’t have issues arise due to dust getting underneath the keys, like my little MacBook had.
 
 ## Concluding Thoughts
 

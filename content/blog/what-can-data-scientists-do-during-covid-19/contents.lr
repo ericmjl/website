@@ -6,15 +6,12 @@ body:
 
 A friend in Austria pinged me with the following question:
 
-<blockquote class="blockquote">
-<p>I was wondering if you have any ideas of how I (and other link-minded) people could help with combating this threat. Do you know how a Data Scientist can contribute to our global efforts?
-</p>
-</blockquote>
+> I was wondering if you have any ideas of how I (and other link-minded) people could help with combating this threat. Do you know how a Data Scientist can contribute to our global efforts?
 
 My response is below.
 The tl;dr version is:
-_Your number-crunching and communication skills, 
-paired with independent re-analyses of publications, 
+_Your number-crunching and communication skills,
+paired with independent re-analyses of publications,
 can help you with local mitigation efforts._
 
 -------
@@ -24,85 +21,85 @@ stay at home,
 interact with people virtually if you need to do meetings,
 and minimize number of trips to the grocery store.
 
-That said, I'm sure you pinged me for a different answer :) 
+That said, I'm sure you pinged me for a different answer :)
 
 Here's what I can think of.
-The overarching theme is to use your skills as a data scientist, 
-particularly number-crunching and communication skills, 
-to help re-emphasize and re-communicate the good practices 
-that the epidemiology experts have been saying all along, 
+The overarching theme is to use your skills as a data scientist,
+particularly number-crunching and communication skills,
+to help re-emphasize and re-communicate the good practices
+that the epidemiology experts have been saying all along,
 the only difference being we're local to our communities,
 and can advocate among our own community.
 
 Firstly, independently replicating others' analyses is a good place to start.
-This doesn't necessarily mean ML models - it can mean an ODE model for case counts, 
+This doesn't necessarily mean ML models - it can mean an ODE model for case counts,
 or [Bayesian models for estimation of growth rate](https://github.com/twiecki/covid19/blob/master/covid19_growth_bayes.ipynb), etc.
 Doing this will take some deep diving into the epidemiology literature,
 as epidemiologists have given much more thought to how to properly count cases and the likes than we have.
 
 Once you've done the first,
-extend those models to show how certain interventions that have been strongly recommended - 
-such as the social distancing one I am emphasizing as well - 
-can impact the spread of the virus. 
-I trust the recommendation from epi experts to practice social distancing 
-because I was once adjacent to the epi world (with my flu research), 
-but I'm not sure others share the same level of trust. 
+extend those models to show how certain interventions that have been strongly recommended -
+such as the social distancing one I am emphasizing as well -
+can impact the spread of the virus.
+I trust the recommendation from epi experts to practice social distancing
+because I was once adjacent to the epi world (with my flu research),
+but I'm not sure others share the same level of trust.
 The lack of trust is probably partially due to the distance most of us have
 from a professional epidemiologist.
-It helps for one to hear it from someone one knows personally, 
+It helps for one to hear it from someone one knows personally,
 especially someone one can trust
 who also has the necessary number-crunching and communication skills.
- 
-Thirdly, produce communications of some kind (posters, blog posts, infographics) 
-that help you communicate to others in your local community. 
-This, I think, is something we can already do without doing any independent re-analyses, 
-but the message among your local community might be more effective 
-if you have already done your homework by doing independent analysis replication. 
+
+Thirdly, produce communications of some kind (posters, blog posts, infographics)
+that help you communicate to others in your local community.
+This, I think, is something we can already do without doing any independent re-analyses,
+but the message among your local community might be more effective
+if you have already done your homework by doing independent analysis replication.
 (There's just something about being prepared to answer questions that helps
-when preparing communication pieces.) 
- 
+when preparing communication pieces.)
+
 Some caveats when doing this.
- 
+
 Firstly, if you find something in your analyses that disagrees with the experts,
-be ready to hold your own view with a grain of salt. 
-There may be a key assumption you missed. 
-Dig into the literature, 
-ping your local epidemiology experts for help, 
-and discuss with other data-oriented people. 
-A good prior is, 
+be ready to hold your own view with a grain of salt.
+There may be a key assumption you missed.
+Dig into the literature,
+ping your local epidemiology experts for help,
+and discuss with other data-oriented people.
+A good prior is,
 "I'm wrong, they're probably right, I might need to re-look what I've done."
- 
-Secondly, making dashboards/notebooks and publishing them is fun, 
-but in these times, I would call them cheap fun if it isn't paired with local action. 
-(To know why I call it cheap fun, 
+
+Secondly, making dashboards/notebooks and publishing them is fun,
+but in these times, I would call them cheap fun if it isn't paired with local action.
+(To know why I call it cheap fun,
 see [this article on #vizresponsibly](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8).
-There's harder but more satisfying work to be done actually helping to influence local action 
-than publishing something to the web and tweeting about it... 
-unless doing that tweeting thing actually helps with influencing local action. 
+There's harder but more satisfying work to be done actually helping to influence local action
+than publishing something to the web and tweeting about it...
+unless doing that tweeting thing actually helps with influencing local action.
 Use good judgment here, and don't go for cheap fame.
 I trust you won't.
- 
-From my time next to the epi world, 
-the best thing you can do is, of course, encouraging local action: 
-social distancing, 
-leaving masks for medical personnel (so don't go raiding shelves), 
-being prepared with 2 weeks of food supplies, 
-and don't go to the hospital unless you have medical symptoms (like fevers), 
-so you don't contribute to overwhelming the medical system. 
- 
-And while in isolation, 
-don't forget to take care of your mental health. 
-Nerds like myself can deal with the isolation, 
-but others might need some social interaction. 
-Audio/video call someone if you need to. 
-One of the nice things of the internet age 
+
+From my time next to the epi world,
+the best thing you can do is, of course, encouraging local action:
+social distancing,
+leaving masks for medical personnel (so don't go raiding shelves),
+being prepared with 2 weeks of food supplies,
+and don't go to the hospital unless you have medical symptoms (like fevers),
+so you don't contribute to overwhelming the medical system.
+
+And while in isolation,
+don't forget to take care of your mental health.
+Nerds like myself can deal with the isolation,
+but others might need some social interaction.
+Audio/video call someone if you need to.
+One of the nice things of the internet age
 is that it's easier to stay connected than ever before.
- 
-Finally, stay kind to the local grocery staff. 
+
+Finally, stay kind to the local grocery staff.
 They're probably under a lot of mental and physical stress
-with people flowing through their workplace. 
-Don't sneeze in their vicinity! 
-They're keeping the shelves stocked for the good of everybody. 
+with people flowing through their workplace.
+Don't sneeze in their vicinity!
+They're keeping the shelves stocked for the good of everybody.
 
 ---
 pub_date: 2020-03-15
@@ -110,7 +107,7 @@ pub_date: 2020-03-15
 summary:
 
 What can data scientists do during the COVID-19 outbreak?
-Many things, but the most important is probably encouraging local action to stop the spread of the virus. 
+Many things, but the most important is probably encouraging local action to stop the spread of the virus.
 Our number crunching and communication skills can be put to good use locally here.
 That's one way we can help outside of the usual recommendations.
 
