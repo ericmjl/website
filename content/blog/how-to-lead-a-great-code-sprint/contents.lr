@@ -30,21 +30,21 @@ This may not necessarily apply to all projects, but for small-ish enough project
 
 ## Make clear who should sprint with your project
 
-Mismatched expectations breed frustration; hence, making clear what pre-requisite knowledge participants should have can go a long way to reducing frustrations later on. 
+Mismatched expectations breed frustration; hence, making clear what pre-requisite knowledge participants should have can go a long way to reducing frustrations later on.
 
 Drawing on my `pyjanitor` experience, I would want participants to at the minimum be me of the following:
 1. `pandas` users who have frustrations with the library, and would like to make contributions, or
 2. Individuals who wish to make a documentation contribution and don’t mind doing a fine-toothed pass over the docs to figure out what is unclear in the docs.
 
-Defining your so-called “sprint audience” ahead-of-time can go a long way to making the sprint productive and friendly.
+Defining your so-called "sprint audience" ahead-of-time can go a long way to making the sprint productive and friendly.
 
 ## Communicate priorities of the project
 
-Sprinters want to know that their contributions are going to be valued. Though it is easy to say, “come talk with me before you embark on a task”, the reality is that you, the sprint lead, are likely going to be extremely overbooked. One way to get around this, I think, is to have a high-level list of priorities for the sprint, which can help sprinters better strategize which tasks to tackle. Communicate this on a whiteboard, large sticky notes, or online Wiki page that you can direct people to.
+Sprinters want to know that their contributions are going to be valued. Though it is easy to say, "come talk with me before you embark on a task", the reality is that you, the sprint lead, are likely going to be extremely overbooked. One way to get around this, I think, is to have a high-level list of priorities for the sprint, which can help sprinters better strategize which tasks to tackle. Communicate this on a whiteboard, large sticky notes, or online Wiki page that you can direct people to.
 
-## Have a publicly-viewable “file lock”
+## Have a publicly-viewable "file lock"
 
-Merge conflicts will inadvertently show up if multiple people are contributing to the same file simultaneously. It helps to have a publicly-viewable “file lock” on, say, a whiteboard or large sticky notes, so that we know who is working on what file. This helps prevent you, the sprint lead, from accidentally getting two people to work on the same file, and then having to resolve merge conflicts later.
+Merge conflicts will inadvertently show up if multiple people are contributing to the same file simultaneously. It helps to have a publicly-viewable "file lock" on, say, a whiteboard or large sticky notes, so that we know who is working on what file. This helps prevent you, the sprint lead, from accidentally getting two people to work on the same file, and then having to resolve merge conflicts later.
 
 In the `pyjanitor` sprints, I frequently approved two people working on the same notebook; resolving merge conflicts in the notebook JSON later proved to be a big pain! This lesson was one learned hard.
 
@@ -74,11 +74,11 @@ This is because you, the sprinter, might have your hands full helping beginners,
 
 ## Stay humble and calm
 
-In open source software development, it is hard to find contributors who are willing to sustain an effort, and so any contributions are generally welcome (barring those that are clearly out of scope). Hence, as far as it is humanly possible, I would be inclined to express appreciation for contributors’ contributions. 
+In open source software development, it is hard to find contributors who are willing to sustain an effort, and so any contributions are generally welcome (barring those that are clearly out of scope). Hence, as far as it is humanly possible, I would be inclined to express appreciation for contributors’ contributions.
 
 One of the PyMC maintainers, [Colin Carroll](https://colindcarroll.com), said something of a contribution that I wanted to make that stuck with me. The gist of it was as follows:
 
-> It’s a contribution from someone who is willing, and I’d take that any day. 
+> It’s a contribution from someone who is willing, and I’d take that any day.
 
 So yes, even though we may see our project as providing an opportunity for newcomers to contribute, the fact that they are willing to contribute is even more so an important thing to recognize! Gratitude makes more sense than entitlement here.
 

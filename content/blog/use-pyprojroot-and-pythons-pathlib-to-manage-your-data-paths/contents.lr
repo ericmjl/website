@@ -20,7 +20,7 @@ project/
 ```
 
 As such, your notebook are all going to be in a different directory from your data.
-This is one way that keeps the mind sane: 
+This is one way that keeps the mind sane:
 you might have subdirectories in the `notebooks/` directory
 that you use to organize the notebooks further,
 yet you have multiple notebooks that use the same file,
@@ -85,7 +85,7 @@ that are commonly found in a project’s root directory.
 For example, `.git` is a common one.
 For Python packages, `setup.py` is another.
 
-If your project doesn’t “fit” any of the conventions assumed,
+If your project doesn’t "fit" any of the conventions assumed,
 or if you have a fancier structure,
 you can always add a `.here()` to your project root,
 and configure the `project_files` keyword argument

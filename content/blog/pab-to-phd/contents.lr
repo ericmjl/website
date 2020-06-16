@@ -21,15 +21,11 @@ Now, I have encountered in many books write,
 regarding the application of Bayes' rule to statistical modelling,
 something along the lines of the following:
 
-<blockquote class="blockquote">
-<p>
-Now, there is an alternative _interpretation_ of Bayes' rule,
-one that replaces the symbol "A" with "Hypothesis",
-and "B" with the "Data", such that we get:
-
-$$P(H|D) = \frac{P(D|H)P(H)}{P(D)}$$
-</p>
-</blockquote>
+> Now, there is an alternative _interpretation_ of Bayes' rule,
+> one that replaces the symbol "A" with "Hypothesis",
+> and "B" with the "Data", such that we get:
+> 
+> $$P(H|D) = \frac{P(D|H)P(H)}{P(D)}$$
 
 At first glance, nothing seems wrong about this statement,
 but I did remember having a lingering nagging feeling

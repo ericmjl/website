@@ -9,7 +9,7 @@ body:
 For scientists who are looking to take their Python code to the next level, options are abound. I’ve decided to put down in writing a short summary of what I’ve learned so far.
 
 Disclaimers:
-- the “best use cases” part comes from personal experience, not from referenced literature, and is by necessity going to be of limited scope.
+- the "best use cases" part comes from personal experience, not from referenced literature, and is by necessity going to be of limited scope.
 - your mileage… ahem, *speed increases* may vary. (yada yada yada)
 - **your algorithm complexity matters more than these tools below.**
 - learn how to profile your code, and then profile, profile, and profile before you optimize.
@@ -18,15 +18,15 @@ Now that the disclaimers are out of the way, here’s the shortlist, in no parti
 
 ------
 
-#### PyPy 
+#### PyPy
 
-Great if you have only pure Python code, have to deal with things in Python objects, and import other modules that are only pure Python. 
+Great if you have only pure Python code, have to deal with things in Python objects, and import other modules that are only pure Python.
 
 **My use cases:** Agent-based simulations, re-implementing random draws from a variety of distributions.
 
 **Upsides:** Speedups can be massive; in my hands anywhere between 8-100X. PyPy is a really simple drop-in replacement for the regular CPython that we’re all used to.
 
-**Downsides:** Have to download an alternate Python interpreter. I have yet to successfully use PyPy as my `jupyter` backend. Need to tweak environment variables to get `pip` to install packages/modules such that they’re accessible by `pypy`. 
+**Downsides:** Have to download an alternate Python interpreter. I have yet to successfully use PyPy as my `jupyter` backend. Need to tweak environment variables to get `pip` to install packages/modules such that they’re accessible by `pypy`.
 
 ------
 
@@ -38,7 +38,7 @@ Great if you’re writing things that are, by nature, arrays of stuff, with oper
 
 **Upsides:** `numpy` and `scipy` are well-supported, community-favoured, thoroughly tested and all-round great standard scientific computing libraries to use. Easily installable via `conda`!
 
-**Downsides:** Very few, except that Python overhead is incurred every time a function is called, so one has to get used to avoid calling same function over and over in a `for` loop. 
+**Downsides:** Very few, except that Python overhead is incurred every time a function is called, so one has to get used to avoid calling same function over and over in a `for` loop.
 
 ------
 
@@ -68,7 +68,7 @@ Only for the brave of heart! A simple way to continue writing Python-ish code th
 
 ### Bonus!
 
-How did I pick up each of these? It was some mixture of following online tutorials, trying to modify examples myself, reading Stack Overflow, and coding with another advanced person who was willing to teach me stuff. I found the last one to be the most effective of them all, as the back-and-forth is great for learning. 
+How did I pick up each of these? It was some mixture of following online tutorials, trying to modify examples myself, reading Stack Overflow, and coding with another advanced person who was willing to teach me stuff. I found the last one to be the most effective of them all, as the back-and-forth is great for learning.
 
 Hope this post helps you decide what to try next for speeding up your code!
 ---

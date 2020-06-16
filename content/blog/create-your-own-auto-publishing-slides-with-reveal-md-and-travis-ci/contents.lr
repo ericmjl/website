@@ -174,15 +174,15 @@ Notice also the `$GITHUB_TOKEN` environment variable: we need to declare that as
 
 ### Get a GitHub deploy token
 
-Under your repository settings, generate a deploy/“personal access” token. Exact docs are [here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line), so in the spirit of “don’t repeat yourself” and “learn to read the docs”, I will encourage you to read them.
+Under your repository settings, generate a deploy/"personal access" token. Exact docs are [here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line), so in the spirit of "don’t repeat yourself" and "learn to read the docs", I will encourage you to read them.
 
 Once you have generated a deploy key, copy them somewhere - you will need it later. (Tip: also make sure you don’t accidentally save it to disk!)
 
 ### Connect Travis CI to your repository
 
-On Travis CI, connect your Travis CI account to GitHub, and then enable Travis to look for changes on the `my-talk` repository. Generally, this is done by going to your user settings, and searching for “Legacy Services Integration”, then toggling the checkbox to enable it on your `my-talk` repository.
+On Travis CI, connect your Travis CI account to GitHub, and then enable Travis to look for changes on the `my-talk` repository. Generally, this is done by going to your user settings, and searching for "Legacy Services Integration", then toggling the checkbox to enable it on your `my-talk` repository.
 
-Once that is done, go into the Travis CI settings for the repository. Navigate to the “Environment Variables” section, and declare the `GITHUB_TOKEN` there. Be sure to keep it hidden from the output!
+Once that is done, go into the Travis CI settings for the repository. Navigate to the "Environment Variables" section, and declare the `GITHUB_TOKEN` there. Be sure to keep it hidden from the output!
 
 ### Turn on GitHub pages
 
@@ -212,13 +212,13 @@ In case the build fails, you can inspect the output. Any errors are basically yo
 
 ## Beyond this
 
-Going beyond serving up `reveal.js` slides, Travis hooked up to GitHub pages can help you build static sites very easily. 
+Going beyond serving up `reveal.js` slides, Travis hooked up to GitHub pages can help you build static sites very easily.
 
 If you use a static site generator (such as [Lektor](https://www.getlektor.com/), [Hugo](https://gohugo.io/), [Pelican](https://blog.getpelican.com/), [Gatsby](https://www.gatsbyjs.org/) or [Nikola](https://getnikola.com/)), then you can create websites whose sources are fully under your control, 100% customizable, and fast to load. I do not blog on Medium because I desire full control over the display of my blog content, and I want to be able to take it anywhere I desire, without relying on a platform that might lock my content in. My personal website uses Lektor + Travis to push to GitHub pages; please feel free to look at [the source](https://github.com/ericmjl/website) and raid the repo for anything you’d like!
 
 _Addendum: I learned today from a fellow friend Nathan Matias that Netflix’s blog posts on Medium have been paywalled. Another reason for us to take back hosting of slides and blog content into our own hands!_
 
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Today I learned the <a href="https://twitter.com/netflix?ref_src=twsrc%5Etfw">@netflix</a> tech blog posts are paywalled by Medium and I may have to take their post off my syllabus.<br><br>Now I wonder if they paywalled posts which I intend to be freely available. Have any of you found that Medium was unexpectedly charging people for your work?</p>&mdash; J. Nathan Matias (@natematias) <a href="https://twitter.com/natematias/status/1218244174299963392?ref_src=twsrc%5Etfw">January 17, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Today I learned the <a href="https://twitter.com/netflix?ref_src=twsrc%5Etfw">@netflix</a> tech blog posts are paywalled by Medium and I may have to take their post off my syllabus.<br><br>Now I wonder if they paywalled posts which I intend to be freely available. Have any of you found that Medium was unexpectedly charging people for your work?</p>&mdash; J. Nathan Matias (@natematias) <a href="https://twitter.com/natematias/status/1218244174299963392?ref_src=twsrc%5Etfw">January 17, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 ---
 pub_date: 2020-01-18

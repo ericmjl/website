@@ -6,10 +6,9 @@ body:
 
 When I was in [Science One](https://scienceone.ubc.ca/) at UBC in 2006, our Physics professor, [Mark Halpern](https://www.phas.ubc.ca/users/mark-halpern), said a quotable statement that has stuck for many years.
 
-<blockquote class="blockquote">
-<p> Order of magnitude is more than accurate enough.</p>
-<p class="blockquote-footer">Mark Halpern</p>
-</blockquote>
+> Order of magnitude is more than accurate enough.
+>
+_Mark Halpern_
 
 At the time, that statement rocked the class, myself included. We were classically taught that significant digits are significant, and that we have to keep track of them. But Mark’s quote seemed to throw all of that caution and precision in Physics into the wind. Did what we learn in Physics lab class not matter?
 
@@ -19,16 +18,15 @@ Regardless, I took it upon myself to carry significant digits in our calculation
 
 We reached the same conclusion.
 
-More precisely, I remember obtaining a result along the lines of $6.2 \cdot 10^3$ days, while Charles obtained $10^4$ days. On an order of magnitude, more or less equivalent. 
+More precisely, I remember obtaining a result along the lines of $6.2 \cdot 10^3$ days, while Charles obtained $10^4$ days. On an order of magnitude, more or less equivalent.
 
 In retrospect, I shouldn’t have been so surprised. Mark is an astrophysicist, and at that scale, 1 or 2 significant digits might not carry the most importance; rather, getting into the right ballpark might be more important. At the same time, the recitation activity was a powerful first-hand experience of that last point: getting into the right ballpark first.
 
 At the same time, I was also missing a second perspective, which then explains my surprise at Mark’s quote. Now that I’ve gone the route of more statistics-oriented work, I see a similar theme showing up. John Tukey said something along these lines:
 
-<blockquote class="blockquote">
-<p>Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.</p>
-<p class="blockquote-footer">John Tukey</p>
-</blockquote>
+> Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.
+>
+> John Tukey
 
 The connection to order of magnitude estimates should be quite clear here. If we’re on an order of magnitude correct on the right questions, we can always refine the answer further. If we’re precisely answering the wrong question, God help us.
 
@@ -36,10 +34,9 @@ What does this mean for a data scientist? For one, it means that means approxima
 
 So yes, to mash those two quotes together:
 
-<blockquote class="blockquote">
-<p>Order of magnitude estimates on the right question are more useful than precise quantifications on the wrong question. </p>
-<p class="blockquote-footer">Mashup</p>
-</blockquote>
+>Order of magnitude estimates on the right question are more useful than precise quantifications on the wrong question.
+>
+> Mashup
 ---
 pub_date: 2019-07-07
 ---

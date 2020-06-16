@@ -17,7 +17,7 @@ I use networks as part of my research, and visualization is a very important par
 
 Thankfully, if we put some thought into visualizing networks rationally, we can get aesthetic, beautiful and simultaneously informative network visualizations that are much more appealing than hairballs. My time at [SciPy 2016](http://scipy2016.scipy.org), hearing the keynote by [Brian Granger](http://www.physics.calpoly.edu/faculty/bgranger) about [Altair](https://github.com/ellisonbg/altair), and talking with [Aric Hagberg](http://aric.hagberg.org), has given me a ton of inspiration on how rational network visualizations can be done right.
 
-What does it mean to be drawn “rationally”? I think it means following the principles of good data visualization - in which size, shape, location, colour and transparency are all used to convey meaning. As applied to network visualizations, the key is in placing and styling the nodes in some “rational” or “logical” fashion:
+What does it mean to be drawn "rationally"? I think it means following the principles of good data visualization - in which size, shape, location, colour and transparency are all used to convey meaning. As applied to network visualizations, the key is in placing and styling the nodes in some "rational" or "logical" fashion:
 
 1. Spatial location (i.e. `(x, y)` coordinates) follows some regular organization (e.g. in a shape, or along lines), based on grouping or ordering.
 2. Node colour follows some grouping, or ordering, or scaling. (Note - it is in that order - colour doesn’t work well for scale.)
@@ -34,7 +34,7 @@ Finally, it may be better to show panels of subsets of the graph, rather than th
 
 Hive Plots and Circos Plots are two examples of network visualizations done well, for they conform to these principles. They will both be available in the [`nxviz`](https://github.com/ericmjl/nxviz) package that I will be co-developing, and I hope to use `nxviz` to highlight these details. I think there are other creative layouts as well, such as Arc Plots and Parallel Line Plots that can help us gain a more rational view of the structure of our network data.
 
-From an API design perspective, the “grammar”-based API that specifies how things are coloured makes a ton of sense. For example, a HivePlot API may look as such:
+From an API design perspective, the "grammar"-based API that specifies how things are coloured makes a ton of sense. For example, a HivePlot API may look as such:
 
 ```python
 h = HivePlot(nodes, edges, node_groupby=groupby_key, node_colorby=colorby_key, edge_colorby=colorby_key)

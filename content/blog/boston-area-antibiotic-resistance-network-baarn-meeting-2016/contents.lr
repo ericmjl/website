@@ -4,17 +4,17 @@ author: Eric J. Ma
 ---
 body:
 
-Yesterday I attended a very fruitful [BAARN 2016 meeting](https://www.eventbrite.com/e/baarn-2016-boston-area-antibiotic-resistance-network-tickets-22500283955). This was the fourth annual meeting, and the range of topics spanned the scientific (new technologies for treating and diagnosing) to economic (incentives for development of new antibiotics and diagnostic technologies) to medical (outlining the real unmet needs that doctors are facing). I learned a ton; the $100 registration fee was definitely worthwhile. 
+Yesterday I attended a very fruitful [BAARN 2016 meeting](https://www.eventbrite.com/e/baarn-2016-boston-area-antibiotic-resistance-network-tickets-22500283955). This was the fourth annual meeting, and the range of topics spanned the scientific (new technologies for treating and diagnosing) to economic (incentives for development of new antibiotics and diagnostic technologies) to medical (outlining the real unmet needs that doctors are facing). I learned a ton; the $100 registration fee was definitely worthwhile.
 
 There were three things I took note of that I think could be translated over from the bacterial surveillance world to the viral surveillance world.
 
 **(1) Genomic and Phenotypic Surveillance**
 
-This one was a big take-home for me, given the research direction I’m hoping to pursue after grad school. 
+This one was a big take-home for me, given the research direction I’m hoping to pursue after grad school.
 
-Genomic surveillance is the use of genome sequence to determine the evolutionary history and potential risk of a pathogen. In the bacterial world, genomic surveillance efforts are mostly concentrated on finding known antibiotic resistance genes. 
+Genomic surveillance is the use of genome sequence to determine the evolutionary history and potential risk of a pathogen. In the bacterial world, genomic surveillance efforts are mostly concentrated on finding known antibiotic resistance genes.
 
-Phenotypic surveillance involves actually experimentally testing a pathogen for some phenotype. In the bacterial world, this means testing a cultured isolate against a panel of drugs. 
+Phenotypic surveillance involves actually experimentally testing a pathogen for some phenotype. In the bacterial world, this means testing a cultured isolate against a panel of drugs.
 
 In my mind, these two are inseparable. Genomic surveillance will always be cheaper and faster to carry out, given the advances in portable sequencers; phenotypic surveillance is going to be rate-limited by biochemistry. On the other hand, only systematic phenotypic measurements can give us the necessary data to link genome sequence to phenotype. In my view, the function that connects genome/protein sequence to phenotype is complex enough that for pure surveillance (not scientific) purposes, machine learning models are probably the best tools to use. With tools like [TPOT](http://www.randalolson.com/2016/05/08/tpot-a-python-tool-for-automating-data-science/), it should be trivial to automate the selection of best predictive features and models. The tough part, then, is generating a gold-standard, epidemiologically relevant dataset.
 
@@ -28,20 +28,20 @@ One alternative incentive system that was brought up is best described with an a
 
 [Dr. Angela Caliendo](https://vivo.brown.edu/display/ac184) (Brown University) brought up some really, really useful points during her talk, which I took note of in my [bullet-point notes](/blog/2016/6/16/baarn-2016-bullet-point-notes/). Rapid detection was the point that stuck the most.
 
-“Rapid” is a nebulous concept, so Angela’s talk helped bring some clarity here. For the physician (and by my own extension, front-line epidemiologist), the major unmet medical needs for countering infectious disease outbreaks are:
+"Rapid" is a nebulous concept, so Angela’s talk helped bring some clarity here. For the physician (and by my own extension, front-line epidemiologist), the major unmet medical needs for countering infectious disease outbreaks are:
 
 1. Distinguishing bacterial from viral infection.
 2. Identifying bacterial pathogen.
 3. Identifying viral pathogen
 4. Measuring susceptibility of pathogen.
 
-In each case, “rapid” means different things. To distinguish bacterial from viral infection, and to be most useful in guiding physician decision-making, “rapid” means within minutes, at the bedside, doable by a non-laboratory trained person. For viral detection, it has to likewise be within 15-20 minutes to be “rapid”. For bacterial detection, an hour or less is best, and for susceptibility testing, less than 6 hours is optimal. 
+In each case, "rapid" means different things. To distinguish bacterial from viral infection, and to be most useful in guiding physician decision-making, "rapid" means within minutes, at the bedside, doable by a non-laboratory trained person. For viral detection, it has to likewise be within 15-20 minutes to be "rapid". For bacterial detection, an hour or less is best, and for susceptibility testing, less than 6 hours is optimal.
 
-Knowing these points really helps set the engineering constraints properly. Basically, any useful assay has to work within minutes, be operable by a non-laboratory trained person, and accept blood/swabs as input. Solid phase (bio)chemistry is going to be really important. 
+Knowing these points really helps set the engineering constraints properly. Basically, any useful assay has to work within minutes, be operable by a non-laboratory trained person, and accept blood/swabs as input. Solid phase (bio)chemistry is going to be really important.
 
 **Synthesis/Thoughts**
 
-My current projects are geared towards tying viral genotype to phenotype, with the goal of predicting a virus’ pathogenic risk profile from its sequence. Because sequence data is the input, and not blood/swab samples, I won’t be playing in the rapid detection space. However, I think the tools I hope to develop will play well in the susceptibility prediction/determination space. 
+My current projects are geared towards tying viral genotype to phenotype, with the goal of predicting a virus’ pathogenic risk profile from its sequence. Because sequence data is the input, and not blood/swab samples, I won’t be playing in the rapid detection space. However, I think the tools I hope to develop will play well in the susceptibility prediction/determination space.
 
 With the MinION sequencer, the sequence of a virus can be determined within one day of isolation. Now, the sequencer’s [60-85% accuracy](https://www.engadget.com/2014/09/18/minion-usb-dna-sequencer-beta-test/) (this number comes from a 2014 popular news report, and [a recent 2015 paper](http://www.nature.com/nbt/journal/v33/n3/full/nbt.3103.html) supports this number) isn’t up to the point where single point mutations can be identified accurately, so I think it’s best used for viral species/subtype identification (e.g. in the case of influenza). When the accuracy moves below 1 error in 10,000 base calls (and I’m confident it will given the efforts of scientists and engineers to make this happen), that’s when I think that the susceptibility prediction tools I’m trying to develop will come in handy; common viral genomes sizes are on the order of thousands of bases. The key (and hard part) here is investing in *good measurement data* on which models can be trained that map sequence to phenotype.
 ---
