@@ -1,0 +1,74 @@
+title: Statistical tests are just canned model comparisons
+---
+author: Eric J. Ma
+---
+body:
+
+I reached another statistics epiphany today.
+
+Statistical tests? They are nothing more than a comparison between statistical models
+that has been made canned.
+
+What do I mean?
+
+Let's say we have data for Korean men from both the North and the South.
+We could write a generative model for men's height that looks something like the following:
+
+$$
+h_{north} \sim N(\mu_{north}, \sigma{north})
+
+h_{south} \sim N(\mu_{south}, \sigma{south})
+$$
+
+In effect, we have one data generating model per country.
+
+Think back to how you might analyze Korean male height data using canned statistical procedures.
+You might choose the t-test.
+In performing the t-test, we make some assumptions:
+
+- The two populations have equal variance, and
+- We are only interested in comparing the means.
+
+Yes, there are variations on the t-test, such as t-test with unequal variance and the likes,
+but I wonder how many of us would _really_ think deep about the assumptions underlying the procedure
+when faced with data and a "canned protocol"?
+Instead, we'd simply ask, "is there a difference in the means?"
+And then calculate some convoluted p-value.
+
+How could we go beyond canned procedures and tell if the two populations have a difference?
+Well, we could compare their means, but we could also add another comparison of the variance too.
+All of this comes very naturally from thinking about the data generating story.
+Let's see this in action.
+
+In performing Bayesian inference, we would obtain posterior distributions
+for both the $\mu$ and $\sigma$ parameters of both models.
+We could then compare the $\mu$ and the $\sigma$ parameters,
+and they would both be informative.
+
+For example, if $\mu$s turned out to be different and their posteriors do not overlap,
+we would claim that the two populations differ in their average height,
+and explain it as being due to the nutritional difference arising from economic mismanagement.
+
+On the other hand, if the $\sigma$ turned out to be different and their posterios didn't overlap,
+we would claim that the two populations differ in their _variation in height_.
+How would we explain this?
+For example, if the distribution of North Korean heights was tighter
+giving rise to a smaller $\sigma$ value,
+we might explain this as being due to rationing and genetic homogeneity.
+
+In both comparisons, by thinking more precisely about the data generating process,
+we had access to a broader set of hypotheses.
+If we had defaulted to the t-test as a "canned statistical procedure",
+and not thought carefully about setting up a data generating model,
+we would be missing out on a rich world of inquiry into our data.
+
+---
+pub_date: 2020-06-28
+---
+tags:
+
+data science
+bayesian statistics
+hypothesis testing
+---
+twitter_handle: ericmjl
