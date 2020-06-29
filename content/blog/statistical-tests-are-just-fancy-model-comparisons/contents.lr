@@ -14,11 +14,11 @@ What do I mean?
 Let's say we have data for Korean men from both the North and the South.
 We could write a generative model for men's height that looks something like the following:
 
-$$
-h_{north} \sim N(\mu_{north}, \sigma{north})
+$$h^n \sim N(\mu^{n}, \sigma^{n})$$
 
-h_{south} \sim N(\mu_{south}, \sigma{south})
-$$
+$$h^s \sim N(\mu^{s}, \sigma^{s})$$
+
+(The superscripts don't refer to powers, but "north" and "south"; I was just having difficulty getting Markdown + LaTeX subscripts parsed correctly.)
 
 In effect, we have one data generating model per country.
 
