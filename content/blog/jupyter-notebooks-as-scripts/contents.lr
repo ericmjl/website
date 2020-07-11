@@ -1,0 +1,136 @@
+title: Jupyter notebooks as scripts
+---
+author: Eric J. Ma
+---
+body:
+
+If you're one of the types of programmers
+for whom a notebook interface helps with prototyping and scripting,
+it is possibly handy to treat notebooks as a script
+and execute them programmatically.
+There's multiple ways to do accomplish this.
+
+## `nbconvert` to Python script
+
+One way is to use `nbconvert` to convert your script
+into a Python script on the fly,
+and then execute the Python script itself:
+
+```bash
+jupyter nbconvert --to python my_notebook.ipynb
+python my_notebook.py
+```
+
+## Direct programmatic execution of a Jupyter notebook
+
+This other way also uses `nbconvert`,
+but slightly differently in that
+we take advantage of `nbconvert`'s execution capabilities:
+
+```bash
+jupyter nbconvert --to notebook --execute my_notebook.ipynb
+```
+
+By default, there is a timeout of 30 seconds,
+so if you need to specify a longer timeout than the default,
+you can do so:
+
+```bash
+jupyter nbconvert --ExecutePreprocessor.timeout=1200 --to notebook --execute mynotebook.ipynb
+```
+
+`1200` is in seconds, so that will give you a 20 minute execution timeout.
+With that said, you should ideally be ensuring that
+anything programmatically executed should execute quickly.
+
+## Use `papermill`
+
+Papermill takes the notebook execution paradigm one level up,
+in that it allows you parameterize your notebooks.
+I haven't used it myself, so I won't provide a code sample,
+but I'll [link it here nonetheless](https://papermill.readthedocs.io/en/latest/).
+
+## How do I choose?
+
+There's really not much of a difference between the first two methods, so I'd encourage you to test-drive both and see which one you're more comfortable with.
+
+Personally, I would choose the first option.
+Even though it "feels" a bit more roundabout,
+it helps me because I don't have to remember
+the `ExecutePreprocessor` syntax
+(which can feel a bit clunky typing at the command line).
+That said, if you wrap everything inside a nice `Makefile`,
+this minor practical difference goes away.
+
+As for `papermill`,
+I see its utility for teams who don't necessarily yet have the software chops
+to make well-structured Python packages and scripts.
+It's a good hack _en route_ to good practices,
+but at the end of the day,
+I'd choose "principled workflow over hacks" whenever practically possible.
+In the long-run, it makes a ton of sense for data science teams
+to equip themselves with software skills!
+
+## Do you have an example?
+
+Yes, indeed!
+For the [Network Analysis Made Simple](https://github.com/ericmjl/Network-Analysis-Made-Simple)
+tutorial series that my co-author Mridul and I teach,
+I recently spent a bit of time figuring out
+how to convert our collection of Jupyter notebooks and markdown files,
+which get rendered in our [official tutorial website](https://ericmjl.github.io/Network-Analysis-Made-Simple)
+as a [`mkdocs`](https://www.mkdocs.org) site
+with a beautiful and functional [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) theme,
+into leanpub-flavoured markdown
+that we then [publish as a book for offline viewing](https://leanpub.com/nams).
+In doing so, we could preserve a single source of truth for the content,
+and automatically publish to two locations simultaneously.
+
+I needed the interactivity of a Jupyter notebook
+to prototype what I wanted to get done.
+I also wanted to use the notebook as the "gold standard" source of truth,
+rather than a Python script,
+as this would facilitate modifying and debugging later
+(i.e. I could execute up to a certain point and go deep).
+Thus, in the Travis CI script,
+we first convert the notebook to a Python script,
+then execute it,
+and also build the website:
+
+```yaml
+script:
+  # Build LeanPub files
+  - jupyter nbconvert --to python scripts/bookbuilder/markua.ipynb
+  - python scripts/bookbuilder/markua.py
+
+  # Build official website
+  - mkdocs build
+```
+
+Finally, we get Travis to publish everything to the `leanpub` branch,
+which we never edit.
+
+```yaml
+  # Publish the LeanPub files
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+    keep_history: false
+    on:
+      branch: master
+    target_branch: leanpub
+```
+
+---
+pub_date: 2020-07-11
+---
+summary: I like writing in notebooks, for the ability to quickly prototype. But can we treat Jupyter notebooks as scripts that we can execute? The answer is yes, and in this blog post, I'll show you a few of the simplest ways to do so.
+---
+tags:
+
+jupyter
+jupyter notebook
+notebook
+data science
+---
+twitter_handle: ericmjl
