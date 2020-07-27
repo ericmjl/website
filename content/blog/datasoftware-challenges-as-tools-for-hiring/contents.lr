@@ -1,0 +1,247 @@
+title: Data/Software Challenges as Tools for Hiring
+---
+author: Eric J. Ma
+---
+body:
+
+Some teams/hiring managers love them, and some candidates really detest them.
+Having been on both sides of the hiring equation, I can definitely see both perspectives.
+I wanted to write down some thoughts after using data/software challenges
+to help with the hiring of three interns at work.
+
+## What are data/software challenges?
+
+Data/software challenges are take-home interview assignments
+that are given a specific time frame to be completed. 
+
+In the case of the three interns that I helped with hiring,
+two were for data science roles, and one was for a software engineering role.
+In all three cases, we gave them a one week time frame to complete the assigned challenge.
+
+For the software challenge, the candidates were asked to build the core
+of a piece of typical software that we would build in our department,
+according to a pre-defined spec,
+i.e. pretty much in-line with how we operate, just on a mini scale.
+For the data challenge, the candidates were given a list of four data sets,
+and told to come up with a research question and produce an analysis
+that were delivered in the form of a Jupyter notebook.
+
+After the data and software challenges were turned in, we would review them,
+and invite the subset of them that "passed" the bar to deliver a presentation "on-site".
+(With COVID-19, "on-site" has dramatically changed, of course.)
+The candidate had to deliver a seminar presentation on their challenge
+to myself and other colleagues involved in hiring.
+
+The challenges were designed in such a way that a competent and well-equipped individual
+could complete the task in about 2-3 afternoons of work.
+We put in some thought to designing the challenges such that
+they could not be trivially solved by looking up StackOverflow answers alone.
+(Use of SO was encouraged, though, as long as they documented which SO post they referenced
+for the non-trivial pieces of the project.)
+
+## What were you looking for?
+
+I can speak more for the data challenge, as I designed it.
+
+To start, my data challenge borrowed ideas
+from the legend of [Van Halen’s Brown M&Ms](https://www.snopes.com/fact-check/brown-out/) contract clauses:
+they contained some pretty exact requirements that seemed trivial,
+but if ignored, I would fail the candidate and not bother with their candidacy going forward.
+Being detail-oriented is a pre-requisite for doing data science work,
+and if the candidate did not follow instructions precisely,
+even after I factored in language ambiguities and barriers as confounding factors,
+I knew I would have problems working with them.
+In the interest of being able to reuse and evolve the data challenges,
+I’m clearly not going to reveal what those requirements are here,
+but the principle stands, nonetheless!
+
+Apart from that, I was looking for a candidate’s ability
+to write “good” code (refactored and documented at least),
+take care to make sure their notebooks are “readable”,
+and be able to “defend” in their prose their choice of problem
+_and_ the individual choices made in their analyses.
+As a bonus, I was also on the lookout for “modern” tooling.
+Having one or two grammatical or spelling warts was fine;
+we all make these mistakes once in a while,
+but if the grammatical issues interfered substantially with readability,
+then that was cause for concern.
+
+## What qualities in a candidate were you trying to infer from the aforementioned things you were looking out for?
+
+Primarily, this list:
+
+- Meticulousness
+- Empathy
+- Logical rigor
+- Creativity
+
+Meticulousness is most evident from their ability to pass the “Van Halen details” test.
+
+Creativity would show in their problem choice and choice of methods.
+
+Logical rigor would show up in how they defended their choices.
+
+Empathy shows up in the way they communicate, both written and oral.
+
+I am confident that these are non-controversial qualities to desire in colleagues.
+
+This next statement will possibly be controversial, but I hold it to be true:
+taken _holistically_, one can tell from _a presented pattern of good/bad behaviours_
+whether a candidate can hit the quality bar for the points listed above.
+This is controversial because the desire for objective fairness in hiring
+means subjectively perceived patterns can be unfair.
+However, if there is sufficiently diverse perspectives
+agreeing on the same set of observed patterns presented,
+this cannot be ignored, regardless of whether the patterns present as positive or negative.
+
+## Weren’t the expectations a bit high for interns?
+
+Possibly, though I did set a high bar
+because I expect the interns I work with to deliver high quality work.
+I’m ready to teach them things they don’t know,
+but a baseline level of skill level and quality is necessary.
+In order to ensure that my expectations were not set unreasonably high,
+I calibrated them against colleagues’ opinions;
+in particular, I asked them specifically
+whether I’d be asking too much of the candidate at their level.
+
+## Were the data challenges effective?
+
+Subjectively, I would claim yes,
+but because I ended up working with these interns, I might clearly be biased.
+
+If my subjective experience is informative for anything,
+once I saw the data challenge notebooks for the interns I interviewed,
+I immediately knew whether I could work with them or not.
+In particular, I could get a pretty strong idea of their ability to write code well,
+which I prize very highly,
+as it is a strong indicator of being able 
+to impose sane structure on an otherwise free form problem.
+Also, their ability to communicate clearly in prose 
+(which has become important in a remote world)
+can shine through a well-done Jupyter notebook.
+
+In one case, the intern we hired was the only plausible candidate available;
+the other candidate didn’t do the challenge. 
+
+In another case, I had the chance to evaluate three data challenges.
+One candidate failed the Van Halen test.
+The other two passed the data challenge with flying colours,
+and after interacting with them in person,
+I submitted my preference for the one who was able
+to defend their modelling choices in the live presentation.
+It was with that candidate too that I was able to go deep into technical points.
+
+In all cases, I made sure to take the time
+to provide feedback to the candidates that we interviewed on-site.
+I remember _not_ receiving concrete feedback post on-sites and being left frustrated,
+so I wanted to make sure this frustration was not passed on to them.
+My feedback was given right after I read the data challenge, i.e. before they came onsite,
+as I didn't want it to fall off the radar.
+
+## Would you use this for hiring regular colleagues?
+
+Possibly, though not always.
+
+I floated the idea with my home team, but I did receive a legitimate concern:
+issuing a data challenge would be biased against those with families to take care of.
+After all, doing a data challenge does take time.
+So unless "not having a family to take care for" is part of the job description,
+I would be wary of making a data challenge an _absolute requirement_.
+
+In the data scientist roles at NIBR, I’ve noticed that for whatever reason,
+we’ve prized prior scientific track record highly.
+That means either publication record or prior work experience.
+A PhD usually gives a candidate both simultaneously,
+so most of our data scientists are trained scientists who have finished doctoral training.
+(A small but excellent cadre of them are MSc scholars
+but have a significant track record too, e.g. in publications.)
+
+The data challenge helps level the playing field a bit for MSc scholars, in my opinion.
+Without a track record to demonstrate creativity and logical rigor,
+the data challenge gives an outlet for that to happen.
+As such, for a regular colleague, I see it as being fair
+to offer the option to either present prior research work
+or to tackle the data challenge,
+without compulsion to do one or the other.
+Both should reveal the qualities that we’re looking for,
+and candidates that don’t have a prior track record can use the data challenge to shine.
+
+## How should a hiring team approach using a data challenge?
+
+The most important is to know what you’re looking for from the data challenge.
+It’s also helpful, I think, to spell the qualities expected to be demonstrated
+inside the text of the data challenge,
+to help set expectations on the candidates’ side.
+Doing so is also a matter of being thoughtful and intentional with the hiring process.
+If you don’t know who you’re looking for, how are you going to find that person?
+
+Keep in mind that there are other ways to fish out the qualities you're looking for.
+An online portfolio that has been professionally curated,
+whether on a personal website or on GitHub or LinkedIn, for example.
+Hiring teams can look at the composition and rougly "grok"
+whether the candidate is competent, has the ability to write good code,
+has the ability to communicate (e.g. via teaching), and more.
+A data challenge should only be one component of the overall hiring process.
+
+For a data scientist, I sense that "basic good software skills" are increasingly going to be important.
+That said, a data challenge is _not_ the only way to assess a candidate's regular coding skill.
+Live coding challenges, which are done under artificial, pressure-cooked situations,
+are definitely not a good indicator.
+If there is code associated with a scientific publication,
+that is another way of assessing their software skills.
+Open source software development is another way of assessing this aspect.
+Finally, original code snippets embedded in publicly-delivered talks and/or blog posts
+are also an alternative way of getting a glimpse at a candidate's programming skills,
+though I find that the signal-to-nosie ratio there might be a bit lower.
+
+I would advise against data/software challenges being a screening tool pre-phone screen.
+A data/software challenge is too much work to ask for up-front,
+and in my opinion a bit cruel if used to figure out whether to talk with someone.
+Adhering to the Golden Rule, I’d prefer to deal with a human before having to deal with a system,
+not the other way around.
+
+## How should a candidate approach a data challenge?
+
+The most important thing is to view it as another opportunity to shine,
+and not another hurdle to cross.
+This subtle switch in attitude is what can make a difference
+in whether your best side shows through in the challenge or not.
+The skills on which you can shine might include:
+
+- Programming skills
+- Communication ability
+- Visualization taste
+
+Be careful to see if there are Van Halen tests inside the data challenge.
+If there are, you may be unnecessarily disqualifying yourself.
+
+Apart from that, if you do not see the qualities that a team is looking for,
+then that’s actually a red flag - it means they haven’t given enough thought into who they’re looking for.
+This could be an indicator of whether the entire data science team is being thoughtfully built out or not.
+
+## Conclusions
+
+I hope this article is informative!
+It’s been on my mind to write down these lessons learned,
+and finally I found a chunk of time to do so.
+In the right hands, and paired with the right processes,
+data challenges can be an extremely revealing way
+of identifying whether an individual is someone you can work with.
+It shouldn't be the _only_ or _primary_ tool relied on.
+When hiring, I we should be on the lookout for people
+with whom we holistically can work with
+and who also complement the local environment of the team.
+An ecosystem of hiring tools are needed.
+---
+pub_date: 2020-07-26
+---
+summary: In this post, I detail some of my thoughts about the use of "data challenges" for hiring data scientists. Though I have only used it in hiring data science interns, I think some of the lessons I've learned from test-driving the process can apply more generally.
+---
+tags:
+
+data science
+hiring
+data challenge
+---
+twitter_handle: ericmjl
