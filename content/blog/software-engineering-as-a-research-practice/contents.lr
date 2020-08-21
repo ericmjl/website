@@ -1,0 +1,456 @@
+title: Software Engineering as a Research Practice
+---
+author: Eric J. Ma
+---
+body:
+
+At this year's SciPy 2020,
+a talk and proceedings paper caught my eye:
+"Software Engineering as Research Method".
+(Here are links to [the paper](http://procbuild.scipy.org/download/sbenthall-2020_econ_ark) and [the talk](https://youtu.be/nxXr0LNdQUU).)
+In it, the authors, Mridul Seth and Sebastian Benthall,
+detailed the benefits that software skills bring
+to the academic and industrial research communities,
+both from the perspective of making scientific progress
+and from the perspective of pedagogy.
+
+I've been doing some reflection of my own
+on how software skills have helped me tremendously,
+as a data scientist.
+Here's my thoughts on them,
+using the example of random number generators
+and probability distributions.
+
+## Generating Random Numbers
+
+In building scientific software,
+we are recognizing pragmatically useful categories around us,
+and formalizing them in a language.
+Let's look at a really simple example of drawing `1`s and `0`s
+from a Bernoulli distribution.
+
+### Oppa _Imperative_ Style
+
+If we were to write a Bernoulli draws generator in Python code,
+we might implement it as follows:
+
+```python
+from random import random
+
+p = 0.5
+draws = []
+for i in range(num_draws):
+    draws.append(int(random() > p))
+```
+
+This is purely imperative style programming.
+Without going too deep (pun intended) into definitions,
+by using mostly built-in primitives of the Python language,
+we are operating at a fairly low-level paradigm.
+
+Now, let's imagine a world where
+the Bernoulli distribution object does not exist.
+I have a collaborator
+who wants to build on top of Bernoulli distributions
+to make other things.
+They would have to copy/paste this _imperative_ block of code 
+into their programs.
+
+### Oppa _Functional_ Style
+
+What can we do to alleviate this, then?
+
+One thing we can try is to encapsulate it in a function!
+The implementation might look like this:
+
+```python
+from random import random
+
+def bernoulli(num_draws, p):
+    draws = []
+    for i in range(num_draws):
+        draws.append(int(random() > p))
+    return p
+```
+
+But wait, what are the semantics of `p`?
+Is it the probability of obtaining class 1, or class 0?
+The behaviour isn't documented in the class,
+so let's add some of it in.
+
+```python
+from random import random
+
+def bernoulli(num_draws: int, p: float) -> List[int]:
+    """
+    Return a sequence of Bernoulli draws.
+
+    :param p: The probability of obtaining class 0.
+    :num_draws: The number of Bernoulli draws to make.
+        Should be greater than zero.
+    :returns: A list of 1s and 0s.
+    """
+    draws = []
+    for i in range(num_draws):
+        draws.append(int(random() > p))
+    return draws
+```
+
+Now, we can do a few things with this implementation.
+Firstly, we can write a test for it.
+For example, we can assert that numbers drawn from the Bernoulli
+are within the correct support:
+
+```python
+def test_bernoulli():
+    draws = bernoulli(10, 0.3)
+    assert set(draws).issubset([1, 0])
+```
+
+Secondly, we can compose it in bigger programs, such as a Binomial generator:
+
+```python
+def binomial(num_draws: int, n: int, p: float) -> List[int]:
+    draws = []
+    for i in range(num_draws):
+        num_ones = n - sum(bernoulli(n, p))
+        draws.append(num_ones)
+    return draws
+```
+
+Please excuse my lack of docstrings for a moment!
+
+### Oppa _Classy_ Style
+
+This is all good and such,
+but there is another thing we need to consider.
+A random number generator exists logically
+as a sub-category of things
+that a probability distribution can do.
+There are other things that we do
+with probability distributions,
+such as evaluating data
+against a probability distribution's density/mass function.
+After all, generating numbers isn't necessarily
+the only action we want to take
+with a probability distribution.
+
+The probability density function is unique property
+of a probability distribution;
+it's also an invariant property.
+As such, it is something we can instantiate once
+and forget about later.
+Perhaps using an object-oriented paradigm might be good here.
+Let's see this in action:
+
+```python
+class Bernoulli:
+    def __init__(self, p):
+        self.p = p
+
+    def pdf(self, data: int):
+        if data not in [0, 1]:
+            raise ValueErrror("`data` must be either 0 or 1!")
+        if data == 0:
+            return p
+        return 1 - p
+
+    def rvs(self, n: int):
+        draws = []
+        for i in range(num_draws):
+            draws.append(int(random() > p))
+        return draws
+```
+
+Now, with this object,
+we've made using the category of Bernoulli distributions
+much easier!
+
+```python
+b = Bernoulli(0.5)
+
+draws = b.rvs(10)  # draw 10 numbers
+
+pdfs = [b.pdf(d) for d in draws]  # calculate pdf of data
+```
+
+An object-oriented paradigm here also works well,
+because the way `.rvs()` and `.pdf()` have to be implemented
+for each probability distribution is different,
+but the inputs to those functions are similar
+across the entire category of things  
+called "probability distributions".
+
+### A reflection
+
+I want to first state up-front
+that this essay is not one
+championing object-oriented programming.
+Those who know me actually know that
+I much prefer functional programming.
+Rather, this essay is about how leveraging
+the natural programming paradigms
+and data structures
+for a problem or model class
+gives us a way to mastering that problem
+or model class.
+After all, building _useful_
+and _verifiable_
+models of the world
+is a core activity of the quantitative sciences.
+
+By exploring and structuring probability distributions in a logical fashion,
+my pedagogical exploration of probability distributions as a modelling tool
+is reinforced with the following main ideas:
+
+1. Probability distributions generate random numbers according to a set of rules,
+2. Probability distributions can evaluate data against its PDF
+
+And by structuring a probability distribution
+as an object with class methods,
+our mental model of the world of probability distributions
+is made much clearer.
+
+## "Research discipline", you say?
+
+Yes, research discipline, and in both ways.
+Here’s what I mean.
+
+Discipline (_a la_ "rigour") in thought means thinking _clearly_
+about how the thing we are working with
+fits _most naturally_ in relation to other things.
+Nudging ourselves to make better software
+makes us better thinkers about a problem class.
+Bringing this level of discipline gives us
+an opportunity to organize
+the little subject matter discipline that we inhabit.
+
+As a discipline (i.e. "way of thought"),
+well-written software also enables us to build
+on top of others' thoughtfully laid out tooling.
+As such we are 
+
+### Stability in underlying “primitives” matter
+
+Contrary to a generation of us that might think
+that "choice in everything is the ultimate",
+a stable base is what a field _really_ needs
+in order for a discipline to flourish and build on top.
+That means agreed-upon foundational definitions,
+that have stood up to the test of time.
+The base being well-tested means we can rely on it;
+having longevity is also
+a very good prior for innate invariance over time.
+
+If we did not all agree on using shared primitives
+from the language,
+we would never have been able to build on top
+of the shared primitives
+to define a probability distribution the way we did.
+And without defining a probability distribution
+in a uniform but useful way,
+we leave no easy path to build on top of that
+to make other things,
+such as probabilistic programming languages!
+
+As such, shared stability in the base
+gives us confidence to build on top of it.
+
+### Building and reinforcing mental models
+
+In the SciPy talk, and in the proceedings paper,
+Sebastian and Mridul make the point
+that building software enables "constructionist" learning,
+i.e. a learner learns when playing with software.
+I think it is plausible to extend the idea,
+in that a learner can learn well when _building_ software.
+
+The act of organizing the world around us
+into categories with properties and relationships
+is made _concrete_ when we build software.
+By organizing the conceptual world
+into layers of abstractions and sequences of actions,
+we bring a clarity of thought to the flow of work.
+I would argue that this can _only help_
+with the construction of
+a consistent and productive view of a field.
+
+### Incidental benefits
+
+In addition to these conceptual benefits,
+learning how to structure a codebase logically
+and write software tests for your code
+helps with reproducibility.
+Through tests, our code is known to run correctly,
+and hence can be depended upon as stable.
+If structured logically, they can be creatively composed
+to fit a variety of workflows that may show up,
+which can be reliably automated as well.
+
+## Application of software skills: A case study
+
+Some of the work I engage in at NIBR
+involves fairly non-standard models.
+These are the models for which
+a `scikit-learn`-like API
+might not necessarily be available,
+and for which I myself might not necessarily have
+prior training in to rely on.
+As such, there is a process
+of "learning on the job"
+each time I encounter a new model class.
+Over the past two years, for me, that has been recurrent models,
+such as recurrent neural networks (RNNs)
+and autoregressive hidden Markov models (AR-HMMs).
+
+In both cases, I have worked with interns
+to build a software library for the model core.
+In there, we not only worry
+about the implementation of the core,
+we also worry about how we will use the model,
+and strive to make its API semantics
+match and leverage that of
+the surrounding PyData ecosystem,
+such as following SciPy's API for distributions,
+using `scikit-learn`'s API for model construction,
+and leveraging `jax` for speed and expressiveness.
+
+### Implementing the core
+
+In both model’s cases,
+we started by implementing the core of the model.
+This refers to the key algorithmic steps.
+The exact process of how we get there
+usually involves some trial and error,
+but the general idea is to work out the algorithm
+for a single “unit” of data,
+and work out how that unit of data
+passes through the model
+until it reaches the end point that we want,
+whether that is a “prediction”
+or a “likelihood” calculation.
+Implementing the core forces us
+to more clearly learn
+the semantics of the model class
+and the problem we are trying to solve,
+and hence helps us chart out
+what kind of internal API we might need
+to be productive.
+
+### Testing
+
+The act of writing tests for the library
+helps with cross-checking assumptions.
+By checking against "well-known"
+or "trivial" cases,
+we can check that our understanding
+of how the model ought to work
+is correct at a basic level.
+By leveraging property-based testing,
+we can also check that
+our understanding of the model
+is also _more generally_ correct.
+
+### Documentation
+
+We invest time up-front working on documentation.
+By documentation, I mean at least the following:
+
+- Docstrings for every function, and
+- Usage examples to cover workflows.
+
+Investing time up-front for documentation
+is actually a great thing to do.
+By putting in workflow examples,
+we actually leave for ourselves
+copy/paste-able workflows
+that can greatly speed up
+the ramp-up phase of a new project
+that leverages what we have built.
+
+### View towards open sourcing
+
+In building dog-fooded,
+usable software around a topic,
+I believe we are empowered to leverage
+the act of organizing knowledge
+into a usable software package
+to also learn that new topic.
+I also build it with a view towards
+an open source release.
+That helps increase the motivation level
+for learning it well,
+because I am placing reputation points on the line!
+(And not just my own:
+usually my interns’ reputations
+are on the line too!)
+Having the public audience
+is something personally motivating.
+Having written all that,
+I will acknowledge too 
+that this is not uniformly true for everybody!
+
+## Conclusion
+
+Whenever I go to my tribe
+of data scientists at work
+and advocate for better software skills,
+I often get a myriad of responses.
+A small sliver agree with me
+_and_ actively put it into practice.
+A much larger slice agree,
+other factors stop them from getting started;
+these might be lack of knowledge,
+or too much external pressure to deliver results,
+and as such no action is taken.
+
+With this essay, I attempted to extend 
+what Mridul Seth and Sebastian Benthall elaborated on.
+In particular, I wanted to show
+that “writing good code” is a natural extension
+of “thinking clearly about a problem”,
+and thus suggest that leveraging software skills
+gives us superpowers in our data science work.
+
+I started with the concrete task of "generating random numbers", 
+showing how thinking clearly about
+how to structure probability distributions
+as classes with innate properties
+gives us clarity in how to interact with them.
+I then showed, through a personal example,
+how common and simple software practices
+can help the practice of data science.
+
+It is easy to over-read this essay
+and start suggesting that data science teams
+should be run like an engineering team.
+This conclusion would be far from the spirit of my intent.
+Rather, I am merely suggesting that it would be beneficial
+for data scientists to learn better software skills,
+as it would help us think more clearly
+about the problems we encounter,
+and help us accelerate our work.
+My hope is that you, a data scientist who reads this essay,
+will consider adopting and learning basic software skills
+and incorporate them into your work.
+
+## Resources for learning
+
+- [Software Carpentry's Lessons](https://software-carpentry.org/lessons/)
+- [Software Engineering for Data Scientists by Itamar Turner-Trauring](https://pythonspeed.com/datascience/)
+- [Software engineering fundamentals for Data Scientists](https://towardsdatascience.com/software-engineering-fundamentals-for-data-scientists-6c95316d6cc4)
+- [Software Engineering for Data Scientists by Matt Hoffman](http://hiphoff.com/software-engineering-for-data-scientists/)
+- [University of Washington's Software Engineering for Data Scientists](http://uwseds.github.io)
+
+---
+pub_date: 2020-08-21
+---
+summary: Why do software skills matter for data scientists? We might have heard that it matters for our workflow, but what about for organizing knowledge? In this essay, I argue that practicing good software skills has those benefits and more.
+---
+tags:
+
+data science
+software engineering
+software skills
+---
+twitter_handle: ericmjl
