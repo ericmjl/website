@@ -1,0 +1,216 @@
+title: Pandera, Data Validation, and Statistics
+---
+author: Eric J. Ma
+---
+body:
+
+I have test-driven the [`pandera`](pandera.readthedocs.io/) package over the past few days,
+and I'm extremely happy that this package exists!
+
+Let me tell you why.
+
+## Data testing
+
+"Data testing" is the colloquial term that I have used in place of the more formal term,
+"schema validation",
+or "data validation".
+Ever since I was burned once by CSV files with invalid column names,
+I put together a [data testing tutorial](https://github.com/ericmjl/data-testing-tutorial) to kickstart the idea,
+and have been keeping an eye on the space ever since.
+
+But let’s step back a bit.
+
+What do we mean by schema/data validation? It’s merely a fancy way of checking,
+“are my data as I expect them to be?” 
+
+Here’s an example.
+Imagine you have a data table,
+in which the semantic meaning of a row is a "sample" (i.e.
+one row = one sample),
+and columns are observations about that sample.
+In this data,
+there are definitely some things you may want to guarantee to be true of our data.
+
+For example,
+I may have numeric measurements of each sample,
+and I need to guarantee that they cannot be negative or zero.
+Hence,
+for those columns,
+I need “greater than zero” check.
+For another column,
+it may be that we expect that the values in there take one of two values.
+An example dataframe could be as follows:
+
+```python
+df = pd.DataFrame(
+    {
+        "non_negative": [1.1, 0.34, 2.5],
+        "two_values": ["val1", "val2", "val2"],
+    }
+)
+```
+
+If I were implementing these checks in a test suite in vanilla Python,
+I would write them as follows:
+
+```python
+from project_source.data import load_data
+import numpy as np
+
+def test_load_data():
+    data = load_data(**kwargs)
+    assert np.all(data["non_negative"] > 0)
+    assert set(data["two_values"].unique()) == set(["val1",
+"val2"])
+```
+
+Having the checks in the test suite is nice,
+as it means if the checks are run as part of a CI pipeline,
+they’ll continually be checked.
+However,
+they cannot be checked whenever I call on `load_data()`,
+which is the most important time I’d need those checks to appear — 
+whenever I’m going to use that data loading function,
+i.e. at runtime, and have to depend on them being correct.
+To have those checks available at runtime,
+I’d have to duplicate all of the checks into the `load_data()` function.
+And we know that duplication of code increases risk of stale code.
+
+
+Enter `pandera`.
+Instead of writing the checks in two separate places,
+I can start by writing the following declarative schema in a Python module,
+that serves as a defined source of truth:
+
+```python
+# project_source/schemas.py
+from pandera import Column,
+DataFrameSchema,
+Check
+import pandera as pa 
+
+schema = DataFrameSchema(
+    columns={
+        "non_zero_column": Column(pa.Float, Check.greater_than(0)),
+        "categorical_column": Column(pa.String, Check.isin(["value_1", "value_2"])),
+    }
+)    
+```
+
+Now, the flexibility with which this schema gets used
+is simply _superb_!
+Because I've declared it as a Python object in code,
+I can import it _anywhere_ I want validation to happen.
+
+For example,
+I can validate the inputs to a function at runtime:
+
+```python
+# project_source/data.py
+from pandera import check_input,
+check_output
+from .schemas import dataframe_schema,
+cleaned_df_schema
+
+
+@check_input(dataframe_schema)
+@check_output(cleaned_df_schema)
+def clean(dataframe):
+    # stuff happens
+    return cleaned_df
+```
+
+And because the validation happens as soon as the function is executed,
+I can also validate the schema as part of an automatically-executed test suite
+that continuously runs and checks data alongside code.
+
+```python
+from project_src.data import load_some_data
+
+def test_load_some_data():
+    data = load_some_data()
+```
+
+The data test suite becomes simpler to maintain,
+as it gets reduced to a simple execution test.
+Validating data at every step that it could go wrong is pretty important!
+
+Additionally,
+if there is a new data file that needs to be processed in the same way,
+when we pass in the dataframe version into the `clean_data` function,
+it is automatically validated by `pandera`’s `check_input`.
+If a dataframe that fails `check_input`,
+then `pandera` will give us an error message straight away!
+
+These are just the basics.
+Pandera comes with even more:
+
+- Validating the `Index`/`MultiIndex`.
+- Automatically inferring a draft schema that you can use as a base.
+
+I'm excited to see how this goes.
+Congratulations to the package author Niels Bantilan,
+it's a package that has all of the _right_ API ideas in place!
+Its design is very lightweight,
+which helps encourage fast iteration and turnaround on schema validation.
+Being one of those “eagerly executable” and “interactively debuggable” tools
+helps its case as well.
+The package focuses on doing only one thing well,
+and doesn't try to be a "God package" that does all sorts of things in one package.
+For a person of my tastes,
+this increases the attraction factor!
+Finally, it targets `pandas` DataFrames,
+an idiomatic data structure in the Python data science world,
+which is always a plus.
+Having incorporated `pandera` into a project just recently,
+I'm excited to see where its future is headed!
+
+## Data Validation as Statistical Evaluation
+
+I can see that data validation _actually_ has its roots in statistical evaluation of data.
+
+Humour me for a moment.
+
+Say we have a column that can only take two values,
+such as “yes” and “no”.
+
+From a statistical viewpoint,
+that data are generated from Bernoulli distribution,
+with “yes”/1 and “no”/0 being the outcomes.
+
+If you get a “maybe” in that column,
+that value is outside of the _support_ of the distribution.
+It’s like trying to evaluate the likelihood of observing a 2 from a Bernoulli.
+It won’t compute.
+
+So every time we run a `pandera` check,
+we are effectively expressing a _statistical_ check of some kind.
+The byline of the package,
+“Statistical Data Validation for Pandas”,
+is _even more apt_ once we consider this viewpoint!
+
+## Conclusions
+
+I hope this post encourages you to give `pandera` a test-drive!
+Its implementation of "runtime data validation" is very handy,
+allowing me to declare the assumptions I have about my data up-front,
+and catch any violations of those assumptions as early as possible.
+---
+pub_date: 2020-08-22
+---
+summary:
+
+I test-drove the Python package `pandera` this month, and I like its usage paradigm.
+Come read on to learn how you can incorporate `pandera` into your workflow!
+---
+tags:
+
+data science
+statistics
+data validation
+data engineering
+pandera
+software tools
+tips and tricks
+---
+twitter_handle: ericmjl
