@@ -32,25 +32,28 @@
 {% endmacro %}
 
 {% macro render_blog_post(post, from_index=false) %}
-<div>
-  {{ render_blog_header(post, from_index) }}
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    {{ render_blog_header(post, from_index) }}
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    {{ post.body }}
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
 
-  <!-- Put post body -->
-  {{ post.body }}
-</div>
-<hr>
-<div>
-  <p>
-    <i>I send out a monthly newsletter with tips and tools
-    for data scientists. Come check it out at
-    <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
-  </p>
-  <p>
-    <i>If you would like to receive deeper, in-depth content
-    as an early subscriber, come support me on
-    <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
-  </p>
-</div>
 {% endmacro %}
 
 
