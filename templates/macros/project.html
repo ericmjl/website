@@ -26,6 +26,10 @@
       <a href="{{ blk.url }}" class="card-link">Slides</a>
       {% endif %}
 
+      {% if blk._flowblock == "book" %}
+      <a href="{{ blk.url }}" class="card-link">Book</a>
+      {% endif %}
+
       {% endfor %}
       <a href="{{ project|url }}" class="card-link">Details</a>
 
