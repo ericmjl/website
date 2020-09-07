@@ -1,0 +1,41 @@
+title: Faster iteration over dataframes
+---
+author: Eric J. Ma
+---
+body:
+
+I can't claim credit for this one, as I found it [here on LinkedIn](https://www.linkedin.com/posts/chayankathuria_python-datascience-machinelearning-activity-6708675592541270016-XVnA). That said, in case it's helpful for you, here's the tip:
+
+We are usually taught to loop through a dataframe using `df.iterrows()`:
+
+```python
+for r, d in df.iterrows():
+    print(d["column_name"])
+```
+
+Turns out, the faster way to loop over rows in a dataframe is:
+
+```python
+for d in df.itertuples():
+    print(d.column_name)
+```
+
+According to the post, this is about on the order of 1000X faster.
+
+The main reason for the speedup is because the use of [`.itertuples()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.itertuples.html) leads to the construction of [`namedtuples`](https://docs.python.org/3/library/collections.html#collections.namedtuple). By contrast, the use of [`.iterrows()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.iterrows.html) returns `d` as a pandas Series, which is slower to construct on each loop iteration.
+
+Of course, one would usually try to vectorize as much as possible, but in the event that looping is unavoidable, this might be a good tip to keep in your back pocket!
+---
+pub_date: 2020-09-07
+---
+summary: If `df.iterrows()` is slow, what then is the alternative? Read on to figure out how to make looping over dataframes 1000X faster :).
+---
+tags:
+
+data science
+pandas
+tricks
+tips
+productivity
+---
+twitter_handle: ericmjl
