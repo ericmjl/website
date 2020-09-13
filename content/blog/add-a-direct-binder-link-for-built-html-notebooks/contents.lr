@@ -1,0 +1,64 @@
+title: Add a direct Binder link for built HTML notebooks
+---
+author: Eric J. Ma
+---
+body:
+
+I recently learned a thing! If you write tutorial material in Jupyter notebooks, it's possible to include a Binder link directly to a notebook, such that Binder opens up _directly_ inside that notebook (rather than in the file browser).
+
+The "vanilla" link one usually gets from [mybinder.org](https://mybinder.org) looks like this (using Network Analysis Made Simple as an example):
+
+```python
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ericmjl/Network-Analysis-Made-Simple/master)
+```
+
+More generally speaking, the anatomy of the URL is:
+
+```python
+https://mybinder.org/v2/<PROVIDER>/<REPO_NAME>/<BRANCH/TAG/COMMIT>
+```
+
+Now, if you want to point directly to a file to be opened on Binder launch, you would instead do something like this:
+
+```python
+https://mybinder.org/v2/gh/ericmjl/Network-Analysis-Made-Simple/master?filepath=docs%2F01-introduction%2F02-networkx-intro.ipynb
+```
+
+The general form of the URL looks now like the following:
+
+```python
+https://mybinder.org/v2/<PROVIDER>/<REPO_NAME>/<BRANCH/TAG/COMMIT>?filepath=<FILE_PATH>
+```
+
+Here, the `<FILE_PATH>` is a POSIX-style string relative to the repository root. A thing to note: all of the `/` characters in the `<FILE_PATH>` probably have to be replaced with `%2F`, otherwise the URL might not work correctly!
+
+Using this pattern, I was able to insert a Launch Binder icon for all of my Jupyter notebooks in the Network Analysis Made Simple repository! 
+
+That said, manually inserting that many Launch Binder icons by hand is not an easy-to-maintain thing. Is there a better way? You bet!
+
+Leveraging the Jupyter notebook Python API (the [`nbformat` package](https://nbformat.readthedocs.io/en/latest/)) as well as the `mkdocs` navigation section, I was able to write a few custom functions that inserted a correct Binder URL with the badge into the top of each notebook before building the HTML pages with `mkdocs`. The code roughly looked like this:
+
+```python
+badge_url = f"[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ericmjl/Network-Analysis-Made-Simple/master?filepath=docs%2F{nb_relpath.parent.name}%2F{nb_relpath.name})"
+nb_path = docroot / nb_relpath
+nb["cells"].insert(0, nbformat.v4.new_markdown_cell(source=badge_url))
+```
+
+The full build script is located [here](https://github.com/ericmjl/Network-Analysis-Made-Simple/blob/master/scripts/binderbuilder/insert_binder_link.py).
+
+I thought this might be a useful addition to `mknotebooks`, which handles Jupyter notebook preprocessing for `mkdocs`, so I also raised [an issue](https://github.com/greenape/mknotebooks/issues/43) up there to see if the maintainer of `mknotebooks` is interested in it!
+---
+pub_date: 2020-09-12
+---
+summary: I recently figured out how to *dynamically* insert a Binder badge into HTML pages built from Jupyter notebooks, so that users can one-click *directly* open a Jupyter notebook in the correct `conda` environment without needing to navigate or build an environment from scratch. Come see how I figured this out!
+---
+tags:
+
+jupyter
+notebooks
+data science
+education
+teaching
+Binder
+---
+twitter_handle: ericmjl
