@@ -10,15 +10,13 @@ data carpentry
 ---
 body:
 
-This past Monday, I led a hands-on session at the <a href="http://broadinstitute.org">Broad Institute</a>, showing how to use the <a href="http://scikit-learn.org">scikit-learn</a> API, as well as common coding patterns for running machine learning algorithms on the data.
-
-<a href="http://www.ericmajinglong.com/wp-content/uploads/2016/02/IMG_20160208_132009.jpg" rel="attachment wp-att-525"><img class="aligncenter wp-image-525 size-large" src="http://www.ericmajinglong.com/wp-content/uploads/2016/02/IMG_20160208_132009-1024x768.jpg" alt="IMG_20160208_132009" width="640" height="480" /></a>
+This past Monday, I led a hands-on session at the <a href="https://broadinstitute.org">Broad Institute</a>, showing how to use the <a href="https://scikit-learn.org">scikit-learn</a> API, as well as common coding patterns for running machine learning algorithms on the data.
 
 First off, I was totally surprised at how many people signed up for the event - it "sold out" (tickets were free) within 3 hours of opening registration. I was quite floored - and I know it's not because I'm some famous dude who knows ML algorithms. Rather, it told me and my co-organizers that there is most certainly great demand here for this topic, and it should be run again.
 
-I found it to be a great opportunity to put some of my <a href="http://software-carpentry.org">Software Carpentry</a>/<a href="http://www.datacarpentry.org">Data Carpentry</a> tools to use. For example, we used sticky notes to indicate class progress (we used blue for "all done", and red for "need help"). I also tried to ensure that participants could walk away from the tutorial knowing how to do something that they could use immediately in their research.
+I found it to be a great opportunity to put some of my <a href="https://software-carpentry.org">Software Carpentry</a>/<a href="https://www.datacarpentry.org">Data Carpentry</a> tools to use. For example, we used sticky notes to indicate class progress (we used blue for "all done", and red for "need help"). I also tried to ensure that participants could walk away from the tutorial knowing how to do something that they could use immediately in their research.
 
-The examples I used (<a href="http://github.com/ericmjl/scikit-learn-tutorial/">hosted openly on Github</a>) were based on transforming sequence information into a sequence feature matrix, which is then fed into a selected machine learning algorithm. I think this seemed to suit the crowd, but I would love to use different examples as well, for example microbiome data or transcriptomics data.
+The examples I used (<a href="https://github.com/ericmjl/scikit-learn-tutorial/">hosted openly on Github</a>) were based on transforming sequence information into a sequence feature matrix, which is then fed into a selected machine learning algorithm. I think this seemed to suit the crowd, but I would love to use different examples as well, for example microbiome data or transcriptomics data.
 
 Feedback given by the participants was overall quite positive. To some, I could have explained things a bit more clearly, which I could recognize as an area I will need to improve on for delivering a second round. Others loved the hands-on instruction; in their feedback it was just the right delivery format for the workshop.
 
