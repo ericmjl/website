@@ -1,0 +1,48 @@
+title: Moving Data Securely and Quickly with `croc`
+---
+author: Eric J. Ma
+---
+body:
+
+I recently had to move a large file from a computer in one site at work to another computer in another site at work, to obtain a dataset for machine learning purposes. To do this, I usually would have used `scp`, but for whatever reason (didn't debug, no time), it was borked on my user account. We apparently pay for an Aspera license, but it was installed on a very old system that I was struggling/wrestling with. Thus, I looked back on my GitHub stars, knowing that someone must have made something that we could use - and indeed, I found [`croc`](https://github.com/schollz/croc).
+
+What's `croc`? It's a file transfer system that sends files securely using end-to-end encryption, via a file transfer relay. What's a "file transfer relay"? Essentially, it's a go-between computer that is set up to relay connections to and from computers -- it does this one and only one job -- but cannot read the contents of anything that is passed through it. 
+
+Using a relay in between two computers sounds kind of roundabout. Why would we want this in contrast to directly `scp`-ing, or standing up an HTTP server and using an HTTP URL to send the data?
+
+To understand more, I read `croc`'s creator's [blog post describing the design advantages of `croc`](https://schollz.com/blog/croc6/). The key advantages are **speed**, **security**, and **simplicity**, all-in-one. Speed because the relay doubles the number of computers sending/receiving data. Security because of the use of Password-Authenticated Key Exchange between the two computers, and the ephemeral nature of the connection. And simplicity, because of the user-interface.
+
+Now, baked into `croc`'s configuration is the use of a public relay server that `croc`'s creator has set up, but one can set up their own relay server, and configure `croc` to use that relay server at runtime. To do this requires a one-time setup on a third computer or in a docker container. I did the former at work, setting up a temporary relay server on a Linux workstation, because I couldn't access the public relay server on our VPN (which is exactly what is supposed to happen, for security!). The 6GB file was transferred at a rate of about 50 MB/sec, which, for me, was fast enough and heartening to get on with life! 
+
+To do this, we access the relay computer, which should be a computer visible on the intranet, download `croc`, and run `croc` as a relay process:
+
+```bash
+croc relay
+```
+
+Then, we point croc away from the default public relay when sending a file:
+
+```bash
+croc --relay "my-url.my-host.com:9009" send some_file.extension
+```
+
+Then on the receiving end:
+
+```bash
+croc --relay "my-url.my-host.com:9009" some-secret-code
+```
+
+Being written in the Go programming language, it's fast and easily distributed on multiple platforms. Coupled with its ease-of-use, count me a fan!
+---
+pub_date: 2020-10-01
+---
+summary: I found a new free and open source tool for moving data between computers in a secure and fast fashion, called `croc`. I highly recommend it! Come read on to learn more.
+---
+tags:
+
+tools
+tips
+tricks
+croc
+---
+twitter_handle: ericmjl
