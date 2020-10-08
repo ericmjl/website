@@ -1,0 +1,33 @@
+title: Fermi estimation and Bayesian priors
+---
+author: Eric J. Ma
+---
+body:
+
+Fermi estimation is named after the renown physicist Enrico Fermi for his ability to give accurate order-of-magnitude estimates for certain quantities. From Wikipedia, Fermi estimation is described as such:
+
+> In physics or engineering education, a Fermi problem, Fermi quiz, Fermi question, Fermi estimate, order-of-magnitude problem, order-of-magnitude estimate, or order estimation is an estimation problem designed to teach dimensional analysis or approximation of extreme scientific calculations, and such a problem is usually a back-of-the-envelope calculation. The estimation technique is named after physicist Enrico Fermi as he was known for his ability to make good approximate calculations with little or no actual data. Fermi problems typically involve making justified guesses about quantities and their variance or lower and upper bounds.
+
+What struck me is how this relates to thinking about prior distributions for parameter estimates. A common critique of Bayesian estimation models is that "one can cook up priors to make the model say anything you want". While true, it ignores the reality that most of us will be able to to use Fermi estimation to come up with justified and non-informative priors.
+
+Let me illustrate.
+
+In biology, say we had a quantity to estimate, such as the average size of a species of bacteria, which we could reasonably assume to be Gaussian-distributed. Since we know that most other bacteria are 0.1 to 10 microns in size, we might set a the log(mean) with a $N(0, 0.5)$ prior, in the units of microns, which would put us in a good prior distribution range. The mean is at $10^0 = 1$ microns, which is smack in the middle. Three scale units out to the right, and we are at 30-ish microns; three scale units out to the left, and we are at about 0.03-ish microns. As a prior, it's uninformative enough for the problem that data can refine the distribution, and few would argue against this choice when framed the way above.
+
+Let's consider counterfactually ridiculous priors. It would be unreasonable if I placed scale = 10 as the prior. Why? In that case, we are spanning orders of magnitude that are practically unreasonable for the category of things we call bacteria. We would go down to as small as $10^{-10}$ microns, which is less than the size of a bond between atoms, or as large as $10^{10}$ microns, which is on the scale of distances between towns on a map.
+
+It would also be uncreasonable if I placed scale = 0.1 as the prior. Why? Because it ignores the one order of magnitude above and below our mean, which may be relevant for the category of things called bacteria. As a rule of thumb, that one order of magnitude above or below where our guess lies is a good thing to span for weakly-informative priors.
+
+So as you can see, Fermi estimation is a pretty principled way to guess at what priors should be used for a problem. It also helps us constrain those priors to be not-so-unreasonable. Yet another critique against Bayesian bites the dust, in my opinion.
+---
+pub_date: 2020-10-15
+---
+summary: Enrico Fermi had a unique way of thinking that I think dovetails nicely with constructing principled priors. Curious? Read on!
+---
+tags:
+
+bayesian
+data science
+statistics
+---
+twitter_handle: ericmjl
