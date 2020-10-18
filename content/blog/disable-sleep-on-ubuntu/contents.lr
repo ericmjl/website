@@ -1,0 +1,52 @@
+title: Disable sleep on Ubuntu
+---
+author: Eric J. Ma
+---
+body:
+
+I have a running Linux tower at home that contains a GPU. It runs headless, i.e. without keyboard, mouse, and monitor. However, the box sometimes goes to sleep, which means I'm unable to SSH (or [`mosh`](https://mosh.org)) into the tower on our home network, or access a perpetually running Jupyter session that I have. Short of keeping a keyboard next to it, I thought there had to be a better way to keep the tower alive.
+
+Turns out, it's a simple command.
+
+Based on [this StackOverflow](https://askubuntu.com/questions/47311/how-do-i-disable-my-system-from-going-to-sleep) post, to disable sleeping/suspending, we execute the following command at the terminal (after logging in):
+
+```bash
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
+
+You'll get the following output:
+
+```bash
+Created symlink /etc/systemd/system/sleep.target → /dev/null.
+Created symlink /etc/systemd/system/suspend.target → /dev/null.
+Created symlink /etc/systemd/system/hibernate.target → /dev/null.
+Created symlink /etc/systemd/system/hybrid-sleep.target → /dev/null.
+```
+
+Now, let's say we wanted to re-enable sleep/suspend. In that case, we have the inverse command available:
+
+```bash
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
+
+You'll get the following output:
+
+```bash
+Removed /etc/systemd/system/sleep.target.
+Removed /etc/systemd/system/suspend.target.
+Removed /etc/systemd/system/hibernate.target.
+Removed /etc/systemd/system/hybrid-sleep.target.
+```
+
+The `mask`/`unmask` combo is what does the magic. Specifically, when masking, the command creates a symbolic link in `/etc/systemd/system` for each of sleep, suspend, hybernate and hybrid-sleep, and points it to `/dev/null`. Pointing to `/dev/null` is a great way to redirect commands to oblivion, thus disabling sleep.
+---
+pub_date: 2020-10-18
+---
+summary: How do you prevent a headless Linux machine from going to sleep/suspend? I recently learned how to do so :).
+---
+tags:
+
+linux
+tips
+---
+twitter_handle: ericmjl
