@@ -38,7 +38,7 @@ jobs:
             lektor
 
       - name: Build website
-        run: lektor build
+        run: lektor build --output-path site/
 
       - name: Deploy Leanpub
         uses: peaceiris/actions-gh-pages@v3
