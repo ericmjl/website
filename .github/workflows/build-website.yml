@@ -40,7 +40,7 @@ jobs:
       - name: Build website
         run: lektor build --output-path site/
 
-      - name: Deploy website to gh-pages branch
+      - name: Deploy website to ericmjl.github.io
         uses: peaceiris/actions-gh-pages@v3
         with:
           # https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-set-personal-access-token-personal_token
