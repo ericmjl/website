@@ -1,0 +1,279 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Software Engineering Skills for Data Analytics - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Software Engineering Skills for Data Analytics</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-08-18
+
+    
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>When you think about software engineering skills, you probably don't think about the analytics types, or data scientist (DS) teams. This is a reasonable thought. Data scientists aren't in the business of building software, they're in the business of using software to analyze data. That said, I think it's still important for a data scientist (or analytics person, for that matter), to know some basic software engineering skills. Here's the why, followed by the what.</p>
+<p>Why should an analytics person who uses code to perform analysis care about good software engineering practices?</p>
+<ol>
+<li>It will help you write better, reusable analysis code.</li>
+<li>It will help you when you come back to your analysis code later on.</li>
+<li>It will help you integrate with software teams that you may have to work with.</li>
+<li>It will help you share the tools that you end up developing.</li>
+</ol>
+<p>What basic skills should one at least be knowledgeable about, if not able to implement?</p>
+<ol>
+<li><strong>Defining specifications:</strong> being able to create specific and precise descriptions of what's needed, using standardized language.</li>
+<li><strong>Refactoring:</strong> being able to pull out chunks of code that are repeated, to turn them into function calls.</li>
+<li><strong>Writing unit/data tests:</strong> being able to write tests that ensure the integrity of a function or a block of data.</li>
+<li><strong>Packaging and distribution:</strong> being able to share the code, with other people.</li>
+<li><strong>Version control:</strong> being able to keep track of every meaningful change made to the  code or data.</li>
+<li><strong>Documentation:</strong> being able to explain to someone other than yourself what the software tool or analysis code is all about.</li>
+<li><strong>Continual automated testing &amp; integration:</strong> having a continuous integration system automatically run the necessary software and data tests, and report code testing coverage.</li>
+</ol>
+<hr>
+<p>Here's where I see them being implemented.</p>
+<p><strong>Building your own tools</strong></p>
+<p>Sometimes, the tools that you need to get your work done aren't already written, or they're scattered about. You'll need to write your own tools to get your job done. The history of some Python packages, like <code>numpy</code>, <code>pandas</code> or <code>seaborn</code> were born out of this necessity. Here, the ability to use good software engineering practices as described above will make a huge difference when trying to orient newcomers to the tool and help new contributors jump in easily. And even if you don't end up sharing the code with others, if you still end up reusing your code, all of the above practices will help with codebase maintenance.</p>
+<p><strong>Developing your analysis pipeline</strong></p>
+<p>Your analysis pipeline is the sequence of steps that are needed to get from raw data to interpretable data to insights. Along the way, you may encounter blocks of code that get copy/pasted elsewhere. Or, you might find yourself writing a series of functions that always take the same inputs - necessitating your own OOP-based tool. Knowing good software engineering practices will help you keep your code clean, readable, and reusable across your analysis pipeline. It'll also help others interpret and verify your data analysis steps. Documentation, in this realm, is particularly important.</p>
+<p>Data tests, are something software engineers don't do, but you might wish to. Data tests that run on continuous integration platforms serve as an automatically-enforced contract between you, your data provider, and your data delivery. If anything changes, continuous integration should catch it early on, and not later. An example of a data test is ensuring that the number of columns/rows stays the same, or that a hash of the original data file hasn't changed (i.e. data integrity).</p>
+<p><strong>Integrating with Data Products</strong></p>
+<p>Data scientists in industry don't work in a vacuum: there is usually a software product waiting at the end. Those software products are (hopefully) maintained with good software engineering practices. Getting good at the practice of good software engineering will help lubricate communication and workflows with the software engineers who may be responsible for integrating the new algorithm or analysis pipeline. Even in the academic or government world, where the end product may not be a monolithic system but a series of, perhaps, web dashboards, knowing good software engineering practices will ease the transition from analytics to product.</p>
+<hr>
+<p>Of course, any good thing done too much will become a bad thing. Don't over-specify straight from the start, start with something clear enough. Don't over-refactor if it isn't necessary. Don't worry about finding every test case, just test enough so the most common bugs are caught. Or use something like Hypothesis to do property-based testing. (The maintainer threw in the towel recently, citing financial reasons, I think, but as it stands it's already pretty darn good.) Don't package every last tool you develop, only share what's necessary. And over-indulging on documentation can take away from good coding. Write enough for yourself to review your code, and let others help you refine it if it's actually needed. Tracking every little minor change is also probably overdoing it.</p>
+<p>Happy coding!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/software-engineering-skills-for-data-analytics"; this.page.url = "http://www.ericmjl.com/blog/2015/8/18/software-engineering-skills-for-data-analytics/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

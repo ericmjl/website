@@ -1,0 +1,386 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>BAARN 2016 Bullet Point Notes - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>BAARN 2016 Bullet Point Notes</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-16
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/meeting notes/">
+      meeting notes
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p><strong>Session 1: New antibiotic strategies and therapeutics:</strong></p>
+<p>In this section, scientists and group leaders presented novel ways of thinking about anti-bacterial treatment.</p>
+<ol>
+<li>Small molecules: focus on how to get molecules into the cell. (Anita Miller, Entasis)</li>
+<li>Phage lysins: one component of phages, add externally to a bacteria. (Vincent Fischetti, Rockefeller University)</li>
+<li>Ecobiotics: Consortia of commensal bacteria to restore general diversity, or impact specific pathways. (Matthew Henn, Seres Therapeutics)</li>
+<li>Chemical discovery: Gene clusters can predict biochemical activity of natural products, great for discovering new chemicals. Cool point I took home - a gene cluster that encodes a molecule that destroys function of a common protein may also encode a resistant version of that version. (Emily Balskus, Harvard University)</li>
+</ol>
+<p><strong>Session 2: Creating a sustainable ecosystem for antibiotic production.</strong></p>
+<p>In this section, representatives from finance, manufacturing, regulatory, and public policy discussed how they thought a sustainable ecosystem for producing antibiotics could be fostered.</p>
+<p>Panel members:</p>
+<ul>
+<li>Joseph Larsen, BARDA</li>
+<li>Cara Cassino, Contrafect</li>
+<li>Edward Cox, FDA</li>
+<li>Alan Carr, Needham &amp; Co.</li>
+</ul>
+<p>Are there enough ideas in the pipeline?</p>
+<ul>
+<li>BARDA model: product accelerator; public-private partnerships.</li>
+<li>Missing: a "pull" incentive - if I develop X successfully, I will get paid Y. Need lawmakers’ help.</li>
+</ul>
+<p>Are there enough ideas in the pipeline? </p>
+<ul>
+<li>BARDA model: product accelerator; public-private partnerships.</li>
+<li>Missing: a "pull" incentive - if I develop X successfully, I will get paid Y. Need lawmakers’ help.</li>
+<li>There’s a move towards targeted drug therapies.</li>
+<li>New paradigms come with unknown risks.</li>
+<li>Market around antibiotics: there’s underlying interest, but some skepticism and fear towards biotech.</li>
+<li>There are sub-sections of antibiotics space (e.g. gram positives) that can do well, because of unmet need.</li>
+<li>Regulatory: yet, if there’s an unmet need, then we’re behind. Private vs. societal value are not aligned.</li>
+<li>Antibiotics: a bit like fire department. We don’t pay fire department by the number of times they put out fires, but as an insurance. Payments are de-linked from the amount of usage.</li>
+<li>Private sector model isn’t going to foster investment.</li>
+<li>Incentives need to factor in not just pathogens, but also clinical manifestations of the pathogens.</li>
+</ul>
+<p>Diagnostics?</p>
+<ul>
+<li>Rapid, within 1-2 hours, which can be good enough to form the basis for decision making, is an unmet need.</li>
+<li>Susceptibility testing is also important.</li>
+</ul>
+<p>Why is there not reduced antibiotic usage in agriculture?</p>
+<ul>
+<li>Companies that manufacture these products are told to voluntarily remove indications for non-therapeutic uses.</li>
+<li>By end of year, antibiotics will need to be prescribed by a vet.</li>
+<li>Antibiotics have growth promotion and prophylactic non-therapeutic uses. </li>
+<li>Interestingly: high prices per course discourages lax usage. Interesting…… But what if the economic &amp; regulatory model was changed?</li>
+</ul>
+<p>New antibiotics are a bit like the different types of fire extinguishers (one for petrochemical, one for electrical, etc.). You only buy a new fire extinguisher if it is sufficiently different. New antibiotics have to likewise be sufficiently different.</p>
+<p>What’s the one thing that has to be done?</p>
+<ul>
+<li>From small antibiotic developer’s perspective: prioritization is needed. Favourable reimbursement is needed. Also support the fire department model, but don’t discriminate between large and small developers.</li>
+<li>Push incentives are helping, but we need the "pull" incentives, i.e. the known return on investment.</li>
+<li>Parallels between rare diseases and antibiotics. "Fire department"-style incentives might be a good way forward.</li>
+<li>Rapid, high resolution diagnostics would be really transformative, for example, in their use in clinical trials for rare infections.</li>
+<li>Clinical trial networks, infrastructure to be able to study new, narrow-spectrum agents.</li>
+</ul>
+<p><strong>Session 3: Entrepreneurship</strong></p>
+<p>Things to note:</p>
+<ul>
+<li>Make sure the science is solid. Nature cannot be fooled.<ul>
+<li>Regulatory issues must be thought of right from the beginning. </li>
+</ul>
+</li>
+<li>Technology can come from anywhere. A good company is one that addresses an unmet need.</li>
+<li>Talk with regulatory people early on. They sometimes have productive things to say as well.</li>
+<li>Get a great team together. They should know the market, believe in the mission.</li>
+<li>Focus on proof of concept and differentiation. If these are achieved, good things can happen.</li>
+<li>Talk with people you trust, who are willing to tell you "this idea is a bad idea".</li>
+</ul>
+<p><strong>Session 4: Diagnostics</strong></p>
+<ul>
+<li>From talking with others over lunch, I found that diagnostics have to be technically so simple (i.e. solid phase chemistry).</li>
+<li>Clinical goals:<ul>
+<li>Reduce use of antibiotics</li>
+<li>Rapid diagnosis and treatment</li>
+<li>Data to guide the most appropriate antibiotic</li>
+<li>Clinicians need to know when to withhold and when to deploy antibiotics.</li>
+</ul>
+</li>
+<li>Unmet clinical needs:<ul>
+<li>Rapid, simple, inexpensive to distinguish viral from bacterial infection, or if a person is even infected or not.<ul>
+<li>CLIA-waived - so simple, a non-laboratory person can do it.</li>
+<li>Likely a biomarker test.</li>
+</ul>
+</li>
+<li>Rapid, simple inexpensive test to detect viral pathogens<ul>
+<li>There are simple molecular assays, but none that are inexpensive.</li>
+</ul>
+</li>
+<li>Rapid identification of bacteria<ul>
+<li>Laboratory-based test</li>
+<li>Improvements are being made.</li>
+</ul>
+</li>
+<li>Rapid susceptibility testing<ul>
+<li>Still a challenge.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Rapid: a context-specific term.<ul>
+<li>Bacterial vs. viral: 15-20 minutes.</li>
+<li>Viral detection: 15-20 minutes, on-demand and not batched.</li>
+<li>Bacterial detection: an hour or less, on-demand.</li>
+<li>Susceptibility: \&lt; 6 hours.</li>
+</ul>
+</li>
+<li>Identification of species is better than gram pos/neg.</li>
+<li>T2 Biosystems: an interesting platform, PCR-based detection.</li>
+<li>Resistance testing:<ul>
+<li>Genotypic is helpful for gram-positive strains. Gram-negatives are more challenging.</li>
+<li>Phenotypic testing: Accelerate Diagnostics and Geneweave. Accelerate uses FISH and growth characteristics.</li>
+</ul>
+</li>
+<li>How to change a clinician’s practice?<ul>
+<li>Reliable test.</li>
+<li>Outcomes data - prove to doctor that test makes a difference.</li>
+<li>Reimbursement model that encourages use of test.</li>
+<li>Educate physicians - what and when to order, how to interpret results. (Interpretation is key!)</li>
+</ul>
+</li>
+<li>T2 diagnostics: magnetic resonance-based detection of pathogens.</li>
+<li>What is the best economic model for infectious disease products?</li>
+</ul>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/baarn-2016-bullet-point-notes"; this.page.url = "http://www.ericmjl.com/blog/2016/6/16/baarn-2016-bullet-point-notes/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

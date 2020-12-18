@@ -1,0 +1,286 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Boston Area Antibiotic Resistance Network (BAARN) Meeting 2016 - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Boston Area Antibiotic Resistance Network (BAARN) Meeting 2016</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-16
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/antibiotic resistance/">
+      antibiotic resistance
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>Yesterday I attended a very fruitful <a href="https://www.eventbrite.com/e/baarn-2016-boston-area-antibiotic-resistance-network-tickets-22500283955">BAARN 2016 meeting</a>. This was the fourth annual meeting, and the range of topics spanned the scientific (new technologies for treating and diagnosing) to economic (incentives for development of new antibiotics and diagnostic technologies) to medical (outlining the real unmet needs that doctors are facing). I learned a ton; the $100 registration fee was definitely worthwhile.</p>
+<p>There were three things I took note of that I think could be translated over from the bacterial surveillance world to the viral surveillance world.</p>
+<p><strong>(1) Genomic and Phenotypic Surveillance</strong></p>
+<p>This one was a big take-home for me, given the research direction I’m hoping to pursue after grad school.</p>
+<p>Genomic surveillance is the use of genome sequence to determine the evolutionary history and potential risk of a pathogen. In the bacterial world, genomic surveillance efforts are mostly concentrated on finding known antibiotic resistance genes.</p>
+<p>Phenotypic surveillance involves actually experimentally testing a pathogen for some phenotype. In the bacterial world, this means testing a cultured isolate against a panel of drugs.</p>
+<p>In my mind, these two are inseparable. Genomic surveillance will always be cheaper and faster to carry out, given the advances in portable sequencers; phenotypic surveillance is going to be rate-limited by biochemistry. On the other hand, only systematic phenotypic measurements can give us the necessary data to link genome sequence to phenotype. In my view, the function that connects genome/protein sequence to phenotype is complex enough that for pure surveillance (not scientific) purposes, machine learning models are probably the best tools to use. With tools like <a href="http://www.randalolson.com/2016/05/08/tpot-a-python-tool-for-automating-data-science/">TPOT</a>, it should be trivial to automate the selection of best predictive features and models. The tough part, then, is generating a gold-standard, epidemiologically relevant dataset.</p>
+<p><strong>(2) Incentives</strong></p>
+<p>Another interesting point that came out is the notion that antibiotic drugs are the only drug whose value depreciates with its widespread usage. The main factor at play here is the emergence of drug resistant bacteria. This makes it financially disadvantageous for companies to come in and invest in making new drugs.</p>
+<p>One alternative incentive system that was brought up is best described with an analogy - fire stations. Taxpayers pay into a common pool of money, which funds fire stations and firemen. As opposed to paying firemen per fire that they put out, we pay them a fixed amount as a public good/insurance against fire disasters. Likewise, as opposed to paying drug companies per dosage of antibiotics that are sold, a better incentive may be to guarantee payment at (peer-/externally-reviewed) drug development milestones, in addition to a sum for maintaining an arsenal of drugs that could be stewarded when needed.</p>
+<p><strong>(3) Rapid Detection</strong></p>
+<p><a href="https://vivo.brown.edu/display/ac184">Dr. Angela Caliendo</a> (Brown University) brought up some really, really useful points during her talk, which I took note of in my <a href="../baarn-2016-bullet-point-notes/">bullet-point notes</a>. Rapid detection was the point that stuck the most.</p>
+<p>"Rapid" is a nebulous concept, so Angela’s talk helped bring some clarity here. For the physician (and by my own extension, front-line epidemiologist), the major unmet medical needs for countering infectious disease outbreaks are:</p>
+<ol>
+<li>Distinguishing bacterial from viral infection.</li>
+<li>Identifying bacterial pathogen.</li>
+<li>Identifying viral pathogen</li>
+<li>Measuring susceptibility of pathogen.</li>
+</ol>
+<p>In each case, "rapid" means different things. To distinguish bacterial from viral infection, and to be most useful in guiding physician decision-making, "rapid" means within minutes, at the bedside, doable by a non-laboratory trained person. For viral detection, it has to likewise be within 15-20 minutes to be "rapid". For bacterial detection, an hour or less is best, and for susceptibility testing, less than 6 hours is optimal.</p>
+<p>Knowing these points really helps set the engineering constraints properly. Basically, any useful assay has to work within minutes, be operable by a non-laboratory trained person, and accept blood/swabs as input. Solid phase (bio)chemistry is going to be really important.</p>
+<p><strong>Synthesis/Thoughts</strong></p>
+<p>My current projects are geared towards tying viral genotype to phenotype, with the goal of predicting a virus’ pathogenic risk profile from its sequence. Because sequence data is the input, and not blood/swab samples, I won’t be playing in the rapid detection space. However, I think the tools I hope to develop will play well in the susceptibility prediction/determination space.</p>
+<p>With the MinION sequencer, the sequence of a virus can be determined within one day of isolation. Now, the sequencer’s <a href="https://www.engadget.com/2014/09/18/minion-usb-dna-sequencer-beta-test/">60-85% accuracy</a> (this number comes from a 2014 popular news report, and <a href="http://www.nature.com/nbt/journal/v33/n3/full/nbt.3103.html">a recent 2015 paper</a> supports this number) isn’t up to the point where single point mutations can be identified accurately, so I think it’s best used for viral species/subtype identification (e.g. in the case of influenza). When the accuracy moves below 1 error in 10,000 base calls (and I’m confident it will given the efforts of scientists and engineers to make this happen), that’s when I think that the susceptibility prediction tools I’m trying to develop will come in handy; common viral genomes sizes are on the order of thousands of bases. The key (and hard part) here is investing in <em>good measurement data</em> on which models can be trained that map sequence to phenotype.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/boston-area-antibiotic-resistance-network-baarn-meeting-2016"; this.page.url = "http://www.ericmjl.com/blog/2016/6/16/boston-area-antibiotic-resistance-network-baarn-meeting-2016/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

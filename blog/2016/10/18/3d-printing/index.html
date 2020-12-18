@@ -1,0 +1,282 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>3D Printing! - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>3D Printing!</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-18
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/hobbies/">
+      hobbies
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/3d printing/">
+      3d printing
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>Who would have thought that making stuff could be so fun? (Particularly when the tediousness of actually building it is removed!) I think that the 3D printer I just bought for the lab might really open up new doors for us.</p>
+<p>We have the <a href="https://www.makerbot.com/replicator/">MakerBot Replicator 2</a>. MakerBot is one of the leading brands on the market, according to what I've read online. Their printers tend to be on the expensive side, costing upwards of $2000 for a good model. I was lucky that there was a store demo model on sale at Micro Center nearby campus, so I took a ride over and splurged $600 on it.</p>
+<p>I did previously have an M3D Micro for the lab, but that was awfully slow, the heater element was unreliable (resulting in poor prints), the quality of the model filling wasn't as good, and the build volumes were really small. Even though it was touted as a PLA printer, the prints also kept warping. I eventually returned it.</p>
+<p>MakerBot, by contrast, was fast, had a reliable heater element, had very strong high quality and high resolution prints, and could print much taller objects.</p>
+<p>So why did I splurge lab money on a printer? Well, there's a few reasons.</p>
+<p>Firstly, I've been inspired by the maker movement. I'm also thinking about how I could start my own research group or company. Given the spiralling costs of how to do research, mastering 3D printing now could pay off dividends later, as my group could custom 3D print stuff as we needed it, potentially saving time and money down the road. It'd also give us the freedom to think about what equipment we really need, and then just go ahead and make it.</p>
+<p>Secondly, one side project I did just for fun was to build a Raspberry Pi-based remote time-lapse camera to spy on seals on Monomoy and Nantucket (see my <a href="../../../../../research">research</a>). (The larger context is a "seal infectious disease" project led by my advisor Jon.) I worked on this during December 2015 to January 2016, sort of as a distraction while I was waiting for my paper's reviews to come back. As things turned out, my hacked together Tiki cams (as we called them) didn't perform too shabbily, and we could capture, with high resolution over a long period of time (8+ hours), the qualitative contact structure of the seals. But my hack was fragile and inflexible, and I wanted to print better housings for the case for this year's excursion.</p>
+<p>Thirdly, ever since the Ebola 2014 outbreak, and now with the current Zika outbreak, I've been reflecting on how to get labs up and running cheaply in resource-poor regions, thereby bringing molecular diagnostics to regions that don't have access to it. DIY-bio <a href="http://openpcr.org/">PCR machines</a>, <a href="http://pearlbiotech.com/">gel boxes</a>, and <a href="https://www.chaibio.com/openqpcr">RT-PCR</a> kits are one avenue. I think 3D-printing has a role to play as well. Cheap PLA can be brought over with the 3D printer, and within a matter of minutes to hours, parts that are needed may be printed easily, say, extra tube racks where needed.</p>
+<p>I'd argue that there's a human side to this as well: objects carry meaning to people, and for those affected by the outbreak, a printer may provide a humanitarian role by allowing a response team to also print designs that are meaningful to the affected people group, perhaps bringing an added element of trust, comfort, and resilience to the population. (Of course, none of this replaces the human acts of empathy and self-sacrifice.)</p>
+<p>Finally, I <em>really, really, really</em> wanted to start playing with 3D printing. (Cue the *sheepish look* here.) But we all know that's a quarternary reason, right, right?</p>
+<p>In my quest to figure out 3D printing, I've done some test objects.</p>
+<p>The MakerBot had a "nut and bolt" design that was my first print on the machine.</p>
+<p><img src="nuts-bolts.jpg" alt="Nut and bolt"></p>
+<p>I then used <a href="http://tinkercad.com/">Tinkercad</a> to design a single 50 mL tube holder, and I'm fiddling with designs that'll allow any number of these guys to be chained together.</p>
+<p><img src="tube-holder.jpg" alt="Tube holder."></p>
+<p>To commemorate, the purchase of the printer, I've also printed custom keyrings for each of my labmates.</p>
+<p><img src="keyrings.jpg" alt="Keyrings."></p>
+<p>To explore the concept of "appropriate tolerances" for objects and the like, and I've printed out a custom business card holder for myself too.</p>
+<p><img src="business-card-holder.jpg" alt="Business card holder."></p>
+<p>My colleague Kim also wants a custom 96-well plate holder for a magnetic bead system that she uses for sequencing, so I'll give that a shot. Later on, once I've finally mastered how to do the design work properly, I'll probably start designing the battery and Raspberry Pi cases for the TikiCam Version 2.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/3d-printing"; this.page.url = "http://www.ericmjl.com/blog/2016/10/18/3d-printing/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

@@ -1,0 +1,398 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Create your own auto-publishing slides with reveal-md and Travis CI - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Create your own auto-publishing slides with reveal-md and Travis CI</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-01-18
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/presentation skills/">
+      presentation skills
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/continuous integration/">
+      continuous integration
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>For my PyData Ann Arbor Meetup talk, I decided to use <a href="https://github.com/webpro/reveal-md"><code>reveal-md</code></a> and a Markdown file to generate my slides. Here, I'd like to write about how I used <code>reveal-md</code> and Travis CI to continually publish my slides as I updated them, thus making them accessible to everybody on the web.</p>
+<h2 id="what-is-reveal-md">What is <code>reveal-md</code>?</h2><p><code>reveal-md</code> is nothing more than a live web server for that converts Markdown files into <code>reveal.js</code> slides that can be hosted via a web server, static site, or PDF.</p>
+<h2 id="why-reveal-md">Why <code>reveal-md</code>?</h2><p>I much prefer to use Markdown to write my slides, as doing so comes with one big benefit: I am focused on the content that I want to deliver, and not the less important details that are easy to screw up (animations, positioning, etc.). Constraining what's accessible to me forces me to be extremely clear and succinct on what I'm trying to communicate. And if I really desired anything fancier, I could weave in some HTML with no issue.</p>
+<h2 id="create-your-own-auto-publishing-reveal-md-slides">Create your own auto-publishing <code>reveal-md</code> slides!</h2><p>Let’s walk through the steps needed to make this a reality for you!</p>
+<h3 id="create-a-new-repository">Create a new repository</h3><p>On GitHub, create a new repository that has a nice and informative name. (For now, we’ll just refer to that repository as <code>my-talk</code> for convenience.)</p>
+<h3 id="get-setup-locally">Get setup locally</h3><p>To get setup, you need to make sure that <code>reveal-md</code> is on your <code>PATH</code>. I choose to use <code>conda</code> environments to manage my packages, so I have a slightly convoluted way of doing this, by using <code>conda</code> to install <code>nodejs</code> (which installs the <code>npm</code> node package manager), followed by using the node package manager to install <code>reveal-md</code>. We first start by preparing an <code>environment.yml</code> specification file that <code>conda</code> can use to build your environment:</p>
+<div class="hll"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my_talk</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">python=3.8</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nodejs</span>
+</pre></div>
+<p>Now, we can execute the installation commands.</p>
+<div class="hll"><pre><span></span><span class="c1"># Installation commands</span>
+
+<span class="c1"># Create environment</span>
+conda env create -f environment.yml
+
+<span class="c1"># Activate environment</span>
+conda activate my_talk
+
+<span class="c1"># Install reveal-md</span>
+npm install -g reveal-md
+</pre></div>
+<p>To learn more about <code>conda</code> hacks that can improve your efficiency, I <a href="https://ericmjl.github.io/blog/2018/12/25/conda-hacks-for-data-science-efficiency/">have a blog post</a> that you can reference.</p>
+<h3 id="write-your-slides">Write your slides</h3><p>Before we go onto the automation, it’s important that you get a feel for the workflow so you know what’s being automated.</p>
+<p>Let’s write a simple Markdown file that has two slides:</p>
+<div class="hll"><pre><span></span>---
+<span class="gu">title: My Fancy Talk!</span>
+<span class="gu">---</span>
+
+<span class="gh"># My Fancy Talk</span>
+
+Speaker Name
+
+Date
+
+---
+
+<span class="gu">## Hello!</span>
+</pre></div>
+<p>Save it as <code>slides.md</code>. The filename isn’t special, it’s just convenient to remember.</p>
+<p>To see more of what <code>reveal.js</code> can do, check out the <a href="https://github.com/hakimel/reveal.js">RevealJS GitHub repository</a>!</p>
+<h3 id="preview-your-slides">Preview your slides</h3><p>To serve it up, run the following command at your terminal:</p>
+<div class="hll"><pre><span></span>reveal-md slides.md  <span class="c1"># replace with the filename of your slides</span>
+</pre></div>
+<p>Your browser should now pop open, and your slides will be there! <code>reveal.js</code> made simple, thanks to <code>reveal-md</code>.</p>
+<h3 id="continue-editing-your-slides">Continue editing your slides</h3><p>Now, you can continue editing your slides, keeping in mind the following pointers.</p>
+<p>Firstly, <code>---</code> (three of them) denotes horizontal slide transition, while <code>----</code> (four of them) denotes vertical slide transitions. Use this to organize your content.</p>
+<p>Secondly, to progressively reveal pointers on a slide, you need to add the following HTML comment right after the element. For example, to show bullet points progressively:</p>
+<div class="hll"><pre><span></span><span class="k">-</span> Bullet Point 1
+&lt;!-- .element class=&quot;fragment&quot; --&gt;
+<span class="k">-</span> Bullet Point 2
+&lt;!-- .element class=&quot;fragment&quot; --&gt;
+</pre></div>
+<h3 id="aside-fancier-items">Aside: fancier items</h3><p>If you need fancier things, you can weave in HTML at your own convenience. For example, I embedded an HTML table to organize <a href="https://github.com/ColCarroll/imcmc"><code>imcmc</code></a> logos that I had previously compiled.</p>
+<h3 id="get-travis-ci-setup">Get Travis CI setup</h3><p>You’ll now want to create a <code>.travis.yml</code>, which commands Travis to do things. It’s generally nothing more than a collection of bash commands that are executed in order. An example Travis configuration file from my <a href="https://ericmjl.github.io/testing-for-data-scientists">data science testing talk</a> looks like this:</p>
+<div class="hll"><pre><span></span><span class="nt">language</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">python</span><span class="p">:</span>
+    <span class="c1"># We don&#39;t actually use the Travis Python, but this keeps it organized.</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;3.5&quot;</span>
+<span class="nt">install</span><span class="p">:</span>
+    <span class="c1"># We do this conditionally because it saves us some downloading if the</span>
+    <span class="c1"># version is the same.</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">bash miniconda.sh -b -p $HOME/miniconda</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">export PATH=&quot;$HOME/miniconda/bin:$PATH&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">hash -r</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda config --set always_yes yes --set changeps1 no</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda update -q conda</span>
+
+    <span class="c1"># Useful for debugging any issues with conda</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda info -a</span>
+
+    <span class="c1"># Install Python and required packages.</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda env create -f environment.yml</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">source activate testing-for-data-scientists</span>
+
+    <span class="c1"># Install reveal-md</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">npm install -g reveal-md</span>
+
+
+<span class="nt">script</span><span class="p">:</span>
+    <span class="c1"># Create the docs directory. This is where we will be publishing from</span>
+    <span class="c1"># (see the &quot;deploy&quot; section below).</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mkdir -p docs/</span>
+    <span class="c1"># Use reveal-md to generate static docs.</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">reveal-md slides.md --static docs --disable-auto-open --theme white</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">cp -r assets docs/.</span>
+    <span class="c1"># Use reveal-md to generate PDF.</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">reveal-md slides.md --disable-auto-open --theme white --print slides.pdf</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">cp slides.pdf docs/.</span>
+
+
+<span class="c1"># This is an example to deploy to a branch through Travis.</span>
+<span class="nt">deploy</span><span class="p">:</span>
+    <span class="nt">provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pages</span>
+    <span class="nt">skip-cleanup</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">github-token</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">$GITHUB_TOKEN</span>  <span class="c1"># Set in the settings page of your repository, as a secure variable</span>
+    <span class="nt">keep-history</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="c1"># We read the master branch</span>
+    <span class="nt">on</span><span class="p">:</span>
+        <span class="nt">branch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">master</span>
+    <span class="c1"># Take the docs/ directory</span>
+    <span class="nt">local-dir</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docs</span>
+    <span class="c1"># Publish to the gh-pages branch</span>
+    <span class="nt">target-branch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gh-pages</span>
+    <span class="nt">verbose</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+<p>You’ll notice that the commands we want Travis to execute are basically the same as those we executed manually. The only difference now is that we command <code>reveal-md</code> to build a static site under the directory <code>site/</code>, which we then command Travis to push to GitHub pages.</p>
+<p>In the <code>deploy</code> section, we are specifying to Travis that we want all of the content under the directory <code>site/</code> to be pushed to the <code>gh-pages</code> branch of our repository. (We have not yet connected Travis to our repo; that will happen next, so sit tight!)</p>
+<p>Notice also the <code>$GITHUB_TOKEN</code> environment variable: we need to declare that as well. The <code>GITHUB_TOKEN</code> is an authentication token that GitHub will recognize when Travis CI pushes the <code>site/</code> directory to <code>gh-pages</code>. Because underneath the hood we are using <code>bash</code> syntax in the YAML file, when we declare the <code>GITHUB_TOKEN</code>, we do it without the <code>$</code> symbol, but when we need to grab it from the environment, we include the <code>$</code> symbol, just as in regular plain old <code>bash</code>.</p>
+<h3 id="get-a-github-deploy-token">Get a GitHub deploy token</h3><p>Under your repository settings, generate a deploy/"personal access" token. Exact docs are <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line">here</a>, so in the spirit of "don’t repeat yourself" and "learn to read the docs", I will encourage you to read them.</p>
+<p>Once you have generated a deploy key, copy them somewhere - you will need it later. (Tip: also make sure you don’t accidentally save it to disk!)</p>
+<h3 id="connect-travis-ci-to-your-repository">Connect Travis CI to your repository</h3><p>On Travis CI, connect your Travis CI account to GitHub, and then enable Travis to look for changes on the <code>my-talk</code> repository. Generally, this is done by going to your user settings, and searching for "Legacy Services Integration", then toggling the checkbox to enable it on your <code>my-talk</code> repository.</p>
+<p>Once that is done, go into the Travis CI settings for the repository. Navigate to the "Environment Variables" section, and declare the <code>GITHUB_TOKEN</code> there. Be sure to keep it hidden from the output!</p>
+<h3 id="turn-on-github-pages">Turn on GitHub pages</h3><p>To turn on GitHub pages, we are going to stick to a pretty sane and widely-used set of practices when interacting with GitHub repositories and static sites.</p>
+<p>Firstly, on the GitHub repository for <code>my-talk</code>, create a new branch (using the web interface or through the CLI) called <code>gh-pages</code>. This time round, the name is definitely special, as GitHub recognizes this branch as a legitimate GitHub pages branch to serve content from.</p>
+<p>Secondly, go to the <strong>repository</strong> settings (not your user settings), and ensure that GitHub pages is enabled for the repository. Usually, adding the <code>gh-pages</code> branch will result in this option being  automagically turned on.</p>
+<p>Now, run:</p>
+<div class="hll"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">git add slides.md environment.yml .travis.yml</span>
+<span class="l l-Scalar l-Scalar-Plain">git commit -m &quot;first commit&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">git push</span>
+</pre></div>
+<p>Your slides, environment config, and Travis CI config files are now pushed to GitHub.</p>
+<h3 id="check-on-travis">Check on Travis</h3><p>Travis is now going to be building your slides and pushing them to the <code>gh-pages</code> branch. If all goes well, you will see the slides show up at the URL: <code>https://your_username.github.io/my-talk</code>. (Naturally, replace <code>your_username</code> with your GitHub username, and <code>my-talk</code> with your repository name.</p>
+<h2 id="debugging-builds">Debugging builds</h2><p>In case the build fails, you can inspect the output. Any errors are basically your standard bash <code>stderr</code>, so if you know how to debug error messages, you should be able to debug issues with the build.</p>
+<h2 id="beyond-this">Beyond this</h2><p>Going beyond serving up <code>reveal.js</code> slides, Travis hooked up to GitHub pages can help you build static sites very easily.</p>
+<p>If you use a static site generator (such as <a href="https://www.getlektor.com/">Lektor</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://blog.getpelican.com/">Pelican</a>, <a href="https://www.gatsbyjs.org/">Gatsby</a> or <a href="https://getnikola.com/">Nikola</a>), then you can create websites whose sources are fully under your control, 100% customizable, and fast to load. I do not blog on Medium because I desire full control over the display of my blog content, and I want to be able to take it anywhere I desire, without relying on a platform that might lock my content in. My personal website uses Lektor + Travis to push to GitHub pages; please feel free to look at <a href="https://github.com/ericmjl/website">the source</a> and raid the repo for anything you’d like!</p>
+<p><em>Addendum: I learned today from a fellow friend Nathan Matias that Netflix’s blog posts on Medium have been paywalled. Another reason for us to take back hosting of slides and blog content into our own hands!</em></p>
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Today I learned the <a href="https://twitter.com/netflix?ref_src=twsrc%5Etfw">@netflix</a> tech blog posts are paywalled by Medium and I may have to take their post off my syllabus.<br><br>Now I wonder if they paywalled posts which I intend to be freely available. Have any of you found that Medium was unexpectedly charging people for your work?</p>&mdash; J. Nathan Matias (@natematias) <a href="https://twitter.com/natematias/status/1218244174299963392?ref_src=twsrc%5Etfw">January 17, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/create-your-own-auto-publishing-slides-with-reveal-md-and-travis-ci"; this.page.url = "http://www.ericmjl.com/blog/2020/1/18/create-your-own-auto-publishing-slides-with-reveal-md-and-travis-ci/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

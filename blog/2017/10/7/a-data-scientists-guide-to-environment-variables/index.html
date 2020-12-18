@@ -1,0 +1,494 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>A Data Scientist&#39;s Guide to Environment Variables - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>A Data Scientist&#39;s Guide to Environment Variables</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-10-07
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/bash/">
+      bash
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/environment variables/">
+      environment variables
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/programming/">
+      programming
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>You might have encountered a piece of software asking you for permission to modify your <code>PATH</code> variable,
+or another program's installation instructions cryptically telling you
+that you have to "set your <code>LD_LIBRARY_PATH</code> variable correctly".</p>
+<p>As a data scientist, you might encounter other environment variable issues
+when interacting with your compute stack
+(particularly if you don't have full control over it, like I do).
+This post is meant to demystify what an environment variable is,
+and how it gets used in a data science context.</p>
+<h2 id="what-is-an-environment-variable">What Is An Environment Variable?</h2><p>First off, let me explain what an environment variable is,
+by going in-depth into the <code>PATH</code> environment variable.
+I'd encourage you to execute the commands here inside your bash terminal
+(with appropriate modifications -- read the text to figure out what I'm doing!).</p>
+<p>When you log into your computer system, say,
+your local computer’s terminal or your remote server via SSH,
+your bash interpreter needs to know where to look for particular programs,
+such as <code>nano</code> (the text editor), or <code>git</code> (your version control software),
+or your Python executable. This is controlled by your PATH variable.
+It specifies the paths to folders where your executable programs are found.</p>
+<p>By historical convention, command line programs,
+such as <code>nano</code>, <code>which</code>, and <code>top</code>,
+are found in the directory <code>/usr/bin</code>.
+By historical convention, the <code>/bin</code> folder is for software binaries,
+which is why they are named <code>/bin</code>.
+These are the ones that are bundled with your operating system,
+and as such, need special permissions to upgrade.</p>
+<p>Try it out in your terminal:</p>
+<pre><code>$ which which
+/usr/bin/which
+$ which top
+/usr/bin/top
+</code></pre>
+<p>Other programs are installed (for whatever reason) into <code>/bin</code> instead. <code>ls</code> is one example:</p>
+<pre><code>$ which ls
+/bin/ls
+</code></pre>
+<p>Yet other programs might be installed in other special directories:</p>
+<pre><code>$ which nano
+/usr/local/bin/nano
+</code></pre>
+<p>How does your Bash terminal figure out where to go to look for stuff?
+It uses the <code>PATH</code> environment variable.
+It looks something like this:</p>
+<pre><code>$ echo $PATH
+/usr/bin:/bin:/usr/local/bin
+</code></pre>
+<p>The most important thing to remember about the <code>PATH</code> variable is that it is "colon-delimited".
+That is, each directory path is separated by the next using a "colon" (<code>:</code>) character.
+The order in which your bash terminal is looking for programs goes from left to right:</p>
+<ul>
+<li><code>/usr/bin</code></li>
+<li><code>/bin</code></li>
+<li><code>/usr/local/bin</code></li>
+</ul>
+<p>On my particular computer, when I type in <code>ls</code>,
+my bash interpreter will look inside the <code>/usr/bin</code> directory first.
+It'll find that <code>ls</code> doesn't exist in <code>/usr/bin</code>,
+and so it'll move to the next directory, <code>/bin</code>.
+Since my <code>ls</code> exists under <code>/bin</code>,
+it'll execute the <code>ls</code> program from there.</p>
+<p>You can see, then, that this is simultaneously super flexible for customizing your compute environment,
+yet also potentially super frustrating if a program modified your <code>PATH</code> variable without you knowing.</p>
+<p>Wait, you can actually modify your <code>PATH</code> variable? Yep, and there's a few ways to do this.</p>
+<h2 id="how-to-modify-the-path-variable">How To Modify the <code>PATH</code> variable</h2><h3 id="using-a-bash-session">Using a Bash Session</h3><p>The first way is transient, or temporary, and only occurs for your particular bash session.
+You can make a folder have higher priority than the existing paths by "pre-pending" it to the <code>PATH</code> variable:</p>
+<pre><code>$ export PATH=/path/to/my/folder:$PATH
+$ echo $PATH
+/path/to/my/folder:/usr/bin:/bin:/usr/local/bin
+</code></pre>
+<p>Or I can make it have a lower priority than existing paths by "appending" it to the <code>PATH</code> variable:</p>
+<pre><code>$ export PATH=$PATH:/path/to/my/folder
+$ echo $PATH
+/usr/bin:/bin:/usr/local/bin:/path/to/my/folder
+</code></pre>
+<p>The reason this is temporary is because I only export it during my current bash session.</p>
+<h3 id="bashrc-or-bash-profile-file"><code>bashrc</code> or <code>.bash_profile</code> File</h3><p>If I wanted to make my changes somewhat more permanent,
+then I would include inside my <code>.bashrc</code> or <code>.bash_profile</code> file.
+(I recommend using the <code>.bashrc</code> file.)
+The <code>.bashrc</code>/<code>.bash_profile</code> file lives inside your home directory
+(your <code>$HOME</code> environment variable specifies this),
+and is a file that your bash interpreter will execute first load.
+It will execute all of the commands inside there.
+This means, you can change your PATH variable by simply putting inside your <code>.bashrc</code>:</p>
+<pre><code>...other stuff above...
+# Make /path/to/folder have higher priority
+export PATH=/path/to/folder:$PATH
+
+# Make /path/to/other/folder have lower priority
+export PATH=$PATH:/path/to/folder
+...other stuff below...
+</code></pre>
+<h2 id="data-science-and-the-path-environment-variable">Data Science and the <code>PATH</code> environment variable</h2><p>Now, <strong>how is this relevant to data scientists?</strong>
+Well, if you're a data scientist, chances are that you use Python,
+and that your Python interpreter comes from the Anaconda Python distribution
+(a seriously awesome thing, go get it!).
+What the Anaconda Python installer does is prioritize
+the <code>/path/to/anaconda/bin</code> folder in the <code>PATH</code> environment variable.
+You might have other Python interpreters installed on your system
+(that is, Apple ships its own).
+However, this <code>PATH</code> modification ensures that
+each time you type <code>python</code> into your Bash terminal,
+ou execute the Python interpreter shipped with the Anaconda Python distribution.
+In my case, after installing the Anaconda Python distribution, my <code>PATH</code> looks like:</p>
+<pre><code>$ echo $PATH
+/Users/ericmjl/anaconda/bin:/usr/bin:/bin:/usr/local/bin
+</code></pre>
+<p>Even better, what conda environments do is
+prepend the path to the conda environment binaries folder
+while the environment is activated.
+For example, with my blog, I keep it in an environment named <code>lektor</code>.
+Thus...</p>
+<pre><code>$ echo $PATH
+/Users/ericmjl/anaconda/bin:/usr/bin:/bin:/usr/local/bin
+$ which python
+/Users/ericmjl/anaconda/bin/python
+$ source activate lektor
+$ echo $PATH
+/Users/ericmjl/anaconda/envs/lektor/bin:/Users/ericmjl/anaconda/bin:/usr/bin:/bin:/usr/local/bin
+$ which python
+/Users/ericmjl/anaconda/envs/lektor/bin/python
+</code></pre>
+<p>Notice how the bash terminal now preferentially picks the Python inside the higher-priority <code>lektor</code> environment.</p>
+<p>If you've gotten to this point, then you'll hopefully realize there's a few important concepts listed here. Let's recap them:</p>
+<ul>
+<li><code>PATH</code> is an environment variable stored as a plain text string used by the bash interpreter to figure out where to find executable programs.</li>
+<li><code>PATH</code> is colon-delimited; higher priority directories are to the left of the string, while lower priority directories are to the right of the string.</li>
+<li><code>PATH</code> can be modified by prepending or appending directories to the environment variable. It can be done transiently inside a bash session by running the <code>export</code> command at the command prompt, or it can be done permanently across bash sessions by adding an <code>export</code> line inside your <code>.bashrc</code> or <code>.bash_profile</code>.</li>
+</ul>
+<h2 id="other-environment-variables-of-interest">Other Environment Variables of Interest</h2><p>Now, what other environment variables might a data scientist encounter? These are a sampling of them that you might see, and might have to fix, especially in contexts where your system administrators are off on vacation (or taking too long to respond).</p>
+<p><strong>For general use</strong>, you'll definitely want to know where your <code>HOME</code> folder is -- on Linux systems, it's often <code>/home/username</code>, while on macOS systems, it's often <code>/Users/username</code>.  You can figure out what <code>HOME</code> is by doing:</p>
+<pre><code>$ echo $HOME
+/Users/ericmjl
+</code></pre>
+<p><strong>If you're a Python user</strong>,
+then the <code>PYTHONPATH</code> is one variable that might be useful.
+It is used by the Python interpreter,
+and specifies where to find Python modules/packages.</p>
+<p><strong>If you have to deal with C++ libraries</strong>,
+then knowing your <code>LD_LIBRARY_PATH</code> environment variable is going to be very important.
+I'm not well-versed enough in this to espouse on it intelligently,
+so I would defer to <a href="http://xahlee.info/UnixResource_dir/_/ldpath.html">this website</a>
+for more information on best practices for using the <code>LD_LIBRARY_PATH</code> variable.</p>
+<p><strong>If you're working with Spark</strong>,
+then the <code>PYSPARK_PYTHON</code> environment variable would be of interest.
+This essentially tells Spark which Python to use for both its driver and its workers;
+you can also set the <code>PYSPARK_DRIVER_PYTHON</code>
+to be separate from the <code>PYSPARK_PYTHON</code> environment variable, if needed.</p>
+<p><strong>If you're developing data science apps</strong>,
+then according to the <a href="https://12factor.net">12 factor app development principles</a>,
+your credentials to databases and other sensitive information
+are securely stored and dynamically loaded into the environment at runtime.
+How then do you mimic this in a "local" environment (i.e. your computer)
+without hard-coding sensitive information in your source <code>.py</code> files?</p>
+<p>One way to handle this situation is as follows:
+Firstly, create a <code>.env</code> file in your home directory.
+In there, store your credentials:</p>
+<div class="hll"><pre><span></span><span class="nv">SOME_PASSWORD</span><span class="o">=</span><span class="s2">&quot;put_your_pw_here&quot;</span>
+<span class="nv">SOME_USERNAME</span><span class="o">=</span><span class="s2">&quot;put_your_username_here&quot;</span>
+</pre></div>
+<p>Next, add it to your <code>.gitignore</code>, so you never add it to your version control system.</p>
+<div class="hll"><pre><span></span><span class="c1"># other things</span>
+.env
+</pre></div>
+<p>Finally, in your source <code>.py</code> files, use <code>python-dotenv</code> to load the environment variables at runtime.</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">username</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SOME_USERNAME&quot;</span><span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SOME_PASSWORD&quot;</span><span class="p">)</span>
+</pre></div>
+<h3 id="hack-your-environment-variables">Hack Your Environment Variables</h3><p>This is where the most fun happens!
+Follow along for some stuff you might be able to do
+by hacking your environment variables.</p>
+<p><strong>Hack #1: Enable access to PyPy.</strong>
+I occasionally keep up with the development of PyPy,
+but because PyPy is not yet the default Python interpreter,
+and is not yet <code>conda install</code>-able,
+I have to put it in its own <code>$HOME/pypy/bin</code> directory.
+To enable access to the PyPy interpreter,
+I have to make sure that my <code>/path/to/pypy</code> is present
+in the <code>PATH</code> environment variable,
+but at a lower priority than my regular CPython interpreter.</p>
+<p><strong>Hack #2: Enable access to other language interpreters/compilers.</strong>
+This is analogous to PyPy.
+I once was trying out Lua's JIT interpreter to use Torch for deep learning,
+and needed to add a path to there in my <code>.bashrc</code>.</p>
+<p><strong>Hack #3: Install Python packages to your home directory.</strong>
+On shared Linux compute systems that use the <code>modules</code> system
+rather than <code>conda</code> environments,
+a <code>modulefile</code> that you load might be configured
+with a virtual environment that <em>you don't have permissions to modify</em>.
+If you need to install a Python package,
+you might want to <code>pip install --user my_pkg_name</code>.
+This will install it to <code>$HOME/.local/lib/python-[version]/site-packages/</code>.
+Ensuring that your <code>PYTHONPATH</code>
+includes <code>$HOME/.local/lib/python-[version]/site-packages</code>
+at a high enough priority is going to be important in this case.</p>
+<p><strong>Hack 4: Debugging when things go wrong.</strong>
+In case something throws an error,
+or you have unexpected behaviour --
+something I encountered before was my Python interpreter
+not being found correctly after loading all of my Linux modules --
+then a way to debug is to temporarily set your PATH environment variable
+to some sensible "defaults" and sourcing that,
+effectively "resetting" your PATH variable,
+so that you can manually prepend/append while debugging.</p>
+<p>To do this, place the following line inside a file named <code>.path_default</code>,
+inside your home directory:</p>
+<pre><code>export PATH=""  # resets PATH to an empty string.
+export PATH=/usr/bin:/bin:/usr/local/bin:$PATH  # this is a sensible default; customize as needed.
+</code></pre>
+<p>After something goes wrong,
+you can reset your PATH environment variable by using the "source" command:</p>
+<pre><code>$ echo $PATH
+/some/complicated/path:/more/complicated/paths:/really/complicated/paths
+$ source ~/.path_default
+$ echo $PATH
+/usr/bin:/bin:/usr/local/bin
+</code></pre>
+<p>Note - you can also execute the exact same commands inside your bash session;
+the interactivity may also be helpful.</p>
+<h3 id="conclusion">Conclusion</h3><p>I hope you enjoyed this article, and that it'll give you a, ahem,
+path forward whenever you encounter these environment variables!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/a-data-scientists-guide-to-environment-variables"; this.page.url = "http://www.ericmjl.com/blog/2017/10/7/a-data-scientists-guide-to-environment-variables/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

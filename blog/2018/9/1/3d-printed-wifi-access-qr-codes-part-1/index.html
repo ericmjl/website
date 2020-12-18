@@ -1,0 +1,315 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>3D Printed WiFi Access QR Codes: Part 1 - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>3D Printed WiFi Access QR Codes: Part 1</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2018-09-01
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/3d printing/">
+      3d printing
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/qr codes/">
+      qr codes
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <h2 id="the-project">The Project</h2><p>Over the weekend, I embarked on a project to create a 3D printed QR code that guests at our house could scan to gain access to our guest wireless network.</p>
+<h2 id="why-i-decided-to-do-this">Why I decided to do this</h2><p>From the standpoint of practicality, sure, it's trivial to open up phone settings, find the WiFi network name, and give them the password, but... this has the coolness factor associated with it! Imagine scanning a 3D-printed QR code! Until this becomes commonplace, it's a cool thing to be able to do.</p>
+<p>Anyways, there's a ton of QR code generators out there on the web, and there's more than a handful of WiFi QR code generators out there - so why did I embark on this project?</p>
+<p>Partly it's borne out of security reasons - I am not giving my WiFi password up to some random website. Who knows whether they're actually storing the passwords?</p>
+<p>Another part of this is borne out of me wanting to scratch my itch surrounding QR codes. The last time I went to China (Xi'an and Shanghai, specifically), I saw QR codes <em>everywhere</em>. There surely had to be something good we could use this for at home that didn't involve just packing and storage.</p>
+<h2 id="getting-setup">Getting Setup</h2><p>Ok, let's get started! To create QR codes, all you need are the following packages installed in your environment:</p>
+<ol>
+<li><code>pyqrcode</code> [<code>pip</code>]</li>
+<li><code>pypng</code> [<code>pip</code>]</li>
+</ol>
+<p>If you want to do the 3D printing part, you'll need another package:</p>
+<ol>
+<li><code>SolidPython</code> [<code>pip</code>]</li>
+<li><code>numpy</code> [<code>conda</code>/<code>pip</code>]</li>
+</ol>
+<p>Finally, if you'd like to work with command line interfaces and Flask, you'll need:</p>
+<ol>
+<li><code>click</code> [<code>pip</code>/<code>conda</code>]</li>
+<li><code>Flask</code> [<code>pip</code>/<code>conda</code>]</li>
+</ol>
+<h2 id="encoding-wifi-credentials-in-a-qr-code">Encoding WiFi credentials in a QR code</h2><p>Let's start by creating a QR code for our WiFi guest network.</p>
+<p>Let's say that these are the security credentials for the network:</p>
+<ul>
+<li>SSID (a.k.a. Network Name): <code>Family Guest Network</code></li>
+<li>Password: <code>vn8h2sncu093y3nd!</code></li>
+<li>Security Type (one of WPA or WEP): <code>WPA</code></li>
+</ul>
+<p>Because QR codes are merely two-dimensional barcodes that encode a string that can be parsed by another program, in order to create a QR-code that is readable for accessing WiFi, we need a string that can be parsed. This string is structured as follows:</p>
+<div class="hll"><pre><span></span>WIFI:S:&lt;SSID&gt;;T:&lt;WPA|WEP|&gt;;P:&lt;password&gt;;;
+</pre></div>
+<p>So in our case, we would want a string that looks like:</p>
+<div class="hll"><pre><span></span>WIFI:S:Family Guest Network;T:WPA;P:vn8h2sncu093y3nd!;;
+</pre></div>
+<p>Now, we can code up our Python program do encode the QR code for us. I'll assume you're running Python 3.6 or later.</p>
+<div class="hll"><pre><span></span><span class="kn">import</span> <span class="nn">pyqrcode</span> <span class="k">as</span> <span class="nn">pq</span>
+<span class="n">ssid</span> <span class="o">=</span> <span class="s2">&quot;Family Guest Network&quot;</span>
+<span class="n">security</span> <span class="o">=</span> <span class="s2">&quot;WPA&quot;</span>
+<span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;vn8h2sncu093y3nd!&quot;</span>
+<span class="n">qr</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;WIFI:S:</span><span class="si">{</span><span class="n">ssid</span><span class="si">}</span><span class="s1">;T:</span><span class="si">{</span><span class="n">security</span><span class="si">}</span><span class="s1">;P:</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s1">;;&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">qr</span><span class="o">.</span><span class="n">terminal</span><span class="p">())</span>
+</pre></div>
+<p>With that block of code, you should get a QR code printed to your terminal, just like that!</p>
+<p>Let's say you wanted to do the simple thing, and just have a regular laser/inkjet printer make a printout of the QR code. To do so, you can save the QR code to disk as a PNG file:</p>
+<div class="hll"><pre><span></span><span class="n">qr</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="s1">&#39;home_guest_wifi.png&#39;</span><span class="p">)</span>
+</pre></div>
+<h2 id="conclusions">Conclusions</h2><p>And just like that, you've used Python to create a WiFi QR code!  How easy was that?</p>
+<p>Along the way, I also used Kite in the Atom text editor while embarking on this project - this allowed me to view documentation and common usage patterns for the packages I imported.</p>
+<p>Now, if you remember that QR codes are just "ASCII strings encoded in a 2D barcode", then you'll know that you can pass any arbitrary string into the <code>pyqrcode.create()</code> function. That means you can come up with any creative use of a short string that needs to be scanned to be useful! For example, you can create business cards with your LinkedIn profile URL embedded in the QR code, or use it to encode a serial number information on your possessions, or more!</p>
+<p>Stay tuned for the coming blog posts!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/3d-printed-wifi-access-qr-codes-part-1"; this.page.url = "http://www.ericmjl.com/blog/2018/9/1/3d-printed-wifi-access-qr-codes-part-1/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

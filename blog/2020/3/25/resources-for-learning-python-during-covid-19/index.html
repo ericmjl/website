@@ -1,0 +1,419 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Resources for learning Python during COVID-19 - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Resources for learning Python during COVID-19</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-03-25
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/covid-19/">
+      covid-19
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      python
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/learning/">
+      learning
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>With COVID-19 on hand, you might have some time to go deeper into Python programming.</p>
+<p>I'd like to recommend some resources for you, in case you wish to brush up, learn, or go deeper.</p>
+<h2 id="datacamp-https//www-datacamp-com/"><a href="https://www.datacamp.com/">DataCamp</a></h2><p>If you're a complete beginner, I recommend going with DataCamp.
+I say this with a full up-front disclosure that I'm a DataCamp instructor,
+and if you make it to the Network Analysis courses, then I benefit from you.
+(If you don't, then I don't.)</p>
+<p>The reasons why I recommend DataCamp is:</p>
+<ul>
+<li>They have a hosted compute environment that you use,
+thus freeing you from the potentially tricky task of navigating
+how best to install Python on your local system,
+and letting you focus on learning Python.</li>
+<li>The exercises are designed in such a way to be bite-sized,
+so you can pace yourself through the curriculum.
+A little practice every day goes a very long way to picking it up.
+This I know because I also had to design the network analysis curricula the same way.</li>
+<li>There are clearly delineated specializations for both R and Python programmers,
+and psychologically, it can be very rewarding to navigate a pre-defined path for a learner, thus easier to keep up the learning.
+(This is also a very smart business strategy that ed-tech firms use.)</li>
+<li>Beyond just the beginner-oriented courses, they go all the way up to the core PyData stack through to deep learning. </li>
+<li>Finally, there are example projects that they recommend to you when you've passed the pre-requisite courses, thus giving you more practice.</li>
+</ul>
+<p>The reason why you wouldn't want to go with DataCamp is because you have to pay for it,
+and maybe because you don't trust the words of someone who has a conflict of interest.
+(I don't blame you, I'd take the same position.)</p>
+<p>You might need to discuss with your management if your team is going to sponsor your learning.</p>
+<h2 id="coursera-https//www-coursera-org/"><a href="https://www.coursera.org/">Coursera</a></h2><p>Coursera has a wide range of offerings for learning Python,
+and they are completely free with certification
+if your organization sponsors it (my current employer Novartis includes this as a perk).
+(Otherwise, it's just free - also hard to beat.)
+Just on the basis of price I would not hesitate to recommend it.</p>
+<p>That said, there's a lot of courses to choose from.</p>
+<ul>
+<li>The well-reviewed ones, that also come as a series, generally are from the University of Michigan.</li>
+<li>JHU also provides some neat ones, such as "Python for Genomic Data Science".</li>
+<li>As a prior (i.e. having not seen the course content), I would avoid the ones by IBM and other big firms.
+Prior experience has told me they're likely not hands-on (though I might be wrong).</li>
+</ul>
+<p>One of the bigger issues here is that you might need to learn how to set up your own Python programming environment.
+For this, consult your friendly neighborhood <a href="https://www.reddit.com/r/ProgrammerHumor/comments/7pxp2b/parsertongue/">parsertongue</a> speaker
+(i.e. a colleague who knows Python) to help you.</p>
+<h2 id="think-python-https//greenteapress-com/wp/think-python-2e/"><a href="https://greenteapress.com/wp/think-python-2e/">Think Python</a></h2><p>Think Python is an online book by Allen Downey,
+a professor of computer science and more at the Olin College of Engineering in Needham, MA.
+Allen is also a fellow Python community educator,
+and has generously let me test-drive my deep learning tutorials at his classes.</p>
+<p>In this book, Allen leverages the friendliness of the Python programming language to teach you basic computing concepts.</p>
+<p>Allen is incredibly generous, and has made the book freely available online, though you can buy it via Amazon or O'Reilly Media.</p>
+<p>He's got other titles for those who already know Python:</p>
+<ul>
+<li><a href="https://greenteapress.com/thinkstats/">Think Stats</a>: Statistics taught using computation.</li>
+<li><a href="https://greenteapress.com/wp/think-bayes/">Think Bayes</a>: <em>Bayesian</em> statistics (YAY!) taught using computation.
+(I used this book to get brushed up on Bayesian inference when in grad school.)</li>
+<li><a href="http://greenteapress.com/complexity/">Think Complexity</a>: A computation-oriented introduction to data science.
+This book actually kickstarted half of my doctoral thesis.</li>
+</ul>
+<h2 id="automate-the-boring-stuff-with-python-https//automatetheboringstuff-com/"><a href="https://automatetheboringstuff.com/">Automate the Boring Stuff with Python</a></h2><p>This is a book by a Python friend of mine, Al Swiegart, whom I met at the annual PyCon USA.</p>
+<p>In this book, Al teaches you how to use Python code
+to automate all the boring, repetitive stuff that you encounter in your day-to-day work on a computer.
+It's this kind of project, which directly impacts your day-to-day,
+that can keep your motivation levels high while learning.</p>
+<p>Al is also incredibly generous, and has made the book freely available online,
+and sometimes gives away the physical book for free.
+But as it's one of his income sources, I'd encourage you to buy the book
+(just as I did, even though I don't really need to read it anymore). </p>
+<h2 id="e2eml-by-brandon-rohrer-https//end-to-end-machine-learning-teachable-com/courses"><a href="https://end-to-end-machine-learning.teachable.com/courses">e2eML by Brandon Rohrer</a></h2><p>This is an online course created by Brandon Rohrer,
+who is a data scientist at iRobot (the maker of those fancy robot vacuums!).</p>
+<p>Brandon is pretty active on social media, and is a fellow education enthusiast.
+(I sometimes wish my current role could include formal classroom teaching as part of my professional goals.)
+With this online course, he brings you through one opinionated path to getting good with machine learning and data science.
+As a pre-requisite, you should know how to set up your own Python programming environment,
+as there's no hosted computing environment for you.</p>
+<h2 id="your-own-project">Your Own Project</h2><p>If you're proficient with some basic Python, and in particular, have learned how to use <code>pandas</code>,
+then you might want to take the time to re-do an analysis that you did once, except now done in <code>pandas</code> and Python.</p>
+<p>Doing so will get you lots of practice in what <em>actual</em> day-to-day data science programming looks like, where you:</p>
+<ul>
+<li>encounter new error messages you've never seen before,</li>
+<li>have to learn how to ask the "right" questions to debug them,</li>
+<li>might end up pinging a friend/colleague to help you,</li>
+<li>end up knowing deeply how to solve that problem, because <strong>you</strong> encountered it for yourself.</li>
+</ul>
+<p>If possible, write a blog post as well, to document your learning journey, especially explaining how you solved the problem.
+I have found this to be an incredibly effective way of making that thing I just learned stick in memory.</p>
+<h2 id="scipy/pycon-conferences">SciPy/PyCon conferences</h2><p>The SciPy and PyCon conferences are two annual Python conferences that I have attended since grad school,
+and they have a wealth of resources available for learners.</p>
+<p>There are YouTube playlists available for each of them
+(<a href="https://www.youtube.com/user/EnthoughtMedia/playlists?view=50&amp;sort=dd&amp;shelf_id=1">SciPy</a>
+and <a href="https://www.youtube.com/channel/UCxs2IIVXaEHHA4BtTiWZ2mQ">PyCon</a>).
+PyCon has a new YouTube channel each year, while SciPy uses Enthought Media's own channel.</p>
+<p>If you dig deep enough, my tutorials are available online as well, freely available for anybody to watch.
+(I link them from my <a href="https://ericmjl.github.io/teaching/">personal website</a> if you want a shortcut there...
+alrighty, enough of my shameless self-promotion.)</p>
+<p>Some videos that have been helpful in my own learning journey:</p>
+<ul>
+<li><a href="https://youtu.be/fMycLa1bsno">Computational Statistics 1 by Allen Downey</a></li>
+<li><a href="https://youtu.be/heFaYLKVZY4">Computational Statistics 2 by Chris Fonnesbeck</a>
+(Chris Fonnesbeck is an ex-Vanderbilt biostatistics professor who quit and joined the Yankees.
+He is also the creator and BDFL of PyMC, for which I help out with development.)</li>
+<li><a href="https://youtu.be/mbfsog3e5DA">Parallelizing Scientific Python with Dask by Jim Crist &amp; co.</a>
+(Dask is a highly productive tool for interactive parallel data science!)</li>
+<li><a href="https://youtu.be/oGzU688xCUs">Pandas for Data Analysis by Daniel Chen</a>.
+(Dan Chen and I are often mistaken for each other. He also has a good book for <code>pandas</code>.)</li>
+</ul>
+<p>The YouTube videos are quite good for those who have some basic knowhow on managing their own Python environments.
+There are some beginner-friendly ones that show you how to get started with Python too.
+In particular, <a href="https://www.youtube.com/watch?v=pB3BFP001co&amp;list=PLytH1Th3ORyNIBPyOQg20CsVhVIJh1u2a">this playlist</a>
+should cover everything for you.</p>
+<h2 id="pandas-resources"><code>pandas</code> Resources</h2><p>If you're already proficient with Python, then learning <code>pandas</code> can only help you.
+<code>pandas</code> is the idiomatic package for working with data tables in Python.
+Knowing how to use it can help you be productive 
+when working with tables that come from collaborators,
+or data from databases.</p>
+<p>Here's some resources for picking up <code>pandas</code>:</p>
+<ul>
+<li><a href="https://tomaugspurger.github.io/modern-1-intro.html">Modern Pandas</a> by <a href="https://tomaugspurger.github.io/">Tom Augspurger</a>. Tom is also someone I have met on the conference circuit.</li>
+<li><a href="https://www.amazon.com/Pandas-Cookbook-Scientific-Computing-Visualization-ebook/dp/B06W2LXLQK">Pandas Cookbook</a> by <a href="https://www.linkedin.com/in/tedpetrou/">Ted Petrou</a>, a Python trainer and consultant.</li>
+<li><a href="https://www.amazon.com/Pandas-Everyone-Analysis-Addison-Wesley-Analytics-ebook/dp/B0789WKTKJ">Pandas for Everyone</a> by <a href="https://chendaniely.github.io/">Daniel Chen</a>.</li>
+</ul>
+<h2 id="other-notes">Other notes</h2><h3 id="setting-up-python-locally">Setting up Python locally</h3><p>Thus far, I've alluded to "setting up your own Python environment" many times.
+To demystify what I mean by that, it really boils down to installing
+the <a href="https://www.anaconda.com/distribution/">Anaconda distribution</a> of Python more than anything else.
+(<strong>Don't download the Python 2.7 version, it's outdated!</strong>)
+The Anaconda Python distribution, distributed by the distribution namesake Anaconda,
+solved a lot of Python packaging problems that weren't actively being solved in the early 2010s,
+and "robustified" the distribution of Python packages.
+I myself was once skeptical about using it,
+until I screwed up my own system Python installation and broke iPhoto.
+That's when I finally bit the bullet and installed it - and never looked back since.</p>
+<h3 id="jupyter">Jupyter</h3><p>You might encounter the name "Jupyter", and think that "Jupyter" provides packages.
+This is incorrect - Jupyter is the name of an ecosystem of tools that data scientists use,
+and it covers</p>
+<ul>
+<li>a computation notebook ("Jupyter Notebook") where you can weave code, prose, and figures together,</li>
+<li>connectors to computation engines ("Kernels"), such as a Python or R or Scala language kernel,
+that in turn houses the packages you install, and</li>
+<li>an integrated development environment ("Jupyter Lab"), which provides you the interface for coding in the browser.</li>
+</ul>
+<p>IPython is the precursor monolith project to Jupyter, and it was primarily focused on the computation engine and notebook.</p>
+<p>Hope that disambiguates the terms for you.</p>
+<h3 id="the-most-important-trick-for-learning..">The Most Important Trick For Learning...</h3><p>...is nothing more than getting practice every single day.</p>
+<p>Even if it's only for a single DataCamp exercise, getting that practice in <em>daily</em> is important for mastery.
+Otherwise, your time spent learning now will simply go to waste,
+filed away in the "I guess I learned it" cabinet never to be retrieved and tested again.
+If you want the knowledge to stick, you need to increase the odds that you'll get practice every day.</p>
+<p>If you have a project you need to solve, you increase the odds that you'll get practice every day.</p>
+<p>If you have sunken costs (time or money) into a course, you increase the odds that you'll practice every day.</p>
+<p>If you have a community of learners to learn with, you increase the odds that you'll practice every day.</p>
+<p>If you have a resource person with whom you click that you can ask questions of, you increase the odds that you'll practice every day.</p>
+<h3 id="other-resources">Other resources</h3><p>I clearly have a biased view of the world; if you have other resources for learning Python, don't hesitate to DM me or share them with your friends!</p>
+<h2 id="finally..">Finally...</h2><p>Stay safe, y'all. Stay indoors, stay away from other people, and keep washing your hands!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/resources-for-learning-python-during-covid-19"; this.page.url = "http://www.ericmjl.com/blog/2020/3/25/resources-for-learning-python-during-covid-19/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

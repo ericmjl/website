@@ -1,0 +1,307 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Reticulate Evolution and Microbial Ecology - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Reticulate Evolution and Microbial Ecology</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-12-03
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/influenza/">
+      influenza
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/graduate school/">
+      graduate school
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/peer review/">
+      peer review
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/thesis/">
+      thesis
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I am happy to announce that, with my advisor's (Jon Runstadler, MIT) approval, I've uploaded my first 1st-author paper to <a href="http://biorxiv.org/content/early/2015/12/02/033514">BioRXiv</a>. This may sound surprising, to document and write about the paper pre-peer review, rather than after being formally accepted after peer-preview in a journal. This choice is borne out of two desires.</p>
+<p>Firstly, I am fed up with having the editorial process decide whether my work can be sent for peer evaluation, based on some perceived notion of broad impact or editorial alignment. This manuscript has gone through four editorial rejections and (hopefully not) counting…  I acknowledge that "4" is a small number, but my patience and tolerance level for bureaucratic delays is very low, and I think the editorial process is a big reason delaying the work from review. After internal review and public presentation in talks and posters, peer review and evaluation is the final step in getting my work evaluated in the public domain. Really, it’s about getting feedback on whether what I’ve worked on constitutes sufficiently rigorous scientific work or not. I’d like to know that earlier rather than later, and I do not believe that editors should be the gatekeepers of this process. Pre-print servers let me release the work to the public domain without tough barriers to break down, which help me achieve this goal.</p>
+<p>Secondly, I’m really, like <em>really</em>, excited about the results in this paper, regardless of what others think about its impact. It’s hard to contain this PhD candidate’s enthusiasm for his work. I’m particularly proud of the work done here, especially the code written from scratch to answer this question, with everything written and designed to be reproducible. Thus, much like an artist has a natural drive towards showcasing work s/he is proud of, I have this desire to get it out there. I hope you enjoy it.</p>
+<h2 id="manuscript-in-brief">Manuscript in Brief</h2><p><strong>Title:</strong> Reticulate evolution is favoured in microbial niche switching.</p>
+<p><strong>Question being answered:</strong> Can we measure how important reticulate evolutionary processes that result in gene exchange are in enabling microbes to switch between ecological niches?</p>
+<p><strong>tl;dr answer</strong>: Yes we can, and when switching ecological niches, the ability to exchange genes is more important the greater the difference between the niches.</p>
+<p><strong>Definitions:</strong>
+I think some definitions are required before I proceed.</p>
+<ul>
+<li><em>Reticulate evolution</em>: A non-tree-like evolutionary trajectory. It involves processes like recombination, reassortment, horizontal gene transfer, sexual reproduction etc. In this paper, we detect reassortment amongst influenza A viruses.</li>
+<li><em>Ecological niche</em>: Ecology is the study of organisms and their interactions with one another and their environment. Organisms occupy certain niches - such as particular habitats, producing and consuming particular combinations of nutrients. In this paper, an ecological niche is defined as a particular host species of the influenza A virus.</li>
+<li><em>Switching</em>: When a microbe switches ecological niches, it has either entered a new ecological niche - different environment, a new set of host species it interacts with etc. In this paper, we define niche switching as switching between different hosts, as the host is the environment for the influenza A virus.</li>
+</ul>
+<p><strong>Brief Background:</strong></p>
+<p>In the field of ecology, there’s this idea that gene exchange between two microbes can lead to genetic diversity, and lead to fitness advantages in new environments. To the best of my knowledge, this idea has not been tested explicitly (and I am happy to be corrected on this). In our paper, we sought to <strong>test whether, in switching between different host species, gene shuffling between influenza A viruses was more prevalent than clonal transmission</strong>. If so, it would allude to a broader principle that reticulate evolutionary events are important when microbes change ecological niches.</p>
+<p><strong>Why should we care?</strong></p>
+<p>Why should we care about this problem that, seemingly, only microbes have to deal with? Well, we know that microbes and human health intersect, and this is borne out in the scientific literature. Specifically with the influenza virus, every new pandemic virus that has emerged in human populations has been shown to be a reassortant virus. It looks quite clear to me that reticulate evolution intersects with host and microbe ecology, impacting human health.</p>
+<p><strong>How did we answer the scientific question at hand?</strong></p>
+<p>To do this, we used data from the Influenza Research Database, which houses influenza sequence data augmented with collection date and host species metadata. This makes it a really suitable dataset to answer the broader question, "Is reticulate evolution is favoured in ecological niche switches?". This is because of a few reasons. Firstly, it is a densely-sampled dataset with a global scope, which allows us to detect rare reassortment events. Secondly, we can trace source-sink paths through different host species, by using time and genetic data. Finally, influenza can undergo reassortment, which is its reticulate evolutionary process.</p>
+<p>To answer the broader question, we first had to figure out which viruses were reassortant, and where they came from. Our method involves using a phylogenetic heuristic method, which has been previously published, and which we modified to detect reticulate evolutionary events. We basically ask, "What are the sources of segments for each influenza virus?" We try to make sure that all segments for one "sink" virus isolate are traceable back to one older "source" isolate, ensuring that the two isolates are of maximal similarity possible across all 8 segments. That sink virus would be denoted as a clonally transmitted virus, resulting from "<strong>clonal descent</strong>". However, if a "source pair", i.e. two viruses donating part of their genome, could improve the summed similarity score, then we denote that sink virus as the reassortant virus, resulting from "<strong>reassortment descent</strong>".</p>
+<p>How do we represent the data? This is done as a directed graph of influenza A virus isolates (nodes), and two types of descent (edges): clonal and reassortment. If there are more than one plausible clonal or reassortment source, then the corresponding edges are weighted accordingly, such that the sum of edges into one node is equal to 1. This encodes our knowledge of one virus being the result of one possible reassortment event, or one clonal transmission event.</p>
+<p><strong>What did we find?</strong></p>
+<p>We show in our supplementary data that our method and representation together well-approximates the phylogenetic relationships calculated by more sophisticated Bayesian methods, and that it captures known patterns of influenza transmission and ‘famous’ reassortant viruses. In some sense, the method we adapted can scale better compared to Bayesian methods, especially when the number of viral taxa are large, and I think it can represent reticulate events better than trees. However, I will state that Bayesian phylogenetic inference is still the gold-standard for representing evolution on a single gene/trait.</p>
+<p>We then wanted to assess whether reassortment was over-represented when hosts were identical or different. To calculate this, we looked all edges where the source and sink hosts were identical, and compared them to edges where the source and sink hosts were different. When source and sink hosts were different, the proportion of edges that represented reassortment events were over-represented compared to a null model of host species labels on the viral nodes being permuted. When they were identical, reassortment was under-represented compared to the null.</p>
+<p>We then wanted to know whether at different host group interfaces, reassortment was over- or under-represented compared to a null model. We found that once again, reassortment was under-represented compared to the null when the virus jumped between hosts of the same group, and over-represented when jumping between different host groups.</p>
+<p>Finally, we wanted to know whether the degree of dissimilarity between two hosts mattered. We used data from the Barcode of Life Database to identify the host’s cytochrome oxidase I genes, and measured percentage dissimilarity as a metric of the degree of host dissimilarity. Here, we found that as hosts become more different, reassortment was more prominently featured during those switches.</p>
+<p><strong>So what does this all mean?</strong></p>
+<p>All-in-all, we find that reticulate evolutionary processes are indeed important in microbe ecology. Scientifically, I think the novelty here lies in quantitatively defining the importance of the ability to shuffle genes when a microbe changes ecological contexts, with the change quantitatively defined as well. From a public health perspective, if I were allowed to put on my "divergent thinking" hat, one direct application of this knowledge would be to quantify the "reticulate potential" of a pathogen - how easily it can acquire and share genes. This may inform which pathogens we would want to perform deeper disease surveillance on.</p>
+<p><strong>Where can I view this paper, code, and data?</strong></p>
+<p>In line with open science principles, we have uploaded all of the code used in the analysis to Zenodo. Their DOIs are referenced in the manuscript.</p>
+<p>The paper is available <a href="http://biorxiv.org/content/early/2015/12/02/033514">here</a> on BioRXiv.</p>
+<p>The data are publicly available on the <a href="www.fludb.org">Influenza Research Database</a>.</p>
+<p>I hope you enjoy reading it!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/reticulate-evolution-and-microbial-ecology"; this.page.url = "http://www.ericmjl.com/blog/2015/12/3/reticulate-evolution-and-microbial-ecology/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

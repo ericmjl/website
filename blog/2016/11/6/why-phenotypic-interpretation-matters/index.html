@@ -1,0 +1,279 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Why Phenotypic Interpretation Matters - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Why Phenotypic Interpretation Matters</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-11-06
+
+    
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>At IMED 2016, I heard a lot of talks surrounding surveillance efforts. Most of it has been syndromic surveillance, because that's what's currently collectable. For digital disease surveillance, search queries (a marker of "interest" in a disease) are used as a proxy for probable presence of a disease.</p>
+<p>These are good for real-time surveillance, but I think it's not good enough from the standpoint of accuracy and understanding mechanism.</p>
+<p>For accuracy, syndromic surveillance and search queries are n<sup>th</sup>-degree manifestations of underlying causes. Multiple different pathogens can present the same symptoms. Upticks in searches for a given symptom or pathogen may have multiple underlying causes, though "hearing of the disease" and "being concerned about it" may be related to certain diagnoses and local spread of information.</p>
+<p>Found data can help act as a very early sentinel to a problem, and can guide us by providing leads to follow-up, but for understanding mechanism, neither tell us how a new virus is going to be dangerous.</p>
+<p>In other words, while fast and rapid and local, syndromic surveillance and digital disease surveillance remains a reactive endeavour, because we can't mechanistically forecast risk from the data.</p>
+<p>On the other hand, genomic data is often collected with the intention of understanding pathogen dynamics, as we have well-developed phylogenetic tools for this. However, we still rely on single point mutations, identified in small-scale, one-off, ad-hoc, [insert-some-dashed-phrase-that-expresses-frustration] studies, and basically treat the limited amount of evidence as gospel. I am quite sure that is not the right way to do phenotypic interpretation of genomic data.</p>
+<p>If we're going to make disease surveillance a <strong>proactive</strong> endeavour, I am convinced that the disease surveillance world will need a paradigm shift, and investment in infrastructure. By predictive, this is what I mean:</p>
+<ol>
+<li>Calculating what has a high probability of jumping into humans.</li>
+<li>Phenotypically testing those viruses without using live viruses (concept of pseudotyping).</li>
+<li>Using genomic information to predict phenotype.</li>
+</ol>
+<p>Here's how I see it happening, given everything I've learned at IMED 2016:</p>
+<p><strong>(1) Sequence everything, in animals that interface with humans</strong></p>
+<p>60-70% of new infections are going to be zoonotic in nature. To know what might be coming up, use metagenomics to sequence animal species in geographic areas that humans, <em>prior</em> to the host switch event. To me, this is a no-brainer. Long-term serial sampling is going to be key.</p>
+<p><strong>(2) Leverage pseudotyping technologies and genetic systems, and automation, to create systematic phenotyping platforms</strong></p>
+<p>Doing so will allow us to phenotypically test components of a virus for a particular step in its life cycle, such as speed of entry into a cell, or resistance to a drug. With rapid DNA synthesis &amp; assembly technologies, we should be able to experimentally measure a virus' epidemiologically-relevant phenotype within 24 hours of an outbreak. We should also be able to rapidly generate large-scale genotype-phenotype data for machine learning.</p>
+<p>What would be relevant phenotypes? I can think of a few, broken down basically to "druggability" and "life cycle steps":</p>
+<ol>
+<li>For druggable proteins, measure drug resistance. It has high epidemiological relevance, and hence, value.</li>
+<li>For viruses targetable by drugs and not alike, measure cellular entry capability.</li>
+<li>For identified polymerase complexes, measure replication capacity.</li>
+<li>For cellular release machinery, if identified, measure release.</li>
+<li>If there's others already existing for which the case can be made for systematic phenotyping, scale the assay up.</li>
+</ol>
+<p><strong>(3) Develop machine learning tools that allow for learning of structural properties that determine epi-relevant protein phenotype</strong></p>
+<p>By doing so, we can explicitly model epistasis in a protein, and therefore account for epistatic interactions explicitly when developing learning algorithms that map genotype to phenotype. With this kind of technology coupled to the ability to sequence a virus within hours of sample collection, we'll be able to cut down the time for phenotypic interpretation from the order of a day (because of experimentation required) to seconds (because it's a computational prediction). By going Bayesian, we can even model uncertainty in final predictions, thereby aiding decision-making under uncertainty.</p>
+<hr>
+<p>In conjunction with the "sequence everything" approach, systematic phenotyping and deep learning will allow us to move to a "predictive" paradigm because it'll give us the ability to rationally predict the phenotypic risk of a virus before it even jumps into humans. I see this as an infrastructural project: requiring up-front commitment of time and money. Yet, we know that investments in infrastructure always pay off dividends in a myriad of ways, from time saved to lives saved.</p>
+<p>Something I learned from IMED 2016, however, is that epidemiology is an old discipline, and with old disciplines comes a certain tunnel vision on how things should be done. It'll be up to a new and creative generation (i.e. us) to convince the funders and old guard that our new way will add value to the discipline.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/why-phenotypic-interpretation-matters"; this.page.url = "http://www.ericmjl.com/blog/2016/11/6/why-phenotypic-interpretation-matters/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

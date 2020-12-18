@@ -1,0 +1,842 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../static/pygments.css">
+
+    
+    
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Blog - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/18/" class="btn btn-secondary-nord">18</a>
+  
+
+  
+  <a href="../19/" class="btn btn-secondary-nord">19</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">20</span>
+
+  
+  <a href="../21/" class="btn btn-secondary-nord">21</a>
+  
+
+  
+  <a href="/blog/page/22/" class="btn btn-secondary-nord">22</a>
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+<hr>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/7/4/the-shaping-of-an-effective-leader-chapter-2/">The Shaping of an Effective Leader: Chapter 2</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-07-04
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/reading notes/">
+      reading notes
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/leadership/">
+      leadership
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>Some of my notes from Chapter 2 of the book.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/7/4/the-shaping-of-an-effective-leader-chapter-2/">Read on...</a>
+      
+
+
+
+
+
+
+
+(329 words, approximately 2 minutes reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/30/productivity-hack-get-rid-of-visual-clutter/">Productivity Hack: Get Rid of Visual Clutter</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-30
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/productivity/">
+      productivity
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>How simple visual decluttering can helped me work more effectively.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/6/30/productivity-hack-get-rid-of-visual-clutter/">Read on...</a>
+      
+
+
+
+
+
+
+
+
+
+(190 words, approximately 1 minute reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/24/new-network-analysis-logo/">New Network Analysis Logo!</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-24
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/network analysis/">
+      network analysis
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/teaching/">
+      teaching
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/education/">
+      education
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/tutorials/">
+      tutorials
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>I made a new logo for the Network Analysis Made Simple tutorial!</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/6/24/new-network-analysis-logo/">Read on...</a>
+      
+
+
+
+
+
+
+
+
+
+(96 words, approximately 1 minute reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/22/in-defence-of-extreme-openness/">In Defence of Extreme Openness</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-22
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/open science/">
+      open science
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>I found an awesome slide deck by <a href="http://jakevdp.github.io">Jake Vanderplas</a>. It's a great case for doing science in the open; highly recommended.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/6/22/in-defence-of-extreme-openness/">Read on...</a>
+      
+
+
+
+
+
+
+
+
+
+(22 words, approximately 1 minute reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/22/tooling-up-for-plain-text-academic-writing-in-markdown/">Tooling up for Plain Text Academic Writing in Markdown</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-22
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/academia/">
+      academia
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/writing/">
+      writing
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/grad school/">
+      grad school
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>My tooling I used for academic plain-text writing. Mostly done for my paper, also for my thesis.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/6/22/tooling-up-for-plain-text-academic-writing-in-markdown/">Read on...</a>
+      
+
+
+
+
+
+
+
+(947 words, approximately 5 minutes reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/21/the-shaping-of-an-effective-leader-chapter-1/">The Shaping of an Effective Leader: Chapter 1</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-21
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>Author: Gayle D. Beebe.</p>
+<p>I’ll be putting together a series of blog posts as my book reading notes. This is the first of many more to come.</p>
+<h3 id="introduction">Introduction</h3><p>8 principles of leadership (pyramid). Ordered below from...
+        <a href="../../2016/6/21/the-shaping-of-an-effective-leader-chapter-1/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(445 words, approximately 3 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/17/yoga-for-python/">Yoga for Python</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-17
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/network analysis/">
+      network analysis
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/tutorials/">
+      tutorials
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/pycon/">
+      pycon
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p><a href="../../2016/6/17/yoga-for-python/www.allendowney.com">Prof. Allen Downey</a> (<a href="http://www.olin.edu/">Olin College</a>) described my Network Analysis tutorial as being like yoga with Python.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/6/17/yoga-for-python/">Read on...</a>
+      
+
+
+
+
+
+
+
+
+
+(46 words, approximately 1 minute reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/16/baarn-2016-bullet-point-notes/">BAARN 2016 Bullet Point Notes</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-16
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/meeting notes/">
+      meeting notes
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>I attended the 2016 Boston Area Antibiotic Resistance Network meeting, held at the American Association for the Advancement of Science (AAAS). Here’s my bullet-point notes version of what went on.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/6/16/baarn-2016-bullet-point-notes/">Read on...</a>
+      
+
+
+
+
+
+
+
+(943 words, approximately 5 minutes reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/16/boston-area-antibiotic-resistance-network-baarn-meeting-2016/">Boston Area Antibiotic Resistance Network (BAARN) Meeting 2016</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-16
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/antibiotic resistance/">
+      antibiotic resistance
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>Conference notes from the BAARN meeting held at the AAAS.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/6/16/boston-area-antibiotic-resistance-network-baarn-meeting-2016/">Read on...</a>
+      
+
+
+
+
+
+
+
+(869 words, approximately 5 minutes reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/6/15/gaining-focus-going-analog/">Gaining Focus: Going Analog</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-15
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>I have found that I most successfully focus when I have my scribble book by my side. Jotting down what I'm going to do next on the notebook focuses my mind more than jotting it down in Evernote, which is done digitally. I think it's the combination...
+        <a href="../../2016/6/15/gaining-focus-going-analog/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(61 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/18/" class="btn btn-secondary-nord">18</a>
+  
+
+  
+  <a href="../19/" class="btn btn-secondary-nord">19</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">20</span>
+
+  
+  <a href="../21/" class="btn btn-secondary-nord">21</a>
+  
+
+  
+  <a href="/blog/page/22/" class="btn btn-secondary-nord">22</a>
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

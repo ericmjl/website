@@ -1,0 +1,553 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>My Flask app-building sprint - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>My Flask app-building sprint</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-12-27
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software engineering/">
+      software engineering
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/side projects/">
+      side projects
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/flask/">
+      flask
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <h1 id="overview">Overview</h1><p>This winter, I decided to embark on a coding project purely for fun. In preparation to build my own Raspberry Pi photo display, I wanted to build an easily-installable, portable (across operating systems) and completely hackable stand-alone image displayer. This project ended up being an awesome way to get myself familiarized with a wide variety of concepts in web development, software packaging, and software distribution. I learned a ton, and I want to share the process behind it.</p>
+<p>The design goals were as follows:</p>
+<ol>
+<li>It does one and only one thing well: run the app from any directory, and show the photos in that directory in a random order.</li>
+<li>It has to be easily distributable. I chose to use <code>pip</code> as my distribution mechanism, partly because of familiarity, partly be cause it is sufficiently ubiquitous (with Python).</li>
+<li>It should be completely hackable. My source code is up on <a href="https://github.com/ericmjl/imgdisplay">GitHub</a>. Anybody can fork it, hack it, and redistribute it. Go for it - it's BSD-3 licensed!</li>
+</ol>
+<p>The philosophical goals were pretty simple. Learn how to do the whole stack from scratch, and be free from commercial, closed-source software constraints by being free to build exactly what I need from reusable components.</p>
+<h1 id="writing-the-app-logic">Writing the App Logic</h1><p>My choice of tools were as follows:</p>
+<ul>
+<li><code>Python</code> 3.5</li>
+<li><code>Flask</code>: great framework for web development in Python. Provides glue between Python and HTML.</li>
+<li><code>pywebview</code>: provides native GUI wrappers for each platform.</li>
+<li><code>click</code>: awesome framework for command-line options.</li>
+</ul>
+<p>My thought process here was as such: write the user-facing interface using HTML, and write application logic in Python, and we get automatic cross-platform portability. Run the app from the command-line, which is the lowest-common denominator for running applications.</p>
+<p>I structured my app as follows:</p>
+<pre><code>+ imgdisplay/
+    + imgdisplay/
+        + __init__.py
+        + imgdisplay.py  # this is where the main application logic is found.
+        + static/
+            + styling.css
+        + templates/
+            + img.html
+    + .gitignore
+    + LICENSE
+    + MANIFEST.in
+    + README.md
+    + requirements.txt
+    + setup.py
+</code></pre>
+<p>By most standards, this (at least in the eyes of pros) is probably a very, very simple Flask app.</p>
+<p>The app logic was the first part that I tackled. Let's start with the file <code>imgdisplay.py</code>.</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">send_from_directory</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
+
+<span class="kn">import</span> <span class="nn">webview</span>
+<span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># Section (A)</span>
+<span class="n">tmpl_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
+                        <span class="s1">&#39;templates&#39;</span><span class="p">)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">template_folder</span><span class="o">=</span><span class="n">tmpl_dir</span><span class="p">)</span>
+
+
+<span class="c1"># Section (B)</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;img.html&#39;</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;img.html&#39;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s1">&#39;No images in directory&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Section (C)</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/image/&lt;path:imgname&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">random_image</span><span class="p">(</span><span class="n">imgname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">send_from_directory</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">imgname</span><span class="p">,</span> <span class="n">as_attachment</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="c1"># Section (D)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--port&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Port number&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--host&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Host name&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">start_server</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+    <span class="c1"># Architected this way because my console_scripts entry point is at</span>
+    <span class="c1"># start_server.</span>
+
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">}</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">webview</span><span class="o">.</span><span class="n">create_window</span><span class="p">(</span><span class="s2">&quot;PiPhoto Display&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;http://127.0.0.1:</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">port</span><span class="p">))</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+<span class="c1"># Section (E)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">start_server</span><span class="p">()</span>
+</pre></div>
+<p>Here's my commentary on each of the sections.</p>
+<h2 id="section-a-flask-boilerplate">Section A: Flask boilerplate.</h2><div class="hll"><pre><span></span><span class="n">tmpl_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
+                        <span class="s1">&#39;templates&#39;</span><span class="p">)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">template_folder</span><span class="o">=</span><span class="n">tmpl_dir</span><span class="p">)</span>
+</pre></div>
+<p>Here, we instantiate a Flask instance called <code>app</code>. The <code>tmpl_dir</code> variable was later added on, because I later learned that Flask apps had to look within the project directory for the <code>templates</code> folder; this variable ensures that the correct template directory path is specified.</p>
+<h2 id="section-b-main-application-logic">Section B: Main application logic.</h2><div class="hll"><pre><span></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;img.html&#39;</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;img.html&#39;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s1">&#39;No images in directory&#39;</span><span class="p">)</span>
+</pre></div>
+<p>This is Flask's "hello world" function expanded. What we're doing here is reading a list of <code>.jpg</code> files from the bash shell's current working directory. If there are images present, we tell choose one file, and tell Flask to render the template (<code>render_template</code>) <code>img.html</code> passing in an <code>image</code> to the <code>image</code> keyword argument. If none, we pass in an error text message to the <code>error</code> keyword argument.</p>
+<p>If this were a more complicated app, we would probably move to an MVC-like model, where the application logic would be in an importable module adjacent to the rendering code. Here, because the logic is simple enough, and only really amounts to three lines of Python, it's simple enough to not require placing it in a separate Python module.</p>
+<p>I think at this point, it's best to show how these will get rendered. Below is <code>img.html</code>, the template that is being used.</p>
+<div class="hll"><pre><span></span><span class="cp">&lt;!doctype html&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;static&#39;, filename=&#39;styling.css&#39;) }}&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">&quot;refresh&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;5&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        {% if image %}
+          <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;random_image&#39;, imgname=image) }}&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">img</span><span class="p">&gt;</span>
+        {% endif %}
+
+        {% if error %}
+          <span class="p">&lt;</span><span class="nt">p</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;color:white&quot;</span><span class="p">&gt;</span>
+              {{ error }}
+          <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+        {% endif %}
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</pre></div>
+<p>Flask uses <code>jinja2</code> templating - what this basically means is that we can insert Python-like code into other text-based files, allowing for passed in values to be substituted. For example, consider the block below:</p>
+<div class="hll"><pre><span></span>{% if error %}
+  <span class="p">&lt;</span><span class="nt">p</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;color:white&quot;</span><span class="p">&gt;</span>
+      {{ error }}
+  <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+{% endif %}
+</pre></div>
+<p>What this is essentially saying is: if the "error" keyword from <code>render_template</code> is not a null value, fill in the value passed to the <code>error</code> keyword (<code>{{ error }}</code>).</p>
+<p>What about the header? It's got something much more complicated in there, the <code>url_for</code> function.</p>
+<div class="hll"><pre><span></span><span class="cp">&lt;!doctype html&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;static&#39;, filename=&#39;styling.css&#39;) }}&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">&quot;refresh&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;5&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</pre></div>
+<p>What this is saying here is render the URL for (<code>url_for</code>) the static directory to load the CSS file <code>styling.css</code>, which allows us to use the static CSS file to style the user interface appropriately. If you inspect the HTML source after rendering, you will see that it maps to <code>/static/styling.css</code>.</p>
+<p>What about the image?</p>
+<div class="hll"><pre><span></span>{% if image %}
+  <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;random_image&#39;, imgname=image) }}&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">img</span><span class="p">&gt;</span>
+{% endif %}
+</pre></div>
+<p>It's a bit complicated, so let me try my best to explain what's going on. This uses the <code>url_for</code> function, which is Flask magic for saying, "render the URL for a particular function" (<code>{{ url_for('random_image',...</code>), while passing in the necessary keywords arguments to that function (<code>... imgname=image) }}</code>). But... where did the <code>random_image</code> function come from, and why is it's keyword arguments named as <code>imgname</code>?</p>
+<p>Well, that's the best segue into Section C.</p>
+<h2 id="section-c-random-image..?!">Section C: random_image...?!</h2><p>If by the end of my own explanation you don't get it, don't worry. The inner workings remain a bit of black magic to me still. Here's the code:</p>
+<div class="hll"><pre><span></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/image/&lt;path:imgname&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">random_image</span><span class="p">(</span><span class="n">imgname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">send_from_directory</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">imgname</span><span class="p">,</span> <span class="n">as_attachment</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+<p>This function is what is called in the <code>img.html</code> template. The function takes in an image name <code>imgname</code> keyword argument, which is then passed to Flask's <code>send_from_directory()</code> function. Here, we are essentially saying, "get the file <code>imgname</code> from the directory <code>os.getcwd()</code>, as an attachment (<code>as_attachment=True</code>), and send it to Flask."</p>
+<p>Somehow, this provides the correct way to send the image file to the browser renderer.</p>
+<p><strong>Side note:</strong> Figuring this out turned out to be the better of a whole day's worth of debugging and reading through the Flask package documentation, plus another half a day on Stack Overflow trying to figure out the right coding patterns. Once I figured this out, almost everything else fell into place for the minimum-viable-product version of the app.</p>
+<h2 id="section-d-execution">Section D: Execution</h2><div class="hll"><pre><span></span><span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--port&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Port number&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--host&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Host name&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">start_server</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+    <span class="c1"># Architected this way because my console_scripts entry point is at</span>
+    <span class="c1"># start_server.</span>
+
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">}</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">webview</span><span class="o">.</span><span class="n">create_window</span><span class="p">(</span><span class="s2">&quot;PiPhoto Display&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;http://</span><span class="si">{0}</span><span class="s2">:</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</pre></div>
+<p>This part of the code was totally inspired by <a href="https://joecodeswell.wordpress.com/2016/08/09/flask-with-pywebview-example/">Joe Dorocak</a>, but I had to modify it a little bit to fit my use case (using <code>console_scripts</code> as part of the <code>entry_points</code>). The idea here for this code is to create a new thread that runs the app, and then use pywebview to open a new GUI window that loads the appropriate URL. The other big idea is that I could invoke <code>imgdisplay</code> from the command-line using the call:</p>
+<div class="hll"><pre><span></span>$ imgdisplay
+</pre></div>
+<p>In order to do so, everything that needs to happen when executing has to happen within the function that the <code>imgdisplay</code> bash command is mapped to; which happens to be <code>start_server</code>. Joe's example puts all of the logic under <code>if __name__ == __main__</code>, because the assumption there is that the code is executed by running:</p>
+<div class="hll"><pre><span></span>$ python imgdisplay.py
+</pre></div>
+<p>According to the design goals stated above, the former fulfills the goals better than the latter, because in the latter, I would have to copy <code>imgdisplay.py</code> into the directory that I needed. Therefore, I had to hack Joe's example a tiny bit to get it to work the way I wanted. If there's a better way to do it, I'd love to hear!</p>
+<h2 id="section-e-execution">Section E: Execution</h2><div class="hll"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">start_server</span><span class="p">()</span>
+</pre></div>
+<p>This is boilerplate, but in case anybody wants to run the script from the main project folder (<code>imgdisplay/</code>), for whatever reason, they'd be able to.</p>
+<h1 id="styling">Styling</h1><p>I did my prototyping using Chrome on macOS Sierra. The order in which I presented the code above corresponded roughly to the order in which the code became more and more complex. I had to iterate between coding + testing in the browser. Styling was a pretty fun part of the iteration process. Here's my CSS code:</p>
+<div class="hll"><pre><span></span><span class="nt">html</span> <span class="p">{</span>
+    <span class="k">height</span><span class="p">:</span> <span class="mi">600</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">body</span> <span class="p">{</span>
+    <span class="k">font-family</span><span class="p">:</span> <span class="s2">&quot;PT Sans&quot;</span><span class="p">;</span>
+    <span class="k">padding-left</span><span class="p">:</span> <span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
+    <span class="k">padding-right</span><span class="p">:</span> <span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
+    <span class="k">padding-top</span><span class="p">:</span> <span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
+    <span class="k">padding-bottom</span><span class="p">:</span> <span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
+    <span class="k">height</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="k">background</span><span class="p">:</span> <span class="kc">black</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">div</span> <span class="p">{</span>
+    <span class="k">max-width</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="k">max-height</span><span class="p">:</span> <span class="mi">600</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">text-align</span><span class="p">:</span> <span class="kc">center</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">div</span> <span class="o">&gt;</span> <span class="nt">img</span> <span class="p">{</span>
+    <span class="k">max-height</span><span class="p">:</span> <span class="mi">600</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">max-width</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>The idea behind the styling was to make the image stand out by using a black background, while making sure that the height of the image stayed a maximum of 600 px. In the future, I'd like this to be an adjustable parameter... or maybe not. We'll see.</p>
+<h1 id="packaging-for-distribution">Packaging for Distribution</h1><p>This is one of the places where I've had a number of spectacular failures in the past, particularly because Python's packaging documentation is, in my opinion, out of line with the Zen of Python's philosophy of "there should be preferably one and only one way of doing things". I think what's missing from the official documentation is clear-cut examples for packaging Python packages, modules, and command-line programs, and examples of where they mix. If I get a chance in the future, I might contribute that.</p>
+<h2 id="setup-script">Setup Script</h2><p>Anyways, here's the setup script:</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">find_packages</span>
+
+
+<span class="k">def</span> <span class="nf">readfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;imgdisplay&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;2016.12.26.19.35&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A command-line app to slideshow photos in a directory.&quot;</span><span class="p">,</span>
+    <span class="n">long_description</span><span class="o">=</span><span class="n">readfile</span><span class="p">(</span><span class="s1">&#39;README.md&#39;</span><span class="p">),</span>
+    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Eric J. Ma&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s2">&quot;my_email&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://github.com/ericmjl/imgdisplay&quot;</span><span class="p">,</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;click==6.6&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;Flask==0.11.1&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;pywebview==1.3&#39;</span><span class="p">,</span>
+                      <span class="p">],</span>
+    <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(),</span>
+    <span class="n">license</span><span class="o">=</span><span class="n">readfile</span><span class="p">(</span><span class="s1">&#39;LICENSE&#39;</span><span class="p">),</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s1">&#39;imgdisplay=imgdisplay.imgdisplay:start_server&#39;</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">package_data</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;static&#39;</span><span class="p">:</span> <span class="s1">&#39;imgdisplay/static/*&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;templates&#39;</span><span class="p">:</span> <span class="s1">&#39;imgdisplay/templates/*&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">include_package_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+<p>Before we go on, please ignore my version numbering system. It's essentially the current date and time... While I know semantic versioning and the likes, for this single project, I decided to go simple and not worry about more complex stuff.</p>
+<p>There's a few key stuff I learned here.</p>
+<p>Firstly, the big highlight: making my package command-line accessible.</p>
+<div class="hll"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;imgdisplay=imgdisplay.imgdisplay:start_server&#39;</span>
+    <span class="p">]</span>
+<span class="p">},</span>
+</pre></div>
+<p>What this is saying is "map the <code>start_server()</code> function to the command <code>imgdisplay</code>". That creates the <code>imgdisplay</code> magic command that runs the app, because the entirety of the execution logic is contained in that function.</p>
+<p>Secondly, including static data:</p>
+<div class="hll"><pre><span></span><span class="n">package_data</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;static&#39;</span><span class="p">:</span> <span class="s1">&#39;imgdisplay/static/*&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;templates&#39;</span><span class="p">:</span> <span class="s1">&#39;imgdisplay/templates/*&#39;</span><span class="p">,</span>
+<span class="p">},</span>
+<span class="n">include_package_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</pre></div>
+<p>This is <strong>very, very important</strong> for running the Flask app. The <code>static</code> and <code>templates</code> folders are default folders that Flask automatically looks for. These have to be packaged and distributed together in order for the app to work properly.</p>
+<h2 id="building-distribution">Building Distribution</h2><p>To build the distribution at the command line, according to <a href="http://www.plankandwhittle.com/packaging-a-flask-web-app/">Plank &amp; Whittle's</a> website, there are two options for Python packages: a binary file, which contains only Python code, and a source distribution, which contains Python code + other files packaged in. Flask apps can only be distributed as a source distribution, so binary distributions are out of luck. I made the mistake of uploading a binary distribution to PyPI, and that cost me hours of debugging to get out of it, which I finally did. So here's the "correct" set of commands needed to avoid this headache:</p>
+<div class="hll"><pre><span></span>$ <span class="nb">cd</span> /path/to/project
+$ <span class="c1"># execute the following line only if dist/ exists and there&#39;s stuff inside</span>
+$ rm dist/*
+$ <span class="c1"># the following command builds the source distribution</span>
+$ python setup.py sdist
+$ <span class="c1"># the following command uploads the package to PyPI!!!!!!!!</span>
+$ twine upload dist/*
+$ <span class="c1"># you will be prompted for username &amp; password to PyPI</span>
+$ <span class="c1"># remove stuff under dist/* to keep it clean for updates.</span>
+$ rm dist/*
+</pre></div>
+<p>At all costs, <strong>do not run</strong> <code>python setup.py sdist bdist_wheel</code>. This works for other pure Python packages, but not for Flask apps that are bundled with static files.</p>
+<h1 id="summary">Summary</h1><p>With that, that was it! Through this project, I was able to learn more about the insides of Python packaging &amp; distribution, making my Python tools accessible through the command line, developing web &amp; cross-platform interfaces, and working with really popular frameworks (Flask, click, pywebview). Big learning journey, only made possible because of some time taken off to let my mind wander away from other real work.</p>
+<p>Do I see this fitting in with my current work? Yep, absolutely. There's some times in research where nothing beats building a prototype of a final product that I'm envisioning, for example, the front-end to a</p>
+<p>I'd love to get feedback on how it could be improved, but more importantly, contributions are really welcome! Please be kind in feedback, I'm still a relative newbie with web development, so keeping things positive would help keep things encouraging. Hope you enjoyed the post!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/my-flask-app-building-sprint"; this.page.url = "http://www.ericmjl.com/blog/2016/12/27/my-flask-app-building-sprint/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

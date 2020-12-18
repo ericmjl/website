@@ -1,0 +1,793 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../static/pygments.css">
+
+    
+    
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Blog - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/15/" class="btn btn-secondary-nord">15</a>
+  
+
+  
+  <a href="../16/" class="btn btn-secondary-nord">16</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">17</span>
+
+  
+  <a href="../18/" class="btn btn-secondary-nord">18</a>
+  
+
+  
+  <a href="/blog/page/19/" class="btn btn-secondary-nord">19</a>
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+<hr>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/11/1/paywalls/">Paywalls</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-11-01
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>What a twist! A paper that I contributed to is behind a Wiley paywall.</p>
+<p><a href="../../2016/11/1/paywalls/ecoletters.png"><img src="../../2016/11/1/paywalls/ecoletters-small.png" alt="Ecology letters paywall."></a></p>
+<p>(click on the image...
+        <a href="../../2016/11/1/paywalls/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(136 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/29/pycon-2017/">PyCon 2017</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-29
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/pycon/">
+      pycon
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>Registered for <a href="https://us.pycon.org/2017/">PyCon 2017</a>, and tutorial &amp; talk proposals submitted!</p>
+<p>PyCon remains my favourite annual conference. What makes a conference great really is the people, and the PyCon community...
+        <a href="../../2016/10/29/pycon-2017/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(196 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/28/r21-grant-results-attempt-2/">R21 Grant Results: Attempt 2</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-28
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>Just got back reviewer comments for the 2nd attempt at an NIH R21 grant that I led the writing for. Reading the comments, I was at happy that the reviewers did at least read through how we addressed the first round's comments - you can never tell,...
+        <a href="../../2016/10/28/r21-grant-results-attempt-2/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(358 words, approximately 2 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/23/reinventing-statistical-language-in-science/">Reinventing Statistical Language in Science</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-23
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/statistics/">
+      statistics
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>How we might make progress communicating statistics better.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/10/23/reinventing-statistical-language-in-science/">Read on...</a>
+      
+
+
+
+
+
+
+
+(695 words, approximately 4 minutes reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/18/3d-printing/">3D Printing!</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-18
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/hobbies/">
+      hobbies
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/3d printing/">
+      3d printing
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>Who would have thought that making stuff could be so fun? (Particularly when the tediousness of actually building it is removed!) I think that the 3D printer I just bought for the lab might really open up new doors for us.</p>
+<p>We have the <a...
+        <a href="../../2016/10/18/3d-printing/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(793 words, approximately 4 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/16/low-cost-robotic-liquid-handlers/">Low-Cost Robotic Liquid Handlers!</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-16
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>Just found out about <a href="https://opentrons.com/robots">OpenTrons</a>, which is a company that produces open source robotic liquid handlers for less than $5000. In terms of research budgets, this is amazing!</p>
+<p>While some may contend that...
+        <a href="../../2016/10/16/low-cost-robotic-liquid-handlers/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(178 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/12/github-lab-notebooks-update/">GitHub Lab Notebooks: Update</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-12
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>It's been about 2 months since starting up with the <a href="https://github.com/ericmjl/protein-systematic-characterization">GitHub lab notebooks</a> for a project that I'm coordinating. Here's some thoughts on it.</p>
+<p>Firstly, version control...
+        <a href="../../2016/10/12/github-lab-notebooks-update/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(377 words, approximately 2 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/11/collaborations-between-experimentalists-and-statisticians/">Collaborations Between Experimentalists and Statisticians</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-11
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>I just saw an awesome pair of blog posts by <a href="http://simplystatistics.org/2013/10/09/the-care-and-feeding-of-your-scientist-collaborator/">Roger Peng</a> and <a...
+        <a href="../../2016/10/11/collaborations-between-experimentalists-and-statisticians/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(401 words, approximately 3 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/9/reproducible-pi-manifesto/">Reproducible PI Manifesto</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-09
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/reproducibility/">
+      reproducibility
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>I found this set of slides by <a href="http://lorenabarba.com">Lorena Barba</a>: the Reproducible PI Manifesto. I love it, and I hope other PIs take it up!</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2016/10/9/reproducible-pi-manifesto/">Read on...</a>
+      
+
+
+
+
+
+
+
+
+
+(24 words, approximately 1 minute reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/10/8/conference-finaid-packages/">Conference FinAid Packages</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-10-08
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>I've been thinking back on my experience being on the SciPy 2016 Financial Aid committee, having myself received a full scholarship to attend SciPy 2015.</p>
+<p>I had a chance to talk with two of the SciPy scholarship recipients. They belonged to a...
+        <a href="../../2016/10/8/conference-finaid-packages/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(258 words, approximately 2 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/15/" class="btn btn-secondary-nord">15</a>
+  
+
+  
+  <a href="../16/" class="btn btn-secondary-nord">16</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">17</span>
+
+  
+  <a href="../18/" class="btn btn-secondary-nord">18</a>
+  
+
+  
+  <a href="/blog/page/19/" class="btn btn-secondary-nord">19</a>
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

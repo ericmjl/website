@@ -1,0 +1,272 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>How to give a great Data Science Workshop - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>How to give a great Data Science Workshop</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-14
+
+    
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I recently was asked by <a href="http://www.hugobowneanderson.com">Dr. Hugo Bowne-Anderson</a> (a really chill guy, who probably would insist that I drop the "Dr.") to contribute some of my thoughts on what makes a great data science workshop. Having been on both sides as an instructor and a learner, here's some of my thoughts.</p>
+<p><strong>What distinguishes a Data Science Workshop from a Data Science talk or lecture?</strong></p>
+<p>I think the distinguishing mark of a data science workshop is that the instructor will make sure that there is hands-on coding involved. The only exception to this that I have experienced was in <a href="http://clearscience.info/wp/">Bang Wong's</a> workshop on data visualization, where we did group discussion instead. In both cases, participant involvement is very important.</p>
+<p><strong>What are the 3 most important qualities for a great Data Science Workshop to have and the 3 most important for it to NOT have? Why (one sentence on each quality)?</strong></p>
+<p>My top 3 important qualities are:</p>
+<ol>
+<li><strong>Interactive &amp; hands-on:</strong> in line with the MIT motto <a href="https://libraries.mit.edu/mithistory/institute/seal-of-the-massachusetts-institute-of-technology/"><em>Mens et Manus</em></a>, the best workshops apply theory soon after learning it.</li>
+<li><strong>Targeted:</strong> The best workshops have their difficulty tailored to their audience’s skill level.</li>
+<li><strong>Expandable knowledge:</strong> Ideally, the workshop isn’t the end of learning; the best workshops point students to other resources to further the learning.</li>
+</ol>
+<p>It should be evident that the opposites of the above should be avoided, but I’ll put out a few ideas of common good teaching practices that might (paradoxically) be best avoided in a workshop setting:</p>
+<ol>
+<li><strong>Repetition:</strong> I think there should be as little conceptual repetition as possible; while it’s good for learning, but I think it’s not suited for a workshop setting, where I think the goal is a "sufficiently deep introductory survey" (an oxymoron of terms).</li>
+<li><strong>Lecturing:</strong> This is admittedly tricky; there has to be enough lecturing, but not too much, and I think the best instructors intersperse them sparingly throughout the workshop.</li>
+<li><strong>Handling questions:</strong> Questions are great during the breaks and after, but I’ve seen that the best instructors, and most cooperative students as well, defer their tougher and more detailed questions till a later time.</li>
+</ol>
+<p><strong>How do you avoid losing your audience in the 1st 5 minutes?</strong></p>
+<p>The most important thing I learned was to keep the energy high. My verbal and body language have to show that I'm excited to share my knowledge, thrilled to meet everybody present, and eager to continue the conversation afterwards. The best instructors that I’ve seen, such as <a href="http://www.allendowney.com">Allen Downey</a>, do this. Following that, I think it’s important to set expectations, to clarify what will and won’t be covered.</p>
+<p><strong>What tools/software/resources do you use when giving a Workshop? What tools/software do you ask your attendees to use?</strong></p>
+<p>The topic I teach the most has been <a href="https://github.com/ericmjl/Network-Analysis-Made-Simple">network/graph analysis fundamentals</a>, using the <a href="https://networkx.github.io">NetworkX</a> API to introduce these ideas. For this, I use <a href="https://www.python.org">Python</a> (and the <a href="http://scipy.org">scientific Python stack</a>, in particular), the <a href="http://jupyter.org">Jupyter notebook</a>, and <code>git</code> on <a href="https://github.com">GitHub</a>. I like using the <a href="https://github.com/damianavila/RISE">RISE plugin</a> for Jupyter, which instantly turns my code and markdown cells into slides that I can advance through. Everybody complains about font sizes being too small; RISE solves that instantly for the notebook, and I can spice up the theme by changing the CSS.</p>
+<p>Apart from that, where possible, I try to make use of sticky notes. It’s something I picked up from my <a href="http://software-carpentry.org">Software</a> &amp; <a href="http://www.datacarpentry.org">Data Carpentry</a> instructor training. Green stands for "I'm good to go!", while red stands for "I'm in need of some help."</p>
+<p><strong>What would you like to find in a "How to teach a great Data Science Workshop" article?</strong></p>
+<p>I’d like to see real feedback from students about their instructors. Nothing beats having direct feedback from the participants. I’d also like to see a list of questions that instructors should ask themselves (or have a coach-like figure ask them) after each workshop, so that we can train ourselves to focus on the most important aspects of teaching.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/how-to-give-a-great-data-science-workshop"; this.page.url = "http://www.ericmjl.com/blog/2016/6/14/how-to-give-a-great-data-science-workshop/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

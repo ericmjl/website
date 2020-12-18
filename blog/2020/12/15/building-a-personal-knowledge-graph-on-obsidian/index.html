@@ -1,0 +1,403 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Building a personal knowledge graph on Obsidian - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Building a personal knowledge graph on Obsidian</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J.</a>
+    
+    on 2020-12-15
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/notetaking/">
+      notetaking
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/productivity/">
+      productivity
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>Amidst COVID-19, I decided to take a break from work.
+I was definitely in need of a bit of personal rejuvenation
+after hitting hard on the accelerator at work,
+mostly to get things wrapped up before our first baby girl was born.
+During this personal rejuvenation time,
+I stumbled upon <a href="https://notes.andymatuschak.org">Andy Matuschak's notes</a>,
+which are famous amongst the "personal knowledge management" community.</p>
+<p>At the same time,
+I also saw the rise of <a href="https://roamresearch.com">Roam Research</a>
+and <a href="https://obsidian.md">Obsidian</a>,
+and I was looking with envious eyes at those who had early access to Roam.
+I was a bit turned off by the subscription and lock-in that characterized Roam
+and was much more attracted to the Freemium + "respect your data rights" model
+embraced by Obsidian, so I dipped my toes in.
+The result is this learning journey
+building my own "personal knowledge management" system
+from which I've never turned back.</p>
+<p>Let me explain.</p>
+<p>For a long time, I've known that the way that I think is in a "linked" fashion.
+I rarely entertain a thought on its own in isolation.
+Instead, I will jump and hop from one idea to another in my brain.
+Sometimes, I joke with others that my mind is effectively a random graph:
+nodes are ideas, and edges are relationships between them.
+The unfortunate thing is that I don't have the right tools
+for externalizing the relationships that I uncover.
+As a practicing data scientist,
+as I continuously learn and discover new model classes
+that may be useful in my projects,
+I also see connections between models,
+their components,
+and their applications.</p>
+<p>My previous notetaking tool, Evernote, is better described as an archival tool.
+In there, I would dump and collect
+everything and anything that I thought might be of marginal value.
+After all, Evernote's mantra is to help us
+store everything and make it searchable to us.
+It's a great tool, and I still use it in that fashion.
+However, using it as a tool for developing and understanding ideas
+is a bit like treating a flea market as a museum.
+Yes, it's a collection of items,
+but a flea market has everything and anything in there,
+while a museum is intentionally curated.
+Intentional curation is the key to internalizing insights
+from the external knowledge we gain.</p>
+<p>All of those points above brings us to the problem of tooling.
+Evernote is a tool for collection, not curation and linking.
+Tools that help us actively curate
+a concrete representation of an idea -- a note --
+and help us link them together
+will also help us intentionally curate these ideas together.
+Obsidian gives us the necessary tooling to be such a curator.</p>
+<h2 id="how-obsidian-helps">How Obsidian Helps</h2><p>There are at least three features of Obsidian that help with this.</p>
+<h3 id="markdown-files">Markdown files</h3><p>Firstly, Obsidian treats individual notes,
+implemented as Markdown files,
+as the unit on which linking happens.
+When you want to create a wiki-style link to another page,
+you use a double square bracket (<code>[[...]]</code>)
+and start typing the name of the note that you want to link.
+A pop-up display will show the note titles, which can help you
+if you have a fuzzy or approximate notion of the idea you're trying to link.
+If you use "imperative tone" ideas to name your note files,
+then linking becomes <em>even more</em> natural.</p>
+<h3 id="graph-view">Graph view</h3><p>Secondly, Obsidian has a graph view.
+This graph view is nothing more than a node-link diagram,
+likely implemented using <code>d3.js</code>, with note titles overlaid.
+Yes, it is fascinating to explore our ideas' connected structure,
+but the more significant value proposition
+is quickly identifying every note file that exists as an unlinked singleton.
+Why? Because one of the goals of linked notetaking
+is to search for linkable ideas and then explicitly connect them.
+The visual graph view also helps me surf through concepts;
+each time I trace a path between the thoughts I've recorded down,
+I reinforce the link in my unreliable internal store.</p>
+<h3 id="random-notes">Random notes</h3><p>Thirdly, Obsidian has a "show me a random note" feature.
+This feature helps me <em>ruminate</em> through ideas.
+It's the digital equivalent of me jumping through concepts in my head,
+except now I have a <em>reliable</em> external store for ideas (Obsidian)
+rather than an <em>unreliable</em> internal store (my brain).
+Surfacing up random notes
+is an extremely excellent way of hopping through my knowledge graph
+to surface up ideas in a spaced repetition fashion,
+allowing my mind to uncover and create connections
+between ideas that I might not have made otherwise.</p>
+<h3 id="plain-text">Plain text</h3><p>Apart from those three key features,
+one other notable feature, pun intended,
+makes me <em>trust</em> Obsidian over other notetaking services.
+That feature is Obsidian's choice to rely on simple Markdown files
+as the unit on which linking happens.
+This choice stands in contrast to Evernote's expanded XML syntax,
+which, though open, is not <em>plain</em> enough to have a low barrier to parsing.
+The choice also stands in contrast to Roam's and Notion's choice
+to link individual blocks of text,
+which requires additional tech that, almost by definition,
+requires specialized data structures -
+again, being not low enough of a barrier.
+Effectively, with Obsidian, I own my data,
+stored using the lowest common denominator of computing: text files.</p>
+<h2 id="tips-for-using-obsidian">Tips for using Obsidian</h2><p>I've now decided to change up my notetaking systems
+and go the "whole hog" with Obsidian.
+For the rest of this post, I'd like to share
+some of the tips that I picked up that made the system click for me.</p>
+<h3 id="each-markdown-file-as-a-single-unit-of-thought">Each Markdown file as a single unit of thought</h3><p>The first tip I picked up was to treat each Markdown file
+as a coherent and atomic unit of thought.
+This tip is something I picked up directly from Andy Matuschak's notes,
+and I believe this is the most crucial tip to making a system like this work.
+In doing so, we are nudging ourselves to compose
+a coherent and atomic unit of thought,
+to which we can establish relationships to other similarly-constructed ideas.
+Writing them down takes effort,
+so this mode of notetaking not for the "collector" type;
+instead, it is for intentional curators.</p>
+<h3 id="actively-connect-ideas">Actively connect ideas</h3><p>The second tip I picked up was to intentionally try to establish
+as many connections between ideas as possible.
+Andy Matuschak calls this "linking densely,"
+and this action is essential: it is how we construct our knowledge graph!
+A way to make these links is to think of ideas
+as <em>imperative statements</em> that we make;
+inside the note, we elaborate on the concept with, say, supporting evidence.
+As an example, this paragraph would be given the title
+<code>Notes should be linked densely</code>.
+I would then link to it inside a list on an overview page
+or as part of textual prose.</p>
+<h3 id="tend-to-the-knowledge-garden-regularly">Tend to the knowledge garden regularly</h3><p>A third tip that I uncovered through experience
+is to treat the knowledge graph as a garden that requires regular tending.
+For me, tending implies:</p>
+<ol>
+<li>Leveraging the random note feature to find old ideas
+buried beneath the more recent things I have been thinking about,</li>
+<li>Browsing through Obsidian's graph view to locate singleton notes
+and trace paths through them, and</li>
+<li>Ruminating over the notes at a later date using the random notes feature.</li>
+</ol>
+<h2 id="my-notes-made-public">My notes made public</h2><p>I've written a lot about how I've used Obsidian to help me organize my knowledge.
+However, you might be wondering, can I see an example?
+In line with the principle of working in the open, of course!
+<a href="https://ericmjl.github.io/notes/">I put my notes online</a>,
+available for others to see,
+and so that I can reference them when I interact with others.
+In case you want to see the note(s) that backed this blog post,
+look around for my "blog drafts" on the index page,
+and follow the knowledge graph from there. :)</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/building-a-personal-knowledge-graph-on-obsidian"; this.page.url = "http://www.ericmjl.com/blog/2020/12/15/building-a-personal-knowledge-graph-on-obsidian/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

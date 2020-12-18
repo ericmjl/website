@@ -1,0 +1,362 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>PyCon 2019 Sprints - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>PyCon 2019 Sprints</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2019-05-11
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/pycon/">
+      pycon
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software development/">
+      software development
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/sprint/">
+      sprint
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/open source/">
+      open source
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>This year was the first year that I decided to lead a sprint! The sprint I led was for <code>pyjanitor</code>, a package that I developed with my colleague, Zach Barry, and a remote collaborator in NYC, Sam Zuckerman (whom I've never met in person!). This being the first sprint I've ever led, I think I was lucky to stumble upon a few ideas that made for a productive, collaborative, and most importantly, fun sprint.</p>
+<h2 id="pyjanitor">pyjanitor?</h2><p>I'm going to deliver a talk on <code>pyjanitor</code> later in the year, so I'll save the details for that talk. The short description of <code>pyjanitor</code> is that if you have <code>pandas</code> one-liners that are difficult to remember, they should become a function in <code>pyjanitor</code>; if you have a 10-liner that you always copy/paste from another source, they should become a function in <code>pyjanitor</code>.</p>
+<h2 id="sprints">Sprints?</h2><p>Code sprints are a part of PyCon, and it's basically one to four days of intense and focused software development on a single project.</p>
+<p>Project sprint leads first pitch their projects at the "<em>Sprintros</em>", where they indicate what days they will be sprinting, and at what times. The next day, we indicate on which rooms our projects will be sprinting. Volunteers from the conference, who would like to make an open source project contribution, then identify projects they would like to come sprint with.</p>
+<p>In some senses, there's no way for a sprint leader to know how popular their sprint will be <em>a priori</em>. We have to be prepared to handle a range of scenarios from sprinting with just one other person to sprinting with a crowd.</p>
+<h2 id="structure">Structure</h2><h3 id="preparation">Preparation</h3><p>In preparation for the sprint, I absorbed many lessons learned over the years of sprinting on others' projects.</p>
+<p>The most obvious one was to ensure that every sprinter had something to do right from the get-go. Having a task from the get-go keeps sprinters, especially newcomers, engaged right from the beginning. This motivated the requirement to make a doc fix before making a code fix. (You can read more below on how we made this happen.) I wrote out this requirement in a number of places, and by the time the sprint day rolled by, this rolled off pretty naturally.</p>
+<p>The second thing that I did to prep was to triage existing issues and label them as being beginner- or intermediate-friendly, and whether they were doc, infrastructure, or code contributions.</p>
+<p>Those two things were the my highest priority preparation for the sprint, and I think that helped a ton.</p>
+<h3 id="doc-fixes">Doc Fixes</h3><p>This sprint, I gave the structure some thought, and settled on the following: Before making a code contribution, I required a docs contribution.</p>
+<p>Docs contributions could be of any scale:</p>
+<ul>
+<li>A typographical, grammatical, or spelling error.</li>
+<li>A docstring that was unclear.</li>
+<li>Installation/setup instructions that are unclear.</li>
+<li>A sentence/phrase/word choice that didn't make sense.</li>
+<li>New example/tutorial notebooks using the library.</li>
+</ul>
+<p>I think this worked well for the following reasons:</p>
+<ol>
+<li>New contributors must read the docs before developing on the project, and hence become familiar with the project.</li>
+<li>There's always something that can be done better in the docs, and hence, there is something that can be immediately acted on.</li>
+<li>The task is a pain point personally uncovered by the contributor, and hence the contributor has the full context of the problem. </li>
+<li>The docs don't break the code/tests, and hence doc contributions are a great way make a contribution without wrestling with more complex testing.</li>
+<li>Starting <em>everybody</em> who has never worked on <code>pyjanitor</code> on docs is an egalitarian way of on-boarding every newcomer, beginner and experienced individuals alike. Nobody gets special treatment.</li>
+</ol>
+<p>For each individual's contribution, I asked them to first raise an issue on the GitHub issue tracker describing the contribution that they would like to make, and then clearly indicate in the comments that they would like to work on it. Then, they would go through the process of doing the documentation fix, from forking the repository, cloning it locally, creating a new branch, making edits, committing, pushing, and PR-ing.</p>
+<p>If two people accidentally ended up working on the same docs issue, I would assess the effort of the later one, and if it was substantial enough, I would allow them to consider it done, and move onto a different issue.</p>
+<p>Going forth, as the group of contributors expands, I will enforce this "docs-first" requirement only for newcomer sprinters, and request experienced ones to help manage the process.</p>
+<h3 id="code-contributions">Code Contributions</h3><p>Once the docs contributions were done, sprinters were free to either continue with more docs contributions, or provide a code contribution.</p>
+<p>Code contributions could be of one of the following:</p>
+<ol>
+<li>New function contributions.</li>
+<li>Cleaner implementations of existing functions.</li>
+<li>Restructuring of existing functions.</li>
+<li>Identification of functions to deprecate (very important!)</li>
+<li>Infrastructural changes to docs, build system, and more.</li>
+</ol>
+<p>The process for doing this was identical to docs: raise an issue, claim it, and then make a new branch with edits, and finally PR it.</p>
+<h2 id="my-role">My Role</h2><p>For both days, we had more than 10 people sprint on <code>pyjanitor</code>. Many who were present on the 1st day (and didn't have a flight to catch) came back on the 2nd day. As such, I actually didn't get much coding done. Instead, I took on the following roles:</p>
+<ol>
+<li>Q&amp;A person: Answering questions about what would be acceptable contributions, technical (read: git) issues, and more.</li>
+<li>Issue labeller and triage-r: I spent the bulk of my downtime (and pre-/post-sprint time) tagging issues on the GitHub issue tracker and marking them as being available or unavailable for hacking on, and tagging them with whether they were docs-related, infrastructure-related, or code enhancements. </li>
+<li>Code reviewer: As PRs came in, I would conduct code reviews on each of them, and would discuss with them where to adjust the code to adhere to code style standards. </li>
+<li>Continuous integration pipeline babysitter: Because I had just switched us off from Travis CI to Azure Pipelines, I was babysitting the pipelines to make sure nothing went wrong. (Spoiler: something did!) </li>
+<li>Green button pusher: Once all tests passed, I would hit the big green button to merge PRs!</li>
+</ol>
+<p>If I get to sprint with other experienced contributors at the sprints, I would definitely like to have some help with the above.</p>
+<h2 id="thoughts">Thoughts</h2><h3 id="making-sprints-human-friendly">Making sprints human-friendly</h3><p>I tried out a few ideas, which I hope made the sprints just that little bit more human-friendly.</p>
+<ol>
+<li>Used large Post-It easel pads to write out commonly-used commands at the terminal.</li>
+<li>Displayed claimed seating arrangements at the morning, and more importantly, get to know every sprinter's name.</li>
+<li>Announcing every PR to the group that was merged and what the content was, followed by a round of applause.</li>
+<li>Setting a timer for 5 minutes before lunch so that they could all get ahead in the line.</li>
+<li>I used staff privileges to move the box of leftover bananas into our sprint room. :)</li>
+</ol>
+<p>I think the applause is the most encouraging part of the process. Having struggled through a PR, however big or small, and having group recognition for that effort, is super encouraging, especially for first-time contributors. I think we need to encourage this more at sprints.</p>
+<h3 id="relinquishing-control">Relinquishing control</h3><p>The only things about the pyjanitor project that I'm unwilling to give up on are: good documentation of what a function does, that a function should do one thing well, and that it be method-chainable. Everything else, including functionality, is an open discussion that we can have!</p>
+<p>One PR I particularly enjoyed was that from Lucas, who PR'd in a logo for the project on the docs page. He had the idea to take the hacky broomstick I drew on the big sticky note (as a makeshift logo), redraw it as a vector graphic in Inkscape, and PR it in as the (current) official logo on the docs.</p>
+<p>More broadly, I deferred to the sprinters' opinions on docs, because I recognized that I'd have old eyes on the docs, and wouldn't be able to easily identify places where the docs could be written more clearly. Eventually, a small, self-organizing squad of 3-5 sprinters ended up becoming the unofficial docs squad, rearranging the structure of the docs, building automation around it, and better organizing and summarizing the information on the docs.</p>
+<p>In more than a few places, if there were a well-justified choice for the API (which really meant naming the functions and keyword arguments), I'd be more than happy to see the PR happen. Even if it is evolved away later, the present codebase and PRs that led to it provided the substrate for better evolution of the API!</p>
+<h3 id="a-new-microsoft">A new Microsoft</h3><p>This year, I switched from Travis CI to Azure Pipelines. In particular, I was attracted to the ability to build on all three major operating systems, Windows, macOS, and Linux, on the free tier.</p>
+<p>Microsoft had a booth at PyCon, in which Steve Dowell led an initiative to get us set up with Azure-related tools. Indeed, as a major sponsor of the conference, this was one of the best swag given to us. Super practical, relationship- and goodwill-building. Definitely not lesser than the Adafruit lunchboxes with electronics as swag!</p>
+<h3 id="hiccups">Hiccups</h3><p>Naturally, not everything was smooth sailing throughout. I did find myself a tad expressing myself in an irate fashion at times with the amount of context switching that I was doing, especially switching between talking to different sprinters one after another. (I am very used to long stretches hacking on one problem.) One thing future sprinters could help with, which I will document, is to give me enough ramp-up context around their problem, so that I can quickly pinpoint what other information I might need.</p>
+<p>The other not-so-smooth-sailing thing was finding out that Azure sometimes did not catch errors in a script block! My unproven hypothesis at this point is that if I have four commands executed in a script block, and if any of the first three fail but the last one passes, the entire script block will behave as if it passes. This probably stems from the build system looking at only the last exit code to determine exit status. Eventually, after splitting each check into individual steps, linting and testing errors started getting caught automatically! (Automating this is much preferred to me running the <code>black</code> code formatter in my head.)</p>
+<p>Though the above issue is fixed, I think I am still having issues getting <code>pycodestyle</code> and <code>black</code> to work on the Windows builds. Definitely looking forward to hearing from Azure devs what could be done here!</p>
+<h2 id="suggestions">Suggestions</h2><p>I'm sure there's ways I could have made the sprint a bit better.  I'd love to hear them if there's something I've missed! Please feel free to comment below.</p>
+<h2 id="sprinter-acknowledgement">Sprinter Acknowledgement</h2><p>I would like to thank all the sprinters who joined in this sprint. Their GitHub handles are below:</p>
+<ul>
+<li>@HectorM14 (who was remote!)</li>
+<li>@jekwatt</li>
+<li>@kurtispinkney</li>
+<li>@lphk92</li>
+<li>@jonnybazookatone</li>
+<li>@SorenFrohlich</li>
+<li>@dave-frazzetto</li>
+<li>@dsouzadaniel</li>
+<li>@Eidhagen</li>
+<li>@mdini</li>
+<li>@kimt33</li>
+<li>@jack-kessler-88</li>
+<li>@NapsterInBlue</li>
+<li>@jk3587</li>
+<li>@ricky-lim</li>
+<li>@catherinedevlin</li>
+<li>@StephenSchroed</li>
+</ul>
+<p>And as always, big thanks to my collaborators on the repository:</p>
+<ul>
+<li>@zbarry</li>
+<li>@szuckerman</li>
+</ul>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/pycon-2019-sprints"; this.page.url = "http://www.ericmjl.com/blog/2019/5/11/pycon-2019-sprints/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

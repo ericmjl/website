@@ -1,0 +1,846 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../static/pygments.css">
+
+    
+    
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Blog - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/21/" class="btn btn-secondary-nord">21</a>
+  
+
+  
+  <a href="../22/" class="btn btn-secondary-nord">22</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">23</span>
+
+  
+  <a href="../24/" class="btn btn-secondary-nord">24</a>
+  
+
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+<hr>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/3/17/science-and-applied-science-the-philosophies/">Science and Applied Science - The Philosophies</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-03-17
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/philosophy/">
+      philosophy
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/science/">
+      science
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>Random thought came to my mind today.</p>
+<p>The process of science is the careful observation, measurement, and falsification of hypotheses of the world. It is immensely useful. IMO, a worldview that gives rise to genuine curiosity,...
+        <a href="../../2016/3/17/science-and-applied-science-the-philosophies/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(208 words, approximately 2 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/3/15/tests-enabled-science/">Tests-Enabled Science</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-03-15
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>In the software development world, I learned about the importance of writing tests for one’s software. Since then, I have incorporated this habit in my own work, where as part of my more recent work, I write tests for the software I write to...
+        <a href="../../2016/3/15/tests-enabled-science/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(378 words, approximately 2 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/3/13/r-for-statistics-python-for-data-processing/">R for Statistics, Python for Data Processing?</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-03-13
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/python/">
+      python
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/statistics/">
+      statistics
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/r/">
+      R
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>I’ve heard this refrain many times. However, the distinction never really made sense to me.</p>
+<p>R and Python are merely programming languages. You don’t have to do stats in R and data processing in Python. You can do data processing in R, and...
+        <a href="../../2016/3/13/r-for-statistics-python-for-data-processing/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(552 words, approximately 3 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/2/13/chalk-talk/">Chalk Talk</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-02-13
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>Yesterday, I presented my work on influenza ecology and evolution at the <a href="https://www.broadinstitute.org/scientific-community/science/programs/infectious-disease-program/infectious-disease-program">Infectious Disease Program</a> seminar...
+        <a href="../../2016/2/13/chalk-talk/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(424 words, approximately 3 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2016/2/9/scikit-learn-tutorial/">scikit-learn tutorial</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-02-09
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/software carpentry/">
+      software carpentry
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data carpentry/">
+      data carpentry
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>This past Monday, I led a hands-on session at the <a href="https://broadinstitute.org">Broad Institute</a>, showing how to use the <a href="https://scikit-learn.org">scikit-learn</a> API, as well as common coding patterns for running machine...
+        <a href="../../2016/2/9/scikit-learn-tutorial/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(489 words, approximately 3 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2015/12/3/reticulate-evolution-and-microbial-ecology/">Reticulate Evolution and Microbial Ecology</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-12-03
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/influenza/">
+      influenza
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/graduate school/">
+      graduate school
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/peer review/">
+      peer review
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/thesis/">
+      thesis
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>I am happy to announce that, with my advisor's (Jon Runstadler, MIT) approval, I've uploaded my first 1st-author paper to <a href="http://biorxiv.org/content/early/2015/12/02/033514">BioRXiv</a>. This may sound surprising, to document and write...
+        <a href="../../2015/12/3/reticulate-evolution-and-microbial-ecology/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(1491 words, approximately 8 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2015/11/28/profiling-pypy-vs-python-for-agent-based-simulation/">Profiling PyPy vs. Python for Agent-Based Simulation</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-11-28
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><h2 id="outline">Outline</h2><ol>
+<li>Introduction:<ol>
+<li>Motivation</li>
+<li>Model description</li>
+<li>Link to code</li>
+</ol>
+</li>
+<li>Environment Setup</li>
+<li>Performance<ol>
+<li>Python vs. PyPy on one parameter set.</li>
+<li>Vary number of...
+        <a href="../../2015/11/28/profiling-pypy-vs-python-for-agent-based-simulation/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(1180 words, approximately 6 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2015/9/28/predicting-hiv-drug-resistance-phenotype-from-genotype/">Predicting HIV Drug Resistance Phenotype from Genotype</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-09-28
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/drug resistance/">
+      drug resistance
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/academia/">
+      academia
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/grad school/">
+      grad school
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>A blog post detailing how I built a model to predict drug resistance from HIV protease sequence.</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2015/9/28/predicting-hiv-drug-resistance-phenotype-from-genotype/">Read on...</a>
+      
+
+
+
+
+
+
+
+(1385 words, approximately 7 minutes reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2015/9/3/in-which-i-trained-a-neural-network/">In Which I Trained A Neural Network :)</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-09-03
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/deep learning/">
+      deep learning
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/neural networks/">
+      neural networks
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>I have decided to link to my <a href="https://github.com/ericmjl/nnet-HA/blob/master/Prototype%20Neural%20Network%20for%20predicting%20HA%20host%20tropism.ipynb">Jupyter notebook</a> &amp; <a href="https://github.com/ericmjl/nnet-HA/tree/master">github repository</a> instead of re-writing the whole post here. I hope you enjoy it! :)</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2015/9/3/in-which-i-trained-a-neural-network/">Read on...</a>
+      
+
+
+
+
+
+
+
+
+
+(24 words, approximately 1 minute reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2015/8/18/software-engineering-skills-for-data-analytics/">Software Engineering Skills for Data Analytics</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-08-18
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>When you think about software engineering skills, you probably don't think about the analytics types, or data scientist (DS) teams. This is a reasonable thought. Data scientists aren't in the business of building software, they're in the business...
+        <a href="../../2015/8/18/software-engineering-skills-for-data-analytics/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(840 words, approximately 5 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/21/" class="btn btn-secondary-nord">21</a>
+  
+
+  
+  <a href="../22/" class="btn btn-secondary-nord">22</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">23</span>
+
+  
+  <a href="../24/" class="btn btn-secondary-nord">24</a>
+  
+
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

@@ -1,0 +1,330 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>How to lead a great code sprint - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>How to lead a great code sprint</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2019-07-21
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software development/">
+      software development
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/sprint/">
+      sprint
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/code sprint/">
+      code sprint
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/open source/">
+      open source
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/community/">
+      community
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/community development/">
+      community development
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>This blog post is the first in a series of two blog posts on participating in code sprints, and is the culmination of two other blog posts I’ve written on leading a sprint. In this post, I’ll be writing it from the perspective of what a sprint participant might appreciate from a sprint leader.</p>
+<h2 id="write-good-docs">Write good docs</h2><p>Documentation scales you, the package maintainer. Good docs let others get going without needing your intervention, while bad docs create more confusion. Write good docs ahead-of-time on:</p>
+<ul>
+<li>The purpose and scope of the project.</li>
+<li>How to get setup for contributing</li>
+<li>What contributors should look out for when contributing, including:<ul>
+<li>Code style</li>
+<li>Function scope</li>
+<li>Documentation requirements</li>
+<li>Testing requirements</li>
+</ul>
+</li>
+<li>How contributors can contribute without necessarily providing code</li>
+</ul>
+<h2 id="require-documentation-as-a-first-contribution">Require documentation as a first contribution</h2><p>This may not necessarily apply to all projects, but for small-ish enough projects, this might be highly relevant. Requiring documentation contributions as the first contribution has a few nice side effects for newcomer contributors:</p>
+<ol>
+<li>This enforces familiarity with the project before making contributions.</li>
+<li>It’s a very egalitarian way to kick-off the sprints, reducing the probability of sprinter anxiety from falling behind.</li>
+<li>This reduces the burden of new contributions for first-time sprinters: docs do not break code!</li>
+<li>Apart from being non-intimidating, it can sometimes give rise to repetitive tasks that newcomer sprinters with which newcomers can practice git workflow.</li>
+</ol>
+<h2 id="make-clear-who-should-sprint-with-your-project">Make clear who should sprint with your project</h2><p>Mismatched expectations breed frustration; hence, making clear what pre-requisite knowledge participants should have can go a long way to reducing frustrations later on.</p>
+<p>Drawing on my <code>pyjanitor</code> experience, I would want participants to at the minimum be me of the following:</p>
+<ol>
+<li><code>pandas</code> users who have frustrations with the library, and would like to make contributions, or</li>
+<li>Individuals who wish to make a documentation contribution and don’t mind doing a fine-toothed pass over the docs to figure out what is unclear in the docs.</li>
+</ol>
+<p>Defining your so-called "sprint audience" ahead-of-time can go a long way to making the sprint productive and friendly.</p>
+<h2 id="communicate-priorities-of-the-project">Communicate priorities of the project</h2><p>Sprinters want to know that their contributions are going to be valued. Though it is easy to say, "come talk with me before you embark on a task", the reality is that you, the sprint lead, are likely going to be extremely overbooked. One way to get around this, I think, is to have a high-level list of priorities for the sprint, which can help sprinters better strategize which tasks to tackle. Communicate this on a whiteboard, large sticky notes, or online Wiki page that you can direct people to.</p>
+<h2 id="have-a-publicly-viewable-file-lock">Have a publicly-viewable "file lock"</h2><p>Merge conflicts will inadvertently show up if multiple people are contributing to the same file simultaneously. It helps to have a publicly-viewable "file lock" on, say, a whiteboard or large sticky notes, so that we know who is working on what file. This helps prevent you, the sprint lead, from accidentally getting two people to work on the same file, and then having to resolve merge conflicts later.</p>
+<p>In the <code>pyjanitor</code> sprints, I frequently approved two people working on the same notebook; resolving merge conflicts in the notebook JSON later proved to be a big pain! This lesson was one learned hard.</p>
+<h2 id="encourage-contribution-of-life-like-examples">Encourage contribution of life-like examples</h2><p>If there are new package users in the crowd who want to get familiar with the package, then encouraging them to contribute life-like examples is a great way to have them make a contribution! This has some nice side effects:</p>
+<ol>
+<li>In creating the example, they may find limitations in the package that could form the substrate of future contributions.</li>
+<li>By using the library in the creation of an example, they become users of the project themselves.</li>
+</ol>
+<h2 id="celebrate-every-contribution">Celebrate every contribution</h2><p>This one is particularly important for first-time contributors. Oftentimes, they have never done standard Gitflow, and that is intimidating enough. So it doesn’t matter if the contribution is nothing more than deleting an unnecessary plural <code>s</code> or correcting a broken URL. We should celebrate that contribution, because they have now learned how to make a contribution (regardless of type), and can repeat the unfamiliar Gitflow pattern until they have it muscle memorized.</p>
+<p>At the SciPy sprints, for the <code>pyjanitor</code> project, once a contributor’s PR finished building and passed all checks, I brought my iPad over to their table to let them hit the Big Green Button on GitHub. This is one touch I am quite confident our sprinters loved!</p>
+<h2 id="recognize-and-assign-non-code-tasks">Recognize and assign non-code tasks</h2><p>While code contributions are useful, I think a great way to encourage them to help out would be to have them help with non-code contributions. A few examples include:</p>
+<ul>
+<li>Debugging others’ setups</li>
+<li>Triaging/tagging issues on your issue tracker</li>
+<li>Talking with sprinters to help them prioritize</li>
+<li>Social media sprinting for the project</li>
+</ul>
+<p>This is because you, the sprinter, might have your hands full helping beginners, and so having as much help as possible is extremely helpful to you. Be sure, of course, the acknowledge them in some public way that expresses your appreciation of their effort, because they might not necessarily get into the commit record (which, by the way, is not the only way to keep track of contributions).</p>
+<h2 id="stay-humble-and-calm">Stay humble and calm</h2><p>In open source software development, it is hard to find contributors who are willing to sustain an effort, and so any contributions are generally welcome (barring those that are clearly out of scope). Hence, as far as it is humanly possible, I would be inclined to express appreciation for contributors’ contributions.</p>
+<p>One of the PyMC maintainers, <a href="https://colindcarroll.com">Colin Carroll</a>, said something of a contribution that I wanted to make that stuck with me. The gist of it was as follows:</p>
+<blockquote><p>It’s a contribution from someone who is willing, and I’d take that any day.</p>
+</blockquote>
+<p>So yes, even though we may see our project as providing an opportunity for newcomers to contribute, the fact that they are willing to contribute is even more so an important thing to recognize! Gratitude makes more sense than entitlement here.</p>
+<p>Staying calm is also important. It’s easy to get irritated because of all of the context switching that happens. Leverage the help you can get from your sprint co-leads to help shoulder the load. If you take good care of your mental state, you can help make the sprints fun and productive for others.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/how-to-lead-a-great-code-sprint"; this.page.url = "http://www.ericmjl.com/blog/2019/7/21/how-to-lead-a-great-code-sprint/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

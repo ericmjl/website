@@ -1,0 +1,870 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../static/pygments.css">
+
+    
+    
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Blog - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/12/" class="btn btn-secondary-nord">12</a>
+  
+
+  
+  <a href="../13/" class="btn btn-secondary-nord">13</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">14</span>
+
+  
+  <a href="../15/" class="btn btn-secondary-nord">15</a>
+  
+
+  
+  <a href="/blog/page/16/" class="btn btn-secondary-nord">16</a>
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+<hr>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/5/22/pycon-2017-highlights/">PyCon 2017 Highlights</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-05-22
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/pycon/">
+      pycon
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>A selection of my favourite talks and tutorials from PyCon 2017!</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2017/5/22/pycon-2017-highlights/">Read on...</a>
+      
+
+
+
+
+
+
+
+(888 words, approximately 5 minutes reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/5/21/post-pycon-2017-thoughts/">Post-PyCon 2017 Thoughts</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-05-21
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/pycon/">
+      pycon
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>This year's PyCon 2017 is over! Well, for me at least, as I head back to Boston, a place I've had to call home for the past 6 years.</p>
+<p>I've noticed my Portland PyCons have felt different from my Montreal PyCons.</p>
+<p>In Montreal, I felt more...
+        <a href="../../2017/5/21/post-pycon-2017-thoughts/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(477 words, approximately 3 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/5/15/thesis-defence-video/">Thesis Defence Video!</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-05-15
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/grad school/">
+      grad school
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/academia/">
+      academia
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/thesis/">
+      thesis
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/defence/">
+      defence
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <p class="card-text"><p>My thesis defence video is <a href="https://youtu.be/ePqhQusK-3Q?t=1m23s">up on YouTube</a>!</p>
+</p>
+    <small class="text-muted">
+      <a href="../../2017/5/15/thesis-defence-video/">Read on...</a>
+      
+
+
+
+
+
+
+
+
+
+(68 words, approximately 1 minute reading time)
+
+    </small>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/5/13/why-i-teach-coding-tutorials/">Why I Teach Coding Tutorials</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-05-13
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/pycon/">
+      pycon
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>I'm very excited to be at PyCon! It's a bit of a personal challenge this year, as I'll be leading two tutorials, one on Network Analysis and one on Data Testing.</p>
+<p>With a bit of time on hand, I've done a bit of introspection as to why I love...
+        <a href="../../2017/5/13/why-i-teach-coding-tutorials/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(183 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/5/4/pycon-2017-tutorials-and-talks-preview/">PyCon 2017: Tutorials and Talk Preview!</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-05-04
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/pycon/">
+      pycon
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>This year, I'll be at PyCon 2017 presenting two tutorials and one talk! I'm very excited to be attending!</p>
+<p>The first tutorial I will deliver is on network analysis. The GitHub repository is <a...
+        <a href="../../2017/5/4/pycon-2017-tutorials-and-talks-preview/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(262 words, approximately 2 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/5/3/managing-conda-environments/">Managing conda environments</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-05-03
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>I recently got around to hacking a system for managing my <code>conda</code> environments better. Previously, my coding projects mostly relied on one master environment (with exceptions, e.g. <code>bokeh</code> development, or my Network Analysis...
+        <a href="../../2017/5/3/managing-conda-environments/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(360 words, approximately 2 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/4/28/defended/">Defended!</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-04-28
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>It is done! I have defended my doctoral thesis, supervised by Prof. Jonathan A. Runstadler, advised by Prof. Mark Bathe and Prof. Jukka-Pekka Onnela, conducted as a student in the Department of Biological Engineering at MIT.</p>
+<p>Looking back,...
+        <a href="../../2017/4/28/defended/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(65 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/4/24/thesis-defence/">Thesis Defence!</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-04-24
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/graduate school/">
+      graduate school
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/thesis defence/">
+      thesis defence
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>My thesis defence announcement has been made to the department!</p>
+<ul>
+<li><strong>Date:</strong>  Thursday, April 27th, 2017</li>
+<li><strong>Time:</strong>  2:00 PM</li>
+<li><strong>Location:</strong> ...
+        <a href="../../2017/4/24/thesis-defence/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(190 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/4/21/moving-on-from-mit/">Moving on from MIT</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-04-21
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/graduate school/">
+      graduate school
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/job hunt/">
+      job hunt
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/insight data science/">
+      insight data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../tag/mit/">
+      mit
+    </a>
+    
+  </p>
+  
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>It's my final week before defending my thesis.</p>
+<p>The thesis has been submitted to my committee, and my slides, as usual, are being made until the last minute.</p>
+<p>I've had a number of conversations with a number of people, both in person...
+        <a href="../../2017/4/21/moving-on-from-mit/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+(524 words, approximately 3 minutes reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+
+<div class="card bg-dark-nord">
+  <div class="card-body">
+    
+<!-- Set title style -->
+
+<h3><a href="../../2017/4/7/staying-nimble/">Staying Nimble</a></h3>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-04-07
+
+    
+</small>
+
+    
+    <div>
+      <p class="card-text"><p>As I wrap up grad school, one thought recurrently comes to mind: as we grow older, do we intrinsically lose mental agility, nimbleness and ability to learn? Or is it because of external factors that cause one to become less adventurous, less...
+        <a href="../../2017/4/7/staying-nimble/">(read more)</a>
+      </p>
+      <small class="text-muted">
+        
+
+
+
+
+
+
+
+
+
+(191 words, approximately 1 minute reading time)
+
+      </small>
+    </div>
+    
+  </div>
+</div>
+
+<div>
+  <hr>
+</div>
+
+
+<div class="btn-group" role="group" aria-label="pagination">
+  
+  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  
+
+  
+  <a href="/blog/page/12/" class="btn btn-secondary-nord">12</a>
+  
+
+  
+  <a href="../13/" class="btn btn-secondary-nord">13</a>
+  
+
+  <span class="btn btn-secondary-nord disabled">14</span>
+
+  
+  <a href="../15/" class="btn btn-secondary-nord">15</a>
+  
+
+  
+  <a href="/blog/page/16/" class="btn btn-secondary-nord">16</a>
+  
+
+  
+  <a href="/blog/page/25" class="btn btn-secondary-nord">&raquo;</a>
+  
+</div>
+
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

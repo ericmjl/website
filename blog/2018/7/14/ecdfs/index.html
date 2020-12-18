@@ -1,0 +1,313 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>ECDFs - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>ECDFs</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2018-07-14
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/statistics/">
+      statistics
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/visualization/">
+      visualization
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>In my two SciPy 2018 co-taught tutorials, I made the case that ECDFs provide richer information compared to histograms. My main points were:</p>
+<ol>
+<li>We can more easily identify central tendency measures, in particular, the median, compared to a histogram.</li>
+<li>We can much more easily identify other percentile values, compared to a histogram.</li>
+<li>We become less susceptible to outliers arising from binning issues.</li>
+<li>It is more difficult to hide multiple modes.</li>
+<li>We can easily identify repeat values.</li>
+</ol>
+<p>What are ECDFs? ECDFs stand for the "empirical cumulative distribution function", and they map every data point in the dataset to a quantile, which is a number between 0 and 1 that indicates the cumulative fraction of data points smaller than that data point itself.</p>
+<p>To illustrate, let's take a look at the following plots.</p>
+<div class="hll"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Generate a mixture of two normal distributions, but with</span>
+<span class="c1"># very few data points.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">mx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">mx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">mx1</span><span class="p">,</span> <span class="n">mx2</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]])</span>  <span class="c1"># one outlier</span>
+
+<span class="k">def</span> <span class="nf">ecdf</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax_ecdf</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax_hist</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">ax_hist</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;histogram&#39;</span><span class="p">)</span>
+
+<span class="n">ax_hist</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">mx</span><span class="p">)</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">ecdf</span><span class="p">(</span><span class="n">mx</span><span class="p">)</span>
+<span class="n">ax_ecdf</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">ax_ecdf</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ecdf&#39;</span><span class="p">)</span>
+</pre></div>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div><p>Let's compare the ECDF and the histogram for this data.</p>
+<p><strong>Is the central tendency measure easily discoverable?</strong> We might say that there's some peak at just below the x-axis at just above zero, but is that the mode, median or mean? And what is its exact value? On the other hand, at least the median is easily discoverable on the ECDF: Draw a horizontal line from 0.5 on the y-axis until it crosses a data point, and then drop a line down to the x-axis to get the median value.</p>
+<p><strong>Are percentiles easily discoverable?</strong> It's much clearer that the answer is "yes" for the ECDF, and "no" for the histogram.</p>
+<p><strong>What is the value of the potential outlier?</strong> Difficult to tell on the histogram: it could be anywhere from 4 to 5 (high outlier) and maybe -3 to -4 on the low outlier. On the other hand, just drop a line down from the suspected outliers to the x-axis to read off their values.</p>
+<p><strong>Is this a mixture distribution or is this a single Normal distribution?</strong> If you looked at the histogram, you might be tempted to think that the data are normally distributed with mean 0.5 and standard deviation about 2. However, if you look at the ECDF, it's clear that there are multiple modes, as shown by two or three sigmoidal-like curves. This should give us pause to see if there's a mixture distribution at play here.</p>
+<p><strong>Are there repeat values?</strong> You can't tell in a histogram. However, it's evidently clear on the ECDF scatterplot that there's no repeat values -- they would show up on the plot as vertical stacks of dots. (Repeat-values might be important when working with, say, a zero- or X-inflated distribution.)</p>
+<h2 id="summary">Summary</h2><p>I hope this post showed you why ECDFs contain richer information than histograms. They're taught less commonly than histograms, so people will have a harder time interpreting them at first glance. However, a bit of guidance and orientation will bring out the rich information on the ECDFs.</p>
+<h2 id="credits">Credits</h2><p>I credit Justin Bois (Caltech) for teaching me about ECDFs, and Hugo Bowne-Anderson (DataCamp) for reinforcing the idea.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/ecdfs"; this.page.url = "http://www.ericmjl.com/blog/2018/7/14/ecdfs/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

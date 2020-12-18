@@ -1,0 +1,483 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Reimplementing and Testing Deep Learning Models - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Reimplementing and Testing Deep Learning Models</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2019-10-31
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/deep learning/">
+      deep learning
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/testing/">
+      testing
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/pair programming/">
+      pair programming
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/code review/">
+      code review
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p><em>Note: this blog post is cross-posted on my personal <a href="https://ericmjl.github.io/essays-on-data-science/machine-learning/reimplementing-models/">essay collection on the practice of data science</a>.</em></p>
+<p>At work, most deep learners I have encountered
+have a tendency to take deep learning models
+and treat them as black boxes that we should be able to wrangle.
+While I see this as a pragmatic first step
+to testing and proving out the value of a newly-developed deep learning model,
+I think that stopping there
+and not investing the time into understanding the nitty-gritty of the model
+leaves us in a poor position
+to know that model's
+(1) applicability domain (i.e. where the model should be used),
+(2) computational and statistical performance limitations, and
+(3) possible engineering barriers to getting the model performant
+in a "production" setting.</p>
+<p>As such, with deep learning models,
+I'm actually a fan of investing the time to re-implement the model
+in a tensor framework that we all know and love,
+NumPy (and by extension, JAX).</p>
+<h2 id="benefits-of-re-implementing-deep-learning-models">Benefits of re-implementing deep learning models</h2><p>Doing a model re-implementation from a deep learning framework
+into NumPy code actually has some benefits for the time being invested.</p>
+<h3 id="developing-familiarity-with-deep-learning-frameworks">Developing familiarity with deep learning frameworks</h3><p>Firstly, doing so forces us to know the translation/mapping
+from deep learning tensor libraries into NumPy.
+One of the issues I have had with deep learning libraries
+(PyTorch and Tensorflow being the main culprits here)
+is that their API copies something like 90% of NumPy API
+without making easily accessible
+the design considerations discussed when deciding to deviate.
+(By contrast, CuPy has an explicit API policy
+that is well-documented and front-and-center on the docs,
+while JAX strives to replicate the NumPy API.)</p>
+<p>My gripes with tensor library APIs aside, though,
+translating a model by hand from one API to another
+forces growth in familiarity with both APIs,
+much as translating between two languages
+forces growth in familiarity with both languages.</p>
+<h3 id="developing-a-mechanistic-understanding-of-the-model">Developing a mechanistic understanding of the model</h3><p>It is one thing to describe a deep neural network
+as being "like the brain cell connections".
+It is another thing to know that the math operations underneath the hood
+are nothing more than dot products (or tensor operations, more generally).
+Re-implementing a deep learning model
+requires combing over every line of code,
+which forces us to identify each math operation used.
+No longer can we hide behind an unhelpfully vague abstraction.</p>
+<h3 id="developing-an-ability-to-test-and-sanity-check-the-model">Developing an ability to test and sanity-check the model</h3><p>If we follow the workflow (that I will describe below)
+for reimplementing the model,
+(or as the reader should now see, translating the model between APIs)
+we will develop confidence in the correctness of the model.
+This is because the workflow I am going to propose
+involves proper basic software engineering workflow:
+writing documentation for the model,
+testing it,
+and modularizing it into its logical components.
+Doing each of these requires a mechanistic understanding
+of how the model works,
+and hence forms a useful way of building intuition behind the model
+as well as correctness of the model.</p>
+<h3 id="reimplementing-models-is-not-a-waste-of-time">Reimplementing models is <em>not</em> a waste of time</h3><p>By contrast, it is a highly beneficial practice
+for gaining a deeper understanding into the inner workings
+of a deep neural network.
+The only price we pay is in person-hours,
+yet under the assumption that the model is of strong commercial interest,
+that price can only be considered an investment, and not a waste.</p>
+<h2 id="a-proposed-workflow-for-reimplementing-deep-learning-models">A proposed workflow for reimplementing deep learning models</h2><p>I will now propose a workflow for re-implementing deep learning models.</p>
+<h3 id="identify-a-coding-partner">Identify a coding partner</h3><p>Pair programming is a productive way of teaching and learning.
+Hence, I would start by identifying a coding partner
+who has the requisite skillset and shared incentive
+to go deep on the model.</p>
+<p>Doing so helps a few ways.</p>
+<p>Firstly, we have real-time peer review on our code,
+making it easier for us to catch mistakes that show up.</p>
+<p>Secondly, working together at the same time means that
+both myself and my colleague will learn something about the neural network
+that we are re-implementing.</p>
+<h3 id="pick-out-the-forward-step-of-the-model">Pick out the "forward" step of the model</h3><p>The "forward" pass of the model is where the structure of the model is defined:
+basically the mathematical operations
+that transform the input data into the output observations.</p>
+<p>A few keywords to look out for
+are the <code>forward()</code> and  <code>__call__()</code> class methods.</p>
+<div class="hll"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="c1"># Implementation of model happens here.</span>
+        <span class="n">something</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="n">something</span>
+</pre></div>
+<p>For models that involve an autoencoder,
+somewhat more seasoned programmers
+might create a class method called <code>encoder()</code> and <code>decoder()</code>,
+which themselves reference another model
+that would have a <code>forward()</code> or <code>__call__()</code> defined.</p>
+<div class="hll"><pre><span></span><span class="k">class</span> <span class="nc">AutoEncoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">something</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">something</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+<p>Re-implementing the <code>forward()</code> part of the model
+is usually a good way of building a map
+of the equations that are being used
+to transform the input data into the output data.</p>
+<h3 id="inspect-the-shapes-of-the-weights">Inspect the shapes of the weights</h3><p>While the equations give the model <em>structure</em>,
+the weights and biases, or the <em>parameters</em>,
+are the part of the model that are optimized.
+(In Bayesian statistics, we would usually presume a model structure,
+i.e. the set of equations used alongside the priors,
+and fit the model parameters.)</p>
+<p>Because much of deep learning hinges on linear algebra,
+and because most of the transformations that happen
+involve transforming the <em>input space</em> into the <em>output space</em>,
+getting the shapes of the parameters is very important.</p>
+<p>In a re-implementation exercise with my intern,
+where we re-implemented
+a specially designed recurrent neural network layer in JAX,
+we did a manual sanity check through our implementation
+to identify what the shapes would need to be
+for the inputs and outputs.</p>
+<h3 id="write-tests-for-the-neural-network-components">Write tests for the neural network components</h3><p>Once we have the neural network model and its components implemented,
+writing tests for those components is a wonderful way of making sure
+that
+(1) the implementation is correct, to the best of our knowledge, and that
+(2) we can catch when the implementation might have been broken inadvertently.</p>
+<p>The shape test (as described above) is one way of doing this.</p>
+<div class="hll"><pre><span></span><span class="k">def</span> <span class="nf">test_layer_shapes</span><span class="p">():</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">input_dims</span><span class="p">,</span> <span class="n">output_dims</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">input_dims</span><span class="p">))</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">nn_layer</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">output_dims</span>
+</pre></div>
+<p>If there are special elementwise transforms performed on the data,
+such as a ReLU or exponential transform,
+we can test that the numerical properties of the output are correct:</p>
+<div class="hll"><pre><span></span><span class="k">def</span> <span class="nf">test_layer_shapes</span><span class="p">():</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">input_dims</span><span class="p">,</span> <span class="n">output_dims</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">input_dims</span><span class="p">))</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">nn_layer</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">output</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+<h3 id="write-tests-for-the-entire-training-loop">Write tests for the entire training loop</h3><p>Once the model has been re-implemented in its entirety,
+prepare a small set of training data,
+and pass it through the model,
+and attempt to train it for a few epochs.</p>
+<p>If the model, as implemented, is doing what we think it should be,
+then after a dozen epochs or so,
+the training loss should go down.
+We can then test that the training loss at the end
+is less than the training loss at the beginning.
+If the loss does go down, it's necessary but not sufficient for knowing
+that the model is implemented correctly.
+However, if the loss <em>does not</em> go down, then we will definitely know
+that a problem exists somewhere in the code, and can begin to debug.</p>
+<p>An example with pseudocode below might look like the following:</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">data</span> <span class="kn">import</span> <span class="n">dummy_graph_data</span>
+<span class="kn">from</span> <span class="nn">model</span> <span class="kn">import</span> <span class="n">gnn_model</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">make_gnn_params</span>
+<span class="kn">from</span> <span class="nn">losses</span> <span class="kn">import</span> <span class="n">mse_loss</span>
+<span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">grad</span>
+<span class="kn">from</span> <span class="nn">jax.experimental.optimizers</span> <span class="kn">import</span> <span class="n">adam</span>
+
+<span class="k">def</span> <span class="nf">test_gnn_training</span><span class="p">():</span>
+    <span class="c1"># Prepare training data</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dummy_graph_data</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">make_gnn_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">dloss</span> <span class="o">=</span> <span class="n">grad</span><span class="p">(</span><span class="n">mse_loss</span><span class="p">)</span>
+    <span class="n">init</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">get_params</span> <span class="o">=</span> <span class="n">adam</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+    <span class="n">start_loss</span>  <span class="o">=</span> <span class="n">mse_loss</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="n">state</span> <span class="o">=</span> <span class="n">init</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">dloss</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="n">end_loss</span> <span class="o">=</span> <span class="n">mse_loss</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">end_loss</span> <span class="o">&lt;</span> <span class="n">start_loss</span>
+</pre></div>
+<p>A side benefit of this is that
+if you commit to only judiciously changing the tests,
+you will end up with a stable
+and copy/paste-able
+training loop that you know you can trust
+on new learning tasks,
+and hence only need to worry about swapping out the data.</p>
+<h3 id="build-little-tools-for-yourself-that-automate-repetitive-boring-things">Build little tools for yourself that automate repetitive (boring) things</h3><p>You may notice in the above integration test,
+we wrote a lot of other functions
+that make testing much easier,
+such as dummy data generators,
+and parameter initializers.</p>
+<p>These are tools that make composing parts of the entire training process
+modular and easy to compose.
+I strongly recommend writing these things,
+and also backing them with more tests
+(since we will end up relying on them anyways).</p>
+<h3 id="now-run-your-deep-learning-experiments">Now run your deep learning experiments</h3><p>Once we have the model re-implemented and tested,
+the groundwork is present for us to conduct extensive experiments
+with the confidence that we know
+how to catch bugs in the model
+in a fairly automated fashion.</p>
+<h2 id="concluding-words">Concluding words</h2><p>Re-implementing deep learning models can be a very fun and rewarding exercise,
+because it serves as an excellent tool
+to check our understanding of the models that we work with.</p>
+<p>Without the right safeguards in place, though,
+it can also very quickly metamorphose into a nightmare rabbithole of debugging.
+Placing basic safeguards in place when re-implementing models
+helps us avoid as many of these rabbitholes as possible.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/reimplementing-and-testing-deep-learning-models"; this.page.url = "http://www.ericmjl.com/blog/2019/10/31/reimplementing-and-testing-deep-learning-models/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

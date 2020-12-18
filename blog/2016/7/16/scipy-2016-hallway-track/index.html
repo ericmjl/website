@@ -1,0 +1,276 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>SciPy 2016 Hallway Track - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>SciPy 2016 Hallway Track</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-07-16
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/scipy/">
+      scipy
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>Like <a href="https://us.pycon.org/2016/">PyCon 2016</a>, I ended up doing the Hallway Track at <a href="http://www.scipy2016.scipy.org">SciPy 2016</a>, which really meant hanging out in the hallway, talking with people, fixing code bugs, and writing. Oh, and not to mention, running/jogging/walking on the treadmill to burn off all the food they've fed us. Part of the rationale for doing the hallway track is because all of the talks will be online (they are already going up!) on <a href="https://www.youtube.com/playlist?list=PLYx7XA2nY5Gf37zYZMw6OqGFRPjB1jCy6">YouTube</a>, so I can selectively listen to the ones that I'm most interested in later. (We also have a grant deadline to meet today, so I've needed time to work on that.)</p>
+<p>I re-connected with <a href="http://www.hugobowneanderson.com">Hugo Bowne-Anderson</a>, who works at <a href="https://www.datacamp.com">DataCamp</a> as a curriculum engineer. He was previously in the field of quantitative physical biology, and now works to bring data science skills to the workforce. A really funny giant Ozzylander (Australian)! We are working together on bringing some of my network analysis material into DataCamp - exciting stuff!</p>
+<p>I got a chance to talk with <a href="http://aric.hagberg.org">Aric Hagberg</a>, who is the lead developer for <a href="https://networkx.github.io">NetworkX</a>. He shared with me some stories of how they got NetworkX started, and his thoughts on the future of NetworkX as a package. I definitely learned a lot from him on the software engineering side.</p>
+<p>I had a chance to meet <a href="https://www.linkedin.com/in/greg-wilson-a26510b6">Greg Wilson</a>, finally, in person! He led our software and data carpentry instructor training. He always has interesting stories to tell.</p>
+<p>I re-connected with <a href="https://www.linkedin.com/in/carolwilling">Carol Willing</a>, and a few other MIT-related people (<a href="https://www.linkedin.com/in/noelle-held-537a7aab">Noelle</a> and <a href="https://halexand.github.io">Harriet</a>). Carol is always telling me to stay out of trouble, just as a grandmother-like figure would :P. She also wrote a very encouraging comment for me at the end of the tutorial session that I led on Network Analysis. Such a grandma-type!</p>
+<p>I had a lot of fun time chatting with my roommate, <a href="http://oswco.com">Tom Brander</a>, who has a ton of industry experience and was once an employee of Citibank. He is a master networker, and connected me with tons of people at the conference.</p>
+<p>I also met some of the financial aid recipients, such as Sartaj, Aman, and AMiT. The reason Amit spells his name that way is because Amit is a commonly-used names in India, so that’s his way of differentiation. I also re-connected with <a href="http://hargup.in">Harsh Gupta</a>, whom I met last year - he has leveraged his experiences with <a href="http://docs.sympy.org/latest/tutorial/index.html">SymPy</a> and <a href="https://summerofcode.withgoogle.com">GSoC</a> to do some really cool other things! I also connected with Nelson Liu (UW), who showed me quite a bit of the ropes behind Pokemon Go on the first night of SciPy. (Yes, I was the one responsible for that channel.) Turns out it wasn’t all games and play only; Chris Niemara put together <code>bokehmongo</code> - a Pokemon implementation that used good’ol physics code and Bokeh plots! (SoftEng nerds out there - do not read it as <code>bokeh</code> and <code>mongo</code>!)</p>
+<p>During the sprints, I had a chance to sprint with the <a href="http://bokeh.pydata.org">Bokeh</a> team! I learned much more about the internals of Bokeh than I could have just reading the developer documentation alone (side note: it’s a <em>complicated</em> library of code, but <em>very</em> well organized). <a href="https://www.linkedin.com/in/bryanvdv">Bryan Van de Ven</a> and <a href="https://www.linkedin.com/in/birdsarah">Sarah Bird</a> were also amazingly helpful during the sprint as well, just as <a href="https://github.com/jenshnielsen">Jens Nielsen</a>, <a href="https://github.com/tacaswell">Thomas Caswell</a> and <a href="https://github.com/WeatherGod">Benjamin Root</a> helped me during last year’s sprint with the <a href="http://matplotlib.org"><code>matplotlib</code></a> team. I recommended that Noelle, also a graduate student at MIT, sprint with the MPL team. In my opinion, they have a very mature and easy-to-follow workflow coupled with a dozen low-hanging fixes that a newcomer to open source can help with.</p>
+<p>In parallel, with SciPy, there was another scientific conference ongoing somewhere else, and I was seeing the "new post-doc positions available!" (re-)tweets flooding my feed. I personally dislike those tweets because I think post-docs ought to be paid at least double the current NIH pay rate. SciPy conferences don’t have those tweets happening, and I think it is for the betterment of the community that way.</p>
+<p>All-in-all, SciPy 2016 was yet another really fun community conference! (Apologies if I forgot the names of other people; there's just too many to remember!) Looking forward to helping out with next year’s conference!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/scipy-2016-hallway-track"; this.page.url = "http://www.ericmjl.com/blog/2016/7/16/scipy-2016-hallway-track/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

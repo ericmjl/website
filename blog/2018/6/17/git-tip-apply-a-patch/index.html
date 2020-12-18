@@ -1,0 +1,360 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Git Tip: Apply a Patch - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Git Tip: Apply a Patch</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2018-06-17
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/git/">
+      git
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/version control/">
+      version control
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/code snippets/">
+      code snippets
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I learned a new thing this weekend: we apparently can apply a patch onto a branch/fork using <code>git apply [patchfile]</code>.</p>
+<p>There's a few things to unpack here. First off, what's a <code>patchfile</code>?</p>
+<p>The long story cut short is that a <code>patchfile</code> is nothing more than a plain text file that contains all information about <code>diffs</code> between one commit and another. If you've ever used the <code>git diff</code> command, you'll know that it will output a <code>diff</code> between the current state of a repository, and the last committed state. Let's take a look at an example.</p>
+<p>Say we have a file, called <code>my_file.txt</code>. In a real world example, this would be parallel to, say, a <code>.py</code> module that you've written. After a bunch of commits, I have a directory structure that looks like this:</p>
+<div class="hll"><pre><span></span>$ ls
+total <span class="m">8</span>
+drwxr-xr-x   <span class="m">4</span> ericmjl  staff   128B Jun <span class="m">17</span> <span class="m">10</span>:26 ./
+drwx------@ <span class="m">19</span> ericmjl  staff   608B Jun <span class="m">17</span> <span class="m">10</span>:26 ../
+drwxr-xr-x  <span class="m">12</span> ericmjl  staff   384B Jun <span class="m">17</span> <span class="m">10</span>:27 .git/
+-rw-r--r--   <span class="m">1</span> ericmjl  staff    68B Jun <span class="m">17</span> <span class="m">10</span>:26 my_file.txt
+</pre></div>
+<p>The contents of <code>my_file.txt</code> are as follows:</p>
+<div class="hll"><pre><span></span>$ cat my_file.txt
+Hello! This is a text file.
+
+I have some text written inside here.
+</pre></div>
+<p>Now, let's say I edit the text file by adding a new line and removing one line.</p>
+<div class="hll"><pre><span></span>$ cat my_file.txt
+Hello! This is a text file.
+
+I have some text written inside here.
+
+This is a new line!
+</pre></div>
+<p>If I looked at the "diff" between the current state of the file and the previous committed state of the file:</p>
+<div class="hll"><pre><span></span>$ git diff my_file.txt
+<span class="gh">diff --git a/my_file.txt b/my_file.txt</span>
+<span class="gh">index a594a37..d8602e1 100644</span>
+<span class="gd">--- a/my_file.txt</span>
+<span class="gi">+++ b/my_file.txt</span>
+<span class="gu">@@ -1,4 +1,4 @@</span>
+ Hello! This is a text file.
+
+<span class="gd">-I have some text written inside here.</span>
+<span class="gi">+This is a new line!</span>
+</pre></div>
+<p>While this may look intimidating at first, the key thing that one needs to look at is the <code>+</code> and <code>-</code>. The <code>+</code> signals that there is an addition of one line, and the <code>-</code> signals the removal of one line.</p>
+<p>Turns out, I can export this as a file.</p>
+<div class="hll"><pre><span></span>$ git diff my_file.txt &gt; /tmp/patch1.txt
+$ cat /tmp/patch1.txt
+diff --git a/my_file.txt b/my_file.txt
+index a594a37..d8602e1 <span class="m">100644</span>
+--- a/my_file.txt
++++ b/my_file.txt
+@@ -1,4 +1,4 @@
+ Hello! This is a text file.
+
+-I have some text written inside here.
++This is a new line!
+</pre></div>
+<p>Now, let's simulate the scenario where I accidentally discarded those changes in the repository. A real-world analogue happened to me while contributing to CuPy: I had a really weird commit history, and couldn't remember how to rebase, so I exported the patch from my GitHub pull request (more on this later) and applied it following the same conceptual steps below.</p>
+<div class="hll"><pre><span></span>$ git checkout -- my_file.txt
+</pre></div>
+<p>Now, the repository is in a "cleaned" state -- there are no changes made:</p>
+<div class="hll"><pre><span></span>$ git status
+On branch master
+nothing to commit, working tree clean
+</pre></div>
+<p>Since I have saved the diff as a file, I can apply it onto my project:</p>
+<div class="hll"><pre><span></span>$ git apply /tmp/patch1.txt
+$ git status
+On branch master
+Changes not staged <span class="k">for</span> commit:
+  <span class="o">(</span>use <span class="s2">&quot;git add &lt;file&gt;...&quot;</span> to update what will be committed<span class="o">)</span>
+  <span class="o">(</span>use <span class="s2">&quot;git checkout -- &lt;file&gt;...&quot;</span> to discard changes in working directory<span class="o">)</span>
+
+        modified:   my_file.txt
+
+no changes added to commit <span class="o">(</span>use <span class="s2">&quot;git add&quot;</span> and/or <span class="s2">&quot;git commit -a&quot;</span><span class="o">)</span>
+</pre></div>
+<p>Looking at the diff again, I've recovered the changes that were lost!</p>
+<div class="hll"><pre><span></span>$ git diff
+<span class="gh">diff --git a/my_file.txt b/my_file.txt</span>
+<span class="gh">index a594a37..d8602e1 100644</span>
+<span class="gd">--- a/my_file.txt</span>
+<span class="gi">+++ b/my_file.txt</span>
+<span class="gu">@@ -1,4 +1,4 @@</span>
+ Hello! This is a text file.
+
+<span class="gd">-I have some text written inside here.</span>
+<span class="gi">+This is a new line!</span>
+</pre></div>
+<p>Don't forget to commit and push!</p>
+<h2 id="how-to-export-a-patch-from-github">How to export a patch from GitHub?</h2><p>I mentioned earlier that I had exported the patch file from GitHub and then applied it on a re-forked repository. How does one do that? It's not as hard as you think.</p>
+<p>Here's the commands below with comments.</p>
+<div class="hll"><pre><span></span><span class="c1"># Download the patch from the pull request URL.</span>
+<span class="c1"># Replace curly-braced elements with the appropriate names.</span>
+<span class="c1"># Export it to /tmp/patch.txt.</span>
+$ wget https://github.com/<span class="o">{</span>repo_owner<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/pull/<span class="o">{</span>pr_number<span class="o">}</span>.patch -O /tmp/patch.txt
+
+<span class="c1"># Now, apply the patch to your project</span>
+$ git apply /tmp/patch.txt
+</pre></div>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/git-tip-apply-a-patch"; this.page.url = "http://www.ericmjl.com/blog/2018/6/17/git-tip-apply-a-patch/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

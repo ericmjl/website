@@ -1,0 +1,290 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Lessons learned from publishing the reassortment paper - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Lessons learned from publishing the reassortment paper</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-04-07
+
+    
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>The paper can be found here (<a href="http://biorxiv.org/content/early/2016/03/22/033514">preprint</a>, freely available; accepted at PNAS and in press).</p>
+<p>In no order of importance, here are the things I would tell myself to do from the start.</p>
+<p><strong>Lesson 1. Computational work requires simulated data.</strong></p>
+<p>Creating simulated data is paramount. Just as writing an idea down for an audience forces out the details, creating simulated data for an algorithm forces out the assumptions.</p>
+<p><strong>Lesson 2. Use pre-submission inquiries!</strong></p>
+<p>Don’t waste time formatting papers for journals. Write it up, write the abstract, and use pre-submission inquiries to rapidly iterate over the journals that are likely to accept or reject the paper.</p>
+<p><strong>Lesson 3. Use pre-print servers.</strong></p>
+<p>Scientists funded by public money should have their work disseminated back to the public in due time. Put written work on pre-print servers; Knowledge Without Barriers is worth it! In fact, it may even pay off to be radical, and write the whole paper in the open.</p>
+<p><strong>Lesson 4. Dare to try for a wide audience.</strong></p>
+<p>If not for Jon’s encouragement, I might not have had the guts to try for the broad readership journals. In most cases, I know it won’t pay off; in this case, I’m thankful it did.</p>
+<p><strong>Lesson 5. Writing with clarity is difficult.</strong></p>
+<p>Crafting the scientific narrative around the data was a difficult iterative process. It was difficult taking that step of chopping off a ton of derivative data that did not contribute to the scientific insight being conveyed, but in the end, I think it was necessary.</p>
+<p><strong>Lesson 6. The non-linear path in science is real.</strong></p>
+<p>Israeli scientist Uri Alon described the <a href="https://www.ted.com/talks/uri_alon_why_truly_innovative_science_demands_a_leap_into_the_unknown?language=en">non-linear path</a> that a scientist takes. At the outset, I first thought of the scientific narrative to this project as being "a better reassortment finding algorithm", and that’s where and how I focused my efforts (small datasets, simulations). It later changed to "here’s the state of reassortment in the IRD", and that was reflected in expanded data scope and optimizations (hacks, really) to work with computing clusters and large datasets.</p>
+<p>But only later I realized the really exciting problem we were solving was "quantifying reticulate evolution importance in context of ecological niche switching", a broadly general problem with great basic scientific interest (if nonetheless lacking in public health importance).</p>
+<p>Therein lies the tension of all creative work. One needs to convince people of one’s direction early on. Yet, later on, the direction may pivot, and one needs to be ready for that, and to convince stakeholders in it.</p>
+<p><strong>Lesson 7. A first-draft template for scientific project management.</strong></p>
+<p>I now think of it as a "folder" of stuff that should be kept together, version controlled, and done openly. This is just a first draft, still evolvable.</p>
+<ol>
+<li>Data - everything collected and used, in its raw-est form available.&lt;/li&gt;</li>
+<li>Code - for processing data, and for generating figures.<ol>
+<li>New software packages should be kept as a sub-folder, isolated from the rest of the work.&lt;/li&gt;</li>
+<li>Software packages, for the scientist, are essentially code written that provide functions written to do the similar stuff over and over.&lt;/li&gt;</li>
+</ol>
+</li>
+<li>Protocols - for experimental work.&lt;/li&gt;</li>
+<li>Manuscript - written openly as the work progresses.&lt;/li&gt;</li>
+</ol>
+<p><strong>Lesson 8: The transferrable things a graduate student has to learn.</strong></p>
+<p>By this, I mean stuff beyond the "good’ol do-your-experiments/write-your-code properly". This is an incomplete list, hoping to expand it further.</p>
+<ol>
+<li>Prioritizing time to get the most important stuff done, not merely being efficient in crossing off todo lists.</li>
+<li>Saying "no" to good stuff, to leave time to say "yes" to the best stuff. (same as the above point, really.)</li>
+<li>Learning how to craft a narrative that ties data together logically, and connects the data to a specifically important problem.</li>
+<li>Leveraging others’ strengths to achieve common goals, and expanding one’s own strengths.</li>
+<li>Learning how to learn and apply new things really quickly. (Something I’d like to expand on later.)</li>
+</ol>
+<p><strong>Lesson 9: Keep writing.</strong></p>
+<p>Ultimately, the end product of our work is a written piece. Therefore, early on, start writing the narrative as an abstract. Get the narrative out there. And then rewrite and expand on the narrative until it is self-coherent, coherent with the data, and connects to an important problem.</p>
+<p><strong>Lesson 10: The problem space is infinite.</strong></p>
+<p>I don’t believe that scientific competition is healthy. The problem space is infinite; the narrative space is as well. Getting scooped is not something to be worried about. Work openly, and rapidly advance your work on hand.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/lessons-learned-from-publishing-the-reassortment-paper"; this.page.url = "http://www.ericmjl.com/blog/2016/4/7/lessons-learned-from-publishing-the-reassortment-paper/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

@@ -1,0 +1,532 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>One Weird Trick to Speed Up Your TensorFlow Model 100X... - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>One Weird Trick to Speed Up Your TensorFlow Model 100X...</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-02-13
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/deep learning/">
+      deep learning
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/optimization/">
+      optimization
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software development/">
+      software development
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>You’ve got a TensorFlow 1.13 model on hand,
+written by an academic group,
+and you know it’s going to be useful,
+because you’ve already done some preliminary experiments with it.
+The model takes in protein sequences,
+and returns vectors, one per protein sequence.
+The vectors turn out to be excellent descriptors
+for downstream supervised learning,
+to predict protein activity from sequence data.</p>
+<p>The only problem?
+It’s slow.
+<em>Excruciatingly slow</em>.
+Not just on CPU.
+It’s slow on your local GPU as well.
+You can’t run this locally without waiting for hours
+to process the thousands of protein sequences that you have on hand.</p>
+<h2 id="slow-what-now">Slow? What now?</h2><p>What do we do, then?
+Install a newer GPU with faster processors and more RAM?
+"Lift and shift" onto cloud GPUs?</p>
+<p>I’d argue that all of those are evil choices,
+because premature optimization is the root of all evil (Donald Knuth).
+Moving the model onto a GPU
+without knowing the root cause of the model’s slowness
+could be construed as a form of premature optimization,
+because we are prematurely moving to more powerful hardware
+without first finding out whether it can be improved on existing ones.
+Moving the model onto a <em>cloud</em> GPU,
+renting another person’s computer
+while not maximizing pushing the model to its extremes locally,
+is probably even worse,
+because we end up with more variables to debug.
+By the aforementioned premises and Knuth’s logical conjugation,
+those options are, therefore, evil choices.</p>
+<p>Rather provocatively,
+I’d like to suggest that one right option
+when faced with a very slow deep learning model
+is to make it fast on a <em>single CPU</em>.
+If we make the model fast locally on a single CPU,
+then we might have a good chance
+of dissecting the source of the model’s slowness,
+and thus make it really fast on different hardware.</p>
+<p>This is exactly what we did with the UniRep model.
+Our protein engineering intern in Basel, Arkadij,
+had already done the groundwork testing the model
+on our high performance computing cluster.
+It was slow in our hands,
+and so we decided it was time to really dig into the model.</p>
+<h2 id="reimplementation">Reimplementation</h2><p>Because the model is an RNN model that processes sequential data,
+we need to know how the model processes one window of sequence first.
+In the deep learning literature, this is known as an "RNN cell".
+We isolated that part of the RNN,
+and carefully translated each line of code into NumPy.
+Because it processes one "window" or <strong>"step"</strong> at a time,
+we call it <code>mlstm1900_step</code>.</p>
+<p>Because the RNN cell is "scanned" over a single sequence,
+we then defined the function that processes a single sequence.
+To do this, we took advantage of the <code>jax.lax</code> submodule’s <code>scan</code> function,
+which literally "scans" the RNN cell over the entire sequence
+the way TensorFlow’s RNN cell would be scanned.
+<del>This basically is a vectorized for-loop.</del>
+Thanks to Stephan Hoyer <a href="https://twitter.com/shoyer/status/1228416820119400448">pointing out my conceptual error here</a>;
+<code>lax.scan</code> is a compiled for-loop with known number of iterations.
+Together, that defined the function call that processes a single sequence.
+This, incidentally, gives us the "batch-" or "sample-wise" RNN function,
+<code>mlstm1900_batch</code>.</p>
+<p>Finally, we need a function that processes multiple sequences
+that are the same length.
+Here, we need the function to be vectorized,
+so that we do not incur a Python loop penalty
+for processing sequences one at a time.
+This forms the <code>mlstm1900</code> layer,
+which, semantically speaking, takes in a batch of sequences
+and returns a batch of outputs.</p>
+<h2 id="testing">Testing</h2><p>So, does the reimplementation work in the same way as the original?
+Absolutely. We passed an <em>attrappe</em> (Google it, it’s German) sequence through the model,
+and checked that the reps were identical to the original - which they were.
+But don’t take my word for it,
+check out the <a href="https://elarkk.github.io/jax-unirep/">draft preprint</a> we wrote to document this!
+Meanwhile, in case you don't want to click over and read our hard work,
+here's the figure linked from the source.
+(It's only off by a bit because we added a delta
+to make the two representations visible.)</p>
+<p><img src="https://elarkk.github.io/jax-unirep/figures/rep_trace_lf.png" alt="Congruence between the reps."></p>
+<p>Besides that,
+we also added tests and elaborate docstrings
+for the functions in there,
+so anybody reading the model source code
+can know what the <em>semantic meaning</em> of each of the tensors’ axes are.
+Having wrestled through undocumented academic code,
+knowing what input tensor dimensions were supposed to be
+were one of the hardest things to grok
+from looking at a relatively poorly undocumented model.</p>
+<p>By carefully reimplementing the deep learning model in pure JAX/NumPy,
+we were able to achieve approximately 100X speedup
+over the original implementation on a single CPU.
+Given JAX’s automatic compilation to GPU and TPU,
+the speed improvements we could obtain might be even better,
+though we have yet to try it out.
+Again, don't take my word at it -
+check out the <a href="https://elarkk.github.io/jax-unirep/">draft preprint</a>
+if you're curious!
+The exact figure, though is below.</p>
+<p><img src="https://elarkk.github.io/jax-unirep/figures/speed_comparison.png#center" alt="Speed comparison between the original and `jax`-based reimplementation."></p>
+<p>I suspect that by reimplementing the model in NumPy,
+we basically eliminated the TensorFlow graph compilation overhead,
+which was the original source of slowness.
+By using some of JAX’s tricks, including <code>lax.scan</code> and <code>jax.vmap</code>,
+we could take advantage of vectorized looping
+that the JAX developers built into the package,
+thus eliminating Python looping overhead.</p>
+<h2 id="distribution">Distribution</h2><p>So, now, how do we get the model distributed to end-users?
+This is where thinking about the API matters.
+I have this long-held opinion that data scientists
+need some basic proficiency in software skills,
+as we invariably end up doing tool-building whether we want to or not.
+Part of software skills involves knowing
+how to package the model for use in a variety of settings,
+and thinking about how the end-user would use it.
+Then, only, have we made a <strong>data product</strong> that is of use to others.</p>
+<p>Two settings we thought of are the Python user setting, and a web user setting.</p>
+<h3 id="python-user-setting">Python-user setting</h3><p>Serving Python users means building <strong><code>pip</code>-installable packages</strong>.</p>
+<p>In the Python world,
+it’s idiomatic to consider a Python package
+as the unit of software that is shipped to others.
+Some packages are large (think NumPy),
+others are diverse (think SciPy),
+some are both (e.g. <code>scikit-learn</code>),
+and yet others do one and only one thing well (think <code>humanize</code>).
+UniRep probably falls within to the last category.</p>
+<p>To fit this idiom,
+we decided to package up the model as a Python-style package
+that is pip-installable into the environment of an end-user.
+While we develop the package,
+it is <code>pip</code>-installable from our GitHub repository
+(where we also give full credit and reference to the original authors for the original).
+We might release it to PyPI, with licenses and the likes as well.</p>
+<p>Moreover, we needed a <strong>nice API</strong>.</p>
+<p>With UniRep, there’s basically two things one would want to do:</p>
+<ol>
+<li>Compute "reps" for a sequence conditioned on the pre-trained weights, and</li>
+<li>Evolutionarily-tune ("evo-tune") the model weights to compute more locally-relevant reps.</li>
+</ol>
+<p>As such, we designed a <code>get_reps(seqs)</code> API
+that would correctly process single sequences,
+multiple sequences of same lengths,
+and multiple sequences of varying lengths,
+while not needing the user to think about that.</p>
+<p>For evolutionary tuning,
+we desired that the API worked regardless of whether
+the user tuned on sequences of equal or varying lengths.
+In other words,
+we wanted to wrap the complexity of handling sequences of multiple lengths
+away from the end-user.
+This is something we are working on right now,
+but at least the API sketch as it stands now
+gives the end-user a single <code>evotune(sequences)</code> function to work with.
+Designing it this way allows us to work backwards from the outside-in,
+starting with the desired API and flexibly designing the inner parts.
+A friend of mine, Ex-Googler Jesse Johnson at Cellarity,
+<a href="https://medium.com/@jejo.math/writing-software-from-the-outside-in-e5359f60fa30">wrote an excellent blog post on this</a>.</p>
+<h3 id="web-api">Web API</h3><p>With a <code>pip</code>-installable package on-hand,
+we could then depend on it to build other single-use tools.
+For example, we built a web API for the model by using <a href="https://fastapi.tiangolo.com/">FastAPI</a>,
+and designed it to return the calculated representations for a single sequence
+based on the pre-trained weights.
+Because evo-tuning is computationally expensive,
+we don’t plan to offer that on the web API.
+The web API is also packaged up as a <code>pip</code>-installable package,
+and can be installed inside a Docker container,
+thus forming the basis of a deep learning-powered micro-service
+that pre-calculates "standard", non-tuned representations
+of every new protein we might encounter.</p>
+<h2 id="lessons-learned">Lessons Learned</h2><h3 id="on-the-fragility-of-deep-learning-models">On the fragility of deep learning models</h3><p>Our modern way of communicating the architecture of deep learning models
+is still a work-in-progress, with overloaded terms and ambiguity present.
+As such, there were minor details that we reimplemented incorrectly
+that incidentally also had a major impact on the correctness of the reimplementation.
+For example, the <code>sigmoid()</code> function in TensorFlow
+was different from the other implementations that we had seen in multiple codebases
+(we detail this in our preprint),
+yet both are colloquially described as "sigmoids".</p>
+<p>We also know from adversarial examples
+that deep learning models are notoriously fragile
+against inputs that have noise added to them.
+This has implications in the design of the API to the model.
+If we design the user-facing API to accept tensors rather than strings,
+then we leave the burden of correctly translating string inputs into tensors
+(with semantically correct dimensions) on the end-user.
+If the end-user processed the strings in a way that the model is not robust against,
+it will handle the processed tensors in a way that may be incorrect for their purposes;
+yet, there is no robust way to write a unit test against this.
+The key problem here is that the semantic meaning of the tensors
+cannot be easily and automatically tested.</p>
+<p>As such, in order for the user-facing API of the model to be "friendly" (so to speak),
+it must accept data in a format that the intended end-user will be handling.
+This is nothing new in the world of software development, to be user-centric.
+At the same time, because of its small size and the way we structure our codebase,
+all of the internals are easily accessible,
+and how they fit together is also not difficult to understand.</p>
+<h3 id="why-tools-and-not-full-apps">Why tools, and not full apps?</h3><p>The environment that we're in is a research environment.
+That, by definition, means we're always doing non-standard things.
+Moreover, a model is usually but one small component
+in a large interconnected web of tools
+that come together to make a useful, consumable app.
+Rather than try to go end-to-end,
+it makes more sense to produce modular parts that fit well with one another.
+The mantra I like to keep in mind here is:</p>
+<blockquote><p>Modularity and composability give us the flexibility for creativity.</p>
+</blockquote>
+<p>And if creativity is not the heart of research, what then is?</p>
+<h3 id="if-you-want-to-accelerate-a-deep-learning-model..">If you want to accelerate a deep learning model...</h3><p>…<em>how about making sure it first runs well on a single CPU?</em></p>
+<p>But beyond that,
+also consider that whole frameworks
+and their associated overheads might not necessarily be what you need.
+In our case, we didn't need the entire TF framework to get the model reimplemented.
+We only really needed XLA (pre-compiled in <code>jaxlib</code> for our systems)
+and the NumPy API to get it right.
+Also consider whether a framework is getting in the way of your modelling work,
+or if it's helping.
+(If it's the latter, keep using what you're using!)</p>
+<h3 id="encouraging-a-co-creation-mindset">Encouraging a co-creation mindset</h3><p>Co-creation is <em>the</em> ethos of the open source world,
+where unrelated people come together and build software
+that is useful to others beyond themselves.
+I've experienced it many times on the <code>pyjanitor</code> and <code>nxviz</code> projects.
+Technically, nobody has to ask for permission to fork a project,
+make changes, and even submit a pull request back.
+Of course, we do so anyways,
+just for the polity of being courteous to the original creator -
+it's always good to let someone know something's coming their way.</p>
+<p>Pair-coding, as it turns out,
+happens to be a wonderful way to encourage co-creation.
+Much of the reimplementation work
+was done pair coding with my co-author, Arkadij Kummer,
+who lives and works in our Basel site.
+Yes, we're separated by six hours of time,
+but that doesn't stop us
+from using all of the good internet-enabled tools available to us
+to collaborate together.
+We used MS Teams at work for video chatting,
+and sometimes just did VSCode with VSLiveShare (with audio)
+to develop code together.
+All work was version-controlled and shared via Git,
+which means we could work asynchronously when needed as well.
+The time spent pair coding is time where knowledge is shared,
+trust is built,
+and mentoring relationships are forged.
+In an upcoming blog post,
+I will write about pair coding as a practice in data science,
+particularly for levelling-up junior members of the data science team
+and sharing knowledge between peers.</p>
+<h2 id="conclusion">Conclusion</h2><p>I hope you enjoyed reading about our journey reimplementing UniRep in JAX.
+Keep in mind that JAX isn't necessarily always going to speed up your TF model 100X;
+I'm clearly being facetious in writing it that way.
+<del>JAX and TF share XLA underneath the hood,</del>
+Matt Johnson pointed out that JAX uses XLA by default,
+while TF does not,
+yet XLA is really the secret sauce that makes the models execute fast.
+<del>The only difference is TF1.x needed this compilation time,
+while JAX does it just-in-time (when ordered to do so).</del>
+Because JAX gets us autodiff on the NumPy API,
+it's a super productive research and teaching tool
+with a familiar API to many Pythonistas.
+My hope is this post encourages you to try it out; happy experimenting!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/one-weird-trick-to-speed-up-your-tensorflow-model-100x"; this.page.url = "http://www.ericmjl.com/blog/2020/2/13/one-weird-trick-to-speed-up-your-tensorflow-model-100x/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

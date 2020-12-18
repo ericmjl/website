@@ -1,0 +1,360 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Tooling up for Plain Text Academic Writing in Markdown - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Tooling up for Plain Text Academic Writing in Markdown</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-06-22
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/academia/">
+      academia
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/writing/">
+      writing
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/grad school/">
+      grad school
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I finally got down to doing it! Here's my brief notes on how I set it up; it may change a bit later on, as my needs evolve, but it should be enough instructions for others to get setup.</p>
+<h3 id="motivation">Motivation</h3><p>I'm writing a <a href="https://github.com/ericmjl/genomic-surveillance-whitepaper">white paper on genomic surveillance</a>, so I thought I'd experiment with something new. By switching over to writing in plain text, I can ignore all distractions by other word processors. I'm looking at you, Word, Google Docs and others.</p>
+<p>Because I get to write in plain text, I also get to version control the text. By selectively committing logical blocks, I can also easily selectively revert unwanted commits; it's rare, but once in a while it's saved my work.</p>
+<p>Because it's plain text, I can export to anywhere with a bit of configuration.</p>
+<p>Because it's written publicly, it's <a href="https://speakerdeck.com/jakevdp/in-defense-of-extreme-openness">great</a>.</p>
+<h3 id="overview">Overview</h3><p>What I do here is basically use Sublime Text 3 (ST3) as a word processor. BibTex libraries are used for keeping track of papers, but I like Papers for organizing more than BibDesk - automatic downloading of PDFs is the best part. My compromise, then, is to export my Papers library to a master BibTex library prior to compiling everything into a single PDF. Papers can also add in Pandoc-style citations, which Pandoc can then parse to make an automatic bibliography. Everything is kept under version control, for reasons stated above.</p>
+<p>It basically took me one morning's worth of time invested in tooling this up, but I can already imagine the amount of time saved by minimizing the time spent on formatting references, figure numbers, versioning, and (most of all) being able to write without being distracted.</p>
+<h3 id="tools">Tools</h3><ol>
+<li>Papers for Mac (paid)</li>
+<li>Pandoc (free)</li>
+<li>Sublime Text (free/paid) - you can use it for free, but I decided to fess up and pay for it, the text editor is that good, that powerful, that I would encourage you to do the same too.</li>
+<li>Git and GitHub (free)</li>
+</ol>
+<h3 id="setup">Setup</h3><h4 id="central-bibliography">Central Bibliography</h4><ol>
+<li>Set up a version controlled GitHub repository for the master bibliography file.</li>
+<li>In Papers, export the library to that repository's directory. Take note of the <code>/path/to/master/library.bib</code>.</li>
+</ol>
+<h4 id="general-tooling">General Tooling</h4><ol>
+<li>Install Pandoc, either using <code>homebrew</code>, or download a fresh copy of the installer binary. Note the <code>/path/to/pandoc</code>.</li>
+<li>Install the LaTeX distribution, make sure that <code>pdflatex</code> is bundled. Note the <code>/path/to/pdflatex</code>.</li>
+<li>Fork the <a href="https://github.com/citation-style-language/styles">Citation Styles repository</a>, and clone it to disk.</li>
+<li>Install the <code>pandoc-fignos</code> plugin, to enable automatic figure numbering. Again, take note of the <code>/path/to/pandoc-fignos</code>.</li>
+</ol>
+<h4 id="sublime-text-tooling">Sublime Text Tooling</h4><p><strong>Install:</strong></p>
+<ol>
+<li><a href="https://packagecontrol.io/installation">Package Control</a></li>
+<li><a href="https://packagecontrol.io/packages/Pandoc">Pandoc</a></li>
+<li><a href="https://packagecontrol.io/packages/CiteBibtex">CiteBibTex</a></li>
+<li><a href="https://packagecontrol.io/packages/AcademicMarkdown">AcademicMarkdown</a></li>
+<li><a href="https://packagecontrol.io/packages/Git">Git</a></li>
+<li><a href="https://packagecontrol.io/packages/GitGutter">GitGutter</a></li>
+<li><a href="https://packagecontrol.io/packages/PackageSync">PackageSync</a></li>
+<li><a href="https://packagecontrol.io/packages/BracketHighlighter">BracketHighlighter</a></li>
+<li><a href="https://packagecontrol.io/packages/WordCount">WordCount</a></li>
+</ol>
+<p><strong>Configure:</strong></p>
+<p><em>Pandoc</em></p>
+<div class="hll"><pre><span></span>    <span class="nt">&quot;pandoc-path&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/pandoc&quot;</span><span class="p">,</span>
+</pre></div>
+<div class="hll"><pre><span></span>      <span class="nt">&quot;PDF&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;scope&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;text.html&quot;</span><span class="p">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;text.html.markdown&quot;</span><span class="p">:</span> <span class="s2">&quot;markdown&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;pandoc-arguments&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;--latex-engine=/path/to/pdflatex&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/output.pdf&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;--filter&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/pandoc-fignos&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;--filter=/path/to/pandoc-citeproc&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;--bibliography=/path/to/master/library.bib&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+</pre></div>
+<p>Apart from placing these <code>pandoc-arguments</code> under the <code>PDF</code> section, you may want to do the same for the <code>HTML</code> and <code>Word</code> sections.</p>
+<p><em>CiteBibTex</em></p>
+<p>Find the corresponding configuration fields, and change them to the following (making appropriate changes):</p>
+<div class="hll"><pre><span></span>    <span class="nt">&quot;bibtex_file&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/master/library.bib&quot;</span><span class="p">,</span>
+</pre></div>
+<div class="hll"><pre><span></span>    <span class="nt">&quot;autodetect_citation_style&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</pre></div>
+<h3 id="user-interface">User Interface</h3><p>Today I learned that ST3 has a "Distraction Free Writing Mode", under the <code>View</code> menu. Earlier on, I also learned that it has a pane view mode, also under <code>View --&gt;Layout</code>. Both have associated shortcut keys. My writing interface ended up looking something like what's in Figure {@fig:two-pane}.</p>
+<p><img src="two-pane.png" alt="Two pane view.">{#fig:two-pane}</p>
+<p>My outline is on the right, and the main text is on the left, and there's no distracting tabs, sliding preview, or directory structure (as is what I'm used to for coding).</p>
+<h3 id="writing">Writing</h3><p>Get started by adding the YAML headers in the document (Figure {@fig:yaml-header}).</p>
+<p><img src="yaml-header.png" alt="YAML Headers.">{#fig:yaml-header}</p>
+<p>Specifically, the format of what I have above is:</p>
+<div class="hll"><pre><span></span>---
+title: &quot;My Title Here&quot;
+author: 
+<span class="k">-</span> &quot;Author 1 (Affiliation)&quot;
+<span class="k">-</span> &quot;Author 2 (Affiliation)&quot;
+date: 22 June 2016
+<span class="gu">csl: nature.csl</span>
+<span class="gu">---</span>
+</pre></div>
+<p>More details on what metadata can be stored in the headers can be found on the <a href="http://pandoc.org/README.html">Pandoc README</a>.</p>
+<h3 id="citations">Citations</h3><p>Citations are done in Markdown by inserting:</p>
+<div class="hll"><pre><span></span>   [@citekey]
+</pre></div>
+<p>where the <code>citekey</code> is automatically generated by Papers, usually in the form of <code>LastName:YYYY[2- or 3-letter hash]</code>. An example of what gets inserted is <code>[@Young:2013px]</code>. I was reading through Papers' <a href="http://support.mekentosj.com/kb/cite-write-your-manuscripts-and-essays-with-citations/universal-citekey">documentation on the generation of a "universal" citekey</a>, and I quite like the idea. I think the specification is worth a read, and is an idea worth spreading (sorry, I like TED talks).</p>
+<p>I intentionally configured my ST3 Pandoc package settings to use a global master library, rather than a project-specific one. I think it stemmed more from laziness than anything else; one less thing to manage is a better thing.</p>
+<h3 id="generating-outputs">Generating Outputs</h3><p>Note that the way I had configured Pandoc (above) for PDF outputs was to use the master <code>.bib</code> library for matching up references. An additional thing I did was to keep a copy of the citation style language (CSL) markup file in the same directory as the Markdown document.</p>
+<p>Within ST3, we can use the Command Palette to quickly generate the PDF output desired. Steps are:</p>
+<p>Select Pandoc</p>
+<p><img src="cmd-01-pandoc.png" alt="Command Palette: Select Pandoc."></p>
+<p>Select PDF as the output</p>
+<p><img src="cmd-02-pdf.png" alt="Command Palette: Select PDF."></p>
+<p>Inspect that gorgeous PDF!</p>
+<p><img src="cmd-03-output.png" alt="Look at this gorgeous output!"></p>
+<p>Check your references!</p>
+<p><img src="cmd-04-references.png" alt="Look at those perfectly Nature-formatted references!"></p>
+<p>Just to show how the figures get numbered correctly (I don't have any in the draft whitepaper I'm writing), you can inspect the <a href="blog-source.md">source code for this blog post</a>, and the associated <a href="blog-post.pdf">pdf file</a>. Note how I've not numbered anything except the associated files. It's pretty cool.</p>
+<p>Alrighty - and that's it! Hope it helps others too.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/tooling-up-for-plain-text-academic-writing-in-markdown"; this.page.url = "http://www.ericmjl.com/blog/2016/6/22/tooling-up-for-plain-text-academic-writing-in-markdown/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

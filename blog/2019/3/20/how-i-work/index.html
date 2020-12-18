@@ -1,0 +1,283 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>How I Work - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>How I Work</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2019-03-20
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/productivity/">
+      productivity
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I was inspired to write this because of Will Wolf’s interview with DeepLearning.AI, in which I found a ton of similarities between how both of us work. As such, I thought I’d write down what I use at work to get things done.</p>
+<h2 id="tooling">Tooling</h2><p>For a data scientist, I think tooling is of very high importance: mastery over our tools keeps us productive. Here’s a sampling of what I use at work:</p>
+<ul>
+<li>Compute: I have my own MacBook, but I prefer freeloading off my colleague’s workstation, which is connected to our HPC compute cluster, allowing me to do parallelization with Dask!</li>
+<li>Editors/IDEs: VSCode + Jupyter Lab (JLab). Lots of plugins for VSCode!</li>
+<li>Terminal: iTerm, with my <a href="https://github.com/ericmjl/dotfiles"><code>dotfiles</code></a> providing a high degree of customization. I also use the VSCode and JLab terminals where convenient.</li>
+<li>General Purpose: Python, Dask, git</li>
+<li>ML/Stats: <code>scikit-learn</code>, <code>jax</code>, <code>pymc3</code></li>
+<li>Data wrangling: <code>pandas</code>, <code>pyjanitor</code> (a package I wrote to provide convenience APIs for data cleaning)</li>
+<li>Data visualization: <code>matplotlib</code>, <code>seaborn</code>, <code>holoviews</code></li>
+<li>App development: <code>flask</code></li>
+</ul>
+<p>As you probably can see, I’m a very Python-centric person!</p>
+<h2 id="daily/weekly-routines">Daily/Weekly Routines</h2><p>Most of my work necessitates long stretches of thinking and hacking time. Without that, I’m unable to get into "the zone" to do anything productive. Hence, I have a habit of packing meetings onto Mondays (a.k.a. "Meeting Mondays"). Backup times for meetings, which I prefer to not do, are 11 am and 1 pm, bookending lunch time so that I don’t end up with a fragmented morning/afternoon. The only exceptions I make are for my two high-priority team meetings, for which I defer to the rest of the team. I’m glad that my managers understand the need for long stretches of hacking time, and have stuck to Monday one-on-one meetings.</p>
+<p>Hence, almost every day from Tuesday through to Friday, I have long stretches of pre-allocated time for hacking. It’s data science scheduling bliss! It also means I turn down a lot of "can I meet you to chat" invites - unless we can pack them on Monday!</p>
+<p>On Friday, I make a point to try to work remotely. It helps with sanity, particularly in the winter, when the commute gets harsh and I can’t bike. Fridays also are the days on which I try to do my open source work.</p>
+<h2 id="pair-coding">Pair Coding</h2><p>Pair coding with others on mutual projects has been a very productive endeavor, <a href="https://ericmjl.github.io/blog/2019/3/1/pair-coding-why-and-how-for-data-scientists/">which I have written about before</a>. Unlike weekly update meetings, I plan for pair coding on an as-needed basis. We have a pre-defined goal for what we want to accomplish, including a conceivably achievable goal and a stretch goal; achieving the easier one keeps us motivated. It follows the "no agenda, no meeting" rule of thumb by which I protect my time.</p>
+<p>I found that a good setup is really necessary for pair coding to be successful. A minimum is a dual-monitor setup, with one extra keyboard + mouse for my coding partner.</p>
+<p>One thing I didn’t mention in my previous blog post was how knowledge transfer happens. Here’s how I think it works. We have one in the "driver’s seat", and the other in the observer role. Knowledge transfer generally happens from the more experienced person to the less experienced one, and the driver doesn’t necessarily have to be the more experienced one. For example, when pair coding with my intern, I play the role of observer and may dictate code or outline what needs to be done, but I don’t actively take over on my keyboard unless there’s a situation that shows up that is irrelevant to the coding session goals. On the other hand, if there’s a codebase I’ve developed for which I need to play the tour guide role, I will be in the driver’s seat, while the observer will help me catch peripheral errors that I’m making.</p>
+<h2 id="learning-new-things">Learning New Things</h2><p>Pair coding has been one way I learn new things. For example, with my colleague Zach as the observer, we hacked together a simple dashboard project using Flask, Holoviews and Panel.</p>
+<p>I’m not very mathematically-savvy, in that algebra is difficult for me to follow. (I’m mildly algebra-blind, but getting better now.) Ironically, code, which is algebraic in nature too, but works with plain English names, works much better for me. Implementing algorithms and statistical methods using <code>jax</code> (for things that involve differential computing) and <code>PyMC3</code> (for all things Bayesian) has served to be very educational. While implementing, I also impose some software abstractions on the math, and this also forces me to organize my knowledge, which also helps learning. Implementing things on the computer is also the perfect way to learn by teaching: The computer is the ultimately dumb student, as it will execute exactly as you tell it, mistakes included!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/how-i-work"; this.page.url = "http://www.ericmjl.com/blog/2019/3/20/how-i-work/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

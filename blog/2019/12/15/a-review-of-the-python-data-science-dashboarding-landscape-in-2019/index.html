@@ -1,0 +1,457 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>A Review of the Python Data Science Dashboarding Landscape in 2019 - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>A Review of the Python Data Science Dashboarding Landscape in 2019</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2019-12-15
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/dashboarding/">
+      dashboarding
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      python
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data visualization/">
+      data visualization
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software development/">
+      software development
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p><em>This blog post is also available on <a href="https://ericmjl.github.io/essays-on-data-science/">my collection of essays</a>.</em></p>
+<h2 id="introduction">Introduction</h2><p>As Pythonista data scientists,
+we are spoiled for choice when it comes to developing front-ends
+for our data apps.
+We used to have to fiddle with HTML in Flask (or Plotly's Dash),
+but now, there are tools in which
+"someone wrote the HTML/JS so I didn't have to".</p>
+<p>Let me give a quick tour of the landscape of tools
+as I've experienced it in 2019.</p>
+<h3 id="beginnings-voila">Beginnings: Voila</h3><p>Previously, I had test-driven
+<a href="https://voila.readthedocs.io/en/latest/">Voila</a>.
+The key advantage I saw back then was that in my workflow,
+once I had the makings of a UI present in the Jupyter notebook,
+and just needed a way to serve it up
+independent of having my end-users run a Jupyter server,
+then Voila helped solve that use case.
+By taking advantage of existing the <code>ipywidgets</code> ecosystem
+and adding on a way to run and serve the HTML output of a notebook,
+Voila solved that part of the dashboarding story quite nicely.
+In many respects,
+I regard Voila as the first proper dashboarding tool for Pythonistas.</p>
+<p>That said, development in a Jupyter notebook
+didn't necessarily foster best practices
+(such as refactoring and testing code).
+When my first project at work ended,
+and I didn't have a need for further dashboarding,
+I didn't touch Voila for a long time.</p>
+<h3 id="another-player-panel">Another player: Panel</h3><p>Later, <a href="http://panel.pyviz.org/">Panel</a> showed up.
+Panel's development model allowed a more modular app setup,
+including importing of plotting functions defined inside <code>.py</code> files
+that returned individual plots.
+Panel also allowed me to prototype in a notebook and see the output live
+before moving the dashboard code into a source <code>.py</code> file.</p>
+<p>At work, we based a one-stop shop dashboard for a project on Panel,
+and in my personal life,
+I also built a
+<a href="https://github.com/ericmjl/minimal-panel-app">minimal panel app</a>
+that I also
+<a href="https://minimal-panel-app.herokuapp.com/">deployed to Heroku</a>.
+Panel was definitely developed
+targeting notebook and source file use cases in mind,
+and this shows through in its source development model.</p>
+<p>That said, panel apps could be slow to load,
+and without having a "spinner" solution in place
+(i.e. something to show the user
+that the app is "doing something" in the background),
+it sometimes made apps <em>feel</em> slow
+even though the slowness was not Panel's fault really.
+(My colleagues and I pulled out all the tricks in our bag to speed things up.)</p>
+<p>Additionally, any errors that show up don't get surfaced to the app's UI,
+where developer eyeballs are on -
+instead, they get buried in the browser's JavaScript console
+or in the Python terminal where the app is being served.
+When deployed, this makes it difficult to see where errors show up
+and debug errors.</p>
+<h3 id="enter-streamlit">Enter Streamlit</h3><p>Now, Streamlit comes along, and some of its initial demos are pretty rad.
+In order to test-drive it,
+I put together this <a href="https://minimal-streamlit.herokuapp.com/">little tutorial</a>
+on the Beta probability distribution for my colleagues.</p>
+<p>Streamlit definitely solves some of the pain points
+that I've observed with Panel and Voila.</p>
+<p>The most important one that I see is that errors are captured by Streamlit
+and bubbled up to the UI,
+where our eyeballs are going to be when developing the app.
+For me, this is a very sensible decision to make, for two reasons:</p>
+<p>Firstly, it makes debugging interactions that much easier.
+Instead of needing to have two interfaces open,
+the error message shows up right where the interaction fails,
+in the same browser window as the UI elements.</p>
+<p>Secondly, it makes it possible for us
+to use the error messages as a UI "hack" to inform users
+where their inputs (e.g. free text) might be invalid,
+thereby giving them <em>informative error messages</em>.
+(Try it out in the Beta distribution app:
+it'll give you an error message right below
+if you try to type something that cant be converted into a float!)</p>
+<p>The other key thing that Streamlit provides as a UI nice-ity
+is the ability to signal to end-users that a computation is happening.
+Streamlit does this in three ways, two of which always come for free.
+<strong>Firstly</strong>, if something is "running",
+then in the top-right hand corner of the page,
+the "Running" spinner will animate.
+<strong>Secondly</strong>, anything that is re-rendering will automatically be greyed out.
+<strong>Finally</strong>, we can use a special context manager
+to provide a custom message on the front-end:</p>
+<div class="hll"><pre><span></span><span class="kn">import</span> <span class="nn">streamlit</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Message goes here...&quot;</span><span class="p">):</span>
+    <span class="c1"># stuff happens</span>
+</pre></div>
+<p>So all-in-all, Streamlit seems to have a solution of some kind
+for the friction points that I have observed with Panel and Voila.</p>
+<p>Besides that, Streamlit, I think, uses a procedural paradigm,
+rather than a callback paradigm, for app construction.
+We just have to think of the app as a linear sequence of actions
+that happen from top to bottom.
+State is never really an issue, because every code change
+and interaction re-runs the source file from top to bottom, from scratch.
+When building quick apps,
+this paradigm really simplifies things compared to a callback-based paradigm.</p>
+<p>Finally, Streamlit also provides a convenient way to add text to the UI
+by automatically parsing as Markdown any raw strings unassigned to a variable
+in a <code>.py</code> file and rendering them as HTML.
+This opens the door to treating a <code>.py</code> file as a
+<a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming document</a>,
+hosted by a Python-based server in the backend.
+It'd be useful especially in teaching scenarios.
+(With <code>pyiodide</code> bringing the PyData stack to the browser,
+I can't wait to see standalone <code>.py</code> files rendered to the DOM!)</p>
+<p>Now, this isn't to say that Streamlit is problem-free.
+There are still rough edges,
+the most glaring (as of today) in the current release
+is the inability to upload a file and operate on it.
+This has been fixed in <a href="https://github.com/streamlit/streamlit/pull/488">a recent pull request</a>,
+so I'm expecting this should show up in a new release any time soon.</p>
+<p>The other not-so-big-problem that I see with Streamlit at the moment
+is the procedural paradigm -
+by always re-running code from top-to-bottom afresh on every single change,
+apps that rely on long compute may need a bit more thought to construct,
+including the use of Streamlit's caching mechanism.
+Being procedural does make things easier for development though,
+and on balance, I would not discount Streamlit's simplicity here.</p>
+<h2 id="where-does-streamlit-fit">Where does Streamlit fit?</h2><p>As I see it, Streamlit's devs are laser-focused on enabling devs
+to <em>very quickly</em> get to a somewhat good-looking app prototype.
+In my experience, the development time for the Beta distribution app
+took about 3 hours, 2.5 of which were spent on composing prose.
+So effectively, I only used half an hour doing code writing,
+with a live and auto-reloading preview
+greatly simplifying the development process.
+(I conservatively estimate that this is about 1.5 times
+as fast as I would be using Panel.)</p>
+<p>Given Streamlit, I would use it to develop two classes of apps:
+(1) very tightly-focused utility apps that do one lightweight thing well, and
+(2) bespoke, single-document literate programming education material.</p>
+<p>I would be quite hesitant to build more complex things;
+then again, for me, that statement would be true more generally anyways
+with whatever tool.
+In any case, I think bringing UNIX-like thinking to the web
+is probably a good idea:
+we make little utilities/functional tools
+that can pipe standard data formats from to another.</p>
+<h2 id="common-pain-points-across-all-three-dashboarding-tools">Common pain points across all three dashboarding tools</h2><p>A design pattern I have desired is to be able to serve up a fleet of small,
+individual utilities served up from the same codebase,
+served up by individual server processes,
+but all packaged within the same container.
+The only way I can think of at the moment
+is to build a custom Flask-based gateway
+to redirect properly to each utility's process.
+That said, I think this is probably out of scope
+for the individual dashboarding projects.</p>
+<h2 id="how-do-we-go-forward">How do we go forward?</h2><p>The ecosystem is ever-evolving, and,
+rather than being left confused by the multitude of options available to us,
+I find myself actually being very encouraged
+at the development that has been happening.
+There's competing ideas with friendly competition between the developers,
+but they are also simultaneously listening to each other and their users
+and converging on similar things in the end.</p>
+<p>That said, I think it would be premature to go "all-in" on a single solution
+at this moment.
+For the individual data scientist,
+I would advise to be able to build something
+using each of the dashboarding frameworks.
+My personal recommendations are to know how to use:</p>
+<ul>
+<li>Voila + <code>ipywidgets</code> in a Jupyter notebook</li>
+<li>Panel in Jupyter notebooks and standalone <code>.py</code> files</li>
+<li>Streamlit in <code>.py</code> files.</li>
+</ul>
+<p>These recommendations stem mainly from
+the ability to style and layout content without needing much knowledge of HTML.
+In terms of roughly when to use what,
+my prior experience has been that
+Voila and Streamlit are pretty good for quicker prototypes,
+while Panel has been good for more complex ones,
+though in all cases, we have to worry about speed impacting user experience.</p>
+<p>From my experience at work,
+being able to quickly hash out key visual elements in a front-end prototype
+gives us the ability to better communicate with UI/UX designers and developers
+on what we're trying to accomplish.
+Knowing how to build front-ends ourselves
+lowers the communication and engineering barrier
+when taking a project to production.
+It's a worthwhile skill to have;
+be sure to have it in your toolbox!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/a-review-of-the-python-data-science-dashboarding-landscape-in-2019"; this.page.url = "http://www.ericmjl.com/blog/2019/12/15/a-review-of-the-python-data-science-dashboarding-landscape-in-2019/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

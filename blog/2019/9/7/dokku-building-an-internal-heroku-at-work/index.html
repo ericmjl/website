@@ -1,0 +1,290 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Dokku: Building an internal Heroku at work - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Dokku: Building an internal Heroku at work</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2019-09-07
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data apps/">
+      data apps
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/devops/">
+      devops
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/deployment/">
+      deployment
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>At work, we don’t have a service that has the simplicity of Heroku. Part of it is that we’re still behind what’s available for free in my FOSS life (both commercial and FOSS offerings), and cybersecurity tends to be a gatekeeper against adoption of new things, which is a reality I have to face at work.</p>
+<p>BUT! I am unwilling to simply bow down to this secnario. "There’s got to be a better way."</p>
+<p>What does that mean? It means if we want a Heroku-like thing internally, we have to hack together workarounds.</p>
+<p>Enter <a href="http://dokku.viewdocs.io/dokku/">Dokku</a>!</p>
+<p>What is it? It’s a FOSS implementation of the functionality that Heroku provides. It’s only slightly more involved than Heroku, and gives us a really nice taste of what’s possible with Heroku.</p>
+<p>Dokku claims to be the "smallest PaaS implementation you’ve ever seen", and I fully believe it. The maintainers have done a wonderful thing, making the installation process as simple and clean as possible. I’ve successfully installed it on a bare DigitalOcean droplet and on my home Linux tower. I’ve also successfully installed it in EC2 instances at work, albeit needing a few minor modifications to the script they provide.</p>
+<h2 id="why-would-i-want-to-use-dokku">Why would I want to use Dokku?</h2><p>Taking Dokku on my DigitalOcean droplet as an example, what it effectively provides is a self-hosted Heroku.</p>
+<p>This means you can get 95% of the convenience that Heroku offers, except done in-house. This can be handy if you’ve got cybersecurity standing in the way of awesome convenience, or if finance isn’t willing to shell out the moolah.</p>
+<h2 id="what-can-we-do-with-dokku">What can we do with Dokku?</h2><p>Here’s a few neat things that we can do.</p>
+<ol>
+<li>We can provision a database to run on the same compute node as the app, and then link them together. If your compute node is "beefy" enough (RAM/CPU/storage-wise) to handle both the database and the app (and I mean, I’m confident that most disposable apps aren’t going to be at a large scale), then it can be pretty handy, because it means we save on latency.</li>
+<li>We can deploy apps using either Heroku buildpacks (which look for Procfiles) or using Dockerfiles. Docker containers can be easier to maintain if we have a large and/or complex <code>conda</code> environment, in my opinion, as we can reuse the existing environment spec, but Procfiles are much nicer for smaller projects. This fits with the paradigm of "declaring what you need", rather than "programming what you need".</li>
+<li>Because Dokku is managing everything through isolated Docker containers, we can actually enter into a Docker container and muck around to debug, without worrying about breaking the broader system. I realize now how neat it is to have containerization, but without a unified front-end interface to manage the containers, networking interfaces, and environment variables, it’s tough to keep everything straight. Dokku provides that front-end interface.</li>
+</ol>
+<h2 id="what-are-you-deploying-right-now">What are you deploying right now?</h2><p>On my DigitalOcean box, which I use for personal projects, I have deployed both the "Getting Started" Ruby app that Heroku provides as well as a <a href="minimal-panel.ericmjl.com">minimal app</a> showcasing a minimal dashboard using <a href="panel.pyviz.org">Panel</a>.</p>
+<p>The easy part was getting Dokku up and running. The hard part, though, was getting URLs and DNSs right. It took some debugging to get that work correctly.</p>
+<p>In particular, Dokku uses a concept called virtual hosts (<code>VHOSTS</code>) to route from the Dokku host to individual containers. For example, to get <code>minimal-panel.ericmjl.com</code> up and running correctly, I had to ensure that <code>*.ericmjl.com</code> was routed to my DigitalOcean box.</p>
+<h2 id="how-have-we-used-this-at-work">How have we used this at work?</h2><p>At work, I just finished prototyping the use of Dokku on EC2. In particular, I was able to deploy both Dockerfile-based and Procfile-based projects. Once again, getting a domain was the most troublesome part of this project; spinning up an EC2 instance and configuring it became easy using a simple Bash script which we executed on each test spin-up machine.</p>
+<h2 id="what-changes-between-heroku-and-dokku">What changes between Heroku and Dokku?</h2><p>The biggest thing I found is that I need to at least have SSH-access to the compute box that is running Dokku. This is because what we would usually configure on Heroku’s web interface (e.g. environment variables), we would instead configure using <code>dokku</code>’s command-line interface via SSH. Hence, not being afraid of the CLI is important.</p>
+<h2 id="whats-your-verdict">What’s your verdict?</h2><p>If you know Heroku, Dokku gets you 95% of the convenience you’re used to, plus quite a bit more flexibility to customize it to your own compute environment.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/dokku-building-an-internal-heroku-at-work"; this.page.url = "http://www.ericmjl.com/blog/2019/9/7/dokku-building-an-internal-heroku-at-work/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

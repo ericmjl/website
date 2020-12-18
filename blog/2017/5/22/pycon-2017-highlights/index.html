@@ -1,0 +1,286 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>PyCon 2017 Highlights - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>PyCon 2017 Highlights</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-05-22
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/pycon/">
+      pycon
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/conferences/">
+      conferences
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      python
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>Last post was about thoughts on past PyCons, having attended PyCon 2017. This post is on PyCon 2017's highlights for me.</p>
+<p><strong>(1) Serving as part of the organizing committee.</strong> I had the privilege of serving on the FinAid committee this year, and spent a large fraction of time in the staff room preparing to disburse FinAid cheques. I have very vivid memories of how slow the line was when I was receiving my cheques back in the day, and so I wanted to make sure FinAid recipients could receive their reimbursements as fast as possible, without wasting time in line (when they could instead be listening on talks).</p>
+<p><strong>(2) Teaching two tutorials.</strong> This year, I submitted two tutorial proposals, and both were accepted. In the three years that I've been teaching it, <a href="https://www.youtube.com/watch?v=E4VKzFmByhE">Network Analysis Made Simple</a> has always been popular, and I think it's because it gives participants a different way of thinking about data, thus making it an intellectually stimulating topic. I also developed a new material on <a href="https://www.youtube.com/watch?v=yACtdj1_IxE">Best Testing Practices for Data Science</a>. This one, in retrospect, was much fresher, and thus in need of more battle-testing and polish compared to Network Analysis. I have some ideas, including modifications to the workshop format, narrowing the target audience and more, to make it more useful for future iterations.</p>
+<p><strong>(3) First talk at PyCon!</strong> I also gave a talk at PyCon on doing <a href="https://www.youtube.com/watch?v=p1IB4zWq9C8">Bayesian Statistical Analysis with PyMC3</a>! This was my first PyCon talk ever. It was so nice to have a tweet-commendation by PyMC3's creator Chris Fonnesbeck too:</p>
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">. <a href="https://twitter.com/ericmjl">@ericmjl</a> is giving the <a href="https://twitter.com/hashtag/PyMC3?src=hash">#PyMC3</a> talk you really want to hear if you want to learn how to put it to practical use. Room 251. <a href="https://twitter.com/hashtag/PyCon2017?src=hash">#PyCon2017</a></p>&mdash; Chris Fonnesbeck (@fonnesbeck) <a href="https://twitter.com/fonnesbeck/status/866404594951139328">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>It was also nice to have Thomas Wiecki's tweet-commendation too:</p>
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Excellent <a href="https://twitter.com/hashtag/PyMC3?src=hash">#PyMC3</a> talks at <a href="https://twitter.com/hashtag/PyCon2017?src=hash">#PyCon2017</a> by <a href="https://twitter.com/fonnesbeck">@fonnesbeck</a>: <a href="https://t.co/iFbxjSz9C1">https://t.co/iFbxjSz9C1</a> <a href="https://t.co/VhAJLpVQBR">https://t.co/VhAJLpVQBR</a> and <a href="https://twitter.com/ericmjl">@ericmjl</a>: <a href="https://t.co/MnkyWRivXs">https://t.co/MnkyWRivXs</a></p>&mdash; Thomas Wiecki (@twiecki) <a href="https://twitter.com/twiecki/status/866639588995063808">May 22, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>Beyond that, the attendees seemed to like the talk too on the Twitterverse!</p>
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Great introduction to Bayesian data analysis with PyMC3 by <a href="https://twitter.com/ericmjl">@ericmjl</a> at <a href="https://twitter.com/hashtag/PyCon2017?src=hash">#PyCon2017</a> <a href="https://t.co/BjbR0tZ6AO">https://t.co/BjbR0tZ6AO</a></p>&mdash; Matteo Visconti dOC (@MatteoVdOC) <a href="https://twitter.com/MatteoVdOC/status/866413241907400704">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Awesome talk on Bayesian analysis by <a href="https://twitter.com/ericmjl">@ericmjl</a>! Check out the material here: <a href="https://t.co/HAPVYjKUhM">https://t.co/HAPVYjKUhM</a></p>&mdash; Sarah Guido (@sarah_guido) <a href="https://twitter.com/sarah_guido/status/866413261037555713">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">An excellent concrete introduction to Bayesian stats. I&#39;m really looking forward to working through the notebooks as well. <a href="https://twitter.com/hashtag/PyCon2017?src=hash">#PyCon2017</a> <a href="https://t.co/ec230Ui3iC">https://t.co/ec230Ui3iC</a></p>&mdash; Leland McInnes (@leland_mcinnes) <a href="https://twitter.com/leland_mcinnes/status/866437998253981696">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Problems, code and explanation - nice! <a href="https://t.co/ulJEXfMAo0">https://t.co/ulJEXfMAo0</a></p>&mdash; AV Speech Processing (@AV_SP) <a href="https://twitter.com/AV_SP/status/866422943361794049">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Great summary slide <a href="https://twitter.com/ericmjl">@ericmjl</a>! <a href="https://t.co/JbFV4qrzCl">pic.twitter.com/JbFV4qrzCl</a></p>&mdash; William Farmer (@willzfarmer) <a href="https://twitter.com/willzfarmer/status/866415332264562688">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Last technical talk of <a href="https://twitter.com/hashtag/PyCon2017?src=hash">#PyCon2017</a> and my brain is full. Excellent introduction to <a href="https://twitter.com/hashtag/PyMc3?src=hash">#PyMc3</a> and Bayesian variable inference by <a href="https://twitter.com/ericmjl">@ericmjl</a></p>&mdash; Justin Gosses (@JustinGosses) <a href="https://twitter.com/JustinGosses/status/866413619315056641">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Great talk from <a href="https://twitter.com/ericmjl">@ericmjl</a> on PyMC3 making everything clear with concrete examples. <a href="https://twitter.com/hashtag/pycon2017?src=hash">#pycon2017</a></p>&mdash; Leland McInnes (@leland_mcinnes) <a href="https://twitter.com/leland_mcinnes/status/866413119676891137">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">.<a href="https://twitter.com/ericmjl">@ericmjl</a> giving <a href="https://twitter.com/hashtag/bayesian?src=hash">#bayesian</a> intuition at <a href="https://twitter.com/hashtag/PyCon2017?src=hash">#PyCon2017</a> ; as always, a great, inspiring speaker <a href="https://t.co/4qz9QeTArc">https://t.co/4qz9QeTArc</a></p>&mdash; Hugo Bowne-Anderson (@hugobowne) <a href="https://twitter.com/hugobowne/status/866407227518734337">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Foregoing formula, <a href="https://twitter.com/ericmjl">@ericmjl</a> wants you to walk away w/intuition about Bayesian stats: &quot;update beliefs having seen the evidence&quot; <a href="https://twitter.com/hashtag/pycon2017?src=hash">#pycon2017</a></p>&mdash; Melissa @ #pycon2017 (@iff_or) <a href="https://twitter.com/iff_or/status/866407192110350336">May 21, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>It's very heartening to see how many people want to move into Bayes-land! The talk also happened to be the last in the session and last of the day, so I think many people were tired by that point and wanted to go to the final keynote. Thus, the only question came from my friend Hugo, with whom I also worked on a course at DataCamp, who asked about "how we might communicate these ideas to, say, a manager." My thoughts on that were to report not a single number (e.g. the mean), but also the range, and communicate how the lower and upper bound of the range would affect bottomline decisions, or open up new opportunities (though I probably could have expressed this sentiment better).</p>
+<p><strong>(4) Feeding Guido van Rossum.</strong> Python's BDFL, <a href="https://en.wikipedia.org/wiki/Guido_van_Rossum">Guido van Rossum</a>, wandered into the staff office asking to see whether the speaker ready room was open, because he was hungry and was looking for some snacks. We initially suggested the main conference hall, but later I ran out and called him back, because we had some English biscuits in the staff room, and we engaged in a short chat. That's when I had my star-awed moment! Was tempted to get a photo, but I figured he'd probably be fed up with people asking for photo ops, so I decided against it, hoping to be considerate for him. When he finished the biscuit, he said goodbye, and left the staff office. Amazing how everybody else just went about their own business while he was in the room; speaks to the lack of ego that PyCon celebrities have, and that sets a great example for the rest of the community!</p>
+<p>Once I'm back in Boston, I'm definitely going to catch up on the rest of PyCon. I heard that there were a lot of good talks that I missed while staffing the conference as FinAid co-chair, will have to make sure that YouTube playlist is set up!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/pycon-2017-highlights"; this.page.url = "http://www.ericmjl.com/blog/2017/5/22/pycon-2017-highlights/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

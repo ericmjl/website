@@ -1,0 +1,301 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Add a direct Binder link for built HTML notebooks - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Add a direct Binder link for built HTML notebooks</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-09-12
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/jupyter/">
+      jupyter
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/notebooks/">
+      notebooks
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/education/">
+      education
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/teaching/">
+      teaching
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/binder/">
+      Binder
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I recently learned a thing! If you write tutorial material in Jupyter notebooks, it's possible to include a Binder link directly to a notebook, such that Binder opens up <em>directly</em> inside that notebook (rather than in the file browser).</p>
+<p>The "vanilla" link one usually gets from <a href="https://mybinder.org">mybinder.org</a> looks like this (using Network Analysis Made Simple as an example):</p>
+<div class="hll"><pre><span></span><span class="p">[</span><span class="err">!</span><span class="p">[</span><span class="n">Binder</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">mybinder</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">badge_logo</span><span class="o">.</span><span class="n">svg</span><span class="p">)](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">mybinder</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">v2</span><span class="o">/</span><span class="n">gh</span><span class="o">/</span><span class="n">ericmjl</span><span class="o">/</span><span class="n">Network</span><span class="o">-</span><span class="n">Analysis</span><span class="o">-</span><span class="n">Made</span><span class="o">-</span><span class="n">Simple</span><span class="o">/</span><span class="n">master</span><span class="p">)</span>
+</pre></div>
+<p>More generally speaking, the anatomy of the URL is:</p>
+<div class="hll"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">mybinder</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">v2</span><span class="o">/&lt;</span><span class="n">PROVIDER</span><span class="o">&gt;/&lt;</span><span class="n">REPO_NAME</span><span class="o">&gt;/&lt;</span><span class="n">BRANCH</span><span class="o">/</span><span class="n">TAG</span><span class="o">/</span><span class="n">COMMIT</span><span class="o">&gt;</span>
+</pre></div>
+<p>Now, if you want to point directly to a file to be opened on Binder launch, you would instead do something like this:</p>
+<div class="hll"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">mybinder</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">v2</span><span class="o">/</span><span class="n">gh</span><span class="o">/</span><span class="n">ericmjl</span><span class="o">/</span><span class="n">Network</span><span class="o">-</span><span class="n">Analysis</span><span class="o">-</span><span class="n">Made</span><span class="o">-</span><span class="n">Simple</span><span class="o">/</span><span class="n">master</span><span class="err">?</span><span class="n">filepath</span><span class="o">=</span><span class="n">docs</span><span class="o">%</span><span class="mi">2</span><span class="n">F01</span><span class="o">-</span><span class="n">introduction</span><span class="o">%</span><span class="mi">2</span><span class="n">F02</span><span class="o">-</span><span class="n">networkx</span><span class="o">-</span><span class="n">intro</span><span class="o">.</span><span class="n">ipynb</span>
+</pre></div>
+<p>The general form of the URL looks now like the following:</p>
+<div class="hll"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">mybinder</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">v2</span><span class="o">/&lt;</span><span class="n">PROVIDER</span><span class="o">&gt;/&lt;</span><span class="n">REPO_NAME</span><span class="o">&gt;/&lt;</span><span class="n">BRANCH</span><span class="o">/</span><span class="n">TAG</span><span class="o">/</span><span class="n">COMMIT</span><span class="o">&gt;</span><span class="err">?</span><span class="n">filepath</span><span class="o">=&lt;</span><span class="n">FILE_PATH</span><span class="o">&gt;</span>
+</pre></div>
+<p>Here, the <code>&lt;FILE_PATH&gt;</code> is a POSIX-style string relative to the repository root. A thing to note: all of the <code>/</code> characters in the <code>&lt;FILE_PATH&gt;</code> probably have to be replaced with <code>%2F</code>, otherwise the URL might not work correctly!</p>
+<p>Using this pattern, I was able to insert a Launch Binder icon for all of my Jupyter notebooks in the Network Analysis Made Simple repository!</p>
+<p>That said, manually inserting that many Launch Binder icons by hand is not an easy-to-maintain thing. Is there a better way? You bet!</p>
+<p>Leveraging the Jupyter notebook Python API (the <a href="https://nbformat.readthedocs.io/en/latest/"><code>nbformat</code> package</a>) as well as the <code>mkdocs</code> navigation section, I was able to write a few custom functions that inserted a correct Binder URL with the badge into the top of each notebook before building the HTML pages with <code>mkdocs</code>. The code roughly looked like this:</p>
+<div class="hll"><pre><span></span><span class="n">badge_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ericmjl/Network-Analysis-Made-Simple/master?filepath=docs%2F</span><span class="si">{</span><span class="n">nb_relpath</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">%2F</span><span class="si">{</span><span class="n">nb_relpath</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="n">nb_path</span> <span class="o">=</span> <span class="n">docroot</span> <span class="o">/</span> <span class="n">nb_relpath</span>
+<span class="n">nb</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nbformat</span><span class="o">.</span><span class="n">v4</span><span class="o">.</span><span class="n">new_markdown_cell</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">badge_url</span><span class="p">))</span>
+</pre></div>
+<p>The full build script is located <a href="https://github.com/ericmjl/Network-Analysis-Made-Simple/blob/master/scripts/binderbuilder/insert_binder_link.py">here</a>.</p>
+<p>I thought this might be a useful addition to <code>mknotebooks</code>, which handles Jupyter notebook preprocessing for <code>mkdocs</code>, so I also raised <a href="https://github.com/greenape/mknotebooks/issues/43">an issue</a> up there to see if the maintainer of <code>mknotebooks</code> is interested in it!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/add-a-direct-binder-link-for-built-html-notebooks"; this.page.url = "http://www.ericmjl.com/blog/2020/9/12/add-a-direct-binder-link-for-built-html-notebooks/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

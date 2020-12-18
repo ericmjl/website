@@ -1,0 +1,446 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Data/Software Challenges as Tools for Hiring - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Data/Software Challenges as Tools for Hiring</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-07-26
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/hiring/">
+      hiring
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data challenge/">
+      data challenge
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>Some teams/hiring managers love them, and some candidates really detest them.
+Having been on both sides of the hiring equation, I can definitely see both perspectives.
+I wanted to write down some thoughts after using data/software challenges
+to help with the hiring of three interns at work.</p>
+<h2 id="what-are-data/software-challenges">What are data/software challenges?</h2><p>Data/software challenges are take-home interview assignments
+that are given a specific time frame to be completed.</p>
+<p>In the case of the three interns that I helped with hiring,
+two were for data science roles, and one was for a software engineering role.
+In all three cases, we gave them a one week time frame to complete the assigned challenge.</p>
+<p>For the software challenge, the candidates were asked to build the core
+of a piece of typical software that we would build in our department,
+according to a pre-defined spec,
+i.e. pretty much in-line with how we operate, just on a mini scale.
+For the data challenge, the candidates were given a list of four data sets,
+and told to come up with a research question and produce an analysis
+that were delivered in the form of a Jupyter notebook.</p>
+<p>After the data and software challenges were turned in, we would review them,
+and invite the subset of them that "passed" the bar to deliver a presentation "on-site".
+(With COVID-19, "on-site" has dramatically changed, of course.)
+The candidate had to deliver a seminar presentation on their challenge
+to myself and other colleagues involved in hiring.</p>
+<p>The challenges were designed in such a way that a competent and well-equipped individual
+could complete the task in about 2-3 afternoons of work.
+We put in some thought to designing the challenges such that
+they could not be trivially solved by looking up StackOverflow answers alone.
+(Use of SO was encouraged, though, as long as they documented which SO post they referenced
+for the non-trivial pieces of the project.)</p>
+<h2 id="what-were-you-looking-for">What were you looking for?</h2><p>I can speak more for the data challenge, as I designed it.</p>
+<p>To start, my data challenge borrowed ideas
+from the legend of <a href="https://www.snopes.com/fact-check/brown-out/">Van Halen’s Brown M&amp;Ms</a> contract clauses:
+they contained some pretty exact requirements that seemed trivial,
+but if ignored, I would fail the candidate and not bother with their candidacy going forward.
+Being detail-oriented is a pre-requisite for doing data science work,
+and if the candidate did not follow instructions precisely,
+even after I factored in language ambiguities and barriers as confounding factors,
+I knew I would have problems working with them.
+In the interest of being able to reuse and evolve the data challenges,
+I’m clearly not going to reveal what those requirements are here,
+but the principle stands, nonetheless!</p>
+<p>Apart from that, I was looking for a candidate’s ability
+to write “good” code (refactored and documented at least),
+take care to make sure their notebooks are “readable”,
+and be able to “defend” in their prose their choice of problem
+<em>and</em> the individual choices made in their analyses.
+As a bonus, I was also on the lookout for “modern” tooling.
+Having one or two grammatical or spelling warts was fine;
+we all make these mistakes once in a while,
+but if the grammatical issues interfered substantially with readability,
+then that was cause for concern.</p>
+<h2 id="what-qualities-in-a-candidate-were-you-trying-to-infer-from-the-aforementioned-things-you-were-looking-out-for">What qualities in a candidate were you trying to infer from the aforementioned things you were looking out for?</h2><p>Primarily, this list:</p>
+<ul>
+<li>Meticulousness</li>
+<li>Empathy</li>
+<li>Logical rigor</li>
+<li>Creativity</li>
+</ul>
+<p>Meticulousness is most evident from their ability to pass the “Van Halen details” test.</p>
+<p>Creativity would show in their problem choice and choice of methods.</p>
+<p>Logical rigor would show up in how they defended their choices.</p>
+<p>Empathy shows up in the way they communicate, both written and oral.</p>
+<p>I am confident that these are non-controversial qualities to desire in colleagues.</p>
+<p>This next statement will possibly be controversial, but I hold it to be true:
+taken <em>holistically</em>, one can tell from <em>a presented pattern of good/bad behaviours</em>
+whether a candidate can hit the quality bar for the points listed above.
+This is controversial because the desire for objective fairness in hiring
+means subjectively perceived patterns can be unfair.
+However, if there is sufficiently diverse perspectives
+agreeing on the same set of observed patterns presented,
+this cannot be ignored, regardless of whether the patterns present as positive or negative.</p>
+<h2 id="werent-the-expectations-a-bit-high-for-interns">Weren’t the expectations a bit high for interns?</h2><p>Possibly, though I did set a high bar
+because I expect the interns I work with to deliver high quality work.
+I’m ready to teach them things they don’t know,
+but a baseline level of skill level and quality is necessary.
+In order to ensure that my expectations were not set unreasonably high,
+I calibrated them against colleagues’ opinions;
+in particular, I asked them specifically
+whether I’d be asking too much of the candidate at their level.</p>
+<h2 id="were-the-data-challenges-effective">Were the data challenges effective?</h2><p>Subjectively, I would claim yes,
+but because I ended up working with these interns, I might clearly be biased.</p>
+<p>If my subjective experience is informative for anything,
+once I saw the data challenge notebooks for the interns I interviewed,
+I immediately knew whether I could work with them or not.
+In particular, I could get a pretty strong idea of their ability to write code well,
+which I prize very highly,
+as it is a strong indicator of being able 
+to impose sane structure on an otherwise free form problem.
+Also, their ability to communicate clearly in prose 
+(which has become important in a remote world)
+can shine through a well-done Jupyter notebook.</p>
+<p>In one case, the intern we hired was the only plausible candidate available;
+the other candidate didn’t do the challenge.</p>
+<p>In another case, I had the chance to evaluate three data challenges.
+One candidate failed the Van Halen test.
+The other two passed the data challenge with flying colours,
+and after interacting with them in person,
+I submitted my preference for the one who was able
+to defend their modelling choices in the live presentation.
+It was with that candidate too that I was able to go deep into technical points.</p>
+<p>In all cases, I made sure to take the time
+to provide feedback to the candidates that we interviewed on-site.
+I remember <em>not</em> receiving concrete feedback post on-sites and being left frustrated,
+so I wanted to make sure this frustration was not passed on to them.
+My feedback was given right after I read the data challenge, i.e. before they came onsite,
+as I didn't want it to fall off the radar.</p>
+<h2 id="would-you-use-this-for-hiring-regular-colleagues">Would you use this for hiring regular colleagues?</h2><p>Possibly, though not always.</p>
+<p>I floated the idea with my home team, but I did receive a legitimate concern:
+issuing a data challenge would be biased against those with families to take care of.
+After all, doing a data challenge does take time.
+So unless "not having a family to take care for" is part of the job description,
+I would be wary of making a data challenge an <em>absolute requirement</em>.</p>
+<p>In the data scientist roles at NIBR, I’ve noticed that for whatever reason,
+we’ve prized prior scientific track record highly.
+That means either publication record or prior work experience.
+A PhD usually gives a candidate both simultaneously,
+so most of our data scientists are trained scientists who have finished doctoral training.
+(A small but excellent cadre of them are MSc scholars
+but have a significant track record too, e.g. in publications.)</p>
+<p>The data challenge helps level the playing field a bit for MSc scholars, in my opinion.
+Without a track record to demonstrate creativity and logical rigor,
+the data challenge gives an outlet for that to happen.
+As such, for a regular colleague, I see it as being fair
+to offer the option to either present prior research work
+or to tackle the data challenge,
+without compulsion to do one or the other.
+Both should reveal the qualities that we’re looking for,
+and candidates that don’t have a prior track record can use the data challenge to shine.</p>
+<h2 id="how-should-a-hiring-team-approach-using-a-data-challenge">How should a hiring team approach using a data challenge?</h2><p>The most important is to know what you’re looking for from the data challenge.
+It’s also helpful, I think, to spell the qualities expected to be demonstrated
+inside the text of the data challenge,
+to help set expectations on the candidates’ side.
+Doing so is also a matter of being thoughtful and intentional with the hiring process.
+If you don’t know who you’re looking for, how are you going to find that person?</p>
+<p>Keep in mind that there are other ways to fish out the qualities you're looking for.
+An online portfolio that has been professionally curated,
+whether on a personal website or on GitHub or LinkedIn, for example.
+Hiring teams can look at the composition and rougly "grok"
+whether the candidate is competent, has the ability to write good code,
+has the ability to communicate (e.g. via teaching), and more.
+A data challenge should only be one component of the overall hiring process.</p>
+<p>For a data scientist, I sense that "basic good software skills" are increasingly going to be important.
+That said, a data challenge is <em>not</em> the only way to assess a candidate's regular coding skill.
+Live coding challenges, which are done under artificial, pressure-cooked situations,
+are definitely not a good indicator.
+If there is code associated with a scientific publication,
+that is another way of assessing their software skills.
+Open source software development is another way of assessing this aspect.
+Finally, original code snippets embedded in publicly-delivered talks and/or blog posts
+are also an alternative way of getting a glimpse at a candidate's programming skills,
+though I find that the signal-to-nosie ratio there might be a bit lower.</p>
+<p>I would advise against data/software challenges being a screening tool pre-phone screen.
+A data/software challenge is too much work to ask for up-front,
+and in my opinion a bit cruel if used to figure out whether to talk with someone.
+Adhering to the Golden Rule, I’d prefer to deal with a human before having to deal with a system,
+not the other way around.</p>
+<h2 id="how-should-a-candidate-approach-a-data-challenge">How should a candidate approach a data challenge?</h2><p>The most important thing is to view it as another opportunity to shine,
+and not another hurdle to cross.
+This subtle switch in attitude is what can make a difference
+in whether your best side shows through in the challenge or not.
+The skills on which you can shine might include:</p>
+<ul>
+<li>Programming skills</li>
+<li>Communication ability</li>
+<li>Visualization taste</li>
+</ul>
+<p>Be careful to see if there are Van Halen tests inside the data challenge.
+If there are, you may be unnecessarily disqualifying yourself.</p>
+<p>Apart from that, if you do not see the qualities that a team is looking for,
+then that’s actually a red flag - it means they haven’t given enough thought into who they’re looking for.
+This could be an indicator of whether the entire data science team is being thoughtfully built out or not.</p>
+<h2 id="conclusions">Conclusions</h2><p>I hope this article is informative!
+It’s been on my mind to write down these lessons learned,
+and finally I found a chunk of time to do so.
+In the right hands, and paired with the right processes,
+data challenges can be an extremely revealing way
+of identifying whether an individual is someone you can work with.
+It shouldn't be the <em>only</em> or <em>primary</em> tool relied on.
+When hiring, I we should be on the lookout for people
+with whom we holistically can work with
+and who also complement the local environment of the team.
+An ecosystem of hiring tools are needed.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/datasoftware-challenges-as-tools-for-hiring"; this.page.url = "http://www.ericmjl.com/blog/2020/7/26/datasoftware-challenges-as-tools-for-hiring/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

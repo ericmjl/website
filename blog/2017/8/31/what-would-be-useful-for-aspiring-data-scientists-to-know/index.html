@@ -1,0 +1,337 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>What would be useful for aspiring data scientists to know? - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>What would be useful for aspiring data scientists to know?</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-08-31
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/career development/">
+      career development
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/job hunt/">
+      job hunt
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I originally titled this post, "What you need to know to become a data scientist", but I backed off from having such an authoritative post title for I wanted to keep things opinionated without being pompous :).</p>
+<p>Data Science (DS) is a hot field, and I'm going to be starting my new role doing DS at Novartis in September. As an aside, what makes me most happy about this role is that I'm going to do DS in the context of the life sciences (one of the "hard sciences")!</p>
+<p>Now that I have secured a role, some people have come to ask me questions about how I made the transition into DS and into the industry in general. I hope to provide answers to those questions in this blog post, and that you, the reader, find it useful.</p>
+<p>I will structure this blog post into two sections:</p>
+<ol>
+<li><strong>What do I need to know and how do I go about it?</strong></li>
+<li><strong>What do I need to do?</strong></li>
+</ol>
+<p>Ready? Here we go :)</p>
+<hr>
+<p>First off, let's talk about what I think you, an aspiring data scientist, needs to know, and how to go about learning it.</p>
+<h3 id="topic-1-statistical-learning">Topic 1: Statistical Learning</h3><p><strong>Statistical learning methods</strong> are going to top the list. From the standpoint of "topics to learn", there's a laundry list one can write - all of the ML methods in <code>scikit-learn</code>, neural networks, statistical inference methods and more. It's also very tempting to go through that laundry list of terms, learn how they work underneath, and call it a day there. I think that's all good, but only if that material is learned while in the service of picking up the meta-skill of <strong>statistical thinking</strong>. This includes:</p>
+<ol>
+<li>Thinking about data as being sampled from a generative model parameterized by probability distributions (my Bayesian fox tail is revealed!), </li>
+<li>Identifying biases in the data and figuring out how to use sampling methods to help correct those biases (e.g. bootstrap resampling, downsampling), and </li>
+<li>Figuring out when your data are garbage enough that you shouldn't proceed with inference and instead think about experimental design.</li>
+</ol>
+<p>That meta-skill of statistical thinking can only come with practice. Some only need a few months, some need a few years. (I needed about a year's worth of self-directed study during graduate school to pick it up.) <strong><em>Having a project that involves this is going to be key!</em></strong> A good introduction to statistical thinking for data science can be found in a <a href="https://www.youtube.com/watch?v=TGGGDpb04Yc">SciPy 2015 talk by Chris Fonnesbeck</a>, and working through the two-part computational statistics tutorial by him and Allen Downey (<a href="https://www.youtube.com/watch?v=fMycLa1bsno">Part 1</a>, <a href="https://www.youtube.com/watch?v=heFaYLKVZY4">Part 2</a>) helped me a ton.</p>
+<p><strong>Recommendation &amp; Personal Story:</strong> Nothing beats practice. This means finding ways to apply statistical learning methods to projects that you already work on, or else coming up with new projects to try. I did this in graduate school: my main thesis project was not a machine learning-based project. However, I found a great <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3794897/">PLoS Computational Biology paper</a> implementing Random Forests to identify viral hosts from protein sequence, and it was close enough in research topic that I spent two afternoons re-implementing it using <code>scikit-learn</code>, and presenting it during our lab's Journal Club session. I then realized the same logic could be applied to predicting drug resistance from protein sequence, and re-implemented a few other HIV drug resistance papers before finally learning and applying a fancier deep learning-based method that had been developed at Harvard to the same problem.</p>
+<h3 id="topic-2-software-engineering">Topic 2: Software Engineering</h3><p><strong>Software engineering</strong> (SE), to the best of my observation, is about three main things: (a) learning how to abstract and organize ideas in a way that is logical and humanly accessible, (b) writing good code that is well-tested and documented, and (c) being familiar with the ever-evolving ecosystem of packages. SE is important for a data scientist, because models that are making predictions often are put into production systems and used beyond just the DS themselves.</p>
+<p>Now, I don't think a data scientist has to be a seasoned software engineer, as most companies have SE teams that a data scientist can interface with. However, having some experience building a software product can be <em>very helpful</em> for lubricating the interaction between DS and SE teams. Having a logical structure to your code, writing basic tests for it, and providing sufficiently detailed documentation, are all things that SE types will very much appreciate, and it'll make life much easier for them when coming to code deployment and helping with maintenance. (Aside: I strongly believe a DS should take primary responsibility for maintenance, and <em>not</em> the SE team, and only rely on the SE team as a fallback, say, when people are sick or on vacation.)</p>
+<p><strong>Recommendation &amp; Personal Story:</strong> Again, nothing beats practice here. Working on your own projects, whether work-related or not, will help you get a feel for these things. I learned my software engineering concepts from participating in open source contributions. The first was a contribution to <code>matplotlib</code> documentation, where I first got to use Git (a version control system) and Travis CI (a continuous integration system). It was there that I also got my first taste of software testing. The next year, I quickly followed it up with a small contribution to <code>bokeh</code>, and then decided at SciPy 2016 to build <code>nxviz</code> for my Network Analysis Made Simple tutorials. <code>nxviz</code> became my first independent software engineering project, and also my "capstone" project for that year of learning. All-in-all, getting practice was instrumental for my learning process.</p>
+<h3 id="topic-3-industry-specific-business-cases">Topic 3: Industry-Specific Business Cases</h3><p>This is something I learned from my time at Insight, and is non-negotiable. Data Science does not exist in a vacuum; it is primarily in the service of solving business problems. At Insight, Fellows get exposure to business case problems from a variety of industries, thanks to the Program Directors' efforts in collecting feedback from Insight alumni who are already Data Scientists in the industry.</p>
+<p>I think business cases show up in interviews as a test of a candidate's <strong>imaginative capacity and/or experience</strong>: can the candidate demonstrate (a) the creativity needed in solving tough business problems, and (b) the passion for solving those problems? Neither of these are easy to fake when confronted with a well-designed business case. In my case, it was tough for me to get excited about data science in an advertisement technology firm, and was promptly rejected right after an on-site business case.</p>
+<p>It's important to note that these business cases are very industry specific. Retail firms will have a distinct need from marketing firms, and both will be very distinct from healthcare and pharmaceutical companies.</p>
+<p><strong>Recommendation &amp; Personal Story:</strong> For aspiring data scientists, I recommend prioritizing the general industry area that you're most interested in targeting. After that, start going to meet-ups and talking with people about the kinds of problems they're solving - for example, I started going to a <a href="#">Quantitative Systems Pharmacology</a> meet-up to learn more about quantitative problems in the pharma research industry; I also presented a talk &amp; poster at a conference organized by Applied BioMath, where I knew lots of pharma scientists would be present. I also started reading through scientific journals (while I still had access to them through the MIT Libraries), and did a lot of background reading on the kinds of problems being solved in drug discovery.</p>
+<h3 id="topic-4-cs-fundamentals">Topic 4: CS Fundamentals</h3><p>CS fundamentals really means things like algorithms and data structures. I didn't do much to prepare for this. The industry I was targeting didn't have a strong CS legacy/tradition, unlike most other technology firms doing data science (think the Facebooks, Googles, and Amazons), which do. Thus, I think CS fundamentals are mostly important for cracking interviews, and while problems involving CS fundamentals certainly can show up at work, unless something changes, they probably won't occupy a central focus of data science roles for a long time.</p>
+<p><strong>Recommendation &amp; Personal Story:</strong> As I don't really like "studying to the test", I didn't bother with this - but that also meant I was rejected from tech firms that I did apply to (e.g. I didn't pass Google Brain's phone interview). Thus, if you're really interested in those firms, you'll probably have to spend a lot of time getting into the core data structures in computer science (not just Python). Insight provided a great environment for us Fellows to learn these topics; that said, it's easy to over-compensate and neglect the other topics. Prioritize accordingly - based on your field/industry of experience.</p>
+<hr>
+<p>Now, let's talk about things you can start doing from now on that will snowball your credibility for entering into a role in data science. To be clear, these recommendations are made with a year-long time horizon in mind - these are not so much "crack-the-interview" tips as they are "prepare yourself for the transition" strategies.</p>
+<h3 id="strategy-1-create-novel-and-useful-material-and-share-it-freely">Strategy 1: Create novel and useful material, and share it freely</h3><p>This is very important, as it builds a personal portfolio of projects that showcase your technical skill. A friend of mine, Will Wolf, did a self-directed <a href="http://willwolf.io/2016/07/29/my-open-source-machine-learning-masters-in-casablanca-morocco/">Open Source Masters</a>, where he not only delved deeply into learning data science topics, but also set about <a href="http://willwolf.io/">writing blog posts</a> that explained tough and difficult concepts for others to understand, and showcased data projects that he was hacking on while learning his stuff.</p>
+<p>Another friend of mine, Jon Charest, wrote a blog post doing a <a href="http://jonchar.net/2016/05/20/exploring-metal-subgenres-with-python.html">network analysis about metal bands</a> and their shared genre labels - along the way producing a great Jupyter Notebook and network visualizations that yielded contributions to <code>nxviz</code>! Starting with that project, he did a few more, and eventually landed a role as a data scientist at Mathworks.</p>
+<p>Apart from blog posts, giving technical talks is another great way to showcase your technical mastery. I had created the Network Analysis Made Simple tutorials, inspired by Allen Downey's X Made Simple series, as a way of solidifying my knowledge on graph theory and complex systems, and a very nice side product was recognition that I had capabilities in computation, resulting in more opportunities - my favourite being becoming a DataCamp instructor on Network Analysis!</p>
+<p>A key here is to create materials that are <strong>accessible</strong>.  Academic conferences likely won't cut it for accessibility - they're often not recorded, and not published to the web, meaning people can't find it. On the other hand, blog posts are publicly accessible, as are PyCon/SciPy/JupyterCon/PyData videos. Another key is to produce <strong>novel</strong> material - simple rehashes aren't enough; they have to bring value to someone else's. Your materials only count if people can find you and they expand someone's knowledge.</p>
+<p>A few other data scientists, I think, will concur very strongly with this point; Brandon Rorher has an <a href="https://brohrer.github.io/imposter_syndrome.html">excellent blog post</a> on this.</p>
+<h3 id="strategy-2-talk-with-people-inside-and-adjacent-to-industries-that-you-re-interested-in">Strategy 2: Talk with people inside and adjacent to industries that you're interested in.</h3><p>The importance of learning from other people cannot be understated. If you're releasing novel and accessible material, then you'll find this one to be much easier, as your credibility w.r.t. technical mastery will already be there - you'll have opportunities to bring value to industry insiders, and you can take that opportunity to get inside information on the kinds of problems that are being solved there. That can really help you strategize the kinds of new material that you make, which feeds back into a positive cycle.</p>
+<p>Talking with people in adjacent industries and beyond is also very important. I think none put it better than Francois Chollet in his tweet:</p>
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">It&#39;s better to be curious about many things beyond your field -- the more topics you&#39;ve explored, the broader your inspiration in your field</p>&mdash; François Chollet (@fchollet) <a href="https://twitter.com/fchollet/status/903103206812655621">August 31, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>The main thing here is to have a breadth of ideas to draw on for inspiration when solving your own problem at hand. I had a first-hand taste of it when trying to solve the drug resistance problem (see above) - which turned out to be my introduction into the deep learning world proper!</p>
+<h3 id="strategy-3-learn-python">Strategy 3: Learn Python</h3><p>Yes, I put this as a strategy rather than as a topic, mainly because programming languages are kind of arbitrary, and as such are less about whether a language is superior to others and more about whether you can get stuff done with that language.</p>
+<p>I suggest Python only because I've tasted for myself the triumphant feeling of being able to do all of the following:</p>
+<ul>
+<li>environment setup (<code>conda</code>), </li>
+<li>data extraction and cleaning (<code>pandas</code>) </li>
+<li>modelling (<code>scikit-learn</code>, <code>PyMC3</code>, <code>keras</code>) </li>
+<li>visualization (<code>matplotlib</code>, <code>bokeh</code>, <code>searborn</code>), </li>
+<li>deployment (<code>Flask</code>)</li>
+</ul>
+<p>in one language. That's right - one language! (Sprinkling in a bit of HTML/CSS/JS in deployment, and bash in environment setup, of course.)</p>
+<p>There's very few languages with the flexibility of Python, and having a team converse in one language simply reduces that little bit of friction that comes from reading another language. There's a ton of productivity gains to be had! It's not the fastest, it's not the most elegant, but over the years, it's adopted the right ideas and built a large community developers, as such many people have built on it and used it to solve all manners of problems they're facing - heck, I even found a package that converts between traditional and simplified Chinese!</p>
+<p>It takes time to learn the language well enough to write good code with it, and nothing beats learning Python apart from actually building a project with it - I hope this idea of "building stuff" is now something ingrained in you after reading this post!</p>
+<h3 id="strategy-4-find-a-community-of-people">Strategy 4: Find a community of people</h3><p>When it comes to building a professional network and making friends, nothing beats going through a shared experience of thick &amp; thin together with other people. Data science, being a really new thing, is a growing community of people, and being plugged into the community is going to be important for learning new things.</p>
+<p>The Insight Summer 2017 class did this - we formed a closely-knit community of aspiring data scientists, cheered each other on, and coached each other on topics that were of interest. I know that this shared experience with other Insighters will give us a professional network that we can tap into in the future!</p>
+<hr>
+<h3 id="conclusions">Conclusions</h3><p>Alrighty, to conclude, here's the topics and strategies outlined above.</p>
+<p>Topics to learn:</p>
+<ol>
+<li><strong>Must-have:</strong> Statistical learning &amp; statistical thinking</li>
+<li><strong>Good-to-have:</strong> Software engineering</li>
+<li><strong>Good-to-have:</strong> Business case knowledge</li>
+<li><strong>Dependency, Optional:</strong> CS Fundamentals</li>
+</ol>
+<p>Strategies:</p>
+<ol>
+<li><strong>Proven:</strong> Make novel and useful materials and freely release them - teaching materials &amp; projects!</li>
+<li><strong>Very Useful:</strong> Learn from industry insiders.</li>
+<li><strong>Very Useful:</strong> Learn Python.</li>
+<li><strong>Don't Forget:</strong> Build community.</li>
+</ol>
+<p>All-in-all, I think it boils back down to the fundamentals of living in a society: it's still about <strong>creating real value for others</strong>, and <strong>receiving commensurate recognition</strong> (not always money, by the way) for what you've delivered. Tips and tricks can sometimes get us ahead by a bit, but the fundamentals matter the most.</p>
+<p>For aspiring data scientists, some parting words: build useful stuff, learn new things, demonstrate that you can deliver value using data analytics and work with others using the same tools, and good luck on your job hunt!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/what-would-be-useful-for-aspiring-data-scientists-to-know"; this.page.url = "http://www.ericmjl.com/blog/2017/8/31/what-would-be-useful-for-aspiring-data-scientists-to-know/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

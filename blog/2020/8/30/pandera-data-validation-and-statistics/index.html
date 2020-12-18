@@ -1,0 +1,434 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Pandera, Data Validation, and Statistics - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Pandera, Data Validation, and Statistics</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-08-30
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/statistics/">
+      statistics
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data validation/">
+      data validation
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data engineering/">
+      data engineering
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/pandera/">
+      pandera
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software tools/">
+      software tools
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/tips and tricks/">
+      tips and tricks
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>I have test-driven the <a href="pandera.readthedocs.io/"><code>pandera</code></a> package over the past few days,
+and I'm extremely happy that this package exists!</p>
+<p>Let me tell you why.</p>
+<h2 id="data-testing">Data testing</h2><p>"Data testing" is the colloquial term that I have used in place of the more formal term,
+"schema validation",
+or "data validation".
+Ever since I was burned once by CSV files with invalid column names,
+I put together a <a href="https://github.com/ericmjl/data-testing-tutorial">data testing tutorial</a> to kickstart the idea,
+and have been keeping an eye on the space ever since.</p>
+<p>But let’s step back a bit.</p>
+<p>What do we mean by schema/data validation? It’s merely a fancy way of checking,
+“are my data as I expect them to be?”</p>
+<p>Here’s an example.
+Imagine you have a data table,
+in which the semantic meaning of a row is a "sample" (i.e.
+one row = one sample),
+and columns are observations about that sample.
+In this data,
+there are definitely some things you may want to guarantee to be true of our data.</p>
+<p>For example,
+I may have numeric measurements of each sample,
+and I need to guarantee that they cannot be negative or zero.
+Hence,
+for those columns,
+I need “greater than zero” check.
+For another column,
+it may be that we expect that the values in there take one of two values.
+An example dataframe could be as follows:</p>
+<div class="hll"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;non_negative&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.34</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span>
+        <span class="s2">&quot;two_values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;val1&quot;</span><span class="p">,</span> <span class="s2">&quot;val2&quot;</span><span class="p">,</span> <span class="s2">&quot;val2&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+<p>If I were implementing these checks in a test suite in vanilla Python,
+I would write them as follows:</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">project_source.data</span> <span class="kn">import</span> <span class="n">load_data</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">test_load_data</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;non_negative&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;two_values&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">([</span><span class="s2">&quot;val1&quot;</span><span class="p">,</span>
+<span class="s2">&quot;val2&quot;</span><span class="p">])</span>
+</pre></div>
+<p>Having the checks in the test suite is nice,
+as it means if the checks are run as part of a CI pipeline,
+they’ll continually be checked.
+However,
+they cannot be checked whenever I call on <code>load_data()</code>,
+which is the most important time I’d need those checks to appear — 
+whenever I’m going to use that data loading function,
+i.e. at runtime, and have to depend on them being correct.
+To have those checks available at runtime,
+I’d have to duplicate all of the checks into the <code>load_data()</code> function.
+And we know that duplication of code increases risk of stale code.</p>
+<p>Enter <code>pandera</code>.
+Instead of writing the checks in two separate places,
+I can start by writing the following declarative schema in a Python module,
+that serves as a defined source of truth:</p>
+<div class="hll"><pre><span></span><span class="c1"># project_source/schemas.py</span>
+<span class="kn">from</span> <span class="nn">pandera</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span>
+<span class="n">DataFrameSchema</span><span class="p">,</span>
+<span class="n">Check</span>
+<span class="kn">import</span> <span class="nn">pandera</span> <span class="k">as</span> <span class="nn">pa</span> 
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">DataFrameSchema</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;non_zero_column&quot;</span><span class="p">:</span> <span class="n">Column</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">Check</span><span class="o">.</span><span class="n">greater_than</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+        <span class="s2">&quot;categorical_column&quot;</span><span class="p">:</span> <span class="n">Column</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">Check</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;value_1&quot;</span><span class="p">,</span> <span class="s2">&quot;value_2&quot;</span><span class="p">])),</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+<p>Now, the flexibility with which this schema gets used
+is simply <em>superb</em>!
+Because I've declared it as a Python object in code,
+I can import it <em>anywhere</em> I want validation to happen.</p>
+<p>For example,
+I can validate the inputs to a function at runtime:</p>
+<div class="hll"><pre><span></span><span class="c1"># project_source/data.py</span>
+<span class="kn">from</span> <span class="nn">pandera</span> <span class="kn">import</span> <span class="n">check_input</span><span class="p">,</span>
+<span class="n">check_output</span>
+<span class="kn">from</span> <span class="nn">.schemas</span> <span class="kn">import</span> <span class="n">dataframe_schema</span><span class="p">,</span>
+<span class="n">cleaned_df_schema</span>
+
+
+<span class="nd">@check_input</span><span class="p">(</span><span class="n">dataframe_schema</span><span class="p">)</span>
+<span class="nd">@check_output</span><span class="p">(</span><span class="n">cleaned_df_schema</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="n">dataframe</span><span class="p">):</span>
+    <span class="c1"># stuff happens</span>
+    <span class="k">return</span> <span class="n">cleaned_df</span>
+</pre></div>
+<p>And because the validation happens as soon as the function is executed,
+I can also validate the schema as part of an automatically-executed test suite
+that continuously runs and checks data alongside code.</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">project_src.data</span> <span class="kn">import</span> <span class="n">load_some_data</span>
+
+<span class="k">def</span> <span class="nf">test_load_some_data</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_some_data</span><span class="p">()</span>
+</pre></div>
+<p>The data test suite becomes simpler to maintain,
+as it gets reduced to a simple execution test.
+Validating data at every step that it could go wrong is pretty important!</p>
+<p>Additionally,
+if there is a new data file that needs to be processed in the same way,
+when we pass in the dataframe version into the <code>clean_data</code> function,
+it is automatically validated by <code>pandera</code>’s <code>check_input</code>.
+If a dataframe that fails <code>check_input</code>,
+then <code>pandera</code> will give us an error message straight away!</p>
+<p>These are just the basics.
+Pandera comes with even more:</p>
+<ul>
+<li>Validating the <code>Index</code>/<code>MultiIndex</code>.</li>
+<li>Automatically inferring a draft schema that you can use as a base.</li>
+</ul>
+<p>I'm excited to see how this goes.
+Congratulations to the package author Niels Bantilan,
+it's a package that has all of the <em>right</em> API ideas in place!
+Its design is very lightweight,
+which helps encourage fast iteration and turnaround on schema validation.
+Being one of those “eagerly executable” and “interactively debuggable” tools
+helps its case as well.
+The package focuses on doing only one thing well,
+and doesn't try to be a "God package" that does all sorts of things in one package.
+For a person of my tastes,
+this increases the attraction factor!
+Finally, it targets <code>pandas</code> DataFrames,
+an idiomatic data structure in the Python data science world,
+which is always a plus.
+Having incorporated <code>pandera</code> into a project just recently,
+I'm excited to see where its future is headed!</p>
+<h2 id="data-validation-as-statistical-evaluation">Data Validation as Statistical Evaluation</h2><p>I can see that data validation <em>actually</em> has its roots in statistical evaluation of data.</p>
+<p>Humour me for a moment.</p>
+<p>Say we have a column that can only take two values,
+such as “yes” and “no”.</p>
+<p>From a statistical viewpoint,
+that data are generated from Bernoulli distribution,
+with “yes”/1 and “no”/0 being the outcomes.</p>
+<p>If you get a “maybe” in that column,
+that value is outside of the <em>support</em> of the distribution.
+It’s like trying to evaluate the likelihood of observing a 2 from a Bernoulli.
+It won’t compute.</p>
+<p>So every time we run a <code>pandera</code> check,
+we are effectively expressing a <em>statistical</em> check of some kind.
+The byline of the package,
+“Statistical Data Validation for Pandas”,
+is <em>even more apt</em> once we consider this viewpoint!</p>
+<h2 id="conclusions">Conclusions</h2><p>I hope this post encourages you to give <code>pandera</code> a test-drive!
+Its implementation of "runtime data validation" is very handy,
+allowing me to declare the assumptions I have about my data up-front,
+and catch any violations of those assumptions as early as possible.</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/pandera-data-validation-and-statistics"; this.page.url = "http://www.ericmjl.com/blog/2020/8/30/pandera-data-validation-and-statistics/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

@@ -1,0 +1,433 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Sparse Matrix Multiplication in Python 3 - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Sparse Matrix Multiplication in Python 3</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2016-07-24
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      python
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/sparse matrix/">
+      sparse matrix
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/linear algebra/">
+      linear algebra
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>Sparse matrix multiplication shows up in many places, and in Python, it's often handy to use a sparse matrix representation for memory purposes.</p>
+<p>One thing nice about the newest version of Python 3 is the <code>@</code> operator, which takes two matrices and multiplies them. While <code>numpy</code> has had the <code>np.dot(mat1, mat2)</code> function for a while, I think <code>mat1 @ mat2</code> can be a more expressive way of expressing the matrix multiplication operation. One hidden benefit of the <code>@</code> operator: it handles <code>scipy.sparse</code> matrices pretty well!</p>
+<p>Consider the following binary matrix in a dense format:</p>
+<pre><code>In [7]: dense = np.random.binomial(n=1, p=0.1, size=(10, 10))
+
+In [8]: dense
+Out[8]:
+array([[0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+       [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 0, 1, 0, 1, 1, 0, 0, 0, 0]])
+</code></pre>
+<p>We can convert that matrix to a sparse format:</p>
+<pre><code>In [9]: sparse = csr_matrix(dense)
+
+In [10]: sparse
+Out[10]:
+&lt;10x10 sparse matrix of type '&lt;class 'numpy.int64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;
+</code></pre>
+<p>Let's say now that we want to multiply it against a random matrix. Let's first instantiate the random matrix:</p>
+<pre><code>In [11]: rand = np.random.random(size=(10, 1))
+
+In [12]: rand
+Out[12]:
+array([[ 0.07692164],
+       [ 0.96495678],
+       [ 0.03917639],
+       [ 0.00568423],
+       [ 0.62973733],
+       [ 0.09481768],
+       [ 0.97617109],
+       [ 0.58497563],
+       [ 0.85287145],
+       [ 0.76737415]])
+</code></pre>
+<p>Cool! So, starting with the <code>np.dot()</code> operation...</p>
+<pre><code>In [13]: np.dot(dense, rand)
+Out[13]:
+array([[ 1.54993241],
+       [ 0.        ],
+       [ 0.80655054],
+       [ 0.96495678],
+       [ 0.07692164],
+       [ 0.04486062],
+       [ 0.58497563],
+       [ 0.        ],
+       [ 0.07692164],
+       [ 0.84065304]])
+</code></pre>
+<p>Because <code>np.dot</code> doesn't natively recognize <code>scipy.sparse</code> matrices, when we try to do the matrix multiplication, we get...</p>
+<pre><code>In [14]: np.dot(sparse, rand)
+Out[14]: /Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/compressed.py:296: SparseEfficiencyWarning: Comparing sparse matrices using &gt;= and &lt;= is inefficient, using &lt;, &gt;, or !=, instead.
+  "using &lt;, &gt;, or !=, instead.", SparseEfficiencyWarning)
+
+array([[ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;]], dtype=object)
+</code></pre>
+<p>Totally not what we wanted! On the other hand, if we used the <code>@</code> operator...</p>
+<pre><code>In [15]: sparse @ rand
+Out[15]:
+array([[ 1.54993241],
+       [ 0.        ],
+       [ 0.80655054],
+       [ 0.96495678],
+       [ 0.07692164],
+       [ 0.04486062],
+       [ 0.58497563],
+       [ 0.        ],
+       [ 0.07692164],
+       [ 0.84065304]])
+</code></pre>
+<p>Exactly what we wanted!</p>
+<p>The reverse multiplication, in which we take a <code>(10x1)</code> matrix and try to multiply it with a <code>(10x10)</code> matrix, should fail:</p>
+<pre><code>In [16]: np.dot(rand, dense)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+&lt;ipython-input-17-5abc172f5ef1&gt; in &lt;module&gt;()
+----&gt; 1 np.dot(rand, dense)
+
+ValueError: shapes (10,1) and (10,10) not aligned: 1 (dim 1) != 10 (dim 0)
+</code></pre>
+<p>With the <code>scipy.sparse</code> matrix being multiplied in <code>np.dot</code>, however, it doesn't work out to the correct answer...</p>
+<pre><code>In [17]: np.dot(rand, sparse)
+Out[17]: /Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/compressed.py:296: SparseEfficiencyWarning: Comparing sparse matrices using &gt;= and &lt;= is inefficient, using &lt;, &gt;, or !=, instead.
+  "using &lt;, &gt;, or !=, instead.", SparseEfficiencyWarning)
+
+array([[ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;],
+       [ &lt;10x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+    with 14 stored elements in Compressed Sparse Row format&gt;]], dtype=object)
+</code></pre>
+<p>On the other hand, the <code>@</code> matrix multiplier catches the error perfectly!</p>
+<pre><code>In [18]: rand @ sparse
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+&lt;ipython-input-18-4aa22b6b8f2e&gt; in &lt;module&gt;()
+----&gt; 1 rand @ sparse
+
+/Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/base.py in __rmatmul__(self, other)
+    402             raise ValueError("Scalar operands are not allowed, "
+    403                              "use '*' instead")
+--&gt; 404         return self.__rmul__(other)
+    405
+    406     ####################
+
+/Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/base.py in __rmul__(self, other)
+    386             except AttributeError:
+    387                 tr = np.asarray(other).transpose()
+--&gt; 388             return (self.transpose() * tr).transpose()
+    389
+    390     #####################################
+
+/Users/ericmjl/anaconda/lib/python3.5/site-packages/scipy/sparse/base.py in __mul__(self, other)
+    353
+    354             if other.shape[0] != self.shape[1]:
+--&gt; 355                 raise ValueError('dimension mismatch')
+    356
+    357             result = self._mul_multivector(np.asarray(other))
+
+ValueError: dimension mismatch
+</code></pre>
+<p>I hope I've provided one more piece of evidence in favour of switching to Python 3!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/sparse-matrix-multiplication-in-python-3"; this.page.url = "http://www.ericmjl.com/blog/2016/7/24/sparse-matrix-multiplication-in-python-3/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

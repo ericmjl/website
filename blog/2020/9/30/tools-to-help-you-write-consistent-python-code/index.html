@@ -1,0 +1,453 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Tools to help you write consistent Python code - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Tools to help you write consistent Python code</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-09-30
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/tips and tricks/">
+      tips and tricks
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/programming/">
+      programming
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/python/">
+      Python
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/command line tools/">
+      command line tools
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/code formatting/">
+      code formatting
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/code style/">
+      code style
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>As a data scientist, you might be feeling the need to level-up your code-writing skills.
+After all, if your hacked together script becomes the basis of production systems, imagine the headache :).
+Moreover, as time goes by, it seems to me that for data scientists to uncover the high risk,
+but nonetheless potentially high value and high impact outlets,
+nothing beats having software skills to flexibly express the custom logic that's needed.
+Hadley Wickham's sentiment that <a href="https://youtu.be/cpbtcsGE0OA">one can't do data science in a GUI</a> seems to ring true,
+though I'd probably refine it by saying that one can't do <em>highest value</em> data science without programming skills!</p>
+<p>Mostly because of the community of <a href="https://github.com/ericmjl/pyjanitor"><code>pyjanitor</code></a> developers,
+who encounter a smattering of tooling that I might not have,
+I have had the privilege of learning from them a collection of tooling
+that I think can really help with code style.
+Especially if you transition your code from a Jupyter notebook to a <code>.py</code> source file!
+Equipped with the right tools,
+you can write consistent code without needing to memorize all of the rules.
+And that idea of externalizing the rules to a program is what these tools are all about!</p>
+<h2 id="tl-dr-what-tools-are-there">tl;dr: What tools are there?</h2><p>For the impatient, here's the summary:</p>
+<h3 id="code-formatters">Code formatters</h3><p>i.e. those that explicitly change your code:</p>
+<ul>
+<li>Black</li>
+<li>isort</li>
+</ul>
+<h3 id="code-linters">Code linters</h3><p>i.e. those that <em>don’t</em> change your code, but flag errors:</p>
+<ul>
+<li>Flake8</li>
+<li>Interrogate</li>
+<li>Darglint</li>
+<li>pylint</li>
+<li>mypy</li>
+</ul>
+<p>Some of these come with <code>pre-commit hooks</code>, which I strongly suggest you use!</p>
+<h3 id="vscode-tooling">VSCode tooling</h3><p>VSCode tooling for those who are used to VSCode as your development environment:</p>
+<ul>
+<li>Python extension</li>
+<li>pylance: this is superbly fast. hats off, Microsoft.</li>
+</ul>
+<h3 id="external-ci-services">External CI services</h3><p>Tools that run as an external service for your continuous integration pipeline:</p>
+<ul>
+<li>deepsource</li>
+</ul>
+<h2 id="thats-a-lot-of-tools-how-do-i-interact-them">That’s a lot of tools; how do I interact them?</h2><p>A full-fledged tutorial is probably not the realm of this tiny blog post,
+but I will begin by giving you the overview of how you interact with them in general.
+That should give you enough patterns to work with when you look at their docs.</p>
+<h3 id="at-the-cli">At the CLI</h3><p>The code formatters and linters are runnable at the CLI.
+You can consider this to be the lowest-level/primitive way of using them.
+For example, with <code>black</code>, you would call on it at the command line at the root of your project repository:</p>
+<div class="hll"><pre><span></span>black .
+</pre></div>
+<p>What pops out is Black telling you what files it formatted, or error messages telling you which files it couldn’t format.</p>
+<p>Likewise for <code>flake8</code>:</p>
+<div class="hll"><pre><span></span>flake8 .
+</pre></div>
+<p>What pops out is an entire collection of “error codes”, which specify one and only one error that it caught.
+The error messages will tell you what’s <em>wrong</em>, so correcting the error is a matter of doing the opposite.
+For example, <code>flake8</code> might tell me that a line is too long at 89 characters,
+which is greater than the 79 that it is configured for,
+and so I would have to split up that line,
+or if it’s a string then remove unnecessary words, to correct the error.</p>
+<h3 id="configuration">Configuration</h3><p>Sometimes, two tools might come with defaults that conflict with one another.
+<code>flake8</code> and <code>black</code> are two;
+<code>black</code>, being opinionated, will format lines to fit in 88 characters,
+but <code>flake8</code> will by default look for 79 characters.
+(I’m in favour of 79,
+because it allows me to look at my code in its entirety side-by-side on a 15” MacBook Pro.)</p>
+<p>Each tool comes with its own configuration documentation page.
+The Python community has started gravitating towards
+a config file called <a href="https://snarky.ca/what-the-heck-is-pyproject-toml/"><code>pyproject.toml</code></a>,
+which is intended for Python language tools.
+If <code>pyproject.toml</code> is supported by a tool,
+then you should be able to find a page in the documentation.
+A well-written docs page will give you a copy/paste-able config file
+with extensive comments that you can read to know what’s going on.
+(Black itself leads the charge:
+its <a href="https://black.readthedocs.io/en/stable/pyproject_toml.html">page on the <code>pyproject.toml</code> file</a>
+is very well-documented!)</p>
+<p>I think that the community-wide standardization is a great thing!
+The way this has happened is a bit slow,
+but at least the tool authors don’t make it <em>onerous</em> to migrate from existing config files.
+Fits all of the right patterns: make doing the right thing easy!</p>
+<h3 id="inside-vscode">Inside VSCode</h3><p>If you use VSCode as your day-to-day integrated development environment (or IDE),
+there are two extensions that are indispensable for Python developers:
+<a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">the official Python extension</a>
+and <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance">Pylance</a>.
+The official Python extension adds support for:</p>
+<blockquote><p>IntelliSense, linting, debugging, code navigation, code formatting,
+Jupyter notebook support, refactoring, variable explorer,
+test explorer, snippets, and more!</p>
+</blockquote>
+<p>Pylance, on the other hand, is:</p>
+<blockquote><p>powered by Pyright, Microsoft's static type checking tool.
+Using Pyright, Pylance has the ability to supercharge
+your Python IntelliSense experience with rich type information,
+helping you write better code faster.</p>
+</blockquote>
+<p>With code linting enabled in VSCode, you get the benefits of errors showing up as you type.
+An example from the <code>pyjanitor</code> library,
+which contains some holdover code style issues from before the time I was proficient in these tools,
+can be seen in the screenshot below.</p>
+<p><img src="pylance-screenshot.png" alt=""></p>
+<p>Underneath the hood, for code style checking,
+both extensions call out to <code>flake8</code>, <code>black</code>, <code>mypy</code>
+and other tools to perform code checking,
+and this is configurable in VSCode itself.</p>
+<h3 id="inside-your-ci-system">Inside your CI system</h3><p>If you build a project and have a continuous integration system for it,
+you can continuously check your code using the CLI tools.
+Concpetually, the steps you'd follow are:</p>
+<ol>
+<li>Install the tools inside the CI environment at build time.</li>
+<li>Place in the right configuration files in your project root.</li>
+<li>Execute the tools in the testing section of your CI build.</li>
+</ol>
+<p>The <a href="https://github.com/ericmjl/pyjanitor/blob/dev/.azure-pipelines/templates/run-tests.yml"><code>pyjanitor</code> Azure pipelines CI</a>
+has a great example of this in action.
+I'd recommend putting these early on,
+as waiting for test to pass
+before catching these <em>slightly</em> more trivial problems
+can make for a <em>slightly</em> irritated developer 😅.</p>
+<p>Because we're talking about CI systems,
+we might as well also talk about the external CI service highlighted here, DeepSource.
+It's a commercial service that is free for open source projects,
+and in there I've gotten a few reminders on certain anti-patterns.
+I like what they're doing; the team does have to make a living,
+so I'm not opposed to the commercialization of their tool,
+and in fact I'm quite appreciative of the fact
+that they've made it freely accessible for OSS projects.</p>
+<h3 id="what-about-inside-jupyter-notebooks">What about inside Jupyter notebooks?</h3><p>Most of us who are data scientists spend a majority of our time inside Jupyter notebooks.
+Are there tools available for us to help us write good code inside notebooks?</p>
+<p>Turns out, there's quite a few projects that try to do this!
+Given the breadth of people who know how to use Python to do things,
+it never seems far-fetched to think that
+someone else who has a need to scratch has already figured this out.</p>
+<p>Through digging around on the internet,
+I found at least the following tools that could be promising:</p>
+<ul>
+<li><a href="https://pypi.org/project/black-nb/"><code>black-nb</code></a></li>
+<li><a href="https://pypi.org/project/nb-black/"><code>nb_black</code></a></li>
+<li><a href="https://github.com/drillan/jupyter-black"><code>jupyter-black</code></a></li>
+</ul>
+<p>That said, I usually adhere to the following principle with notebooks:
+that they are intended to be both read <em>and</em> executed,
+meaning if you have long walls of code inside your notebook,
+they should be refactored out into a custom package
+to keep the storytelling logic of your notebook flowing nicely.
+That is when using an IDE can help you.
+If your intent with <code>black</code>-ifying notebooks is to avoid refactoring your code,
+then you'll be disappointed - <code>black</code> has a tendency to add lines to code,
+such as hard-coded lists that are unavoidably long.
+<code>black</code>-ifying your notebook code may thus have
+unintended consequences for readability!</p>
+<p>Instead, do the right thing:
+<a href="https://ericmjl.github.io/essays-on-data-science/software-skills/refactoring/">Refactor your code!</a>!
+To learn how to break out custom code,
+<a href="https://godatadriven.com/blog/write-less-terrible-code-with-jupyter-notebook/">check out this very well-written blog post</a>!</p>
+<h2 id="help-me-take-action-what-should-i-do-next">Help me take action! What should I do next?</h2><p>Here's the next thing you can do:
+add these tools into your <code>environment.yml</code> (conda users)
+or <code>requirements.txt</code> (venv/pip-only users) files!
+Then, update your virtual environment.
+Voilà!
+You now have these tools in your environment,
+and can start checking your code style!</p>
+<p>(Not using environments?
+I won't judge you 😅, but I would <em>strongly encourage</em> that you do so!
+<a href="https://ericmjl.github.io/blog/2018/12/25/conda-hacks-for-data-science-efficiency/">Here's some tips to help</a>.)</p>
+<h2 id="conclusions">Conclusions</h2><p>Hopefully this short essay has helped you get familiar with
+some of the tooling to help you write consistently-styled code
+that is also readable by a large swathe of the Python-writing universe of programmers.
+Writing code in a consistent style is important.
+That style usually involves rules;
+having tools to externalize that style,
+such you don't have to worry about remembering it,
+helps us conform to that style more easily.
+Have fun writing clean code!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/tools-to-help-you-write-consistent-python-code"; this.page.url = "http://www.ericmjl.com/blog/2020/9/30/tools-to-help-you-write-consistent-python-code/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

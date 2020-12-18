@@ -1,0 +1,279 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Using Bokeh in FluForecaster - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Using Bokeh in FluForecaster</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2017-06-30
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/bokeh/">
+      bokeh
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/dashboarding/">
+      dashboarding
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <h2 id="motivation">Motivation</h2><p>As a Health Data Fellow at Insight, we spend about 3 weeks executing on a data project, which we demo at companies that are hiring. I built <a href="https://fluforecaster.herokuapp.com/">FluForecaster</a>, which was a project aimed at forecasting influenza sequence evolution using deep learning.</p>
+<p>My choice of project was strategically aligned with my goals on a few levels. Firstly, I wanted to make sure my project showcased deep learning, as it's currently one of the hottest skills to have. Secondly, I had components of the code base written in separate Jupyter notebooks prior to Insight, meaning, I could execute on it quickly within the three weeks we had. Thirdly, I had intended to join Insight primarily with the goal of networking with the Insight community, and that basically meant 'being a blessing' to others on their journey too - if I could execute fast and well on my own stuff, then there'd be time to be a team player with other Fellows in the session, and help them get their projects across the finish line.</p>
+<p>Each of us had to demo a "final product". Initially, I was thinking about a "forecasting dashboard", but one of our program directors, Ivan, suggested that I include more background information. As such, I decided to make the dashboard an interactive blog post instead. Thus, with FluForecaster being a web-first project, I finally had a project in which I could use Bokeh as part of the front-end.</p>
+<h2 id="applying-bokeh">Applying Bokeh</h2><p>Bokeh was used mainly for displaying three data panels in the browser. Firstly, I wanted to show how flu vaccine efficacy rarely crossed the 60% threshold over the years. Secondly, I wanted to show a breakdown of the number of sequences collected per year (as used in my dataset). Thirdly, I wanted to show a visual display of influenza evolution.</p>
+<p>For yearly vaccine effectiveness, it was essentially a line and scatter chart, with the Y-axis constrained between 0 and 100%. I added a hover tooltip to enable my readers to see the exact value of vaccine effectiveness as measured by the US CDC.</p>
+<p>To show the number of sequences per year in the dataset, the same kind of chart was deployed.</p>
+<p>Bokeh magic became really evident later when I wanted to show sequence evolution in 3 dimensions. Because 3D charts are generally a poor choice for a flat screen, I opted to show pairs of dimensions at a time. A nice side-effect of this is that because my <code>ColumnDataSource</code> was shared amongst each of the three pairs of coordinates, panning and selection was automatically linked for free.</p>
+<h2 id="usage-pros-and-cons">Usage Pros and Cons</h2><p>Bokeh's API is very powerful, in that it supplies many plotting primitive objects (glyphs, particularly), and that makes it a big plus for users who are experienced with the library, who are creating complex interactive charts.</p>
+<p>Most of my fellow Fellows at Insight ended up using the <code>bokeh.plotting</code> interface, and I did too. I think the <code>bokeh.plotting</code> interface provides the best balance between ease-of-use and flexibility. If you take a look at the code <a href="https://github.com/ericmjl/flu-sequence-predictor/blob/master/utils/webplots.py#L15">here</a>, you'll notice that there's often a bit of boilerplate that gets repeated with variation, such as in the configuration of custom hover tools. I think this is the tradeoff we make for configurability... or I might just be not writing code most efficiently. :)</p>
+<p>There were times where I was tempted to just use the <code>bkcharts</code>' declarative interface instead. It's a lot more easy to use. However, I did have some time on hand, and wanted to get familiar with the <code>bokeh.plotting</code> interface, because there's a possibility that I might want to make wrappers for other visualizations that can lend themselves to a declarative API.</p>
+<h2 id="embedding-visualizations">Embedding Visualizations</h2><p>I built my interactive blog post using a combination of Flask, hand-crafted HTML, Bootstrap CSS &amp; JS, and Bokeh - which took care of the bulk of visuals. I drew static figures using Illustrator.</p>
+<p>Embedding the necessary Bokeh components wasn't difficult. Very good documentation is available on the <a href="http://bokeh.pydata.org/en/latest/docs/user_guide/embed.html">Bokeh docs</a>. The key insight that I had learned was that I could have the <code>components</code> passed into my Flask app functions' <code>return</code> statements, and embed them using Jinja2 templating syntax. An example can be found <a href="https://github.com/ericmjl/flu-sequence-predictor/blob/master/templates/index.html#L81">here</a>. Basically, <code>components</code> returns a <code>div</code> and a <code>js</code> object, which are essentially just strings. To embed them in the templates, we use the syntax <code>{{ div|safe }}</code> and <code>{{ js|safe }}</code>. That <code>|safe</code> is very important: it tells the Jinja2 templating engine that it's safe to render those pieces of Javascript and HTML.</p>
+<h2 id="conclusion">Conclusion</h2><p>Through the project, I became a lot more familiar with the Bokeh plotting library. Now I feel a bit torn! I've contributed to both the Bokeh and <code>matplotlib</code> projects, and I love them both! I've also come to deeply respect the lead developers of both projects, having interacted with them many times. If I were to make a comment on "where to use what" based on my experience, it'd probably still be the conservative view of "<code>matplotlib</code> for papers, <code>bokeh</code> for the web"... but I'm sure that will be outdated soon. Who knows how the Python plotting landscape will evolve - it's exciting times ahead, and at least for now, I'm happy for the experience driving a dataviz project with Bokeh!</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/using-bokeh-in-fluforecaster"; this.page.url = "http://www.ericmjl.com/blog/2017/6/30/using-bokeh-in-fluforecaster/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

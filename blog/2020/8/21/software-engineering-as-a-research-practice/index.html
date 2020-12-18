@@ -1,0 +1,622 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Software Engineering as a Research Practice - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Software Engineering as a Research Practice</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2020-08-21
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software engineering/">
+      software engineering
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/software skills/">
+      software skills
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>At this year's SciPy 2020,
+a talk and proceedings paper caught my eye:
+"Software Engineering as Research Method".
+(Here are links to <a href="http://procbuild.scipy.org/download/sbenthall-2020_econ_ark">the paper</a> and <a href="https://youtu.be/nxXr0LNdQUU">the talk</a>.)
+In it, the authors, Mridul Seth and Sebastian Benthall,
+detailed the benefits that software skills bring
+to the academic and industrial research communities,
+both from the perspective of making scientific progress
+and from the perspective of pedagogy.</p>
+<p>I've been doing some reflection of my own
+on how software skills have helped me tremendously,
+as a data scientist.
+Here's my thoughts on them,
+using the example of random number generators
+and probability distributions.</p>
+<h2 id="generating-random-numbers">Generating Random Numbers</h2><p>In building scientific software,
+we are recognizing pragmatically useful categories around us,
+and formalizing them in a language.
+Let's look at a really simple example of drawing <code>1</code>s and <code>0</code>s
+from a Bernoulli distribution.</p>
+<h3 id="oppa-imperative-style">Oppa <em>Imperative</em> Style</h3><p>If we were to write a Bernoulli draws generator in Python code,
+we might implement it as follows:</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">draws</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_draws</span><span class="p">):</span>
+    <span class="n">draws</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">))</span>
+</pre></div>
+<p>This is purely imperative style programming.
+Without going too deep (pun intended) into definitions,
+by using mostly built-in primitives of the Python language,
+we are operating at a fairly low-level paradigm.</p>
+<p>Now, let's imagine a world where
+the Bernoulli distribution object does not exist.
+I have a collaborator
+who wants to build on top of Bernoulli distributions
+to make other things.
+They would have to copy/paste this <em>imperative</em> block of code 
+into their programs.</p>
+<h3 id="oppa-functional-style">Oppa <em>Functional</em> Style</h3><p>What can we do to alleviate this, then?</p>
+<p>One thing we can try is to encapsulate it in a function!
+The implementation might look like this:</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+
+<span class="k">def</span> <span class="nf">bernoulli</span><span class="p">(</span><span class="n">num_draws</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="n">draws</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_draws</span><span class="p">):</span>
+        <span class="n">draws</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">p</span>
+</pre></div>
+<p>But wait, what are the semantics of <code>p</code>?
+Is it the probability of obtaining class 1, or class 0?
+The behaviour isn't documented in the class,
+so let's add some of it in.</p>
+<div class="hll"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+
+<span class="k">def</span> <span class="nf">bernoulli</span><span class="p">(</span><span class="n">num_draws</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a sequence of Bernoulli draws.</span>
+
+<span class="sd">    :param p: The probability of obtaining class 0.</span>
+<span class="sd">    :num_draws: The number of Bernoulli draws to make.</span>
+<span class="sd">        Should be greater than zero.</span>
+<span class="sd">    :returns: A list of 1s and 0s.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">draws</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_draws</span><span class="p">):</span>
+        <span class="n">draws</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">draws</span>
+</pre></div>
+<p>Now, we can do a few things with this implementation.
+Firstly, we can write a test for it.
+For example, we can assert that numbers drawn from the Bernoulli
+are within the correct support:</p>
+<div class="hll"><pre><span></span><span class="k">def</span> <span class="nf">test_bernoulli</span><span class="p">():</span>
+    <span class="n">draws</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">draws</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+<p>Secondly, we can compose it in bigger programs, such as a Binomial generator:</p>
+<div class="hll"><pre><span></span><span class="k">def</span> <span class="nf">binomial</span><span class="p">(</span><span class="n">num_draws</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">draws</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_draws</span><span class="p">):</span>
+        <span class="n">num_ones</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+        <span class="n">draws</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num_ones</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">draws</span>
+</pre></div>
+<p>Please excuse my lack of docstrings for a moment!</p>
+<h3 id="oppa-classy-style">Oppa <em>Classy</em> Style</h3><p>This is all good and such,
+but there is another thing we need to consider.
+A random number generator exists logically
+as a sub-category of things
+that a probability distribution can do.
+There are other things that we do
+with probability distributions,
+such as evaluating data
+against a probability distribution's density/mass function.
+After all, generating numbers isn't necessarily
+the only action we want to take
+with a probability distribution.</p>
+<p>The probability density function is unique property
+of a probability distribution;
+it's also an invariant property.
+As such, it is something we can instantiate once
+and forget about later.
+Perhaps using an object-oriented paradigm might be good here.
+Let's see this in action:</p>
+<div class="hll"><pre><span></span><span class="k">class</span> <span class="nc">Bernoulli</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+
+    <span class="k">def</span> <span class="nf">pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">ValueErrror</span><span class="p">(</span><span class="s2">&quot;`data` must be either 0 or 1!&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">p</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p</span>
+
+    <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">draws</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_draws</span><span class="p">):</span>
+            <span class="n">draws</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">draws</span>
+</pre></div>
+<p>Now, with this object,
+we've made using the category of Bernoulli distributions
+much easier!</p>
+<div class="hll"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">draws</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># draw 10 numbers</span>
+
+<span class="n">pdfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">draws</span><span class="p">]</span>  <span class="c1"># calculate pdf of data</span>
+</pre></div>
+<p>An object-oriented paradigm here also works well,
+because the way <code>.rvs()</code> and <code>.pdf()</code> have to be implemented
+for each probability distribution is different,
+but the inputs to those functions are similar
+across the entire category of things<br>
+called "probability distributions".</p>
+<h3 id="a-reflection">A reflection</h3><p>I want to first state up-front
+that this essay is not one
+championing object-oriented programming.
+Those who know me actually know that
+I much prefer functional programming.
+Rather, this essay is about how leveraging
+the natural programming paradigms
+and data structures
+for a problem or model class
+gives us a way to mastering that problem
+or model class.
+After all, building <em>useful</em>
+and <em>verifiable</em>
+models of the world
+is a core activity of the quantitative sciences.</p>
+<p>By exploring and structuring probability distributions in a logical fashion,
+my pedagogical exploration of probability distributions as a modelling tool
+is reinforced with the following main ideas:</p>
+<ol>
+<li>Probability distributions generate random numbers according to a set of rules,</li>
+<li>Probability distributions can evaluate data against its PDF</li>
+</ol>
+<p>And by structuring a probability distribution
+as an object with class methods,
+our mental model of the world of probability distributions
+is made much clearer.</p>
+<h2 id="research-discipline-you-say">"Research discipline", you say?</h2><p>Yes, research discipline, and in both ways.
+Here’s what I mean.</p>
+<p>Discipline (<em>a la</em> "rigour") in thought means thinking <em>clearly</em>
+about how the thing we are working with
+fits <em>most naturally</em> in relation to other things.
+Nudging ourselves to make better software
+makes us better thinkers about a problem class.
+Bringing this level of discipline gives us
+an opportunity to organize
+the little subject matter discipline that we inhabit.</p>
+<p>As a discipline (i.e. "way of thought"),
+well-written software also enables us to build
+on top of others' thoughtfully laid out tooling.
+As such we are</p>
+<h3 id="stability-in-underlying-primitives-matter">Stability in underlying “primitives” matter</h3><p>Contrary to a generation of us that might think
+that "choice in everything is the ultimate",
+a stable base is what a field <em>really</em> needs
+in order for a discipline to flourish and build on top.
+That means agreed-upon foundational definitions,
+that have stood up to the test of time.
+The base being well-tested means we can rely on it;
+having longevity is also
+a very good prior for innate invariance over time.</p>
+<p>If we did not all agree on using shared primitives
+from the language,
+we would never have been able to build on top
+of the shared primitives
+to define a probability distribution the way we did.
+And without defining a probability distribution
+in a uniform but useful way,
+we leave no easy path to build on top of that
+to make other things,
+such as probabilistic programming languages!</p>
+<p>As such, shared stability in the base
+gives us confidence to build on top of it.</p>
+<h3 id="building-and-reinforcing-mental-models">Building and reinforcing mental models</h3><p>In the SciPy talk, and in the proceedings paper,
+Sebastian and Mridul make the point
+that building software enables "constructionist" learning,
+i.e. a learner learns when playing with software.
+I think it is plausible to extend the idea,
+in that a learner can learn well when <em>building</em> software.</p>
+<p>The act of organizing the world around us
+into categories with properties and relationships
+is made <em>concrete</em> when we build software.
+By organizing the conceptual world
+into layers of abstractions and sequences of actions,
+we bring a clarity of thought to the flow of work.
+I would argue that this can <em>only help</em>
+with the construction of
+a consistent and productive view of a field.</p>
+<h3 id="incidental-benefits">Incidental benefits</h3><p>In addition to these conceptual benefits,
+learning how to structure a codebase logically
+and write software tests for your code
+helps with reproducibility.
+Through tests, our code is known to run correctly,
+and hence can be depended upon as stable.
+If structured logically, they can be creatively composed
+to fit a variety of workflows that may show up,
+which can be reliably automated as well.</p>
+<h2 id="application-of-software-skills-a-case-study">Application of software skills: A case study</h2><p>Some of the work I engage in at NIBR
+involves fairly non-standard models.
+These are the models for which
+a <code>scikit-learn</code>-like API
+might not necessarily be available,
+and for which I myself might not necessarily have
+prior training in to rely on.
+As such, there is a process
+of "learning on the job"
+each time I encounter a new model class.
+Over the past two years, for me, that has been recurrent models,
+such as recurrent neural networks (RNNs)
+and autoregressive hidden Markov models (AR-HMMs).</p>
+<p>In both cases, I have worked with interns
+to build a software library for the model core.
+In there, we not only worry
+about the implementation of the core,
+we also worry about how we will use the model,
+and strive to make its API semantics
+match and leverage that of
+the surrounding PyData ecosystem,
+such as following SciPy's API for distributions,
+using <code>scikit-learn</code>'s API for model construction,
+and leveraging <code>jax</code> for speed and expressiveness.</p>
+<h3 id="implementing-the-core">Implementing the core</h3><p>In both model’s cases,
+we started by implementing the core of the model.
+This refers to the key algorithmic steps.
+The exact process of how we get there
+usually involves some trial and error,
+but the general idea is to work out the algorithm
+for a single “unit” of data,
+and work out how that unit of data
+passes through the model
+until it reaches the end point that we want,
+whether that is a “prediction”
+or a “likelihood” calculation.
+Implementing the core forces us
+to more clearly learn
+the semantics of the model class
+and the problem we are trying to solve,
+and hence helps us chart out
+what kind of internal API we might need
+to be productive.</p>
+<h3 id="testing">Testing</h3><p>The act of writing tests for the library
+helps with cross-checking assumptions.
+By checking against "well-known"
+or "trivial" cases,
+we can check that our understanding
+of how the model ought to work
+is correct at a basic level.
+By leveraging property-based testing,
+we can also check that
+our understanding of the model
+is also <em>more generally</em> correct.</p>
+<h3 id="documentation">Documentation</h3><p>We invest time up-front working on documentation.
+By documentation, I mean at least the following:</p>
+<ul>
+<li>Docstrings for every function, and</li>
+<li>Usage examples to cover workflows.</li>
+</ul>
+<p>Investing time up-front for documentation
+is actually a great thing to do.
+By putting in workflow examples,
+we actually leave for ourselves
+copy/paste-able workflows
+that can greatly speed up
+the ramp-up phase of a new project
+that leverages what we have built.</p>
+<h3 id="view-towards-open-sourcing">View towards open sourcing</h3><p>In building dog-fooded,
+usable software around a topic,
+I believe we are empowered to leverage
+the act of organizing knowledge
+into a usable software package
+to also learn that new topic.
+I also build it with a view towards
+an open source release.
+That helps increase the motivation level
+for learning it well,
+because I am placing reputation points on the line!
+(And not just my own:
+usually my interns’ reputations
+are on the line too!)
+Having the public audience
+is something personally motivating.
+Having written all that,
+I will acknowledge too 
+that this is not uniformly true for everybody!</p>
+<h2 id="conclusion">Conclusion</h2><p>Whenever I go to my tribe
+of data scientists at work
+and advocate for better software skills,
+I often get a myriad of responses.
+A small sliver agree with me
+<em>and</em> actively put it into practice.
+A much larger slice agree,
+other factors stop them from getting started;
+these might be lack of knowledge,
+or too much external pressure to deliver results,
+and as such no action is taken.</p>
+<p>With this essay, I attempted to extend 
+what Mridul Seth and Sebastian Benthall elaborated on.
+In particular, I wanted to show
+that “writing good code” is a natural extension
+of “thinking clearly about a problem”,
+and thus suggest that leveraging software skills
+gives us superpowers in our data science work.</p>
+<p>I started with the concrete task of "generating random numbers", 
+showing how thinking clearly about
+how to structure probability distributions
+as classes with innate properties
+gives us clarity in how to interact with them.
+I then showed, through a personal example,
+how common and simple software practices
+can help the practice of data science.</p>
+<p>It is easy to over-read this essay
+and start suggesting that data science teams
+should be run like an engineering team.
+This conclusion would be far from the spirit of my intent.
+Rather, I am merely suggesting that it would be beneficial
+for data scientists to learn better software skills,
+as it would help us think more clearly
+about the problems we encounter,
+and help us accelerate our work.
+My hope is that you, a data scientist who reads this essay,
+will consider adopting and learning basic software skills
+and incorporate them into your work.</p>
+<h2 id="resources-for-learning">Resources for learning</h2><ul>
+<li><a href="https://software-carpentry.org/lessons/">Software Carpentry's Lessons</a></li>
+<li><a href="https://pythonspeed.com/datascience/">Software Engineering for Data Scientists by Itamar Turner-Trauring</a></li>
+<li><a href="https://towardsdatascience.com/software-engineering-fundamentals-for-data-scientists-6c95316d6cc4">Software engineering fundamentals for Data Scientists</a></li>
+<li><a href="http://hiphoff.com/software-engineering-for-data-scientists/">Software Engineering for Data Scientists by Matt Hoffman</a></li>
+<li><a href="http://uwseds.github.io">University of Washington's Software Engineering for Data Scientists</a></li>
+</ul>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/software-engineering-as-a-research-practice"; this.page.url = "http://www.ericmjl.com/blog/2020/8/21/software-engineering-as-a-research-practice/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

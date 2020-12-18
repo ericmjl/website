@@ -1,0 +1,301 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Predicting HIV Drug Resistance Phenotype from Genotype - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Predicting HIV Drug Resistance Phenotype from Genotype</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2015-09-28
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/drug resistance/">
+      drug resistance
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/academia/">
+      academia
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/grad school/">
+      grad school
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p><strong>Note to Reader:</strong> I’d highly suggest reading this blog post on the left half of your screen, and have the <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/Predict%20HIV%20Genotype%20from%20Phenotype%20-%20Custom%20Funcs.ipynb">Jupyter notebook</a> on the right half of your screen. Makes things a bit easier to follow.</p>
+<p>I recently have been writing a proposal to conduct some experiments to predict viral RNA polymerase activity, in some standardized unit, from protein genotype. The main application of this would be to be able to conduct quantitative surveillance in a precise fashion. For example, with HIV, as treatment progresses, the virus accumulates mutations that confer resistance. For a physician treating a patient infected with HIV, would it be possible to determine, from sequence data alone, what would be the degree of predicted viral resistance for that patient’s virus?</p>
+<p>Knowing fully that this problem has been tackled many times in the past from multiple angles, I wanted to know how easily I could set up an ML workflow to go from sequence to predicted drug resistance. The goal of this blog post is to document how easy it was for me to get up and running, using Python packages really well-written Python packages.</p>
+<h2 id="raw-code">Raw Code</h2><p>All of my code can be found on my Github <a href="https://github.com/ericmjl/hiv-resistance-prediction">repository</a>. You can also jump directly to the <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/Predict%20HIV%20Genotype%20from%20Phenotype%20-%20Custom%20Funcs.ipynb">Jupyter notebook</a> that I reference code from in this article.</p>
+<h2 id="data-source-and-preprocessing">Data Source and Preprocessing</h2><p>I sourced the data from the <a href="http://hivdb.stanford.edu">Stanford HIV Drug Resistance Database</a>. Specifically, I downloaded the <a href="http://hivdb.stanford.edu/pages/genopheno.dataset.html">high quality, filtered set</a> of Genotype-to-Phenotype mappings, for protease inhibitors, nucleoside reverse transcriptase inhibitors, and non-nucleoside reverse transcriptase inhibitors. I wrote a few custom functions to preprocess the data, including the following steps:</p>
+<ol>
+<li>Replacing all "<code>-</code>" characters with the consensus sequences. I am guessing that they use the "<code>-</code>" character in place to help highlight where the mutations are; much more human readable.</li>
+<li>Removing sequences that had more than one mutation present. Mostly a function of being lazy than anything else.</li>
+<li>Removing sequences with ambiguous amino acids. These are a bit harder to deal with down the road. From biological background knowledge, it’s unlikely that excluding them would be detrmimental.</li>
+<li>Dropping all conserved amino acid positions. They add nothing to the analysis.</li>
+<li>Binarizing the columns. This transforms the letters of the amino acid into a first-pass feature set, in which the binarized columns indicate whether or not an amino acid is present at a given position or not.</li>
+</ol>
+<p>These are found in my <a href="https://github.com/ericmjl/hiv-resistance-prediction/blob/master/custom_funcs.py">custom_funcs.py</a> module, which I imported into the Jupyter notebooks. Having futzed around for about a day copying/pasting blocks of code, I refactored the code into separate functions for readability, so that only the "business logic" is shown in the notebook.</p>
+<h2 id="train/test-split">Train/Test Split</h2><p>It is a standard practice to split the dataset into a training and test set. K-fold cross-validation is quite easy to do using <code>scikit-learn</code>. Given an <code>X</code> and a <code>Y</code> matrix, to split it into <code>X_train</code>, <code>X_test</code>, <code>Y_train</code>, and <code>Y_test</code>, simply do the function call:</p>
+<p><code>X_train, X_test, Y_train, Y_test = train_test_split(X_binarized, Y)</code></p>
+<h2 id="model-training">Model Training</h2><p>To train models, I used the <a href="http://scikit-learn.org/stable/">scikit-learn</a> package to help. It’s useful to note that <code>scikit-learn</code> has a consistent API - every regressor model has a <code>MODEL.fit()</code> and a <code>MODEL.predict()</code> function. This ‘modular’ style allowed me to wrap the series of function calls into single-line functions, and thus quickly try out a variety of models to see what out-of-box predictive power would be. Using the Random Forest Regressor as an example, I wrapped up the training and plotting phases:</p>
+<p><code># Model Training</code>
+<code>kwargs = {'n_jobs':-1, 'n_estimators':1000}</code>
+<code>rfr, rfr_preds, rfr_mse, rfr_r2 = cf.train_model(*tts_data, model=RandomForestRegressor, modelargs=kwargs)</code></p>
+<p><code># Plotting</code>
+<code>cf.scatterplot_results(rfr_preds, Y_test, rfr_mse, rfr_r2, DRUG, 'Rand. Forest', figsize=std)</code></p>
+<p>Here, <code>cf</code> simply refers to the <code>custom_funcs.py</code> module I wrote to refactor out the repetitive boilerplate code needed.</p>
+<p>The ensemble learners also include feature importances, i.e. an identification of the columns in the data that best predict the outcome of interest. I wrapped the feature importances code to make it easy to plot:</p>
+<p><code>cf.barplot_feature_importances(rfr, DRUG, 'Rand. Forest', figsize=std)</code></p>
+<p>In particular, I used the ensemble learners, which are known to be pretty powerful for learning tasks. And for comparison, I pitted them against a number of linear models as well. As you can see in the notebooks, the ensemble learners outperformed the linear models, at least for a binarized amino acid feature set. This makes intuitive sense - protein sequence to function is non-linear, and highly contextual.</p>
+<h2 id="neural-networks">Neural Networks!</h2><p>One of the things I wanted to highlight here was how <a href="http://danielnouri.org">Daniel Nouri’s</a> <a href="https://github.com/dnouri/nolearn">nolearn</a> package made it easy for me to start experimenting with neural networks. By no means am I a deep learning expert - I consider myself too algebra-blind (but by no means code-blind!) to learn the math behind it all. However, I know that my learning style of diving into the deep end and doing a lot of hands-on trials would help me get a fairly good intuitive grasp of how to do it. So after futzing around on a GPU cluster for a few days trying to get it configured right, I got <code>theano</code>, <code>lasagne</code> and <code>nolearn</code> up and running. (Note: A GPU makes light(er) work of training artificial neural nets. CPUs take around 5-10x more time. Highly recommended to use a GPU with neural nets. Shout-out to my PhD thesis committee member, Mark Bathe, for giving me access to his lab's GPU machine!)</p>
+<p><code>nolearn</code>’s API is, by design, really close to the <code>scikit-learn</code> API. I find this to be a great thing - since neural networks are basically ML models, we get the familiar <code>neural_net.fit()</code> and <code>neural_net.predict()</code> function calls. (The importance of great APIs! Thank you, @dnouri!) The API also makes specifying a neural network architecture quite easy. For example, in the simple feed-forward network architecture that I show in the Jupyter notebook, network layers are specified as a list of parameters, and each layer’s properties can be specified by using named parameters that sync up with the specified names. The comments in my Jupyter notebook in some of the layers show my (rather simple) efforts in experimenting with different architectures. To note, the original structure of the feed-forward network is directly lifted from <a href="http://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/">Daniel Nouri's tutorial</a>, so big thanks to him for publishing it!</p>
+<p>FWIW, I also learned from other experienced Pythonistas (shout out to Rick Landau!) for teaching me <em>not</em> to use binary features on neural networks, something I happily disregarded for this first pass. But I’ve nonetheless still remembered that lesson! And in future iterations, probably I will try to change to non-binary features.</p>
+<h2 id="summary-future-work">Summary &amp; Future Work</h2><p>So to summarize, the <code>scikit-learn</code> API makes it pretty easy to get my hands dirty doing machine learning. By keeping a <code>scikit-learn</code>-like API, <code>nolearn</code> also does a great job of keeping neural nets accessible.</p>
+<p>What else do I think can be done? Well, there’s one idea I’ve been thinking about, to improve the regression score beyond what experimental error in the dataset may limit us to. Think convolutional networks (convnets) and their data input requirements. Basically, most image recognition convnets need a 2D image. But what if I used a convnet that can take in a 3D image instead? Calculating a numerical value, such as the electrostatic charge at every grid point in a static, modelled 3D protein structure, may be much more informative than simply using binarized amino acid columns. A recent paper that I read in <a href="http://www.biomedcentral.com/1471-2164/15/S5/S1">BMC genomics</a> (say "yay" for open access!) uses a computationally efficient shortcut representation to get structural features encoded as well, with great success; I would definitely be game for implementing their version as a first pass as well.</p>
+<p>Apart from that, it's insufficient to run only on a single train/test split. There will always be unavoidable biases in the trained model. Training <code>k</code>-fold splits <code>k</code> times is a common practice I've heard. In papers I've read, usually k-fold splits are trained k times, and the standard deviation reported. I can imagine also doing it n times, to get a better feel for the generalization error (assuming the data are representative of the population).</p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/predicting-hiv-drug-resistance-phenotype-from-genotype"; this.page.url = "http://www.ericmjl.com/blog/2015/9/28/predicting-hiv-drug-resistance-phenotype-from-genotype/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>

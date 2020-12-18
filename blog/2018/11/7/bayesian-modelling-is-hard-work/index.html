@@ -1,0 +1,343 @@
+<!doctype html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap v4beta Imports -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+    </style>
+    <!-- Import stylesheet -->
+    <link rel="stylesheet" href="../../../../../static/pygments.css">
+
+    
+<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<link rel="stylesheet" href="../../../../../static/pygments.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-12498603-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Posthog Analytics -->
+    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
+    <script>
+    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
+    </script> -->
+
+
+    <!-- FontAwesome embed -->
+    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!-- Highlight.js Nord Theme -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <!-- Mathjax -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+</head>
+
+<title>Bayesian Modelling is Hard Work! - Eric J. Ma's Personal Site</title>
+
+<body class="body">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="local-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa fa-home"
+                            aria-hidden="true"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/resume"><i class="fa far fa-file-alt"
+                            aria-hidden="true"></i> Resume</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fa fas fa-pen"
+                            aria-hidden="true"></i> Blog</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/open-source"><i class="fa fa-code"
+                            aria-hidden="true"></i> Open Source</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects"><i class="fa fa-briefcase"
+                            aria-hidden="true"></i> Projects</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/talks"><i class="fa fa-microphone"
+                            aria-hidden="true"></i> Talks</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/teaching"><i class="fa fa-university"
+                            aria-hidden="true"></i> Teaching</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/bio"><i class="fa fa-user"
+                            aria-hidden="true"></i> Bio</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        
+
+<div class="card bg-dark-nord">
+  <div class="card-header">
+    
+<!-- Set title style -->
+
+<h1>Bayesian Modelling is Hard Work!</h1>
+
+
+<!-- Append author -->
+<small class="text-muted">
+  <p>
+    written by
+    
+    <a class="author" href="https://twitter.com/ericmjl">Eric J. Ma</a>
+    
+    on 2018-11-07
+
+    
+    | tags:
+    <!-- Append tags after author -->
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/bayesian/">
+      bayesian
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/data science/">
+      data science
+    </a>
+    <i class="fas fa-tag"></i>
+    <a class="tags" href="../../../../tag/statistics/">
+      statistics
+    </a>
+    
+  </p>
+  
+</small>
+
+  </div>
+  <div class="card-body">
+    <!-- Put post body -->
+    <p>It’s definitely not easy work; anybody trying to tell you that you can "just apply this
+model and just be done with it" is probably wrong.</p>
+<h2 id="simple-models">Simple Models</h2><p>Let me clarify: I agree that doing the first half of the statement, "just apply this model",
+is a good starting point, but I disagree with the latter half, "and just be done with it". I
+have found that writing and fitting a very naive Bayesian model to the data I have is a very
+simple thing. But doing the right thing is not. Let’s not be confused: I don’t mean a Naive
+Bayes model, I mean naively writing down a Bayesian model that is structured very simply
+with the simplest of priors that you can think of.</p>
+<p>Write down the model, including any transformations that you may need on the variables, and
+then lazily put in a bunch of priors. For example, you might just start with Gaussians
+everywhere a parameter could take on negative to positive infinity values, or a bounded Half
+Gaussian if it can only take values above (or below) a certain value. You might assume
+Gaussian-distributed noise in the output.</p>
+<p>Let’s still not be confused: Obviously this would not apply to a beta-bernoulli/binomial
+model!</p>
+<p>Doing the right thing, however, is where the tricky parts come in. To butcher and mash-up
+two quotes:</p>
+<blockquote><p>All models are wrong, but some are useful (Box), yet some models are more wrong than others (modifying from Orwell).</p>
+</blockquote>
+<h2 id="critiquing-models">Critiquing Models</h2><p>When doing modeling, a series of questions comes up:</p>
+<ul>
+<li>Do my naive assumptions about "Gaussians everywhere" hold?</li>
+<li>Given that my output data are continuous, is there a better distribution that can describe
+the likelihood?</li>
+<li>Is there are more principled prior for some of the variables?</li>
+<li>Does my link function, which joins the input data to the output parameters, properly
+describe their relationship?</li>
+<li>Instead of independent priors per group, would a group prior be justifiable?</li>
+<li>Does my model yield posterior distributions that are within bounds of reasonable ranges,
+which come from my prior knowledge? If it does not, do I need to bound my priors instead of
+naively assuming the full support for those distributions?</li>
+</ul>
+<p>I am quite sure that this list is non-exhaustive, and probably only covers the bare minimum
+we have to think about.</p>
+<p>Doing these model critiques is not easy. Yet, if we are to work towards truthful and
+actionable conclusions, it is a necessity. We want to know ground truth, so that we can act
+on it accordingly, and hence take appropriate actions.</p>
+<h2 id="prior-experience">Prior Experience</h2><p>I have experienced this modeling loop that Mike Betancourt describes (in his <a href="https://github.com/betanalpha/jupyter_case_studies/blob/master/principled_bayesian_workflow/principled_bayesian_workflow.ipynb">Principled
+Bayesian Workflow notebook</a>) more than once. One involved count data, with a data
+scientist from TripAdvisor last year at the SciPy conference; another involved estimating
+cycle time distributions at work, and yet another involved a whole 4-parameter dose-response
+curve. In each scenario, model fitting and critique took hours at the minimum; I’d also note
+that with real world data, I didn’t necessarily get to the "win" was looking for.</p>
+<p>With the count data, the TripAdvisor data scientist and I reached a point where after 5
+rounds of tweaking his model, we had a model that fit the data, and described a data
+generating process that mimics closely to what we would expect given his process. It took us
+5 rounds, and 3 hours of staring at his model and data, to get there!</p>
+<p>Yet with cycle time distributions from work, a task ostensibly much easier ("just fit a
+distribution to the data"), none of my distribution choices, which reflected what I thought
+would be the data generating process, gave me a "good fit" to the data. I checked by many
+means: K-S tests, visual inspection, etc. I ended up abandoning the fitting procedure, and
+used empirical distributions instead.</p>
+<p>With a 4-parameter dose-response curve, it took me 6 hours to go through 6 rounds of
+modeling to get to a point where I felt comfortable with the model. I started with a
+simplifying "Gaussians everywhere" assumption. Later, though, I hesitantly and tentatively
+putting in bound priors because I knew some posterior distributions were completely out of
+range under the naive assumptions of the first model, and were likely a result of
+insufficient range in the concentrations tested. Yet even that model remained unsatisfying:
+I was stuck with some compounds that didn’t change the output regardless of concentration,
+and that data are fundamentally very hard to fit with a dose response curve. Thus I the next
+afternoon,I modeled the dose response relationship using a Gaussian Process instead. Neither
+model is completely satisfying to the degree that the count data model was, but both the GP
+and the dose-response curve are and will be roughly correct modeling choices (with the GP
+probably being more flexible), and importantly, both are actionable by the experimentalists.</p>
+<h2 id="thoughts">Thoughts</h2><p>As you probably can see, whenever we either (1) don’t know ground truth, and/or (2) have
+messy, real world data that don’t fit idealized assumptions about the data generating
+process, <strong>getting the model "right" is a very hard thing to do!</strong> Moreover, data are
+insufficient on their own to critique the model; we will always need to bring in prior
+knowledge. Much as all probability is conditional probability (Venn), all modeling involves
+prior knowledge. Sometimes it comes up in non-modellable ways, though as far as possible,
+it’s a good exercise to try incorporating that into the model definition.</p>
+<h2 id="canned-models">Canned Models?</h2><p>Even with that said, I’m still a fan of canned models, such as those provided by
+<code>pymc-learn</code> and <code>scikit-learn</code> - provided we recognize that their "canned" nature and are
+equipped to critique and modify said models. Yes, they provide easy, convenient baselines
+that we can get started with. We can "just apply this model". But we can’t "just be done
+with it": the hard part of getting the model right takes much longer and much more hard
+work. <strong><em>Veritas!</em></strong></p>
+
+  </div>
+  <div class="card-footer">
+    <p>
+      <i>I send out a monthly newsletter with tips and tools
+        for data scientists. Come check it out at
+        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+    </p>
+    <p>
+      <i>If you would like to receive deeper, in-depth content
+        as an early subscriber, come support me on
+        <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
+    </p>
+  </div>
+</div>
+
+
+<a name="disqus"></a>
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/blog/bayesian-modelling-is-hard-work"; this.page.url = "http://www.ericmjl.com/blog/2018/11/7/bayesian-modelling-is-hard-work/"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//ericmjl.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="external-links">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/ericmjl"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://twitter.com/ericmjl"><i class="fab fa-twitter" aria-hidden="true"></i>
+                        Twitter</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://octodon.social/web/accounts/7711"><i class="fab fa-mastodon" aria-hidden="true"></i>
+                        Octodon</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://github.com/ericmjl"><i class="fab fa-github" aria-hidden="true"></i>
+                        GitHub</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://stackoverflow.com/users/1274908/ericmjl"><i class="fab fa-stack-overflow" aria-hidden="true"></i>
+                        Stack Overflow</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="http://shortwhale.com/ericmjl"><i class="far fa-envelope" aria-hidden="true"></i>
+                        Contact Me</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ericmjl.github.io/blog.xml"><i class="fas fa-rss" aria-hidden="true"></i>
+                        Blog RSS</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <!-- Boostrap JS imports -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
