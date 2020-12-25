@@ -32,7 +32,7 @@
 {% endmacro %}
 
 {% macro render_blog_post(post, from_index=false) %}
-<div class="card bg-dark-nord">
+<div class="card">
   <div class="card-header">
     {{ render_blog_header(post, from_index) }}
   </div>
@@ -72,7 +72,7 @@
 
 
 {% macro render_blog_card(post) %}
-<div class="card bg-dark-nord">
+<div class="card">
   <div class="card-body">
     {{ render_blog_header(post, from_index=True) }}
     {% if post.summary %}
