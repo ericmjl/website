@@ -1,46 +1,46 @@
 {% macro render_project_card(project) %}
-<div class="col mb-4">
-  <div class="card bg-dark-nord h-100">
-    {{ render_card_header(project) }}
+<!-- <div class="col mb-4"> -->
+<div class="card h-100">
+  {{ render_card_img_top(project) }}
+  <div class="card-header">
+    <h5 class="card-title">{{ project.title }}</h5>
+  </div>
+  <div class="card-body">
+    {{ project.summary }}
+  </div>
+  <div class="card-footer">
+    {% for blk in project.body.blocks %}
 
-    <div class="card-body">
-      <h5 class="card-title">{{ project.title }}</h5>
-      {{ project.summary }}
-    </div>
-    <div class="card-footer">
-      {% for blk in project.body.blocks %}
+    {% if blk._flowblock == "resource" %}
+    <a href="{{ blk.url }}" class="card-link">{{ blk.label }}</a>
+    {% endif %}
 
-      {% if blk._flowblock == "resource" %}
-      <a href="{{ blk.url }}" class="card-link">{{ blk.label }}</a>
-      {% endif %}
+    {% if blk._flowblock == "github" %}
+    <a href="{{ blk.url }}" class="card-link">GitHub Repository</a>
+    {% endif %}
 
-      {% if blk._flowblock == "github" %}
-      <a href="{{ blk.url }}" class="card-link">GitHub Repository</a>
-      {% endif %}
+    {% if blk._flowblock == "notebooks" %}
+    <a href="{{ blk.url }}" class="card-link">Notebooks</a>
+    {% endif %}
 
-      {% if blk._flowblock == "notebooks" %}
-      <a href="{{ blk.url }}" class="card-link">Notebooks</a>
-      {% endif %}
+    {% if blk._flowblock == "slides" %}
+    <a href="{{ blk.url }}" class="card-link">Slides</a>
+    {% endif %}
 
-      {% if blk._flowblock == "slides" %}
-      <a href="{{ blk.url }}" class="card-link">Slides</a>
-      {% endif %}
+    {% if blk._flowblock == "book" %}
+    <a href="{{ blk.url }}" class="card-link">Book</a>
+    {% endif %}
 
-      {% if blk._flowblock == "book" %}
-      <a href="{{ blk.url }}" class="card-link">Book</a>
-      {% endif %}
+    {% endfor %}
+    <a href="{{ project|url }}" class="card-link">Details</a>
 
-      {% endfor %}
-      <a href="{{ project|url }}" class="card-link">Details</a>
-
-    </div>
   </div>
 </div>
-
+<!-- </div> -->
 {% endmacro %}
 
-{% macro render_card_header(project) %}
-<div class="card-img-top bg-dark-nord">
+{% macro render_card_img_top(project) %}
+<div class="card-img-top bg-light">
   {{ render_youtube(project) }}
 </div>
 {% endmacro %}
@@ -55,10 +55,13 @@
 
 
 {% macro render_project(project) %}
-<div class="card bg-dark-nord">
-  {{ render_card_header(project) }}
-  <div class="card-body bg-dark-nord">
-    <h4 class="cart-title">{{ project.title }}</h4>
+<div class="card bg-light">
+  {{ render_card_img_top(project) }}
+  <div class="card-header">
+    <h4 class="card-title">{{ project.title }}</h4>
+  </div>
+  <div class="card-body bg-light">
+    {{ project.summary }}
     {% for blk in project.body.blocks %}
     {% if blk._flowblock != "youtube" %}
     {{ blk }}

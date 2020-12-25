@@ -11,7 +11,6 @@
             padding-top: 70px;
             padding-bottom: 70px;
         }
-
     </style>
     <!-- Import stylesheet -->
     <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
@@ -53,6 +52,7 @@
     <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
 
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/nordstrap.css">
     <link rel="stylesheet" href="/static/css/custom.css">
 
     <!-- Mathjax -->
@@ -69,7 +69,7 @@
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 
 <body class="body">
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark-nord">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
             data-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -89,8 +89,7 @@
     <div class="container">
         {% block body %}{% endblock %}
     </div>
-
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark-nord">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
             data-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
             aria-label="Toggle navigation">
