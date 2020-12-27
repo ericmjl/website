@@ -1,6 +1,4 @@
-title:
-
-Moving my CI pipelines to GitHub Actions and Azure Pipelines 
+title: Moving my CI pipelines to GitHub Actions
 ---
 author: Eric J. Ma
 ---
@@ -16,8 +14,6 @@ tutorial
 continuous integration
 pipelines
 github actions
-azure pipelines
-data engineering
 ---
 body:
 
@@ -36,44 +32,54 @@ In this blog post,
 I'm going to document what I did and why,
 as well as lessons learned from migrating a CI pipeline off one provider onto another.
 
-## Splitting testing and deploy pipelines to save on build times
+## Engineering the pipeline for modularity
 
 The biggest architectural change I did here
-was to split my "continuous testing" and "continuous deployment" pipelines
-between Azure Pipelines and GitHub Actions respectively.
-Previously, on Travis CI, it was just one big build pipeline,
-with deploys that were done only on merge to master.
-Why the change?
-Let me explain - it's primarily an economics question.
+was to split up my build pipelines into logical "jobs".
+I defined three logical stages:
 
-Continuous testing means my tests run on _every single commit_,
-and ideally on an isolated branch.
-With limited build minutes on Travis CI and on GitHub Actions,
-and an execution time of approximately 10-13 minutes
-each time I run the integration tests,
-I would burn through my build minutes pretty quickly.
-On the other hand,
-Azure Pipelines guarantees
-unlimited build minutes for open source projects.
-This makes continuous testing in PR branches a feasible proposition.
+1. Building the environment
+2. Building the website (which requires the built environment)
+3. Building the LeanPub book (which also requires the built environment)
 
-For deployment,
-Network Analysis Made Simple
-does two deploys from one repository:
-one for the GitHub Pages for the website,
-and the other to LeanPub for the eBook version.
-These steps should only run on every push to the `master` branch
-(legacy name,
-please don't flame).
-In building both,
-the notebooks have to be programmatically executed from top to bottom,
-though with some injected modifications in there.
-The total time it takes to do so is about 3-5 minutes each,
-and both require the same starting `conda` environment.
+Building the environment takes approximately 3-6 minutes
+(depending on the performance of the machine that runs the install steps).
 
-GitHub Actions allows me to write jobs that depend on one another,
-and is parallelized by default,
-so using GitHub Actions for the deploy step was a no-brainer:
+Building the website requires executing all of the notebooks from top to bottom.
+In authoring the notebooks,
+I try my best to ensure that they can be executed without errors
+_in under 15 seconds_,
+though 1 minute is the upper-bound acceptable.
+MkDocs is the site building engine,
+while `mknotebooks` gives me the ability to execute the notebooks as part of the build.
+(A little interjection here:
+I also put in a PR to `mknotebooks` to enable insertion of a Binder link at the top of a notebook,
+so that readers can directly open a Binder session with the notebook!)
+The site that gets built is then force-pushed into the `gh-pages` branch of the repository.
+In total, this step takes about 5-7 minutes.
+
+Building the LeanPub book also requires executing all of the notebooks programmatically.
+I take advantage of the MkDocs configuration file to order the content.
+I used a Jupyter notebook to prototype the script that builds the content,
+though I also subsequently went lazy
+and decided to just execute the notebook
+from top-to-bottom directly in a programmatic fashion too.
+(I am not sure when I'll come to regret this move,
+but hey, at least there's in-line documentation (Markdown cells)
+that explains what I'm trying to accomplish.)
+The manuscript that is built gets force-pushed to the `leanpub` branch of the repository,
+and I do a curl call to the LeanPub API to trigger a new build of the book.
+In total, this step takes about 5-7 minutes as well.
+
+## Experimenting with parallel builds
+
+Building the website and LeanPub book can run in parallel
+as soon as the environment is built.
+Hence, I took advantage of this fact on GitHub Actions, which:
+
+1. Allows me to specify which jobs depend on each other, and
+2. Automatically runs builds in parallel.
+
 I could write the pipeline such that it would build the environment once,
 package it up as an artifact,
 and re-use the environment in both of the downstream steps,
@@ -82,50 +88,29 @@ thus allowing me to parallelize the two steps.
 ## Engineering the pipeline to be modular
 
 The logical steps involved in both of the pipelines
-are identical except for the deployment,
-because in my project's case,
+are identical except for the deployment
+because in the case of Network Analysis Made Simple,
 "testing" equals to "ensuring the notebooks execute from top to bottom".
-(Effectively,
-I have no unit tests on the tutorial repo,
-just integration tests.) As such,
-I took this opportunity to engineer the pipelines
+(Effectively, I have no unit tests on the tutorial repo, just integration tests.)
+As such, I took this opportunity to engineer the pipelines
 to be modular and work on both systems.
 
-To start,
-I made the build steps into individual bash scripts
+To start, I made the build steps into individual bash scripts
 that are stored in the `scripts/ci/` directory.
-The scripts stored here are,
-in order of operation:
+The scripts stored here are, in order of operation:
 
-1. `install_anaconda.sh`:
-used to grab Anaconda and install it in the build environment.
-2. `build_environment.sh`:
-used to build the `conda` environment for the tutorial,
+2. `build_environment.sh`: used to build the `conda` environment for the tutorial, 
 and package it up using `conda-pack`.
-3. `build_leanpub.sh`:
-used to build the source files that power the LeanPub book.
-4. `build_website.sh`:
-used to build the files that are hosted on GitHub Pages.
+3. `build_leanpub.sh`: used to build the source files that power the LeanPub book.
+4. `build_website.sh`: used to build the files that are hosted on GitHub Pages.
 
-In terms of workflow,
-the order of operations is:
+In terms of workflow, the order of operations is:
 
 ```
-install_anaconda.sh
-  -> build_environment.sh
-    -> build_leanpub.sh
-    -> build_website.sh
+build_environment.sh
+  -> build_leanpub.sh
+  -> build_website.sh
 ```
-
-In Azure Pipelines,
-because parallelization isn't allowed,
-I am forced to call on them sequentially.
-This is not an issue,
-though,
-as all I need is for the whole integration test to eventually finish executing.
-Azure Pipelines also comes with
-auto-cancellation of previous builds upon new pushes,
-which is a nice thing.
 
 In GitHub Actions,
 I structured the pipelines as different "jobs".
@@ -141,19 +126,21 @@ This allowed me to share the built environment
 between the job that builds the environment
 and the jobs that builds+deploys the website and book.
 
-For the deployment steps,
-the two were similar,
+The two deployment steps were quite similar,
 with the only difference being the build script that is called.
-Otherwise,
-before the build script,
+Otherwise, before the build script,
 I would use the [`actions/download-artifact@v2` action](https://github.com/actions/download-artifact)
 to download the built artifact from the previous job,
 and execute their respectively configured
 [`peaceiris/actions-gh-pages@v3` actions](https://github.com/peaceiris/actions-gh-pages)
 to deploy the websites.
-On the LeanPub push,
-I would also execute a `curl` command to a web API (available only to Pro users,
+On the LeanPub push, I would also execute a `curl` command to a web API (available only to Pro users,
 which I gladly paid for) to trigger the publishing of a new version.
+
+Finally, I wanted to make sure that my code adhered to `black` code standards.
+As such, I made an extra job that runs independently,
+in which I install a lightweight Python environment
+which I use to run code checks against the codebase.
 
 One advantage I see in having parallel jobs run
 is that I can more quickly identify when an issue crops up.
@@ -161,10 +148,12 @@ Because the LeanPub publishing step
 does not logically depend on the GitHub pages publishing step,
 I can avoid the scenario where the GitHub pages step has to finish first
 before I can see a bug that happens in the LeanPub step.
+Additionally, if my code is not up to snuff,
+I can quickly uncover that problem through the parallel code quality check.
 
 ## Leveraging bash hacks to help with conda environment activation
 
-Because conda environment activation works non-uniformly in Azure Pipelines and GitHub Actions,
+Because conda activation can behave a bit non-uniformly,
 I had to resort to a little bash hack
 that allowed me to execute the environment activation uniformly.
 The specific line I used was:
@@ -175,16 +164,26 @@ source nams_env/bin/activate || conda activate nams || source activate nams
 
 These are three ways to activate an environment.
 The first activates a `conda-pack`ed environment; the second way is the modern way,
-while the third way is the legacy way (used by Azure Pipelines).
+while the third way is the legacy way.
+I layered them this order just in case one of them failed.
 
-By putting this line at the top of both `build_leanpub.sh` and `build_website.sh`,
-I could ensure that the same shell script could be used in both Azure Pipelines and GitHub Actions.
-This would be a huge advantage for maintenance,
-as I would only have a defined single source of truth for both testing and deployment scripts,
-ensuring parity between testing and deployment.
-(Side note:
-I think this is under-appreciated amongst data scientists,
-but we need to think about this a lot more.)
+## Leveraging caches to speed up build times
+
+I also used artifact caching to speed up my build times.
+In particular, I did not want to wait for all the notebooks to be executed
+just to test-drive changes to the CI system
+unless those changes would directly have an effect on the outputs made.
+As such, I inserted a cache step in each of the jobs.
+
+For building the environment,
+if none of `environment.yml` and `build_environment.sh` changed,
+then the CI system would use the cached version of the gzipped environment.
+
+For building the website and book,
+if none of the notebooks, environment, or build scripts changed,
+then the CI system would skip building those artifacts.
+In doing so, I could cut out about 3-4 minutes of parallel build times
+if nothing that would affect the outputs were touched.
 
 ## View the source files for my pipelines
 
@@ -192,11 +191,10 @@ If you're interested in studying my pipelines,
 you can find them on [the GitHub repository](https://github.com/ericmjl/Network-Analysis-Made-Simple).
 In particular, you'll want to view:
 
-- [the Azure Pipeline config file](https://github.com/ericmjl/Network-Analysis-Made-Simple/blob/master/azure-pipelines.yml)
 - [the GitHub actions config file](https://github.com/ericmjl/Network-Analysis-Made-Simple/blob/master/.github/workflows/deploy.yaml)
 - [the collection of shell scripts](https://github.com/ericmjl/Network-Analysis-Made-Simple/tree/master/scripts/ci)
 
-## Building CI pipelines still takes a long time
+## Building CI pipelines still takes skill and time
 
 The process of building CI pipelines is
 getting ever more familiar as I begin to learn some of the idioms here.
@@ -205,8 +203,8 @@ I used to assume a single build environment when using Travis CI,
 but in engineering the GitHub Actions pipeline,
 I realized we can build "artifacts" (like the packaged up conda environment)
 that get re-used later on.
-All it takes (oh yeah,
-"all it takes") is being absolutely sure about where which file is placed,
+All it takes (oh yeah, "all it takes")
+is being absolutely sure about where which file is placed,
 and where your current working directory lives.
 From my experiences building CI pipelines,
 I think the hidden skill that nobody talks about
@@ -219,10 +217,9 @@ If you can do this,
 you can build CI pipelines and debug them faster than others can.
 
 Which then brings me to speed.
-CI pipelines still take a long time to build! That is because each CI system,
-whether it is AppVeyor,
-Travis CI,
-Azure Pipelines or GitHub Actions,
+CI pipelines still take a long time to build!
+That is because each CI system,
+whether it is AppVeyor, Travis CI, Azure Pipelines or GitHub Actions,
 approaches the ergonomics of building a pipeline slightly differently.
 From the config file syntax
 to the idioms of how the filesystem/runtime environment
@@ -236,9 +233,8 @@ these are assumptions about the state of our environment that:
 For those reasons,
 building pipelines still takes about a day or so of time investment,
 maybe less if you're seasoned and know the idioms well enough.
-Yes,
-at its core,
-pipeline building is really nothing more than shuffling files around and executing them,
+Yes, at its core, pipeline building is really nothing more than
+shuffling files around and executing them,
 but knowing _how_ they get shuffled around
 and _why_ they may be present or not in the right directories
 will give you a leg up in debugging the pipeline.
@@ -246,32 +242,35 @@ You might be able to get away with templates that you copy/pasta from project to
 but without a deeper understanding of the system you're working with,
 you'll find it difficult to get unstuck and debug anything that might crop up.
 
-## Which is better, Azure Pipelines or GitHub Actions?
+## What are your thoughts on GitHub Actions?
 
-Both are by Microsoft the entity,
-but both are engineered very differently.
+Firstly, I think GitHub Actions is really awesome because of its
+unlimited _parallel_ builds for open source projects.
+With this, I can keep the continuous integration systems running on my OSS projects
+in a time-effective (and definitely cost-effective) fashion.
 
-From my experience,
-I'd say the GitHub Actions documentation is much better written and easier to follow.
-As such,
-it is much easier to build pipelines using GitHub Actions than Azure Pipelines.
-Also,
-the availability of a Marketplace of community-developed actions is awesome.
-I could leverage others' actions to avoid expensive build steps.
+Secondly, I found the documentation for GitHub Actions to be very user-friendly.
+There is something about the way the docs are written
+that makes them easy to follow.
+My hunch here is that the examples that are shown on the docs
+are "minimally complex", or "minimally non-trivial",
+which is the right balance between being easy to follow,
+having enough material to transfer to another non-trivial workflow,
+but not being over-engineered or overwhelming that it becomes hard to follow.
+(The latter description reminds me a lot about Azure Pipeline's documentation...)
 
-Also,
-nothing really beats the graph view! Take a look at it below.
+Finally, nothing really beats the graph view!
+Take a look at it below.
 
 ![](./github-actions-graph-view.png)
 
-That said,
-I think the biggest thing that Azure Pipelines has going for it
-is the unlimited build minutes for open source projects.
-This is a lifesaver for projects I am involved with,
-such as the [`pyjanitor` project](https://github.com/ericmjl/pyjanitor),
-that follow GitFlow workflow and have automated testing available on every single commit.
-Without this feature,
-we would be left trying to conserve minutes,
-just like I have to do on Netlify (for website build previews) and Travis CI.
+It's gorgeous and helps me visually see the status of the pipeline.
+
+In summary, I think GitHub Actions has a great set of
+ergonomic and economic value propositions.
+I'm more than happy to pay a cup of coffee a month as a Pro-tier supporter
+because I think GitHub is doing the right things
+in providing unlimited parallel builds for OSS projects.
+If you haven't tried it out, I'd definitely encourage you to do so!
 ---
-summary: I had a bit of an adventure today beginning my move off Travis CI and onto GitHub Actions + Azure Pipelines. Come read about it!
+summary: I had a bit of an adventure today beginning my move off Travis CI and onto GitHub Actions. GitHub Actions is a wonderfully built tool, and I'm a fan. Come check it out!
