@@ -25,9 +25,9 @@
   {% endif %}
 
   {% if pagination.page == pagination.pages %}
-  <a href="/blog/page/{{ pagination.pages }}" class="btn btn-secondary-nord disabled">&raquo;</a>
+  <a href="/blog/page/{{ pagination.pages }}/" class="btn btn-secondary-nord disabled">&raquo;</a>
   {% else %}
-  <a href="/blog/page/{{ pagination.pages }}" class="btn btn-secondary-nord">&raquo;</a>
+  <a href="/blog/page/{{ pagination.pages }}/" class="btn btn-secondary-nord">&raquo;</a>
   {% endif %}
 </div>
 {% endmacro %}
