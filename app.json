@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "dokku": {
-      "predeploy": "cd /app/www && mkdir -p site && lektor build -O site"
-    }
-  }
-}
-
