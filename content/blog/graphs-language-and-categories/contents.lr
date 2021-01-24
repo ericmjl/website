@@ -1,0 +1,148 @@
+title: Graphs, language, and categories
+---
+author: Eric J. Ma
+---
+body:
+
+Just as I began vacation, my brain started going into overdrive.
+(This is a quirk of my head.)
+One of the epiphanies I arrived at involved graphs, programming languages, and categories.
+
+## Let's talk about multiple dispatch
+
+Multiple dispatch is a programming construct.
+It essentially allows us to write functions that:
+
+1. Share the same name, but
+2. Exhibit different behaviour based on the _types_ of the arguments passed in.
+
+This idea is baked into the Julia programming language
+and is part of what makes Julia so composable.
+Python programmers don't have this luxury,
+partially because multiple dispatch isn't part of the language design
+and partially because of namespaces.
+That said, Matt Rocklin and a few others
+maintain the [`multipledispatch`][mdisp] Python package,
+which implements multiple dispatch in a pretty sane fashion.
+To borrow the example from the package,
+we might design a function called `add`,
+but need it to operate differently
+depending on whether we put in integers or Python objects:
+
+[mdisp]: https://pypi.org/project/multipledispatch/
+
+```python
+@dispatch(int, int)
+def add(a, b):
+    """Adds two numbers together."""
+    return a + b
+
+@dispatch(object, object)
+def add(a, b):
+    """Performs a concatenation between two strings."""
+    return f"{a}{b}"
+```
+
+Is this a good idea?
+I used to wonder when I'd know enough to answer the question.
+I think I do now.
+But first, we have to take a detour to graphs.
+
+## Let's talk about graphs
+
+Graphs are a data structure that allows us to model
+entities and their relationships.
+Entities are nodes, while relationships are edges.
+I usually teach a tutorial at PyCon, SciPy and ODSC
+titled "[Network Analysis Made Simple][nams]",
+in which we use [NetworkX][nx] as a tool to learn applied graph theory.
+It's been running since 2014, and I've learned a lot,
+made a lot of friends,
+and had new opportunities spring up through teaching it.
+
+[nams]: https://ericmjl.github.io/Network-Analysis-Made-Simple/
+[nx]: https://networkx.org/
+
+As a data model, graphs are handy for reasoning
+because for our logic to make sense,
+we must be extremely clear on our definitions.
+What exactly constitutes a node?
+What exactly constitutes a relationship?
+What connections are allowed to exist between nodes
+(or, surprise! _categories_ of nodes)?
+These answers must be precise.
+
+This then brings us to categories.
+
+## Let's talk about categories
+
+I think it was from [Eric Schles][eric_schles]
+that I learned that there was this entire field of mathematics
+called "category theory".
+(This was likely ODSC 2017,
+while both of us were chatting in the speaker's lounge.)
+Also, I started reading the blog of [Tai Danae-Bradley][tdb],
+who trained as a category theorist at NYU and even has a book on it.
+From [one of her excellent blog posts][categorytheory],
+I learned the core of category theory is about:
+"...collections of objects that can relate to each other via morphisms..."
+
+[eric_schles]: https://github.com/EricSchles
+[tdb]: https://www.math3ma.com
+[categorytheory]: https://www.math3ma.com/blog/what-is-category-theory-anyway
+
+Sounds familiar... it sounds like a graph!
+
+## So... what about multiple dispatch?
+
+If you stepped back one moment and looked carefully at the `add` example,
+you'll notice that we have a microcosm of category theory
+being brought to life in a programming language.
+
+There's a category of objects called _objects_,
+and there's a (sub-)category of objects called _integers_.
+There are relations between integers called _add_,
+and a similar relation between objects, also called _add_.
+Both have a relationship named _add_,
+but each _add_ differs because the "integers" case
+is a particular case that needs to be handled differently from the "objects" case.
+
+You could construct a graph to represent it all, one that looks like this:
+
+```python
+(int, int) --add--> int
+(obj, obj) --add--> str
+```
+
+If we think about it carefully,
+because integers are a sub-category of objects,
+the second case `(obj, obj)` covers the child cross-type cases.
+
+So what gives, what's the epiphany?
+
+_Multiple dispatch works because linguistically,
+we might need to reuse the same category of relations,
+as indicated by their shared name,
+for different object categories,
+for no other reason than doing so
+is the semantically correct thing to do for our problem._
+And doing so allows us to leverage composition
+to write cleaner and interoperable programs.
+
+---
+pub_date: 2020-12-18
+---
+tags:
+
+math
+graph theory
+category theory
+programming
+---
+twitter_handle: ericmjl
+---
+summary:
+
+I had an epiphany over the week,
+connecting graphs, programming, and category theory.
+I might be wrong, but if you're intrigued, come on in and check it out.
