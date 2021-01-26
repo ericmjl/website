@@ -5,9 +5,8 @@ channels:
 dependencies:
 - python>=3.7
 - pip
-- lektor
+- lektor>=3.2.0
 - flask
 - requests
 - jinja2
-- werkzeug=0.15.6
 - mamba
