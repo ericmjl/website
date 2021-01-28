@@ -1,0 +1,109 @@
+title: Experience with M1 MacBook Air
+---
+author: Eric J. Ma
+---
+body:
+
+Though I've been a Mac user for close to 15 years now, it's the first time that I've had to experience an architecture change. Having upgraded from an old 12" MacBook to a new 13" MacBook Air, I wanted to quickly document some of my early experiences with the M1 MacBook Air.
+
+## Initial Ordering
+
+The online shopping experience is something that I have to mention and give full credit to Apple. They've enabled customers to order a MacBook Air at noon and get it by 2:30 pm, at least in the Boston area. I think this was possible because the model I ordered, a 16GB RAM + 1TB SSD MacBook Air, was available and in-stock in their South Shore store. Good move, Apple; I was pleasantly delighted at being able to make this purchase. (Hopefully, I get a good four years of use out of it, as I did for my little MacBook!)
+
+## Installing tooling
+
+My tools primarily involve the following:
+
+1. Homebrew for system-wide packages.
+2. Anaconda for the Python data science stack.
+3. VSCode for software development.
+4. Jupyter for notebook experimentation.
+
+I started by installing as much as I could of my stack under native (ARM) mode rather than emulated (x86) mode. Here's my report on what worked and what didn't.
+
+### Homebrew
+
+As of 26 Jan 2021, Homebrew has partial support for the M1 ARM processors. Installing Homebrew was not difficult. Open up the _native_ Terminal, type in the official Homebrew installation commands, and see it go to work. No problems encountered.
+
+As an experiment, I removed the ARM-compatible Homebrew installation and re-installed it in emulation mode. To do this, I opened up the Hyper terminal, which was not ported over to M1 yet, and ran the official Homebrew installation commands. Likewise, I encountered no problems. As I have been a bit lazy, I did not revert to ARM Homebrew.
+
+ARM Homebrew and x86 Homebrew get installed into two different directories. The ARM `brew` goes into `/opt/homebrew/bin`, while the x86 version goes into the usual `/usr/local/bin`. Just keep this point in mind; you might find it handy in the future.
+
+### Anaconda
+
+Following the [best practices I outline in my knowledge base](https://ericmjl.github.io/data-science-bootstrap-notes/install-anaconda-on-your-machine/), I install Miniconda on my machine. After reading some blog posts online, I discovered that there's [miniforge](https://github.com/conda-forge/miniforge), a Miniconda distribution that comes with native ARM compatibility. As such, I started by installing that first. 
+
+Soon, however, I found that there were some environments that I couldn't build. These included [the one for this website](https://github.com/ericmjl/website/blob/master/environment.yml), and anything involving JAX. Initially, I considered living with the situation and using a remote development machine, but I soon felt that nagging feeling that I was leaving a lot of awesome compute on the table by doing that. As such, I uninstalled Miniforge and installed Miniconda in emulation mode. As with Homebrew, I got Miniconda going by running the installer inside Hyper. After the installation was complete, I could build all of my conda environments with ease.
+
+Having installed Miniconda, I went to work benchmarking a test suite for [`jax-unirep`](https://elarkk.github.io/jax-unirep/), an RNN model that my intern Arkadij and I accelerated together. One of my projects uses JAX, which I could not install in native ARM mode. The exciting thing for me is that I saw the test suite run with no issues! Also, I noticed that the slow tests ran at approximately twice as fast on my computer than on GitHub Actions. This anecdotal benchmark is enough for me to gain confidence in using JAX on this laptop. If you want numbers, though:
+
+- GitHub Actions for jax-unirep tests:
+ - 45 seconds for fast test
+ - 3m 35 seconds for slow tests
+- M1 MacBook air (while running on battery power in emulation mode)
+ - 43 seconds for fast test
+ - 1m 25 seconds for slow tests
+
+### Docker
+
+Docker has a technical preview for the M1 Mac, and it has only crashed once thus far. (I didn't have enough time to dig deep and figure out why.) Other than that, I was able to install the tech preview with no hassle and even use it to build a development container in VSCode for `pyjanitor`, in which I made a few pull requests into the library.
+
+### VSCode
+
+To get VSCode, I had to install and use the [Insiders build for ARM64](https://code.visualstudio.com/insiders/). No big hiccups here, everything installed without issues. As I mentioned above, building development containers involved zero hiccups. 
+
+### Jupyter
+
+The Jupyter notebook server ran in x86 emulation mode with no issues as well. I installed the latest jupyter lab 3.0.5, which ran with no hiccups, was snappy in the browser, everything behaving in line with what I was accustomed to. 
+
+### Julia Language
+
+I also went ahead and installed Julia both from conda-forge (it is a bit dated, at v1.1.1) and from the official Julia language website. Installation went smooth; running had no hiccups.
+
+## Overall two-day impressions
+
+As someone who's used a Mac exclusively since 2006, _nothing substantial_ has changed on the surface. That's something worth mentioning: Apple does it again, making a technically complicated technological transition without letting an end-user know as much. Doing this is insanely remarkable! I've done calls, written emails, this blog post, done software development and ML model fitting with gradient descent, all on a lightweight but powerful machine that sips very little power. I'm wholly impressed here.
+
+The conda-forge community of volunteers has done just as much too. I'm wholly impressed by the speed at which the team could get their bots to town, cross-compiling the ecosystem's packages.
+
+I know I'm leaving some performance on the table by sticking with x86 emulation at the moment. Nonetheless, I still can't help but remark that the performance is insanely great! I was quite pleasantly surprised at how smoothly everything runs. Compared to the Intel m5 processor in my old 12" MacBook, the M1 chip runs fast, _even in emulation mode_.
+
+## Tips for data science usage
+
+These tips are valid as of 26 Jan 2021. Here are some things that I suggest you might want to do if you want stuff to "just work":
+
+1. Don't bother with emulation mode for the Python DS/software/web development stack. Install Miniconda in emulation mode and be done with it.
+2. Same goes for Homebrew.
+3. Install VSCode Insiders for ARM64; you'll enjoy the speed at which everything runs.
+4. Install Docker's technical preview for M1 if you need to use Docker.
+
+If you do the above, keep your eyes peeled for community movement on ARM64 compatibility, and don't hesitate to re-install things.
+
+## Limitations encountered
+
+From my perspective, these are the current limitations I see:
+
+1. JAX, being built on top of XLA, is not yet natively compatible with the M1 Mac's GPU. Some movement is probably necessary from the XLA team to make it happen. [There is an issue tracker I filed with the JAX team](https://github.com/google/jax/issues/5501), in which Metal bindings are necessary. Targeting compilation to the Neural Engine will be difficult because there are no public APIs for that, as far as I can tell.
+
+## References
+
+I used the following references in getting set up:
+
+1. [A comment by Chris Fonnesbeck on PyMC3's issue tracker](https://github.com/pymc-devs/pymc3/issues/4442#issuecomment-767286954).
+2. [A question on Stack Overflow](https://stackoverflow.com/questions/65534042/anaconda-and-upgrading-to-new-m1-mac).
+3. [A slightly dated Medium post on How to run Jupyter notebooks on your Mac](https://towardsdatascience.com/how-to-run-jupyter-notebooks-on-an-apple-m1-mac-ac3a8bf39c6c).
+
+---
+pub_date: 2021-01-27
+---
+summary: Some of my early impressions using the M1 MacBook Air for data science purposes.
+---
+tags:
+
+data science
+macbook
+macos
+arm
+m1
+---
+twitter_handle: ericmjl
