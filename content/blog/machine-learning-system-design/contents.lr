@@ -1,0 +1,40 @@
+title: Machine learning system design
+---
+author: Eric J. Ma
+---
+body:
+
+I think we're past the age of building fancy models.
+After about a decade or so of seeing where models could make an impact on decisions being made,
+I think we're entering a phase where operationalizing these models is more important
+than building bigger and more powerful models.
+The field of data science is evolving yet again,
+this time with a big offshoot branch with the name "Machine Learning Engineering". 
+
+The key problem here is that most data scientists don't possess the software _and_ engineering skills
+to build and operationalize machine learning systems for colleagues.
+There's a big opportunity here to make machine learning systems work.
+The key here is to design machine learning systems the way software engineers design software systems:
+modular, with clean contracts, minimizing entanglement, etc. etc.
+
+There are very few resources that I know of that can help us learn what needs to be done, but here are a few that I have encountered.
+
+1. [Machine Learning Systems Design][mlsd] by Chip Huyen.
+2. [Machine Learning Engineering][mle] by Andriy Burkov
+3. [MLOps][mlops] by @visenger
+
+[mlsd]: https://stanford-cs329s.github.io/index.html
+[mle]: https://leanpub.com/MLE
+[mlops]: https://ml-ops.org
+---
+pub_date: 2021-03-01
+---
+summary: In which I share some resources on MLOps and ML Engineering.
+---
+tags:
+
+machine learning
+system design
+data science
+---
+twitter_handle: ericmjl
