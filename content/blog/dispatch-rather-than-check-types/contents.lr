@@ -1,0 +1,73 @@
+title: Dispatch rather than check types
+---
+author: Eric J. Ma
+---
+pub_date: 2021-01-24
+---
+tags:
+
+programming
+coding
+---
+twitter_handle: ericmjl
+---
+body:
+
+I finally grokked an old thing!
+
+The thing I've been trying to understand properly is "how and when to do single/multiple dispatching".
+It's an idea that is heavily baked into the Julia programming language,
+and one for which I rarely see the pattern being used in Python.
+But after reading [Michael Chow's blog post on single dispatching](https://mchow.com/posts/2020-02-24-single-dispatch-data-science/),
+I finally realized how dispatching gets used. Let me explain with an example.
+
+Let's say you have a function that can process one column or multiple columns of the a dataframe.
+As a first pass, you might write it as follows:
+
+```python
+import pandas as pd
+from typing import Union, List, Tuple
+
+
+def my_func(df: pd.DataFrame, column_names: Union[List, Tuple, str]):
+    if isinstance(column_names, (list, tuple)):
+        for column in column_names:
+            # something happens.
+    if isinstance(column_names, str):
+        # something happens.
+    return df
+```
+
+Here are the problems I see:
+
+1. Notice how nested that function `my_func` is. It definitely goes against the Zen of Python's recommendation that "flat is better than nested". 
+2. At the same time, the function silently fails for data types that are not explicitly supported -- also an anti-pattern that should not be encouraged.
+
+Here's the same function written instead as two functions that share the same name, leveraging the [multipledispatch package by Matt Rocklin](https://github.com/mrocklin/multipledispatch):
+
+```python
+from multipledispatch import dispatch
+import pandas as pd
+
+
+@dispatch(pd.DataFrame, str)
+def my_func(df, column_names):
+    # do str-specific behaviour
+    return df 
+
+@dispatch(pd.DataFrame, (List, Tuple))
+def my_func(df, column_names):
+    for column in column_names:
+        # do stuff
+    return df
+```
+
+Notice how now each function is:
+
+1. Flatter
+2. Self-documented because of the type annotations used as part of the `dispatch` call.
+3. Easier to see when the function will fail.
+
+The only downside I can think of to the "dispatch" programming pattern is that one must know the concept of "dispatching" before one can understand the `@dispatch` syntax. The one who is unfamiliar with this concept might also be thrown off by declaring the same function twice. That said, I think the benefits here are immense though!
+---
+summary: I finally figured out how multiple dispatch works. Come read on to see my learnings here :).
