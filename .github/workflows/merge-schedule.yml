@@ -13,6 +13,14 @@ jobs:
   merge_schedule:
     runs-on: ubuntu-latest
     steps:
+      # https://github.com/gr2m/merge-schedule-action
+      # example syntax:
+      #
+      #   /schedule 2019-12-31
+      #
       - uses: gr2m/merge-schedule-action@v1.x
+        with:
+          merge_method: squash
+          time_zone: "America/New_York"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

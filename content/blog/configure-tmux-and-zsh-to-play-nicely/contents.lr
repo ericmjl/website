@@ -1,0 +1,35 @@
+title: Configure tmux and zsh to play nicely
+---
+author: Eric J. Ma
+---
+body:
+
+I have been encountering this problem where `tmux` reloads my PATH environment variable incorrectly.
+As it turns out, the fix is documented in [a StackOverflow post][so].
+
+[so]: https://stackoverflow.com/questions/13058578/how-to-prevent-tmux-from-filling-up-the-global-path-variable-with-duplicated-pat
+
+The crux of the problem is as follows: When `tmux` loads, my `.zshrc` is re-evaluated.
+By setting the following line in my `.tmux.conf` configuration file:
+
+```
+set -g default-command /bin/zsh
+```
+
+I can now prevent `zsh` from being instantiated as a login shell.
+
+(If you're now wondering what in the world is a "login shell", fret not, I had to search online too.
+Here's the best answer I found, this time on [StackExchange][se].)
+
+[se]: https://unix.stackexchange.com/a/46856
+---
+pub_date: 2021-02-28
+---
+summary: If you're having problems with `tmux`, `zsh`, and your PATH environment variable like I did, learn from my experience: the interwebs gave me a way to get everything to play nicely.
+---
+tags:
+
+shell
+programming
+---
+twitter_handle: ericmjl
