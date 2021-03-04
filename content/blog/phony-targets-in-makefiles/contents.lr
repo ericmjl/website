@@ -1,0 +1,38 @@
+title: Phony targets in Makefiles
+---
+author: Eric J. Ma
+---
+body:
+
+Makefiles can be used to create a lightweight CLI entry point for your project. 
+By writing a `Makefile`, you can automate repetitive shell commands,
+such as building a Dockerfile (which might require you to remember certain incantations):
+
+```Makefile
+.PHONY: container
+
+container:
+    docker build -t mycontainer -f Dockerfile .
+```
+
+Doing so allows us to build a Docker container using the command `make container` when at the command line.
+
+Now, you'll probably notice the `.PHONY` line at the top.
+What's that all about?
+
+By convention, the command `container` would have referred to a file target on disk.
+(This is how Makefiles were originally designed.)
+However, if we want the command to be independent of any files on disk,
+we declare it to be a _phony_ target that doesn't actually exist on disk.
+---
+pub_date: 2021-03-04
+---
+tags:
+
+automation
+computation
+reproducibility
+---
+twitter_handle: ericmjl
+---
+summary: What are phony targets in Makefiles? Or have you not heard of them before? Here's a short post documenting a minimal example of what phony targets are.
