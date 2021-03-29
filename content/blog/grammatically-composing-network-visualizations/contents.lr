@@ -1,0 +1,155 @@
+title: Grammatically composing network visualizations
+---
+author: Eric J. Ma
+---
+pub_date: 2021-04-02
+---
+tags:
+
+data visualization
+open source
+python
+matplotlib
+---
+twitter_handle: ericmjl
+---
+body:
+
+This past month, I've been revamping the `nxviz` package,
+a package I created in graduate school
+to build network visualizations on top of NetworkX and Matplotlib.
+(You can see the work being done in [this PR branch][pr]!)
+
+[pr]: https://github.com/ericmjl/nxviz/pull/658
+
+It's been a bit neglected!
+The biggest reason, I think,
+is the lack of a _grammar_ for composing network visualizations,
+which then leads to hairball being created.
+Sometimes the hairballs are beautiful; most of the time they are uninformative.
+Flowing from a lack of grammar means
+the architecture of the codebase is also a bit messy,
+with one example being annotations
+being too tightly coupled to a particular plot object.
+
+## Network visualization workflow
+
+To revamp the `nxviz` API,
+I started by structuring the API around
+the following workflow for constructing graph visualizations.
+As such, I decided to refactor the API,
+structuring it around what I know about the grammar of graphics.
+
+### Prioritize node _placement_
+
+Because the core idea of `nxviz`
+is _rational graph visualizations_ that prioritize node placements,
+the refactor started there,
+with node layout algorithms that group and sort nodes
+according to their properties.
+
+### Apply aesthetic node _styling_
+
+Once we have node _placement_ figured out,
+we can now proceed to node _styling_.
+Mapping data to aesthetic properties of glyphs
+is a core activity in data visualization;
+in `nxviz`, the styling that can be controlled by data
+are the node size (radius), color, and transparency.
+
+### Draw edges between nodes
+
+Following that, we need algorithms for drawing edges.
+Do we simply draw lines?
+Or do we draw Bezier curves instead?
+If we draw curves, what are the anchor points that we need?
+Sane defaults are provided for each of the plot families in `nxviz`.
+
+### Apply aesthetic edge _styling_
+
+As with nodes, we then add in aesthetic styling
+that are mapped to a given edge's metadata.
+In `nxviz`, the edge styling that can be controlled by data
+are their line width, color, and transparency.
+
+### Add annotations
+
+We then add in annotations onto the graph.
+Are there _groups_ of nodes?
+If so, for each node layout type,
+we can add in group annotations in sane locations.
+Are colors mapped to a quantitative or qualitative variable?
+Legends or color bars can be annotated easily.
+
+### Add highlights
+
+Finally, in some cases, it may be helpful to highlight a node,
+a particular edge, or edges attached to a node;
+we might use such highlights in a presentation, for example.
+The final part of the refactor was to add in functions
+for adding in each of these highlights in an easy fashion.
+
+## Cloned node layouts
+
+Some node layouts involve _cloning_ the axis on which the nodes live.
+Examples of this include the matrix plot,
+in which we lay out the nodes on the x-axis,
+and then clone them onto the y-axis,
+canonically in the exact same order (though not always).
+These were much easier to write
+once the components underneath were laid out in a sane fashion.
+
+## Supporting data structures
+
+Some data structures were immensely important in the API redesign,
+and turned out to be foundational for almost everything.
+
+### Node and edge tables
+
+Every graph's node set can be represented as a data table.
+In the node table, nodes are the index, while the metadata are the columns.
+In the edge table, two special columns, `source` and `target`,
+indicate the nodes between which an edge exists,
+and the rest of the columns are the metadata.
+
+### Node position dictionary
+
+A node position dictionary that maps node ID to (x, y) coordinates
+was also something extremely important.
+This is calculated by the node layout algorithm
+and used by the edge drawing algorithms and elsewhere in the library.
+Worrying about the positions of nodes
+is a page taken out of NetworkX's drawing functionality directly,
+and I have to give the developers much of the credit for that.
+
+### Matplotlib Axes
+
+The global stateful nature of Matplotlib
+turned out to be a blessing in disguise.
+Rather than having a user pass around an axes object all of the time,
+in `nxviz` we simply assume that there is a globally available axes object.
+
+## Optimizing for composability and workflow
+
+In redesigning the `nxviz` API,
+I wanted to make sure that the _workflow_ of creating a network visualization,
+done in a _principled fashion_,
+was something that the API would support properly.
+As such, the API is organized basically around the workflow described above.
+A lesson I learn over and over in writing software is that
+once the workflow is clear,
+the API that's needed to support it also becomes quite clear.
+And when does the workflow become clear?
+Usually, that clarity comes when the important logical steps
+that are composable with one another are well-defined,
+and the core data structures that support that workflow are present.
+
+## Bringing a grammar to network visualization
+
+The Grammar of Graphics, `ggplot`, Seaborn, Altair, and Holoviews
+were all inspirations for nxviz's functional and declarative API.
+Network visualization appears to be
+an under-developed area of the data visualization ecosystem,
+and I'm hoping that this grammar of network visualization helps bring clarity!
+---
+summary: I've been working on revamping the `nxviz` API to much more closely align with the grammar of graphics' principles and other data visualization best practices. Come check out the ideas backing the API revamp!
