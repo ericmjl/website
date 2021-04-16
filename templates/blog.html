@@ -6,7 +6,7 @@
 {{ render_pagination(this.pagination) }}
 <hr>
 {% for child in this.pagination.items %}
-{#  {{ render_blog_post(child, from_index=true) }}  #}
+{# {{ render_blog_post(child, from_index=true) }} #}
 {{ render_blog_card(child) }}
 <div>
   <hr>

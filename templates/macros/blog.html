@@ -56,7 +56,7 @@
 
 {% endmacro %}
 
-
+<!-- Start reading time calculation macro -->
 {% macro render_reading_time(post) %}
 {% set post_length = post.body|striptags|wordcount %}
 {% set time_unit = "minutes" %}
@@ -69,10 +69,10 @@
 
 ({{ post_length }} words, approximately {{ reading_time }} {{ time_unit }} reading time)
 {% endmacro %}
-
+<!-- End reading time calculation macro -->
 
 {% macro render_blog_card(post) %}
-<div class="card">
+<div class="card card-hover transition">
   <div class="card-body">
     {{ render_blog_header(post, from_index=True) }}
     {% if post.summary %}
