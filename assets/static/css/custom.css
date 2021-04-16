@@ -73,27 +73,14 @@ a:hover  {
     color: var(--nord10);
 }
 
+.transition {
+  transition: all 500ms;
+}
+
+.card-hover:hover {
+  transform: scale(1.05);
+}
+
 code {
     color: var(--nord11);
 }
-
-/* .bg-dark-nord {
-    background-color: var(--nord1);
-} */
-
-/* .btn-secondary-nord {
-    color: var(--nord4);
-    background-color: var(--nord2);
-} */
-
-/* blockquote {
-    background-color: var(--nord1);
-} */
-
-/* img {
-  background-color: var(--nord6);
-  padding: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-} */
