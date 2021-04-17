@@ -7,7 +7,7 @@
 {% endif %}
 
 <!-- Append author -->
-<small class="text-muted">
+<small>
   <p>
     written by
     {% if post.twitter_handle %}
@@ -44,7 +44,7 @@
     <p>
       <i>I send out a monthly newsletter with tips and tools
         for data scientists. Come check it out at
-        <a href="https://tinyletter.com/ericmjl">TinyLetter</a>.</i>
+        <a href="https://dspn.substack.com">Substack</a>.</i>
     </p>
     <p>
       <i>If you would like to receive deeper, in-depth content
@@ -73,24 +73,29 @@
 
 {% macro render_blog_card(post) %}
 <div class="card card-hover transition">
-  <div class="card-body">
-    {{ render_blog_header(post, from_index=True) }}
-    {% if post.summary %}
-    <p class="card-text">{{ post.summary }}</p>
-    <small class="text-muted">
-      <a href="{{ post|url }}">Read on...</a>
-      {{ render_reading_time(post) }}
-    </small>
-    {% else %}
-    <div>
-      <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
-        <a href="{{ post|url }}">(read more)</a>
-      </p>
-      <small class="text-muted">
+  <div class="row g-0">
+    <div class="card-body col-md-4 bg-nord-light">
+      {{ render_blog_header(post, from_index=True) }}
+    </div>
+    <div class="col-md-8">
+      {% if post.summary %}
+      <p class="card-text">{{ post.summary }}</p>
+      <small>
+        <a href="{{ post|url }}">Read on...</a>
         {{ render_reading_time(post) }}
       </small>
+      {% else %}
+      <div>
+        <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
+          <a href="{{ post|url }}">(read more)</a>
+        </p>
+        <small>
+          {{ render_reading_time(post) }}
+        </small>
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
+
   </div>
 </div>
 {% endmacro %}
