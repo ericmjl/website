@@ -33,7 +33,7 @@ Publishing data is the second piece that Datasette excels in. Built-in to Datase
 datasette serve bundled_database.db
 ```
 
-Now, you can go to your local host on a port that `datasette` specifies for you and view it. (For example, I might get port 8001, so I would go to `http://localhost:8001/` on my browser to view the contents of the database.
+Now, you can go to your local host on a port that `datasette` specifies for you and view it. For example, I might get port 8001, so I would go to `http://localhost:8001/` on my browser to view the contents of the database.
 
 This allows you to serve files on a local network. But what if you wanted to publish the database across the _whole wide world_?
 
@@ -47,7 +47,7 @@ After a short while, the data will be viewable at `some-nice-name.fly.dev`!
 
 Now, what happens behind the scenes? Basically, `datasette publish` automates the construction of a Docker container. The first build will usually take a while, but once the build is done and the container deployed, you'll get a URL returned to you in the Terminal at which you can view the Datasette instance with your data served up. For example, check out the [Drosha data that I deployed on Fly](https://drosha-data.fly.dev).
 
-## Some comments on using data
+## Some comments on using datasette
 
 In using Datasette, knowing some key concepts about databases is highly recommended. These include primary keys, foreign keys, data types, and more. For example, if you have a column in your CSV files that basically acts as an indexer across multiple tables, you might want to consider extracting it to a separate lookup table using `csvs-to-sqlite`'s `-c/--extract-column ` flag. 
 
