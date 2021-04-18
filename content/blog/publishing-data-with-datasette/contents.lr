@@ -1,0 +1,68 @@
+title: Publishing data with Datasette
+---
+author: Eric J. Ma
+---
+body:
+
+I think the Datasette ecosystem of tools is amazing. Built basically single-handedly by Simon Willison, it provides a way to turn collections of CSV files into read-only collections of SQLite databases that one can serve on the web. Here are a few use cases of Datasette as described by Simon on the official website:
+
+1. Journalists and academics can publish the data that they use or generate onto the web.
+2. Web developers can stand quickly stand up a mock database for developing applications, complete with web APIs, without needing to go to more expensive solutions.
+
+I also remember having the pleasure of meeting Simon at PyCon 2019 while in line for food! In some sense, while I enjoy remote work, I do miss being at an in-person conference. The balance where we do remote work but getting together once in a while to do in-person events seems like the right balance for me.
+
+![](meeting-simon.jpeg)
+
+### Combine multiple data files into a single database
+
+I recently wanted to share some data from a publication that I had co-authored with colleagues. Primarily, there were two CSV files - one that was about 100MB in size and the other was 10MB in size. The flat CSVs were a tad overloaded in information, so I did a "data refactor" (a.k.a. data normalization in database terms) and pulled out some of the columns into independent CSV files as needed. (I used pandas and a Jupyter notebook to do that processing.) 
+
+Then, I put them back into a single SQLite database using Datasette. This is where Datasette's suite of tools really shines. One CLI tool, which is called `csvs-to-sqlite`, has a wonderful command-line interface for handling this task:
+
+```bash
+csvs-to-sqlite file1.csv file2.csv bundled_database.db
+```
+
+Essentially, `csvs-to-sqlite` takes as many CSV files as you want and stashes them into a single SQLite database. Doing so allows you to convert logical collections of CSV files into a single database file that is now queryable using SQL syntax. Compared to sharing a collection of CSV files that might be up to hundreds of files long, sharing a single SQLite database as a logical collection is much easier. This ability to quickly get a logical collection of data into a single data container (the SQLite database) is handy! (It's no wonder Datasette is labelled as a multi-tool, like a Swiss Army knife.
+
+### Publishing
+
+Publishing data is the second piece that Datasette excels in. Built-in to Datasette is a web server for browsing the contents of a SQLite database. To launch the server, you use the following command on your local machine:
+
+```bash
+datasette serve bundled_database.db
+```
+
+Now, you can go to your local host on a port that `datasette` specifies for you and view it. (For example, I might get port 8001, so I would go to `http://localhost:8001/` on my browser to view the contents of the database.
+
+This allows you to serve files on a local network. But what if you wanted to publish the database across the _whole wide world_?
+
+That's where [Datasette's dataset publishing](https://simonwillison.net/2018/Jan/17/datasette-publish/) capabilities really start to shine. Datasette comes with several publishing plugins that let you deploy a Docker container housing the SQLite database onto PaaS providers such as Vercel, Heroku, and Fly. (I think AWS is also supported, but I also remember Simon ranting on Twitter about how hard some parts of AWS were.) To use the `datasette publish`, you will need to have `datasette` installed in your environment alongside one of the hosting plugins that Simon has generously built. In my case, I used the Fly plugin `datasette-publish-fly`, which one installs into the same environment as `datasette` itself. After logging into Fly's command-line interface, we then execute the following command:
+
+```bash
+datasette publish fly bundled_database.db --app="some-nice-name"
+```
+
+After a short while, the data will be viewable at `some-nice-name.fly.dev`!
+
+Now, what happens behind the scenes? Basically, `datasette publish` automates the construction of a Docker container. The first build will usually take a while, but once the build is done and the container deployed, you'll get a URL returned to you in the Terminal at which you can view the Datasette instance with your data served up. For example, check out the [Drosha data that I deployed on Fly](https://drosha-data.fly.dev).
+
+## Some comments on using data
+
+In using Datasette, knowing some key concepts about databases is highly recommended. These include primary keys, foreign keys, data types, and more. For example, if you have a column in your CSV files that basically acts as an indexer across multiple tables, you might want to consider extracting it to a separate lookup table using `csvs-to-sqlite`'s `-c/--extract-column ` flag. 
+
+Here's one practical consequence of doing this. Suppose you have a categorical column with repeated values. In a CSV file, that column's values are stored as a raw string over and over; multiply it by tens of thousands of rows, and you might end up with that value occupying megabytes of data. Instead of recording the raw string repeatedly, one can store an integer-to-string mapping in a separate table while recording the integer value in the original table, thus saving on storage. (Indeed, I was able to shave off about 25% of the size of the original files put together using this trick.) It goes without saying that knowing something about the relationships in your data will help a ton too.
+---
+pub_date: 2021-04-26
+---
+summary: Recently, I saw [Datasette](https://datasette.io) resurface on my Twitter feed, and I started doing a deep dive into it once again. The work that [Simon Willison](https://simonwillison.net), author of Datasette, has done -- it is amazing! Here's what I learned test-driving it once again.
+---
+tags:
+
+data
+datasette
+data publishing
+data engineering
+data science
+---
+twitter_handle: ericmjl
