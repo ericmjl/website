@@ -1,12 +1,12 @@
-name: website  # for my website.
+name: website # for my website.
 channels:
-- conda-forge
-- ericmjl
+  - conda-forge
+  - ericmjl
 dependencies:
-- python>=3.7
-- pip
-- lektor>=3.2.0
-- flask
-- requests
-- jinja2
-- mamba>=0.7.12
+  - python>=3.7
+  - pip
+  - lektor>=3.2.0
+  - flask
+  - requests
+  - jinja2
+  - mamba>=0.7.12
