@@ -40,15 +40,11 @@ the following workflow for constructing graph visualizations.
 As such, I decided to refactor the API,
 structuring it around what I know about the grammar of graphics.
 
-### Prioritize node _placement_
-
-Because the core idea of `nxviz`
+Firstly, because the core idea of `nxviz`
 is _rational graph visualizations_ that prioritize node placements,
 the refactor started there,
 with node layout algorithms that group and sort nodes
 according to their properties.
-
-### Apply aesthetic node _styling_
 
 Once we have node _placement_ figured out,
 we can now proceed to node _styling_.
@@ -57,22 +53,16 @@ is a core activity in data visualization;
 in `nxviz`, the styling that can be controlled by data
 are the node size (radius), color, and transparency.
 
-### Draw edges between nodes
-
 Following that, we need algorithms for drawing edges.
 Do we simply draw lines?
 Or do we draw Bezier curves instead?
 If we draw curves, what are the anchor points that we need?
 Sane defaults are provided for each of the plot families in `nxviz`.
 
-### Apply aesthetic edge _styling_
-
 As with nodes, we then add in aesthetic styling
 that are mapped to a given edge's metadata.
 In `nxviz`, the edge styling that can be controlled by data
 are their line width, color, and transparency.
-
-### Add annotations
 
 We then add in annotations onto the graph.
 Are there _groups_ of nodes?
@@ -81,15 +71,22 @@ we can add in group annotations in sane locations.
 Are colors mapped to a quantitative or qualitative variable?
 Legends or color bars can be annotated easily.
 
-### Add highlights
-
 Finally, in some cases, it may be helpful to highlight a node,
 a particular edge, or edges attached to a node;
 we might use such highlights in a presentation, for example.
 The final part of the refactor was to add in functions
 for adding in each of these highlights in an easy fashion.
 
-## Cloned node layouts
+Summarized, the flow looks something like this:
+
+1. Layout nodes.
+1. Style nodes according to node properties.
+1. Connect nodes by drawing in edges.
+1. Style edges according to edge properties.
+1. Annotate visualization with auxiliary information.
+1. Add highlights.
+
+## Handling node layouts with cloned node axes
 
 Some node layouts involve _cloning_ the axis on which the nodes live.
 Examples of this include the matrix plot,
@@ -104,15 +101,11 @@ once the components underneath were laid out in a sane fashion.
 Some data structures were immensely important in the API redesign,
 and turned out to be foundational for almost everything.
 
-### Node and edge tables
-
 Every graph's node set can be represented as a data table.
 In the node table, nodes are the index, while the metadata are the columns.
 In the edge table, two special columns, `source` and `target`,
 indicate the nodes between which an edge exists,
 and the rest of the columns are the metadata.
-
-### Node position dictionary
 
 A node position dictionary that maps node ID to (x, y) coordinates
 was also something extremely important.
@@ -121,8 +114,6 @@ and used by the edge drawing algorithms and elsewhere in the library.
 Worrying about the positions of nodes
 is a page taken out of NetworkX's drawing functionality directly,
 and I have to give the developers much of the credit for that.
-
-### Matplotlib Axes
 
 The global stateful nature of Matplotlib
 turned out to be a blessing in disguise.
