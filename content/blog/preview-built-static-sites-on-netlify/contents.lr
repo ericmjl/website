@@ -1,0 +1,49 @@
+title: Preview built static sites on Netlify
+---
+author: Eric J. Ma
+---
+body:
+
+Twitter is an amazing universe. I asked a question, and friends came to help.
+
+I use Netlify to host my site previews. That said, I use GitHub actions to build the site, as site-building on Netlify has a limit of 300 minutes, while for my open source projects, I have unlimited minutes. I was curious about how to enable static site previews on Netlify _with an automatic comment on the PR housing the URL_. [Peter Bull kindly replied](https://twitter.com/pjbull/status/1384521263108870146), and that's when I learned that [GitHub user @nwtgck](https://github.com/nwtgck) created [a GitHub Action](https://github.com/nwtgck/actions-netlify) that makes this easy.
+
+Inside one of our GitHub actions configuration YAML files, we add this step:
+
+```yaml
+      # Taken from: https://github.com/drivendataorg/cloudpathlib/blob/master/.github/workflows/docs-preview.yml
+      - name: Deploy site preview to Netlify
+        uses: nwtgck/actions-netlify@v1.1
+        with:
+          publish-dir: "./site"
+          production-deploy: false
+          github-token: ${{ secrets.GHPAGES_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true  # this is crucial!
+          enable-commit-comment: false
+          overwrites-pull-request-comment: true
+          alias: deploy-preview-${{ github.event.number }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
+```
+The result looks something like this:
+
+![](./netlify-action.png)
+
+Now, it's much easier for me and collaborators to find the preview URL rather than dig through a bunch of logs to find it.
+
+When one can query the collective intellect of the whole wide world, that's an amazing feeling. 
+---
+pub_date: 2021-04-28
+---
+tags:
+
+netlify
+web development
+continuous integration
+---
+twitter_handle: ericmjl
+---
+summary: I learned a new thing: how to enable Netlify site preview URLs to be commented back on a PR thread! A story about how the collective intellect of the world is such a wonderful resource to query.
