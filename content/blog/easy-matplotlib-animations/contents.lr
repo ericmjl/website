@@ -4,9 +4,13 @@ author: Eric J. Ma
 ---
 body:
 
-Recently, [`celluloid`][celluloid]caught my eye: it's a package that lets you create `matplotlib` animations easily!
+Recently, [`celluloid`][celluloid] caught my eye:
+it's a package that lets you create `matplotlib` animations easily!
 
-If you need a dead-simple example to convince you to check it out, here's one lifted straight from the repository:
+[celluloid]: https://github.com/jwkvam/celluloid
+
+If you need a dead-simple example to convince you to check it out,
+here's one lifted straight from the repository:
 
 ```python
 from matplotlib import pyplot as plt
@@ -20,12 +24,15 @@ for i in range(10):
 animation = camera.animate()
 ```
 
-But seriously though, if you use the workhorse Python drawing package `matplotlib` for anything,
-this package can be considered to be one of those "great tricks to have" in your bag!
+But seriously though,
+if you use the workhorse Python drawing package `matplotlib` for anything,
+this package can be considered to be
+one of those "great tricks to have" in your bag!
 ---
 pub_date: 2020-05-26
 ---
-summary: I recently stumbled upon a package that makes animations _dead simple_. Check it out!
+summary: I recently stumbled upon a package that makes animations _dead simple_.
+Check it out!
 ---
 tags:
 
