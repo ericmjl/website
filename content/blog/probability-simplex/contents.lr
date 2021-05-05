@@ -1,0 +1,34 @@
+title: Probability Simplex
+---
+author: Eric J. Ma
+---
+body:
+
+Doing another TIL ([as inspired by Simon Willison](https://simonwillison.net/2021/May/2/one-year-of-tils/)), this time being the definition of a probability simplex.
+
+I gleaned a pretty good definition of the probability simplex from [this article](https://www.localmaxradio.com/questions/what-is-a-probability-simplex).
+From a computational perspective, it is represented as:
+
+1. a vector of $K$ numbers ($K$ being the dimension of the simplex) that lie between 0 and 1, such that
+2. their sum is equal to 1.0 (it is a probability vector, after all), and
+3. each vector slot represents a choice mutually exclusive with others.
+
+Here are a few examples.
+
+- A probability simplex where $K = 2$ might be the vector $(0.15, 0.85)$.
+- A probability simplex where $K = 3$ might be the fector $(0.10, 0.50, 0.40)$.
+
+Probability simplices are usually used as the probability parameter in the Multinomial distribution.
+(Reminder: the Binomial is a special case of the Multinomial.)
+In Bayesian inference, we also place priors over the probability parameter (or probability simplices)
+to express what we might believe about the relative tendency to pick one choice over another.
+---
+tags:
+
+bayesian
+probability
+TIL
+---
+twitter_handle: ericmjl
+---
+summary: Today I learned about the definition of the term "probability simplex". Here's what it is.
