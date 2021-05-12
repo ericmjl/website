@@ -1,0 +1,25 @@
+title: Desktop Python applications with Flask
+---
+author: Eric J. Ma
+---
+body:
+
+Today, I learned that it's possible to create a desktop app that uses Flask as the webserver, Python for application logic, and HTML/CSS/JS for the front-end.
+
+The logic basically that we split the desktop app code into the front-end and back-end, and we let the front-end and back-end communicate data using JSON. The backend code does whatever complex logic is needed, while the front-end code simply does the rendering. It's basically a very familiar pattern for server-based applications.
+
+One tool that helps with this is [`flaskwebgui`](https://github.com/ClimenteA/flaskwebgui), by GitHub user `@ClimenteA`. I found out about this tool by reading a [dev.to article on using FastAPI to create a desktop application](https://dev.to/climentea/can-you-use-fastapi-vue-react-other-to-create-a-desktop-application-34gd).
+
+I also saw [another article on using Svelte.js + Flask to create a Python app](https://cabreraalex.medium.com/svelte-js-flask-combining-svelte-with-a-simple-backend-server-d1bc46190ab9). That one also looks like a simple pattern to follow, with the advantage that Svelte.js makes reactivity very simple.
+---
+pub_date: 2021-05-12
+---
+summary: Today I learned that it's possible to create a Desktop app that uses Flask (and hence HTML/CSS/JS) to render the front-end. Read on to see what packages are involved.
+---
+tags:
+
+python
+software development
+til
+---
+twitter_handle: ericmjl
