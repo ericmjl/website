@@ -1,0 +1,44 @@
+title: Set environment variables inside a Jupyter notebook
+---
+author: Eric J. Ma
+---
+body:
+
+Today, I learned that one can set an environment variable from within a Jupyter notebook session.
+
+Let's say you needed an environment variable set for your Jupyter notebook, but you:
+
+1. Don't want it set globally or project-wide, or
+2. Forgot to set it before you launched Jupyter.
+
+To do so, add the following line(s) to the very, very first cell of the notebook:
+
+```
+%env MY_ENV_VAR=value
+```
+
+Within the same code cell, you can clone that as many times as you want to set environment variables of any kind.
+
+To verify that the environment variable has been set correctly, you can use the following code block to view the value of the environment variable that you set:
+
+```python
+import os
+os.environ["MY_ENV_VAR"]
+```
+
+Now, one thing has to be stated - according to 12 Factor App development principles, 
+you might need to set environment variables for sensitive information. 
+You should **never, ever, ever** set those environment variables at the top of your notebook
+because they will be exposed!
+---
+pub_date: 2021-05-14
+---
+summary: Did you forget to set an environment variable before launching Jupyter? Today, I learned how you can rescue that situation easily.
+---
+tags:
+
+til
+jupyter
+data science
+---
+twitter_handle: ericmjl
