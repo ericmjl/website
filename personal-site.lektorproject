@@ -1,12 +1,7 @@
 [project]
 name = Eric J. Ma's Personal Website
 locale = en_US
-url = http://www.ericmjl.com/
-
-[servers.digital_ocean]
-name = Digital Ocean
-enabled = yes
-target = rsync://doroot/var/www/html/ericmjl.com
+url = https://ericmjl.github.io/
 
 [servers.gh_ssh]
 name = GitHub Pages
