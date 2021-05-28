@@ -1,0 +1,54 @@
+title: Ward: A new Python package for software testing
+---
+author: Eric J. Ma
+---
+body:
+
+Today I learned about a new package called [Ward](https://ward.readthedocs.io/en/latest/).
+It claims to be an alternative to pytest _with a focus on productivity and readability_.
+
+Looking at the examples on [the docs](https://ward.readthedocs.io/en/latest/guide/writing_tests.html),
+I see a few cool things that are in there:
+
+```python
+@fixture
+def three():
+    yield 3
+
+
+@test("{a} + {b} == {result}")
+def _(a=1, b=2, result=three):
+    assert a + b == result
+
+@test("simple addition", tags=["unit", "regression"])
+def _():
+    assert 1 + 2 == 3
+```
+
+Firstly, how the `@test` decorator is used to provide a descriptive name,
+thus allowing us to completely bypass trying to think up descriptive test function names
+and instead simply describe the test in plain English.
+I can see how this makes documenting the test a little bit easier.
+
+Secondly, how tags (which in `pytest` land would be `marks`)
+are simply added as part of the `@test` decorator.
+
+The syntax is definitely attractive.
+That said, while I like the syntax,
+one thing that might prevent me from using `ward` at this moment in time
+is the lack of clarity with how it interfaces with `hypothesis`,
+which I use to do testing of machine learning model implementations.
+I might do some digging in the near future.
+For now, just leaving this note here for future reference.
+---
+pub_date: 2021-05-29
+---
+summary: Today I learned about a new package for Python testing called Ward. It looks pretty neat!
+---
+tags:
+
+til
+software testing
+tooling
+---
+twitter_handle: ericmjl
