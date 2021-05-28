@@ -1,0 +1,45 @@
+title: Help MathJax render correctly by wrapping latex in span tags
+---
+author: Eric J. Ma
+---
+body:
+
+Today I learned that we can help MathJax _guarantee_ correct rendering of LaTeX in HTML and HTML-converted Markdown documents
+by simply wrapping the latex inside a `<span>` tag.
+
+For example, if the following equation gives you trouble because the underscore gets parsed by a Markdown parser incorrectly:
+
+```
+$y_{alpha} = 3x^2 + 5$
+```
+
+If it is rendered correctly, you'll see: $y_{alpha} = 3x^2 + 5$
+
+However, if the rendering is butchered somehow, then we can simply add `<span>` tags around it to guarantee correct parsing:
+
+```
+<span>
+$y_{alpha} = 3x^2 + 5$
+</span>
+```
+
+With the span tags, it'll look like: <span>$y_{alpha} = 3x^2 + 5$</span>. (Inspect the website source to see how I did it.)
+
+This tip should apply anywhere we use LaTeX inside Markdown and wish to have it render correctly in HTML using MathJax. 
+Some examples of documents where this might be useful is in:
+
+1. Jupyter Notebooks
+2. vanilla Markdown files,
+3. Markdown blocks in YAML files that get parsed.
+---
+pub_date: 2021-05-28
+---
+summary: Today I learned how to guarantee correct rendering of LaTeX equations with MathJax when placed inside Markdown documents.
+---
+tags:
+
+til 
+blogging
+
+---
+twitter_handle: ericmjl
