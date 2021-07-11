@@ -1,0 +1,53 @@
+title: How to enable custom source package installation in Binder
+---
+author: Eric J. Ma
+---
+body:
+
+When I make tutorial material, I often choose to write a custom library in support of the tutorial. For example, for this JAX-centric tutorial repository that I made (`dl-workshop`), all exercise answers are written as Python functions that we can call in the notebook (and inspected at one's own pace). Doing so helps me ensure that I have one single source of truth for the answers and can write tests against them (if I desire so). By organizing the code answers into submodules, I also gain an organizational mapping from answers to tutorial sections - which is incredibly handy for navigating the library.
+
+When building a Binder container using a configuration file, it's sometimes difficult to include the custom source library in the Binder build. I could, in theory, use the `pip` section of an `environment.yml` file to install the custom source as follows:
+
+```yaml
+name: my_project
+channels:
+- conda-forge
+dependencies:
+- python=3.9
+- ...
+- pip:
+  - ...
+  - -e src/.
+```
+
+However, there are cases where we might not necessarily want the current version of the custom library. In those cases, we may instead prefer a canonical version that we can reference (like the one that lives on the `master`/`main` branch). Sticking the `-e src/.` in `environment.yml` thus restricts the flexibility that we might otherwise need.
+
+Suppose this level of flexibility is needed. In that case, we need to match the flexibility with the appropriate composition of tooling. Writing a `Dockerfile` could be the way out. Thankfully the Binder team made a fit-for-purpose abstraction called the [`postBuild` script](https://mybinder.readthedocs.io/en/latest/config_files.html#postbuild-run-code-after-installing-the-environment). Essentially `postBuild` is nothing more than a shell script that gets executed right after the Docker container is built. We can use it to install our custom source library for use with Binder:
+
+1. Include a file named `postBuild` in the root of our repository. It shouldn't have any file extensions, such as `.sh` or `.zsh`.
+2. In there, add in the following commands, assuming our source code library is in the directory `src/`:
+
+```bash
+#!/bin/bash
+set -e  # don't allow errors to fail silently
+echo `which pip`  # in case the wrong `pip` is used, this will let us debug
+pip install -e src/  # install the custom library
+```
+
+As a side note, Binder also provides [`start`](https://mybinder.readthedocs.io/en/latest/config_files.html#start-run-code-before-the-user-sessions-starts). This is a way of running code before the user session starts (e.g. setting environment variables that we don't want to be stored in a container). I have yet to find a use for this myself, but I'm sure the good folks on the Binder team have excellent reasons for doing so.
+
+I really do have to give it to the Binder team. They've done a fantastic job here in architecting the package to satisfy _workflow_ needs. Kudos!
+---
+pub_date: 2021-07-10
+---
+tags:
+
+binder
+tutorial
+jupyter
+data science
+til
+---
+twitter_handle: ericmjl
+---
+summary: I figured out how to make my custom source code libraries installable in a Binder container - and do it in a way that preserves flexibility while still being easy to use.
