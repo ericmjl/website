@@ -4,7 +4,7 @@ author: Eric J. Ma
 ---
 body:
 
-When I make tutorial material, I often choose to write a custom library in support of the tutorial. For example, for this JAX-centric tutorial repository that I made (`dl-workshop`), all exercise answers are written as Python functions that can be called in the notebook (and inspected at one's own pace). Doing so helps me ensure that I have one single source of truth for the answers and can write tests against them (if I desire so). By organizing the code answers into submodules, I also gain an organizational mapping from answers to tutorial sections - which is incredibly handy for navigating the library.
+When I make tutorial material, I often choose to write a custom library in support of the tutorial. For example, for this JAX-centric tutorial repository that I made (`dl-workshop`), all exercise answers are written as Python functions that we can call in the notebook (and inspected at one's own pace). Doing so helps me ensure that I have one single source of truth for the answers and can write tests against them (if I desire so). By organizing the code answers into submodules, I also gain an organizational mapping from answers to tutorial sections - which is incredibly handy for navigating the library.
 
 When building a Binder container using a configuration file, it's sometimes difficult to include the custom source library in the Binder build. I could, in theory, use the `pip` section of an `environment.yml` file to install the custom source as follows:
 
@@ -35,6 +35,8 @@ pip install -e src/  # install the custom library
 ```
 
 As a side note, Binder also provides [`start`](https://mybinder.readthedocs.io/en/latest/config_files.html#start-run-code-before-the-user-sessions-starts). This is a way of running code before the user session starts (e.g. setting environment variables that we don't want to be stored in a container). I have yet to find a use for this myself, but I'm sure the good folks on the Binder team have excellent reasons for doing so.
+
+I really do have to give it to the Binder team. They've done a fantastic job here in architecting the package to satisfy _workflow_ needs. Kudos!
 ---
 pub_date: 2021-07-10
 ---
