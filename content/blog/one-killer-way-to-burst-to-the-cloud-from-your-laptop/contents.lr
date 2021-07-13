@@ -1,0 +1,62 @@
+title: One killer way to burst to the cloud from your laptop
+---
+author: Eric J. Ma
+---
+body:
+
+Today I finally had a chance to test-drive [Coiled Computing's](https://coiled.io) product. Oh boy, am I impressed!
+
+The first time I first tasted parallel computation on the MIT GridEngine compute cluster in 2014. Ever since then, one thing I've been _dreaming_ of is the ability to burst my computation into remote machines _from my little laptop_.
+
+The computing model I'm thinking of isn't _exactly_ an SSH tunnel, as this model presumes a few things:
+
+1. We have permanent access to a remote beefy machine or a cluster.
+2. We have the ability to SSH directly into it to manipulate it.
+3. Our compute environment lives _entirely_ on the cluster and not on our local machine.
+
+The computing model I'm thinking of is as follows:
+
+1. We only want convenient and ephemeral access to the practically infinite cloud computing resources available.
+2. We merely need to declare what our environment _ought_ to look like using configuration files.
+3. Our compute environment lives _primarily_ on my portable machine and can be replicated in the cloud.
+
+You can think of this as akin to having [12 Factor App](https://12factor.net)-like computing environments.
+
+Coiled Computing's product provides _exactly_ the computing model that I'm thinking of. By being built on top of Dask, the critical problem that Coiled solves, which is also its fundamental value proposition,
+is to orchestrate the creation of ephemeral cloud compute resources
+into a Dask cluster with access to a replica of our local compute environment. Locally, we only need to worry about having a configuration file, such as an `environment.yml` file, that declares what kind of compute environment is required. Coiled will read that config file to re-create the environment on the cloud, optionally on a cloud provider that you get to specify. Once the Dask cluster is created in the cloud, we only need to connect to that Dask cluster from a Python session
+using Dask's distributed clients.
+
+Once we've done that, if you've got code written against Dask that runs on your little laptop, then _literally nothing else needs to change_!
+Execute the rest of your code, whether in a Jupyter notebook or in a Python script.
+
+From my perspective, this is the ideal situation for parallel computation.
+
+Because the computing environment is available locally, I need not worry about not having internet/cluster access when I'm on the road. At the same time, if I'm literally flying in the cloud with WiFi access, I can burst my calculations into the metaphorical compute cloud and do my computing with ease.
+
+Additionally, easy-to-follow documentation is readily available, making it easy for me to create very ephemeral Dask clusters in the cloud that also shut down as soon as my computation is done.
+
+At work, I had tried Databricks. It was helpful for some things that my colleagues needed, but it was also highly inflexible: back in 2018, my `conda` environment was not recognized, I couldn't develop and use custom software packages in support of a project, and I most certainly couldn't have the convenience of a local computation environment. So I quickly ditched it because of the lack of flexibility.
+
+Moreover, though I shared access to a Linux workstation with colleagues,
+and even though that Linux workstation could access our HPC cluster, it still required me to SSH every morning. Call me a person pampered with first-world problems, perhaps, and yes, I'll grant you that. Still, you can't deny that needing to SSH every morning is still a friction point.
+
+By contrast, Coiled has me smiling to my ears. I'm very impressed with what I see here! [Clarke's third law](https://en.wikipedia.org/wiki/Clarke%27s_three_laws) states that "any sufficiently advanced technology is indistinguishable from magic ." Because I have helped alpha-test Coiled's product and successfully borked it on my machines before, I sort of know what the product's internals are like. (I will respectfully decline to reveal what I know, though, as it concerns my friends' livelihoods.) However, even with that knowledge, Coiled _feels_ like magic. That was the exact feeling I had when I first test-drove their demo code successfully on my laptop.
+
+![](./coiled-preview.png)
+![](./coiled-preview-2.png)
+
+Kudos to Matt and Hugo (the two whom I know most closely) and the rest of the team, who have really built a fantastic product! I am excited to try things out on my projects at home :).
+---
+pub_date: 2021-07-12
+---
+tags:
+
+data science
+dask
+coiled computing
+computation
+---
+twitter_handle: ericmjl
+---
+summary: I test-drove Coiled Computing's product, and it's magical. Let me tell you why!
