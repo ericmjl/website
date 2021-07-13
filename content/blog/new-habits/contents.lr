@@ -4,35 +4,74 @@ author: Eric J. Ma
 ---
 body:
 
-Ever since "going corporate", it's meant picking up more new productivity/coding habits. Here's a sampling of what I've learned.
+Ever since "going corporate",
+it's meant picking up more new productivity/coding habits.
+Here's a sampling of what I've learned.
 
 **(1) Living by my calendar**
 
-Basically, the "work calendar" defines everything about the day. I've had to make sure that if I am not going to be pencilled in for a meeting, I have to block out time on the calendar first. 
+Basically, the "work calendar" defines everything about the day.
+I've had to make sure that if I am not going to be pencilled in for a meeting,
+I have to block out time on the calendar first.
 
-Also, sending invites to people + rooms -- the latter being the newest habit I've had to pick up.
+Also, sending invites to people + rooms --
+the latter being the newest habit I've had to pick up.
 
-Finally, setting informative titles for calendar events - if I want to have coffee or lunch with X, I can't just write "Coffee with X" - it literally shows up as "Coffee with X" on X's calendar, which is super awkward, as if they're having coffee with themselves! Something more informative, like, "Eric <> X coffee" really helps the other person, who might be super busy and thus only glances at their calendar once in a while.
+Finally, setting informative titles for calendar events -
+if I want to have coffee or lunch with X, I can't just write "Coffee with X" -
+it literally shows up as "Coffee with X" on X's calendar,
+which is super awkward, as if they're having coffee with themselves!
+Something more informative, like,
+"Eric <> X coffee" really helps the other person,
+who might be super busy
+and thus only glances at their calendar once in a while.
 
 **(2) Flagging emails and applying rules**
 
-Emails fly everywhere. It gets super overwhelming after a while. 
+Emails fly everywhere.
+It gets super overwhelming after a while.
 
-If there's stuff that needs to be followed-up on, it stays in my Inbox until it's done. It also gets flagged, which automatically creates a Todo on my task list. (If this sounds like Outlook - yes, it's Outlook. On macOS. With no "email snoozing" feature...)
+If there's stuff that needs to be followed-up on,
+it stays in my Inbox until it's done.
+It also gets flagged, which automatically creates a Todo on my task list.
+(If this sounds like Outlook - yes, it's Outlook.
+On macOS. With no "email snoozing" feature...)
 
 **(3) Hacking through legacy code and shared compute resources**
 
-Working on a compute cluster with a code base that's built for legacy versions of programming languages is super frustrating! Thankfully I know enough about the differences between Python 2 and Python 3 to hack my way through.
+Working on a compute cluster with a code base that's built
+for legacy versions of programming languages is super frustrating!
+Thankfully I know enough about the differences between Python 2 and Python 3
+to hack my way through.
 
-Shared compute resources means using `modules`, but not everybody sets up `modules` with the same set of assumptions as others. Some create virtual environments inside a module, others append to `$PATH`, and getting the right combinations in a modular way is really tricky. It means I have some really painful one-off `$PATH` hacks to make stuff work. Documentation is paramount - without putting in docs, I'll never remember what I did...
+Shared compute resources means using `modules`,
+but not everybody sets up `modules` with the same set of assumptions as others.
+Some create virtual environments inside a module,
+others append to `$PATH`,
+and getting the right combinations in a modular way is really tricky.
+It means I have some really painful one-off `$PATH` hacks to make stuff work.
+Documentation is paramount - without putting in docs,
+I'll never remember what I did...
 
 **(4) Adapting to others' coding styles**
 
-Not everybody is a Python programmer, and not everybody is a Pythonic programmer. The usual Python idioms that I'm used to (whether functional or object-oriented) sometimes get thrown out in favour of some other style (globals, anybody?), and I have to adapt to figure out what's going on. Thankfully my colleagues are open to me modifying their code, as long as I can demonstrate that the new version works fine, and I've been working hard to bring in Pythonic code style. 
+Not everybody is a Python programmer,
+and not everybody is a Pythonic programmer.
+The usual Python idioms that I'm used to
+(whether functional or object-oriented) sometimes get thrown out
+in favour of some other style (globals, anybody?),
+and I have to adapt to figure out what's going on.
+Thankfully my colleagues are open to me modifying their code,
+as long as I can demonstrate that the new version works fine,
+and I've been working hard to bring in Pythonic code style.
 
 **(5) Performance reviews**
 
-Gotta start getting used to this. I had a taste of it while volunteering as part of Tang Hall's student leadership, but now it's for real.
+Gotta start getting used to this.
+I had a taste of it while volunteering
+as part of Tang Hall's student leadership,
+but now it's for real.
+
 ---
 pub_date: 2017-10-03
 ---
