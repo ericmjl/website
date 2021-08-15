@@ -10,7 +10,7 @@ Two particularly interesting problems I've wanted to write my own implementation
 
 Multinomial classification ([notebook here](https://github.com/ericmjl/bayesian-analysis-recipes/blob/master/multiclass-logistic-regression-cover-type.ipynb)) is the problem where we try to classify an item as being one of multiple classes. This is the natural extension to binary classification (done by logistic regression). To do this, I took the [forest cover dataset](https://archive.ics.uci.edu/ml/datasets/covertype) and used PyMC3 to implement multinomial logistic regression. Seeing how to do it with PyMC3 was the most important aspect of this; actual accuracy wasn't much of a concern for me.
 
-However, having seen the classification report (at the bottom of the notebook), and having read that the dataset was originally classified using neural networks, I immediately had the thought of doing a Bayesian neural network for multi-class classification, having seen it implemented for binary classification on the PyMC3 website. 
+However, having seen the classification report (at the bottom of the notebook), and having read that the dataset was originally classified using neural networks, I immediately had the thought of doing a Bayesian neural network for multi-class classification, having seen it implemented for binary classification on the PyMC3 website.
 
 Bayesian neural networks are not hard to intuit - basically, we place priors on the weights, rather than learning point estimates. In doing so, we are able to propagate uncertainty forward to predictions. Speaking as a non-expert in the field, I think the tricky part is the sampling algorithms needed.
 
@@ -20,7 +20,7 @@ Starting with the code [from Thomas Wiecki's website](http://twiecki.github.io/b
 
 Moving forward, I'd like to improve on that notebook a bit more, by somehow implementing/developing a visualization for multiclass classification **uncertainty** which is the thing we gain from going Bayesian. Hopefully I'll be able to get to that next week - it's shaping up to look quite hectic!
 
-As a side note, I found a bug with the multinomial distribution implementation in PyMC3, and am working with one of the core developers to get it fixed in PyMC3's master branch. (Thanks a ton, Junpeng, if you ever get to read this! ) In the meantime, I simply took his patch, modified mine a little bit, and used the patched up PyMC3 for my own purposes. 
+As a side note, I found a bug with the multinomial distribution implementation in PyMC3, and am working with one of the core developers to get it fixed in PyMC3's master branch. (Thanks a ton, Junpeng, if you ever get to read this! ) In the meantime, I simply took his patch, modified mine a little bit, and used the patched up PyMC3 for my own purposes.
 
 This is why I think open source is amazing - I can literally patch the source code to get it to do what I need correctly! Wherever I work next has to be supportive of things like this, and have to allow re-release of generally/broadly useful code that I touch - it is the right thing to do!
 ---

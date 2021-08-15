@@ -4,13 +4,13 @@ author: Eric J. Ma
 ---
 body:
 
-Once again, I’m reminded through my research how neat and useful it is to be able to think of matrices as graphs and vice-versa. 
+Once again, I’m reminded through my research how neat and useful it is to be able to think of matrices as graphs and vice-versa.
 
-I was constructing a symmetric square matrix of values, in which multiple cells of the matrix were empty (i.e. no values present). (Thankfully, the diagonal is guaranteed dense.) From this matrix, I wanted the largest set of rows/columns that formed a symmetric, densely populated square matrix of values, subject to a second constraint that the set of rows/columns also maximally intersected with another set of items. 
+I was constructing a symmetric square matrix of values, in which multiple cells of the matrix were empty (i.e. no values present). (Thankfully, the diagonal is guaranteed dense.) From this matrix, I wanted the largest set of rows/columns that formed a symmetric, densely populated square matrix of values, subject to a second constraint that the set of rows/columns also maximally intersected with another set of items.
 
 Having thought about the requirements of the problem, my prior experience with graphs reminded me that every graph has a corresponding adjacency matrix, and that finding the densest symmetric subset of entries in the matrix was equivalent to finding cliques in a graph! My intern and I proceeded to convert the matrix into its graph representation, and a few API calls in `networkx` later, we found the matrix we needed.
 
-The key takeaway from this experience? Finding the right representation for a problem, we can computationally solve them quickly by using the appropriate APIs! 
+The key takeaway from this experience? Finding the right representation for a problem, we can computationally solve them quickly by using the appropriate APIs!
 ---
 pub_date: 2019-06-15
 ---

@@ -31,7 +31,7 @@ ARM Homebrew and x86 Homebrew get installed into two different directories. The 
 
 ### Anaconda
 
-Following the [best practices I outline in my knowledge base](https://ericmjl.github.io/data-science-bootstrap-notes/install-anaconda-on-your-machine/), I install Miniconda on my machine. After reading some blog posts online, I discovered that there's [miniforge](https://github.com/conda-forge/miniforge), a Miniconda distribution that comes with native ARM compatibility. As such, I started by installing that first. 
+Following the [best practices I outline in my knowledge base](https://ericmjl.github.io/data-science-bootstrap-notes/install-anaconda-on-your-machine/), I install Miniconda on my machine. After reading some blog posts online, I discovered that there's [miniforge](https://github.com/conda-forge/miniforge), a Miniconda distribution that comes with native ARM compatibility. As such, I started by installing that first.
 
 Soon, however, I found that there were some environments that I couldn't build. These included [the one for this website](https://github.com/ericmjl/website/blob/master/environment.yml), and anything involving JAX. Initially, I considered living with the situation and using a remote development machine, but I soon felt that nagging feeling that I was leaving a lot of awesome compute on the table by doing that. As such, I uninstalled Miniforge and installed Miniconda in emulation mode. As with Homebrew, I got Miniconda going by running the installer inside Hyper. After the installation was complete, I could build all of my conda environments with ease.
 
@@ -50,11 +50,11 @@ Docker has a technical preview for the M1 Mac, and it has only crashed once thus
 
 ### VSCode
 
-To get VSCode, I had to install and use the [Insiders build for ARM64](https://code.visualstudio.com/insiders/). No big hiccups here, everything installed without issues. As I mentioned above, building development containers involved zero hiccups. 
+To get VSCode, I had to install and use the [Insiders build for ARM64](https://code.visualstudio.com/insiders/). No big hiccups here, everything installed without issues. As I mentioned above, building development containers involved zero hiccups.
 
 ### Jupyter
 
-The Jupyter notebook server ran in x86 emulation mode with no issues as well. I installed the latest jupyter lab 3.0.5, which ran with no hiccups, was snappy in the browser, everything behaving in line with what I was accustomed to. 
+The Jupyter notebook server ran in x86 emulation mode with no issues as well. I installed the latest jupyter lab 3.0.5, which ran with no hiccups, was snappy in the browser, everything behaving in line with what I was accustomed to.
 
 ### Julia Language
 

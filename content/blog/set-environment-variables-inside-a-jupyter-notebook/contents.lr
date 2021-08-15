@@ -26,8 +26,8 @@ import os
 os.environ["MY_ENV_VAR"]
 ```
 
-Now, one thing has to be stated - according to 12 Factor App development principles, 
-you might need to set environment variables for sensitive information. 
+Now, one thing has to be stated - according to 12 Factor App development principles,
+you might need to set environment variables for sensitive information.
 You should **never, ever, ever** set those environment variables at the top of your notebook
 because they will be exposed!
 ---

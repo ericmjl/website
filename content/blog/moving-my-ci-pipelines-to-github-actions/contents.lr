@@ -99,7 +99,7 @@ To start, I made the build steps into individual bash scripts
 that are stored in the `scripts/ci/` directory.
 The scripts stored here are, in order of operation:
 
-2. `build_environment.sh`: used to build the `conda` environment for the tutorial, 
+2. `build_environment.sh`: used to build the `conda` environment for the tutorial,
 and package it up using `conda-pack`.
 3. `build_leanpub.sh`: used to build the source files that power the LeanPub book.
 4. `build_website.sh`: used to build the files that are hosted on GitHub Pages.

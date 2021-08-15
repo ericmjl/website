@@ -17,11 +17,11 @@ From Wikipedia, Fermi estimation is described as such:
 > The estimation technique is named after physicist Enrico Fermi
 > as he was known for his ability to make good approximate calculations
 > with little or no actual data.
-> Fermi problems typically involve making justified guesses about quantities and their variance 
+> Fermi problems typically involve making justified guesses about quantities and their variance
 > or lower and upper bounds.
 
-What struck me is how this relates to thinking about prior distributions for parameter estimates. 
-A common critique of Bayesian estimation models is that 
+What struck me is how this relates to thinking about prior distributions for parameter estimates.
+A common critique of Bayesian estimation models is that
 "one can cook up priors to make the model say anything you want".
 While true, it ignores the reality that most of us will be able to to use Fermi estimation
 to come up with justified and weakly-informative priors.
@@ -41,7 +41,7 @@ As a prior, it's uninformative enough for the problem that data can refine the d
 and few would argue against this choice when framed the way above.
 
 Let's consider counterfactually ridiculous priors.
-It would be unreasonable if I placed scale = 10 as the prior. 
+It would be unreasonable if I placed scale = 10 as the prior.
 Why?
 In that case, we are spanning orders of magnitude
 that are practically unreasonable for the category of things we call bacteria.

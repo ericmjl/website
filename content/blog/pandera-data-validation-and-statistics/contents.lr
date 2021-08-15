@@ -21,7 +21,7 @@ and have been keeping an eye on the space ever since.
 But let’s step back a bit.
 
 What do we mean by schema/data validation? It’s merely a fancy way of checking,
-“are my data as I expect them to be?” 
+“are my data as I expect them to be?”
 
 Here’s an example.
 Imagine you have a data table,
@@ -69,7 +69,7 @@ as it means if the checks are run as part of a CI pipeline,
 they’ll continually be checked.
 However,
 they cannot be checked whenever I call on `load_data()`,
-which is the most important time I’d need those checks to appear — 
+which is the most important time I’d need those checks to appear —
 whenever I’m going to use that data loading function,
 i.e. at runtime, and have to depend on them being correct.
 To have those checks available at runtime,
@@ -87,14 +87,14 @@ that serves as a defined source of truth:
 from pandera import Column,
 DataFrameSchema,
 Check
-import pandera as pa 
+import pandera as pa
 
 schema = DataFrameSchema(
     columns={
         "non_zero_column": Column(pa.Float, Check.greater_than(0)),
         "categorical_column": Column(pa.String, Check.isin(["value_1", "value_2"])),
     }
-)    
+)
 ```
 
 Now, the flexibility with which this schema gets used

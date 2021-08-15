@@ -4,13 +4,13 @@ author: Eric J. Ma
 ---
 body:
 
-There's the [p-value][538] vs. [significance][nature] problem. I think it's widely agreed that education and training have a big role to play in fixing the culture of p-hacking. I think apart from the math-y parts of the problem, scientists are also stuck with a language problem. 
+There's the [p-value][538] vs. [significance][nature] problem. I think it's widely agreed that education and training have a big role to play in fixing the culture of p-hacking. I think apart from the math-y parts of the problem, scientists are also stuck with a language problem.
 
 ![XKCD p-values](https://imgs.xkcd.com/comics/p_values.png)
 
 [538]: http://fivethirtyeight.com/features/statisticians-found-one-thing-they-can-agree-on-its-time-to-stop-misusing-p-values/
 [nature]: http://www.nature.com/news/scientific-method-statistical-errors-1.14700
- 
+
 For example, I think you'd find this familiar: a statistically poorly-trained scientist will ask "whether the data show the hypothesis to be significant or not". I won't dive into an analysis as to how misleading the phrasing is, but I hope that the error in logical thinking is evident. Data don't decide whether a hypothesis is significant or not. The nature of the scientific question, and future historians' evaluation of the question, define the "significance" of the hypothesis being tested.
 
 Less poorly informed scientists may ask, "is there a significant difference between my treatment and control?" That really depends on the magnitude of the difference, whether it's percentage/fractional/fold difference, or absolute difference, or odds ratios. Note here, p-values don't tell that. I'd point the reader to Allen Downey's [excellent set of material][allen] that introduce this concept.
@@ -26,7 +26,7 @@ I'd assert here that for a scientist, the language that's used in describing the
 
 **(1) Instead of describing a "significant difference", describe the difference.**
 
-Replace the following phrasing: 
+Replace the following phrasing:
 
 > our results showed a significant difference between treatment and control (INCORRECT)
 
@@ -51,7 +51,7 @@ replace it instead with:
 
 **(3) Report uncertainty.**
 
-Let's build on that statement with uncertainty. Instead of: 
+Let's build on that statement with uncertainty. Instead of:
 
 > our results showed that the treatment exhibited 220% the activity level of the control (cohen's d: 2.5) (INCOMPLETE)
 

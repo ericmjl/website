@@ -32,7 +32,7 @@ https://mybinder.org/v2/<PROVIDER>/<REPO_NAME>/<BRANCH/TAG/COMMIT>?filepath=<FIL
 
 Here, the `<FILE_PATH>` is a POSIX-style string relative to the repository root. A thing to note: all of the `/` characters in the `<FILE_PATH>` probably have to be replaced with `%2F`, otherwise the URL might not work correctly!
 
-Using this pattern, I was able to insert a Launch Binder icon for all of my Jupyter notebooks in the Network Analysis Made Simple repository! 
+Using this pattern, I was able to insert a Launch Binder icon for all of my Jupyter notebooks in the Network Analysis Made Simple repository!
 
 That said, manually inserting that many Launch Binder icons by hand is not an easy-to-maintain thing. Is there a better way? You bet!
 
