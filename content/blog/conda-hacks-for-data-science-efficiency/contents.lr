@@ -4,21 +4,21 @@ author: Eric J. Ma
 ---
 body:
 
-The `conda` package manager has, over the years, become an integral part of my workflow. I use it to manage project environments, and have built a bunch of very simple hacks around it that you can adopt too. I'd like to share them with you, alongside the rationale for using them. 
+The `conda` package manager has, over the years, become an integral part of my workflow. I use it to manage project environments, and have built a bunch of very simple hacks around it that you can adopt too. I'd like to share them with you, alongside the rationale for using them.
 
 ## Hack #1: Set up your `.condarc`
 
 **Why?** It will save you a few keystrokes each time you want to do something with `conda`. For example, in my `.condarc`, I have the following:
 
 ```yaml
-# Set the channels that the `conda install` command will 
+# Set the channels that the `conda install` command will
 # automatically search through.
 channels:
   - defaults
   - conda-forge
   - ericmjl
 
-# Always accept installation. Is convenient, but always 
+# Always accept installation. Is convenient, but always
 # double-check!
 always_yes: true
 ```
@@ -58,7 +58,7 @@ dependencies:
 	- tqdm  # for example only, tqdm is actually available by conda.
 ```
 
-A hack that I have related to this is that I use TextExpander shortcut to populate a starting environment spec file. 
+A hack that I have related to this is that I use TextExpander shortcut to populate a starting environment spec file.
 
 Additionally, if I want to install a new package, rather than simply typing `conda install <packagename>`, I will add the package to the environment spec file, and then type `conda env update -f environment.yml`, as more often than not, my default is to continue using the package I added.
 
@@ -108,7 +108,7 @@ source /path/to/.conda-auto-env
 
 ## Hack 4: hijack bash aliases for `conda` commands
 
-I use aliases to save myself a few keystrokes whenever I'm at the terminal. This is a generalizable bash hack, but here it is as applied to `conda` commands. 
+I use aliases to save myself a few keystrokes whenever I'm at the terminal. This is a generalizable bash hack, but here it is as applied to `conda` commands.
 
 Anyways, these are the commands that I use most often, which I have found it useful to alias:
 
@@ -129,7 +129,7 @@ Then, source `.aliases` in your `. bashrc`:
 source /path/to/.aliases
 ```
 
-Now, all of your defined aliases will be available in your bash shell. 
+Now, all of your defined aliases will be available in your bash shell.
 
 The idea/pattern, as I mentioned earlier, is generalizable beyond just bash commands. (I have `ls` aliased for `exa`, and `l` aliased for `ls` - the epitome of laziness!)
 

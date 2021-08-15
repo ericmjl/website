@@ -53,7 +53,7 @@ the Bernoulli distribution object does not exist.
 I have a collaborator
 who wants to build on top of Bernoulli distributions
 to make other things.
-They would have to copy/paste this _imperative_ block of code 
+They would have to copy/paste this _imperative_ block of code
 into their programs.
 
 ### Oppa _Functional_ Style
@@ -178,7 +178,7 @@ An object-oriented paradigm here also works well,
 because the way `.rvs()` and `.pdf()` have to be implemented
 for each probability distribution is different,
 but the inputs to those functions are similar
-across the entire category of things  
+across the entire category of things
 called "probability distributions".
 
 ### A reflection
@@ -228,7 +228,7 @@ the little subject matter discipline that we inhabit.
 As a discipline (i.e. "way of thought"),
 well-written software also enables us to build
 on top of others' thoughtfully laid out tooling.
-As such we are 
+As such we are
 
 ### Stability in underlying “primitives” matter
 
@@ -387,7 +387,7 @@ are on the line too!)
 Having the public audience
 is something personally motivating.
 Having written all that,
-I will acknowledge too 
+I will acknowledge too
 that this is not uniformly true for everybody!
 
 ## Conclusion
@@ -404,7 +404,7 @@ these might be lack of knowledge,
 or too much external pressure to deliver results,
 and as such no action is taken.
 
-With this essay, I attempted to extend 
+With this essay, I attempted to extend
 what Mridul Seth and Sebastian Benthall elaborated on.
 In particular, I wanted to show
 that “writing good code” is a natural extension
@@ -412,7 +412,7 @@ of “thinking clearly about a problem”,
 and thus suggest that leveraging software skills
 gives us superpowers in our data science work.
 
-I started with the concrete task of "generating random numbers", 
+I started with the concrete task of "generating random numbers",
 showing how thinking clearly about
 how to structure probability distributions
 as classes with innate properties

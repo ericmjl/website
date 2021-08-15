@@ -4,7 +4,7 @@ author: Eric J. Ma
 ---
 body:
 
-A few years on after trying out PyPy for the first time and wrestling with it, I still find it to be pretty awesome. 
+A few years on after trying out PyPy for the first time and wrestling with it, I still find it to be pretty awesome.
 
 Now that PyPy officially supports `numpy`, I'm going to profile a few simple statistical simulation tasks:
 
@@ -31,11 +31,11 @@ Here's a description of what's happening:
 
 It's pretty clear that when PyPy is dealing with "pure" data (i.e. not having to pass data between Python and C), PyPy runs very, very fast, and, at least in the scenarios tested here, it performs faster than the CPython interpreter. This is consistent with my previous observations, and probably explains why PyPy is very good for code that is very repetitive; the JIT tracer really speeds things up.
 
-That last plot (bottom-right) is a big curiosity. Using the code below, I measured the random number generation is actually just as fast as it should be using CPython, but that PyPy failed badly when I was passing in a `numpy` array to the `Counter()` object (from the standard library). I'm not sure what is happening behind-the-scenes, but I have reached out to the PyPy developers to ask what's going on, and will update this post at a later date. 
+That last plot (bottom-right) is a big curiosity. Using the code below, I measured the random number generation is actually just as fast as it should be using CPython, but that PyPy failed badly when I was passing in a `numpy` array to the `Counter()` object (from the standard library). I'm not sure what is happening behind-the-scenes, but I have reached out to the PyPy developers to ask what's going on, and will update this post at a later date.
 
 **UPDATE:** I heard back from the PyPy devs [on BitBucket](https://bitbucket.org/pypy/pypy/issues/2680/slow-speed-going-from-numpy-data-structure), and this is indeed explainable by data transfer between the C-to-PyPy interface. It's probably parallel to the latency that arises from transferring data between the CPU and GPU, or between compute nodes.
 
-So, what does this mean? It means that for pure Python code, PyPy can be a very powerful way to accelerate your code. One example I can imagine is agent-based simulations using Python objects. Another example that comes to mind is running a web server that only ever deals with strings, floats and JSONs (in contrast to matrix-heavy scientific computing). 
+So, what does this mean? It means that for pure Python code, PyPy can be a very powerful way to accelerate your code. One example I can imagine is agent-based simulations using Python objects. Another example that comes to mind is running a web server that only ever deals with strings, floats and JSONs (in contrast to matrix-heavy scientific computing).
 
 Now, for those who are curious, here's the source code for the **pure Python implementation of the mean of random numbers**.
 

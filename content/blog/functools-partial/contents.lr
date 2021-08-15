@@ -6,7 +6,7 @@ body:
 
 If you’ve done Python programming for a while, I think it pays off to know some little tricks that can improve the readability of your code and decrease the amount of repetition that goes on.
 
-One such tool is `functools.partial`. It took me a few years after my first introduction to `partial` before I finally understood why it was such a powerful tool. 
+One such tool is `functools.partial`. It took me a few years after my first introduction to `partial` before I finally understood why it was such a powerful tool.
 
 Essentially, what `partial` does is it wraps a function and sets a keyword argument to a constant. That’s it. What do we mean?
 
@@ -59,7 +59,7 @@ The most common place I have used it is in Flask. I have built Flask apps where 
 ```python
 from bokeh import __version__ as bkversion
 from flask import render_template, Flask
-from functools import partial 
+from functools import partial
 
 render_template = partial(render_template, bkversion=bkversion)
 

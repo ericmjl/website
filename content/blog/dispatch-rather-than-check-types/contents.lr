@@ -40,7 +40,7 @@ def my_func(df: pd.DataFrame, column_names: Union[List, Tuple, str]):
 
 Here are the problems I see:
 
-1. Notice how nested that function `my_func` is. It definitely goes against the Zen of Python's recommendation that "flat is better than nested". 
+1. Notice how nested that function `my_func` is. It definitely goes against the Zen of Python's recommendation that "flat is better than nested".
 2. At the same time, the function silently fails for data types that are not explicitly supported -- also an anti-pattern that should not be encouraged.
 
 Here's the same function written instead as two functions that share the same name, leveraging the [multipledispatch package by Matt Rocklin](https://github.com/mrocklin/multipledispatch):
@@ -53,7 +53,7 @@ import pandas as pd
 @dispatch(pd.DataFrame, str)
 def my_func(df, column_names):
     # do str-specific behaviour
-    return df 
+    return df
 
 @dispatch(pd.DataFrame, (List, Tuple))
 def my_func(df, column_names):

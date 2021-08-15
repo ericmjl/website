@@ -16,11 +16,11 @@ Each of us had to demo a "final product". Initially, I was thinking about a "for
 
 Bokeh was used mainly for displaying three data panels in the browser. Firstly, I wanted to show how flu vaccine efficacy rarely crossed the 60% threshold over the years. Secondly, I wanted to show a breakdown of the number of sequences collected per year (as used in my dataset). Thirdly, I wanted to show a visual display of influenza evolution.
 
-For yearly vaccine effectiveness, it was essentially a line and scatter chart, with the Y-axis constrained between 0 and 100%. I added a hover tooltip to enable my readers to see the exact value of vaccine effectiveness as measured by the US CDC. 
+For yearly vaccine effectiveness, it was essentially a line and scatter chart, with the Y-axis constrained between 0 and 100%. I added a hover tooltip to enable my readers to see the exact value of vaccine effectiveness as measured by the US CDC.
 
-To show the number of sequences per year in the dataset, the same kind of chart was deployed. 
+To show the number of sequences per year in the dataset, the same kind of chart was deployed.
 
-Bokeh magic became really evident later when I wanted to show sequence evolution in 3 dimensions. Because 3D charts are generally a poor choice for a flat screen, I opted to show pairs of dimensions at a time. A nice side-effect of this is that because my `ColumnDataSource` was shared amongst each of the three pairs of coordinates, panning and selection was automatically linked for free. 
+Bokeh magic became really evident later when I wanted to show sequence evolution in 3 dimensions. Because 3D charts are generally a poor choice for a flat screen, I opted to show pairs of dimensions at a time. A nice side-effect of this is that because my `ColumnDataSource` was shared amongst each of the three pairs of coordinates, panning and selection was automatically linked for free.
 
 ## Usage Pros and Cons
 
@@ -34,7 +34,7 @@ There were times where I was tempted to just use the `bkcharts`' declarative int
 
 I built my interactive blog post using a combination of Flask, hand-crafted HTML, Bootstrap CSS & JS, and Bokeh - which took care of the bulk of visuals. I drew static figures using Illustrator.
 
-Embedding the necessary Bokeh components wasn't difficult. Very good documentation is available on the [Bokeh docs](http://bokeh.pydata.org/en/latest/docs/user_guide/embed.html). The key insight that I had learned was that I could have the `components` passed into my Flask app functions' `return` statements, and embed them using Jinja2 templating syntax. An example can be found [here](https://github.com/ericmjl/flu-sequence-predictor/blob/master/templates/index.html#L81). Basically, `components` returns a `div` and a `js` object, which are essentially just strings. To embed them in the templates, we use the syntax `{{ div|safe }}` and `{{ js|safe }}`. That `|safe` is very important: it tells the Jinja2 templating engine that it's safe to render those pieces of Javascript and HTML. 
+Embedding the necessary Bokeh components wasn't difficult. Very good documentation is available on the [Bokeh docs](http://bokeh.pydata.org/en/latest/docs/user_guide/embed.html). The key insight that I had learned was that I could have the `components` passed into my Flask app functions' `return` statements, and embed them using Jinja2 templating syntax. An example can be found [here](https://github.com/ericmjl/flu-sequence-predictor/blob/master/templates/index.html#L81). Basically, `components` returns a `div` and a `js` object, which are essentially just strings. To embed them in the templates, we use the syntax `{{ div|safe }}` and `{{ js|safe }}`. That `|safe` is very important: it tells the Jinja2 templating engine that it's safe to render those pieces of Javascript and HTML.
 
 ## Conclusion
 

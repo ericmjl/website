@@ -25,7 +25,7 @@ Here's an explainer of the _anatomy_ of the lambda function.
 - The signature of the function, meaning, the arguments the function takes in, is given by everything between `lambda` and `:`. In our example, the signature of the function is `x`, meaning the function only takes in a single argument, `x`.
 - The stuff the function returns is everything after the `:`. In our case, it's the boolean result of `x % 2 == 0`.
 
-So a lambda function _basically_ equivalent to a Python function. The key difference here is that it is considered "anonymous", in that we have not given it an explicit name. 
+So a lambda function _basically_ equivalent to a Python function. The key difference here is that it is considered "anonymous", in that we have not given it an explicit name.
 
 Let me explain. When we use the following pattern:
 

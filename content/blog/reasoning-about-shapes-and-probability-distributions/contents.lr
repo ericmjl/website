@@ -4,7 +4,7 @@ author: Eric J. Ma
 ---
 body:
 
-I’m here with the PyMC4 dev team and Tensorflow Probability developers Rif, Brian and Chris in Google Montreal, and have found the time thus far to be an amazing learning opportunity. 
+I’m here with the PyMC4 dev team and Tensorflow Probability developers Rif, Brian and Chris in Google Montreal, and have found the time thus far to be an amazing learning opportunity.
 
 Prior to this summit, it never dawned on me how interfacing tensors with probability distributions could be such a minefield of overloaded ideas and terminology. Yet, communicating clearly about tensors is important, because if problems can be cast into a tensor-space operation, vectorization can help speed up many operations that we wish to handle. I wanted to share a bit about something new about tensors that I learned here: the different types of shapes involved in a probabilistic programming language.
 
@@ -26,13 +26,13 @@ Now, what if I had a second Gaussian, say, with a different mean and/or variance
 
 ![](./one-draw-two-normals.png)
 
-In this case, we may argue that per distribution, the elementary shape of the *event* did not change. However, since we have a *batch* of two distributions, this contributes to the final shape of the tensor. Again, with much waving of my hands in the air, this should extend to more than two distributions. 
+In this case, we may argue that per distribution, the elementary shape of the *event* did not change. However, since we have a *batch* of two distributions, this contributes to the final shape of the tensor. Again, with much waving of my hands in the air, this should extend to more than two distributions.
 
 Now, what if we had a multivariate Gaussian, with two variates? This makes for a very interesting case! The elementary *event* drawn from this multivariate Gaussian is a two-element vector, not a scalar, which means that its shape is apparently identical to the case where we have a single pair of numbers drawn from a batch of two independent Gaussians! This looks like the following:
 
 ![](./one-draw-bivariate-normal.png)
 
-This is interesting, because a single draw from a bivariate Gaussian has the same overall shape as two draws from one Gaussian, which also has the same shape as one draw from a batch of two Gaussians. Yet, these apparently same-shaped draws are shaped differently semantically! In particular, the two independent Gaussians individually have elementary *event* shapes that are scalar, but when drawn as a *batch* of two, that is when their shape of `(2,)` forms. On the other hand, the multivariate Gaussian cannot have its two numbers drawn independent of one another (unless this is the special case of diagonal-only covariance - in which case, this is equivalent to independent Gaussians). Hence, the elementary *event* shape is not scalar, but vector (or more generally, same rank tensor as the mean tensor), but the *batch* has only a single distribution, hence it has a scalar batch shape. 
+This is interesting, because a single draw from a bivariate Gaussian has the same overall shape as two draws from one Gaussian, which also has the same shape as one draw from a batch of two Gaussians. Yet, these apparently same-shaped draws are shaped differently semantically! In particular, the two independent Gaussians individually have elementary *event* shapes that are scalar, but when drawn as a *batch* of two, that is when their shape of `(2,)` forms. On the other hand, the multivariate Gaussian cannot have its two numbers drawn independent of one another (unless this is the special case of diagonal-only covariance - in which case, this is equivalent to independent Gaussians). Hence, the elementary *event* shape is not scalar, but vector (or more generally, same rank tensor as the mean tensor), but the *batch* has only a single distribution, hence it has a scalar batch shape.
 
 To summarize, here are the various kinds of shapes, defined:
 
@@ -42,7 +42,7 @@ To summarize, here are the various kinds of shapes, defined:
 
 **Sample shape:** The shape of a bunch of samples drawn from the distributions.
 
-And finally, here’s the full spread of possibilities, using one or two draws, uni- or bi-variate Gaussians, and one or two batches of distributions as an illustration. 
+And finally, here’s the full spread of possibilities, using one or two draws, uni- or bi-variate Gaussians, and one or two batches of distributions as an illustration.
 
 ![](./shapes-blog-post-md.png)
 
@@ -50,13 +50,13 @@ Special thanks goes to fellow PyMC devs, Ravin Kumar, Brandon Willard, Colin Car
 
 ## Why Shapes Matter: Broadcasting
 
-Why do these different shapes matter? Well, it matters most when we are thinking about broadcasting in a semantically-consistent fashion, particularly when considering batches and events. When it comes to implementing a tensor library with probability distributions as first-class citizens, reasoning about these shapes properly can really help with implementing an API that end-users can grok in a reasonable fashion. 
+Why do these different shapes matter? Well, it matters most when we are thinking about broadcasting in a semantically-consistent fashion, particularly when considering batches and events. When it comes to implementing a tensor library with probability distributions as first-class citizens, reasoning about these shapes properly can really help with implementing an API that end-users can grok in a reasonable fashion.
 
-Let’s return to the simple case where we have two different types of shape `(2,)` Gaussians declared: a batch of two Gaussians, and a bivariate Gaussian. One useful thought experiment is to think about the computation of the log probability of a vector of two numbers, `X = (x1, x2)`, where `x1` and `x2` are not necessarily the same numbers. 
+Let’s return to the simple case where we have two different types of shape `(2,)` Gaussians declared: a batch of two Gaussians, and a bivariate Gaussian. One useful thought experiment is to think about the computation of the log probability of a vector of two numbers, `X = (x1, x2)`, where `x1` and `x2` are not necessarily the same numbers.
 
 In the case of the bivariate Gaussians, how many log probabilities should we return? In this case, it makes semantic sense to return only one number, because in a bivariate Gaussian, the two numbers could not have been drawn independent of each other, and hence the log probability has to be computed with consideration to the full joint distribution.
 
-In the case of the batch of two Gaussians, how many log probabilities should we return? Is it one number, or is it two? Semantically, it makes sense to return two numbers, because we are evaluating `x1` against the first Gaussian, and `x2` against the second Gaussian in the batch of Gaussians. Most crucially, this differs from the bivariate case, because by structuring our Gaussians in a batch, we are essentially declaring our intent to evaluate their log probabilities independent of each other. 
+In the case of the batch of two Gaussians, how many log probabilities should we return? Is it one number, or is it two? Semantically, it makes sense to return two numbers, because we are evaluating `x1` against the first Gaussian, and `x2` against the second Gaussian in the batch of Gaussians. Most crucially, this differs from the bivariate case, because by structuring our Gaussians in a batch, we are essentially declaring our intent to evaluate their log probabilities independent of each other.
 
 Borrowing from the above master figure, here's the a figure that shows how likelihood computations happen:
 
@@ -72,17 +72,17 @@ If I now asked to evaluate the log probability of `x1` only, how should broadcas
 
 If I have a batch of two bivariate Gaussians, hence effectively creating a (batch shape = 2, event shape = 2) vector of bivariate distributions, and I ask to evaluate the log probability of a matrix of values `((x1, x2), (x3, x4))`, in which way do we orient the values? Do we assume that `(x1, x2)` are to be evaluated against the first Gaussian, or `(x1, x3)` are to be evaluated against the first Gaussian? (We don’t have to worry about `(x1, x4)`, because to the average user, it is unreasonable whichever way we look.)
 
-Both these examples illustrate an inherent difficulty to thinking about tensor shapes without reference to what each of the dimensions mean. 
+Both these examples illustrate an inherent difficulty to thinking about tensor shapes without reference to what each of the dimensions mean.
 
 ## Improving Shape Semantics
 
-What could we do, then, to improve the semantic understandability of tensor shapes? 
+What could we do, then, to improve the semantic understandability of tensor shapes?
 
-One solution would be to name tensor axes by what they mean. The `xarray` project does exactly that! However, it can’t be used in differential computing, because (to the best of my knowledge), there is no automatic differentiation system that works with it. 
+One solution would be to name tensor axes by what they mean. The `xarray` project does exactly that! However, it can’t be used in differential computing, because (to the best of my knowledge), there is no automatic differentiation system that works with it.
 
-In addition, there’s `namedtensor` from Harvard NLP that aims to provide an analogous solution to the problem, though I find it a pity that they chose to implement it against `pytorch` rather than to create an extension to the idiomatic `numpy` instead. 
+In addition, there’s `namedtensor` from Harvard NLP that aims to provide an analogous solution to the problem, though I find it a pity that they chose to implement it against `pytorch` rather than to create an extension to the idiomatic `numpy` instead.
 
-The TensorFlow Probability team also has a solution, in which they separate the three types of shapes explicitly, though no naming happens on a per-axis basis. 
+The TensorFlow Probability team also has a solution, in which they separate the three types of shapes explicitly, though no naming happens on a per-axis basis.
 
 I think there are great ideas in all three, and when I take a birds-eye view of the scientific computing ecosystem in Python as both a developer and end-user, I’d love to see the NumPy API, which is idiomatic and widely used and built on top of, become aware of each of these types of designs, something akin to NEP-18, the array function dispatching protocol that allows NumPy APIs to be called on other tensor libraries.
 ---

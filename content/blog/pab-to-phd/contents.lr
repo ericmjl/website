@@ -6,7 +6,7 @@ body:
 
 Bayes' rule looks like this:
 
-$$P(A|B) = 
+$$P(A|B) =
 \frac{P(B|A)P(A)}
 {P(B)}
 $$
@@ -24,7 +24,7 @@ something along the lines of the following:
 > Now, there is an alternative _interpretation_ of Bayes' rule,
 > one that replaces the symbol "A" with "Hypothesis",
 > and "B" with the "Data", such that we get:
-> 
+>
 > $$P(H|D) = \frac{P(D|H)P(H)}{P(D)}$$
 
 At first glance, nothing seems wrong about this statement,

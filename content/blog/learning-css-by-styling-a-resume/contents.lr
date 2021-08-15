@@ -13,15 +13,15 @@ Since I've been on leave for a while, I decided that it was a good idea to updat
 To gather inspiration, I browsed several designs that were freely available online. Amongst those that I personally found aesthetically pleasing and informative, I noticed that:
 
 1. There were a lot of whitespaces. By contrast, my old resume site was visually dense.
-2. Prose was deployed effectively for _clarity_. By comparison, my previous resume site was a tad brief in my skills section. 
+2. Prose was deployed effectively for _clarity_. By comparison, my previous resume site was a tad brief in my skills section.
 3. The colour scheme was well-defined with tasteful colour accents. By contrast, my old resume site was a bit overwhelmingly dark.
 4. Resumes that were _relatable_ had a headshot of the person. For some reason, seeing a face is quite important.
 
 One of the designs that I saw used a left-right layout for each item in education and experience. For example, with work experience, the left third of a Bootstrap card would contain the role title, with a short description placed on that card's right side. One example I saw also included an aesthetically pleasing pine green background colour on the left third. That became one of the biggest design inspirations that I used.
 
-Additionally, I revisited the [Nord theme](#) colours. I rediscovered `nord7` through to `nord15`, the non-blue/gray colours that are part of the standard palette. They were gorgeous colours! Since my resume already had sections, I decided that the colours could help visually identify each section. 
+Additionally, I revisited the [Nord theme](#) colours. I rediscovered `nord7` through to `nord15`, the non-blue/gray colours that are part of the standard palette. They were gorgeous colours! Since my resume already had sections, I decided that the colours could help visually identify each section.
 
-I saw two CSS features in other resumes and decided to incorporate them. They were (1) drop shadows for the cards and (2) hover scaling to give the resume a bit of additional "pop." Those turned out to be easy-to-implement yet beautiful interaction elements that I could include. Along the way, I learned about CSS transitions and scaling too. 
+I saw two CSS features in other resumes and decided to incorporate them. They were (1) drop shadows for the cards and (2) hover scaling to give the resume a bit of additional "pop." Those turned out to be easy-to-implement yet beautiful interaction elements that I could include. Along the way, I learned about CSS transitions and scaling too.
 
 Finally, in all the examples that I reviewed, the ones that were the _cleanest_ had no icons on the headers. Icons next to headings were something I used to have because I thought it looked cool. I was also using it to getting familiar with FontAwesome's icon sets. However, my personal aesthetic has changed now. I now think the resume looks less cluttered and much cleaner without the icons.
 
@@ -94,9 +94,9 @@ And here's a full screenshot of the page in case you're feeling lazy :).
 
 ## Lessons Learned
 
-This was a fantastic exercise, crafting a personal resume to my liking. In particular, I enjoyed discovering new things about CSS that I didn't know before. I also enjoyed bringing some pop and colour into my resume. 
+This was a fantastic exercise, crafting a personal resume to my liking. In particular, I enjoyed discovering new things about CSS that I didn't know before. I also enjoyed bringing some pop and colour into my resume.
 
-Having previously structured my resume in a pretty sane YAML format made it much easier for me to change what I thought needed reworking. Since a resume is primarily composed of data, this reinforced for me that storing data in a sane data structure is supremely important. Counterfactually, if my resume were entangled with the HTML by being written directly in HTML, I'd lose the flexibility to rework isolated parts of the system. 
+Having previously structured my resume in a pretty sane YAML format made it much easier for me to change what I thought needed reworking. Since a resume is primarily composed of data, this reinforced for me that storing data in a sane data structure is supremely important. Counterfactually, if my resume were entangled with the HTML by being written directly in HTML, I'd lose the flexibility to rework isolated parts of the system.
 
 Finally, this exercise reinforced for me that _art is a beautiful medium for learning tech_. Styling a resume is nothing critical. But treating the act of styling the resume as an art project means there is a creative outlet for anything technical to learn. The resume, I think, is a particularly excellent win-win outlet. Because it's highly _personalized_, you can flex your design and creativity muscles. Simultaneously, because it is highly _useful_, you'll effectively be investing in your career development anyways.
 ---
@@ -106,8 +106,8 @@ summary: Once in a while, I make it a practice to hack on my resume. The goal is
 ---
 tags:
 
-css 
-html 
+css
+html
 career development
 coding
 programming

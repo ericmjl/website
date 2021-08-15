@@ -17,7 +17,7 @@ Intuitively, we might think that ancestors and descendants apply only to directe
 
 Here's why.
 
-We can think of undirected graphs as being *equivalent* to directed graphs that have bidirectional edges between nodes. When viewed this way, an undirected graph is a specific case of the more general directed graph. 
+We can think of undirected graphs as being *equivalent* to directed graphs that have bidirectional edges between nodes. When viewed this way, an undirected graph is a specific case of the more general directed graph.
 
 When we trace all ancestors of a node, we are recursively collecting nodes along the path into that node. If we continue recursively collecting nodes in the bidirectional representation of an undirected graph, then we will end up collecting all of the nodes in the _connected component_ of the graph that are connected to the node we are asking for ancestors. The same argument applies to descendants.
 

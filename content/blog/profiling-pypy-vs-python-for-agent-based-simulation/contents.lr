@@ -125,12 +125,12 @@ I use statistical Bernoulli trials (biased coin flips) extensively in the simula
         def __init__(self, p):
             super(bernoulli, self).__init__()
             self.p = p
-            
+
         def rvs(self, num_draws):
             draws = []
             for i in range(num_draws):
                 draws.append(int(random() &gt; self.p))
-        
+
             return draws
 
 This is <em>almost</em> a drop-in replacement for <code>scipy.stats.bernoulli</code>. (The API isn't exactly the same.) I wanted to know whether the calling <code>bernoulli</code> function I wrote performed better than calling on the <code>scipy.stats</code> function. I therefore setup a series of small tests to determine at what scale of function calls it makes more sense to use PyPy vs. CPython.
@@ -152,7 +152,7 @@ I then wrote a simple block of code that times the Bernoulli draws. For the PyPy
 
     start = time()
     bern_draws = bernoulli(0/5).rvs(10000)
-    mean = sum(bern_draws) / len(bern_draws)   
+    mean = sum(bern_draws) / len(bern_draws)
     end = time()
 
     print(end - start)

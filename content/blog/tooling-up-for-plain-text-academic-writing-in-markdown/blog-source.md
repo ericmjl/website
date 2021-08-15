@@ -8,7 +8,7 @@ I'm writing a [white paper on genomic surveillance](https://github.com/ericmjl/g
 
 Because I get to write in plain text, I also get to version control the text. By selectively committing logical blocks, I can also easily selectively revert unwanted commits; it's rare, but once in a while it's saved my work.
 
-Because it's plain text, I can export to anywhere with a bit of configuration. 
+Because it's plain text, I can export to anywhere with a bit of configuration.
 
 Because it's written publicly, it's [great](https://speakerdeck.com/jakevdp/in-defense-of-extreme-openness).
 
@@ -57,7 +57,7 @@ It basically took me one morning's worth of time invested in tooling this up, bu
 
 *Pandoc*
 
-```json    
+```json
     "pandoc-path": "/path/to/pandoc",
 ```
 ```json
@@ -67,7 +67,7 @@ It basically took me one morning's worth of time invested in tooling this up, bu
           "text.html.markdown": "markdown"
         },
         "pandoc-arguments": [
-          "-t", "pdf", 
+          "-t", "pdf",
           "--latex-engine=/path/to/pdflatex",
           "-o", "/path/to/output.pdf",
           "--filter", "/path/to/pandoc-fignos",
@@ -109,7 +109,7 @@ Specifically, the format of what I have above is:
 ```markdown
 ---
 title: "My Title Here"
-author: 
+author:
 - "Author 1 (Affiliation)"
 - "Author 2 (Affiliation)"
 date: 22 June 2016

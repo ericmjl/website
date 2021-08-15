@@ -6,9 +6,9 @@ body:
 
 I first learned GPs about two years back, and have been fascinated by the idea. I learned it through a video by David MacKay, and managed to grok it enough that I could put it to use in simple settings. That was reflected in my [Flu Forecaster project](https://fluforecaster.herokuapp.com), in which my GPs were trained only on individual latent spaces.
 
-Recently, though, I decided to seriously sit down and try to grok the math behind GPs (and other machine learning models). To do so, I worked through [Nando de Freitas' YouTube videos on GPs](https://youtu.be/4vGiHC35j9s). (Super thankful that he has opted to put these videos up online!) 
+Recently, though, I decided to seriously sit down and try to grok the math behind GPs (and other machine learning models). To do so, I worked through [Nando de Freitas' YouTube videos on GPs](https://youtu.be/4vGiHC35j9s). (Super thankful that he has opted to put these videos up online!)
 
-The product of this learning is two-fold. Firstly, I have added a [GP notebook](https://github.com/ericmjl/bayesian-analysis-recipes/blob/master/notebooks/gp-test.ipynb) to my [Bayesian analysis recipes](https://github.com/ericmjl/bayesian-analysis-recipes) repository. 
+The product of this learning is two-fold. Firstly, I have added a [GP notebook](https://github.com/ericmjl/bayesian-analysis-recipes/blob/master/notebooks/gp-test.ipynb) to my [Bayesian analysis recipes](https://github.com/ericmjl/bayesian-analysis-recipes) repository.
 
 Secondly, I have also put together some hand-written notes on GPs. (For those who are curious, I first hand-wrote them on paper, then copied them into my iPad mini using a Wacom stylus. We don't have the budget at the moment for an iPad Pro!) They can be downloaded [here](./gaussian-processes.pdf).
 
