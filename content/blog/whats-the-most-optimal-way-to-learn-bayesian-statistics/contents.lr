@@ -20,7 +20,7 @@ After seeing the following tweet from Michael Betancourt...
 
 In some sense, thinking through the data generating process is _an extremely natural thing to do_. It's like telling a story about how our data came into being, and we know that telling stories is _exactly_ what humans are great at. Storytelling helps us reason about the world. There should be no reason why we don't use statistical storytelling to reason about our problems.
 
-Worrying _first_ about the data generating process and then about the inferential procedure makes statistical inference less of a black box and more of a natural conclusion of statistical storytelling. We become less concerned with whether something is "significant", and instead more concerned with whether we "got the model right". 
+Worrying _first_ about the data generating process and then about the inferential procedure makes statistical inference less of a black box and more of a natural conclusion of statistical storytelling. We become less concerned with whether something is "significant", and instead more concerned with whether we "got the model right".
 
 To put this into concrete action, I've been working on an alternative introduction to probabilistic programming and Bayesian inference that is lighter on math than most introductions, involves a lot of verbal storytelling, and goes heavier than most introductions in its use of programming. Here we practice the skill of hypothesizing a data generating story and translating that into the language of probability distributions, which can then be translated into SciPy stats Python code. Stay tuned!
 ---

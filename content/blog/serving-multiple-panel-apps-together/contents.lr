@@ -28,7 +28,7 @@ If you have a bunch of Jupyter notebooks, the analogous command is:
 ```bash
 panel serve *.ipynb
 # or, to be selective:
-panel serve nb1.ipynb nb2.ipynb nb3.ipynb 
+panel serve nb1.ipynb nb2.ipynb nb3.ipynb
 ```
 
 Then all of the apps will be served up, with a default Bokeh landing page provided to link to each of the apps.

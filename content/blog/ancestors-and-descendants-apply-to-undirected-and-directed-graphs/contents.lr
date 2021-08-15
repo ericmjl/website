@@ -1,0 +1,35 @@
+title: Ancestors and descendants apply to undirected and directed graphs
+---
+author: Eric J. Ma
+---
+body:
+
+Today I learned a new thing! It is inspired by [PR #5017](https://github.com/networkx/networkx/pull/5017#issuecomment-898619579) from a GSoC student that I have been co-mentoring with Ross Barnowski (in the NetworkX dev team). The PR really forced me to think about the concepts described here.
+
+There are two functions in the NetworkX library called `ancestors(G, n)` and `descendants(G, n)`. Respectively, they return:
+
+- `ancestors`: All nodes that have a path into a node in graph G.
+- `descendants`: All nodes that have a path from a node in graph G.
+
+Do you think it applies to directed graphs only or both directed and undirected graphs when you think of this definition?
+
+Intuitively, we might think that ancestors and descendants apply only to directed graphs, particularly directed acyclic graphs (like trees). However, as it turns out, based on the definition provided, they must apply to both directed and undirected graphs.
+
+Here's why.
+
+We can think of undirected graphs as being *equivalent* to directed graphs that have bidirectional edges between nodes. When viewed this way, an undirected graph is a specific case of the more general directed graph.
+
+When we trace all ancestors of a node, we are recursively collecting nodes along the path into that node. If we continue recursively collecting nodes in the bidirectional representation of an undirected graph, then we will end up collecting all of the nodes in the _connected component_ of the graph that are connected to the node we are asking for ancestors. The same argument applies to descendants.
+
+---
+pub_date: 2021-08-15
+---
+summary: Does finding ancestors and descendants of a node apply to undirected graphs, or do they apply to directed graphs only? The answer is less intuitive than we might think.
+---
+tags:
+
+til
+network science
+graph theory
+---
+twitter_handle: ericmjl

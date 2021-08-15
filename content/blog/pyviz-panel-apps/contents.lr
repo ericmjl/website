@@ -4,11 +4,11 @@ author: Eric J. Ma
 ---
 body:
 
-I finally learned how to build and serve apps with Panel! 
+I finally learned how to build and serve apps with Panel!
 
 Here are the key ideas:
 
-1. Prototype the app inside a Jupyter notebook. That gives the real-time feedback on whether your apps/widgets are working or not. 
+1. Prototype the app inside a Jupyter notebook. That gives the real-time feedback on whether your apps/widgets are working or not.
 2. The most important thing is that the final thing you package together is now a `.servable()` object.
 2. Use Panel’s `serve` command to test the app locally. It’s actually quite magical - the serve command can actually parse a Jupyter notebook and serve it up on a local web server.
 3. When you’ve confirmed that everything is working properly locally, Heroku is a great deployment option. Using the default Python buildpack and a `requirements.txt` file, one can easily specify the exact Python environment for deployment.
