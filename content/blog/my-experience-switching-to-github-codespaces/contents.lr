@@ -92,6 +92,23 @@ CI previews are good for asynchronous development
 but potentially frustrating to wait for
 in synchronous, pair programming settings.)
 
+Another benefit, which might feel a bit niche but is highly relevant,
+is that with Codespaces,
+we need not worry about multiple SSH keys existing on a system
+and which SSH key we use.
+(I for one, prefer to have just one key for one computer,
+which simplifies things greatly.)
+Some users configure their system to use multiple SSH keys.
+Sometimes the reason is intentional,
+but at other times the reason is something specific and peculiar in history
+that we forgot why later on...
+and yet the system state remains encrusted.
+The confusing part comes when a relatively inexperienced `git` user
+tries to clone a repository onto their system using SSH keys
+but forgets which SSH key they are supposed to use for accessing their remotes.
+Using Codespaces we completely eliminate this stumbling block,
+because access to the remote is granted automagically.
+
 ## What are some limitations of Codespaces?
 
 Right now, I can use Codespaces for free
