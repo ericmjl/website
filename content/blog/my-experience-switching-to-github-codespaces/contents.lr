@@ -4,11 +4,13 @@ author: Eric J. Ma
 ---
 body:
 
-I recently started experimenting with GitHub codespaces and I wanted to share a bit about my experience.
+I recently started experimenting with GitHub codespaces
+and I wanted to share a bit about my experience.
 
 ## What is GitHub's Codespaces?
 
-GitHub Codespaces is a way for anyone who develops in code to work on a repository without going through the hassle of initial setup.
+GitHub Codespaces is a way for anyone who develops in code
+to work on a repository without going through the hassle of initial setup.
 At its core, Codespaces is based on container technology;
 essentially, code is cloned into a volume and mounted into a container
 that is defined by a single source of truth `Dockerfile`.
@@ -26,22 +28,26 @@ and development containers more generally,
 I need to recount the 2019 `pyjanitor` sprints at SciPy 2019 and PyCon 2019.
 
 These were the days before I knew anything about development containers.
-As such, the best environment isolation tool I knew of at the time was Conda environments.
+As such, the best environment isolation tool I knew of at the time
+was Conda environments.
 As such, I had instructions for Conda environment development setup.
 It was, to say the least, quite a bit of work getting that documentation up and running.
-However, not everyone uses Conda; 
-some Python developers either have a preference for `pip`-oriented virtual environment tooling
+However, not everyone uses Conda;
+some Python developers either have a preference
+for `pip`-oriented virtual environment tooling
 or are already invested in it
 and have a shell configuration built around it.
 Other users were using Windows;
 this made things particularly challenging for me when debugging
 because I hadn't used a Windows machine in over 13 years.
 (I had switched to a Mac in 2006 and never looked back.)
-As you can see, the main challenge I had to deal with as a maintainer and sprint lead
+As you can see, the main challenge I had to deal with
+as a maintainer and sprint lead
 was the myriad and variety of possible environment setups;
-each contributor also had to work through their own system's quirks to get up and running.
+each contributor also had to work through
+their own system's quirks to get up and running.
 Though some found it satisfying, others found it frustrating;
-if left alone to wrangle environment set up, 
+if left alone to wrangle environment set up,
 first-time open source contributors would most likely be scared off.
 
 Codespaces, and development containers more generally,
@@ -58,7 +64,7 @@ For education materials that I develop as a hobby,
 I can get new contributors set up and running on Codespaces or dev containers
 running Jupyter Lab in the background automagically,
 no setup is required on their side.
-I even started developing my personal website, 
+I even started developing my personal website,
 yes, this exact site that you're viewing right now,
 on Codespaces.
 
@@ -69,7 +75,7 @@ when our local machine is only an 8-core, 16GB RAM machine.
 Impressively, when I checked the specs of the VM,
 I saw that I was running on a 4-CPU, 8GB RAM box.
 That was more than generous for what I needed to develop this website.
- 
+
 Even better, the entire Codespaces setup _feels_ local,
 even though it is running in the cloud;
 if there are temporary web services that we need to run,
@@ -81,10 +87,10 @@ And as a bonus, that URL can be provided to fellow developers
 if they need a live preview of the site to provide feedback,
 eliminating delays in feedback that may arise from
 using a CI system to preview the docs.
-(As they say, "right tool for the job" - 
+(As they say, "right tool for the job" -
 CI previews are good for asynchronous development
 but potentially frustrating to wait for
-in a synchronous, pair programming setting.)
+in synchronous, pair programming settings.)
 
 ## What are some limitations of Codespaces?
 
@@ -94,10 +100,10 @@ However, as with any good product,
 GitHub will charge for the infrastructure that backs Codespaces.
 As someone who chooses to invest in good _local_ compute hardware,
 I'd say paying for more compute on the cloud
-when I have more than sufficient compute locally 
+when I have more than sufficient compute locally
 is a bit of a hard sell.
 
-To get around that, though, 
+To get around that, though,
 if one's project is small enough and doesn't require that much compute,
 one can use development containers locally too,
 thereby taking advantage of isolated environments
