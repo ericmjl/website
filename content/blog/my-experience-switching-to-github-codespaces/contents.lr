@@ -109,6 +109,25 @@ but forgets which SSH key they are supposed to use for accessing their remotes.
 Using Codespaces we completely eliminate this stumbling block,
 because access to the remote is granted automagically.
 
+## Can you do data science work in Codespaces?
+
+The short answer is yes!
+
+The longer answer depends on what your preferred configuration is.
+
+If you're used to running code in Jupyter notebooks,
+then you should ensure that Jupyter is included in your environment definition.
+You should also ensure that the appropriate port,
+which by default is usually `8888`,
+is exposed in `devcontainer.json`.
+Once your Codespace is launched,
+you should be able to run a Jupyter session from inside there.
+
+On the other hand,
+you can also run Jupyter notebooks directly from inside VSCode!
+To enable this, you'll have to install the Jupyter extension for VSCode.
+That's basically it!
+
 ## What are some limitations of Codespaces?
 
 Right now, I can use Codespaces for free
