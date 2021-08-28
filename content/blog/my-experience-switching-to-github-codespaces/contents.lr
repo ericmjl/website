@@ -1,0 +1,180 @@
+title: My experience switching to GitHub codespaces
+---
+author: Eric J. Ma
+---
+body:
+
+I recently started experimenting with GitHub codespaces
+and I wanted to share a bit about my experience.
+
+## What is GitHub's Codespaces?
+
+GitHub Codespaces is a way for anyone who develops in code
+to work on a repository without going through the hassle of initial setup.
+At its core, Codespaces is based on container technology;
+essentially, code is cloned into a volume and mounted into a container
+that is defined by a single source of truth `Dockerfile`.
+This is known as a "development container", which VSCode supports excellently.
+GitHub Codespaces takes this one step further
+and runs the container on a cloud VM,
+thereby eliminating any local setup overhead:
+with one click, you get set up in a development environment inside the browser,
+connected to a VM that is potentially more powerful than your own.
+
+## What benefits do we get by using Codespaces?
+
+To illustrate the benefits of Codespaces,
+and development containers more generally,
+I need to recount the 2019 `pyjanitor` sprints at SciPy 2019 and PyCon 2019.
+
+These were the days before I knew anything about development containers.
+As such, the best environment isolation tool I knew of at the time
+was Conda environments.
+As such, I had instructions for Conda environment development setup.
+It was, to say the least, quite a bit of work getting that documentation up and running.
+However, not everyone uses Conda;
+some Python developers either have a preference
+for `pip`-oriented virtual environment tooling
+or are already invested in it
+and have a shell configuration built around it.
+Other users were using Windows;
+this made things particularly challenging for me when debugging
+because I hadn't used a Windows machine in over 13 years.
+(I had switched to a Mac in 2006 and never looked back.)
+As you can see, the main challenge I had to deal with
+as a maintainer and sprint lead
+was the myriad and variety of possible environment setups;
+each contributor also had to work through
+their own system's quirks to get up and running.
+Though some found it satisfying, others found it frustrating;
+if left alone to wrangle environment set up,
+first-time open source contributors would most likely be scared off.
+
+Codespaces, and development containers more generally,
+solves _that_ exact problem of development environment setup
+by taking responsibility for it out of the hands of the contributor
+and putting that responsibility in the hands of the project maintainer.
+The project maintainer sets up a working container definition
+via a `Dockerfile` and a `devcontainer.json` file
+that is sufficient for all of the tasks necessary to work on a project.
+Those tasks might include running tests,
+building docs and previewing them on a web server,
+or building an app and previewing it on a web server.
+For education materials that I develop as a hobby,
+I can get new contributors set up and running on Codespaces or dev containers
+running Jupyter Lab in the background automagically,
+no setup is required on their side.
+I even started developing my personal website,
+yes, this exact site that you're viewing right now,
+on Codespaces.
+
+The hardware that Codespaces VMs run on can be quite hefty and impressive.
+For software development that involves heavy computation,
+having access to a 32-core, 64GB RAM machine can be quite liberating
+when our local machine is only an 8-core, 16GB RAM machine.
+Impressively, when I checked the specs of the VM,
+I saw that I was running on a 4-CPU, 8GB RAM box.
+That was more than generous for what I needed to develop this website.
+
+Even better, the entire Codespaces setup _feels_ local,
+even though it is running in the cloud;
+if there are temporary web services that we need to run,
+such as the Lektor web server that I used to write this blog post in,
+we are given a temporary URL for that Codespaces session
+that lets us access the web service easily,
+as if we were accessing something on `http://localhost:<port>/`.
+And as a bonus, that URL can be provided to fellow developers
+if they need a live preview of the site to provide feedback,
+eliminating delays in feedback that may arise from
+using a CI system to preview the docs.
+(As they say, "right tool for the job" -
+CI previews are good for asynchronous development
+but potentially frustrating to wait for
+in synchronous, pair programming settings.)
+
+Another benefit, which might feel a bit niche but is highly relevant,
+is that with Codespaces,
+we need not worry about multiple SSH keys existing on a system
+and which SSH key we use.
+(I for one, prefer to have just one key for one computer,
+which simplifies things greatly.)
+Some users configure their system to use multiple SSH keys.
+Sometimes the reason is intentional,
+but at other times the reason is something specific and peculiar in history
+that we forgot why later on...
+and yet the system state remains encrusted.
+The confusing part comes when a relatively inexperienced `git` user
+tries to clone a repository onto their system using SSH keys
+but forgets which SSH key they are supposed to use for accessing their remotes.
+Using Codespaces we completely eliminate this stumbling block,
+because access to the remote is granted automagically.
+
+## Can you do data science work in Codespaces?
+
+The short answer is yes!
+
+The longer answer depends on what your preferred configuration is.
+
+If you're used to running code in Jupyter notebooks,
+then you should ensure that Jupyter is included in your environment definition.
+You should also ensure that the appropriate port,
+which by default is usually `8888`,
+is exposed in `devcontainer.json`.
+Once your Codespace is launched,
+you should be able to run a Jupyter session from inside there.
+
+On the other hand,
+you can also run Jupyter notebooks directly from inside VSCode!
+To enable this, you'll have to install the Jupyter extension for VSCode.
+That's basically it!
+
+## What are some limitations of Codespaces?
+
+Right now, I can use Codespaces for free
+because it is in beta until September 10.
+However, as with any good product,
+GitHub will charge for the infrastructure that backs Codespaces.
+As someone who chooses to invest in good _local_ compute hardware,
+I'd say paying for more compute on the cloud
+when I have more than sufficient compute locally
+is a bit of a hard sell.
+
+To get around that, though,
+if one's project is small enough and doesn't require that much compute,
+one can use development containers locally too,
+thereby taking advantage of isolated environments
+while also making full use of our local system.
+
+With all of that said,
+for large projects with many developers involved
+and/or those projects that might involve large compute,
+I can see the use of Codespaces being a productivity saver.
+
+## What do I hope to see for Codespaces?
+
+One thing that would blow my mind away is if GitHub offered a free tier for Codespaces,
+tied to a user's account,
+that gave a high time limit on the smallest unit of compute available,
+something like 3000 minutes per month on a 2-core/4GB VM.
+3000 minutes equates to about 2.5 hrs of software development time on a daily basis 5 days/week,
+which is more than generous for the vast majority of open-source projects.
+(Explicitly not asking for unlimited!
+That may open the system to abuse.)
+Such a move would be a huge enabler for open-source projects
+by lowering the barrier to contribution.
+---
+pub_date: 2021-08-23
+---
+tags:
+
+programming
+ide
+tooling
+coding
+---
+twitter_handle: ericmjl
+---
+summary:
+
+I recently started experimenting with GitHub codespaces
+and I wanted to share a bit about my experience.
