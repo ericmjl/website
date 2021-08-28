@@ -27,7 +27,9 @@
     // Use 'postCreateCommand' to run commands after the container is created.
     "postCreateCommand": [
         "lektor build"
-    ]
+    ],
+    // Use 'postStartCommand' to run commands after the container is _started_.
+    "postStartCommand": "lektor server -p 8000"
     // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
     // "remoteUser": "vscode"
 }
