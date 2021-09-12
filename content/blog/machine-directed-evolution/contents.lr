@@ -1,4 +1,4 @@
-title: Machine-directed evolution - my summary
+title: Machine-Directed Evolution
 ---
 author: Eric J. Ma
 ---
@@ -18,9 +18,10 @@ catalysis
 enzyme engineering
 machine learning
 data science
-
 ---
 twitter_handle: ericmjl
+---
+pub_date: 2021-09-12
 ---
 body:
 
@@ -80,6 +81,21 @@ Still, you know that we always measured selectivity
 for a subset of highest activity mutants --
 a subset, because chirality is harder to measure at scale.
 
+![](./dms.png)
+
+_Fig. 2(a) from our paper, deep mutational scan measurements. 
+X-axis: position on linear amino acid sequence of IRED-88.
+Y-axis: amino acid substitution.
+Heatmap shows activity measurements for ~81%
+of all 6000+ possible single point mutations._
+
+![](./activity-dist.png)
+
+_Fig. 2(b) from our paper, activity distributions.
+X-axis: Bayesian estimated activity of IRED-88 mutants.
+Y-axis, top panels: Activity cumulative distribution of our mutants.
+Y-axis, bottom panels: Enantioselectivity of our mutants._
+
 Even without machine learning, that DMS dataset was highly informative!
 We happened to have a crystal structure of IRED-88 on hand.
 When we mapped what positions in the linear sequence
@@ -96,6 +112,7 @@ simply because they were missing in a crystal structure of the same protein.
 ### Traditional directed evolution
 
 At the same time, we did three rounds of traditional directed evolution.
+These are EPPCR1-3 in Fig. 2(b) shown above.
 One round was based directly on the wild-type,
 generating roughly 4000+ mutants
 (with replicates, so go ahead and imagine how many colonies we had to pick).
@@ -145,13 +162,16 @@ Using the prioritization strategy described in the paper,
 we could pick out high-performing mutants
 from the $10^5$ in-silico proposed mutants pool.
 Still, our predictions of their activity were off.
-(I'll address this later in the blog post.)
 That's okay, though, because ultimately,
 we were able to measure just $10^2$ proposed mutants
 to get an activity distribution that was significantly right-shifted
 compared to the $10^4$ mutants measured over three rounds of directed evolution.
+(So that you don't have to scroll back up to see the result,
+I've resurfaced the figure below - see the "ML" panel.)
 In this way, with a good-enough model,
 machine-directed evolution can be pretty sample-efficient.
+
+![](./activity-dist.png)
 
 ### Structure-informed machine-directed evolution
 
@@ -165,8 +185,11 @@ So, to answer this question, we took a hard look at the structure,
 identified positions that were either _at_ the active site (AS),
 _neighboring_ the active site (N),
 or _distal_ to the active site (D).
+You can get a visual feel for these positions in the figure below.
+
+![](./sgm-positions.png)
+
 Then we took our best single mutants from each category,
-totalling about 50+ mutants each,
 and generated double and triple combinations of those mutant categories.
 So, for example, we might combine two active site mutations
 or two distal mutations with one neighbouring.
@@ -178,6 +201,8 @@ The result?
 If you don't touch the active site,
 then you have a pretty good chance of being able to predict combination activity
 by simply adding up their individual activity values.
+
+![](./linear-additivity.png)
 
 For me, this result was _huge_!
 At the time, "big billion parameter BERT models" were all the rage --
@@ -199,6 +224,9 @@ Finally, someone recognized the importance of this point!
 As for how the activity distribution looked?
 Just like the machine-directed round -
 right-shifted and with only $10^2$ samples measured.
+See Fig. 2(b)'s "SGM panel (resurfaced below for convenience).
+
+!(./activity-dist.png)
 
 ### Low N Engineering
 
@@ -215,6 +243,7 @@ and trained a model on their activity.
 We then prioritized another 24 to order and test.
 Likewise, we found a shift in activity distribution,
 though not as dramatic as the machine-directed and structure-guided rounds.
+(This is the "LowN" panel in Fig. 2(b).)
 
 ## What did we learn?
 
