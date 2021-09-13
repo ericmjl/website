@@ -189,6 +189,10 @@ You can get a visual feel for these positions in the figure below.
 
 ![](./sgm-positions.png)
 
+_Fig. 3(a) from our paper.
+Here, we highlight the active site, neighboring, and distal positions
+on IRED-88 that we mutated._
+
 Then we took our best single mutants from each category,
 and generated double and triple combinations of those mutant categories.
 So, for example, we might combine two active site mutations
@@ -203,6 +207,11 @@ then you have a pretty good chance of being able to predict combination activity
 by simply adding up their individual activity values.
 
 ![](./linear-additivity.png)
+
+_Fig. 3(b) from our paper.
+The results shown here are from our experiments probing linear additivity of mutations.
+We show that combining mutations in positions distal to the active site
+result in linearly additive mutations._
 
 For me, this result was _huge_!
 At the time, "big billion parameter BERT models" were all the rage --
@@ -224,9 +233,9 @@ Finally, someone recognized the importance of this point!
 As for how the activity distribution looked?
 Just like the machine-directed round -
 right-shifted and with only $10^2$ samples measured.
-See Fig. 2(b)'s "SGM panel (resurfaced below for convenience).
+See Fig. 2(b)'s "SGM panel" (resurfaced below for convenience).
 
-!(./activity-dist.png)
+![](./activity-dist.png)
 
 ### Low N Engineering
 
