@@ -7,7 +7,7 @@ pub_date: 2021-11-28
 body:
 
 Having been involved in quite a few rounds of hiring data scientists in a biomedical research context,
-I'd like to share some perspectives that may help candidates looking to move into a data science role in biomedical research.
+I'd like to share some perspectives that may help candidates who desire a move into a data science role in biomedical research.
 I'll start off with the usual disclaimer that these are personal observations and thoughts;
 they may not apply uniformly to all biomedical data science teams,
 and may reflect personal biases.
@@ -15,7 +15,7 @@ With that disclaimer out of the way, here are my observations.
 
 ## 60-70% of the hiring process is out of a candidate's control
 
-Therefore, as a candidate, you probably want to focus on just the things that are *in* your realm of control while not fretting over the things that are *out* of your control.
+As a candidate, you probably want to focus on just the things that are *in* your realm of control while not fretting over the things that are *out* of your control.
 
 Here are a few examples of what I mean by things you _cannot_ control:
 
@@ -24,7 +24,7 @@ Here are a few examples of what I mean by things you _cannot_ control:
 3. The personality, personal history, and angles of inquiry that the interviewing team brings to the process.
 4. Whether or not the hiring manager can or cannot hire you because of other legal constraints.
 
-It is impossible for a candidate to know _any_ of these constraints
+A candidate can't know _any_ of these constraints
 unless you have contacts inside the company
 that can help you find these out.
 Because these pointers are inherently dependent on what I call the "local" hiring context,
@@ -38,31 +38,31 @@ and instead, focus on the 30-40% of things you can control.
 
 Here is a sampling of what I know is within the realm of control of a candidate.
 
-1. If a candidate coming out of a research project,
-then how cutting-edge their choice of methods are is highly likely to be
+1. If a candidate comes out of a research project,
+how cutting-edge their choice of methods is is highly likely to be
 within their realm of control.
 2. The professionalism of their searchable [digital footprint](http://etec.ctlt.ubc.ca/510wiki/Digital_Footprint).
 3. The development of their creative imagination
 to imagine the problem space of the firm they are applying to.
 4. Mock practice sessions that a candidate gets before interviewing.
 
-I think these examples adequately of highlight the kinds of things
-that are within a candidate's realm of agency as they embark on the job hunt.
+I think these examples adequately highlight the kinds of things
+within a candidate's realm of agency as they embark on the job hunt.
 Once in a while, I see junior candidates (fresh grads)
 complain about the state of data science hiring.
 While I can empathize with the underlying emotion,
 I also think it is more productive to direct that energy
-towarsd things they can control -
+towards things they can control -
 including better curating that _digital footprint_
 which is being affected by those publicly aired complaints.
 
 ## What I looked for when I was involved in hiring
 
 When I was involved in hiring, I was laser-focused on technical excellence.
-I chose this aspect out of the many aspects because of my personal interest.
-I wanted to see what new things I could learn from candidates
-and I wanted to continue raising the bar on technical excellence in my team
-because this is something I know to be fundamental to
+I chose this aspect out of the many factors because of my personal interest.
+I wanted to see what new things I could learn from candidates.
+I also wanted to continue raising the bar on technical excellence in my team
+because I know this is fundamental to
 a data science team's collective ability to deliver on projects.
 Having worked with individuals who possess the seeds of technical excellence
 that also match my own mental model of excellence,
@@ -74,59 +74,59 @@ Here are the criteria by which I have evaluated technical excellence.
 
 Firstly, I looked for _evidence_ of special sauce modelling skills.
 "Special sauce" skills refer to something uncommon, rare, and technically challenging.
-Topics that I looked for included probabilistic modelling,
+I looked for probabilistic modelling,
 causal inference, graph algorithms, and graph neural networks.
 Having taken a class can only be considered _weak evidence_;
 _strong evidence_ implied actual projects that they had to dedicate
 a significant amount of time towards solving,
-usually over the period of a half a year or longer.
-This may be in a Masters or PhD research thesis,
+usually for half a year or longer.
+This may be in a Masters or Ph.D. research thesis,
 or it may be in an internship.
 
-Candidates may or may not be able to go in-depth into certain business-related project details.
+Candidates may or may not be able to go in-depth into specific business-related project details.
 However, they should usually be able to go in-depth into technical details.
-In order to tease out these details,
+To tease out these details,
 I would question and probe very deeply.
 I would also ask counterfactual questions,
-say, on choice of modelling strategy.
+say, on their choice of modelling strategy.
 In questioning,
 I would place equal weight on technical correctness and interpersonal response;
 a candidate that gets defensive or starts name-dropping terms without justification
 would usually end up getting low ratings from me.
 
 Special sauce skills, in my opinion,
-signal intellectual agility and a relentlessness to go technically deep.
+signal intellectual agility and relentlessness to go technically deep.
 Hence the premium I placed on this skillset.
 
 ### Strong software development skills
 
-Secondly, I looked for evidence of strong software development skills.
+Secondly, I looked for evidence of solid software development skills.
 
 My preferred way of evaluating this skill is not by programming puzzles;
 in my opinion, these are artificial tests that are
 mostly divorced from the day-to-day reality of data science programming.
-Rather, I looked for evidence of a candidate being able to
+Instead, I looked for evidence of a candidate being able to
 structure their code in a way that enables others to use it.
 When it comes to data science projects,
-I hold a strong conviction that it is _primarily_ by structuring the project
-like an idiomatically-built software package with notebooks can we:
+I hold a firm conviction that it is _primarily_ by structuring the project
+like an idiomatically-built software package with notebooks, can we:
 (1) smoothen out the path from prototype to production, and
 (2) enable team ownership of the project.
-Hence, I looked out for evidence of strong software development skillsets.
+Hence, I looked out for evidence of solid software development skillsets.
 
 To assess these skillsets,
-I would ask a candidate to walk through source code they were most proud of.
+I would ask a candidate to walk through the source code they were most proud of.
 This served as an excellent simulator for code review sessions
-where we bring others up-to-speed on the status of a project.
+where we bring others up to speed on the status of a project.
 While they introduced the code to me,
 I put on the persona that I would have in an actual code review question.
 I would ask questions about the structure of the code,
 counterfactual questions about alternative code architecture,
 and how they would improve the code.
-It was fine if their only _best_ public work
+It was okay if their only _best_ public work
 was from a few years ago and less-than-polished;
 using that code as a base,
-it is still possible to ask deep and probing questions
+it is still possible to probe deeply with questions
 to tease out the candidates' thought processes.
 
 ### Does such a candidate exist?
@@ -138,14 +138,14 @@ and whose project code I read via GitHub.
 That candidate's work had excellence written throughout their project.
 The preprint contained clear and structured writing
 that made it easy to understand the premise of the project.
-The candidate's codebase was already `pip`-installable via PyPI!
+Furthermore, the candidate's codebase was already `pip`-installable via PyPI!
 In addition, when I spoke with the candidate in a pre-interview setting,
 the candidate graciously handled a very pointed technical question
 about setting priors on one of their model's hyperparameters to induce regularization.
 
 ## Intellectual work products are the evidence that you can provide
 
-When hiring, it's important for a candidate to remember:
+When hiring, a candidate needs to remember:
 evidence is everything!
 If a hiring manager is comparing two candidates,
 the only way to be fair to both candidates
@@ -169,8 +169,8 @@ the digital footprint can be such a powerful tool to leverage
 if you are in a position to do so.
 (Unfortunately, I am not sure how to advise those
 whose work doesn't permit them to have a digital footprint.)
-By _investing_ time in curating your digital footprint,
-you are investing in a public profile
+By _investing_ time curating your digital footprint,
+you invest in a public profile
 that will yield career dividends for many years.
 Your digital footprint, and more generally,
 your production of intellectual work products,
@@ -184,7 +184,7 @@ To summarize my points here:
 1. Intellectual work products are 100% within a candidate's realm of control.
 2. Intellectual work products are evidence of your skillsets.
 3. Candidates are hired on the evidence of their skillsets, amongst other factors.
-4. In order to stand out, one probably wants to have some "special sauce" skillset.
+4. To stand out, one probably wants to have some "special sauce" skillset.
 
 ---
 summary:
