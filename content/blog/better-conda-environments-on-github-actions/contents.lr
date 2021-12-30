@@ -60,7 +60,7 @@ You can take a look at an example that I copied over from my `nxviz` project rep
 by expanding the details below.
 
 <details>
-<pre><code class="language-yaml">
+<pre><code class="yaml">
 name: Build documentation
 
 on:
@@ -157,7 +157,7 @@ jobs:
 By contrast, the new build is much smaller and easier to maintain:
 
 <details>
-<pre><code class="language-yaml">
+<pre><code class="yaml">
 name: Build documentation
 
 on:
