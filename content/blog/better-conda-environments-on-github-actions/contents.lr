@@ -1,0 +1,67 @@
+title: Better conda environments on GitHub actions
+---
+author: Eric J. Ma
+---
+body:
+
+I recently figured out two tips to make GitHub actions play nicely with conda installations. Here they are.
+
+## Ensure bash is in login mode
+
+The first is to use the following block:
+
+```yaml
+    # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+    defaults:
+      run:
+        shell: bash -l {0}
+```
+
+What this does is ensure that every shell command is run in login mode.
+As detailed in [this StackOverflow answer](https://stackoverflow.com/questions/69070754/shell-bash-l-0-in-github-actions):
+
+> - `-l` to insure (sic) a login bash, where the environment is correctly set;
+> - `{0}`, a template placeholder,
+> replaced at pipeline execution time by the actual script command to execute.
+
+Counterfactually, I would have had to use the deprecated `source activate <env_name>`,
+which always made me a bit nervous.
+Now, I can instead switch over to using `conda activate <env_name>`
+before executing environment-specific commands,
+thereby providing longevity for the build.
+
+## Use mambaforge
+
+The other tip is to use the mambaforge installer
+to get a conda installation onto GitHub actions.
+The block I recently used for my [causality repo](https://github.com/ericmjl/causality)
+is as follows:
+
+```yaml
+      # See: https://github.com/marketplace/actions/setup-miniconda
+      - name: Setup miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          miniforge-variant: Mambaforge
+          channels: conda-forge
+          python-version: 3.9
+          activate-environment: causality
+          environment-file: environment.yml
+          use-mamba: true
+```
+
+This configuration guarantees the use of `mamba` to solve the environment,
+which means we will have blazingly fast builds.
+---
+pub_date: 2021-12-30
+---
+summary: I recently figured out two tips to make GitHub actions play nicely with conda installations. Here they are.
+---
+tags:
+
+continuous integration
+github actions
+til
+---
+twitter_handle: ericmjl
