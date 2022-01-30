@@ -4,9 +4,19 @@ author: Eric J. Ma
 ---
 body:
 
-Yesterday, after I did my Boston Bayesians dry run talk, there was a point raised that I had only heard of once before: Bayesian learning methods don't overfit. Which means we're allowed to use all the data on hand. The point holds for simple Bayesian networks, and for more complicated deep neural nets.
+Yesterday, after I did my Boston Bayesians dry run talk,
+there was a point raised that I had only heard of once before:
+Bayesian learning methods don't overfit.
+Which means we're allowed to use all the data on hand.
+The point holds for simple Bayesian networks,
+and for more complicated deep neural nets.
 
-Though I believe it, I wasn't 100% convinced of this myself, so I decided to check it up. I managed to get my hands on Radford Neal's book, Bayesian Learning for Neural Networks, and found the following quotable paragraphs:
+Though I believe it,
+I wasn't 100% convinced of this myself,
+so I decided to check it up.
+I managed to get my hands on Radford Neal's book,
+Bayesian Learning for Neural Networks,
+and found the following quotable paragraphs:
 
 > It is a common belief, however,
 > that restricting the complexity of the models used for such tasks is a good thing,
@@ -46,9 +56,20 @@ Finally, in the following section after describing how neural networks are built
 > (more precisely, a distribution of values)
 > can be found without the need for a validation set.
 
-This seems to dovetail well with the following convoluted intuition that I've had: **if I fit a Bayesian model on the "training" set of the data, then update it with the "test" set, it's equivalent to just training with the whole dataset. With wide priors, if I fit with a smaller dataset, my posterior distribution will be wider than if I fit with the entire dataset. So... where possible, just train with the entire dataset.** That said, I've not had sufficient grounding in Bayesian stats (after all, still a newcomer) to justify this.
+This seems to dovetail well with the following convoluted intuition that I've had:
+**if I fit a Bayesian model on the "training" set of the data,
+then update it with the "test" set,
+it's equivalent to just training with the whole dataset.
+(This comes from the idea of "exchangability" in i.i.d. samples,
+where the order of when a sample comes in doesn't matter.)
+With wide priors, if I fit with a smaller dataset,
+my posterior distribution will be wider than if I fit with the entire dataset.
+So... where possible, just train with the entire dataset.**
+That said, I've not had sufficient grounding in Bayesian stats
+(after all, still a newcomer) to justify this.
 
-I certainly have more reading/learning to do here. Looks like something neat to explore in the short-term.
+I certainly have more reading/learning to do here.
+Looks like something neat to explore in the short-term.
 ---
 pub_date: 2017-11-16
 ---
