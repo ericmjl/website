@@ -200,6 +200,25 @@ This is refactoring, data science-style.
 By cutting and pasting functions out,
 I'm forced to account for every variable inside the function.
 
+### Pre-define with colleagues what a unit of work will look like
+
+When doing team data science, communication and coordination are key.
+Usually, there are _independent units of work_ that need to be completed by individuals,
+and at times these units of work can run in parallel.
+Some examples of these include:
+
+1. Software-oriented pieces of work, such as contributing new functions to the custom library,
+2. Analyses using the same code but on different datasets,
+
+In each case, it is highly advantageous for you, the data scientist,
+to pre-define with your teammates what a unit of work looks like
+and agree upon the boundaries of the unit of work.
+If you find stuff out of scope, such as programming style issues that bug you,
+it's important to rein in the desire to "just make the change".
+Raise the issue with them, find a place to record the issue,
+and stay within the bounds of your agreed-upon unit of work.
+Use a new pull request to fix that issue so that the pull request doesn't grow unmanageably large.
+
 ## Optimize for automation
 
 Once your processes are well-defined, automation becomes a cinch!
@@ -242,24 +261,16 @@ Below are some of my own notes taken over time.
 [alias]: https://ericmjl.github.io/data-science-bootstrap-notes/create-shell-command-aliases-for-your-commonly-used-commands/
 [pre-commit]: https://ericmjl.github.io/data-science-bootstrap-notes/set-up-pre-commit-hooks-to-automate-checks-before-making-git-commits/
 
-### Pre-define with colleagues what a unit of work will look like
+## Summary
 
-When doing team data science, communication and coordination are key.
-Usually, there are _independent units of work_ that need to be completed by individuals,
-and at times these units of work can run in parallel.
-Some examples of these include:
-
-1. Software-oriented pieces of work, such as contributing new functions to the custom library,
-2. Analyses using the same code but on different datasets,
-
-In each case, it is highly advantageous for you, the data scientist,
-to pre-define with your teammates what a unit of work looks like
-and agree upon the boundaries of the unit of work.
-If you find stuff out of scope, such as programming style issues that bug you,
-it's important to rein in the desire to "just make the change".
-Raise the issue with them, find a place to record the issue,
-and stay within the bounds of your agreed-upon unit of work.
-Use a new pull request to fix that issue so that the pull request doesn't grow unmanageably large.
+This kind of working mode is _other-centric_ rather than _self-centered_.
+It presumes that we're either working on a team,
+or that in some point in the future, we will be working on a team.
+The shared idioms that a team adopts form the lubricant to the team's interactions;
+absent these, we have unproductive variation that form invisible walls to collaboration.
+If we adopt _collaborative_ software development practices in our data science work,
+we're adopting highly productive team workflows
+that will benefit our team productivity and robustness in the long-run!
 
 ## FAQ
 
