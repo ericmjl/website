@@ -1,15 +1,15 @@
-title: verything gets a package? Yes, everything get’s a package.
+title: Everything gets a package? Yes, everything gets a package.
 ---
 author: Eric J. Ma
 ---
 body:
 
-I recently read [Ethan Rosenthal’s Python Data Science][pds] setup,
+I recently read [Ethan Rosenthal's Python Data Science][pds] setup,
 and I loved every line of it.
 His blog post encapsulates some of the best of the ideas
 that I wrote about in my [Data Science Bootstrap knowledge base][kb].
-In this blog post, I’d like to share my own data science setup
-and some new tooling that I’ve been working on
+In this blog post, I'd like to share my own data science setup
+and some new tooling that I've been working on
 to make it *easy* to achieve the same goals as I have.
 
 [pds]: https://www.ethanrosenthal.com/2022/02/01/everything-gets-a-package/
@@ -42,16 +42,16 @@ Let me explain what to optimize for when adopting this mindset.
 
 My grad school days taught me the pains of dependency management
 and dependency isolation,
-so as soon as I borked my MacBook Air’s native Py27 environment,
+so as soon as I borked my MacBook Air's native Py27 environment,
 I bought into using `conda` for environment management.
-(That’s a long, long story I can tell at some other time.)
+(That's a long, long story I can tell at some other time.)
 I also had to run code locally and on an HPC machine,
 and maintaining two separate computation environments means that from the get-go,
 I had to learn how to maintain *portable* environments that could work anywhere.
 
 By buying into the `conda` package manager
 and the associated `environment.yml` file early on,
-it meant I could recreate any project’s software environment
+it meant I could recreate any project's software environment
 with a single command `conda env update -f environment.yml`.
 (Nowadays I use `mamba` instead of `conda` because `mamba` is faster,
 but the command is essentially the same.)
@@ -90,7 +90,7 @@ andorra_geospatial/  # the project name
 ```
 
 If you squint hard,
-you’ll notice that the project structure
+you'll notice that the project structure
 essentially looks like a Python software package,
 except that there is also a `notebooks/` directory added into the mix.
 This is intentional!
@@ -138,7 +138,7 @@ domain expertise, programming skills, modelling skill, and more.
 With that amount of knowledge overhead that we already have to carry,
 adding more minutiae only adds to more cognitive stress.
 Therefore, *any kind of **standardized** workflow
-that helps us ship our work into our colleagues’ hands* will,
+that helps us ship our work into our colleagues' hands* will,
 in the words of [Katie Bauer][katie]:
 
 [katie]: https://twitter.com/imightbemary/status/1405192197696151553
@@ -198,7 +198,7 @@ is to cut and paste it out into a `.py` file,
 and then re-import the function back into the notebook.**
 This is refactoring, data science-style.
 By cutting and pasting functions out,
-I’m forced to account for every variable inside the function.
+I'm forced to account for every variable inside the function.
 
 ## Optimize for automation
 
@@ -207,14 +207,14 @@ The value of automation is obvious - you save time and effort!
 *But the value of automation can only be realized
 when your processes are also stabilized.*
 Without a stable process,
-you’ll never have to execute the same commands over and over and over,
-and hence you’ll never have the need to automate.
-That’s because *by definition,
+you'll never have to execute the same commands over and over and over,
+and hence you'll never have the need to automate.
+That's because *by definition,
 we can only automate stable processes and habits*.
 So if you want to reap the benefits of automation,
 you must optimize for effective processes and habits,
 stabilize them,
-and then you’ll be able to build and use the tooling
+and then you'll be able to build and use the tooling
 that optimizes those processes.
 Even better if others are able to easily adopt the same processes.
 
@@ -267,14 +267,14 @@ Use a new pull request to fix that issue so that the pull request doesn't grow u
 
 Docker is great!
 I tend to see it used the most in deployment situations.
-As of now, I haven’t yet seen a good story
+As of now, I haven't yet seen a good story
 for simultaneously supporting development containers
 (which by necessity needs to be beefed up with lots of tooling)
 and deployment containers
 (which probably should be shrunk in size as much as possible,
 [as Uwe Korn details in his blog post][container]).
 `docker-slim` is a project that makes a good attempt at slimming down containers,
-but I haven’t yet had the bandwidth to try it out.
+but I haven't yet had the bandwidth to try it out.
 
 [container]: https://uwekorn.com/2021/03/01/deploying-conda-environments-in-docker-how-to-do-it-right.html
 
@@ -288,20 +288,20 @@ Also `mamba` is amazing 🙂!
 
 *What about the problem Ethan detailed - reproducible builds when packages come from different channels?*
 
-It’s important to set the channel priorities in `environment.yml`.
+It's important to set the channel priorities in `environment.yml`.
 Packages by default are pulled from the first priority channel,
 then the second if not found in the first, and so on and so forth.
 If we reason clearly about channel priorities
 and pair them with `conda env export`
 and its associated fixed package versions,
-then we’ve got a good story for reproducible conda environments.
+then we've got a good story for reproducible conda environments.
 
 *Can I ask you more questions?*
 
 Of course!
 Send me a message through [Shortwhale][shortwhale].
 If enough people ask questions about the same thing,
-I’ll just update the FAQ here.
+I'll just update the FAQ here.
 
 [shortwhale]: http://www.shortwhale.com/ericmjl
 ---
