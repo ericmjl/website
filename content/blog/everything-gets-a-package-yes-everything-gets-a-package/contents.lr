@@ -1,0 +1,329 @@
+title: Everything gets a package? Yes, everything gets a package.
+---
+author: Eric J. Ma
+---
+body:
+
+I recently read [Ethan Rosenthal's Python Data Science][pds] setup,
+and I loved every line of it.
+His blog post encapsulates some of the best of the ideas
+that I wrote about in my [Data Science Bootstrap knowledge base][kb].
+In this blog post, I'd like to share my own data science setup
+and some new tooling that I've been working on
+to make it *easy* to achieve the same goals as I have.
+
+[pds]: https://www.ethanrosenthal.com/2022/02/01/everything-gets-a-package/
+[kb]: https://ericmjl.github.io/data-science-bootstrap-notes/get-bootstrapped-on-your-data-science-projects/
+
+## But why all the trouble?
+
+Isn't there a _ton_ of overhead that comes from doing software work?
+You now suddenly have to manage dependencies,
+start documenting your functions,
+add tests...
+you suddenly can't just store data with code in the repo...
+I can't just commit the notebook and be done with it?
+
+Let me explain.
+Data science is no longer solo work, but teamwork.
+The corollary is this: _discipline enables better collaborative work_.
+
+Have you encountered the following issues?
+
+- A notebook that works on your colleague's computer trips up on imports?
+- A notebook that ran on your colleague's machine errors out because you were missing a data file?
+- Your PyMC model definition doesn't agree with your colleagues',
+   because you two were independently editing two notebooks that now each contains drifted model code?
+
+These are problems that are solved by thinking more like a software developer and less like a one-off script writer.
+Let me explain what to optimize for when adopting this mindset.
+
+## Optimize for portability
+
+My grad school days taught me the pains of dependency management
+and dependency isolation,
+so as soon as I borked my MacBook Air's native Py27 environment,
+I bought into using `conda` for environment management.
+(That's a long, long story I can tell at some other time.)
+I also had to run code locally and on an HPC machine,
+and maintaining two separate computation environments means that from the get-go,
+I had to learn how to maintain *portable* environments that could work anywhere.
+
+By buying into the `conda` package manager
+and the associated `environment.yml` file early on,
+it meant I could recreate any project's software environment
+with a single command `conda env update -f environment.yml`.
+(Nowadays I use `mamba` instead of `conda` because `mamba` is faster,
+but the command is essentially the same.)
+
+Why `conda`?
+On one hand, the ability to install `conda` into my home directory
+means it is a tool I can use anywhere,
+as long as I have privileges to install stuff in my home directory
+(which, yeah, I figure that should always hold true, right? 🙂).
+On the other hand, I used to find myself on projects
+where packages could only be installed *with ease* from `conda` -
+this holds especially true for cheminformatics projects that I have worked on.
+
+## Optimize for standardized structure
+
+[Cookiecutter Data Science by DrivenData][ccds]
+was the OG inspiration for this idea.
+Basically, I ensure that every project I work on
+starts with a standardized project directory structure that looks,
+at the minimum, something like this:
+
+[ccds]: https://drivendata.github.io/cookiecutter-data-science/
+
+```bash
+andorra_geospatial/  # the project name
+|- docs/
+|- notebooks/
+|- andorra_geospatial/  # custom source code, usually named after the project name.
+|- tests/
+|- .gitignore
+|- .pre-commit-config.yaml
+|- environment.yml
+|- pyproject.toml
+|- setup.cfg
+|- setup.py
+```
+
+If you squint hard,
+you'll notice that the project structure
+essentially looks like a Python software package,
+except that there is also a `notebooks/` directory added into the mix.
+This is intentional!
+Structuring every project in this fashion ensures that when future me,
+or someone else comes to view the project repository,
+they know exactly where to go for code artifacts.
+
+Need an analysis?
+Look it up in `notebooks/`.
+Need to find where that function was defined?
+Look it up in `andorra_geospatial` submodules.
+Need to add a package?
+Update the `environment.yml` definition
+and get `conda` or `mamba` to update your environment.
+Imposing this structure ensures your code is organized,
+and as the CCDS website states:
+
+> Well organized code tends to be self-documenting
+> in that the organization itself provides context
+> for your code without much overhead.
+
+But what about a `data/` directory?
+That's a good question - lots of people store CSV files in a `data/` directory.
+If working in a professional setting,
+it is becoming increasingly idiomatic to pull data from a single source of truth,
+such as an PostgreSQL database or an S3 bucket,
+rather than caching a local copy.
+At work at Moderna,
+we have an awesome single source of truth for versioned datasets
+from which we pull data programmatically into our projects via a Python client.
+(The data is cached locally but not in our repo --
+it is cached in a special directory in our home folder.)
+In our personal projects,
+we can approximate this user experience
+by storing data in personal cloud storage (e.g. Dropbox)
+and pulling the data using a supporting Python web API
+(e.g. the [official Dropbox Python API][dropbox]).
+
+[dropbox]: https://dropbox-sdk-python.readthedocs.io/en/latest/api/dropbox.html#dropbox.dropbox_client.Dropbox.files_download
+
+## Optimize for effective processes and habits
+
+Any data scientist has enough knowledge to carry in their heads:
+domain expertise, programming skills, modelling skill, and more.
+With that amount of knowledge overhead that we already have to carry,
+adding more minutiae only adds to more cognitive stress.
+Therefore, *any kind of **standardized** workflow
+that helps us ship our work into our colleagues' hands* will,
+in the words of [Katie Bauer][katie]:
+
+[katie]: https://twitter.com/imightbemary/status/1405192197696151553
+
+> ensure (original: ensuring) folks can contribute
+> without having to hold a bunch of background knowledge in their head,
+> and reduce (original: reducing) unproductive variance in operations.
+
+In the spirit of that,
+here are some of the processes that I use in my personal and work projects.
+
+### Follow the 1-to-1-to-1-to-1... rule
+
+No matter how big or small,
+every project gets a `git` repository on some hosted service,
+whether GitHub (my favourite) or Bitbucket.
+Doing so ensures that my code can always be pulled into a new machine
+from a *single source of truth.*
+That project also gets one conda environment associated with it,
+one custom source package associated with it,
+one single source of truth documentation,
+and one continuous integration pipeline.
+In other words, there is always a 1:1 mapping
+from project to all of the digital artifacts present in the project,
+and there is a single source of truth for everything.
+[I detail more in my Data Science Bootstrap Notes page
+on the rule of one-to-one][one].
+
+[one]: https://ericmjl.github.io/data-science-bootstrap-notes/follow-the-rule-of-one-to-one-in-managing-your-projects/
+
+### Commit code often
+
+By committing code often,
+I get the benefit of history in the git log!
+I can think about the number of times
+I accidentally deleted a chunk of notebook code that I needed later,
+and how the git history helped me recover that code chunk.
+
+### Ensure code adheres to minimum quality standards
+
+All code that I write (that gets placed in the custom source code directory)
+should, at the minimum, have a docstring attached to it.
+I try to go one step further and ensure that they have type hints
+(which are *incredibly* useful!)
+and an example-based test associated with it.
+Even better is if the docstring contains
+a minimum working example of how to use the chunk of code!
+
+### Refactor by using source `.py` files
+
+Like any other user of Jupyter notebooks as prototyping environments,
+functions I write in the notebook
+may end up relying on the internal state of the notebook.
+**The cleanest way to ensure that a block of code
+operates independently of the internal state of the notebook
+is to cut and paste it out into a `.py` file,
+and then re-import the function back into the notebook.**
+This is refactoring, data science-style.
+By cutting and pasting functions out,
+I'm forced to account for every variable inside the function.
+
+### Pre-define with colleagues what a unit of work will look like
+
+When doing team data science, communication and coordination are key.
+Usually, there are _independent units of work_ that need to be completed by individuals,
+and at times these units of work can run in parallel.
+Some examples of these include:
+
+1. Software-oriented pieces of work, such as contributing new functions to the custom library,
+2. Analyses using the same code but on different datasets,
+
+In each case, it is highly advantageous for you, the data scientist,
+to pre-define with your teammates what a unit of work looks like
+and agree upon the boundaries of the unit of work.
+If you find stuff out of scope, such as programming style issues that bug you,
+it's important to rein in the desire to "just make the change".
+Raise the issue with them, find a place to record the issue,
+and stay within the bounds of your agreed-upon unit of work.
+Use a new pull request to fix that issue so that the pull request doesn't grow unmanageably large.
+
+## Optimize for automation
+
+Once your processes are well-defined, automation becomes a cinch!
+The value of automation is obvious - you save time and effort!
+*But the value of automation can only be realized
+when your processes are also stabilized.*
+Without a stable process,
+you'll never have to execute the same commands over and over and over,
+and hence you'll never have the need to automate.
+That's because *by definition,
+we can only automate stable processes and habits*.
+So if you want to reap the benefits of automation,
+you must optimize for effective processes and habits,
+stabilize them,
+and then you'll be able to build and use the tooling
+that optimizes those processes.
+Even better if others are able to easily adopt the same processes.
+
+There are a lot of tools that I use to automate my workflow.
+They range from tools that create a new project in a standardized fashion
+to tools that save keystrokes at the terminal.
+Below are some of my own notes taken over time.
+
+- [`pyds-cli`][pyds-cli] is a tool I developed,
+  based on my experiences at work,
+  to automate routine chains of shell commands.
+  It automates conda environment management tasks,
+  standardizes the creation of new projects, and many more.
+  Still in development, so there may be rough edges.
+- I also wrote [a blog post detailing some `conda` hacks that I use][conda].
+- To save typing at the terminal,
+  I wrote about [how to use shell aliases to cut down on typing][alias].
+- To avoid arguing with your colleagues about minimum code quality standards,
+  get a bot to enforce them.
+  In this case, that machine is pre-commit hooks.
+  [I wrote about how to get set up on my DS Bootstrap Notes.][pre-commit]
+
+[pyds-cli]: https://github.com/ericmjl/pyds-cli
+[conda]: https://ericmjl.github.io/blog/2018/12/25/conda-hacks-for-data-science-efficiency/
+[alias]: https://ericmjl.github.io/data-science-bootstrap-notes/create-shell-command-aliases-for-your-commonly-used-commands/
+[pre-commit]: https://ericmjl.github.io/data-science-bootstrap-notes/set-up-pre-commit-hooks-to-automate-checks-before-making-git-commits/
+
+## Summary
+
+This kind of working mode is _other-centric_ rather than _self-centered_.
+It presumes that we're either working on a team,
+or that in some point in the future, we will be working on a team.
+The shared idioms that a team adopts form the lubricant to the team's interactions;
+absent these, we have unproductive variation that form invisible walls to collaboration.
+If we adopt _collaborative_ software development practices in our data science work,
+we're adopting highly productive team workflows
+that will benefit our team productivity and robustness in the long-run!
+
+## FAQ
+
+*Why not Docker?*
+
+Docker is great!
+I tend to see it used the most in deployment situations.
+As of now, I haven't yet seen a good story
+for simultaneously supporting development containers
+(which by necessity needs to be beefed up with lots of tooling)
+and deployment containers
+(which probably should be shrunk in size as much as possible,
+[as Uwe Korn details in his blog post][container]).
+`docker-slim` is a project that makes a good attempt at slimming down containers,
+but I haven't yet had the bandwidth to try it out.
+
+[container]: https://uwekorn.com/2021/03/01/deploying-conda-environments-in-docker-how-to-do-it-right.html
+
+*Why not just pip/poetry/pipx?*
+
+In my line of work,
+I end up using a lot of conda-only packages,
+such as RDKit, so defaulting to `conda` packages first
+tends to make things easier.
+Also `mamba` is amazing 🙂!
+
+*What about the problem Ethan detailed - reproducible builds when packages come from different channels?*
+
+It's important to set the channel priorities in `environment.yml`.
+Packages by default are pulled from the first priority channel,
+then the second if not found in the first, and so on and so forth.
+If we reason clearly about channel priorities
+and pair them with `conda env export`
+and its associated fixed package versions,
+then we've got a good story for reproducible conda environments.
+
+*Can I ask you more questions?*
+
+Of course!
+Send me a message through [Shortwhale][shortwhale].
+If enough people ask questions about the same thing,
+I'll just update the FAQ here.
+
+[shortwhale]: http://www.shortwhale.com/ericmjl
+---
+pub_date: 2022-03-31
+---
+tags:
+
+data science
+software development
+software engineering
+---
+twitter_handle: ericmjl
+---
+summary: How treating data science projects like software development projects (plus more) helps you be maximally _effective_.
