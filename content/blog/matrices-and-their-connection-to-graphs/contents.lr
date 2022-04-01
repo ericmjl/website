@@ -122,6 +122,14 @@ np.diagonal(np.linalg.matrix_power(adj_mat, 2))
 array([2., 3., 2., 1.])
 ```
 
+Knowing how to convert between object and matrix representations of graphs
+is a really useful skill,
+because being able to do so gives you access to the necessary programming language APIs
+that can make your life a lot easier.
+I [know this from personal experience][graph]!
+
+[graph]: https://ericmjl.github.io/blog/2019/6/15/graphs-and-matrices/
+
 I will be at ODSC East 2022 teaching [Network Analysis Made Simple](https://ericmjl.github.io/Network-Analysis-Made-Simple/).
 There, we will learn more cool stuff about graphs,
 their key underlying concepts,
