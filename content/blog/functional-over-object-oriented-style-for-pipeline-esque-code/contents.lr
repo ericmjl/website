@@ -1,0 +1,195 @@
+title: Functional over object-oriented style for pipeline-esque code
+---
+author: Eric J. Ma
+---
+body:
+
+Where possible, in my data science projects,
+I usually go for a functional programming style over an object-oriented style.
+I'd like to explain why this could be advantageous from the standpoint of a mental model,
+which is an idea that my friend Jesse Johnson has elaborated on
+[in the context of in biotech organizations][biotech].
+
+[biotech]: https://scalingbiotech.com/2022/01/26/the-giant-hidden-problem-plaguing-tech-biotechs/
+
+## Types, standards, and pipelines
+
+It all starts with types -- basically, what objects are floating around in a program.
+When writing data science code, data type transformations are commonplace.
+Reasoning about the data types is hard enough without introducing another object --
+and, therefore, another type.
+Introducing another type into the program
+[is like introducing another standard][standards] --
+suddenly, you have one more thing to worry about.
+
+[standards]: https://xkcd.com/927/
+
+Here's an example.
+We read in a CSV file and spit out a `pandas` DataFrame.
+That `pandas` `DataFrame` goes into another function
+that constructs a PyMC model and returns the model.
+Next, the model goes into another function that calls on a PyMC sampler
+and returns an `InferenceData` object.
+The `InferenceData` object then gets parsed back into another `DataFrame`
+for multiple uses -- to generate plots, get checked into a database, and more.
+
+If we were to introduce a new object, say,
+a `DataModeller` object,
+we might encapsulate all of those steps in the following way:
+
+```python
+class DataModeller:
+    def __init__(...):
+	    ...
+
+	def make_model(...):
+		...
+		self.model = model
+
+	def sample(...):
+		with self.model:
+			self.idata = pm.sample()
+
+	def process_posterior(...):
+		...
+```
+
+Now, the critical trouble I usually run into with classes-for-data-pipelining
+is not merely about needing to create new objects and hence, new "types" in the project.
+It's also that the class methods can, in theory,
+be called without any enforcement of order - and errors will result.
+It's challenging to reason clearly about the correct order of operations
+when reading just the code.
+The atomic class methods are attached to the class
+at the same level of abstraction as the higher-level class methods,
+and the object's internal state can be created on-the-fly --
+and is implicit, not explicit.
+
+By adopting a functional style,
+we can make keeping atomic functions
+and higher-order functions mentally separate easier.
+We can keep the atomic functions inside a submodule and higher-order functions
+higher up in the source code hierarchy.
+And by calling on the higher-order functions,
+we can easily read off the correct order of operations that need to happen,
+i.e. the pipeline.
+Riffing off the above example:
+
+```python
+# This is where the atomic functions might live, e.g. `src/models/stuff.py`
+def make_model_1(df: pd.DataFrame) -> pm.Model:
+	...
+	return model
+
+def make_model_2(df: pd.DataFrame) -> pm.Model:
+	...
+	return model
+
+def sample(model: pm.Model) -> az.InferenceData:
+	"""Convenience wrapper around `pm.sample` with defaults for our problem."""
+	...
+	return idata
+
+def process_posterior(idata: az.InferenceData) -> pd.DataFrame:
+	...
+	return posterior_df
+```
+
+And now the functions are easily composable to make higher-order functions:
+
+```python
+# This is where the higher-order functions live, e.g. in `src/__init__.py`
+from src.models.stuff import make_model_1, make_model_2, sample, process_posterior
+
+model_name_mapping = {
+	"model1": make_model_1,
+	"model2": make_model_2,
+}
+
+def model(df: pd.DataFrame, model_name: str) -> pd.DataFrame:
+	"""Some docstring here."""
+	model_func: Callable = model_name_mapping.get(model_name)
+	model: pm.Model = model_func(df)
+	idata: az.InferenceData = sample(model)
+	posterior_df: pd.DataFrame = process_posterior(idata)
+	return posterior_df
+```
+
+A natural hierarchy appears here!
+We import lower-level functions from deeper within the library;
+with higher-level functions, we go closer to the top-level imports.
+
+(In the example above, I also took the liberty of annotating types in-line.
+They are another form of in-line documentation.
+They also help with reasoning about the workflow much more efficiently,
+especially if someone is just getting used to, say,
+the `df -> model -> idata -> posterior_df` workflow.)
+
+As you probably can see here, too,
+using functions enables us to easily see the idiomatic workflow.
+Our mental model is more easily read off by the next person
+in the pipelines-as-functions paradigm rather than pipelines-as-objects paradigm.
+
+And as a side benefit,
+if we think carefully about the data types we pass around, consume, and generate,
+then we end up with easily reusable functions.
+That's another awesome side effect!
+
+## Objects are fine, just not _everywhere_
+
+Now, just to be clear,
+I'm not advocating an abdication of objects altogether.
+Clearly, a PyMC Model, InferenceData and DataFrames are all objects themselves.
+_For someone who works with data, when do objects make sense?_
+
+I think in the context of data pipelines,
+objects make the most sense as a data container.
+One clear example is configuration objects
+(which I usually implement as a dataclass with very-few-to-zero class methods).
+Another clear example is when 3-4 related dataframes need to be kept together.
+Also, we may need convenient class methods to dump them to disk at once.
+Here a dataclass with 3-4 corresponding attributes
+and a single class method would make a ton of sense.
+
+Pipelines are best thought of as functions
+and are therefore best implemented as functions.
+Data (and data containers) are best thought of as objects
+and are therefore best implemented as objects.
+Objects as data pipelines, though?
+In my opinion, doing so only adds confusion.
+Once again, it's my conviction,
+having written more than 9 years of Python data science code,
+that pipelines-as-functions express the developer's mental model of the pipeline
+more cleanly than pipelines-as-objects.
+
+## The twist
+
+Aaaaaand I know there's going to be someone who says,
+"But you can make objects callable too, right?"
+Yeah, I know that's doable :).
+On this point, the flexibility of Python
+allows for things to be implemented in multiple ways.
+However, in line with the Zen of Python,
+it's probably best to adopt one clear way of implementing things.
+Pipelines as functions, data as objects.
+This is a much saner way of establishing simple idioms that,
+subjectively, allows for cleaner reasoning about our code.
+
+---
+pub_date: 2022-04-01
+---
+summary: I'm of the opinion that for most data science code,
+it makes more sense to write functions than objects.
+This probably isn't controversion,
+but if you're curious why,
+then this blog post explains my thought process.
+---
+tags:
+
+data science
+pipeline
+programming style
+programming
+software development
+---
+twitter_handle: ericmjl
