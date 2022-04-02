@@ -1,0 +1,164 @@
+title: Matrices and their connection to graphs
+---
+author: Eric J. Ma
+---
+body:
+
+Graphs, also known as networks, are ubiquitous in our world.
+But did you know that graphs are also related to matrices and linear algebra?
+
+Graphs, at their core, are comprised of two sets:
+
+- A node set
+- An edge set
+
+Nodes are entities in a graph, and edges are their relationships.
+One anchoring example you can use throughout this blog post is a social network -
+people are nodes, and their connections are edges.
+In "Network Analysis Made Simple",
+we go much deeper into [particular examples](https://ericmjl.github.io/Network-Analysis-Made-Simple/01-introduction/01-graphs/)
+and [the specific NetworkX implementation](https://ericmjl.github.io/Network-Analysis-Made-Simple/01-introduction/02-networkx-intro/).
+
+As it turns out, you can represent graphs as matrices!
+Let's construct a minimal complex example to illustrate the point.
+If you had a social network of 4 people (A through D),
+such that they had the following connectivity pattern:
+
+```
+    D
+    |
+A - B - C
+└-------┘
+```
+
+We can actually represent the graph as an _adjacency matrix_,
+which highlights which nodes are connected to which other nodes:
+
+```
+    A  B  C  D
+  ┌------------┐
+A | 0  1  1  0 |
+B | 1  0  1  1 |
+C | 1  1  0  0 |
+D | 0  1  0  0 |
+  └------------┘
+```
+
+Here, a value of `1` in the matrix indicates a connection between the two nodes,
+while a value of `0` indicates no relationship.
+
+Using NetworkX, it's straightforward to create the graph and convert it to matrix form:
+
+```python
+import networkx as nx
+import numpy as np
+
+G = nx.Graph()
+G.add_nodes_from(
+	[("A", "B"), ("B", "C"), ("A", "C"), ("B", "D")]
+)
+
+adj_mat = nx.to_adjacency_matrix(G)
+
+
+# This is what adj_mat looks like
+adj_mat
+# output:
+array([[0., 1., 1., 0.],
+       [1., 0., 1., 1.],
+       [1., 1., 0., 0.],
+       [0., 1., 0., 0.]])
+```
+
+From the adjacency matrix,
+it's already easy to infer some basic information about the graph.
+
+Firstly, we can test whether the matrix is symmetric around the diagonal or not
+to infer whether or not the graph can be represented as an undirected graph.
+We do this by checking whether the lower triangle of the adjacency matrix
+is equal to the upper triangle of the adjacency matrix
+when either one of them is transposed:
+
+```python
+(np.triu(adj_mat) == np.tril(adj_mat).T).all()
+# evaluates to `True`
+```
+
+If the graph is undirected,
+we can count the number of edges in the graph
+by summing up either the upper or lower triangle of the matrix.
+If the graph is directed, then summing the matrix tells us the total number of edges:
+
+```python
+np.triu(adj_mat).sum()
+# evalutes to 4.0
+```
+
+Additionally, taking the `k`-th matrix powers of the adjacency matrix
+tells us the number of ways to reach another node by taking `k` hops on the graph.
+Let's see the example of `k = 2`:
+
+```python
+np.linalg.matrix_power(adj_mat, 2)
+# output:
+array([[2., 1., 1., 1.],
+       [1., 3., 1., 0.],
+       [1., 1., 2., 1.],
+       [1., 0., 1., 1.]])
+```
+
+As we can see, there are two ways to go from A and back to A (value = 2),
+by going `A -> B -> A` and `A -> C -> A`.
+There are no ways to go from B to D using 2 hops.
+Hence the value is 0.
+
+And if you've been astute enough to pick it up,
+the diagonal also happens to tell us the _degree_ of each node,
+that is, the number of neighbours that each node has:
+
+```python
+np.diagonal(np.linalg.matrix_power(adj_mat, 2))
+# output:
+array([2., 3., 2., 1.])
+```
+
+Knowing how to convert between object and matrix representations of graphs
+is a really useful skill,
+because being able to do so gives you access to the necessary programming language APIs
+that can make your life a lot easier.
+I [know this from personal experience][graph]!
+
+[graph]: https://ericmjl.github.io/blog/2019/6/15/graphs-and-matrices/
+
+I will be at ODSC East 2022 teaching [Network Analysis Made Simple](https://ericmjl.github.io/Network-Analysis-Made-Simple/).
+There, we will learn more cool stuff about graphs,
+their key underlying concepts,
+and awesome connections to other topics through this tutorial.
+Hope to see you there!
+
+---
+pub_date: 2022-04-02
+---
+summary:
+
+I will be at ODSC East 2022 teaching [Network Analysis Made Simple](https://ericmjl.github.io/Network-Analysis-Made-Simple/).
+We will learn more cool stuff about graphs,
+their key underlying concepts,
+and awesome connections to other topics through this tutorial.
+Hope to see you there!
+Meanwhile, here's a blog post for your edutainment!
+
+---
+tags:
+
+network science
+networkx
+numpy
+data science
+graph
+graph theory
+linear algebra
+matrices
+matrix math
+---
+twitter_handle: ericmjl
