@@ -3,18 +3,19 @@
 blockquote {
   border-left: 10px solid var(--nord6);
   border-right: 10px solid var(--nord6);
-  border-top:10px solid var(--nord6);
-  border-bottom:10px solid var(--nord6);
+  border-top: 10px solid var(--nord6);
+  border-bottom: 10px solid var(--nord6);
   /* margin-bottom:25px; */
   /* margin-top:25px; */
   background-color: var(--nord6)
 }
 
-blockquote p{
+blockquote p {
   margin-left: 20px;
   margin-right: 20px;
   margin-top: 20px;
-  margin-bottom: 20px;}
+  margin-bottom: 20px;
+}
 
 blockquote footer {
   margin-left: 20px;
@@ -22,7 +23,10 @@ blockquote footer {
 
 /* Set max width of images using CSS. This also makes all images responsive up
 to the width of the device. */
-img { width: 100%; max-width: 600px; }
+img {
+  width: 100%;
+  max-width: 600px;
+}
 
 body {
   line-height: 1.7;
@@ -54,16 +58,16 @@ body {
     color: var(--nord8);
 } */
 
-a:hover  {
-    color: var(--nord1);
+a:hover {
+  color: var(--nord1);
 }
 
 .author {
-    color: var(--nord10);
+  color: var(--nord10);
 }
 
 .tags {
-    color: var(--nord10);
+  color: var(--nord10);
 }
 
 .transition {
