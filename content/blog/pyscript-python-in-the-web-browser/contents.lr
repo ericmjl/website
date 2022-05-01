@@ -1,0 +1,145 @@
+title: PyScript: Python in the Web Browser
+---
+author: Eric J. Ma
+---
+body:
+
+<script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+
+At yesterday's PyCon 2022 keynote,
+Anaconda CEO [Peter Wang](https://twitter.com/pwang) did a big reveal on [PyScript](https://pyscript.net),
+which lets us use Python in the browser just like we would use JavaScript.
+Having heard the Keynote and having sat in on the Open Space led by [Fabio Pilter](https://twitter.com/b_smoke),
+one of the lead software developers on the project,
+I immediately went off and tested the thing that afternoon.
+
+My initial reactions can be described using the following phrases, in exact order:
+
+- No way this is happening!
+- Wow!
+- Oh wow!
+- Daaaaaaang!
+- I can write Python just like JavaScript??????
+- Oh man, I see so many possibilities.
+- Yes, yes, this is for the masses.
+
+So I decided to give it a shot.
+That afternoon, I put in a [pull request](https://github.com/pyscript/pyscript/pull/74/files)
+to the `pyscript` examples gallery.
+It was one describing how to do message passing on graphs,
+a point that left many of my [Network Analysis Made Simple tutorial](https://ericmjl.github.io/Network-Analysis-Made-Simple/) participants mindblown.
+I'm replicating the example below, with a few prose enhancements.
+
+## Message Passing and Linear Algebra: A Demo
+
+<div>
+<py-env>
+    - networkx
+    - numpy
+</py-env>
+</div>
+
+Imagine we have a chain graph that looks like this:
+
+```bash
+O --> 1 --> 2 --> 3
+```
+
+In NetworkX, we could construct a graph object that represents the graph.
+That graph would have the following edges:
+
+<div>
+<py-script output="edges">
+import networkx as nx
+G = nx.DiGraph()
+nodes = list(range(4))
+G.add_edges_from(zip(nodes[0:-1], nodes[1:]))
+print(G.edges())
+</py-script>
+</div>
+
+<div><pre id="edges"></pre></div>
+
+It would also look like this:
+
+<div>
+<py-script output="mpl">
+import matplotlib.pyplot as plt
+fig = plt.figure()
+nx.draw(G, ax=plt.gca(), with_labels=True)
+fig
+</py-script>
+</div>
+<div id="mpl"></div>
+
+Now, as it turns out, this graph has a linear algebra representation
+in the form of an adjacency matrix that looks like this:
+
+<div>
+<py-script output="adj-mat">
+import numpy as np
+A = np.eye(4, k=1)
+print("A:")
+print(A)
+</py-script>
+</div>
+
+<div><pre id="adj-mat"></pre></div>
+
+And imagine that we have a message that lives on the graph.
+It is given by an indicator vector `M`,
+where `1` indicates that the message lives on a node
+and `0` indicates that the message is absent from the node.
+
+<pre><py-script>
+M = np.array([1.0, 0.0, 0.0, 0.0])
+print("M:")
+print(M)
+</py-script></pre>
+
+Now, if you did a dot product beetween the message and the adjacency matrix,
+you would pass the message along the chain.
+Try it out for yourself by copying and pasting in any one of the following lines
+into the embedded PyScript REPL below:
+
+```
+M @ A
+M @ A @ A
+M @ A @ A @ A
+```
+
+<div><py-repl output="repl-out"></py-repl></div>
+
+<pre id="repl-out"></pre>
+
+## Reflections
+
+I'm not sure that 2022 is going to be the year of the Linux desktop,
+but I'm very sure that 2022 is already the year of Python _embedded_ in the browser.
+I wrote this blog post entirely in Markdown,
+with only a few `<div></div>`, `<pre></pre>` and `<py-script></py-script>` tags
+sprinkled throughout the post to make this happen.
+As someone who has programmed in Python for my entire professional life,
+there's a glaring inability for me to embed Python in HTML documents.
+As such, Python has a strong server-to-client vibe baked into the ecosystem.
+
+PyScript changes that paradigm: everything you saw above was rendered client-side only.
+My website is a static site,
+and yet you were able to run an embedded Python REPL here!
+The possibility of using Python just like JavaScript is pretty amazing.
+I can see many possibilities going forward,
+both at work, in education, and more.
+Kudos, Peter, Fabio, and the rest of the Anaconda team that put this out.
+I can't wait to see how PyScript evolves!
+
+---
+pub_date: 2022-05-01
+---
+tags:
+
+python
+web
+pyscript
+browser
+---
+twitter_handle: ericmjl
