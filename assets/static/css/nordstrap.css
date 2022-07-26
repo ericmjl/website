@@ -1652,7 +1652,7 @@ pre code {
 }
 
 .table-bordered {
-  border: 1px solid #dee2e6;
+  border: 1px solid #24609c;
 }
 
 .table-bordered th,
@@ -9549,7 +9549,7 @@ a.text-white:focus {
   }
 
   abbr[title]::after {
-    content: " ("attr(title) ")";
+    content: " (" attr(title) ")";
   }
 
   pre {

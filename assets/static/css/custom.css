@@ -109,3 +109,17 @@ code {
 .box-shadow {
   box-shadow: 0px 0px 20px var(--nord4);
 }
+
+table,
+th,
+td {
+  border: 1px solid;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+th {
+  background-color: var(--nord7);
+}
