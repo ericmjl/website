@@ -1,0 +1,219 @@
+title: Python Builtins and their Modern and Convenient Replacements
+---
+author: Eric J. Ma
+---
+body:
+
+Python has a batteries-included philosophy.
+This means that when you install Python,
+you get a lot of basic functionality thrown in for free!
+Yet, as time progressed, we (the Python language community) gradually figured out
+how to accomplish that same functionality with fewer lines of code.
+In other words, we built opinionated tools to streamline common ways of doing things.
+In this blog post, I'd like to highlight some of these tools, both big and small,
+and the built-in modules (or otherwise patterns of usage) that they replace.
+
+## Summary Table
+
+If this blog post is too long for you, then here's the tl;dr:
+
+|            Built-in            |    Replacement     |
+| :----------------------------: | :----------------: |
+|          [`csv`][csv]          | [`pandas`][pandas] |
+|      [`logging`][logging]      | [`loguru`][loguru] |
+| Disable [`warnings`][warnings] | [`shutup`][shutup] |
+|     [`argparse`][argparse]     |  [`typer`][typer]  |
+
+(You can click on the package/module names to check them out!)
+
+[csv]: https://docs.python.org/3/library/csv.html
+[pandas]: https://pandas.pydata.org
+[logging]: https://docs.python.org/3/library/logging.html
+[loguru]: https://loguru.readthedocs.io/en/stable/
+[warnings]: https://docs.python.org/3/library/warnings.html
+[shutup]: https://github.com/polvoazul/shutup
+[argparse]: https://docs.python.org/3/library/argparse.html
+[typer]: https://typer.tiangolo.com
+
+## Handling tabular data
+
+Before `pandas` came along and became the _de facto_ library
+for handling tabular data in Python,
+the built-in `csv` module was the _de facto_ library before it.
+The kind of code that we'd have to write before looked like this:
+
+```python
+import csv
+
+with open("data.csv", "r+") as f:
+    data_reader = csv.reader(f, delimiter=",")
+
+# We would need more code to parse each row...
+```
+
+Of course, with `pandas`,
+we know that we can now write the following compact code instead:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("data.csv")
+```
+
+`pandas` did a great job by giving us an intuitive API
+for reading CSV files and other tabular data formats,
+such as Excel spreadsheets and Matlab data files.
+In addition, it also gave us an interface
+to _compact_ binary representations of data files,
+such as the `.feather` or `.parquet` formats,
+which, in some cases, can result in 3-20X disk space reductions.
+
+## Logging information
+
+If you use logging,
+you might know that Python has a [built-in logging module](https://docs.python.org/3/library/logging.html).
+Logging has advantages over printing,
+the most significant two that I've experienced being
+(1) knowing (in the logs) _exactly_ which module a logging line came from, and
+(2) the ability to redirect the logs to a plain text file that we can search later.
+As it turns out, [`loguru`](https://loguru.readthedocs.io/en/stable/)
+makes logging in your Python code as easy as printing without too much overhead.
+
+Here's the code that you might write using the built-in logging facilities in Python:
+
+```python
+import logging
+
+logger = logging.getLogger(name)
+
+
+def my_func(*args, **kwargs):
+    ...
+    logger.info("Some message.")
+    ...
+```
+
+And here is the code that, frankly,
+feels just a _tad_ easier to write,
+because we eliminate one line of boilerplate:
+
+```python
+from loguru import logger
+
+def my_func(*args, **kwargs):
+    ...
+    logger.info("Some message.")
+    ...
+```
+
+The output looks beautiful in the terminal because of its colours!
+
+## Disabling `warnings`
+
+I can't remember how many times I've forgotten
+how to disable all warnings in a Jupyter notebook.
+Usually, a quick online search would lead me to [this StackOverflow post][so],
+but there are many options for doing so listed on that post
+that I invariably give up and live with warnings piling up in my notebooks.
+That is, until, I saw `shutup`.
+
+[so]: https://stackoverflow.com/questions/14463277/how-to-disable-python-warnings
+
+Before `shutup`, we would write:
+
+```python
+import warnings
+warnings.filterwarnings("ignore")
+```
+
+But with `shutup` we would write the following code that is just a _tad_ easier to remember than the builtin:
+
+```python
+import shutup
+shutup.please()
+```
+
+The package is so Canadian and polite too!
+
+## Making command line interfaces
+
+If you've built command line interface (CLI) tools using Python's built-in `argparser` module,
+you'll know that it's incredibly convenient to turn Python scripts into CLIs.
+Yet, at the same time, it's also really verbose.
+You might end up writing code that looks like this:
+
+```python
+# Hello {name} program!
+import argparse
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="My App")
+    parser.add_argument("name", type=str, help="Name to say hello.")
+    parser.add_argument("times", type=int, help="Number of times to say hello.")
+
+    args = parser.parse_args()
+
+    for i in range(args.times):
+        print(f"Hello {args.name}")
+```
+
+Looking at that code, I can imagine building CLIs composed of multiple commands
+will be challenging to maintain and develop.
+
+Typer makes building CLIs much more accessible
+by helping you easily organize your CLI code into sub-commands.
+
+```python
+import typer
+
+app = typer.Typer()
+
+@app.command()
+def hello(name: str, times: int):
+    for i in range(times):
+        print(f"Hello {name}!")
+
+@app.command()
+def goodbye(name: str, times: int):
+    for i in range(times):
+        print(f"Goodbye {name}!")
+
+if __name__ == "__main__":
+    app()
+```
+
+As you probably can tell,
+it is much easier to compose command line interface programs with Typer than with `argparse;
+this is thanks to type hints in modern Python.
+Typer takes advantage of this to make building CLIs a breeze!
+
+## Summary
+
+As the Python ecosystem matures and grows, as a community,
+we will uncover and find new sane patterns that lubricate our code development work.
+That will, in turn, lead to more development of what I call "convenience packages";
+in the marketplace of ideas,
+good ones will usually (though not always) rise to the top and become well-known.
+I'd encourage you to try out these modern replacements for built-in Python modules
+and see if they stick!
+
+---
+pub_date: 2022-07-25
+---
+summary:
+
+Python has a batteries-included philosophy.
+This means that when you install Python,
+you get a lot of basic functionality thrown in for free!
+Yet, as time progressed, we (the Python language community) gradually figured out
+how to accomplish that same functionality with fewer lines of code.
+In other words, we built opinionated tools to streamline common ways of doing things.
+In this blog post, I'd like to highlight some of these tools, both big and small,
+and the built-in modules (or otherwise patterns of usage) that they replace.
+---
+tags:
+
+python
+tools
+---
+twitter_handle: ericmjl
