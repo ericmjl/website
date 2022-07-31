@@ -123,3 +123,9 @@ td {
 th {
   background-color: var(--nord7);
 }
+
+.boxed {
+  border: 1px solid var(--nord4);
+  padding: 3px;
+  border-radius: 5px;
+}
