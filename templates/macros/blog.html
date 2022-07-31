@@ -18,7 +18,7 @@
     on {{ post.pub_date }}
 
     {% if post.tags %}
-    <br>
+    | tags:
     <!-- Append tags after author -->
     {% for t in post.tags -%}
     <span class="boxed">
