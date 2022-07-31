@@ -18,14 +18,16 @@
     on {{ post.pub_date }}
 
     {% if post.tags %}
-    | tags:
+    <br>
     <!-- Append tags after author -->
     {% for t in post.tags -%}
+    <span class="boxed">
     <i class="fas fa-tag"></i>
     <a class="tags" href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
       {{ t }}
     </a>
-    {% endfor %}
+    </span>
+  {% endfor %}
   </p>
   {% endif %}
 </small>
@@ -42,7 +44,7 @@
   </div>
   <div class="card-footer">
     <p>
-      <i>I send out a monthly newsletter with tips and tools
+      <i>I send out a newsletter with tips and tools
         for data scientists. Come check it out at
         <a href="https://dspn.substack.com">Substack</a>.</i>
     </p>
