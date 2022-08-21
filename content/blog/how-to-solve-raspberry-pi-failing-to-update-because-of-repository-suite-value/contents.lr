@@ -1,0 +1,42 @@
+title: How to solve raspberry pi failing to update because of repository suite value
+---
+author: Eric J. Ma
+---
+body:
+
+Today I learned a new thing trying to install Tailscale on the Raspberry Pi machine responsible for running Pihole.
+
+Part of the install script involves doing an `apt-get update`. On running the command, I would get:
+
+```bash
+E: Repository 'http://raspbian.raspberrypi.org/raspbian buster InRelease' changed its 'Suite' value from 'testing' to 'stable'
+N: This must be accepted explicitly before updates for this repository can be applied. See apt-secure(8) manpage for details.
+```
+
+After a bit of digging, I saw a [blog post on kraaima.com](http://kraaima.com/inrelease-changed-its-suite-value-from-testing-to-stable-error/) that describes the solution:
+
+```bash
+sudo apt-get update --allow-releaseinfo-change
+```
+
+This will bypass the error message listed above.
+
+After that, we do an upgrade:
+
+```bash
+sudo apt-get upgrade
+```
+
+After this, updates & upgrades should resume regular working operation.
+---
+pub_date: 2022-08-20
+---
+tags:
+
+raspberry pi
+linux
+til
+---
+twitter_handle: ericmjl
+---
+summary: Today I learned how to solve yet another fairly esoteric issue with `apt`.
