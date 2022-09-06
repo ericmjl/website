@@ -6,21 +6,41 @@ body:
 
 ## The Project
 
-Over the weekend, I embarked on a project to create a 3D printed QR code that guests at our house could scan to gain access to our guest wireless network.
+Over the weekend,
+I embarked on a project to create a 3D printed QR code
+that guests at our house could scan
+to gain access to our guest wireless network.
 
 ## Why I decided to do this
 
-From the standpoint of practicality, sure, it's trivial to open up phone settings, find the WiFi network name, and give them the password, but... this has the coolness factor associated with it! Imagine scanning a 3D-printed QR code! Until this becomes commonplace, it's a cool thing to be able to do.
+From the standpoint of practicality,
+sure, it's trivial to open up phone settings,
+find the WiFi network name, and give them the password, but...
+this has the coolness factor associated with it!
+Imagine scanning a 3D-printed QR code!
+Until this becomes commonplace,
+it's a cool thing to be able to do.
 
-Anyways, there's a ton of QR code generators out there on the web, and there's more than a handful of WiFi QR code generators out there - so why did I embark on this project?
+Anyways, there's a ton of QR code generators out there on the web,
+and there's more than a handful of WiFi QR code generators out there -
+so why did I embark on this project?
 
-Partly it's borne out of security reasons - I am not giving my WiFi password up to some random website. Who knows whether they're actually storing the passwords?
+Partly it's borne out of security reasons -
+I am not giving my WiFi password up to some random website.
+Who knows whether they're actually storing the passwords?
 
-Another part of this is borne out of me wanting to scratch my itch surrounding QR codes. The last time I went to China (Xi'an and Shanghai, specifically), I saw QR codes *everywhere*. There surely had to be something good we could use this for at home that didn't involve just packing and storage.
+Another part of this is borne out of me
+wanting to scratch my itch surrounding QR codes.
+The last time I went to China (Xi'an and Shanghai, specifically),
+I saw QR codes *everywhere*.
+There surely had to be something good we could use this for at home
+that didn't involve just packing and storage.
 
 ## Getting Setup
 
-Ok, let's get started! To create QR codes, all you need are the following packages installed in your environment:
+Ok, let's get started!
+To create QR codes,
+all you need are the following packages installed in your environment:
 
 1. `pyqrcode` [`pip`]
 2. `pypng` [`pip`]
@@ -45,7 +65,11 @@ Let's say that these are the security credentials for the network:
 - Password: `vn8h2sncu093y3nd!`
 - Security Type (one of WPA or WEP): `WPA`
 
-Because QR codes are merely two-dimensional barcodes that encode a string that can be parsed by another program, in order to create a QR-code that is readable for accessing WiFi, we need a string that can be parsed. This string is structured as follows:
+Because QR codes are merely two-dimensional barcodes
+that encode a string that can be parsed by another program,
+in order to create a QR-code that is readable for accessing WiFi,
+we need a string that can be parsed.
+This string is structured as follows:
 
 ```text
 WIFI:S:<SSID>;T:<WPA|WEP|>;P:<password>;;
@@ -57,7 +81,8 @@ So in our case, we would want a string that looks like:
 WIFI:S:Family Guest Network;T:WPA;P:vn8h2sncu093y3nd!;;
 ```
 
-Now, we can code up our Python program do encode the QR code for us. I'll assume you're running Python 3.6 or later.
+Now, we can code up our Python program do encode the QR code for us.
+I'll assume you're running Python 3.6 or later.
 
 
 ```python
@@ -69,9 +94,13 @@ qr = pq.create(f'WIFI:S:{ssid};T:{security};P:{password};;')
 print(qr.terminal())
 ```
 
-With that block of code, you should get a QR code printed to your terminal, just like that!
+With that block of code,
+you should get a QR code printed to your terminal,
+just like that!
 
-Let's say you wanted to do the simple thing, and just have a regular laser/inkjet printer make a printout of the QR code. To do so, you can save the QR code to disk as a PNG file:
+Let's say you wanted to do the simple thing,
+and just have a regular laser/inkjet printer make a printout of the QR code.
+To do so, you can save the QR code to disk as a PNG file:
 
 ```python
 qr.png('home_guest_wifi.png')
@@ -79,11 +108,23 @@ qr.png('home_guest_wifi.png')
 
 ## Conclusions
 
-And just like that, you've used Python to create a WiFi QR code!  How easy was that?
+And just like that, you've used Python to create a WiFi QR code!
+How easy was that?
 
-Along the way, I also used Kite in the Atom text editor while embarking on this project - this allowed me to view documentation and common usage patterns for the packages I imported.
+Along the way, I also used Kite in the Atom text editor
+while embarking on this project -
+this allowed me to view documentation
+and common usage patterns for the packages I imported.
 
-Now, if you remember that QR codes are just "ASCII strings encoded in a 2D barcode", then you'll know that you can pass any arbitrary string into the `pyqrcode.create()` function. That means you can come up with any creative use of a short string that needs to be scanned to be useful! For example, you can create business cards with your LinkedIn profile URL embedded in the QR code, or use it to encode a serial number information on your possessions, or more!
+Now, if you remember that QR codes are just "ASCII strings encoded in a 2D barcode",
+then you'll know that you can pass any arbitrary string
+into the `pyqrcode.create()` function.
+That means you can come up with any creative use of a short string
+that needs to be scanned to be useful!
+For example, you can create business cards with your LinkedIn profile URL
+embedded in the QR code,
+or use it to encode a serial number information on your possessions,
+or more!
 
 Stay tuned for the coming blog posts!
 ---
