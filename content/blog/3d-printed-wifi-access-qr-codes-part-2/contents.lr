@@ -10,7 +10,9 @@ In this blog post, I'll detail how to create a 3D printable QR code model using 
 
 ## Recap
 
-In the previous blog post, I detailed how to use `pyqrcode` to create a QR code for a WiFi string. The most important parts were:
+In the previous blog post,
+I detailed how to use `pyqrcode` to create a QR code for a WiFi string.
+The most important parts were:
 
 1. The WiFi string. It should have the following pattern:
 
@@ -30,11 +32,16 @@ qr = pq.create(f'WIFI:S:{ssid};T:{security};P:{password};;')
 
 ## Creating a 3D Printed QR Code with Python
 
-Now, let's see how we can create 3D models with Python code. We will need a package called `SolidPython`, and optionally `numpy` to help us with some array processing. (It can be done entirely using built-in lists if needed.)
+Now, let's see how we can create 3D models with Python code.
+We will need a package called `SolidPython`,
+and optionally `numpy` to help us with some array processing.
+(It can be done entirely using built-in lists if needed.)
 
 ### Create QR Code Object
 
-To start, I first defined a convenience function that let me create and return a `QRCode` object that can be passed around and manipulated.
+To start, I first defined a convenience function
+that let me create and return a `QRCode` object
+that can be passed around and manipulated.
 
 ```python
 def create_wifi_qr(ssid: str, security: str, password: str):
@@ -42,7 +49,8 @@ def create_wifi_qr(ssid: str, security: str, password: str):
     return qr
 ```
 
-Its use will become evident later. You'll also notice I'm using type hints inside the function.
+Its use will become evident later.
+You'll also notice I'm using type hints inside the function.
 
 ### Create Text Representation
 
@@ -53,11 +61,18 @@ qr = create_wifi_qr(ssid, security, password)
 print(qr.text())
 ```
 
-This will give essentially a series of 1s and 0s. This is a string, though, not a `numpy` array. Hence, we may have to convert this into a list of lists, or a `numpy` array (as a user of the scientific Python stack, I prefer using arrays where possible, but in this case there is no real practical advantage to doing so because we are not doing linear algebra).
+This will give essentially a series of 1s and 0s.
+This is a string, though, not a `numpy` array.
+Hence, we may have to convert this into a list of lists,
+or a `numpy` array (as a user of the scientific Python stack,
+I prefer using arrays where possible,
+but in this case there is no real practical advantage to doing so
+because we are not doing linear algebra).
 
 ### Create Array Representation
 
-Let's now define a function that takes in the `QRCode` object and return an array version of the text rendering.
+Let's now define a function that takes in the `QRCode` object
+and return an array version of the text rendering.
 
 ```python
 def qr2array(qr):
@@ -78,9 +93,17 @@ arr = qr2array(qr)
 
 Now, we're ready to play with `SolidPython`!
 
-`SolidPython` is a Python package that provides an interface to the OpenSCAD language. The OpenSCAD language allows a programmer to programmatically define 3D models using the language of geometry. This includes the creation of cubes and other 3D objects, as well as object manipulations, such as translation, coloring, and union-ing.
+`SolidPython` is a Python package that provides an interface to the OpenSCAD language.
+The OpenSCAD language allows a programmer to programmatically define 3D models
+using the language of geometry.
+This includes the creation of cubes and other 3D objects,
+as well as object manipulations,
+such as translation,
+coloring,
+and union-ing.
 
-For brevity, I'll not introduce you to more detail on what OpenSCAD is. Rather, I'll recommend two readings, to be read in order:
+For brevity, I'll not introduce you to more detail on what OpenSCAD is.
+Rather, I'll recommend two readings, to be read in order:
 
 1. [Beginner's Guide to OpenSCAD](https://www.makeuseof.com/tag/beginners-guide-openscad-programming-3d-printed-models/)
 1. [SolidPython's Documentation](https://solidpython.readthedocs.io/en/latest/)
@@ -133,13 +156,23 @@ union() {
 }
 ```
 
-What we've done here is take the 1s and created cubes where they are supposed to be, and leave the zeros empty. Then, we add a "base plate" so that everything stays nice and connected, and finally union all of the cubes with the base plate, so that we get one solid piece that is 3D printed.
+What we've done here is take the 1s and created cubes where they are supposed to be,
+and leave the zeros empty.
+Then, we add a "base plate" so that everything stays nice and connected,
+and finally union all of the cubes with the base plate,
+so that we get one solid piece that is 3D printed.
 
-If you observe the output of the function `scad_render`, it will essentially be valid OpenSCAD text. With OpenSCAD text, you can paste it into OpenSCAD to render it:
+If you observe the output of the function `scad_render`,
+it will essentially be valid OpenSCAD text.
+With OpenSCAD text, you can paste it into OpenSCAD to render it:
 
 ![](./openscad.png)
 
-Following that, it can be exported as an STL file. The export process in OpenSCAD takes some time, but once done, it then has to be first converted into a `.gcode` file, which gives a 3D printer the necessary instructions to move its printhead around to print the QR code.
+Following that, it can be exported as an STL file.
+The export process in OpenSCAD takes some time,
+but once done, it then has to be first converted into a `.gcode` file,
+which gives a 3D printer the necessary instructions
+to move its printhead around to print the QR code.
 
 In short, the flow is:
 
@@ -155,7 +188,9 @@ The key things to take away from this blog post are:
 1. How to convert the text representation into an array.
 1. How to create a 3D model of the QR code using the array.
 
-Now that you have an example of how to create an OpenSCAD file from Python using `SolidPython`, I hope you'll go forth and make a ton of fun stuff!
+Now that you have an example of
+how to create an OpenSCAD file from Python using `SolidPython`,
+I hope you'll go forth and make a ton of fun stuff!
 
 ---
 tags:
