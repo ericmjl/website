@@ -1,0 +1,65 @@
+title: Coding on an iPad with Codespaces and Blink
+---
+author: Eric J. Ma
+---
+body:
+
+After many attempts at doing coding on an iPad,
+I finally have hit a solution that works well for me.
+
+I'm a VSCode user.
+I enjoy using VSCode because of the many extensions that make my work productive.
+While I enjoy using my MacBook Air,
+I've sometimes wanted to lug around nothing more than my iPad and its keyboard
+to do my blogging, coding, and other work.
+
+I've tried many different solutions to do coding on an iPad.
+For example, I test-drove GitHub's Codespaces in the built-in Safari browser,
+but the experience was a little less than ideal.
+I'd frequently find myself unable to scroll in the Jupyter notebook interface,
+or the notebook would never load.
+Then, I tried using plain text editors,
+such as a combination of `tmux` and `nano` with syntax highlighting,
+but I found that I was missing the ability to execute code in a notebook.
+
+One day, however, I stumbled upon VSCode in Blink.
+I was trying to open up my personal website's Codespace in Safari,
+but instead, iOS opened up Blink.
+And there it was: Visual Studio Code working on my iPad!
+At first, I thought I was still in Safari,
+and tried to switch to a different tab - only for the action to not work.
+Only later did I realize I was in Blink.
+Here's a screenshot of Blink's VSCode in action for this website:
+
+![](./blink-vscode.png)
+
+One thing notable is that all of my settings are synchronized correctly,
+including my theme configurations, extensions, and keybindings!
+Trackpad usage allows me to operate as if I were on my laptop.
+In other repos where I have Jupyter notebooks,
+I can open them up and run code in them as well.
+Even the built-in terminal works too!
+This was pretty amazing to see in action.
+
+Read more here:
+
+- [VSCode in Blink on YouTube](https://www.youtube.com/watch?v=BsbQxSUdUOw)
+- [Blink Shell](https://blink.sh/)
+- [Docs for using VSCode in Blink](https://docs.blink.sh/advanced/code)
+
+---
+pub_date: 2022-09-16
+---
+tags:
+
+ipad
+coding
+data science
+mobile
+blink
+codespaces
+github
+---
+twitter_handle: ericmjl
+---
+summary:
