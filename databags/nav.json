@@ -1,6 +1,5 @@
 {
-    "header": [
-        {
+    "header": [{
             "title": "Home",
             "href": "/",
             "icon": "fa-home"
@@ -46,8 +45,7 @@
             "icon": "fa-user"
         }
     ],
-    "footer": [
-        {
+    "footer": [{
             "title": "LinkedIn",
             "href": "https://www.linkedin.com/in/ericmjl",
             "icon": "fab fa-linkedin"
@@ -59,8 +57,9 @@
         },
         {
             "title": "Octodon",
-            "href": "https://octodon.social/web/accounts/7711",
-            "icon": "fab fa-mastodon"
+            "href": "https://octodon.social/@ericmjl",
+            "icon": "fab fa-mastodon",
+            "rel": "me"
         },
         {
             "title": "GitHub",
