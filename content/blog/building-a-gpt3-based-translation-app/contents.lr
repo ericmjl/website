@@ -1,0 +1,399 @@
+title: Building a GPT3-based Translation App
+---
+author: Eric J. Ma
+---
+body:
+
+Since 2011, I have been doing Chinese-to-English translation
+for [Ark Channel][arkchannel].
+For as long as I can remember,
+I have used Google Translate to assist me in translation
+because Chinese is my 2nd language
+(though in Singapore, I learned it as a 1st language subject).
+So, with GPT3's capabilities at doing translation,
+I wanted to test drive its abilities to do machine translation.
+I have not been disappointed!
+
+[arkchannel]: http://www.arkchannel.org/en/
+
+Ark Channel is written in Hong Kong by one person, Sam Kong.
+(He started broadcasting short messages of Biblical encouragement
+in response to seeing suicide rates skyrocket in Hong Kong.)
+Sam is not a computer person,
+but he writes each edition of Ark Channel in a relatively structured way.
+From Monday through Saturday, Ark Channel's edition looks something like this:
+
+```text
+熱就退了！- 方舟台 14/01/2023 週六 太8上
+
+耶穌說：我去醫治他 (v.7)
+
+* 在主沒有「能」或「不能」，只有「肯」或「不肯」
+
+今日聖經: 太8上
+
+* 為何我認為聖經可信? Why is the Bible reliable? | Tim Keller at Columbia University
+```
+
+And on Sunday, it looks like this:
+
+```text
+存感恩心，走永生路！- 15/01/2023 Sunday Hope 太8下
+
+眾人希奇，說：這是怎樣的人 ? 連風和海也聽從他了（v.27)
+
+* 恩主從不責備任何人用禱告來打擾祂的安寧，但卻責備人因膽怯而自亂陣腳。
+
+今日聖經: 太8下
+
+* 經典的詩歌，現代的心靈，如同中水的聲音 -
+"Holy, Holy, Holy" — Singing at Together for the Gospel
+```
+
+At first,
+I thought I would get GPT3 to do translation by using the following prompt,
+written inside a Python function:
+
+```python
+def translate(text: str):
+    prompt = f "Translate the following text into English: '{text}'."
+	response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt,
+        max_tokens=2000,
+        temperature=0.1
+    )
+    return response['choices'][0]['text'].strip("\n")
+```
+
+However, this yielded unsatisfactory results.
+Here is one example translation for the January 14 entry:
+
+```text
+The heat is gone! - Ark Platform 14/01/2023 Saturday 8am
+
+Jesus said: I go to heal him (v.7)
+
+* With the Lord there is no "can" or "cannot", only "will" or "will not"
+
+Today's Bible: Matthew 8
+
+* Why do I think the Bible is reliable? Why is the Bible reliable? | Tim Keller at Columbia University
+```
+
+At first glance, the translation is okay!
+The devotional text on the 3rd line is reasonably accurate.
+The additional text at the end is also translated well.
+There are other issues, though, that we could further tackle.
+Here they are.
+
+1. Per our usual practice, `方舟台` should be translated into `Ark Channel`.
+2. `太8` is mistranslated as `8am`. It should be `Matthew 8b` or `Matthew 8c`. Both are acceptable without contextual information; sometimes, we split a chapter into 3 (`abc`) rather than 2 (`ab`).
+3. Additionally, the quoted verse on the 2nd line might need to be corrected and verified.
+4. Translating the entire text uses up a lot of tokens.
+
+To solve point 3, Ark Channel historically uses the NKJV version.
+However, I have sometimes used the NIV version to translate
+(primarily out of habit).
+If we can extract the Bible book, chapter, and verse number from the free text,
+we might be able to hit an API to automatically get an authoritative translation
+rather than use GPT3 to do an approximately correct translation.
+
+To solve point 4,
+if we could translate just the devotional text and additional text fields
+while using dictionary lookups for the rest,
+we could save a lot of OpenAI API calls.
+
+So I decided to split the task into two pieces:
+
+1. The first is to extract the information based on a template I provide and return it as a JSON object that I would read into Python as a dictionary.
+2. The second would take just the parsed devotional and additional texts and do a GPT3-based translation for me.
+
+To make point 1 happen, I needed to provide a template inside a prompt.
+Templating out the Ark Channel devotionals, they look like this:
+
+```Text
+<header> - 'Ark Channel' <date in DDMMYY or DD/MM/YYYY format> <day of the week or 'Sunday Hope'> <book><chapter number><optional modifier>
+<quoted verse> (v.<verse_number>)
+
+<devotional_text followed by "今日聖經">
+
+<additional_text after devotional_text, beginning with "*" character>
+```
+
+It is relatively structured but definitely not easily machine parseable with Python code.
+Furthermore, if I had to code up a parser,
+I would have to write lots of code for many edge cases, which would be undesirable.
+Here are some examples of the issues I encountered,
+each of which would introduce code path forking:
+
+1. The date may sometimes be written as `DDMMYY` or `DD/MM/YYYY`.
+2. Only on Sundays will the 'day of week' field be written as "Sunday Hope"; on other days, it is in Chinese.
+3. There is sometimes an alphanumeric letter at the end of the chapter number to signify that week's edition covers part of a chapter rather than the entire chapter.
+4. The devotional text sometimes includes multiple line breaks with bullet points or numbered lists, and at other times is one single line.
+5. The additional text is sometimes multiple lines long and sometimes a single line.
+
+So, I experimented a bit with the API and made a prompt that returns
+a structured dictionary with fields correctly populated:
+
+```python
+def structure(text: str):
+    prompt = f"""The following text has structure:
+
+'<header> - 'Ark Channel' <date in DDMMYY or DD/MM/YYYY format> <day of the week or 'Sunday Hope'> <book><chapter number><optional modifier>
+<quoted verse> (v.<verse_number>)
+
+<devotional_text followed by "今日聖經">
+
+<additional_text after devotional_text, beginning with "*" character>'
+
+Parse the text: '{text}' as JSON using snake_case for the keys.
+Ensure the keys' verse_number', 'day_of_week_or_sunday_hope', 'header', 'date',
+'book', 'chapter_number', 'optional_modifier', 'quoted_verse', and 'devotional_text' are all present.
+The 'optional_modifier' is usually '下' or '上', sometimes '中', and is not always present.
+Ensure the quoted_verse does not include the verse number.
+Ensure no double quotes.
+In values, replace all double quotes with single quotes.
+Ensure '今日聖經' does not show up in 'devotional_text'.
+    """
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt,
+        max_tokens=2000,
+        temperature=0.1
+    )
+    return json.loads(response['choices'][0]['text'].strip("\n"))
+```
+
+As mentioned above, this prompt performs relatively consistently
+against the test cases I designed.
+However, if there is a mild change in formatting,
+I will need to adjust the prompt.
+
+Additionally, the part that needed the most experimentation was the `Ensure` statements.
+Before including the `Ensure` statements,
+GPT3 would return a JSON string that missed out on keys that needed to be present.
+However, GPT3 began reliably covering all of the necessary keys in the dictionary
+after including the' Ensure' statements.
+
+Finally, there were places in Ark Channel
+where quotation mark usage needed to be more consistent.
+Sometimes, quotation marks were curly;
+at other times, they were straight.
+The parentheses were also sometimes the fixed-width Chinese version;
+at different times, they were the English font version instead.
+With the prompt above, I was able to control the usage of
+quotation marks and parentheses in the translated texts.
+
+As I'll discuss later, GPT3 became (for me) a great Natural Language API.
+That was pretty incredible.
+
+With this function, the original text above is parsed as:
+
+```python
+{
+    'header': '存感恩心，走永生路！',
+    'date': '150123',
+    'day_of_week_or_sunday_hope': 'Sunday Hope',
+    'book': '太',
+    'chapter_number': '8',
+    'optional_modifier': '下',
+    'quoted_verse': '眾人希奇，說：這是怎樣的人 ? 連風和海也聽從他了',
+    'verse_number': '27',
+    'devotional_text': '恩主從不責備任何人用禱告來打擾祂的安寧，但卻責備人因膽怯而自亂陣腳。',
+    'additional_text': '* 經典的詩歌，現代的心靈，如同中水的聲音 - "Holy, Holy, Holy" — Singing at Together for the Gospel'
+}
+```
+
+This is a great start!
+With it in hand,
+I could see a path forward to composing the English translation
+through mapping-based translation for the shorter fields
+and AI-based translation for the natural language fields.
+The latter is what the next point is about.
+
+To make this happen,
+I would just need to instruct GPT3 to translate
+the `devotional_text` and `additional_text`,
+which are the ones that need the most human thought.
+That is relatively simple,
+as I can reuse the original `translate()` function defined above.
+
+For fun,
+I also made two cover images for each Ark Channel edition
+using the OpenAI DALL-E2 API.
+This one was easy:
+using the structured text,
+I passed in the `header` value into the following function:
+
+```python
+def generate_image(translation):
+    """
+    OpenAI image generation API (DALL-E 2) given prompt return image URL
+    """
+    prompt = f"Claude Monet painting of '{translation}'."
+    response = openai.Image.create(
+      prompt=prompt,
+      n=1,
+      size="256x256"
+    )
+    image_url = response['data'][0]['url']
+    return image_url
+```
+
+As you can see, I ask for a Claude Monet-style painting as the image.
+Once we have the image URL, we can display it.
+
+Without a UI, my code is not usable by my 'yokefellows',
+as Sam Kong would call us.
+While I'm a techie, they are not.
+I can run code in a notebook,
+but it would be a huge lift to enable them to use the code in its raw form.
+Therefore, I decided to build and deploy a Panel app
+that makes this accessible to them.
+I chose Panel because I was inspired by
+Sophia Yang's use of Panel + the OpenAI API
+(see [her recent blog post about it][syang_blog])
+and because it includes a very flexible layout engine.
+Its reactive idioms are also Pythonic and, therefore, easy to follow.
+
+[syang_blog]: https://towardsdatascience.com/chatgpt-and-dall-e-2-in-a-panel-app-1c921d7d9021
+
+Regarding deployment, I opted to set up a $12/mo Dokku server on DigitalOcean.
+It has been a while since I last did that, so I felt rusty.
+In the interest of brevity, I will only delve into a bit of detail here.
+The tl;dr is that I installed Dokku,
+figured out how to set up SSL (for HTTPS),
+and deployed the app from within a  Docker container.
+(I referenced [my old essay on deploying static sites and Python apps][essay];
+writing about stuff one builds is an excellent way of recording knowledge!)
+
+[essay]: https://ericmjl.github.io/essays-on-data-science/miscellaneous/static-sites-on-dokku/
+
+The final result is an app that looks like this:
+
+![Ark Channel translator app deployed on DigitalOcean](screenshot.png)
+
+## What's the insight?
+
+From this exercise, I've realized that we can use GPT3 as a **natural language API**.
+As an interface, it is less defined than a programming language
+but is much more flexible and human-like.
+The amount of experimentation we need to achieve the same results
+might be similar or even less compared to programming with a Python-based API,
+especially when it comes to more straightforward tasks,
+like structuring a JSON from texts with solid patterns.
+
+Testing and validating natural language APIs
+is more challenging than with a programming language API,
+but it is still necessary.
+With our usual programming languages, such as Python, Julia, or Rust,
+we can mostly reason through the logic of a program
+and figure out how to write a general test case.
+However, with GPT3 prompts as a pseudo-programming language,
+it takes more work to build a program that generates real-looking data
+and takes more work to test it logically.
+As such, it becomes more important to rely on example-based tests,
+especially those previously known to fail.
+
+Then, there's the issue of data validation at runtime.
+GPT3 can blabber anything, so we still need guardrails.
+I also needed to write data validators that checked that
+all required keys were present in the dictionary.
+If that failed, I would display the error message in the UI
+within a `Status` Markdown pane so that I could surface information to myself
+(the Panel app's primary user and debugger)
+and strategize a way to fix the issue.
+
+What about my bilingual skills?
+Did using GPT3 obviate the need for my skills?
+Not at all.
+Instead of using my bilingual skills to _create_ translations,
+I ended up using my bilingual skills to _verify_
+the machine translations for correctness.
+But, of course, I would still edit the translations
+if they were off, slightly or egregiously.
+
+Finally, there's the lesson on compositionality.
+This is the same lesson outlined on [Twitter][twitter]
+by Jungwon (from Ought, the builders of Elicit,
+a research tool that I wish I had during my doctoral training days).
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">How <a href="https://twitter.com/elicitorg?ref_src=twsrc%5Etfw">@elicitorg</a> applies language models compositionally to make it easier to check models&#39; work:<br><br>1 When language models extract info from or answer questions about papers in Elicit, users can quickly see the source - the part of the paper the model got its answer from. <a href="https://t.co/vHECbNMIVr">pic.twitter.com/vHECbNMIVr</a></p>&mdash; Jungwon (@jungofthewon) <a href="https://twitter.com/jungofthewon/status/1621216780176986112?ref_src=twsrc%5Etfw">February 2, 2023</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+Instead of feeding the full text of the devotional
+and asking GPT3 to do a translation of the full text alone,
+breaking up the text into sub-components made it easier to translate
+while preserving the desired formatting that we wanted.
+Instead of designing a prompt to satisfy both goals,
+I could create simpler sub-tasks for the model and combine them again.
+Doing so saved me GPT3 API call tokens (which equals money!)
+and the headache of designing complicated prompts.
+
+[twitter]: https://twitter.com/jungofthewon/status/1621216780176986112
+
+## Impact
+
+So I spent quite a bit of time building this tool for myself.
+What's the impact here?
+
+Previously, I would spend about 10-15 minutes
+translating each Ark Channel daily devotional entry.
+With my home-built GPT3-based translation tool,
+I can finish translations in 2 minutes.
+That's anywhere from 5-7 times faster than before.
+Furthermore, with it deployed to my DigitalOcean Dokku server,
+I can make it available to my fellow Ark Channel translators worldwide.
+
+But there are more benefits here.
+Translation takes mental energy,
+and there's an activation energy barrier to getting it done.
+On days with lower energy levels than usual,
+I would delay translation,
+sometimes causing a downstream chain reaction
+by slowing other Ark Channel translators.
+(All devotionals are sent in strict order.)
+Having a machine do a high-quality translation that I can edit
+massively reduces the barrier to getting it done.
+
+## Conclusion
+
+This exercise in building an app that used GPT3
+was incredibly informative for me.
+Designing prompts is not easy and takes experimentation,
+but it wasn't the hardest part to get right.
+Within the broader picture of the translator, GPT3 was merely one component.
+As written by Davis Treybig,
+[UX was the thing I needed to pay the most attention to here][ux].
+When GPT3 failed, and it will, having a way to inspect internal data structures
+made a night-and-day difference in
+my ability to debug what was going wrong live.
+With GPT3 and its successor models,
+I'm confident we can unlock new capabilities in many places!
+
+[ux]: https://medium.com/innovationendeavors/the-biggest-bottleneck-for-large-language-model-startups-is-ux-ef4500e4e786
+
+P.S. In case you were wondering where the app is located...
+I don't plan to share the URL publicly.
+That's because my credit card is on the line
+and I have no authentication walls to prevent bad actors
+from abusing the app!
+
+---
+pub_date: 2023-02-05
+---
+summary: Discover my personal experience creating a cutting-edge app
+for translating Ark Channel devotionals using OpenAI's GPT-3.
+Read about the challenges I faced and the lessons I learned
+in this new blog post!
+---
+tags:
+
+gpt3
+large language models
+translation
+faith
+christianity
+bible
+---
+twitter_handle: ericmjl
