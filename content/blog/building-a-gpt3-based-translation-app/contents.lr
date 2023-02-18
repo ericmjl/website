@@ -16,9 +16,11 @@ I have not been disappointed!
 
 [arkchannel]: http://www.arkchannel.org/en/
 
+## What's Ark Channel?
+
 Ark Channel is written in Hong Kong by one person, Sam Kong.
-(He started broadcasting short messages of Biblical encouragement
-in response to seeing suicide rates skyrocket in Hong Kong.)
+He started broadcasting short messages of Biblical encouragement
+in response to seeing suicide rates skyrocket in Hong Kong.
 Sam is not a computer person,
 but he writes each edition of Ark Channel in a relatively structured way.
 From Monday through Saturday, Ark Channel's edition looks something like this:
@@ -50,8 +52,9 @@ And on Sunday, it looks like this:
 "Holy, Holy, Holy" — Singing at Together for the Gospel
 ```
 
-At first,
-I thought I would get GPT3 to do translation by using the following prompt,
+## Can GPT3 alone do the translation?
+
+At first, I thought I would get GPT3 to do translation by using the following prompt,
 written inside a Python function:
 
 ```python
@@ -104,10 +107,14 @@ if we could translate just the devotional text and additional text fields
 while using dictionary lookups for the rest,
 we could save a lot of OpenAI API calls.
 
+## Structuring the translation task into sub-tasks
+
 So I decided to split the task into two pieces:
 
 1. The first is to extract the information based on a template I provide and return it as a JSON object that I would read into Python as a dictionary.
 2. The second would take just the parsed devotional and additional texts and do a GPT3-based translation for me.
+
+### Extract information into a JSON object
 
 To make point 1 happen, I needed to provide a template inside a prompt.
 Templating out the Ark Channel devotionals, they look like this:
@@ -212,12 +219,16 @@ through mapping-based translation for the shorter fields
 and AI-based translation for the natural language fields.
 The latter is what the next point is about.
 
+### Translate the structured information using GPT-3
+
 To make this happen,
 I would just need to instruct GPT3 to translate
 the `devotional_text` and `additional_text`,
 which are the ones that need the most human thought.
 That is relatively simple,
 as I can reuse the original `translate()` function defined above.
+
+### Generate images using DALL-E2 for fun (and non-profit)
 
 For fun,
 I also made two cover images for each Ark Channel edition
@@ -244,8 +255,9 @@ def generate_image(translation):
 As you can see, I ask for a Claude Monet-style painting as the image.
 Once we have the image URL, we can display it.
 
-Without a UI, my code is not usable by my 'yokefellows',
-as Sam Kong would call us.
+### Building a UI for the translation app
+
+Without a UI, my code is not usable by my 'yokefellows', as Sam Kong would call us.
 While I'm a techie, they are not.
 I can run code in a notebook,
 but it would be a huge lift to enable them to use the code in its raw form.
@@ -258,6 +270,8 @@ and because it includes a very flexible layout engine.
 Its reactive idioms are also Pythonic and, therefore, easy to follow.
 
 [syang_blog]: https://towardsdatascience.com/chatgpt-and-dall-e-2-in-a-panel-app-1c921d7d9021
+
+### Deploying the app on my server
 
 Regarding deployment, I opted to set up a $12/mo Dokku server on DigitalOcean.
 It has been a while since I last did that, so I felt rusty.
@@ -276,7 +290,7 @@ The final result is an app that looks like this:
 
 ## What's the insight?
 
-From this exercise, I've realized that we can use GPT3 as a **natural language API**.
+From this exercise, I've realized that **we can use GPT3 as a natural language API**.
 As an interface, it is less defined than a programming language
 but is much more flexible and human-like.
 The amount of experimentation we need to achieve the same results
@@ -284,6 +298,7 @@ might be similar or even less compared to programming with a Python-based API,
 especially when it comes to more straightforward tasks,
 like structuring a JSON from texts with solid patterns.
 
+**How about testing the app?**
 Testing and validating natural language APIs
 is more challenging than with a programming language API,
 but it is still necessary.
@@ -296,7 +311,7 @@ and takes more work to test it logically.
 As such, it becomes more important to rely on example-based tests,
 especially those previously known to fail.
 
-Then, there's the issue of data validation at runtime.
+**What about data validation at runtime?**
 GPT3 can blabber anything, so we still need guardrails.
 I also needed to write data validators that checked that
 all required keys were present in the dictionary.
@@ -305,7 +320,7 @@ within a `Status` Markdown pane so that I could surface information to myself
 (the Panel app's primary user and debugger)
 and strategize a way to fix the issue.
 
-What about my bilingual skills?
+**What about my bilingual skills?**
 Did using GPT3 obviate the need for my skills?
 Not at all.
 Instead of using my bilingual skills to _create_ translations,
