@@ -34,6 +34,8 @@
 <div class="terminal-card">
   <header>{{ render_blog_header(post, from_index) }}</header>
   <div class="card-body">
+    {{ render_author_tags(post) }}
+    <hr>
     <!-- Put post body -->
     {{ post.body }}
     <hr>
@@ -71,7 +73,7 @@
 {% macro render_blog_card(post) %}
 <div class="terminal-card">
     <header>
-      {{ render_blog_header(post, from_index=True) }}
+      <a href="{{ post|url }}" style="color: white">{{ render_blog_header(post, from_index=True) }}</a>
     </header>
     <div class="card-body col-md-8">
       {{ render_author_tags(post) }}
