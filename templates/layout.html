@@ -3,8 +3,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <!-- Bootstrap v5 Imports -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <style media="screen">
         body {
             padding-top: 70px;
@@ -18,7 +16,7 @@
     {% endblock %}
 
     <!-- Google Analytics -->
-    <script>
+    <!-- <script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;
             i[r] = i[r] || function () {
@@ -33,26 +31,19 @@
 
         ga('create', 'UA-12498603-2', 'auto');
         ga('send', 'pageview');
-    </script>
-
-    <!-- Posthog Analytics -->
-    <!-- <script src="https://ericmjl-website-analytics.herokuapp.com/static/array.js"></script>
-    <script>
-    posthog.init('wWRaqGghI2wdsIZz0nkD3tcZK1KJGN1ZaIqQhDBEX6I', {api_host: 'https://ericmjl-website-analytics.herokuapp.com'})
     </script> -->
 
-
     <!-- FontAwesome embed -->
-    <!-- <script src="https://use.fontawesome.com/cb9dbe8e41.js"></script> -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
-        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous"> -->
 
     <!-- Highlight.js Nord Theme -->
-    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" /> -->
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/nordstrap.css">
-    <link rel="stylesheet" href="/static/css/custom.css">
+    <!-- <link rel="stylesheet" href="/static/css/nordstrap.css"> -->
+    <!-- <link rel="stylesheet" href="/static/css/custom.css"> -->
+    <link rel="stylesheet" href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" />
 
     <!-- Mathjax -->
     <script type="text/javascript" async
@@ -67,32 +58,42 @@
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 
-<body class="body">
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
-        <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation"> -->
+<body>
+    <div class="container">
+        <!-- Top Navigation (local links) -->
+        <div class="terminal-nav">
+            <nav class="terminal-menu" id="local-links">
+                <ul>
+                    {% for link in bag('nav')['header'] %}
+                    <li class="menu-item">
+                        <a href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
 
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-            data-bs-target="#local-links" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="local-links">
-            <ul class="navbar-nav mr-auto">
-                {% for link in bag('nav')['header'] %}
+        <!-- Body -->
+        <div id="body">
+            {% block body %}{% endblock %}
+        </div>
+
+        <!-- Bottom Navigation (external links) -->
+        <div class="terminal-nav">
+            <nav class="terminal-menu" id="local-links">
+                <ul>
+                {% for link in bag('nav')['footer'] %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}"><i class="fa {{ link['icon'] }}"
-                            aria-hidden="true"></i> {{ link['title'] }}</a>
+                    <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}">
+                        {{ link['title'] }}</a>
                 </li>
                 {% endfor %}
-            </ul>
+                </ul>
+            </nav>
         </div>
-    </nav>
-    <div class="container">
-        {% block body %}{% endblock %}
+
     </div>
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark">
+    <!-- <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
             data-bs-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -100,27 +101,21 @@
         </button>
         <div class="collapse navbar-collapse" id="external-links">
             <ul class="navbar-nav mr-auto">
-                {% for link in bag('nav')['footer'] %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}"><i class="{{ link['icon'] }}" aria-hidden="true"></i>
-                        {{ link['title'] }}</a>
-                </li>
-                {% endfor %}
             </ul>
         </div>
-    </nav>
+    </nav> -->
     <!-- Boostrap JS imports -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
         crossorigin="anonymous"></script> -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous">
-    </script>
+    </script> -->
     <!-- Masonry is not included with bootstrap, https://getbootstrap.com/docs/5.0/examples/masonry/ -->
-    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    <!-- <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
         integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
         async></script>
-
+ -->
 </body>
