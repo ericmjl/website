@@ -4,12 +4,11 @@
 
 {% block body %}
 <!-- <div class="row row-cols-1 row-cols-md-2"> -->
-<div class="card-columns">
-    {% for project in this.children %}
-    {% if project.visible == "Visible" %}
-    {{ render_project_card(project) }}
-    {% endif %}
-    {% endfor %}
-</div>
+{% for project in this.children %}
+{% if project.visible == "Visible" %}
+{{ render_project_card(project) }}
+<hr>
+{% endif %}
+{% endfor %}
 <!-- </div> -->
 {% endblock %}

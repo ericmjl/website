@@ -1,12 +1,9 @@
 {% macro render_project_card(project) %}
-<!-- <div class="col mb-4"> -->
 <div class="terminal-card">
-  {{ render_card_img_top(project) }}
+  <header class="card-title">{{ project.title }}</header>
   <div class="card-body">
-    <h5 class="card-title">{{ project.title }}</h5>
+    {{ render_card_img_top(project) }}
     {{ project.summary }}
-  </div>
-  <div class="card-footer">
     {% for blk in project.body.blocks %}
 
     {% if blk._flowblock == "resource" %}
@@ -35,10 +32,8 @@
 
     {% endfor %}
     <a href="{{ project|url }}" class="card-link">Details</a>
-
   </div>
 </div>
-<!-- </div> -->
 {% endmacro %}
 
 {% macro render_card_img_top(project) %}
