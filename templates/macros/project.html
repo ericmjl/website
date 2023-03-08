@@ -1,12 +1,9 @@
 {% macro render_project_card(project) %}
-<!-- <div class="col mb-4"> -->
-<div class="card">
-  {{ render_card_img_top(project) }}
+<div class="terminal-card">
+  <header class="card-title">{{ project.title }}</header>
   <div class="card-body">
-    <h5 class="card-title">{{ project.title }}</h5>
+    {{ render_card_img_top(project) }}
     {{ project.summary }}
-  </div>
-  <div class="card-footer">
     {% for blk in project.body.blocks %}
 
     {% if blk._flowblock == "resource" %}
@@ -35,10 +32,8 @@
 
     {% endfor %}
     <a href="{{ project|url }}" class="card-link">Details</a>
-
   </div>
 </div>
-<!-- </div> -->
 {% endmacro %}
 
 {% macro render_card_img_top(project) %}
@@ -57,21 +52,16 @@
 
 
 {% macro render_project(project) %}
-<div class="card bg-light">
-  {{ render_card_img_top(project) }}
-  <div class="card-header">
-    <h4 class="card-title">{{ project.title }}</h4>
-  </div>
-  <div class="card-body bg-light">
+<div class="terminal-card">
+  <header class="card-title">{{ project.title }}</header>
+  <div class="card-body">
+    {{ render_card_img_top(project) }}
     {{ project.summary }}
     {% for blk in project.body.blocks %}
     {% if blk._flowblock != "youtube" %}
     {{ blk }}
     {% endif %}
     {% endfor %}
-  </div>
-  <div class="card-footer">
-    <small>{{ project.category }}</small>
   </div>
 </div>
 {% endmacro %}
