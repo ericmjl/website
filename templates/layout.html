@@ -90,16 +90,40 @@
         </div>
     </nav>
     <div class="container">
-        {% block body %}{% endblock %}
-    </div>
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom bg-dark">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-            data-bs-target="#external-links" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="external-links">
-            <ul class="navbar-nav mr-auto">
+        <h1 class="logo">
+            <a style="color:black" ="/">
+                Eric J Ma's Website
+            </a>
+        </h1>
+        <!-- Top Navigation (local links) -->
+
+        <div class="terminal-nav">
+            <nav class="terminal-menu" id="local-links">
+                <ul>
+                    {% for link in bag('nav')['header'] %}
+                    <li class="menu-item">
+                    {% set path_root = this.path|string %}
+                    {% set path_root = path_root.split("@")[0] %}
+                    {% if link["href"] == path_root %}
+                        <a class="terminal-prompt" href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
+                    {% else %}
+                        <a href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
+                    {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Body -->
+        <div id="body">
+            {% block body %}{% endblock %}
+        </div>
+
+        <!-- Bottom Navigation (external links) -->
+        <div class="terminal-nav">
+            <nav class="terminal-menu" id="local-links">
+                <ul>
                 {% for link in bag('nav')['footer'] %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}"><i class="{{ link['icon'] }}" aria-hidden="true"></i>
