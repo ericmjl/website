@@ -3,13 +3,12 @@
 {% block title %}{{ this.title }}{% endblock %}
 
 {% block body %}
-<!-- <div class="row row-cols-1 row-cols-md-2"> -->
-<div class="card-columns">
-    {% for project in this.children %}
+{% for project in this.children %}
     {% if project.visible == "Visible" %}
-    {{ render_project_card(project) }}
+    <div class="grid-item">
+        {{ render_project_card(project) }}
+    </div>
+    <br>
     {% endif %}
-    {% endfor %}
-</div>
-<!-- </div> -->
+{% endfor %}
 {% endblock %}
