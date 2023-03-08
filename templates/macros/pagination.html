@@ -1,33 +1,33 @@
 {% macro render_pagination(pagination) %}
 <div class="btn-group" role="group" aria-label="pagination">
   {% if pagination.page > 1 %}
-  <a href="/blog" class="btn btn-secondary-nord">&laquo;</a>
+  <a href="/blog" class="btn btn-ghost">&laquo;</a>
   {% else %}
-  <a href="/blog" class="btn btn-secondary-nord disabled">&laquo;</a>
+  <a href="/blog" class="btn btn-ghost disabled">&laquo;</a>
   {% endif %}
 
   {% if pagination.page - 2 > 1 %}
-  <a href="/blog/page/{{ pagination.page - 2 }}/" class="btn btn-secondary-nord">{{ pagination.page - 2 }}</a>
+  <a href="/blog/page/{{ pagination.page - 2 }}/" class="btn btn-ghost">{{ pagination.page - 2 }}</a>
   {% endif %}
 
   {% if pagination.has_prev %}
-  <a href="{{ pagination.prev|url }}" class="btn btn-secondary-nord">{{ pagination.page - 1 }}</a>
+  <a href="{{ pagination.prev|url }}" class="btn btn-ghost">{{ pagination.page - 1 }}</a>
   {% endif %}
 
-  <span class="btn btn-secondary-nord disabled">{{ pagination.page }}</span>
+  <span class="btn btn-ghost disabled">{{ pagination.page }}</span>
 
   {% if pagination.has_next %}
-  <a href="{{ pagination.next|url }}" class="btn btn-secondary-nord">{{ pagination.page + 1 }}</a>
+  <a href="{{ pagination.next|url }}" class="btn btn-ghost">{{ pagination.page + 1 }}</a>
   {% endif %}
 
   {% if pagination.page + 2 < pagination.pages %}
-  <a href="/blog/page/{{ pagination.page + 2 }}/" class="btn btn-secondary-nord">{{ pagination.page + 2 }}</a>
+  <a href="/blog/page/{{ pagination.page + 2 }}/" class="btn btn-ghost">{{ pagination.page + 2 }}</a>
   {% endif %}
 
   {% if pagination.page == pagination.pages %}
-  <a href="/blog/page/{{ pagination.pages }}/" class="btn btn-secondary-nord disabled">&raquo;</a>
+  <a href="/blog/page/{{ pagination.pages }}/" class="btn btn-ghost disabled">&raquo;</a>
   {% else %}
-  <a href="/blog/page/{{ pagination.pages }}/" class="btn btn-secondary-nord">&raquo;</a>
+  <a href="/blog/page/{{ pagination.pages }}/" class="btn btn-ghost">&raquo;</a>
   {% endif %}
 </div>
 {% endmacro %}

@@ -3,14 +3,10 @@
 {% from "macros/pagination.html" import render_pagination %}
 {% block title %}Blog{% endblock %}
 {% block body %}
-{{ render_pagination(this.pagination) }}
-<hr>
+<div class="terminal-timeline">
 {% for child in this.pagination.items %}
-{# {{ render_blog_post(child, from_index=true) }} #}
 {{ render_blog_card(child) }}
-<div>
-  <br>
-</div>
 {% endfor %}
+</div>
 {{ render_pagination(this.pagination) }}
 {% endblock %}

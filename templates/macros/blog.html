@@ -1,11 +1,9 @@
 {% macro render_blog_header(post, from_index=false) %}
 <!-- Set title style -->
-{% if from_index %}
-<h3><a href="{{ post|url }}">{{ post.title }}</a></h3>
-{% else %}
-<h1>{{ post.title }}</h1>
-{% endif %}
+{{ post.title }}
+{% endmacro %}
 
+{% macro render_author_tags(post) %}
 <!-- Append author -->
 <small>
   <p>
@@ -22,7 +20,6 @@
     <!-- Append tags after author -->
     {% for t in post.tags -%}
     <span class="boxed">
-    <i class="fas fa-tag"></i>
     <a class="tags" href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
       {{ t }}
     </a>
@@ -34,15 +31,14 @@
 {% endmacro %}
 
 {% macro render_blog_post(post, from_index=false) %}
-<div class="card">
-  <div class="card-header">
-    {{ render_blog_header(post, from_index) }}
-  </div>
+<div class="terminal-card">
+  <header>{{ render_blog_header(post, from_index) }}</header>
   <div class="card-body">
+    {{ render_author_tags(post) }}
+    <hr>
     <!-- Put post body -->
     {{ post.body }}
-  </div>
-  <div class="card-footer">
+    <hr>
     <p>
       <i>I send out a newsletter with tips and tools
         for data scientists. Come check it out at
@@ -54,6 +50,7 @@
         <a href="https://patreon.com/ericmjl">Patreon</a>!</i>
     </p>
   </div>
+
 </div>
 
 {% endmacro %}
@@ -74,12 +71,12 @@
 <!-- End reading time calculation macro -->
 
 {% macro render_blog_card(post) %}
-<div class="card card-hover transition box-shadow">
-  <div class="row g-0">
-    <div class="card-body col-md-4 bg-nord-light">
-      {{ render_blog_header(post, from_index=True) }}
-    </div>
+<div class="terminal-card">
+    <header>
+      <a href="{{ post|url }}" style="color: white">{{ render_blog_header(post, from_index=True) }}</a>
+    </header>
     <div class="card-body col-md-8">
+      {{ render_author_tags(post) }}
       {% if post.summary %}
       <p class="card-text">{{ post.summary }}</p>
       <small>
@@ -98,6 +95,5 @@
       {% endif %}
     </div>
 
-  </div>
 </div>
 {% endmacro %}
