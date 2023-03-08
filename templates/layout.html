@@ -46,17 +46,25 @@
 
 </head>
 
-<title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
+<title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site {{ this }}</title>
 
 <body>
     <div class="container">
+        <h1 class="logo">Eric J Ma's Website</h1>
         <!-- Top Navigation (local links) -->
+
         <div class="terminal-nav">
             <nav class="terminal-menu" id="local-links">
                 <ul>
                     {% for link in bag('nav')['header'] %}
                     <li class="menu-item">
+                    {% set path_root = this.path|string %}
+                    {% set path_root = path_root.split("@")[0] %}
+                    {% if link["href"] == path_root %}
+                        <a class="terminal-prompt" href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
+                    {% else %}
                         <a href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
+                    {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
