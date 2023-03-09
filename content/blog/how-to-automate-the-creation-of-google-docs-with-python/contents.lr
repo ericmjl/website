@@ -341,6 +341,11 @@ It is a dictionary-like object;
 if we take that object and access the `alternateLink` key,
 we will get back a URL to the actual Google doc!
 
+```python
+gdoc["alternateLink"]
+# should give you an https:// URL to the doc!
+```
+
 
 ### Step 4: Share the doc
 
