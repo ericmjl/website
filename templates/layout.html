@@ -65,9 +65,12 @@
                 <ul>
                     {% for link in bag('nav')['header'] %}
                     <li class="menu-item">
+                    <!-- Set blinking cursor correctly on navigation -->
                     {% set path_root = this.path|string %}
                     {% set path_root = path_root.split("@")[0] %}
-                    {% if link["href"] == path_root %}
+                    {% set path_root = path_root.split("/")[1] + "/" %}
+                    {% set link_root  = link["href"].split("/")[1] + "/" %}
+                    {% if link_root == path_root %}
                         <a class="terminal-prompt" href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
                     {% else %}
                         <a href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
