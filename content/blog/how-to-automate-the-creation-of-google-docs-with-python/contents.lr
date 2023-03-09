@@ -297,13 +297,17 @@ Cool! With this template, we can now create the new Google Doc.
 Firstly, we authenticate to Google Drive:
 
 ```python
+# inside a Jupyter notebook or a Python script
 from pyprojroot import here
 import os
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
+from .authenticate import write_creds
 
 
-secret_file: str = here() / os.getenv("GOOGLE_CREDENTIALS_FILENAME")
+write_creds()
+
+secret_file = here() / os.getenv("GOOGLE_CREDENTIALS_FILENAME")
 
 settings = {
     "client_config_backend": "service",
