@@ -1,3 +1,9 @@
+{% macro render_meta_tags(post) %}
+<meta property="og:title" content="{{ post.title }}">
+<meta property='og:description' content="{{ post.summary|safe }}"/>
+<meta property='og:url' content='http://ericmjl.github.io/blog/{{ post.path }} of the article'/>
+{% endmacro %}
+
 {% macro render_blog_header(post, from_index=false) %}
 <!-- Set title style -->
 {{ post.title }}
