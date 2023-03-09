@@ -1,0 +1,476 @@
+title: How to automate the creation of Google Docs with Python
+---
+author: Eric J. Ma
+---
+body:
+
+## The backdrop
+
+At our church, I teach a Sunday school class about how to lead a Bible study.
+As part of the training, we ask our class to collaboratively create
+study notes and study questions for an assigned scripture each week.
+
+Previously, I would hold a template in Google Drive,
+one for each of the four weeks of class,
+then copy and paste them into another folder in Google docs
+and then share the link with others in the class.
+I would use the most permissive setting when sharing -
+anyone with the link could edit.
+(Doing so mainly was for simplicity.)
+Then, I would compose an email and send it to everyone in the class.
+
+## The problem
+
+As it turns out, this workflow was a hassle in several ways.
+
+Firstly, because the template looked identical to the copied doc,
+I would have to double/triple check that I didn't accidentally send
+a link to the template rather than a copy.
+Checking that I had the correct doc then was tedious.
+It involved clicking around on the screen, checking permissions, and checking filenames...
+and even then, sometimes, I would still send out a link to the template.
+
+Secondly, the docs were quite similar,
+differing only in scripture references and links to other resources.
+If I wanted to update the standardized formatting or text in one doc,
+I would have to copy it seven more times into the other docs.
+If I forgot to do so, that would lead to _a drift_ between the docs.
+Also undesirable.
+
+Thirdly, I would compose a weekly email, which was also relatively standardized.
+However, copying and pasting the text felt tedious.
+Writing from scratch in Chinese, my second language, was sometimes a mental challenge --
+compounded even more so with two kids who fragment my attention span.
+
+## The solution: Python!
+
+Thinking hard about the problems above,
+I noticed a common thread:
+it was all about putting standardized text into the right places.
+That sounded like a problem I could use Python to solve --
+and that was precisely what I did!
+My desired end goal for this project was to write a Python program that could:
+
+1. Create Google docs for me,
+2. Grab the docs' URLs automatically, and
+3. Insert them into an HTML email that the program composed.
+
+### Step 1: Create a Google service account
+
+To create Google docs with Python, one needs a Google account,
+specifically, a service account that can remain authenticated
+without needing a human to sign in.
+To do this, we need to head over to our [Google cloud console](console.cloud.google.com).
+There, we'll do the following things:
+
+1. Create a new "project." Google keeps track of which service accounts are associated with which user by having a "project" between them.
+2. In the new project, enable the Google Drive API. This allows the project to access Google Drive.
+3. From the project's UI, we'll create a new Service Account and grant the Service Account the ability to access project APIs.
+4. For that service account, we'll then create a key credential file that will be used to authenticate the service account.
+
+I compiled a series of screenshots into an HTML slideshow below.
+Following the instructions on the slideshow
+while replacing "Test Project" with a more relevant name
+will get you to the place where you will have
+**a JSON file that will act as the credentials** to authenticate with Google.
+
+### Step 2: Store the JSON file contents as environment variables
+
+When working with a deployed API, application, or other services,
+I habitually stick to [the 12 Factor App patterns](https://12factor.net).
+These are battle-tested patterns that enable secure app/service deployments.
+The third principle listed in the 12 Factor document is
+to store configuration in the environment as [environment variables](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/).
+This includes credentials (a.k.a. "secrets" in techno-lingo).
+
+However, Google just provided me with a JSON file for authentication;
+the usual expectation here would be to store the JSON file on disk in a remote server,
+for which a Python process can read the JSON file and pass it to Google's Python API client.
+However, this clearly violates the idea of storing configuration as environment variables.
+So how can we get around this?
+
+My answer is to store the credential file's information
+as part of the runtime environment variables available to the app.
+Looking at the contents of the JSON file:
+
+```json
+{
+    "type": "service_account",
+    "project_id": "*****-******-******",
+    "private_key_id": "cc8823e98******d66da83f55aa0f3f74b8aedc05",
+    "private_key": "-----BEGIN PRIVATE KEY-----\n******\n******...\n-----END PRIVATE KEY-----\n",
+    "client_email": "test-project-service-account@******.iam.gserviceaccount.com",
+    "client_id": "******",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/test-project-service-account%40******.iam.gserviceaccount.com"
+}
+```
+
+It's clear that there are specific key-value pairs
+uniquely identify the project and its security credentials.
+We merely have to store _those_ values as environment variables.
+
+How about we go about doing authentication?
+I had a choice between two options:
+one was to use the [Official Google Python API](https://developers.google.com/docs/api/quickstart/python),
+and the other was to use the [PyDrive2 package](https://github.com/iterative/PyDrive2).
+As it turns out, authentication from a Python package is only part of the whole picture;
+I also needed to know which Python package was, overall, easier to use.
+So, I had to study them first.
+That meant taking them for a test drive in a Jupyter notebook.
+After a bunch of experimentation,
+I concluded that although the Google Python API is officially supported,
+it also involved abstractions that felt less natural than PyDrive2's.
+Hence, I went with the PyDrive2 package instead.
+
+While Google's Python API allows for service account authentication from a Python dictionary,
+PyDrive2 only supports loading from a credentials JSON file.
+As such, I had to figure out how to write the credentials to disk _at runtime_.
+I finally settled on the following hack:
+
+```python
+# contents of authenticate.py
+import os
+from dotenv import load_dotenv
+from pyprojroot import here
+import json
+
+load_dotenv()
+
+def write_creds():
+    """ Write service account credentials to disk based on environment variables."""
+    credentials = {
+        "type": "service_account",
+        "project_id": os.getenv("GOOGLE_PROJECT_ID"),
+        "private_key_id": os.getenv("GOOGLE_PRIVATE_KEY_ID"),
+        "private_key": os.getenv("GOOGLE_PRIVATE_KEY"),
+        "client_email": os.getenv("GOOGLE_CLIENT_EMAIL"),
+        "client_id": os.getenv("GOOGLE_CLIENT_EMAIL"),
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": os.getenv("GOOGLE_CLIENT_X509_CERT_URL")
+    }
+    with open(here() / os.getenv("GOOGLE_CREDENTIALS_FILENAME"), "w+") as f:
+        f.write(json.dumps(credentials))
+
+```
+
+With this in place, authentication could be much easier!
+All we need to do is store environment variables with appropriate values.
+(In Dokku, this is easy to configure.)
+With this code, we can avoid checking in the credentials JSON file
+while remaining compatible with the PyDrive2 API.
+Furthermore, the single-line variables are easy to store,
+as we would do something like:
+
+```bash
+export GOOGLE_CLIENT_ID="cc8823e98e6cb5d69da83f5aca0f3f7rb8aedc05"
+```
+
+However, how do we configure multi-line environment variables,
+such as the `private_key` above?
+
+It turns out the answer is to wrap the environment variable in _single_ quotes:
+
+```bash
+export GOOGLE_PRIVATE_KEY='-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA04up8hoqzS1+APIB0RhjXyObwHQnOzhAk5Bd7mhkSbPkyhP1
+...
+iWlX9HNavcydATJc1f0DpzF0u4zY8PY24RVoW8vk+bJANPp1o2IAkeajCaF3w9nf
+q/SyqAWVmvwYuIhDiHDaV2A==
+-----END RSA PRIVATE KEY-----'
+```
+
+I had to do a bit of digging to figure this out,
+and eventually found the answer [in a GitHub issue comment](https://github.com/dwyl/learn-environment-variables/issues/17#issuecomment-376108747).
+Thank you, [@nelsonic](https://github.com/nelsonic),
+for providing such an informative answer!
+
+Taken together, to store this information locally for testing purposes,
+we create a `.env` file in the top-level directory of our project
+with the following contents:
+
+```bash
+export GOOGLE_PROJECT_ID="psyched-brush-373815"
+export GOOGLE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC24HtLxJk/Pk4N
+...
+Cr/HCzXyIxnK8HtVlaLumB7Q
+-----END PRIVATE KEY-----
+'
+export GOOGLE_PRIVATE_KEY_ID="cc8823r48e6cb5d66da83f55aa0f3f74b8aedc05"
+export GOOGLE_CLIENT_EMAIL="test-project-service-account@psyched-brush-373815.iam.gserviceaccount.com"
+export GOOGLE_CLIENT_ID= "110659425807002683920"
+export GOOGLE_CLIENT_X509_CERT_URL="https://www.googleapis.com/robot/v1/metadata/x509/test-project-service-account%40psyched-brush-373815.iam.gserviceaccount.com"
+```
+
+(I have, for obvious reasons, changed the contents to invalid credentials!)
+
+Once the contents of the `.env` file are populated,
+we can use the `python-dotenv` package to load the environment variables
+from the `.env` file during the first execution of the app when testing locally.
+
+When it comes to storing them on the runtime environment,
+because I use [Dokku](https://dokku.com/) on [DigitalOcean](https://m.do.co/c/2832a2124e66)
+to host my apps and APIs,
+I used [Dokku's configuration tooling](https://dokku.com/docs/configuration/environment-variables/)
+to set up environment variables as well. Doing so is a one-time setup;
+the environment variables will remain available at runtime on subsequent deploys.
+
+### Step 3: Create the Google Doc's contents using Markdown
+
+The first two steps are one-time setup steps for each project.
+Once we've set them up, we can create the Google Doc content.
+
+As it turns out, Google Doc (and MS Word) documents actually have a 1-to-1 correspondence with HTML documents
+-- and hence, by extension, Markdown documents too!
+([Pandoc](https://pandoc.org/) users will likely have long known about this fact!)
+So, for example, the contents of an `<h1>` tag are converted to Header 1 in Word documents,
+and so on and so forth.
+Therefore, we should be able to template out our Markdown documents
+in our favourite templating engine,
+whether it is [Jinja](https://jinja.palletsprojects.com/en/3.1.x/)
+or simple Python f-strings,
+and then use the [Python Markdown package](https://python-markdown.github.io/)
+to convert the document into HTML...
+and then pass that to the Google API to create collaboratively-editable Google Doc!
+
+Let's see how we can accomplish this.
+For simplicity, I will show how to make this happen with f-strings,
+which are usable in a pinch (and I was in one!).
+That said, if you are fluent with Jinja2 templating,
+I recommend using that because it offers the advantage of the separation of concerns,
+where the contents of the templates are kept separate from
+the contents of the source code files.
+
+Firstly, we create the Markdown document that we want to template.
+Instead of using the text I initially used,
+in this example, I will use a more generic example with placeholder content.
+
+```python
+def document_template(content: dict):
+    text = f"""# My Google Doc!
+
+## Abstract
+
+This is some introductory text.
+We could have lorem ipsum'd it,
+but that would be too generic for my tastes.
+So instead, I have chosen to write freely from my mind.
+
+## Section 1
+
+- First bullet point
+- Second bullet point
+
+<hr class="pb">
+
+## Section 2
+
+{content["lorem ipsum"]}
+
+| hello | world |
+|:-----:|:-----:|
+|  1  |  a  |
+|  2  |  b  |
+
+<hr class="pb">
+
+"""
+  return text
+```
+
+If you were wondering what the `<hr class=" pb">` tag is all about,
+this turns out to be the way to represent a **page break** in HTML.
+(I learned this [from this StackOverflow answer](https://stackoverflow.com/a/51704440).)
+
+Cool! With this template, we can now create the new Google Doc.
+Firstly, we authenticate to Google Drive:
+
+```python
+from pyprojroot import here
+import os
+from pydrive2.auth import GoogleAuth
+from pydrive2.drive import GoogleDrive
+
+
+secret_file: str = here() / os.getenv("GOOGLE_CREDENTIALS_FILENAME")
+
+settings = {
+    "client_config_backend": "service",
+    "service_config": {
+        "client_json_file_path": secret_file,
+    }
+}
+
+
+gauth = GoogleAuth(settings=settings)
+gauth.ServiceAuth()
+drive = GoogleDrive(gauth)
+```
+
+Then, we create the HTML version of the Markdown contents:
+
+```python
+from markdown import markdown
+
+content = {"lorem ipsum": "Lorem ipsum dolor sit amet."}
+text = document_template(content)
+htmldoc = markdown(text)
+```
+
+Finally, we create the file and upload it to Google Drive.
+
+```python
+gdoc = drive.CreateFile(
+    {
+        "title": "My Shiny New Google Doc from Python!",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+)
+gdoc.SetContentString(htmldoc)
+gdoc.Upload()
+```
+
+That last set of code is where the magic happens!
+Now we have a `gdoc` object that connects to the created Google Doc.
+It is a dictionary-like object;
+if we take that object and access the `alternateLink` key,
+we will get back a URL to the actual Google doc!
+
+
+### Step 4: Share the doc
+
+We can also set the sharing permissions of the Google document.
+If the security of the contents doesn't matter much,
+you can select the widest permissions possible:
+
+```python
+# Most permissive
+gdoc.InsertPermission({"type": "anyone", "role": "writer", "value": "anyone"})
+```
+
+On the other hand, if you'd like to grant "write" access
+to just a group of people by their email addresses:
+
+```python
+# Write-access to specific email addresses
+email_addresses = ("first@person.email", "second@person.email",...)
+for email in email_addresses:
+    gdoc.InsertPermission({"type": "user", "role": "writer", "value": email})
+```
+
+Through some digging,
+I found the official documentation for sharing permissions [here](https://developers.google.com/drive/api/v2/reference/permissions/insert#request-body),
+which lists the permissions we can set.
+
+## Non-obvious new knowledge gained
+
+This exercise taught me many new things that weren't obvious to me before.
+Here's what they are.
+
+### Conversion from Markdown to Google Docs
+
+First, we can template new Google Docs
+by converting from Markdown through HTML into a Word document.
+Conceptually:
+
+```text
+Markdown --> HTML --> Word --> Google Docs
+```
+
+The following line,
+where we set the [MIME type](https://en.wikipedia.org/wiki/Media_type) of the new doc,
+is where part of the magic happens:
+
+```python
+gdoc = drive.CreateFile(
+    {
+        "title": "My Shiny New Google Doc from Python!",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+)
+```
+
+As one can tell, there is a particular MIME type for Word-compatible documents -
+`application/vnd.openxmlformats-officedocument.wordprocessingml.document`.
+Correspondingly, there is a MIME type for spreadsheets and slideshows too.
+(This blog post on [how to use Google Sheets as a database for Python](https://towardsdatascience.com/turn-google-sheets-into-your-own-database-with-python-4aa0b4360ce7)
+is another great example!
+It also is where I went to recall how to create a service account.)
+
+### Page Break has an HTML tag
+
+And that HTML tag is:
+
+```html
+<hr class="pb">
+```
+
+That is a piece of trivia I will keep in my back pocket.
+I vividly remember searching online for "Google Docs page break HTML"
+before finding the relevant [SO answer](https://stackoverflow.com/a/51704440).
+
+### How to set multi-line environment variables
+
+I remember having difficulty setting multi-line environment variables.
+But once I figured out how, it's mostly a set-and-forget affair.
+Just to recap, the key here is single quotation marks:
+
+```bash
+export MULTILINE_VARIABLE='something
+and then something on a new line
+and then another new line
+and finally a final line
+```
+
+This was something for which I remember doing intense searches across the internet.
+It was challenging to figure out!
+
+### Document MIME types are non-obvious
+
+It also took me a lot of Google searching to find the correct MIME type for a Word document.
+I stumbled upon the right answer by testing every plausible code chunk.
+
+### Permissions can be set programmatically
+
+I appreciated this much once I figured it out with the API.
+Though I didn't use the feature in my Sunday school project,
+I can foresee the use for programmatic permissions being done later.
+For example, we have an Airtable database containing information about those participating in the class.
+So, we can pull down each student's email address and grant permissions programmatically that way.
+
+### How to create a service account on Google Cloud
+
+For whatever reason, service accounts on cloud services have baffled me.
+This time, I finally understand how (at least) Google Cloud's service accounts work -
+and their relationship to "projects."
+Knowing this for the future will be immensely helpful
+as I try to automate more of my personal life!
+
+## The Future
+
+Being able to create a Google Doc _programmatically_ is pretty powerful.
+Also quite powerful is the ability to read _from_ a Google doc.
+Combining it with GPT-3 to auto-generate _personalized_ versions of templated documents
+based on known context about a situation or person would be rad!
+---
+pub_date: 2023-03-08
+---
+summary: I finally figured out how to programmatically create Google Docs using Python.
+Along the way, I figured out service accounts,
+special HTML tags, and how to set multi-line environment variables.
+Does that tickle your brain?
+---
+tags:
+
+python
+google
+google cloud
+google docs
+automation
+---
+twitter_handle: ericmjl
