@@ -14,7 +14,7 @@
   <a href="{{ pagination.prev|url }}" class="btn btn-ghost">{{ pagination.page - 1 }}</a>
   {% endif %}
 
-  <span class="btn btn-ghost disabled">{{ pagination.page }}</span>
+  <span class="btn btn-primary disabled">{{ pagination.page }}</span>
 
   {% if pagination.has_next %}
   <a href="{{ pagination.next|url }}" class="btn btn-ghost">{{ pagination.page + 1 }}</a>
