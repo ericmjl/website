@@ -1,0 +1,93 @@
+title: Arc Browser: First Impressions
+---
+pub_date: 2023-03-25
+---
+author: Eric J. Ma
+---
+body:
+
+I recently received my invite to use the [Arc browser](https://arc.net/)!
+
+Arc reimagines the browser as a workspace, which is very much in line with how we do much of our work nowadays. As modern people, we also now juggle multiple hats, and our browser can become unwieldy with us having multiple tabs from multiple contexts open simultaneously. Arc rethinks the traditional browser UI, and after using it for 24 hours, I like how it fits my life well.
+
+## Feature 1: Tabs that expire
+
+In a traditional browser implementation, we have the browser and its tabs. For the chronic "million-tabbers" out there, finding that thing you were looking at can become a chore. That's where Arc's first feature comes in: tabs that expire.
+
+Arc's take on tabs is that most tabs should expire while some should be kept around. That's where they distinguish between pinned tabs and tabs that can expire. Chrome has pinned tabs for a while now, but Chrome doesn't enforce tabs to _expire_ after a set number of hours. On the other hand, knowing that most tabs don't need to live around for too long, Arc defaults to opening tabs with a default 12-hour expiry schedule. Users can then drag the ones they want to keep into the pinned section.
+
+An example of where this came in handy is my drafting this blog post. I pinned the main Lektor UI but allowed my other tabs, where I'm doing the fact-checking, to expire naturally after I'm done. This is a minor detail in the grand scheme but has incredibly high leverage for user productivity. The natural expiration of browser tabs, if we can call that "natural", is useful for bringing clarity to my browser (workspace)
+
+## Feature 2: Spaces
+
+Another take Arc has on tabs is being able to group them into spaces.
+
+The modern person takes on multiple life projects at the same time. For example, I have multiple life projects simultaneously: a home renovation, personal GPT experiments, blogging, and more. If we're not careful, we'll have a million tabs open in our browser window.
+
+To solve this problem, Chrome has implemented [tab groups](https://blog.google/products/chrome/manage-tabs-with-google-chrome/). It can work well until...
+
+![](too-many-tabs.jpg)
+
+(Image credit: [this website](https://optimalaccess.com/everything-you-need-to-manage-too-many-tabs-in-chrome/))
+
+At that point, who's to know what is in each tab?
+
+Arc solves this problem by doing two things.
+
+**Firstly, tabs are moved to the left.** This lets each tab's title be much more visible. If necessary, we can resize the tab to provide more browser real estate space.
+
+**Secondly, tabs are grouped into spaces.** Each space can correspond to one context. For example, I can have one space for websites related to home renovation and another space for blogging. The critical thing is this: **when I have activated one space, tabs from the other spaces are not visible**. This means I no longer have the _visual distraction_ of other things going on. This massive UI improvement supports focusing on one context at a time!
+
+Here are screenshots of a few tabs, organized into their respective spaces, that I have kept open.
+
+<iframe src="arc-screenshots.html" width="100%" height="500vh"></iframe>
+
+Bonus: each space can even be configured with separate colours!
+
+As you can see, within one space, I only see the tabs relevant to that space.
+As long as I'm studious about making sure I only open tabs related to that space,
+I can focus on that task alone. Websites like YouTube, LinkedIn, and Twitter
+are kept together in a "Social and Entertainment" space,
+making them _out of sight and out of mind_.
+
+If I ever need to, there is also a UI for viewing all the spaces I have open:
+
+![](./spaces.png)
+
+## Feature 3: Rapid switching between tabbed and full-screen mode
+
+The left sidebar may bug some people, so it's possible to hide it with a single key combination.
+On the Mac, it is `⌘-s`, which is
+For example, Twitter in my "Social and Entertainment" space:
+
+![](./full-screen.png)
+
+There are a few subtle design details with high leverage here.
+
+The first is that I remain aware that I'm in the "Social and Entertainment" space because of the yellow background.
+
+The second is that I can be completely immersed in whatever I'm doing on the internet at that point. There are no distractions visible - not even the other tabs that are open in the same space. Perfect for focusing.
+
+## Feature 4: Side-by-side view
+
+Continuing the theme of productive workspaces, I can place two tabs side-by-side like this:
+
+![](./side-by-side.png)
+
+Say, for example, that I was writing a blog post (ahem) and that I needed to use Grammarly to edit my text. I could have my blog editor on the left, Grammarly on the right, and easily toggle back-and-forth between the two tabs. Or if I needed to refer to reference material while writing, I could do a left-right combination.
+
+Without Arc, this is still doable - use something like [Rectangle](https://rectangleapp.com/) or [Magnet](https://magnet.crowdcafe.com/) to keep two browser windows open. However, we lose the benefits Arc's ability to keep related browser tabs together and in focus without distractions.
+
+## Overall thoughts
+
+Arc, and the company behind it, are on to something. I think their focus on UI design that benefits our ability to _focus_ is going to lead to some cool innovations for the future. I'm definitely a fan!
+
+---
+twitter_handle: ericmjl
+---
+tags:
+
+tools
+productivity
+arc browser
+browser
