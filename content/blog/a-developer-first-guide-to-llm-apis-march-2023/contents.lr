@@ -28,7 +28,12 @@ Some automation help would be great here.
 Finally, if I can make a better title than I initially thought of,
 that would also constitute an improvement.
 
-I've decided that I wanted a tool that can summarize my blog posts, generate appropriately emojified LinkedIn posts for me to advertise those posts, and provide a catchy and engaging title without being clickbait. These are tedious to write! Wouldn't it be great to have a tool that can generate both? That's the use case for LLMs!
+I've decided that I wanted a tool that can summarize my blog posts,
+generate appropriately emojified LinkedIn posts for me to advertise those posts,
+and provide a catchy and engaging title without being clickbait.
+These are tedious to write!
+Wouldn't it be great to have a tool that can generate both?
+That's the use case for LLMs!
 
 ## Desiderata
 
@@ -424,7 +429,12 @@ As usual, let's do the accounting of tokens.
 # Cost Accounting
 generated_encodings_length = len(encoder.encode(linkedin_post)) + len(encoder.encode(summary))
 
-prompt_lengths = len(encoder.encode(human_message_prompt.format_messages(blog_post=blog_text)[0].content)) + len(encoder.encode(system_message_prompt.format_messages()[0].content)) + len(encoder.encode(linkedin_blog_prompt.format_messages(blog_post=blog_text)[0].content)) + len(encoder.encode(linkedin_system_prompt.format_messages()[0].content))
+prompt_lengths = (
+    len(encoder.encode(human_message_prompt.format_messages(blog_post=blog_text)[0].content)) \
+    + len(encoder.encode(system_message_prompt.format_messages()[0].content)) \
+    + len(encoder.encode(linkedin_blog_prompt.format_messages(blog_post=blog_text)[0].content)) \
+    + len(encoder.encode(linkedin_system_prompt.format_messages()[0].content))
+)
 
 cost = 0.03 * prompt_lengths + 0.06 * generated_encodings_length
 print(cost / 1000)
