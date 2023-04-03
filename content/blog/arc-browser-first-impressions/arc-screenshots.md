@@ -14,7 +14,7 @@
 
 ---
 
-## Network Analysis Course Development 
+## Network Analysis Course Development
 
 ---
 
