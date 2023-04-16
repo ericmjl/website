@@ -1,0 +1,191 @@
+title: LLaMaBot: An opinionated, Pythonic interface to Large Language Models
+---
+author: Eric J. Ma
+---
+body:
+
+I've been experimenting with Large Language Models recently,
+and some coding patterns have emerged.
+The most common patterns I saw were:
+
+- Single text in, single text out (STISTO):
+  I prime an LLM with a system message (its task/role),
+  feed in a text, and get back a text response.
+- ChatBot: I prime an LLM with a system message and expect it to keep chat history alive.
+- QueryBot: I give it text files and ask questions about them.
+
+One thing that was common in my previous experiments with all three LLM APIs was
+the amount of boilerplate code I had to write before experimenting with prompts.
+For example, suppose I wanted to "chat in my Jupyter notebook."
+I'd have to do manual chat history (memory) management in that case.
+This could have been better.
+I thus decided to see how close I could get to my perfect developer experience.
+
+While chatting with my friend and current manager, Andrew Giessel,
+we soon realized that a class-based interface may be appropriate here,
+especially with stateful chat history.
+So I put that idea into practice with a new package that I'm excited to announce:
+`llamabot`!
+
+Equipped with an OpenAI API key,
+the key idea here is that users should be able to instantiate
+an LLM bot preconditioned with a system prompt
+and then reuse that base system prompt over and over during a live Python session.
+A natural structure for this kind of program is to use a Python class.
+Those who know my penchant for functional programming should know that
+I did experiment with closures.
+Nonetheless, I still concluded that a class definition is more natural here.
+At its core, it looks something like this:
+
+```python
+from llamabot import SimpleBot
+
+feynman = SimpleBot("You are Richard Feynman. You will be given a difficult concept, and your task is to explain it back.")
+explained = feynman("Enzyme function annotation is a fundamental challenge, and numerous computational tools have been developed...")
+```
+
+The `explained` text will be GPT4's imitation of how Richard Feynman might explain that complicated biochemical concept.
+
+We can also create an ELI5 bot:
+
+```python
+eli5 = SimpleBot("You are a bot that explains concepts the way a 5 year old would understand it. You will be given a difficult concept, and your task is to explain it back.")
+explained = eli5("Enzyme function annotation is a fundamental challenge, and numerous computational tools have been developed...")
+```
+
+Likewise, the `explained` text will attempt to explain the difficult biochemical concept
+as a 5-year-old might understand it.
+For example, I've seen some pretty good ones
+about lipid nanoparticles being described as "bubbles."
+
+One way to think about a SimpleBot is that it is a Python callable (like a function)
+that you can configure using natural language.
+The function body is configured upon instantiation/creation.
+Post-configuration, upon receiving text as an input,
+it will treat your wish (configuration) as its command.
+
+As a result of this simplicity,
+it's surprisingly easy to build opinionated bots
+that are preconditioned to behave a certain way
+and then wrap them inside a desired endpoint
+(e.g. a FastAPI endpoint, a command-line interface, a Panel/Streamlit app, or more).
+For example, if I wanted to make a CLI out of my Feynman bot, I might use:
+
+```python
+from llamabot import SimpleBot
+import typer
+
+
+feynman = SimpleBot("You are Richard Feynman. You will be given a difficult concept, and your task is to explain it back.")
+
+def ask_feynman(text: str):
+  """ Ask Feynman."""
+  result = feynman(text)
+  print(result)
+
+
+if __name__ == "__main__":
+  typer.run(ask_feynman)
+```
+
+## Simple Chat Bots
+
+Sometimes, you might need a simple chatbot
+that you can interact with in a Jupyter notebook.
+(In this way, you could avoid exposing your potentially sensitive data
+to OpenAI's data collection efforts.)
+
+To implement a proper chatbot,
+you will need a way to keep track of chat history,
+at least within a live Python session.
+With the OpenAI native API, you'll likely need to do this manually.
+`ChatBot` implements convenience machinery
+to ensure your chat history is stored in memory
+while a live Python session runs.
+So you can do things like:
+
+```python
+from llamabot import ChatBot
+
+ask_feynman = ChatBot("You are Richard Feynman. You will be given a difficult concept, and your task is to explain it back.")
+ask_feynman("Enzyme function annotation is a fundamental challenge, and numerous computational tools have been developed...")
+```
+
+While that might look similar to the above,
+the magical part here is when you call on `ask_feynman` once again:
+
+"`python
+ask_feynman("Can you redo the explanation as if you were talking with a 5 year old?")
+```
+
+Unlike SimpleBot, which will not remember previous text entries,
+Virtual Richard Feynman (or ELI5, or whatever you build...)
+has memory over what you (the user) put into the function.
+
+## QueryBot
+
+Another common use case for LLMs is to get an LLM to generate texts
+(summaries, LinkedIn posts, and more)
+based on one or more documents given to the LLM.
+To this end, we can use QueryBot.
+The QueryBot gets instantiated with document(s) to query;
+those documents are automatically embedded using LlamaIndex using its default `GPTSimpleIndex`.
+To save on costs, you can embed a collection of documents once
+(using QueryBot or LlamaIndex),
+save the index to disk as a JSON file,
+and then re-load the index into QueryBot directly.
+It looks something like this:
+
+```python
+from llamabot import QueryBot
+blog_index = ... # load in a JSON file with document embeddings.
+bot = QueryBot(system_message="You are a Q&A bot.", saved_index_path=blog_index)
+result = bot("Do you have any advice for me on career development?", similarity_top_k=5)
+display(Markdown(result.response))
+```
+
+## What's coming up next?
+
+Another way of asking that question is,
+"What does the future hold?" LLMs are having their moment now.
+I think `llamabot` can help facilitate experimentation
+and prototyping by making some repetitive things invisible.
+
+As for things that I think could be helpful,
+sticking to the spirit of "making repetitive things invisible",
+I plan to put in opinionated UI-building functions
+that let one stand up Panel apps easily.
+That should enable rapid prototyping in front of end users.
+For each of the Bots above, adhering to good software development practice,
+the programmatic interface should effectively define the user interface.
+
+Figuring out a sane way to interface with multiple LLMs would be incredible too!
+I will need time to work on it;
+however, I would gladly accept a PR that implements the idea
+while sticking closely to good software organization practices!
+
+I'd love for you to check out Llamabot
+and tell me what is missing and what could be made better!
+---
+pub_date: 2023-04-12
+---
+summary:
+
+🤖 I've been playing with Large Language Models and found some common patterns.
+🧠 So, I created a new package called `llamabot`!
+😎 It lets you make your own Python LLM bot, all with just a few lines of code.
+🌬️ It should make experimenting a breeze!
+🚀 Are you curious? Read on!
+---
+tags:
+
+llms
+large language models
+chatbot
+llm
+fastapi
+panel
+software development
+llamabot
+---
+twitter_handle: ericmjl
