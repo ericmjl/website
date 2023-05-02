@@ -1,0 +1,126 @@
+title: How to make Python context managers aware of their code
+---
+author: Eric J. Ma
+---
+body:
+
+While working on `llamabot`, I implemented a new feature: automagically recording prompts and LLM responses.
+I've wanted this for a while because it would eliminate a lot of friction associated with designing prompts, namely, having to keep track of what I tried and what the LLM responded with.
+
+On thinking about how to implement it, I went with a `PromptRecorder` object that uses a context manager.
+The syntax I was going for was to match PyMC's `pm.Model()` context manager, which looks something like this:
+
+```python
+import pymc as pm
+
+with pm.Model() as model:
+    a = pm.Normal("a")
+    ...
+```
+
+I was trying to go for the following:
+
+```python
+from llamabot import PromptRecorder, SimpleBot
+
+recorder = PromptRecorder()
+bot = SimpleBot()
+
+with recorder:
+    bot(first_prompt)
+    bot(second_prompt)
+
+# we would then access an attribute of `recorder` to get the prompt-response pairs.
+```
+
+As an alternative, I can imagine interactively experimenting with prompts inside a Jupyter notebook cell:
+
+```python
+with recorder:
+    bot(interactive_edited_prompt_goes_here)
+```
+
+And we could access the prompt-response pairs from the `recorder` object.
+
+But how do we make a context manager aware of its internal code?
+
+As it turns out, [that's not easily doable](https://stackoverflow.com/questions/74855707/are-context-managers-aware-of-the-lines-of-code-they-contextualise).
+However, the reverse direction is!
+**Code inside the context manager can modify the context manager's contents if referenced properly.**
+
+How do we reference a context manager from within a code chunk?
+I'm going to show a snippet from `llamabot` to illustrate.
+
+Firstly, within the `recorder.py` source file that we use,
+we start with the following:
+
+```python
+import contextvars
+prompt_recorder_var = contextvars.ContextVar("prompt_recorder")
+```
+
+This gives a globally-referenceable "prompt_recorder" variable we can call on later.
+
+Next, within the `PromptRecorder` class, we implement the `__enter__` and `__exit__` methods as follows:
+
+```python
+class PromptRecorder:
+    ....
+    def __enter__(self):
+        prompt_recorder_var.set(self)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        prompt_recorder_var.set(None)
+```
+
+Upon entering the context manager, the `__enter__method sets the `prompt_recorder` variable as the instantiated `PromptRecorder` object.
+
+One final function gives our `SimpleBot` objects the ability to use the `PromptRecorder` within them:
+
+```python
+def autorecord(prompt: str, response: str):
+    # Log the response.
+    prompt_recorder: Optional[PromptRecorder] = prompt_recorder_var.get(None)
+    if prompt_recorder:
+        prompt_recorder.log(prompt, response)
+```
+
+This function accepts a prompt and a response and automatically checks if a `PromptRecorder` object is stored inside the `prompt_recorder_var`. If yes, it will record the response. If not, nothing happens. We use this function inside the SimpleBot class when calling on it:
+
+```python
+
+class SimpleBot:
+    ...
+    def __call__(self, human_message: str) -> AIMessage:
+        ...
+        response = self.model(messages)
+        ...
+        autorecord(human_message, response.content)
+        return response
+```
+
+And just like that, the `SimpleBot` is made aware of the `PromptRecorder` context manager!
+
+The fundamental trick is keeping a globally referenceable `prompt_recorder` variable enabled by the built-in [`contextvars`](https://docs.python.org/3/library/contextvars.html) module.
+With that, we can modify the instantiated `PromptRecorder` object's state, call on the object's methods, and do other things with the object while still hiding it from the front-end code we write.
+---
+pub_date: 2023-05-02
+---
+summary:
+
+I’ve been working on `llamabot` and wanted to implement a feature to automatically record prompts and LLM responses. I used a PromptRecorder object with a context manager, similar to PyMC’s `pm.Model()`. However, I faced a challenge: making the context manager aware of its internal code. 🤔 After some research, I found a solution using the built-in `contextvars` module. By creating a globally-referenceable prompt_recorder variable, I was able to modify the instantiated PromptRecorder object’s state and call its methods while keeping it hidden from the front-end code. 🎉 Now, `llamabot` can easily record prompt-response pairs! 🤖
+
+
+---
+tags:
+
+python
+context manager
+llamabot
+code snippet
+contextvars
+programming
+til
+---
+twitter_handle: ericmjl
