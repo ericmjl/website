@@ -5,7 +5,8 @@ author: Eric J. Ma
 body:
 
 While working on `llamabot`, I implemented a new feature: automagically recording prompts and LLM responses.
-I've wanted this for a while because it would eliminate a lot of friction associated with designing prompts, namely, having to keep track of what I tried and what the LLM responded with.
+I've wanted this for a while because it would eliminate a lot of friction associated with designing prompts,
+namely, having to keep track of what I tried and what the LLM responded with.
 
 On thinking about how to implement it, I went with a `PromptRecorder` object that uses a context manager.
 The syntax I was going for was to match PyMC's `pm.Model()` context manager, which looks something like this:
@@ -59,7 +60,7 @@ import contextvars
 prompt_recorder_var = contextvars.ContextVar("prompt_recorder")
 ```
 
-This gives a globally-referenceable "prompt_recorder" variable we can call on later.
+This gives a globally-referenceable `prompt_recorder` variable we can call on later.
 
 Next, within the `PromptRecorder` class, we implement the `__enter__` and `__exit__` methods as follows:
 
@@ -74,7 +75,7 @@ class PromptRecorder:
         prompt_recorder_var.set(None)
 ```
 
-Upon entering the context manager, the `__enter__method sets the `prompt_recorder` variable as the instantiated `PromptRecorder` object.
+Upon entering the context manager, the `__enter__` method sets the `prompt_recorder` variable as the instantiated `PromptRecorder` object.
 
 One final function gives our `SimpleBot` objects the ability to use the `PromptRecorder` within them:
 
@@ -86,7 +87,10 @@ def autorecord(prompt: str, response: str):
         prompt_recorder.log(prompt, response)
 ```
 
-This function accepts a prompt and a response and automatically checks if a `PromptRecorder` object is stored inside the `prompt_recorder_var`. If yes, it will record the response. If not, nothing happens. We use this function inside the SimpleBot class when calling on it:
+This function accepts a prompt and a response and automatically checks if a `PromptRecorder` object is stored inside the `prompt_recorder_var`.
+If yes, it will record the response.
+If not, nothing happens.
+We use this function inside the SimpleBot class when calling on it:
 
 ```python
 
@@ -102,14 +106,26 @@ class SimpleBot:
 
 And just like that, the `SimpleBot` is made aware of the `PromptRecorder` context manager!
 
-The fundamental trick is keeping a globally referenceable `prompt_recorder` variable enabled by the built-in [`contextvars`](https://docs.python.org/3/library/contextvars.html) module.
-With that, we can modify the instantiated `PromptRecorder` object's state, call on the object's methods, and do other things with the object while still hiding it from the front-end code we write.
+The fundamental trick is keeping a globally referenceable `prompt_recorder` variable
+enabled by the built-in [`contextvars`](https://docs.python.org/3/library/contextvars.html) module.
+With that, we can modify the instantiated `PromptRecorder` object's state,
+call on the object's methods,
+and do other things with the object while still hiding it from the front-end code we write.
+
+_If you're curious, you can study the code [here](https://github.com/ericmjl/llamabot/blob/main/llamabot/recorder.py)_
 ---
 pub_date: 2023-05-02
 ---
 summary:
 
-I’ve been working on `llamabot` and wanted to implement a feature to automatically record prompts and LLM responses. I used a PromptRecorder object with a context manager, similar to PyMC’s `pm.Model()`. However, I faced a challenge: making the context manager aware of its internal code. 🤔 After some research, I found a solution using the built-in `contextvars` module. By creating a globally-referenceable prompt_recorder variable, I was able to modify the instantiated PromptRecorder object’s state and call its methods while keeping it hidden from the front-end code. 🎉 Now, `llamabot` can easily record prompt-response pairs! 🤖
+I’ve been working on `llamabot` and wanted to implement a feature to automatically record prompts and LLM responses.
+I used a PromptRecorder object with a context manager, similar to PyMC’s `pm.Model()`.
+However, I faced a challenge: making the context manager aware of its internal code. 🤔
+After some research, I found a solution using the built-in `contextvars` module.
+By creating a globally-referenceable prompt_recorder variable,
+I was able to modify the instantiated PromptRecorder object’s state
+and call its methods while keeping it hidden from the front-end code. 🎉
+Now, `llamabot` can easily record prompt-response pairs! 🤖
 
 
 ---
