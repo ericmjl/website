@@ -1,0 +1,83 @@
+title: How to Craft Stellar Pull Request Summaries with GPT-4
+---
+author: Eric J. Ma
+---
+body:
+
+Today, I discovered an exciting use case for GPT-4: writing improved pull request messages! In this blog post, I will share the process I followed to achieve this.
+
+First, I utilized `llamabot`, a Python package that I developed.
+
+Next, I obtained the diff of a pull request. The simplest method to do this is by appending `.diff` to the end of a PR URL, like so:
+
+https://github.com/pyjanitor-devs/pyjanitor/pull/1256 -> https://github.com/pyjanitor-devs/pyjanitor/pull/1256.diff
+
+Here's the code for generating the summary message:
+
+```python
+diff = '''
+<diff gets pasted here...>
+'''
+
+prompt = f"Given the following pull request diff: {diff}, summarize the pull request changes for me in plain English. Also, postulate the benefits of these changes. If the changes are not likely to be beneficial, state your reasons for why."
+
+from llamabot import SimpleBot
+prbot = SimpleBot("You are a bot that answers questions about pull request diffs.")
+
+prbot(prompt)
+```
+
+For [PR#1262](https://github.com/pyjanitor-devs/pyjanitor/pull/1262):
+
+```text
+This pull request introduces several changes to the `conditional_join` function in the `janitor/functions/conditional_join.py` file and updates the corresponding tests in the `tests/functions/test_conditional_join.py` file. The main changes are as follows:
+
+1. Adds support for "outer" join type in the `how` parameter, allowing users to perform outer joins in addition to inner, left, and right joins.
+2. Deprecates the `sort_by_appearance` parameter, issuing a warning when it is used.
+3. Updates the documentation and comments to reflect the changes made.
+
+The benefits of these changes include:
+
+1. Increased functionality: Users can now perform outer joins using the `conditional_join` function, providing more flexibility in their data manipulation tasks.
+2. Improved performance: By deprecating the `sort_by_appearance` parameter, the function may offer better performance in certain cases, as it no longer needs to maintain the original order of the data.
+3. Clearer documentation: The updated documentation and comments make it easier for users to understand the function's behavior and the available options.
+
+Overall, these changes are likely to be beneficial, as they enhance the functionality of the `conditional_join` function and improve its performance in certain scenarios.
+```
+
+And for [PR#1261](https://github.com/pyjanitor-devs/pyjanitor/pull/1261):
+
+```text
+The pull request modifies the `_conditional_join_type_check` function in the `conditional_join.py` file. The main change is the removal of the `is_categorical_dtype` function from the `permitted_types` set and the addition of a separate check for categorical data types using `isinstance(left_column.dtype, pd.CategoricalDtype)`.
+
+In plain English, the changes can be summarized as follows:
+1. The code now checks if the `left_column.dtype` is a categorical data type separately, instead of including it in the `permitted_types` set.
+2. If the `left_column.dtype` is not a categorical data type, the code proceeds to check if it is one of the other permitted types (datetime64, numeric, or string).
+3. If the `left_column.dtype` is a categorical data type, the code checks if the categories match up to a permutation between the left and right columns.
+
+The benefits of these changes are:
+1. Improved readability and clarity of the code by separating the check for categorical data types from the other permitted types.
+2. Ensuring that the correct checks are performed for categorical data types, which may help prevent potential issues or bugs in the future.
+
+Overall, these changes are likely to be beneficial as they improve the code's readability and maintainability.
+```
+
+This was an impressive outcome! Previously, I would dread having to (1) write a summary of my PRs, and (2) review PRs with very long diffs. This prompt is an excellent solution to both problems!
+---
+pub_date: 2023-05-13
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss using GPT-4 to write improved pull request summaries with the help of a Python package called `llamabot`. I provide examples of how to generate summary messages for pull requests and demonstrate the benefits of using GPT-4 for this purpose, such as increased functionality, improved performance, and clearer documentation.
+---
+tags:
+
+gpt4
+pull request
+summary
+python
+llamabot
+pr messages
+code review
+github
+artificial intelligence
