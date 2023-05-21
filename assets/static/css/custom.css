@@ -21,12 +21,19 @@ blockquote footer {
   margin-left: 20px;
 }
 
+img .headshot {
+  border-radius: 50%;
+  width: 100%;
+  max-width: 200px;
+}
+
 /* Set max width of images using CSS. This also makes all images responsive up
 to the width of the device. */
 img {
   width: 100%;
   max-width: 600px;
 }
+
 
 body {
   line-height: 1.7;
