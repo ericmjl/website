@@ -1,0 +1,327 @@
+title: Outlines: LLM prompt management and more
+---
+author: Eric J. Ma
+---
+body:
+
+# Outlines
+
+I recently picked up on the library [`outlines`](https://github.com/normal-computing/outlines/tree/main) by Normal Computing. Reading the README, it could have great potential in prompt management - the ability to concisely manage prompts in a composable fashion.
+
+For example, I decided to build a coding bot - not just the Copilot-esque autocomplete, but one that could ghostwrite code with me. As an experiment, I installed the `outlines` library and created a `codingbot` that would do three things: `ghostwrite` code, write `docstrings`, and write `tests`. With these three well-defined tasks on hand, I wrote the code + prompts needed to accomplish this task.
+
+Here is what the bot and the prompts looked like.
+
+Firstly, the bot's definition:
+
+```python
+from llamabot.bot.simplebot import SimpleBot
+
+codebot = SimpleBot(
+    """You are a Python programming expert.
+
+You provide suggestions to programmers in Python.
+
+Only return code, do not put Markdown syntax in your output.
+Do not explain your code, only provide code.
+
+Code should have type hints.
+Ensure that the implementation of the function results in the simplest type hints possible.
+
+Ensure that within any errors raised, the error message is actionable
+and informs the user what they need to do to fix the error.
+Make sure the error message is prescriptive,
+possibly even more verbose than necessary,
+and includes verbiage such as "please do X" or "please do not do Y".
+
+If you are called to suggest docstrings, you always use the sphinx-style docstrings.
+
+If you are asked to write tests, prefer the use of Hypothesis to generate property-based tests.
+Only suggest example-based tests if it is not possible to generate property-based tests.
+For each test, please write a docstring that explains what the test is testing.
+For test function style, use pytest-style test functions and not Unittest-style test classes.
+"""
+)
+```
+
+I clearly had to do some iteration on the prompt, and I used `llamabot`'s `PromptRecorder` to help with that.
+
+Then, the prompt for ghostwriting the code:
+
+```python
+import outlines.text as text
+
+@text.prompt
+def ghostwriter(desired_functionality):
+    """I would like to accomplish the following.
+
+    {{ desired_functionality }}
+
+    How do I write the code for this? Please return only the code without explaining it.
+
+    Ensure that there are type hints in the function.
+    """
+```
+
+Next up, the docstring writer:
+
+```python
+
+@text.prompt
+def docstring(code):
+    """Please help me write docstrings for the following code.
+
+    Ensure that you use Markdown Python block(s) to showcase how the code should be used.
+    The code usage example should be before the parameter/argument documentation.
+    Do not use sphinx-style directives,
+    but instead use Markdown-style triple back-ticks to house the code block.
+
+    Do not include :type: or :rtype: in the docstring
+    as they should be covered by the type hints.
+
+    {{ code }}
+    """
+
+```
+
+And finally, the unit test code writer:
+
+```python
+@text.prompt
+def tests(code):
+    """Please help me write unit tests for the following code.
+
+    {{ code }}
+    """
+```
+
+With those, I tried the following code ghostwriting request:
+
+```python
+output = codebot(
+    ghostwriter(
+        """I need a function that accepts a URL and returns the contents of the URL as a string.
+
+It should validate that the URL is from GitHub
+and that it is a valid GitHub pull request URL.
+It should also raise an error if the URL does not return a 200 status code.
+If the URL is a valid PR URL and does not end with .diff,
+then it should append .diff to the URL before retrieving the contents.
+"""
+    )
+)
+```
+
+This is what I got back:
+
+```python
+import requests
+from typing import Union
+from urllib.parse import urlparse
+
+
+def get_pr_contents(url: str) -> str:
+    parsed_url = urlparse(url)
+
+    if parsed_url.netloc != "github.com":
+        raise ValueError("Please provide a valid GitHub URL.")
+
+    path_parts = parsed_url.path.split("/")
+    if len(path_parts) < 5 or path_parts[3] != "pull":
+        raise ValueError("Please provide a valid GitHub pull request URL.")
+
+    if not url.endswith(".diff"):
+        url += ".diff"
+
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        raise ValueError("The URL did not return a 200 status code. Please check the URL and try again.")
+
+    return response.text
+```
+
+On being satisfied with the correctness of the function, I then asked the bot to add docstrings into the mix:
+
+```python
+output_with_docstrings = codebot(docstring(output))
+```
+
+This gives me:
+
+````python
+def get_pr_contents(url: str) -> str:
+    """
+    Fetches the contents of a GitHub pull request as a diff.
+
+    Example usage:
+
+    ```python
+    pr_url = "https://github.com/owner/repo/pull/42"
+    pr_contents = get_pr_contents(pr_url)
+    print(pr_contents)
+    ```
+
+    :param url: The URL of the GitHub pull request.
+    :returns: The contents of the pull request as a diff.
+	:raises ValueError: If the provided URL is not a valid GitHub URL or a valid GitHub pull request URL.
+    :raises ValueError: If the URL did not return a 200 status code.
+    """
+    parsed_url = urlparse(url)
+
+    if parsed_url.netloc != "github.com":
+        raise ValueError("Please provide a valid GitHub URL.")
+
+    path_parts = parsed_url.path.split("/")
+    if len(path_parts) < 5 or path_parts[3] != "pull":
+        raise ValueError("Please provide a valid GitHub pull request URL.")
+
+    if not url.endswith(".diff"):
+        url += ".diff"
+
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        raise ValueError("The URL did not return a 200 status code. Please check the URL and try again.")
+
+    return response.text
+````
+
+Finally, we can do a test ghostwriter:
+
+```python
+unit_test_output = codebot(tests(output))
+```
+
+And that gives:
+
+```python
+import pytest
+from hypothesis import given, strategies as st
+
+from your_module import get_pr_contents
+
+
+@given(url=st.text())
+def test_get_pr_contents_invalid_url(url: str) -> None:
+    """
+    Test that get_pr_contents raises a ValueError when given an invalid GitHub URL.
+    """
+    with pytest.raises(ValueError, match="Please provide a valid GitHub URL."):
+        get_pr_contents(url)
+
+
+@given(url=st.text())
+def test_get_pr_contents_invalid_pr_url(url: str) -> None:
+    """
+    Test that get_pr_contents raises a ValueError when given an invalid GitHub pull request URL.
+    """
+    url = f"https://github.com/{url}"
+    with pytest.raises(ValueError, match="Please provide a valid GitHub pull request URL."):
+        get_pr_contents(url)
+
+
+def test_get_pr_contents_non_200_status_code() -> None:
+    """
+    Test that get_pr_contents raises a ValueError when the URL does not return a 200 status code.
+    """
+    url = "https://github.com/invalid/repo/pull/1.diff"
+    with pytest.raises(ValueError, match="The URL did not return a 200 status code. Please check the URL and try again."):
+        get_pr_contents(url)
+
+
+def test_get_pr_contents_valid_url() -> None:
+    """
+    Test that get_pr_contents returns the correct content when given a valid GitHub pull request URL.
+    """
+    url = "https://github.com/valid/repo/pull/1"
+    expected_content = "some_content"
+
+    with requests_mock.Mocker() as m:
+        m.get(url + ".diff", text=expected_content)
+        content = get_pr_contents(url)
+
+    assert content == expected_content
+```
+
+While I showed the outputs of GPT-4, those were not this exercise's main points. The thing I _really_ wanted to highlight here is the compactness of the code involved:
+
+```python
+output = codebot(
+    ghostwriter(
+        """I need a function that accepts a URL and returns the contents of the URL as a string.
+
+It should validate that the URL is from GitHub
+and that it is a valid GitHub pull request URL.
+It should also raise an error if the URL does not return a 200 status code.
+If the URL is a valid PR URL and does not end with .diff,
+then it should append .diff to the URL before retrieving the contents.
+"""
+    )
+)
+
+output_with_docstrings = codebot(docstring(output))
+unit_test_output = codebot(tests(output))
+```
+
+If you think about it, all I've done in the ghostwriter prompt is provide a natural language-based, high-level design of the kind of code that I need, delving into sufficient detail when necessary. With good prompt design, we can, with very high probability, obtain outputs that can be directly fed into the `docstring()` and `tests()` functions. And because of the organization of this code, one can easily map it 1-to-1 with a possible user interface:
+
+- The input to `ghostwriter` is a text area-style box;
+- The outputs of each of `ghostwriter`, `docstring` and `tests` is a Markdown display box.
+- The user experience here could be sampling multiple options from the `ghostwriter` and picking the one that feels the most correct, followed by auto-generating docstrings and tests in parallel.
+
+Having a clean separation of concerns makes building the UI much easier!
+
+## Couldn't we have used strings and string interpolation in functions instead?
+
+We could! Here is an example of how we might have accomplished prompt templating using f-strings, for example:
+
+```python
+def docstring(code):
+    prompt = f"""Please help me write docstrings for the following code.
+
+    Ensure that you use Markdown Python block(s) to showcase how the code should be used.
+    The code usage example should be before the parameter/argument documentation.
+    Do not use sphinx-style directives,
+    but instead use Markdown-style triple back-ticks to house the code block.
+
+    Do not include :type: or :rtype: in the docstring
+    as they should be covered by the type hints.
+
+    {code}
+    """
+    return prompt
+```
+
+This could get tricky, however, if we have special syntax in the prompt that requires curly braces. If `code` also includes a docstring, there is no way of escaping those characters from the multi-line string.
+
+By contrast, using Jinja2 templating and the `@text.prompt` decorator to perform the docstring transformation dynamically, we can inject arbitrary strings into the prompt without worrying about escaping any characters. This is where the `outlines` package rescues the day.
+
+## What can we learn from this exercise?
+
+The biggest one is of encapsulating a prompt in a Python function. Though it's doable without the use of `outlines`, the `@text.prompt` decorator enables interpolation without worrying about tricky edge cases.
+
+Apart from that, I also wanted to emphasize how the syntax here is quite enabling! Encapsulating natural language instructions in a function makes for very compact Python programs.
+---
+pub_date: 2023-06-27
+---
+summary: Today, I explored the `outlines` library and built a coding bot that ghostwrites code, docstrings, and tests! 🤖 With clean prompt design, I was able to create a compact and efficient Python program. The best part? It's super easy to map this to a user interface! 🎉 Check out how I did it and learn about the benefits of using `outlines` for prompt management. 😄
+---
+tags:
+
+outlines
+python
+coding bot
+ghostwriting
+docstrings
+unit tests
+prompt management
+composable prompts
+llamabot
+gpt-4
+code generation
+ui design
+jinja2
+clean code
+---
+twitter_handle: ericmjl
