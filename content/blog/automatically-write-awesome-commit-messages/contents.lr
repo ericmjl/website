@@ -1,0 +1,109 @@
+title: Automatically write awesome commit messages
+---
+author: Eric J. Ma
+---
+body:
+
+As a data scientist, I work with Git.
+
+If you're anything like the lazy version of me, your commit messages look something like this:
+
+```Text
+commit 4ea50cae5529a1199aff1a5970c556ae11838681
+Author: Eric Ma <eric***@gmail.com>
+Date:   Sat May 20 22:16:17 2023 -0400
+
+    Add headshot to bio.
+
+commit 0f7358b0bc813648a5cabbcf33c33bb04a01f6ed
+Author: Eric Ma <eric***@gmail.com>
+Date:   Sun May 14 08:29:57 2023 -0400
+
+    Update blog post with sam oranyeli's comment.
+
+commit afec8c50da401859b9759c5490ab95cd74de7c39
+Author: Eric Ma <eric***@gmail.com>
+Date:   Sun May 14 08:26:21 2023 -0400
+
+    Add blog post on crafting PR summaries using GPT4.
+
+commit fb4e5517fc51044f1fa4adb9716e27b32e1c734f
+Author: Eric Ma <eric***@gmail.com>
+Date:   Tue May 2 08:51:34 2023 -0400
+
+    Update with SEMBR.
+```
+
+(This is my website's commit log.)
+
+These aren't particularly informative. They don't tell me sufficient detail on what _changes_ were made from commit to commit. Imagine, now, we had a commit message that looked like this:
+
+```Text
+commit ...
+Author: Eric Ma <eric***@gmail.com>
+Date:   Tue May 2 08:51:34 2023 -0400
+
+    stuff done
+```
+
+That's even worse... and it's a routine thing amongst data scientists!
+
+To get around this problem, I wrote a CLI tool within `llamabot` that crafts commit messages according to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification. To use it, I simply stage the changes I'd like to commit together and then run:
+
+```bash
+llamabot git commit
+```
+
+Underneath the hood, with an OpenAI API key, GPT-4-32k will write a commit message for me that looks like:
+
+```Text
+commit 62ee2b25e8f39f211a074a45c6caf8aabae13742 (HEAD -> main, origin/main)
+Author: Eric Ma <ericmajinglong@gmail.com>
+Date:   Tue Jun 27 08:46:57 2023 -0400
+
+    feat(blog): add outlines library exploration and coding bot example
+
+    This commit adds a new blog post that explores the `outlines` library and
+    demonstrates building a coding bot that ghostwrites code, docstrings, and
+    tests using composable prompts. The post highlights the benefits of using
+    `outlines` for prompt management and showcases how clean prompt design can
+    result in compact and efficient Python programs. Additionally, the post
+    discusses the ease of mapping the demonstrated code to a user interface and
+    compares the use of `outlines` with alternative approaches such as f-strings
+    for prompt templating.
+```
+
+Isn't that amazing?!
+
+The benefits of using meaningful commit messages are manifold. Firstly, it improves collaboration within development teams. When team members review the commit log, they can quickly understand the nature and purpose of each change. This clarity fosters efficient code reviews and reduces the time spent deciphering the intentions behind commits.
+
+Secondly, informative commit messages facilitate better project management. By examining the commit log, project managers and stakeholders gain insights into the progress of the project, the implemented features, and the bugs fixed. This knowledge allows for effective tracking of changes and helps in making informed decisions about future development directions.
+
+Moreover, detailed commit messages greatly aid in debugging and issue resolution. When encountering a bug or regression, developers can trace back the changes through the commit history and identify the specific commit that introduced the problem. This capability saves time and effort by pinpointing the exact source of an issue, enabling faster resolution and reducing downtime. Even better if we're versioning machine learning models!
+
+If you're interested in trying out `llamabot`, you can install it by running `pip install llamabot` at the terminal!
+
+---
+pub_date: 2023-06-20
+---
+summary: Tired of writing boring commit messages? 😴 I've got you covered! Introducing `llamabot`, a CLI tool that uses GPT-4 to craft meaningful commit messages following the Conventional Commits specification. 🚀 Improve collaboration, project management, and debugging with just one command! 🌟 Try it out with `pip install llamabot`. 🦙
+---
+tags:
+
+git
+commit messages
+gpt-4
+llamabot
+cli tool
+openai api
+conventional commits
+collaboration
+project management
+debugging
+code review
+versioning
+machine learning
+outlines library
+coding bot
+---
+twitter_handle: ericmjl
