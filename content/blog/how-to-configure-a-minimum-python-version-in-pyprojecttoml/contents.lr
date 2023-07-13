@@ -1,0 +1,57 @@
+title: How to configure a minimum Python version in pyproject.toml
+---
+author: Eric J. Ma
+---
+body:
+
+Today, I learned how to set the minimum version of Python in `pyproject.toml`.
+
+If I want a minimum version of Python:
+
+```text
+[project]
+python = ">=3.10"
+```
+
+If I want a maximum version of Python:
+
+```text
+[project]
+python = "<=3.10"
+```
+
+This problem came up within the context of `llamabot`, where I was using relatively new syntax to indicate the union of types:
+
+```python
+doc_paths: List[str] | List[Path] | str | Path = None
+```
+
+Pre-Python 3.10, the only way to show this was:
+
+```python
+doc_paths: Union[List[str], List[Path], str, Path] = None
+```
+
+Visually, I think the post-Python 3.10 syntax is a bit easier to reason about.
+
+h/t my colleague Jiayi Cox who helped me identify the bug in [this issue](https://github.com/ericmjl/llamabot/issues/3).
+---
+summary:
+
+In today's blog post, we dive into setting the minimum and maximum Python versions in `pyproject.toml` 🐍.
+We explore how this impacts `llamabot` and discuss the new syntax for indicating the union of types in Python 3.10.
+This new syntax is visually easier to understand, making our coding journey a bit smoother! 🚀👩‍💻👨‍💻
+---
+tags:
+
+til
+python
+python310
+pythonversioning
+pyproject.toml
+pythontips
+llamabot
+---
+twitter_handle: ericmjl
+---
+pub_date: 2023-07-12
