@@ -1,0 +1,106 @@
+title: Behind-the-scenes developing LlamaBot
+---
+author: Eric J. Ma
+---
+pub_date: 2023-07-08
+---
+twitter_handle: ericmjl
+---
+body:
+
+I hit my desired milestones in developing LlamaBot:
+
+- Making a CLI for chatting using the OpenAI GPT-4 API,
+- Building a commit message writer,
+- Making a Zotero chatbot, and
+- Building a Python code ghostwriter that can work with any Python library.
+
+I want to reflect on the development process in this blog post. Specifically, I wanted to record the decisions and struggles that I went through. Building this thing, after all, was challenging, especially since I was doing this way after work and after handling two kids.
+
+## Breakneck innovation pace means we're always building on sand
+
+First, I want to share that building on top of an evolving ecosystem feels like building a house on quicksand. I remember vividly when `llama_index` underwent a refactor of their `GPTSimpleIndex` class. It broke a working version of the `QueryBot` code while I was developing more advanced features. That was bloody frustrating! The challenge here was finding time to keep pace with the ecosystem. It takes time to keep up, and that is time that could be spent building. This was a constant tradeoff that I had to consider.
+
+Eventually, I ended up temporarily pinning the version of `llama_index` that I depended on while I got the rest of the features of QueryBot in place; only then was I able to work following up on the refactored code.
+
+The flip side is that things that _were_ problems before soon disappear. One example is the inability of LLMs to natively return structured data _reliably_; I will quote the [Marvin docs](https://www.askmarvin.ai/guide/use_cases/enforcing_format/):
+
+> One of the most important "unlocks" for using AIs alongside and within your code
+> is working with native data structures.
+> This can be challenging for two reasons:
+> first, because LLMs naturally exchange information through unstructured text;
+> and second, because modern LLMs are trained with conversational objectives,
+> so they have a tendency to interject extra words like
+> "Sure, here's the data you requested:".
+> This makes extracting structured outputs difficult.
+
+Marvin has had a solution to this problem for a short while, but because I had chosen LangChain's as the base of LlamaBot's stack (because I wanted to work with llama_index, which depends on LangChain), I found myself hesitating to even experiment with Marvin, even though, through reading the docs, I loved the ideas the devs were building Marvin around. Yet, soon after, OpenAI released Functions capabilities, and now LangChain also can create structured data _reliably_ (or so I think, given what I'm seeing in the docs). At this pace, thanks to rapid feedback from the global developer community, we will see the rapid development of things that developers need to build the apps they want.
+
+## Bots working with Bots: A design pattern for LLM apps
+
+This is a neat design pattern I didn't appreciate before trying to build the Zotero chatbot.
+
+Within the Zotero chatbot, building a general-purpose bot that could handle the breadth of possible user interactions with papers was impossible. Instead, I still had to decompose possible user interactions into something that fit within the scope of a single bot. Within `llamabot zotero`, there's one SimpleBot that embeds the entire Zotero library and picks out the entries that are most relevant to a user query; once the user has chosen one paper to chat with, then there's another QueryBot that embeds that paper and enables users to interact with the paper.
+
+## Dealing with someone else's versioning practices
+
+LangChain, which `llama_index` and `LlamaBot` depend on, is developing fast. That can be evidenced by its patch version number: As of the writing of this blog post, it is at 0.0.228. 228 patch releases! They're obviously not using SemVer or CalVer.
+
+I can understand the reasons why they're not doing so, though. LLMs are in their infancy regarding foundational libraries that can be used as a base for building applications. There's no established "NumPy" or "SciPy" of LLMs. The rapid pace of innovation means nobody knows what's a "breaking change" or not. The easiest way forward is to keep doing patch releases until the ecosystem stabilizes. Unfortunately, if something breaks because of upgraded packages, it's challenging to know what version of LangChain and `llama_index` to work with unless I have handy dependency version information.
+
+## We can't get away from good software development practices
+
+In building out LlamaBot, I couldn't escape software development best practices. Organizing code (refactoring), documentation, and testing, are important. And these are important because _LLMs are not the application_! LLMs are just part of a broader application.
+
+For example, to build the command-line interface for code ghostwriting and Zotero paper chatting, I still had to create application logic and work out a user flow through the CLI. I also had to decide on a primary axis of code organization. I decided early on that organizing by functional categories (e.g. `prompt_library` and `cli`) was more logical than organizing by application categories (e.g. `zotero` and `code_ghostwriter`).
+
+In the end, though, I ended up with a hybrid code organization because of the speed I was operating at. While I did have a `prompt_library` and `cli` submodule (that was further subdivided into app-specific submodules that implemented the relevant functions), I still had other app-specific submodules at the same level as `prompt_library` and `cli`. If I had a chance to redo this, I would instead prioritize app-specific submodules as the top-level primary axis of code organization. This better aligns with my development practices, where I'm focused on developing an app first and building out functionality around it, not the other way around.
+
+I've noted for years that software development skill is an asset for data scientists. This exercise in building tooling around GPT4 has only reinforced that point. At the end of the day, just as it is with machine learning models "in production", we still need to write code that operationalizes the model to be _useful_ -- and all of that will need software development skills to realize.
+
+## Code ghostwriting is an immense productivity hack
+
+One of the first things I built into LlamaBot was a code ghostwriting bot. This was a massive productivity hack for creating more functionality in LlamaBot! The gist of how I wanted the bot to work was as follows: I would describe the kind of functionality I wanted in as much detail as possible without being prescriptive of the solution. I had a prompt that would take in the description and instruct GPT-4 to return the code (and only the code) while automatically copying it to my clipboard.
+
+I used that prompt to help me write the functions that would enable me to run a command like:
+
+```bash
+llamabot python docstring-writer some_python_file.py some_function
+```
+
+As it turns out, this needed a function that would read in `some_python_file.py`, parse the Abstract Syntax Tree to isolate the source code for `some_function` (or `some_class`), and then use the source code to write the docstring. Before using the code ghostwriter, I wouldn't have known how to write the code to solve my problem, even though I knew something about the general approach to the problem (to use the AST). Using the code ghostwriter, I got a solution out in under 2 minutes; I would have otherwise spent hours looking through the AST API. I could also iterate on the solution, tweaking bits and pieces of it interactively with GPT-4.
+
+Taking advantage of the source code isolation capability that I now had (thanks to GPT-4), I could further bang out a test ghostwriter within the same hour. Code ghostwriting, with the help of GPT-4, is like having a highly experienced junior developer ready at command.
+
+## Building my own framework helps me develop a taste for others' frameworks
+
+Apart from actually wanting to build LLM apps that I found helpful, I treated the building of LlamaBot as an exercise in building my own LLM framework. Frameworks help us organize a mess of ideas into a streamlined implementation; they make complex things easy and impossible things possible.
+
+When building LlamaBot, I strived for simplicity over comprehensiveness. That made me recognize how highly engineered LangChain and `llama_index` were. They have many layers of abstractions that can make it challenging to debug. In some ways, that contradicts the Zen of Python's 'flat is better than nested' maxim. But LlamaBot has its own warts, so I wanted to find new sources of inspiration or tooling that LlamaBot could depend on.
+
+As referenced above, I also did some sleuthing on other upcoming frameworks. We're going through a Cambrian explosion of frameworks at this point in time, so I will only list out frameworks and what they do well.
+
+The first is Outlines by the Normal Computing team. I enjoy it because it uses Jinja2 templating within Python function docstrings to do the string interpolation of prompts, making it much easier than f-strings to interpolate strings that might result in invalid Python string outputs.
+
+The second is Marvin by the Prefect team. While I've not used the package myself, I was attracted to its ability to enforce the output format of LLMs. That said, this is apparently doable with LangChain as well.
+
+The third is LangChain. Though there is a growing sentiment that [LangChain is not as valuable as it purports to be](https://old.reddit.com/r/LangChain/comments/13fcw36/langchain_is_pointless/), there is at least one helpful piece of abstraction that I like over the raw OpenAI API - it has defined types for `HumanMessage`, `AIMEssage`, and `SystemMessage`, which makes it much easier to do filter messages within a chat history. While the raw OpenAI API has a defined dictionary format with a key-value pair that indicates the message type, it's felt a little more clunky to check string matches than using type checking, which is stricter (and hence psychologically safer & easier to maintain).
+
+The fourth is `llama_index`. This one's most helpful piece for me has been its abstractions on indexes. In the spirit of [Andrej Kaparthy's tweet on how he stores embeddings](https://twitter.com/sinclanich/status/1647374385827958785), I found that it was much too much work to get vector DBs (such as Chroma or Pinecone) up and running for things like the Zotero chat functionality. Instead, it turned out that `llama_index`'s GPTSimpleVectorIndex implementation sufficed and could be paired with on-disk caching to speed up large text embedding tasks (such as embedding a Zotero library or a PDF).
+
+---
+summary: Just built LlamaBot, a chatbot using OpenAI GPT-4, and it's been a wild ride! 🎢
+From dealing with rapid innovation and versioning issues
+to discovering the power of code ghostwriting, it's been a learning curve. 🧠💡
+Also, I explored some cool LLM frameworks. Dive in to learn more! 🏊‍♂️
+---
+tags: llamabot
+openai
+gpt4
+chatbot
+software development
+ai innovation
+langchain
+llama_index
+code ghostwriting
+zoterobot
