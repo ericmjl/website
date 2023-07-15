@@ -8,14 +8,16 @@ twitter_handle: ericmjl
 ---
 body:
 
-I hit my desired milestones in developing LlamaBot:
+## LlamaBot
+
+LlamaBot is a Pythonic interface to LLMs that I built out with input from friends and colleagues. (I previously announced that I was working on it [in a previous blog post](https://ericmjl.github.io/blog/2023/6/20/automatically-write-awesome-commit-messages/).) Within the project, I also decided to build some LLM-based apps that I felt would be useful for myself. To pace myself, I set some milestones for myself that included the following desirable features:
 
 - Making a CLI for chatting using the OpenAI GPT-4 API,
 - Building a commit message writer,
 - Making a Zotero chatbot, and
 - Building a Python code ghostwriter that can work with any Python library.
 
-I want to reflect on the development process in this blog post. Specifically, I wanted to record the decisions and struggles that I went through. Building this thing, after all, was challenging, especially since I was doing this way after work and after handling two kids.
+I want to reflect on the development process in this blog post. Building this thing, after all, was challenging, especially since I was doing this way after work hours, handling two kids, and before midnights arrived. I also wanted to record some of the challenges faced, the decisions taken, and how I might redo the code if I had a chance to start again.
 
 ## Breakneck innovation pace means we're always building on sand
 
@@ -40,23 +42,44 @@ Marvin has had a solution to this problem for a short while, but because I had c
 
 This is a neat design pattern I didn't appreciate before trying to build the Zotero chatbot.
 
-Within the Zotero chatbot, building a general-purpose bot that could handle the breadth of possible user interactions with papers was impossible. Instead, I still had to decompose possible user interactions into something that fit within the scope of a single bot. Within `llamabot zotero`, there's one SimpleBot that embeds the entire Zotero library and picks out the entries that are most relevant to a user query; once the user has chosen one paper to chat with, then there's another QueryBot that embeds that paper and enables users to interact with the paper.
+Within the Zotero chatbot, building a general-purpose bot that could handle the breadth of possible user interactions with papers was impossible. Instead, I still needed to map out plausible user flows and decompose possible user interactions into something that fit within the scope of a single bot.
+
+Within `llamabot`, the three bot classes provide a general-purpose interface for creating a bot.
+
+SimpleBot corresponds to a Python function steered by a system prompt and can transform user input into specified output. Because it has no memory, future output requests are not confounded by messages in memory being passed in as context.
+
+ChatBot, on the other hand, is a general-purpose interface that lets us create ChatBots. They, too, are steered by a system prompt and can transform user input into specified output, while the implementation of memory (stuffing as many messages into the maximum context window) allows us to have longer-range conversations. However, stateful memory means that the LLM output will always be confounded by previous messages. (This is why SimpleBot exists.)
+
+Finally, QueryBot is a general-purpose interface for querying documents. By embedding documents and using similarity search for retrieval before stuffing the queried text into the context, synthesized responses can be better conditioned and steered by existing content within the context window.
+
+Within `llamabot zotero`, one QueryBot embeds the entire Zotero library and picks out the entries that are most relevant to a user query, returning only the entries that the QueryBot thinks are relevant. Once the user has chosen one paper to chat with, another QueryBot embeds that paper and enables users to interact with the paper.
+
+While this pattern sounds reasonable, it has its own challenges too. For example, is there a set of principles that dictates the scope of a Bot? How can we know in advance that the role of one bot should be limited to doing retrieval while another bot should be limited to doing Q&A? By what principles can we delineate the scope of one bot?
+
+Chip Huyen suggested that [task composability may be an essential factor here](https://huyenchip.com/2023/04/11/llm-engineering.html#part_2_task_composability). Translated into building an LLM system, if we have tasks that are _composable_ with one another, they can have one bot that handles that task. Having gone through this experience building `llamabot zotero`, I agree with her. The delineation of task boundaries, then, is crucial. Software skills, and more importantly, software thinking, are the key here. Just as a software engineer decomposes a problem into functions that do one and one thing well, LLM system builders need to do the same:
+
+Decompose a big problem into component steps, each of which could be handled by a SimpleBot or QueryBot.
+Let each of them do their thing well, using programming flow control to pull them together.
 
 ## Dealing with someone else's versioning practices
 
 LangChain, which `llama_index` and `LlamaBot` depend on, is developing fast. That can be evidenced by its patch version number: As of the writing of this blog post, it is at 0.0.228. 228 patch releases! They're obviously not using SemVer or CalVer.
 
-I can understand the reasons why they're not doing so, though. LLMs are in their infancy regarding foundational libraries that can be used as a base for building applications. There's no established "NumPy" or "SciPy" of LLMs. The rapid pace of innovation means nobody knows what's a "breaking change" or not. The easiest way forward is to keep doing patch releases until the ecosystem stabilizes. Unfortunately, if something breaks because of upgraded packages, it's challenging to know what version of LangChain and `llama_index` to work with unless I have handy dependency version information.
+I can understand the reasons why they're not doing so, though. LLMs are in their infancy regarding foundational libraries that can be used as a base for building applications. There's no established "NumPy" or "SciPy" of LLMs. The rapid pace of innovation means nobody knows what's a "breaking change" or not. The easiest way forward is to keep doing patch releases until the ecosystem stabilizes. Let's say that something, unfortunately, broke because of upgraded packages. Knowing what version of LangChain and `llama_index` to work with is challenging unless I have on-hand dependency version information.
 
 ## We can't get away from good software development practices
 
-In building out LlamaBot, I couldn't escape software development best practices. Organizing code (refactoring), documentation, and testing, are important. And these are important because _LLMs are not the application_! LLMs are just part of a broader application.
+In building out LlamaBot, I couldn't escape software development best practices. Organizing code (refactoring), documentation, and testing, are essential. And these are important because _LLMs are not the application_! LLMs are just part of a broader application.
 
 For example, to build the command-line interface for code ghostwriting and Zotero paper chatting, I still had to create application logic and work out a user flow through the CLI. I also had to decide on a primary axis of code organization. I decided early on that organizing by functional categories (e.g. `prompt_library` and `cli`) was more logical than organizing by application categories (e.g. `zotero` and `code_ghostwriter`).
 
-In the end, though, I ended up with a hybrid code organization because of the speed I was operating at. While I did have a `prompt_library` and `cli` submodule (that was further subdivided into app-specific submodules that implemented the relevant functions), I still had other app-specific submodules at the same level as `prompt_library` and `cli`. If I had a chance to redo this, I would instead prioritize app-specific submodules as the top-level primary axis of code organization. This better aligns with my development practices, where I'm focused on developing an app first and building out functionality around it, not the other way around.
+In the end, though, I ended up with a hybrid code organization because of the speed I was operating at. While I did have a `prompt_library` and `cli` submodule (that was further subdivided into app-specific submodules that implemented the relevant functions), I still had other app-specific submodules at the same level as `prompt_library` and `cli`. If I had a chance to redo this, I would instead prioritize app-specific submodules as the top-level primary axis of code organization. This better aligns with my development practices for this project. I'm focused on developing an app first and building out functionality around it, not vice versa.
 
 I've noted for years that software development skill is an asset for data scientists. This exercise in building tooling around GPT4 has only reinforced that point. At the end of the day, just as it is with machine learning models "in production", we still need to write code that operationalizes the model to be _useful_ -- and all of that will need software development skills to realize.
+
+## The interface was always the most challenging part of the equation
+
+Connected to the point of software development: because my primary goal was developing apps, I found myself running into a mental roadblock: when I did not have clarity on what my desired user interface and user experience -- the fabled UI/UX -- was, I would be stuck in a loop developing prompts and code in a notebook. My head also turned towards other user interfaces out of my wheelhouse, such as VSCode plugins, Jupyter Notebook plugins, and more. These turned out to be rather tangential to the core functionality I was trying to develop. This experience hammered home for me the need for a _product_ orientation that lets me start first with what I, as a user, actually want to accomplish. The level of detail I needed was "what inputs should I give and what outputs should I get back". And it also revealed to me that I am most skilled at developing CLIs and not UIs.
 
 ## Code ghostwriting is an immense productivity hack
 
