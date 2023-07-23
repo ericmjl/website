@@ -399,13 +399,33 @@ pub_date: 2023-02-05
 ---
 summary:
 
-Here is my personal experience creating an app for translating Ark Channel devotionals using OpenAI's GPT-3.
-In here, I write about the challenges I faced and the lessons I learned!
-I hope it is informative for you!
+I built a translator using GPT3 for Ark Channel,
+a daily devotional written in Chinese.
+The translator parses the text into structured data,
+translates the devotional and additional texts,
+and generates cover images.
+
+I also built a UI using Panel
+and deployed it on a Dokku server on DigitalOcean.
+The result?
+My translation time went from 10-15 minutes to just 2! 🚀
 ---
 tags:
 
 gpt3
+openai
+python
+blogging
+natural language processing
+machine learning
+artificial intelligence
+data science
+programming
+api
+dokku
+digitalocean
+deployment
+web app
 large language models
 translation
 faith
