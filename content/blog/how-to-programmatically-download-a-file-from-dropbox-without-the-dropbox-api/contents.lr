@@ -19,20 +19,38 @@ with open("/tmp/blog_index.json", 'wb') as f:
             f.write(chunk)
 ```
 
-I find it's useful to use Dropbox to host large data files for my Python-based tutorials, allowing me to ensure that my Jupyter notebooks are portable from computer to computer, as long as they can maintain an internet connection.
+I find it's useful to use Dropbox to host large data files for my Python-based tutorials,
+allowing me to ensure that my Jupyter notebooks are portable from computer to computer,
+as long as they can maintain an internet connection.
 
-This is neat because it allows me to use Dropbox, for which I pay for storage, effectively as a personal CDN (content delivery network) with easily referenced URLs.
+This is neat because it allows me to use Dropbox,
+for which I pay for storage,
+effectively as a personal CDN (content delivery network) with easily referenced URLs.
 ---
 pub_date: 2023-04-11
 ---
-summary: Today I learned how to download a file from a Dropbox public folder programmatically!
+summary: Today, I cracked the code on downloading files from Dropbox programmatically! 🎉
+Using Python and the Requests library,
+I can now store large data files for my tutorials on Dropbox,
+making my Jupyter notebooks portable and internet-friendly. 🌐
+It's like having my own personal CDN! 💽
 ---
 tags:
 
-til
-dropbox
 python
-automation
-download files
+dropbox
+file download
+programming
+requests library
+data storage
+jupyter notebooks
+portability
+internet connection
+content delivery
+personal cdn
+data files
+tutorials
+linux
+wget
 ---
 twitter_handle: ericmjl
