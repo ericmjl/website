@@ -6,36 +6,93 @@ body:
 
 ## Introduction
 
-You never know when scalability becomes an issue. Indeed, scalability necessitates a whole different world of tooling.
+You never know when scalability becomes an issue.
+Indeed, scalability necessitates a whole different world of tooling.
 
-While at work, I've been playing with a model - a Bayesian hierarchical 4-parameter dose response model, to be specific. With this model, the overall goal (without going into proprietary specifics) was parameter learning - what's the 50th percentile concentration, what's the max, what's the minimum, etc.; what was also important was quantifying the uncertainty surrounding these parameters.
+While at work,
+I've been playing with a model -
+a Bayesian hierarchical 4-parameter dose response model, to be specific.
+With this model,
+the overall goal (without going into proprietary specifics) was parameter learning -
+what's the 50th percentile concentration,
+what's the max,
+what's the minimum, etc.;
+what was also important was quantifying the uncertainty surrounding these parameters.
 
 ## Prototype Phase
 
-Originally, when I prototyped the model, I used just a few thousand samples, which was trivial to fit with NUTS. I also got the model specification (both the group-level and population-level priors) done using those same few thousand.
+Originally,
+when I prototyped the model,
+I used just a few thousand samples,
+which was trivial to fit with NUTS.
+I also got the model specification (both the group-level and population-level priors) done using those same few thousand.
 
-At some point, I was qualitatively and quantitatively comfortable with the model specification. Qualitatively - the model structure reflected prior biochemical knowledge. Quantitatively, I saw good convergence when examining the sampling traces, as well as the shrinkage phenomena.
+At some point,
+I was qualitatively and quantitatively comfortable with the model specification.
+Qualitatively - the model structure reflected prior biochemical knowledge.
+Quantitatively,
+I saw good convergence when examining the sampling traces,
+as well as the shrinkage phenomena.
 
 ## Scaling Up
 
-Once I reached that point, I decided to scale up to the entire dataset: 400K+ samples, 3000+ groups.
+Once I reached that point,
+I decided to scale up to the entire dataset:
+400K+ samples,
+3000+ groups.
 
-Fitting this model with NUTS with the full dataset would have taken a week, with no stopping time guarantees at the end of an overnight run - when I left the day before, I was still hoping for 5 days. However, switching over to ADVI (automatic differentiation variational inference) was a key enabler for this model: I was able to finish fitting the model with ADVI in just 2.5 hours, with similar uncertainty estimates (it'll never end up being identical, given random sampling).
+Fitting this model with NUTS with the full dataset would have taken a week,
+with no stopping time guarantees at the end of an overnight run -
+when I left the day before,
+I was still hoping for 5 days.
+However,
+switching over to ADVI (automatic differentiation variational inference) was a key enabler for this model:
+I was able to finish fitting the model with ADVI in just 2.5 hours,
+with similar uncertainty estimates (it'll never end up being identical, given random sampling).
 
 ## Thoughts
 
-I used to not appreciate that ADVI could be useful for simpler models; in the past, I used to think that ADVI was mainly useful in Bayesian neural network applications - in other words, with large parameter and large data models.
+I used to not appreciate that ADVI could be useful for simpler models;
+in the past,
+I used to think that ADVI was mainly useful in Bayesian neural network applications -
+in other words,
+with large parameter and large data models.
 
-With this example, I'm definitely more informed about what "scale" can mean: both in terms of number of parameters in a model, and in terms of number of samples that the model is fitted on. In this particular example, the model is simple, but the number of samples is so large that ADVI becomes a feasible alternative to NUTS MCMC sampling.
+With this example,
+I'm definitely more informed about what "scale" can mean:
+both in terms of number of parameters in a model,
+and in terms of number of samples that the model is fitted on.
+In this particular example,
+the model is simple,
+but the number of samples is so large that ADVI becomes a feasible alternative to NUTS MCMC sampling.
+
 ---
 pub_date: 2019-01-21
 ---
 tags:
 
-bayesian
+scalability
+bayesian model
+dose response
+parameter learning
+model specification
+convergence
+shrinkage
+large dataset
+nuts mcmc
+advi
 variational inference
-data science
+neural networks
+random sampling
+biochemistry
+data modeling
 ---
 twitter_handle: ericmjl
 ---
-summary: I ended up using approximate, rather than exact, Bayesian inference to solve a problem at work. Here's my use of ADVI.
+summary: I've been exploring a Bayesian hierarchical 4-parameter dose response model at work.
+Initially, I used a few thousand samples for prototyping,
+but I've now scaled up to 400K+ samples.
+Fitting the model with NUTS would've taken a week,
+but ADVI did the job in just 2.5 hours. 🚀
+This experience has given me a new appreciation for ADVI,
+even in simpler models with large datasets. 🧠
