@@ -475,17 +475,31 @@ based on known context about a situation or person would be rad!
 ---
 pub_date: 2023-03-08
 ---
-summary: I finally figured out how to programmatically create Google Docs using Python.
-Along the way, I figured out service accounts,
-special HTML tags, and how to set multi-line environment variables.
-Does that tickle your brain?
+summary: I've just automated the creation of Google Docs using Python! 🐍
+I used a Google service account to authenticate,
+then created the doc content using Markdown.
+I converted the Markdown to HTML,
+then uploaded it as a Google Doc.
+I also learned how to set multi-line environment variables
+and programmatically set document permissions.
+It was a fun and enlightening project! 🎉
 ---
 tags:
 
 python
-google
-google cloud
 google docs
 automation
+markdown
+html
+programming
+api
+google drive
+google cloud
+service account
+environment variables
+mimetype
+permissions
+templating
+jinja
 ---
 twitter_handle: ericmjl
