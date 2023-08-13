@@ -4,8 +4,6 @@ author: Eric J. Ma
 ---
 body:
 
-# Journal Club: Differentiable Search of Evolutionary Trees
-
 ```python
 from jax import random
 import jax.numpy as np
@@ -23,11 +21,14 @@ one that is not just a matter of brute force scaling
 but uses mathematical links creatively to solve a biological problem.
 "Differentiable Search of Evolutionary Trees" is one such paper,
 and I'm very happy for the authors Ramith Hettiarachchi, Avi Swartz, and Sergey Ovchinnikov
-that it was accepted to ICML 2023.
+that it was accepted to ICML 2023!
+(It was specifically accepted to the Sampling and Optimization in Discrete Space (SODS)
+and Differentiable Almost Everything (DiffAE) workshops.)
 
 I thought it would be worth sharing the methodology,
 with a specific focus on how the authors take a non-differentiable problem
-and turn it into a differentiable problem through mathematical data structures.
+and turn it into a differentiable problem
+through interconversion between mathematical data structures.
 
 It's challenging to find a phylogenetic tree
 that explains the existence of a collection of sequences --
@@ -145,9 +146,21 @@ observed_sequences = np.array(
 
 ## Trees are graphs, and graphs have discrete matrix representations, and those representations can be relaxed as well.
 
-A phylogenetic tree is a directed, acyclic graph.
-As such, the tree can be represented as a matrix with an upper triangle only.
-An example tree with 5 nodes (3 observed, A-C and 2 ancestral, D & E) that looks like this in tree form:
+A phylogenetic tree is a directed acyclic graph (DAG).
+Every graph can be represented as a matrix,
+such that nodes are ordered identically on the rows and columns.
+Since we are talking about directed graphs,
+we can treat the rows as "source" nodes and the columns as "target" nodes.
+In the case of a DAG, we only need to consider the upper triangle;
+due to the _acyclic_ property of a DAG,
+we never need edges from the target nodes back to the source nodes.
+As such, for a tree (which is a DAG),
+we're able to always find a topoligical sort of the nodes,
+and hence only need the upper right triangle.
+
+Here's an example.
+This tree, which has 5 nodes (3 observed, A-C and 2 ancestral, D & E),
+looks like this in tree form:
 
 ```text
     E
@@ -157,7 +170,7 @@ An example tree with 5 nodes (3 observed, A-C and 2 ancestral, D & E) that looks
 A   C
 ```
 
-Looks like this in matrix form
+That same tree, in matrix form,
 (with rows being children and columns being parents to maintain conventions):
 
 ```text
@@ -173,8 +186,14 @@ Here, a value of
 
 - `1` indicates that the row is a child of the column,
 - `0` indicates the absence of that relationship,
-- `x` fills the lower left triangle because those are not applicable to trees (which are Directed Acyclic Graphs), and
+- `x` fills the lower left triangle because those are not applicable to trees, and
 - `i` fills the _invalid_ relations between observed sequences.
+
+If you're being astute and thinking ahead a few steps,
+you'll quickly come to the realization that the `1`s and `0`s above
+are the positions of the _parameterizable_ parts of the tree model.
+Those entries in the matrix are the ones that we need to infer
+in order to find the best tree for a given collection of observed sequences.
 
 Here are other observations that we can make:
 
@@ -249,8 +268,6 @@ to help us convert parameters from infinite support space back to finite support
 We'll also need an adjacency matrix mask that masks all invalid parameters.
 This is constructed using a function that looks like this:
 
-
-
 ```python
 def tree_adjacency_mask(N: int):
     shape = (2*N-1, 2*N-1)
@@ -267,8 +284,6 @@ mask = tree_adjacency_mask(N)
 mask
 ```
 
-
-
 ```text
     Array([[-inf, -inf, -inf,   0.,   0.],
            [-inf, -inf, -inf,   0.,   0.],
@@ -280,14 +295,10 @@ mask
 
 If we apply the mask to our params and then apply the softmax function row-wise:
 
-
-
 ```python
 branch_probabilities = vmap(softmax)(params + mask)
 branch_probabilities
 ```
-
-
 
 ```text
     Array([[0.        , 0.        , 0.        , 0.84250844, 0.15749158],
@@ -323,7 +334,7 @@ and that's where we go to the loss function.
 ## Loss Function Term 1: Bifurcating Tree Loss
 
 But what if we relaxed the problem
-and said that each row must _approximately_ sum to 2.0?
+and said that each column must _approximately_ sum to 2.0?
 If we do so,
 we can turn the problem into an optimization problem.
 That's where Equation 3 in the paper helps.
@@ -508,11 +519,14 @@ S_pk
             0.0225838 , 0.00671417]], dtype=float32)
 ```
 
+As a reminder, our sequences were MATHEMA, MATHIMA, and MITHIMA,
+so the index 0 and 5 positions (columns) in the matrix should be 1.0
+(which is what we observe).
+When reconstructing the ancestral sequences,
+we would optimize their matrix values for parsimony.
 
 Now, by taking the dot product of the learned adjacency $A$ with $S_{pk}$,
 we effectively get a _lookup table_ $L$ of shape `(sequence x position)`.
-
-
 
 ```python
 adjacency_matrix = vmap(softmax)(params)
@@ -520,8 +534,6 @@ S_pk = node_representation_matrix[:, :, alphabet.index("M")]
 lookup_table = np.dot(adjacency_matrix, S_pk)
 lookup_table
 ```
-
-
 
 ```text
     Array([[0.29598033, 0.01430949, 0.02061273, 0.039096  , 0.05093228,
@@ -535,7 +547,6 @@ lookup_table
            [0.5144516 , 0.01023462, 0.01348249, 0.02227255, 0.02311018,
             0.512748  , 0.04558302]], dtype=float32)
 ```
-
 
 The unique property of that lookup table
 is that it is _probabilistic_ in the relaxed case.
@@ -558,7 +569,10 @@ by taking the difference between $S_{pk}$ and $L$.
 ![6c](./figure-6c.png)
 
 ```python
-diff = S_pk - lookup_table
+# NOTE: taking the absolute value of the difference is necessary;
+# we need the differences, which are errors, to add up without canceling out each other.
+# I have verified this point with the original author, Ramith.
+diff = np.abs(S_pk - lookup_table)
 diff
 ```
 
@@ -578,8 +592,17 @@ diff
 Summing this up, then, is the cost function for parsimony:
 
 ```python
-np.sum(diff)
+np.sum(diff) / 2
 ```
+
+Note: Having asked Ramith to check the accuracy of my blog post,
+he reminded me that division by two is necessary
+to ensure that we don't double-count differences.
+This is due to the diff being accounted for
+in both the corresponding amino acid's slice of the matrix
+and another time in the sum of the rest of the matrix.
+Mathematically, this is more precise, though for the purposes of optimization,
+division by two induces no changes in the partial derivative except for its magnitude.
 
 ```text
 Array(0.34258893, dtype=float32)
