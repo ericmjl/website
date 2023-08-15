@@ -339,7 +339,9 @@ If we do so,
 we can turn the problem into an optimization problem.
 That's where Equation 3 in the paper helps.
 
+<div>
 $$L_b=\sum_{j=1}^{N-1} \text{abs}((\sum_{i=1}^{2N-2} A_{ij}) - 2)$$
+</div>
 
 Implemented in JAX,
 it'll look something like this:
@@ -504,8 +506,6 @@ S_pk = node_representation_matrix[:, :, alphabet.index("M")]
 S_pk
 ```
 
-
-
 ```text
     Array([[1.        , 0.        , 0.        , 0.        , 0.        ,
             1.        , 0.        ],
@@ -577,16 +577,16 @@ diff
 ```
 
 ```text
-    Array([[ 0.70401967, -0.01430949, -0.02061273, -0.039096  , -0.05093228,
-             0.70685506, -0.05862169],
-           [ 0.19842249, -0.00347282, -0.00693362, -0.01820618, -0.03276558,
-             0.19960755, -0.00862753],
-           [ 0.2250877 , -0.00401895, -0.00770602, -0.01963376, -0.03455837,
-             0.22637731, -0.01090632],
-           [-0.46383423,  0.01299381,  0.00642458, -0.01999593, -0.08364556,
-            -0.46324545,  0.08887832],
-           [-0.48434174,  0.0042245 ,  0.02545775,  0.09900005,  0.21973743,
-            -0.4901642 , -0.03886886]], dtype=float32)
+    Array([[0.70401967, 0.01430949, 0.02061273, 0.039096  , 0.05093228,
+            0.70685506, 0.05862169],
+           [0.19842249, 0.00347282, 0.00693362, 0.01820618, 0.03276558,
+            0.19960755, 0.00862753],
+           [0.2250877 , 0.00401895, 0.00770602, 0.01963376, 0.03455837,
+            0.22637731, 0.01090632],
+           [0.46383423, 0.01299381, 0.00642458, 0.01999593, 0.08364556,
+            0.46324545, 0.08887832],
+           [0.48434174, 0.0042245 , 0.02545775, 0.09900005, 0.21973743,
+            0.4901642 , 0.03886886]], dtype=float32)
 ```
 
 Summing this up, then, is the cost function for parsimony:
@@ -595,7 +595,11 @@ Summing this up, then, is the cost function for parsimony:
 np.sum(diff) / 2
 ```
 
-Note: Having asked Ramith to check the accuracy of my blog post,
+```text
+    Array(5.0915833, dtype=float32)
+```
+
+_Note:_ Having asked Ramith to check the accuracy of my blog post,
 he reminded me that division by two is necessary
 to ensure that we don't double-count differences.
 This is due to the diff being accounted for
@@ -603,10 +607,6 @@ in both the corresponding amino acid's slice of the matrix
 and another time in the sum of the rest of the matrix.
 Mathematically, this is more precise, though for the purposes of optimization,
 division by two induces no changes in the partial derivative except for its magnitude.
-
-```text
-Array(0.34258893, dtype=float32)
-```
 
 And now, we do this for every single letter:
 
@@ -620,6 +620,7 @@ parsimony_loss
 ```text
     Array(-6.4074993e-07, dtype=float32)
 ```
+
 The smaller we can make the difference,
 the better the ability of the joint distribution over the tree and inferred sequences
 to explain the observed sequences.
