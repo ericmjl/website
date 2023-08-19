@@ -4,7 +4,7 @@ author: Eric J. Ma
 ---
 body:
 
-Fermi estimation is named after the renown physicist Enrico Fermi
+Fermi estimation is named after the renowned physicist Enrico Fermi
 for his ability to give accurate order-of-magnitude estimates for certain quantities.
 From Wikipedia, Fermi estimation is described as such:
 
@@ -23,7 +23,7 @@ From Wikipedia, Fermi estimation is described as such:
 What struck me is how this relates to thinking about prior distributions for parameter estimates.
 A common critique of Bayesian estimation models is that
 "one can cook up priors to make the model say anything you want".
-While true, it ignores the reality that most of us will be able to to use Fermi estimation
+While true, it ignores the reality that most of us can use Fermi estimation
 to come up with justified and weakly-informative priors.
 
 Let me illustrate.
@@ -32,7 +32,7 @@ In biology, say we had a quantity to estimate,
 such as the average size of a species of bacteria,
 which we could reasonably assume to be Gaussian-distributed.
 Since we know that most other bacteria are 0.1 to 10 microns in size,
-we might set a the log(mean) with a $N(0, 0.5)$ prior, in the units of microns,
+we might set the log(mean) with a $N(0, 0.5)$ prior, in the units of microns,
 which would put us in a good prior distribution range.
 The mean is at $10^0 = 1$ microns, which is smack in the middle.
 Three scale units out to the right, and we are at 30-ish microns;
@@ -50,17 +50,16 @@ which is less than the size of a bond between atoms,
 or as large as $10^{10}$ microns,
 which is on the scale of distances between towns on a map.
 
-It would also be uncreasonable if I placed scale = 0.1 as the prior.
+It would also be unreasonable if I placed scale = 0.1 as the prior.
 Why? Because it ignores the one order of magnitude above and below our mean,
-which may be relevant for the category of things called bacteria.
-As a rule of thumb, that one order of magnitude
-above or below where our guess lies
-is a good thing to span for weakly-informative priors.
+which may be relevant for the category of bacteria.
+As a rule of thumb, one order of magnitude
+above or below where our guess lies is a good span for weakly-informative priors.
 
 So as you can see, Fermi estimation is a pretty principled way
-to guess at what priors should be used for a problem.
+to guess what priors should be used for a problem.
 It also helps us constrain those priors to be not-so-unreasonable.
-Yet another critique against Bayesian bites the dust, in my opinion.
+Yet another critique against Bayesian bites the dust.
 ---
 pub_date: 2020-10-15
 ---
