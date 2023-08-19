@@ -39,13 +39,27 @@
     <link rel="stylesheet" href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" />
 
     <!-- Mathjax -->
-    <script type="text/javascript" async
+    <!-- <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
         </script>
 
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script> -->
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
     </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        </script>
 
 </head>
 
@@ -65,16 +79,17 @@
                 <ul>
                     {% for link in bag('nav')['header'] %}
                     <li class="menu-item">
-                    <!-- Set blinking cursor correctly on navigation -->
-                    {% set path_root = this.path|string %}
-                    {% set path_root = path_root.split("@")[0] %}
-                    {% set path_root = path_root.split("/")[1] + "/" %}
-                    {% set link_root  = link["href"].split("/")[1] + "/" %}
-                    {% if link_root == path_root %}
-                        <a class="terminal-prompt" href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
-                    {% else %}
+                        <!-- Set blinking cursor correctly on navigation -->
+                        {% set path_root = this.path|string %}
+                        {% set path_root = path_root.split("@")[0] %}
+                        {% set path_root = path_root.split("/")[1] + "/" %}
+                        {% set link_root = link["href"].split("/")[1] + "/" %}
+                        {% if link_root == path_root %}
+                        <a class="terminal-prompt" href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title']
+                            }}</a>
+                        {% else %}
                         <a href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
-                    {% endif %}
+                        {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
@@ -90,12 +105,12 @@
         <div class="terminal-nav">
             <nav class="terminal-menu" id="local-links">
                 <ul>
-                {% for link in bag('nav')['footer'] %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}">
-                        {{ link['title'] }}</a>
-                </li>
-                {% endfor %}
+                    {% for link in bag('nav')['footer'] %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}">
+                            {{ link['title'] }}</a>
+                    </li>
+                    {% endfor %}
                 </ul>
             </nav>
         </div>
