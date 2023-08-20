@@ -12,5 +12,8 @@ dependencies:
   - pre-commit
   - ipykernel
   - jupyterlab
+  - fastapi
+  - uvicorn
+  - python-multipart
   - pip:
       - llamabot
