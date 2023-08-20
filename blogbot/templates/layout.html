@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+</head>
+
+<body>
+    <h1>Eric's Blog Bot</h1>
+    <form id="form" name="form">
+        <label for="Blog URL">Blog URL</label>
+        <input type="text" name="blog_url" id="blog_url"
+            value="https://ericmjl.github.io/blog/2023/8/7/journal-club-differentiable-search-of-evolutionary-trees/"
+            placeholder="Blog URL goes here..." required>
+
+        <button hx-post="/linkedin" hx-target="#linkedin-post" hx-swap="innerHTML" hx-indicator="#linkedin-spinner"
+            type="submit">Compose LinkedIn Post</button>
+        <img id="linkedin-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
+
+        <button hx-post="/twitter" hx-target="#twitter-post" hx-swap="innerHTML" hx-indicator="#twitter-spinner"
+            type="submit">Compose Twitter Post</button>
+        <img id="twitter-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
+
+    </form>
+
+    <div id="linkedin-post-div">
+        <label for="linkedin-post">LinkedIn Post</label>
+        <textarea id="linkedin-post"></textarea>
+    </div>
+
+    <div id="twitter-post-div">
+        <label for="twitter-post">Twitter Post</label>
+        <textarea id="twitter-post"></textarea>
+    </div>
+
+</body>
+
+</html>
