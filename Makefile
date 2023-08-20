@@ -1,3 +1,5 @@
+.PHONY: blogbot
+
 dat:
 		lektor build --output-path $(HOME)/beaker-sites/ericmjl.com
 
@@ -13,3 +15,6 @@ do:
 update:
 		wget https://raw.githubusercontent.com/ericmjl/conda-envs/master/lektor.yml -O environment.yml
 		conda env update -f environment.yml
+
+blogbot:
+		uvicorn blogbot.api:app --reload
