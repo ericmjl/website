@@ -7,18 +7,67 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from llamabot.prompt_library.blog import (
-    blogging_bot,
-    compose_linkedin_post,
-    compose_twitter_post,
-)
+from llamabot import SimpleBot
+
+# from llamabot.prompt_library.blog import (
+#     blogging_bot,
+#     compose_linkedin_post,
+#     compose_twitter_post,
+# )
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="blogbot/static"), name="static")
 
-bot = blogging_bot()
+bot = SimpleBot(
+    "You are an expert blogger. Whenever you use hashtags, they are always lowercase."
+)
 
 templates = Jinja2Templates(directory="blogbot/templates")
+
+
+def compose_linkedin_post(text):
+    prompt = f"""
+This is a blog post that I just wrote.
+
+{text}
+
+Please compose for me a LinkedIn post
+that entices my network on LinkedIn to read it.
+Ensure that there is a call to action to interact with the post after reading
+to react with it, comment on it, or share the post with others,
+and to support my work on Patreon.
+My Patreon link is https://patreon.com/ericmjl/
+Include hashtags inline with the LinkedIn post and at the end of the post too.
+Please return this for me in JSON format using the following schema:
+
+{
+    "post_text": <post_text>
+}
+    """
+    return prompt
+
+
+def compose_twitter_post(text):
+    prompt = f"""
+This is a blog post that I just wrote:
+
+{text}
+
+Please compose for me a Twitter post
+that entices my followers on Twitter to read it.
+Ensure that there is a call to action to interact with the post after reading it,
+such as retweeting, commenting, or sharing it with others,
+and to support my work on Patreon.
+My Patreon link is https://patreon.com/ericmjl/
+Include hashtags inline with the Twitter post.
+
+Please return this for me in JSON format using the following schema:
+
+{
+    "post_text": <post_text>
+}
+    """
+    return prompt
 
 
 @app.get("/", response_class=HTMLResponse)
