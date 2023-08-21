@@ -40,9 +40,9 @@ My Patreon link is https://patreon.com/ericmjl/
 Include hashtags inline with the LinkedIn post and at the end of the post too.
 Please return this for me in JSON format using the following schema:
 
-{
+
     "post_text": "post text goes here"
-}
+
     """
     return prompt
 
@@ -63,9 +63,9 @@ Include hashtags inline with the Twitter post.
 
 Please return this for me in JSON format using the following schema:
 
-{
+
     "post_text": "post text goes here"
-}
+
     """
     return prompt
 
