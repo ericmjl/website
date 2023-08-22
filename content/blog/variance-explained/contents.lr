@@ -26,9 +26,9 @@ A thing that is *really nice* about variance explained is that it can be used to
 
 Now, we know that single metrics can have failure points, as does the coefficient of correlation $r^2$, as shown in Ansecombe's quartet and the Datasaurus Dozen:
 
-![Ansecombe's quartet, taken from Autodesk Research](https://d2f99xq7vri1nk.cloudfront.net/Anscombe_1_0_0.png)
+![Ansecombe's quartet, taken from Wikipedia](https://upload.wikimedia.org/wikipedia/commons/e/ec/Anscombe%27s_quartet_3.svg)
 
-*Fig. 1: Ansecombe's quartet, taken from Autodesk Research*
+*Fig. 1: Ansecombe's quartet, taken from Wikipedia*
 
 ![Datasaurus Dozen, taken from Revolution Analytics](https://blog.revolutionanalytics.com/downloads/DataSaurus%20Dozen.gif)
 
@@ -40,7 +40,7 @@ One place where the variance explained can fail is if the predictions are system
 $$var(y_{true} - y_{pred}) = var([2, 2, ..., 2]) = 0$$
 </div>
 
-There's no variance in errors, even though they are systematically shifted off from the true prediction. Like r<sup>2</sup>, variance explained will fail here.
+There's no variance in errors, even though they are systematically shifted off from the true prediction. Like $r^2$, variance explained will fail here.
 
 As usual, [Ansecombe's quartet](https://en.wikipedia.org/wiki/Anscombe%27s_quartet), as does [The Datasaurus Dozen](https://www.autodeskresearch.com/publications/samestats), gives us a pertinent reminder that visually inspecting your model predictions is always a good thing!
 
