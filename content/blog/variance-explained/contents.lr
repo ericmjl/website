@@ -8,7 +8,9 @@ Variance explained, as a regression quality metric, is one that I have begun to 
 
 Here's variance explained defined:
 
+<div>
 $$1 - \frac{var(y_{true} - y_{pred})}{var(y_{true})}$$
+</div>
 
 Why do I like it? It’s because this metric gives us a measure of the scale of the error in predictions relative to the scale of the data.
 
