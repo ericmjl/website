@@ -24,7 +24,7 @@ Here's a few interesting scenarios.
 
 A thing that is *really nice* about variance explained is that it can be used to compare related machine learning tasks that have different unit scales, for which we want to compare how good one model performs across all of the tasks. Mean squared error makes this an apples-to-oranges comparison, because the unit scales of each machine learning task is different. On the other hand, variance explained is unit-less.
 
-Now, we know that single metrics can have failure points, as does the coefficient of correlation r^2^, as shown in Ansecombe's quartet and the Datasaurus Dozen:
+Now, we know that single metrics can have failure points, as does the coefficient of correlation $r^2$, as shown in Ansecombe's quartet and the Datasaurus Dozen:
 
 ![Ansecombe's quartet, taken from Autodesk Research](https://d2f99xq7vri1nk.cloudfront.net/Anscombe_1_0_0.png)
 
@@ -36,7 +36,9 @@ Now, we know that single metrics can have failure points, as does the coefficien
 
 One place where the variance explained can fail is if the predictions are systematically shifted off from the true values. Let's say prediction was shifted off by 2 units.
 
+<div>
 $$var(y_{true} - y_{pred}) = var([2, 2, ..., 2]) = 0$$
+</div>
 
 There's no variance in errors, even though they are systematically shifted off from the true prediction. Like r<sup>2</sup>, variance explained will fail here.
 
