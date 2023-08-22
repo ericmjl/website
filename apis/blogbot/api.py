@@ -16,13 +16,13 @@ from llamabot import SimpleBot
 # )
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="blogbot/static"), name="static")
+app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static")
 
 bot = SimpleBot(
     "You are an expert blogger. Whenever you use hashtags, they are always lowercase."
 )
 
-templates = Jinja2Templates(directory="blogbot/templates")
+templates = Jinja2Templates(directory="apis/blogbot/templates")
 
 
 def compose_linkedin_post(text):
