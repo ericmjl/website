@@ -1,0 +1,35 @@
+title: Use Cron to execute commands on startup
+---
+author: Eric J. Ma
+---
+body:
+
+Today I learned how to execute arbitrary commands on startup on a Linux machine.
+
+This trick uses cron, and is essentially adding something like this to your crontab:
+
+```shell
+@reboot /absolute/path/to/your/command with args
+```
+
+There are other ways of doing so as well, according to [tutorialspoint](https://www.tutorialspoint.com/run-a-script-on-startup-in-linux),
+including using `rc.local`, `init.d`, and `systemd`.
+While I'm quite sure there are good reasons for more than one way to accomplish this task,
+I think using `cron` is pretty elegant for the following reasons:
+
+1. The syntax is very clean.
+2. `cron` is almost universally installed on Linux variants.
+3. `cron` is a conceptually well-accepted place for automated execution of commands on a schedule.
+---
+pub_date: 2023-08-22
+---
+summary: Today I learned how to execute arbitrary commands on startup on a Linux machine. It's pretty simple. Curious to hear more?
+---
+tags:
+
+til
+linux
+cron
+automation
+---
+twitter_handle: ericmjl
