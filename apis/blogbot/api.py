@@ -70,9 +70,29 @@ Please return this for me in JSON format using the following schema:
     return prompt
 
 
+def get_latest_blog_posts() -> dict:
+    url = "https://ericmjl.github.io/blog/"
+    response = requests.get(url)
+    html = response.content
+    soup = BeautifulSoup(html, "html.parser")
+
+    # Find the <a> tags nested within the <header> tag
+    header = soup.find_all("header")
+    titles = [h.get_text().strip("\n") for h in header]
+    anchors = [h.find("a", href=True) for h in header]
+    hrefs = [url + a.get("href") for a in anchors]
+    # dictionary of link to title
+    links_to_titles = dict(zip(hrefs, titles))
+    return links_to_titles
+
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("layout.html", context={"request": request})
+    latest_blog_posts = get_latest_blog_posts()
+    return templates.TemplateResponse(
+        "layout.html",
+        context={"request": request, "latest_blog_posts": latest_blog_posts},
+    )
 
 
 def get_content(url):
