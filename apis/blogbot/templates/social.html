@@ -24,6 +24,10 @@
             type="submit">Compose Twitter Post</button>
         <img id="twitter-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
 
+        <button hx-post="/tags" hx-target="#tags-post" hx-swap="innerHTML" hx-indicator="#tags-spinner"
+            type="submit">Generate Tags</button>
+        <img id="tags-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
+
     </form>
 
     <div id="linkedin-post-div">
@@ -34,6 +38,11 @@
     <div id="twitter-post-div">
         <label for="twitter-post">Twitter Post</label>
         <textarea id="twitter-post"></textarea>
+    </div>
+
+    <div id="tags-post-div">
+        <label for="tags-post">Tags</label>
+        <textarea id="tags-post"></textarea>
     </div>
 
 </body>
