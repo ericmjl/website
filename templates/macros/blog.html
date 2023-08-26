@@ -5,7 +5,7 @@
 
 {% macro render_blog_header(post, from_index=false) %}
 <!-- Set title style -->
-{{ post.title }}
+<span name="title" id="title">{{ post.title }}</span>
 {% endmacro %}
 
 {% macro render_author_tags(post) %}
@@ -18,13 +18,14 @@
     {% else %}
     {{ post.author }}
     {% endif %}
-    on {{ post.pub_date }}
+    on
+    <span id="pub_date" name="pub_date">{{ post.pub_date }}</span>
 
     {% if post.tags %}
     | tags:
     <!-- Append tags after author -->
     {% for t in post.tags -%}
-    <span class="boxed">
+    <span class="boxed" id="tags" name="tags">
       <a class="tags" href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
         {{ t }}
       </a>
@@ -41,10 +42,9 @@
   <div class="card-body">
     {{ render_author_tags(post) }}
     <hr>
-    <div id="post_body" name="post_body">
-      <!-- Put post body -->
+    <span id="post_body" name="post_body">
       {{ post.body }}
-    </div>
+    </span>
     <hr>
     <p>
       <i>I send out a newsletter with tips and tools
@@ -85,7 +85,9 @@
   <div class="card-body col-md-8">
     {{ render_author_tags(post) }}
     {% if post.summary %}
-    <p class="card-text">{{ post.summary }}</p>
+    <span name="post_summary" id="post_summary">
+      <p class="card-text">{{ post.summary }}</p>
+    </span>
     <small>
       <a href="{{ post|url }}">Read on...</a>
       {{ render_reading_time(post) }}
