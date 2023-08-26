@@ -1,6 +1,6 @@
 {% macro render_meta_tags(post) %}
 <meta property="og:title" content="{{ post.title }}">
-<meta property='og:url' content='http://ericmjl.github.io/blog/{{ post.path }}'/>
+<meta property='og:url' content='http://ericmjl.github.io/blog/{{ post.path }}' />
 {% endmacro %}
 
 {% macro render_blog_header(post, from_index=false) %}
@@ -25,11 +25,11 @@
     <!-- Append tags after author -->
     {% for t in post.tags -%}
     <span class="boxed">
-    <a class="tags" href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
-      {{ t }}
-    </a>
+      <a class="tags" href="{{ ('/blog/tag/' ~ t.lower() ~ '/')|url }}">
+        {{ t }}
+      </a>
     </span>
-  {% endfor %}
+    {% endfor %}
   </p>
   {% endif %}
 </small>
@@ -37,12 +37,14 @@
 
 {% macro render_blog_post(post, from_index=false) %}
 <div class="terminal-card">
-  <header>{{ render_blog_header(post, from_index) }}</header>
+  <header id="post_title" name="post_title">{{ render_blog_header(post, from_index) }}</header>
   <div class="card-body">
     {{ render_author_tags(post) }}
     <hr>
-    <!-- Put post body -->
-    {{ post.body }}
+    <div id="post_body" name="post_body">
+      <!-- Put post body -->
+      {{ post.body }}
+    </div>
     <hr>
     <p>
       <i>I send out a newsletter with tips and tools
@@ -77,28 +79,28 @@
 
 {% macro render_blog_card(post) %}
 <div class="terminal-card">
-    <header>
-      <a href="{{ post|url }}" style="color: white">{{ render_blog_header(post, from_index=True) }}</a>
-    </header>
-    <div class="card-body col-md-8">
-      {{ render_author_tags(post) }}
-      {% if post.summary %}
-      <p class="card-text">{{ post.summary }}</p>
+  <header>
+    <a href="{{ post|url }}" style="color: white">{{ render_blog_header(post, from_index=True) }}</a>
+  </header>
+  <div class="card-body col-md-8">
+    {{ render_author_tags(post) }}
+    {% if post.summary %}
+    <p class="card-text">{{ post.summary }}</p>
+    <small>
+      <a href="{{ post|url }}">Read on...</a>
+      {{ render_reading_time(post) }}
+    </small>
+    {% else %}
+    <div>
+      <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
+        <a href="{{ post|url }}">(read more)</a>
+      </p>
       <small>
-        <a href="{{ post|url }}">Read on...</a>
         {{ render_reading_time(post) }}
       </small>
-      {% else %}
-      <div>
-        <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
-          <a href="{{ post|url }}">(read more)</a>
-        </p>
-        <small>
-          {{ render_reading_time(post) }}
-        </small>
-      </div>
-      {% endif %}
     </div>
+    {% endif %}
+  </div>
 
 </div>
 {% endmacro %}
