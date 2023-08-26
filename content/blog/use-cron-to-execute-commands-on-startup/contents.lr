@@ -6,7 +6,7 @@ body:
 
 Today I learned how to execute arbitrary commands on startup on a Linux machine.
 
-This trick uses cron, and is essentially adding something like this to your crontab:
+This trick uses `cron`, and is essentially adding something like this to your crontab:
 
 ```shell
 @reboot /absolute/path/to/your/command with args
