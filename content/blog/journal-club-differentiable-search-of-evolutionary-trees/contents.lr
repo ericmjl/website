@@ -155,7 +155,7 @@ In the case of a DAG, we only need to consider the upper triangle;
 due to the _acyclic_ property of a DAG,
 we never need edges from the target nodes back to the source nodes.
 As such, for a tree (which is a DAG),
-we're able to always find a topoligical sort of the nodes,
+we're able to always find a topological sort of the nodes,
 and hence only need the upper right triangle.
 
 Here's an example.
