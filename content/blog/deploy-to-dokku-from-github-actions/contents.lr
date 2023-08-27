@@ -1,0 +1,75 @@
+title: Deploy to Dokku from GitHub Actions
+---
+author: Eric J. Ma
+---
+body:
+
+I host a [Dokku](https://dokku.com/) server on DigitalOcean. (If you're interested in signing up for a DigitalOcean account, I have a referral link [here](https://m.do.co/c/2832a2124e66).) I use Dokku on DigitalOcean because of cost: for a given instance size's price, I can host about 5-10x more apps on a given server than I could otherwise on competing services such as Heroku and Fly.io. That said, deploying to my Dokku server is often done manually. I recently figured out how to get out of doing that manually, by using GitHub Actions to deploy my apps to DigitalOcean on every merge to the `main` branch.
+
+## The GitHub Actions Workflow YAML
+
+Dokku has [an official GitHub Action](https://github.com/dokku/github-action) for doing so. Under there, I found the most minimal and simple configuration that's needed:
+
+```yaml
+name: Deploy to Dokku Server
+
+on:
+  push:
+    branches:
+      - main # configure this
+  workflow_dispatch: # this allows a manual trigger of deploys as well
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloning repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Push to dokku
+        uses: dokku/github-action@master
+        with:
+          branch: 'main' # the branch on the Dokku server to deploy to
+          git_remote_url: ${{ secrets.DOKKU_GIT_REMOTE_URL}}
+          ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+```
+
+## What's going on here?
+
+Underneath the hood, the Dokku action is simply taking the repository and doing a `git push` to the Dokku server. Doing so requires the following information to be configured on GitHub Actions, as secrets (for security purposes).
+
+Firstly, you need `DOKKU_GIT_REMOTE_URL`: which should be of the format `ssh://dokku@<my-server-url-or-ip>:22/<my-app-name>`. I mistakenly configured it as `dokku@<my-server-url>:<my-app-name>`, which is how `git` remotes are configured, but that yielded an error.
+
+Secondly, you need `DOKKU_SSH_PRIVATE_KEY`: which should be the SSH _private key_ that Dokku is configured to accept. For this, I would strongly suggest:
+
+1. Creating a new SSH key pair (following the [excellent instructions on GitHub's docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent), and then
+2. Adding the _public_ key half of the SSH key pair to Dokku (following the instructions [on the Dokku User Management page](https://dokku.com/docs/deployment/user-management/)).
+
+Both `DOKKU_GIT_REMOTE_URL` and `DOKKU_SSH_PRIVATE_KEY` need to be configured on GitHub Actions' secrets. This is done by navigating to the repository's **Settings --> Secrets and Variables --> Actions**, and then adding the appropriate secrets as described above.
+---
+pub_date: 2023-08-27
+---
+tags:
+
+til
+github actions
+cicd
+continuous integration
+continuous delivery
+dokku
+digitalocean
+deployment
+coding
+devops
+cost efficiency
+dokku server
+git
+dokku deployment
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In my latest blog post, I share my experience of hosting a Dokku server on DigitalOcean and how I've managed to automate the deployment process using GitHub Actions. I delve into the cost benefits of using Dokku on DigitalOcean over other services like Heroku and Fly.io. I also provide a step-by-step guide on how to configure GitHub Actions to deploy apps to DigitalOcean automatically. If you're interested in saving time and money on app deployment, this post is a must-read.
