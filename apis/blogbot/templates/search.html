@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+</head>
+
+<body>
+    <h1>Search Eric's Blog</h1>
+    <form id="form" name="form">
+        <input type="text" name="search_term" id="search_term" placeholder="Put your search term here">
+        <button name="submit-button" id="submit-button" type="submit" hx-post="/search/term" hx-target="#search-results"
+            hx-swap="innerHTML">Search</button>
+    </form>
+    <div name="search-results" id="search-results">Results will show here!</div>
+</body>
+
+</html>
