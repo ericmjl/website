@@ -1,0 +1,40 @@
+title: Enable GitHub Actions to Push Code Changes
+---
+author: Eric J. Ma
+---
+body:
+
+Today I learned how to ensure that GitHub actions is capable of pushing code to its associated repo.
+
+The tl;dr is:
+
+1. Within a repo, click on "Settings".
+2. Within "Settings", click on "Actions", and then "General".
+3. Under "General", look for "Workflow Permissions" and then grant "Read and write permissions" to the Workflow runner.
+
+It'll look something like this:
+
+![](./screenshot.png)
+
+Underneath the hood, there is a default `secrets.GITHUB_TOKEN` that is granted to a GitHub Actions' Workflow runner. The default permissions are read-only, as it needs to be able to clone the repo. However, we can enable it to push by enabling write permissions.
+
+Once we've configured that setting, within a GitHub actions workflow, we need to ensure that `git` is configured correctly before pushing. In one of my workflow configuration files, I have it split up into two steps:
+
+```yaml
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      ... (other stuff goes here)
+
+      - name: Push changes with tags
+        run: |
+          git push && git push --tags
+```
+---
+pub_date: 2023-08-26
+---
+tags: til
+---
+twitter_handle: ericmjl
