@@ -24,6 +24,10 @@
             type="submit">Compose Twitter Post</button>
         <img id="twitter-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
 
+        <button hx-post="/summary" hx-target="#summary-post" hx-swap="innerHTML" hx-indicator="#summary-spinner"
+            type="submit">Compose Summary</button>
+        <img id="summary-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
+
         <button hx-post="/tags" hx-target="#tags-post" hx-swap="innerHTML" hx-indicator="#tags-spinner"
             type="submit">Generate Tags</button>
         <img id="tags-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
@@ -44,6 +48,12 @@
         <label for="tags-post">Tags</label>
         <textarea id="tags-post"></textarea>
     </div>
+
+    <div id="summary-post-div">
+        <label for="summary-post">Summary</label>
+        <textarea id="summary-post"></textarea>
+    </div>
+
 
 </body>
 
