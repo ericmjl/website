@@ -62,11 +62,10 @@ Here is my blog post:
 
 {text}
 
-I need a summary of the post.
-It should entice users to read the post
-but should not be sensational.
+I need a summary of the post in 100 words or less.
 My usual tone is to write in first person,
 so please do so as well.
+For example, I usually start with "In this blog post".
 Return as JSON with key='post_text'
 and value=<the summary>.
 Ensure that it is valid JSON!
