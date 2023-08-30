@@ -14,6 +14,7 @@ from .prompts import (
     compose_twitter_post,
     compose_tags,
     compose_summary,
+    compose_patreon_post,
 )
 from .scraper import get_latest_blog_posts, get_post_body
 
@@ -37,18 +38,20 @@ async def home(request: Request):
     )
 
 
-@app.post("/{social_media}", response_class=HTMLResponse)
+@app.post("/{post_type}", response_class=HTMLResponse)
 async def social_media(
-    request: Request, blog_url: Annotated[str, Form()], social_media: str
+    request: Request, blog_url: Annotated[str, Form()], post_type: str
 ):
-    if social_media == "linkedin":
+    if post_type == "linkedin":
         prompt = compose_linkedin_post
-    elif social_media == "twitter":
+    elif post_type == "twitter":
         prompt = compose_twitter_post
-    elif social_media == "tags":
+    elif post_type == "tags":
         prompt = compose_tags
-    elif social_media == "summary":
+    elif post_type == "summary":
         prompt = compose_summary
+    elif post_type == "patreon":
+        prompt = compose_patreon_post
     response, post_body = get_post_body(blog_url)
     if response.status_code == 200:
         response = bot(prompt(post_body))
