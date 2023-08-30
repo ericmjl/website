@@ -7,12 +7,28 @@ This is a blog post that I just wrote.
 Please compose for me a LinkedIn post
 that entices my network on LinkedIn to read it.
 Ensure that there is a call to action to interact with the post after reading
-to react with it, comment on it, or share the post with others,
-and to support my work on Patreon.
-My Patreon link is https://patreon.com/ericmjl/
+to react with it, comment on it, or share the post with others.
 Include hashtags inline with the LinkedIn post and at the end of the post too.
 Please return this for me in JSON format using the following schema:
 
+    "post_text": "post text goes here"
+
+    """
+    return prompt
+
+
+def compose_patreon_post(text):
+    prompt = f"""
+This is a blog post that I just wrote.
+
+{text}
+
+Please compose for me a patreon post
+that encourages my readers to read it and comment on it.
+Ensure that there is a call to action to interact with the post after reading
+to react with it, comment on it, or share the post with others.
+Include hashtags inline with the patreon post and at the end of the post too.
+Please return this for me in JSON format using the following schema:
 
     "post_text": "post text goes here"
 
