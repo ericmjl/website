@@ -46,8 +46,6 @@ Please compose for me a Twitter post
 that entices my followers on Twitter to read it.
 Ensure that there is a call to action to interact with the post after reading it,
 such as retweeting, commenting, or sharing it with others,
-and to support my work on Patreon.
-My Patreon link is https://patreon.com/ericmjl/
 Include hashtags inline with the Twitter post.
 
 Please return this for me in JSON format using the following schema:
