@@ -1,0 +1,41 @@
+title: Research code benefits from unit testing
+---
+author: Eric J. Ma
+---
+body:
+
+Today, during a code review with one of our interns, I had an epiphany.
+
+Research code can still benefit from unit tests.
+
+Especially if that research code is going to be used in a head-to-head comparison of methodologies.
+
+Let me explain.
+
+Within the ML for chemistry world, _random_ splits are downright unacceptable when constructing training, testing, and validation sets, particularly if one wants to claim that one's model _generalizes_ beyond seen chemistry. (For a comprehensive introduction on how best to split data for molecular property prediction, I refer you to Pat Walter's blog, [Practical Cheminformatics](http://practicalcheminformatics.blogspot.com/2023/06/getting-real-with-molecular-property.html).
+
+Without going into proprietary details, one of our datasets involved replicate measurements for each molecule tested. For reasons beyond my realm of influence, one of our external collaborators built a model that included all replicate measurements rather than doing a Bayesian estimation of property for those molecules before predicting the property from an ML model. The splitting strategy there was to split on molecule, so that we ensure that no molecules were represented in both the training set and test sets. In order to build a comparator model internally, one of our interns, [Matthieu](https://www.linkedin.com/in/dagommer/), wrote code to implement that splitting strategy, as the splitting code was not shared by our collaborators just yet.
+
+During code review, Mattheiu, his direct supervisor, my teammate [Zeran](https://www.linkedin.com/in/zeranli/) and myself all came to the realization that because of the non-standard nature of the splitting strategy, we needed to have guarantees that the code that Matthieu wrote was correct. As Matthieu voiced out ways to test the correctness of his code, it dawned upon me: as long as he did a refactor of the splitting code into a function, he'd have the target for a unit test!
+
+Here, he could test certain properties of the splitter function. Firstly, given data that had replicate measurements for a molecule, he could test that in any random split tested, no molecule showed up in both the train and test sets. Secondly, he could test that the total number of rows of data, when re-combining the train set and the test set, equalled the original number. These were, by no means, the only two properties of the function that he could test.
+
+And that basically brings me to the main thesis of this post: even research code, one that might be thrown away eventually, still can benefit from rigorous testing! Since this code was intended to be used in a bake-off between an internal effort and a collaborator's effort, we needed to be absolutely sure that the code did what we claimed it did, and there was no better way to have that guarantee than by having a unit test. That is, after all, the point of software tests: to find ways to prove the correctness of our code.
+---
+pub_date: 2023-08-30
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss the importance of unit tests in research code. I share an experience from a code review with our intern, Matthieu, where we realized the need for rigorous testing of a non-standard splitting strategy in our ML model. We concluded that even research code, which might be discarded eventually, can benefit from thorough testing to ensure its correctness. This is particularly crucial when the code is used for comparisons or collaborations.
+---
+tags:
+
+code review
+unit tests
+research
+chemistry ml
+chemistry
+data splitting
+property prediction
+software testing
+code correctness
