@@ -1,0 +1,145 @@
+title: Service vs. Product-Oriented Data Science
+---
+author: Eric J. Ma
+---
+body:
+
+As the field of data science progresses and evolves within the biotech space,
+I'm seeing two flavours of data science work showing up.
+
+The first is service-oriented data science.
+The second is product-oriented data science.
+
+These two can be conceived along a continuum.
+
+## What is service-oriented data science?
+
+As its name suggests,
+this flavour of data science is all about _serving_ others,
+mainly in a one-off fashion.
+In this flavour of data science,
+the _insights_ derived from a model-building effort are the object of value.
+Examples of this kind of data science might be building a mechanistic model of a biophysical measurement to quantify some key parameter of interest (e.g., half-life decay or thermal stability),
+which can be used downstream.
+In this mode,
+we encounter a wide range of problems,
+and our impact is primarily on the individual or group being serviced.
+
+## What about product-oriented data science?
+
+As its name suggests,
+this flavour of data science is all about _building a product_ that can serve users over and over on a narrowly defined but valuable problem.
+Examples of this kind of data science might be building a predictive model of protein stability or a mutation sampler from evolutionary sequences that one can use repeatedly in future protein engineering campaigns.
+In this mode,
+we are building a reusable tool that solves a well-defined problem,
+effectively expanding our colleagues' capabilities in a scalable fashion.
+
+(h/t to Andrew Giessel and Dave Johnson,
+from whom I first heard this concept articulated.)
+
+In both cases,
+the model itself is of less value than the capabilities it enables or the insights it delivers.
+
+## Is one mode more valuable than another?
+
+My answer is yes... depending on the situation.
+
+How do we know which?
+I've identified two plausible scenarios,
+one for each mode.
+
+When one's broader organization is in a position where people need convincing of the value of a methodology,
+a service-oriented posture is necessary.
+On the other hand,
+when one's organization needs automation that cannot be accomplished by simply chaining off-the-shelf tools together,
+then a product-oriented posture will be necessary.
+
+Even within a team project,
+one can switch between service- and product-orientations.
+In favour of the project's goals,
+we can adopt a service-oriented posture and help deliver insights,
+library designs,
+or more.
+But behind the scenes,
+we can adopt a more product-oriented stance and build out reusable tools and components for the general class of problems being solved.
+
+## What challenges are there in navigating the spectrum?
+
+Our collaborators will always care about being served first.
+The "how",
+on the other hand,
+doesn't really matter as much,
+whether through white-glove service or through a tool we build for them.
+
+In that respect,
+it is tempting to adopt a service-oriented posture when building a higher ROI tool.
+An example of a very challenging instance of this problem I've seen before is when my teammates were asked to design a protein library using rules similar to a previously designed one but with minor differences for a new protein.
+This ask precludes _blindly_ re-running code for generating protein libraries;
+instead,
+modifications are needed.
+Here,
+a product-oriented service posture (yes, I did chain those four words together) can be beneficial.
+With simple and good software engineering practices,
+[which necessarily means thinking clearly about our work](https://ericmjl.github.io/blog/2020/8/21/software-engineering-as-a-research-practice/index.html),
+we can make routine things easy while incorporating the new and varied things modularly.
+
+On the other hand,
+if one adopts a product-oriented posture,
+the challenge lies in becoming progressively detached from the collaborators our products are supposed to serve.
+In this situation,
+it can be tempting to delve into a problem for an extended period,
+tinkering in circles without the necessary feedback from our collaborators on whether our product solves their pain points.
+Thankfully,
+my teammates and I have not yet been in this situation.
+One of the ways we stay vigilant here is by constantly asking ourselves the core question,
+"Does this serve our collaborators?"
+
+## What can I do as an individual contributor or team lead?
+
+In general,
+I prefer that my teammates and I adopt a product-first orientation,
+building tools with high leverage while using a service-first orientation to help demonstrate the value of those tools that we build.
+For some,
+this is a challenge:
+if one's instinct is to "just solve the problem" without stepping back to think of the general case of the problem,
+then one ends up in a _habitual_ service orientation,
+which I consider to be of extremely low leverage.
+
+For an individual contributor, then,
+I think a mindset shift is necessary.
+Rather than being mere _consumers_ of tooling,
+one needs to become a _maker_ of tools as well.
+Being able to make tools for oneself is a data science superpower that will differentiate one from the pack.
+This is in-line with [knowing every last detail of your computational stack](https://ericmjl.github.io/data-science-bootstrap-notes/data-scientists-should-strive-to-know-every-last-detail-about-their-compute-stack/),
+and being able to build parts of that stack yourself will give you much more agency and freedom.
+
+For a team lead, one needs to make time and space for your teammates to be able to build stuff -
+reusable components that improve the efficiency of one's work,
+and reusable tooling that allow a collaborator's work to scale.
+Sometimes, this may entail saying "no" to requests from collaborators
+in order to dedicate time to internal builds.
+Buffer time needs to be added into estimates of when something can be delivered
+in order to allow for this kind of work.
+---
+pub_date: 2023-08-28
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the two flavours of data science work: service-oriented and product-oriented. Service-oriented data science serves others in a one-off fashion, while product-oriented data science builds a reusable tool for a well-defined problem. Both have their value depending on the situation. I discuss the challenges in navigating between the two and emphasize the importance of adopting a product-first orientation. As an individual contributor or team lead, it's crucial to shift from being mere consumers of tooling to makers of tools, enhancing efficiency and scalability!
+---
+tags:
+
+automation
+biotech
+collaboration
+data insights
+data product
+data science
+model building
+predictive models
+product oriented
+protein engineering
+service oriented
+software engineering
+team collaboration
+tool building
