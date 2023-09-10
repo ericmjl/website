@@ -1,0 +1,148 @@
+title: What's the difference between `setup.cfg`, `pyproject.toml`, and `setup.py`?
+---
+author: Eric J. Ma
+---
+body:
+
+If you're in a rush,
+then here's the tl;dr:
+**Of the three, use `pyproject.toml`!**
+
+Yesterday,
+one of my new teammates [Jackie Valeri](https://jackievaleri.github.io/) asked me a relatively challenging question about `setup.cfg`, `pyproject.toml` and `setup.py`:
+what's the difference between those three files?
+
+Let's start with `setup.py`.
+
+## `setup.py`
+
+This is a legacy format in the Python packaging ecosystem.
+Essentially, `setup.py` is a script executed when installing a Python package.
+For good reasons, it was the de facto format for a long time in Python.
+However, it has its flaws.
+Paul Ganssle has an excellent article on [why you shouldn't invoke `setup.py` directly](https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html).
+I won't repeat his points here;
+I encourage you to read through it.
+
+The most common structure of `setup.py` is that you'd declare your package metadata as arguments to the `setup()` function:
+
+```python
+from setuptools import setup
+
+setup(
+    name="my-package-name",
+    version="0.1.0",
+    author="EM",
+    description="Something cool here."
+    # ...
+)
+```
+
+## `setup.cfg`
+
+That brings us to `setup.cfg`.
+The history of `setup.cfg` is that it initially started as a complement to `setup.py`.
+Looking through [this StackOverflow thread](https://stackoverflow.com/questions/39484863/whats-the-difference-between-setup-py-and-setup-cfg-in-python-projects) will give us many answers on what the differences are,
+but the short version is that `setup.cfg` allows us to further configure the behaviour of `setup.py`.
+
+In theory,
+you can actually put all of the metadata that we originally put into the `setup()` function into `setup.cfg` instead:
+
+```ini
+[metadata]
+name = my-package-name
+version = 0.1.0
+author = EM
+description = "Something cool here."
+# ...
+```
+
+And then your `setup()` call can be left empty instead.
+But now we have two files.
+
+And so the Python packaging ecosystem evolved.
+
+## `pyproject.toml`
+
+With [PEP517](https://peps.python.org/pep-0517/) and [PEP518](https://peps.python.org/pep-0518/) (PEP = "Python Enhancement Proposal"),
+`pyproject.toml` became a new option to configure Python builds.
+Over time, it has also evolved into the _de facto_ standard for configuring Python packages,
+providing a one-stop shop for configuring (almost) everything about your Python project.
+For package metadata configuration, it'd look like this:
+
+```toml
+[project]
+name = "my-package-name"
+version = "0.1.0"
+authors = [{name = "EM", email = "me@em.com"}]
+description = "Something cool here."
+```
+
+## What should I use...?
+
+Since it's 2023,
+and PEP517 and 518 have become widely accepted,
+I recommend using `pyproject.toml` as the setup configuration file for a Python package.
+**In other words, unless you've got special reasons for it, your project should not have `setup.py` or `setup.cfg`.**
+In fact, in [`pyds-cli`](https://github.com/ericmjl/pyds-cli),
+a tool I built to standardize the creation of my Python projects,
+I have removed `setup.py` and `setup.cfg` and rely only on `pyproject.toml`.
+
+## Bonus: Why would a data scientist care about Python packaging?
+
+The main reason is as follows:
+if we seek maximum leverage from our work,
+then our data science work should result in reusable tools that others make.
+This often takes the form of a Python package.
+Even if our work doesn't _currently_ have the need to build such a tool,
+we give ourselves the _optionality_ to quickly build it out in the future,
+as long as we [adopt a standard project structure that is inherently a Python package](https://ericmjl.github.io/data-science-bootstrap-notes/get-prepped-per-project/).
+
+## Bonus: Then what about `environment.yml`?
+
+Anyone who has seen my development environments will probably notice the duplication of package dependencies between `environment.yml` and `pyproject.toml`.
+
+The way I treat the two files is as follows.
+
+> `environment.yml` defines a project's development environment.
+>
+> `pyproject.toml` provides to `pip` what is _necessary_ for installation and usage of my Python package.
+
+In most cases, these will be slightly different,
+with `environment.yml` packages being a superset of dependencies declared in `pyproject.toml`.
+How so?
+
+Usually, `environment.yml` will include packages that are needed for _development_ (e.g. `pytest`),
+_code quality_ (e.g. `pre-commit`),
+and _documentation_ (e.g. `mkdocs`).
+
+On the other hand,
+`pyproject.toml`'s dependencies section are parsed by `pip` to install _into_ an environment so that one can use the project when deployed as a standalone and distributed package.
+
+In most of the project repositories I've worked on,
+we have core dependencies of a package listed under both `environment.yml` and `pyproject.toml`.
+This came from a not-too-distant legacy when the `conda` package manager didn't play well with `pip`.
+As such, a dual listing is probably unnecessary.
+Strictly speaking, we can declare core dependencies in `pyproject.toml`.
+When we do an editable install (`pip install -e .`),
+we will still see all those dependencies installed.
+---
+pub_date: 2023-08-31
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explored the differences between setup.cfg, pyproject.toml, and setup.py in Python packaging. I explained their historical context and usage, and recommended using pyproject.toml as the setup configuration file for Python packages in 2023. I also discussed the importance of Python packaging for data scientists, and the distinction between environment.yml and pyproject.toml. The former defines a project's development environment, while the latter provides pip with installation and usage information for a Python package that I might be working on.
+---
+tags:
+
+packaging
+setup.py
+setup.cfg
+python
+pyproject.toml
+enhancement proposal
+project configuration
+dependencies
+package management
+conda
+project structure
