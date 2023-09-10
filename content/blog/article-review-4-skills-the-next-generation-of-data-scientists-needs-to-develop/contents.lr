@@ -1,0 +1,157 @@
+title: Article Review: 4 Skills the Next Generation of Data Scientists Needs to Develop
+---
+author: Eric J. Ma
+---
+body:
+
+Today, I had a chance to read the article,
+[4 Skills the Next Generation of Data Scientists Needs to Develop](https://hbr.org/2023/09/4-skills-the-next-generation-of-data-scientists-needs-to-develop).
+(h/t [Eric Yang](https://www.linkedin.com/in/eric-yang-3b61534/)
+for sharing this one on LinkedIn.)
+This article resonated massively with me,
+and I wanted to share how some of the ideas in here
+translate over to the DSAI Research team at Moderna.
+
+## 1. Problem Spotting: Seeing the real issue
+
+The first skill is distinguishing
+the _real issues_ faced by our collaborators from the apparent problems.
+The real issues might be different from the issues they think they have.
+
+Within biotech research,
+scientists come with differing levels of savviness with machine learning methods
+and the capabilities they bring to laboratory science.
+As such, our collaborators may come to us with requests for help
+that may need refining before they match what they need.
+
+One example that I can recall was related to the hype of ChatGPT.
+[A news and perspectives article in Nature](https://www.nature.com/articles/d41586-023-01516-w) wrote that
+
+> Language models similar to those behind ChatGPT
+> have been used to improve antibody therapies against
+> COVID-19, Ebola and other viruses.
+
+And pretty soon, we were getting inquiries about
+whether we could use an internal implementation of GPT-4 to design protein sequences.
+
+An inexperienced data scientist would say,
+"That sounds like a cool idea! We should try it out!"
+
+But an experienced data scientist
+well-versed in the training of ML models and laboratory science
+would immediately see the flaws in that logic
+and instead ask what the real problems are --
+why would one want to design proteins in the first place?
+Here are some examples of questions we might ask:
+
+1. Is the protein you're trying to engineer particularly difficult to express, and is your goal to improve expression?
+2. Is your protein chemically modified under manufacturing conditions, and do you need to re-design the protein to minimize chemical modifications while retaining function?
+3. Is your protein degrading too quickly within the cell?
+
+Notice how the questions we're asking aren't related to ChatGPT at all!
+Instead, they're all questions about the laboratory science itself.
+These questions are designed to address
+the lab scientist's fundamental scientific challenges.
+Doing so is paramount for our team to continue being valuable and innovative:
+uncovering the fundamental problems
+orients us to build Model Ts instead of breeding faster horses.
+
+## 2. Problem Scoping: Gaining clarity and specificity
+
+The second skill is asking probing questions
+that narrow down the space of problems and the possible solutions
+that our collaborators could use.
+
+Let's continue the previous example by expanding on option #2,
+which is antibody-related.
+
+Gaining clarity would involve asking follow-up questions that look like these:
+
+1. What chemical modifications are you worried about?
+2. How do you detect these chemical modifications? Is it mass spectrometry?
+3. How is the mass spec data analyzed? What are the data transformations involved to get to the endpoint measurement?
+4. How do you know your antibody continues binding to its target? What is the assay that you're using? Can you describe the experiment? What are the controls used?
+5. What's your hypothesis behind using machine learning for your protein engineering problem? How will there be recurring benefits from our effort?
+6. What's the experimental budget in terms of libraries that you can screen? Can you turn an arrayed screen into a pooled screen?
+
+With answers to these and other questions of the same spirit,
+we can enhance our understanding of the problem space.
+We can also begin to see connections between what our collaborators need
+and what other collaborators may need
+and begin to design entire systems that can benefit more than one group at a time.
+
+## 3. Problem Shepherding: Getting updates, gathering feedback
+
+As mentioned in the article,
+it's tempting for a data scientist to dive into the problem for an extended period
+and come back up with a solution that may impress a collaborator.
+
+Within a biotech context, this is junior-level thinking --
+and an easy way to lose the trust
+of sharp and well-trained PhD-level scientists and leaders.
+Universities train PhDs to question everything they don't understand.
+No assumption will be left unturned.
+
+A junior-thinking data scientist who keeps themselves disconnected to do a "big reveal"
+will likely not understand the questions the laboratory scientists will ask.
+They may build something they don't understand and are unwilling to adopt and use.
+
+By contrast, the senior-thinking data scientist
+who makes the concerted effort to jointly co-create the solution
+with the laboratory scientist
+will cultivate trust in the solution,
+build their vocabulary within the scientific domain,
+and construct a library of misconceptions and assumptions
+they can anticipate and address in future builds.
+
+## 4. Solution Translating: Speaking in the language of the audience
+
+Following the original article, speaking the audience's language is paramount.
+As you might have guessed from the previous points,
+when developing solutions for laboratory science,
+we need to speak the language of laboratory science throughout the entire conversation.
+It's insufficient to stop at general questions that sound like:
+
+- What's the problem that you're facing?
+- What are possible solutions that you've tried to implement?
+
+By contrast, the questioning strategy that garners trust
+involves progressively asking more and more specific questions.
+Notice the specificity level of the questions above in section 2.
+In my books, those are only the _basic_ questions;
+our questions are best when they show that we truly understand the underlying biology,
+chemistry, immunology, analytical chemistry, organic chemistry,
+or other theory that backs a problem.
+When we _also_ speak the vocabulary of the laboratory methods, shown for example,
+by actively questioning how experiments are designed
+and possessing an order of magnitude intuition about assay throughputs,
+that trust with laboratory scientists is solidified.
+---
+pub_date: 2023-09-09
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post,
+I reflect on the importance of four key skills for data scientists in the biotech field:
+problem spotting, problem scoping, problem shepherding, and solution translating.
+These came from an article in the [Harvard Business Review](https://hbr.org/2023/09/4-skills-the-next-generation-of-data-scientists-needs-to-develop).
+I show by example the need to understand the real issues faced by our collaborators,
+ask probing questions,
+maintain regular communication,
+and speak the language of the audience -- the last one being crucial.
+These skills are crucial in building trust,
+understanding the underlying science,
+and developing effective solutions.
+---
+tags:
+
+data science
+biotech research
+machine learning
+problem spotting
+problem scoping
+problem shepherding
+solution translating
+laboratory science
+protein engineering
+antibody therapies
