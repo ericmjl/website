@@ -1,0 +1,90 @@
+title: Interviewing Data Science Candidates with Code Reviews
+---
+author: Eric J. Ma
+---
+body:
+
+_Note: This is an excerpt from my longer-form essay on [Hiring and Interviewing Data Scientists](https://ericmjl.github.io/essays-on-data-science/people-skills/hiring/#coding-skills)_
+
+I have found one way to deeply evaluate a candidate's coding skills, which I would like to share here. In this interview question, I would ask the candidate to bring a piece of code they are particularly proud of to the interview. We would then go through the code together, code-review style.
+
+We intentionally ask candidates to pick the code they are proud of, which gives them a home-court advantage. They should be able to explain their code better than anyone else. They also won't need to live up to an imagined standard of excellence. Additionally, because this is their best work, we gain a glimpse into what standards of excellence they hold themselves to.
+
+During the code review, I would ask the candidate questions about the code. These are some of the questions that I would cover:
+
+What's the purpose of the code?
+How is it organized? Are there other plausible ways of organizing the code?
+What tradeoffs did the candidate make in choosing that particular code organization?
+Are there parts of the code that remain dissatisfactory, and if so, how would you improve it in the future?
+That 4th question is particularly revealing. No code is going to be perfect, even my own. As such, if a candidate answers "no" to that question, then I would be wary of their coding skills. A "no" answer usually betrays a Dunning-Kruger effect, where the candidate thinks they are better than they actually are.
+
+That said, even a "yes" answer with superficial or scant details betrays a lack of thought into the code. Even if the code is, in my own eyes, very well-written, I would still expect the candidate to have some ideas on where the code could be extended for a logical expansion of use cases, refactored, or better tested. If the candidate cannot provide details on these ideas, it would betray their shallow thinking about the problem for which they wrote the code.
+
+Here is my rubric for assessing coding skills.
+
+**Did the candidate offer the details mentioned above without prompting?**
+
+This is a sign of experience;
+they know how to handle a code review, which we often do,
+and are usually confident in their knowledge of
+their code's strengths and weaknesses.
+
+**How well-organized was the code? Does it reflect idiomatic domain knowledge, and if so, how?**
+
+Organizing code logically is a sign of
+thoroughly thinking through the problem domain.
+Conversely, messy code usually suggests that
+the candidate is not well-versed in the problem domain
+and hence does not have a well-formed opinion on
+how they can organize code to match their domain knowledge.
+Additionally, because code is read more than written,
+a well-organized library of code will be easily reusable by others,
+thereby giving our team a leverage multiplier in the long run.
+
+**How well-documented was the code? In what ways does the documentation enable reusability of the code?**
+
+Documentation is a sign of thoughtfulness.
+In executing our projects,
+we consider the problem at hand
+_and_ the reusability of the code in adjacent problem spaces.
+Documentation is crucial here.
+Without good documentation,
+future colleagues would have difficulty understanding the code
+and how to use it.
+
+**Did the candidate exhibit defensive behaviors during the code review?**
+
+A positive answer to this question is a red flag for us.
+We want to hire people who are confident in their skills
+but humble enough to accept feedback.
+Defensive behaviors shut down feedback,
+leading to a poor environment for learning and improvement.
+
+**How strong were reasons for certain design choices over others?**
+
+This question gives us a sense of the candidate's thought process.
+Are they thorough in their thinking, or do they rush to a solution?
+Because our team is building out machine learning systems,
+we must be careful about our design choices at each step.
+Therefore, if a candidate does not demonstrate
+thinking thoroughly through their design choices,
+then it means we will need to spend time and effort coaching this habit.
+
+---
+pub_date: 2023-09-06
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss a different approach to evaluating a candidate's coding skills during an interview. I ask them to bring a piece of code they're proud of and conduct a code-review style discussion. This method reveals their standards of excellence, their ability to explain and defend their work, and their thought process behind their design choices. I also share a rubric for assessing coding skills, which includes factors like code organization, documentation, and the candidate's response to feedback.
+---
+tags:
+
+data science
+hiring
+interviewing
+code review
+coding skills
+candidate assessment
+documentation
+design choices
+machine learning
