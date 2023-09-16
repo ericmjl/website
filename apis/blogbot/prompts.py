@@ -6,9 +6,12 @@ This is a blog post that I just wrote.
 
 Please compose for me a LinkedIn post
 that entices my network on LinkedIn to read it.
+I usually like to open off with a question that the post answers.
 Ensure that there is a call to action to interact with the post after reading
 to react with it, comment on it, or share the post with others.
 Include hashtags inline with the LinkedIn post and at the end of the post too.
+Hashtags should be all lowercase.
+Ensure that there is a placeholder for me to paste in the URL.
 Please return this for me in JSON format using the following schema:
 
     "post_text": "post text goes here"
@@ -44,12 +47,14 @@ This is a blog post that I just wrote:
 
 Please compose for me a Twitter post
 that entices my followers on Twitter to read it.
+I usually like to open off with a question that the post answers.
 Ensure that there is a call to action to interact with the post after reading it,
-such as retweeting, commenting, or sharing it with others,
+such as retweeting, commenting, or sharing it with others.
 Include hashtags inline with the Twitter post.
+Hashtags should be all lowercase.
+Ensure that there is a placeholder for me to paste in the URL.
 
 Please return this for me in JSON format using the following schema:
-
 
     "post_text": "post text goes here"
 
