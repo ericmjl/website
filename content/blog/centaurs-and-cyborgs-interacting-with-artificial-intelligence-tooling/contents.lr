@@ -1,0 +1,34 @@
+title: Centaurs and Cyborgs: Interacting with Artificial Intelligence Tooling
+---
+author: Eric J. Ma
+---
+body:
+
+I just had a chance to read [this excellently written article](https://www.oneusefulthing.org/p/centaurs-and-cyborgs-on-the-jagged) on how Boston Consulting Group consultants interacted with Artificial Intelligence tooling. Within there was this concept that described the two kinds of users of AI tooling: Centaurs and Cyborgs. Quoting from the article,
+
+> Centaur work has a clear line between person and machine, like the clear line between the human torso and horse body of the mythical centaur.  Centaurs have a strategic division of labor, switching between AI and human tasks, allocating responsibilities based on the strengths and capabilities of each entity. When I am doing an analysis with the help of AI, I often approach it as a Centaur. I will decide on what statistical techniques to do, but then let the AI handle producing graphs. In our study at BCG, centaurs would do the work they were strongest at themselves, and then hand off tasks inside the jagged frontier to the AI.
+>
+> On the other hand, Cyborgs blend machine and person, integrating the two deeply. Cyborgs don't just delegate tasks; they intertwine their efforts with AI, moving back and forth over the jagged frontier. Bits of tasks get handed to the AI, such as initiating a sentence for the AI to complete, so that Cyborgs find themselves working in tandem with the AI. This is how I suggest approaching using AI for writing, for example. It is also how I generated two of the illustrations in the paper (the Jagged Frontier image and the 54 line graph, both of which were built by ChatGPT, with my initial direction and guidance)
+
+Both reflect how I work with AI tools. My blog posts are written in "Centaur" mode: I write the posts, but delegate tag creation, summarization, and social media post composition to GPT4. The same goes for my day-to-day work. Intellectual synthesis is done by me, the human, but summarization is done by LLMs. On the other hand, modelling work, for me, is done in Cyborg mode. Model conceptualization is done by me, the human, but model code writing is done by an LLM, but I switch back to human-driving when doing verification of the correctness of the code.
+
+This framework also gives me a vocabulary to talk about how we can _integrate_ high-power ML tooling into AI-enabled biotech research. For example, in order to integrate the use of ML models into protein engineering and design, for example, we can adopt a Centaur mode where a library designs an initial library, while a human refines the library design before sending it off for testing. Or we can have Cyborg mode, where AI models automatically decompose a chromatogram into constituent peaks, humans annotate experimental designs onto a collection of chromatograms, and more automated standardized statistical analysis takes place to infer key parameters.
+
+I don't think the two modes are mutually exclusive; the idea probably can be refined further. I'd be curious to hear what your thoughts are on this!
+---
+pub_date: 2023-09-17
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss the concept of Centaurs and Cyborgs in relation to how consultants interact with AI tooling. Centaurs have a clear division of labor between humans and AI, while Cyborgs deeply integrate the two. I explain how I personally work in Centaur mode for tasks like writing blog posts, delegating certain aspects to AI, and in Cyborg mode for modeling work. I also explore how this framework can be applied to integrating ML tooling into biotech research. Overall, the two modes are not mutually exclusive and can be further refined.
+---
+tags:
+
+artificial intelligence
+centaurs
+cyborgs
+ai tooling
+integration
+biotech research
+ml models
+automation
