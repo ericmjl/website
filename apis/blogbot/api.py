@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 from typing import Annotated
 from urllib.parse import unquote
-import requests
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
@@ -69,6 +68,8 @@ async def social_media(
     if response.status_code == 200:
         response = bot(prompt(post_body))
         text = json.loads(response.content)["post_text"]
+        if post_type == "tags":
+            text = "\n".join(text.split(","))
     else:
         text = "Error"
     return text
