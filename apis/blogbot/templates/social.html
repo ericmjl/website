@@ -10,12 +10,21 @@
 <body>
     <h1>Eric's Blog Bot</h1>
     <form id="form" name="form">
-        <label for="blog_url">Choose one of the latest Blog Posts</label>
-        <select name="blog_url">
-            {% for url, title in latest_blog_posts.items() %}
-            <option value="{{ url }}">{{ title }}</option>
-            {% endfor %}
+        <label for="base_url">Base URL</label>
+        <select name="base_url" hx-get="/latest-blog-posts" hx-target="#blog-url">
+            <option value="http://localhost:5959/blog/">http://localhost:5959/blog/</option>
+            <option value="https://ericmjl.github.io/blog/">https://ericmjl.github.io/blog/</option>
         </select>
+
+        <div id="blog-selection">
+            <label for="blog_url">Choose one of the latest Blog Posts</label>
+            <select name="blog_url" id="blog-url">
+                {% for url, title in latest_blog_posts.items() %}
+                <option value="{{ url }}">{{ title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <button hx-post="/linkedin" hx-target="#linkedin-post" hx-swap="innerHTML" hx-indicator="#linkedin-spinner"
             type="submit">Compose LinkedIn Post</button>
         <img id="linkedin-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
