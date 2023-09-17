@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 from typing import Annotated
-
+from urllib.parse import unquote
 import requests
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Form, Request
@@ -31,11 +31,24 @@ templates = Jinja2Templates(directory="apis/blogbot/templates")
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     latest_blog_posts = get_latest_blog_posts(base_url="http://localhost:5959/blog/")
-    print(latest_blog_posts)
     return templates.TemplateResponse(
         "social.html",
         context={"request": request, "latest_blog_posts": latest_blog_posts},
     )
+
+
+@app.get("/latest-blog-posts", response_class=HTMLResponse)
+async def get_latest_blog_posts_api(request: Request):
+    base_url = request.query_params.get("base_url")
+    base_url = unquote(base_url)
+    print(base_url)
+    latest_blog_posts: dict[str, str] = get_latest_blog_posts(base_url=base_url)
+    print(latest_blog_posts)
+    response = ""
+    for url, title in latest_blog_posts.items():
+        response += f"<option value='{url}'>{title}</option>\n"
+    print(response)
+    return response
 
 
 @app.post("/{post_type}", response_class=HTMLResponse)
