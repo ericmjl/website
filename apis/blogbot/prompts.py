@@ -64,13 +64,16 @@ Please return this for me in JSON format using the following schema:
 
 def compose_tags(text):
     prompt = f"""
-Generate me up to 10 tags for this blog post.
-Maximum two words. All lowercase. No `#` symbol is needed.
-Spaces are okay.
+Generate for me 10 tags for this blog post.
+Maximum two words.
+All lowercase.
+No `#` symbol is needed.
+Spaces are okay, so for example, if you have "webdevelopment",
+you can change it to "web development".
 Here is the blog post: {text}.
-Return as JSON with key='post_text'
-and value=<the tags concatenated as one string with linebreaks>.
-Ensure that it is valid JSON!
+Please return this for me in JSON format using the following schema:
+
+    "post_text": "tag1,tag2,tag3,..."
     """
     return prompt
 
