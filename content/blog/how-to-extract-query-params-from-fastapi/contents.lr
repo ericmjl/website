@@ -1,0 +1,79 @@
+title: How to extract query params from FastAPI
+---
+author: Eric J. Ma
+---
+body:
+
+Today, I learned how to extract query parameters from FastAPI.
+
+This was within the context of a blog writing assistant that I was making. I used HTM[L/X] for my frontend and FastAPI for the backend. ([HTMX](https://htmx.org/) rocks, btw, go check it out!) What I wanted to do was to make an HTML `<select>` tag's `<options>` depend on another `<select>`. As it turned out, the HTMX devs already had foreseen many people needing this example and [wrote it up as part of the examples](https://htmx.org/examples/value-select/).
+
+What intrigued me was that the example used a GET request to the API endpoint. This meant that I would get a URL that looked like this:
+
+```text
+http://localhost:8732/get-latest-blog-posts?base_url=https%3A%2F%2Fericmjl.github.io%2Fblog%2F
+```
+
+There were two problems that I didn't know how to solve at first.
+
+First, how do I access the key-value pair `base_url=https%3A%2F%2Fericmjl.github.io%2Fblog%2F` within Python?
+
+Second, given that I knew how to access the key `base_url`, how do I get rid of those `%3A`s and `%2F`s?
+
+A bit of Googling did the trick.
+
+## Access GET request key-value pairs
+
+To access key-value pairs, the API endpoint must accept a Request object. Then, we can access `request.query_params`, an immutable dictionary, from the request object. The code looks like this:
+
+```python
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+
+app = FastAPI()
+
+@app.get("/latest-blog-posts", response_class=HTMLResponse)
+async def get_latest_blog_posts_api(request: Request): # <-- request: Request is important!
+    base_url = request.query_params.get("base_url") # <-- get key-value pairs from .query_params!
+```
+
+I got this answer from [this Stackoverflow post](https://stackoverflow.com/a/68777251).
+
+## Properly format the URL
+
+To properly format the URL, we need to use the `urllib.parse` submodule, part of the Python standard library. The code looks like this:
+
+```python
+from urllib.parse import unquote
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+
+app = FastAPI()
+
+@app.get("/latest-blog-posts", response_class=HTMLResponse)
+async def get_latest_blog_posts_api(request: Request):
+    base_url = request.query_params.get("base_url")
+    base_url = unquote(base_url). # <-- use unquote here!
+```
+
+I got inspiration for this problem from [this StackOverflow post](https://stackoverflow.com/a/72815364).
+
+That was the trickiest part for me here. I hope this piece of information is of use to you as well!
+---
+pub_date: 2023-09-17
+---
+tags:
+
+til
+htmx
+fastapi
+web development
+programming
+frontend
+backend
+python
+requests
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I learned how to extract query parameters from FastAPI. I discovered how to access key-value pairs from a GET request using the `request.query_params` dictionary. Additionally, I found a solution to properly format URLs by using the `urllib.parse` submodule. This information was crucial in developing a blog writing assistant with a frontend in HTMX and a backend in FastAPI. Overall, it was a valuable learning experience that I hope will be useful to others as well.
