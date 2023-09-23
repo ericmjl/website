@@ -12,10 +12,11 @@ We intentionally ask candidates to pick the code they are proud of, which gives 
 
 During the code review, I would ask the candidate questions about the code. These are some of the questions that I would cover:
 
-What's the purpose of the code?
-How is it organized? Are there other plausible ways of organizing the code?
-What tradeoffs did the candidate make in choosing that particular code organization?
-Are there parts of the code that remain dissatisfactory, and if so, how would you improve it in the future?
+- What's the purpose of the code?
+- How is it organized? Are there other plausible ways of organizing the code?
+- What tradeoffs did the candidate make in choosing that particular code organization?
+- Are there parts of the code that remain dissatisfactory, and if so, how would you improve it in the future?
+
 That 4th question is particularly revealing. No code is going to be perfect, even my own. As such, if a candidate answers "no" to that question, then I would be wary of their coding skills. A "no" answer usually betrays a Dunning-Kruger effect, where the candidate thinks they are better than they actually are.
 
 That said, even a "yes" answer with superficial or scant details betrays a lack of thought into the code. Even if the code is, in my own eyes, very well-written, I would still expect the candidate to have some ideas on where the code could be extended for a logical expansion of use cases, refactored, or better tested. If the candidate cannot provide details on these ideas, it would betray their shallow thinking about the problem for which they wrote the code.
