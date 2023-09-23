@@ -1,0 +1,180 @@
+title: How to automatically write git commit messages
+---
+author: Eric J. Ma
+---
+body:
+
+(The alternative title to this blog post is actually "How I made LlamaBot able to write commit messages automagically.")
+
+I've finally figured out how to automatically write git commit messages properly _within_ the `git` workflow!
+
+Commit messages are handy for tracking the history of a project, but it is challenging to write informative ones.
+There are conventions for writing commits -- one is aptly named [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+If you read through it, you'll find it's quite a handful to remember, just like [Semantic Versioning](https://semver.org/).
+Yet, the conventions exist because they're helpful!
+If we write commits that follow the Conventional Commits specification,
+we gain a git history that makes it easy to:
+
+1. Figure out on which commit a specific change was done (and hence be able to study it or even undo it directly),
+2. Use the collection of commit message headers and bodies to write out accurate and succinct change logs.
+
+For data scientists, the commit messages can be even handier: if we commit one notebook that corresponds to one experiment, then an accurate commit message that summarizes the experiment goals (as described at the top of a notebook) and results (as described at the end of a notebook) essentially lets us have a summarized laboratory notebook.
+
+But here's the kicker: great commit messages take time to write. And nobody has that luxury of time, right? (Unless you're a PhD student!) Nobody can write that level of great commit messages, right?
+
+No longer!
+
+As you might know, I'm hacking on [`llamabot`](https://github.com/ericmjl/llamabot), which is a Pythonic interface to Large Language Models (LLMs) hosted by OpenAI.
+One of the things I thought LlamaBot would be able to do is to write commit messages based on the `git diff` between the current state of the repository and the previous commit.
+The way this works is that we feed in the `git diff` output into a LlamaBot SimpleBot and prompt it to write a commit message that follows the Conventional Commits specification.
+
+## The Prompt
+
+So, what does the prompt look like?
+
+It's essentially the Conventional Commits specification plus a few more instructions! Here it is taken [directly from the source code](https://github.com/ericmjl/llamabot/blob/127b6c988eedf6673c487f5c418f3bd9c21825fe/llamabot/prompt_library/git.py#L31):
+
+```python
+def write_commit_message(diff: str):
+    """Please write a commit message for the following diff.
+
+    {{ diff }}
+
+    # noqa: DAR101
+
+    Use the Conventional Commits specification to write the diff.
+
+    [COMMIT MESSAGE BEGIN]
+    <type>[optional scope]: <description>
+
+    [optional body]
+
+    [optional footer(s)]
+    [COMMIT MESSAGE END]
+
+    The commit contains the following structural elements,
+    to communicate intent to the consumers of your library:
+
+    fix: a commit of the type fix patches a bug in your codebase
+        (this correlates with PATCH in Semantic Versioning).
+    feat: a commit of the type feat introduces a new feature to the codebase
+        (this correlates with MINOR in Semantic Versioning).
+    BREAKING CHANGE: a commit that has a footer BREAKING CHANGE:,
+        or appends a ! after the type/scope,
+        introduces a breaking API change
+        (correlating with MAJOR in Semantic Versioning).
+        A BREAKING CHANGE can be part of commits of any type.
+
+    types other than fix: and feat: are allowed,
+    for example @commitlint/config-conventional
+    (based on the Angular convention) recommends
+    build:, chore:, ci:, docs:, style:, refactor:, perf:, test:, and others.
+
+    footers other than BREAKING CHANGE: <description> may be provided
+    and follow a convention similar to git trailer format.
+
+    Additional types are not mandated by the Conventional Commits specification,
+    and have no implicit effect in Semantic Versioning
+    (unless they include a BREAKING CHANGE).
+    A scope may be provided to a commit's type,
+    to provide additional contextual information and is contained within parenthesis,
+    e.g., feat(parser): add ability to parse arrays.
+    Within the optional body section, prefer the use of bullet points.
+
+    Final instructions:
+
+    1. Do not fence the commit message with back-ticks or quotation marks.
+    2. Do not add any other text except the commit message itself.
+    3. Only write out the commit message.
+
+    [BEGIN COMMIT MESSAGE]
+    """
+```
+
+But that alone doesn't help us much. This prompted bot is magical when it is inserted _at precisely the place that's needed_: after pre-commit hooks run and before we edit the commit message.
+
+## Composing the Commit Message
+
+To compose the commit message, we must first get the diff and feed it into the commit message bot. You can see it below, [lifted from the original source](https://github.com/ericmjl/llamabot/blob/127b6c988eedf6673c487f5c418f3bd9c21825fe/llamabot/cli/git.py#L98):
+
+```python
+@gitapp.command()
+def compose_commit():
+    """Autowrite commit message based on the diff."""
+    try:
+        diff = get_git_diff()
+        bot = commitbot()
+        bot(write_commit_message(diff))
+    except Exception as e:
+        echo(f"Error encountered: {e}", err=True)
+        echo("Please write your own commit message.", err=True)
+```
+
+As you can see, if there's _any_ error encountered, we still need to enable code committers to write their own manual commit message, so we have a graceful fallback by echoing any errors that show up but not throwing the error. (h/t Andrew Giessel for this design choice.)
+
+But this alone isn't good enough. We must also run the bot after commit hooks and before editing the message.
+
+## `prepare-commit-msg` hook
+
+Turns out, there's a git hook that runs _right after_ the pre-commit hooks and right before editing the message, and it's called the `prepare-commit-msg` hook. Installing hooks manually is often foreign to data scientists (and I'm guessing a significant fraction of software developers too), so `llamabot` provides a way of installing the hook, once again [lifted from the source](https://github.com/ericmjl/llamabot/blob/127b6c988eedf6673c487f5c418f3bd9c21825fe/llamabot/cli/git.py#L74):
+
+```python
+@gitapp.command()
+def install_commit_message_hook():
+    """Install a commit message hook that runs the commit message through the bot.
+
+    :raises RuntimeError: If the current directory is not a git repository root.
+    """
+    # Check that we are in a repository's root. There should be a ".git" folder.
+    # Use pathlib to verify.
+    if not Path(".git").exists():
+        raise RuntimeError(
+            "You must be in a git repository root folder to use this command. "
+            "Please `cd` into your git repo's root folder and try again, "
+            "or use `git init` to create a new repository (if you haven't already)."
+        )
+
+    with open(".git/hooks/prepare-commit-msg", "w+") as f:
+        contents = """#!/bin/sh
+llamabot git compose-commit > .git/COMMIT_EDITMSG
+"""
+        f.write(contents)
+    os.chmod(".git/hooks/prepare-commit-msg", 0o755)
+    echo("Commit message hook successfully installed! 🎉")
+```
+
+So to install the hook, one just has to do the following:
+
+```bash
+llamabot git install-commit-message-hook
+```
+
+This is done once per repository. Note that `llamabot` must be on the `PATH` for the hook to work!
+
+## How in the world did I come to know this??
+
+`git hooks` feel like esoteric knowledge. The most commonly known one is the pre-commit hooks. However, the `prepare-commit-msg` hook is probably not very well-known. As things turned out, I had to ask GPT-4 how to do this a few times with a slightly more refined question each time.
+
+My first question was, "how do I compose a commit message as part of the pre-commit hooks?" which, given my faulty model of git at that point, was the entirely wrong question to ask.
+
+It took me 3-4 tries to get to "how do I compose a commit message using the diff between my current staged changes and the previous commit and use that diff with a SimpleBot program that can automatically write messages to COMMIT_MESSAGE_EDIT" (notice how I even got the filename wrong!). That's when GPT-4 alerted me to the presence of the `prepare-msg-hook`, which I then read up on the [Git book](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks). Only then was my mental model clarified and correct.
+
+I've learned from this that interacting with LLMs requires a certain finesse. GPT-4 can give great code solutions (i.e. "the how") if I can describe with sufficient precision what I'm trying to accomplish (i.e. "the what"). A general description of "the what" doesn't cut it. If you're trying to solve a problem with LLMs, know that possessing precision and clarity in your thinking can go a long way to effectively using LLMs.
+---
+pub_date: 2023-09-23
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss how I used LlamaBot, a Pythonic interface to Large Language Models (LLMs), to automatically write git commit messages following the Conventional Commits specification. By feeding the git diff into the LlamaBot SimpleBot, I was able to generate informative commit messages that make it easy to track project history and create accurate change logs. I also explain how to install the prepare-commit-msg hook to run the LlamaBot after pre-commit hooks and before editing the commit message. Interacting with LLMs requires precision and clarity in thinking to effectively utilize their capabilities.
+---
+tags:
+
+commit messages
+conventional commits
+git workflow
+git
+llamabot
+python
+pre-commit
+software development
+data science
