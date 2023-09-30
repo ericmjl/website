@@ -1,0 +1,63 @@
+title: How automating git workflows improves data scientists
+---
+author: Eric J. Ma
+---
+body:
+
+As I've been working on automated Git tooling (i.e. automated commit messages and release notes powered by LLMs), I've been thinking about how this applies to data scientists' workflows.
+
+When I was a front-line data scientist, I found that committing work was sometimes a psychological barrier. The reason for this was because of the commit messages. Having been previously taught that we commit code when it feels done, committing in-progress exploratory work seemed to break the rule of not committing work that was in-progress.
+
+However, the exploratory nature of data science work means that we often need to commit work that is in progress. That may look like a Jupyter notebook with commented code (but not fully-fleshed out commentary in the Markdown cells). Committing the notebook in its unfinished state at the end of the day with an uninformative commit message feels like a high cognitive barrier.
+
+However, if we had an automatic commit message writer, we might have a commit message that looks like this:
+
+```bash
+commit 0f0155cea572dc980ecddb3dfcce9723c7904a3f
+Author: Eric Ma <eric**********@*****.com>
+Date:   Sun Sep 17 20:19:23 2023 -0400
+
+    feat: Implement binary genotype-phenotype model
+
+    This commit adds the implementation of a binary genotype-phenotype model in Python. The model is based on a mathematical framework proposed in a research paper by Yeonwoo Park. The implementation includes functions to calculate zeroth, first, and second-order effects, as well as to predict the phenotype value for a given genotype. The code has been tested with a simple binary genotype system with 3 positions and will be further tested with a 5-genotype system. This implementation aims to provide a reference-free analysis of genotype-phenotype relationships.
+```
+
+Notice the phrase:
+
+> and will be further tested with a 5-genotype system
+
+This is the kind of thing I wouldn't write on my own! Leaving notes for myself in the commit log, based on the notes I leave for myself in my notebooks, actually makes the commit log useful for me. My own commit message would look more like this:
+
+```bash
+commit 0f0155cea572dc980ecddb3dfcce9723c7904a3f
+Author: Eric Ma <eric**********@*****.com>
+Date:   Sun Sep 17 20:19:23 2023 -0400
+
+    Saving work.
+```
+
+My lazy brain's commit message is uninformative and unhelpful for resuming work later on.
+
+I think data scientists don't take advantage of commit logs as much as we possibly could because we're too lazy to write commit logs ourselves. But if we have good commit logs, **then we'll have the equivalent of a digital lab notebook that summarizes our work automagically as we go about our work.** And that lab notebook is going to be incredibly helpful for our work.
+
+----
+
+If you're interested in trying out a service I've built that will automatically compose commit messages on every commit, please check out [GitBot](https://ericmjl.github.io/gitbot)!
+---
+pub_date: 2023-09-30
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss the importance of commit messages for data scientists and how automated commit message writers can improve their workflows. I highlight the psychological barrier of committing in-progress work and the benefits of having informative commit logs. By using automatic commit message generation, data scientists can create a digital lab notebook that summarizes their work and aids in resuming tasks. This blog post emphasizes the value of good commit logs in maximizing productivity for data scientists.
+---
+tags:
+
+automation
+git
+commit messages
+release notes
+data workflow
+data science
+jupyter
+notebook
+lab notebook
