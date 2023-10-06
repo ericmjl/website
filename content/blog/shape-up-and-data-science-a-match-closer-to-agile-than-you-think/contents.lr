@@ -1,0 +1,302 @@
+title: Shape Up and Data Science: A Match Closer to Agile Than You Think
+---
+author: Eric J. Ma
+---
+body:
+
+As I've delved deeper into the realms of data science and software methodologies,
+I've often reflected on Agile principles.
+Agile's core ethos – adaptability, swift iterations, and collaborative engagement –
+have always resonated with me.
+Yet, over the years, I've observed a myriad of interpretations,
+with Scrum emerging as a dominant favourite.
+But here's a question I've grappled with:
+Does Scrum genuinely cater to every discipline's unique needs?
+Recently, I stumbled upon Shape Up, Basecamp's brainchild.
+In this piece, I want to dissect
+whether Shape Up aligns more seamlessly with data science.
+Let's see if, in some unexpected ways,
+it might even echo the spirit of Agile
+more closely than current Scrum interpretations do.
+
+## Understanding Agile Principles
+
+Before we go on, we must establish what Agile really is about.
+At its core, Agile values:
+
+1. Individuals and interactions over processes and tools.
+2. Working solutions over comprehensive documentation.
+3. Customer collaboration over contract negotiation.
+4. Responding to change over following a plan.
+
+Agile isn't about specific rituals;
+it's about mindsets and principles emphasizing adaptability and delivering value.
+(That Agile isn't about particular rituals makes the structured approach of Scrum,
+with all of its, ahem, _ceremonies_, particularly jarring and ironic.)
+
+## Scrum's Assumptions About Engineers vs.
+The Unique Needs of Data Scientists
+
+At its core, Scrum was developed with software engineering projects in mind.
+This lineage inherently carries certain assumptions about the team members involved:
+
+**Interchangeability of Engineers:**
+One of the implicit assumptions in Scrum
+is that engineers are somewhat interchangeable.
+In a Scrum environment,
+tasks are often broken down from user stories into smaller tickets.
+In theory, any developer on the team should be able to pick up most tickets.
+This "generalist" approach assumes a relatively uniform skill set among team members.
+While specialization does exist in software engineering,
+Scrum teams often aim for a degree of cross-functionality
+where members can interchange roles to some extent.
+This is why we hear statements in Scrum teams like, "Can anyone take this ticket?"
+
+**Short Feedback Loops:**
+Scrum thrives on rapid iterations and quick feedback.
+It assumes that engineers can produce a piece of functionality,
+however small, that can be reviewed, tested,
+and potentially shipped within a short sprint duration.
+As such, Scrum assumes that the nature of the work allows for such quick turnarounds.
+
+**Homogenized Progress Tracking:**
+Using tools like burndown charts
+and the concept of velocity assume that tasks (or story points)
+can be somewhat uniformly estimated and tracked across sprints.
+This presupposes a certain consistency in the type and complexity of tasks across sprints.
+
+Contrast this with the world of data science:
+
+**Deep Domain Specialization:**
+Data scientists often possess deep domain specialization.
+One might be an expert in natural language processing.
+At the same time, another might specialize in deep learning for computer vision.
+Yet another may be a recovering wet lab biologist
+with over a decade of molecular biology domain expertise.
+Their expertise isn't just about knowledge;
+it's often about years of experience and intuition built over time.
+This makes it challenging to have interchangeable roles,
+as we might find in Scrum-based software teams.
+
+**Complex Tooling Expertise:**
+Beyond domain knowledge,
+data scientists need expertise in specific computational toolsets.
+Building a neural network in TensorFlow differs from setting up
+a distributed data processing pipeline in Spark.
+This isn't about merely knowing a programming language
+but mastering a very complex and deep stack of computational tools.
+
+**Varied Feedback Durations:** Unlike software tasks that can often be demoed quickly
+(I am thinking of those that involve
+building user interfaces or standing up a new database),
+a data science task, such as training a machine learning model,
+might require days or even weeks before its efficacy can be evaluated;
+additionally, data scientists often need to use their deep domain expertise
+in working with collaborators to really dig at the heart of a problem.
+The feedback loop can be long and is not always predictable.
+
+**Non-uniform Task Complexity:**
+In data science, two tasks that sound similar in scope
+can vary wildly in complexity due to the nuances of data
+or the intricacies of algorithms.
+This makes standardized estimation techniques,
+like story points, challenging to apply consistently.
+
+In essence, while Scrum's assumptions about engineers foster a fluid,
+iterative environment for software development,
+data science requires a more nuanced approach.
+The deep specialization and intricate tooling knowledge needed in data science
+demand methodologies that acknowledge and cater to these unique challenges,
+something methodologies like Shape Up aim to address.
+
+## Why Shape Up Aligns Well with Data Science
+
+Let's first understand what [Shape Up]((https://basecamp.com/shapeup)) is all about.
+Shape Up is a product development methodology introduced by 37Signals,
+the creators of Basecamp, emphasizing focused work cycles,
+clear boundaries between planning and execution, and flexibility in project scope.
+Instead of traditional sprints,
+teams work in uninterrupted 6-week cycles to produce tangible outcomes.
+This is followed by a 2-week cool-down period for reflection and preparation.
+The methodology prioritizes high-impact tasks ("bets"),
+uses "fat marker sketches" for broad-stroke planning,
+and champions team autonomy,
+allowing for adaptive solutions
+without getting bogged down in exhaustive task details or constant back-and-forth.
+
+Shape Up, with its unique structure, offers solutions:
+
+**Deep Work Periods**:
+Complex analyses and model developments require deep focus,
+which the longer uninterrupted cycles in Shape Up support.
+
+**Betting on Value**:
+Shape Up emphasizes betting on high-impact tasks,
+ensuring efforts align with potential outcomes.
+This aligns well with the way the best data scientists are trained --
+this person would have a research background, from which follows the:
+Instinct for impact rather than just methodological complexity.
+The ability to clarify and navigate through imprecisely defined problems
+and pick the one with the highest potential value.
+The creativity to develop more than one plausible solution to a problem
+and the technical skill to prototype all of them.
+
+**Fat Marker Sketches:**
+One of the defining characteristics of Shape Up's approach
+is using "fat marker sketches" during the shaping phase.
+These sketches provide a broad overview or blueprint
+without getting bogged down in the minute details.
+This mirrors data science operations very closely.
+Often, a general direction or the core essence of a solution
+is enough to commence with the implementation,
+as the problems data scientists face have a level of complexity
+that doesn't lend itself to concrete wire-framing or detailed lists of specifications.
+Data scientists don't always need an exhaustive list of requirements;
+a sketch that captures the crux of the problem can suffice,
+allowing for flexibility and on-the-fly adjustments.
+
+**Cool-Down Periods**:
+After intense cycles, these periods provide room for reflection,
+further learning, and iteration –
+vital for any data scientist to have a better sense
+of whether we have the right solution built.
+After the intensity of prototyping,
+reworking prototypes, checking with collaborators, and more,
+a cool-down period on a project enables us to
+reflect on the abstraction and generalization of our tooling to other problems,
+identify where we need to fix up our code
+to integrate better across the ecosystem of tools we've built
+and ensure that we're truly addressing
+the underlying business or research questions at hand.
+During this pause, we often find clarity,
+spot overlooked nuances,
+and garner insights that can make our solutions functional and genuinely exceptional.
+The cool-down is less about disengagement and more about taking a holistic view,
+ensuring that our work aligns with broader objectives
+and stands the test of real-world application.
+
+## How Shape Up Embodies Agile Principles
+
+Interestingly, Shape Up mirrors Agile's core values:
+
+**Responding to Change**:
+Agile prioritizes adaptability.
+Shape Up's flexible scope within fixed cycles embodies this
+by accommodating unforeseen challenges or discoveries.
+
+**Continuous Delivery**:
+Shape Up emphasizes tangible outcomes at the end of each cycle,
+aligning with Agile's emphasis on regular value delivery.
+
+**Collaboration & Trust**:
+The shaping process in Shape Up fosters trust,
+giving teams the autonomy to drive projects,
+reflecting Agile's spirit of collaboration and trust.
+
+## Where Shape-Up Needs Modification
+
+It's important to know that Shape Up isn't a perfect fit for data science projects,
+particularly those requiring research skills
+to investigate and explore before embarking on a build.
+Here are some ways that Shape Up
+may need to be adapted and modified to suit a data science project:
+
+**Allowing for Flexible Cycle Times**:
+The fixed 6-week cycle in Shape Up might not cater to
+the unpredictable nature of specific data science tasks,
+especially those grounded in deep research.
+The solution is to give data scientists the flexibility to define cycle times
+based on the nature of the problem, its complexity, the expected challenges,
+and most importantly, their appetite for the problem.
+It makes sense to give back autonomy to the data scientists in the DS team
+to define a date they've got the appetite to commit to
+rather than impose a fixed schedule.
+This is because some investigations require shorter bursts of work
+while others may need extended periods of deep research.
+The person doing the actual work is most likely the one who will have
+the best sense of how long things will take.
+
+**More Iterative Approaches Within Cycles**:
+Data science projects often involve continuous iterations, refinements, and validations,
+especially when tuning models or algorithms.
+Instead of waiting for the end of a cycle for a shippable result,
+teams should flexibly integrate iteration checkpoints within cycles
+where interim findings, model versions, or hypothesis validations
+are reviewed and refined,
+thereby allowing for pivots to more valuable areas of exploration
+and detours for sanity checking,
+
+**Diverse Feedback Mechanisms**:
+Unlike software products,
+data science outputs might need feedback from diverse stakeholders –
+domain experts, data engineers, business analysts, etc.
+Teams should incorporate just-in-time feedback loops within the Shape Up process,
+ensuring that the data solution aligns with business goals,
+domain knowledge, and technical feasibility.
+
+**Detailed In-Cycle Exploration**:
+While valuable,
+the shaping phase in Shape Up might not be exhaustive enough
+for complex data science challenges that require thorough preliminary exploration.
+Instead, teams should embrace exploration while building,
+alternatively known as "learning while prototyping".
+Doing so allows for pivoting to new hypothesized solutions
+or even reframing the entire problem
+if feedback from collaborators on early prototypes suggests the need to do so.
+
+**Handling External Dependencies**:
+Data scientists often rely on external data sources, APIs, or third-party tools.
+Delays or issues in these can impact the progress of the project.
+To solve this problem, time frames should be designed with buffer periods
+or contingency plans to handle such external dependencies,
+ensuring that projects don't get stalled due to factors outside the team's control.
+
+While Shape Up offers a structured approach to product development,
+adapting its principles to the nuanced
+and often unpredictable world of data science is necessary.
+By recognizing and addressing its potential limitations in the context of data science,
+teams can derive the best of both worlds,
+ensuring efficient, impactful, and high-quality data-driven solutions.
+
+## Conclusion
+
+Staying true to Agile's core principles
+means recognizing when alternative methodologies,
+like Shape Up, offer a better alignment,
+especially in unique domains like data science.
+It's a call to understand, adapt, and evolve,
+ensuring we don't get bogged down by ritualistic practices
+but focus on the core essence of delivering value.
+
+> **Note: This blog post was written with GPT-4 as a writing aid.
+> However, I have edited the post to accurately reflect
+> what I know and think about Scrum, Shape-Up, and Agile.
+> As such, I am willing to defend every character in this post
+> as if I were the one writing it.**
+
+---
+pub_date: 2023-10-05
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the limitations of Scrum for data science.
+I introduce Shape Up as a potential alternative.
+I discussed how Shape Up's ways of working
+align better with the unique needs of data science,
+such as deep domain specialization and varied feedback durations.
+I also highlighted how Shape Up embodies Agile's core values
+while suggesting modifications to suit data science projects better.
+Ultimately, I emphasized the importance of adaptability and delivering value,
+staying true to Agile's core principles.
+---
+tags:
+
+data science
+agile
+scrum
+shape up
+software methodologies
+product development
+deep work
+team autonomy
+adaptability
