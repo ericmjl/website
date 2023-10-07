@@ -1,0 +1,37 @@
+title: VSCode Tip: Cmd+P lets you switch to any file within a repository
+---
+author: Eric J. Ma
+---
+body:
+
+Sharing a quick tip here when using VSCode.
+
+I have noticed colleagues sometimes struggle to locate
+an exact file that they want to open when using VSCode.
+As it turns out, the Command Palette gives us a quick way
+of navigating to any file within a repository.
+
+The trick here is to do a `Cmd+P`,
+which will open up the command palette in file-browsing mode.
+From there, you can start typing keywords
+to quickly narrow down the exact file that you want to open.
+Any portion of the file path is fair game!
+
+It looks something like this (you can click on the image to zoom in):
+
+[![](./cmd-palette.png)](./cmd-palette.png)
+---
+pub_date: 2023-10-08
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share a quick tip for using VSCode. I show how to easily locate and open any file within a repository using the Command Palette. By typing keywords in the file-browsing mode, you can quickly narrow down the exact file you want to open. Have you ever struggled to find a specific file in VSCode? Read on to discover this time-saving trick!
+---
+tags:
+
+vscode
+tips and tricks
+til
+navigation
+repository
+productivity
