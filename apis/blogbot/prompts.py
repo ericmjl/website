@@ -112,9 +112,9 @@ def compose_summary(text):
         {{ text }}
 
     I need a summary of the post in 100 words or less.
-    My usual tone is to write in first person,
-    so please do so as well.
-    For example, I usually start with "In this blog post".
+    Please write in first person.
+    Please start the summary with, "In this blog post".
+    Please end the summary with a question that entices the reader to read on.
     Return as JSON with key='post_text'
     and value=<the summary>.
     Ensure that it is valid JSON!
