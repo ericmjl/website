@@ -87,8 +87,6 @@ Here's a summary table of these features.
 | **Primary Use Case**         | General-purpose with lots of pre-installed data science packages | Keeping base environment small, e.g., for Docker containers                                                                                                                                    | Access to bleeding-edge versions of packages.                                                                   |
 | **Default Installation Location** | `~/anaconda` or `~/anaconda3`             | `~/miniconda` or `~/miniconda3`                                                                                                                                                                | Not mentioned                                                                                                   |
 
-Note: Some attributes were inferred from the text to create a cohesive table format. The "Similar to Anaconda/Miniconda" in some cells indicates that the distribution inherits properties from the mentioned one but does not restate them in the provided text.
-
 ## Which to use?
 
 Depends on your persona!
