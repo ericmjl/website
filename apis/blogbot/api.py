@@ -18,6 +18,7 @@ from .prompts import (
     compose_summary,
     compose_tags,
     compose_twitter_post,
+    fix_json,
 )
 from .scraper import get_latest_blog_posts, get_post_body
 
@@ -72,10 +73,16 @@ async def social_media(
         prompt = compose_substack_post
     response, post_body = get_post_body(blog_url)
     if response.status_code == 200:
-        response = bot(prompt(post_body))
-        text = json.loads(response.content)["post_text"]
-        if post_type == "tags":
-            text = "\n".join(text.split(","))
+        social_post = bot(prompt(post_body))
+        try:
+            text = json.loads(social_post.content)["post_text"]
+            if post_type == "tags":
+                text = "\n".join(text.split(","))
+        except Exception as e:
+            print(e)
+            jsonbot = SimpleBot("You are an accurate JSON fixer.")
+            fixed_json = jsonbot(fix_json(social_post.content))
+            text = json.loads(fixed_json.content)["post_text"]
     else:
         text = "Error"
     return text
