@@ -1,0 +1,101 @@
+title: How to choose a (conda) distribution of Python
+---
+author: Eric J. Ma
+---
+body:
+
+_Note: This is an excerpt from my Data Science Bootstrap Notes, which is freely available online [here](https://ericmjl.github.io/data-science-bootstrap-notes/get-bootstrapped-on-your-data-science-projects/). If you find the notes useful and wish to support my work, please consider either purchasing a digital copy on [LeanPub](https://leanpub.com/dsbootstrap) or sending coffee money via [GitHub Sponsor](https://github.com/ericmjl) or [Patreon](https://www.patreon.com/ericmjl)._
+
+If you're a `conda` user, you may have heard of the Anaconda distribution of Python.
+In this set of notes, however, I've also referenced the Miniforge distribution of Python.
+What's the difference here?
+How do you pick which one to use?
+To answer those questions, we must first understand what is a _distribution_ of Python.
+
+## Python distributions
+
+Python can get _distributed_ to users in many ways.
+You can download it directly from the official Python Software Foundation's (PSF) website.
+Or you can install it onto your system using the official Anaconda installer,
+through Homebrew,
+or through your official Linux package manager.
+Each way of installing Python can be thought of as a distribution of Python.
+Each distribution of Python differs ever so slightly.
+Official Python from the PSF comes with just the standard library.
+Anaconda, however, ships with the standard library
+and many other packages that are relevant for data science.
+
+What is common across all Python distributions, however,
+is that it will ship with a Python executable that, at the end of installation,
+should be discoverable on your `PATH` environment variable.
+
+Most commonly, there will be a Python package installer
+that ships with the distribution as well.
+This can be `pip`, the official tool for installing Python packages,
+or it could be `conda`, which was developed by the company Anaconda.
+
+As such, the anatomy of a distribution is essentially nothing more than:
+
+- A Python interpreter that can be discovered on your `PATH`,
+- A Python package manager, and
+- Any other default Python packages that the distributor thinks you might want
+
+With that aside,
+let's look at three distributions of Python that are relevant to this set of notes.
+
+## Anaconda Python
+
+The Anaconda distribution of Python is the official distribution from Anaconda.
+It ships with a modern version of Python,
+both `pip` and `conda` package managers,
+and a whole slew of default data science packages
+(`pandas`, `numpy`, `scikit-learn`, `scipy`, `matplotlib`, for example).
+With the Anaconda distribution,
+`conda` is configured such that
+packages are installed from the `anaconda` repository of packages,
+hosted by Anaconda itself.
+Its default installation location is `~/anaconda` or `~/anaconda3`.
+
+## Miniconda Python
+
+The Miniconda Python distribution also comes from Anaconda.
+It looks like Anaconda except it ships with fewer packages in the base environment.
+You wouldn't, for example, find `pandas` installed for you.
+This was mostly intended to keep the base environment small for use within Docker containers.
+
+Its default installation location is `~/miniconda` or `~/miniconda3`.
+
+## Miniforge Python
+
+This distribution of Python comes from the open-source developer team behind `conda-forge`.
+Miniforge looks like Miniconda, but instead of configuring `conda` to pull packages from the `anaconda` repository,
+`conda` packages are instead pulled from the `conda-forge` repository of packages by default.
+This has the advantage of being able to pull more bleeding-edge versions of packages that you may use.
+Additionally, Miniforge Python ships with `mamba` as well. (See: [[Use Mamba as a faster drop-in replacement for conda]])
+
+## Which to use?
+
+Depends on your persona!
+If you're an indie hacker type, I would strongly recommend the Miniforge Python
+as it is lightweight and fast to get set up with and fully open source.
+On the other hand, if you're more inclined to want enterprise support,
+vetting of packages,
+and wish to support a company that backs so much of the Python open source world,
+then I would recommend reaching out to Anaconda and talking with their sales reps.
+---
+pub_date: 2023-10-07
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss the differences between the Anaconda, Miniconda, and Miniforge distributions of Python. Anaconda is the official distribution from Anaconda and comes with a wide range of data science packages. Miniconda is a smaller version of Anaconda, intended for use in Docker containers. Miniforge, developed by the conda-forge team, pulls packages from the conda-forge repository and includes mamba. The choice of distribution depends on your needs and preferences, with Miniforge being recommended for lightweight and open-source use, and Anaconda for enterprise support and backing the Python open source world.
+---
+tags:
+
+conda
+anaconda
+miniforge
+python distribution
+data science
+pip
+tooling
+python
