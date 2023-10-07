@@ -68,13 +68,14 @@ def compose_substack_post(text):
 
         {{ text }}
 
-    Please compose for me a post on Substack
-    that entices my readers on Substack to read it.
-    I usually like to open off with a question that the post answers.
+    Please compose for me a Substack post
+    that entices my readers on Substack to read the blog post I just gave you.
+    Please open off with a question that the post answers.
     Ensure that there is a call to action for the reader,
     such as forwarding the post to others they think may benefit from it.
     Ensure that there is a placeholder for me
     to paste in the URL to the blog post.
+    Also ensure that it is written in first-person tone.
 
     Please return this for me in JSON format using the following schema:
 
