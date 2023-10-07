@@ -1,0 +1,132 @@
+title: How to use Python functions as a template engine for prompts
+---
+author: Eric J. Ma
+---
+body:
+
+[I previously noted](/blog/2023/6/16/outlines-llm-prompt-management-and-more/) how [Outlines](https://github.com/outlines-dev/outlines) had an excellent implementation of prompt management through a Python decorator, and as such, I decided to explicitly add Outlines as a dependency for [LlamaBot](https://github.com/ericmjl/llamabot), the Pythonic LLM interface with sensible defaults that I've been working on. However, Outlines has a heavy dependency chain itself, requiring, in particular, PyTorch (and a bunch of NVIDIA packages on PyPI) as well. That felt like too much weight for the one functionality I really wanted, which was that prompt decorator. So I decided to reimplement it in my own way... using GPT-4 as a coding aid.
+
+## What Outlines does
+
+Let me back out and explain what Outlines does and how it does so.
+
+Outlines lets us to write prompts as Python docstrings. Doing so offers us the ability to organize our prompts within Python submodules, thereby enabling us to import them as Python objects. When compared to LangChain's prompt templates, Outlines' Jinja2-templates also felt much more lightweight.
+
+Here's an example of what we're going for. First off, the definition:
+
+```python
+@prompt
+def ghostwriter(desired_functionality):
+    """I would like to accomplish the following: {{ desired_functionality }}
+
+    How do I write the code for this? Please return only the code without explaining it.
+
+    Ensure that there are type hints in the function.
+    """
+```
+
+And then secondly, the result of calling `ghostwriter`:
+
+```python
+ghostwriter("Making a list of fibonnaci numbers.")
+```
+
+```text
+"I would like to accomplish the following: Making a list of fibonacci numbers.
+
+How do I write the code for this? Please return only the code without explaining it.
+
+Ensure that there are type hints in the function."
+```
+
+That text can now be passed into, say, a LlamaBot SimpleBot and thus we get back a response.
+
+Now, as I mentioned above, Outlines' dependency chain was a bit heavyweight, so I wanted to find a way to replicate the functionality within LlamaBot so that I could avoid the heavy dependency chain. I studied the original implementation [here](https://github.com/outlines-dev/outlines/blob/main/outlines/text/prompts.py#L44) but it did feel a tad too complex to understand at first glance. Additionally, I was hesitant to copy and paste verbatim the file from Outlines as that felt like stealing, even though it is, strictly speaking, an open source project. So I embarked on my journey to write a reimplementation of the functionality.
+
+## GPT-4 designs the function
+
+As it turns out, GPT-4 was incredibly good at writing a reimplementation of the desired functionality. I gave it the following specification:
+
+```text
+I need a Python function that acts as a decorator. It accepts another function that contains a docstring that is actually a Jinja2 template for strings that need to be interpolated. The function is defined without arguments , but when modified by the decorator, it should accept a variable number keyword arguments that maps onto the template. When the modified function is called, it should return the function with all keyword arguments inside the template.
+```
+
+One of the solutions I settled on, which I arrived at after a bunch of back-and-forth, was this:
+
+```python
+from functools import wraps
+import jinja2
+from jinja2 import meta
+import inspect
+
+
+def prompt(func):
+    """Wrap a Python function into a Jinja2-templated prompt.
+
+    :param func: The function to wrap.
+    :return: The wrapped function.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        """Wrapper function.
+
+        :param args: Positional arguments to the function.
+        :param kwargs: Keyword arguments to the function.
+        :return: The Jinja2-templated docstring.
+        :raises ValueError: If a variable in the docstring
+            is not passed into the function.
+        """
+        # get the function's docstring.
+        docstring = func.__doc__
+
+        # map args and kwargs onto func's signature.
+        signature = inspect.signature(func)
+        kwargs = signature.bind(*args, **kwargs).arguments
+
+        # create a Jinja2 environment
+        env = jinja2.Environment()
+
+        # parse the docstring
+        parsed_content = env.parse(docstring)
+
+        # get all variables in the docstring
+        variables = meta.find_undeclared_variables(parsed_content)
+
+        # check if all variables are in kwargs
+        for var in variables:
+            if var not in kwargs:
+                raise ValueError(f"Variable '{var}' was not passed into the function")
+
+        # interpolate docstring with args and kwargs
+        template = jinja2.Template(docstring)
+        return template.render(**kwargs)
+
+    return wrapper
+```
+
+This was a great solution that worked! It's now implemented within `llamabot`, allowing me to organize prompts within `.py` source modules more easily than before.
+
+## What did I learn?
+
+What's instructive of this experience, I think, is how to construct the prompt for a chunk of desired code. It's infeasible to ask an LLM to do something rather generic and expect it to read my mind. Rather, in order to get back desirable code from an LLM, we need to have a fairly specific idea of what we actually want. I think this really means having a level of clarity about programming -- one that can only be borne from prior experience and training doing programming itself. For coding, the outputs of an LLM are pretty much going to mirror the level of clarity that we have as programmers.
+
+On the other hand, the interactive nature of chatbots (e.g. ChatGPT or LlamaBot's ChatBot class) means we can always _refine_ the output interactively. Sometimes, this can be incredibly helpful for gaining clarity over a problem, especially if we prompt the LLM to help us clarify our thoughts. I might explore this thought further in a later blog post. As such, it isn't necessary for us to presume that we'd get our prompts right the first time round; after all, I did have to do a bit of back-and-forth with the LLM to get to the code I eventually used.
+---
+pub_date: 2023-10-06
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the use of Outlines for prompt management in Python, specifically for LlamaBot. However, due to its heavy dependencies, I decided to reimplement the functionality using GPT-4 as a coding aid. The result was a successful reimplementation that allowed me to organize prompts within `.py` source modules more easily. A lesson from this experience. is the importance of clarity in programming even when we're using LLMs to help us code.
+---
+tags:
+
+python
+llm
+gpt-4
+coding
+outlines
+llamabot
+jinja2
+prompt management
+chatbots
