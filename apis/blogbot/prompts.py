@@ -70,7 +70,9 @@ def compose_substack_post(text):
 
     Please compose for me a Substack post
     that entices my readers on Substack to read the blog post I just gave you.
-    Please open off with a question that the post answers.
+    Please address my readers by opening with,
+    "Hello fellow datanistas!"
+    And then open off with a question that the post answers.
     Ensure that there is a call to action for the reader,
     such as forwarding the post to others they think may benefit from it.
     Ensure that there is a placeholder for me
@@ -112,4 +114,16 @@ def compose_summary(text):
     Return as JSON with key='post_text'
     and value=<the summary>.
     Ensure that it is valid JSON!
+    """
+
+
+@prompt
+def fix_json(bad_json):
+    """The following is a bad JSON that was returned by your sibling bot.
+
+        {{ bad_json }}
+
+    Can you fix it for me such that its contents are preserved
+    but it is now valid JSON?
+    Return only the JSON and nothing else.
     """
