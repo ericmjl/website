@@ -41,6 +41,10 @@
             type="submit">Compose Summary</button>
         <img id="summary-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
 
+        <button hx-post="/substack" hx-target="#substack-post" hx-swap="innerHTML" hx-indicator="#substack-spinner"
+            type="submit">Compose Substack</button>
+        <img id="substack-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
+
         <button hx-post="/tags" hx-target="#tags-post" hx-swap="innerHTML" hx-indicator="#tags-spinner"
             type="submit">Generate Tags</button>
         <img id="tags-spinner" class="htmx-indicator" src="/static/img/bars.svg" />
@@ -60,6 +64,11 @@
     <div id="patreon-post-div">
         <label for="patreon-post">Patreon Post</label>
         <textarea id="patreon-post"></textarea>
+    </div>
+
+    <div id="substack-post-div">
+        <label for="substack-post">Substack</label>
+        <textarea id="substack-post"></textarea>
     </div>
 
     <div id="tags-post-div">
