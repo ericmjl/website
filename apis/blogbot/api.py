@@ -1,19 +1,23 @@
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
 from urllib.parse import unquote
+
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from llamabot import SimpleBot
+
 from .prompts import (
     compose_linkedin_post,
-    compose_twitter_post,
-    compose_tags,
-    compose_summary,
     compose_patreon_post,
+    compose_substack_post,
+    compose_summary,
+    compose_tags,
+    compose_twitter_post,
 )
 from .scraper import get_latest_blog_posts, get_post_body
 
@@ -64,6 +68,8 @@ async def social_media(
         prompt = compose_summary
     elif post_type == "patreon":
         prompt = compose_patreon_post
+    elif post_type == "substack":
+        prompt = compose_substack_post
     response, post_body = get_post_body(blog_url)
     if response.status_code == 200:
         response = bot(prompt(post_body))
@@ -86,9 +92,6 @@ def search_home(request: Request):
 
 site_path = Path("site").resolve()
 blog_path = site_path / "blog"
-
-
-from functools import lru_cache
 
 
 @lru_cache
@@ -114,7 +117,8 @@ def find_publication_date(source):
     return publication_date
 
 
-# convert publication_date into URL. Split on "-" and join with "/", and remove "0" from month and day.
+# convert publication_date into URL. Split on "-" and join with "/",
+# and remove "0" from month and day.
 def convert_pubdate_to_url(pubdate):
     """Convert publication date to URL.
 
