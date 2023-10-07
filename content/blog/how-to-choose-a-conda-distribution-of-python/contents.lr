@@ -71,7 +71,23 @@ This distribution of Python comes from the open-source developer team behind `co
 Miniforge looks like Miniconda, but instead of configuring `conda` to pull packages from the `anaconda` repository,
 `conda` packages are instead pulled from the `conda-forge` repository of packages by default.
 This has the advantage of being able to pull more bleeding-edge versions of packages that you may use.
-Additionally, Miniforge Python ships with `mamba` as well. (See: [[Use Mamba as a faster drop-in replacement for conda]])
+Additionally, Miniforge Python ships with `mamba` as well.
+
+## Summary Table
+
+Here's a summary table of these features.
+
+| Attribute                    | Anaconda Python                           | Miniconda Python                                                                                                                                                                                | Miniforge Python                                                                                                 |
+|------------------------------|-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| **Origin**                   | Official distribution from Anaconda       | Comes from Anaconda                                                                                                                                                                             | From open-source developer team behind `conda-forge`                                                             |
+| **Version of Python**        | Modern                                    | Similar to Anaconda                                                                                                                                                                             | Similar to Miniconda                                                                                             |
+| **Package Managers**         | `pip` and `conda`                         | Similar to Anaconda                                                                                                                                                                             | `conda` and ships with `mamba`                                                                                  |
+| **Default Data Science Packages** | `pandas`, `numpy`, `scikit-learn`, `scipy`, `matplotlib` | Fewer packages (e.g., `pandas` not pre-installed)                                                                                                                                               | Similar to Miniconda                                                                                            |
+| **Conda Configuration**      | Pulls from `anaconda` repository          | Pulls from `anaconda` repository                                                                                                                                                                | Pulls from `conda-forge` repository by default                                                                   |
+| **Primary Use Case**         | General-purpose with lots of pre-installed data science packages | Keeping base environment small, e.g., for Docker containers                                                                                                                                    | Access to bleeding-edge versions of packages.                                                                   |
+| **Default Installation Location** | `~/anaconda` or `~/anaconda3`             | `~/miniconda` or `~/miniconda3`                                                                                                                                                                | Not mentioned                                                                                                   |
+
+Note: Some attributes were inferred from the text to create a cohesive table format. The "Similar to Anaconda/Miniconda" in some cells indicates that the distribution inherits properties from the mentioned one but does not restate them in the provided text.
 
 ## Which to use?
 
