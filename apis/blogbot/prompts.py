@@ -29,10 +29,14 @@ def compose_patreon_post(text):
         {{ text }}
 
     Please compose for me a patreon post
-    that encourages my readers to read it and comment on it.
-    Ensure that there is a call to action to interact with the post after reading
-    to react with it, comment on it, or share the post with others.
-    Include hashtags inline with the patreon post and at the end of the post too.
+    that encourages my Patreon supporters to read it.
+    that thanks my readers for their continued support.
+    Please ensure that it starts with, "Dear Patreon supporters,".
+    Additionally, please emphasize that
+    the post will go out on social media blast later.
+    Ensure that there is a call to action
+    to interact with the post after reading,
+    such as commenting.
     Please return this for me in JSON format using the following schema:
 
         "post_text": "post text goes here"
