@@ -1,0 +1,107 @@
+title: Check docstrings blazing fast with pydoclint
+---
+body:
+
+Documenting your code is essential,
+not only for others but for your future self.
+Tools like `darglint` have been lifesavers,
+ensuring our docstrings align with the actual code.
+But as we all know, technologies evolve,
+and sometimes the tools we rely on become outdated or no longer maintained.
+
+## The Issue with Darglint
+
+I used to be a fan of `darglint`,
+but sadly, it's no longer maintained.
+This poses risks; using outdated tools might result in overlooking newer conventions
+or not being compatible with the latest Python updates.
+
+## Enter Pydoclint
+
+Thankfully, I stumbled upon [`pydoclint`](https://github.com/jsh9/pydoclint).
+Not only does it serve the same purpose as `darglint`,
+but it's also considerably faster.
+
+## Case Study: `pyjanitor`'s `darglint` Dilemma
+
+Let's discuss a real-world scenario.
+The `pyjanitor` project faced a recurring issue with `darglint`
+causing timeouts during Continuous Integration (CI) runs.
+To keep the CI process smooth, the team had to introduce multiple workarounds.
+This isn't ideal; CI tools should enhance our workflow, not impede it.
+
+Switching to `pydoclint` solved this problem.
+Drawing a comparison, `pydoclint` is to `darglint`
+what `ruff` is to other code checking tools.
+In my own benchmarking, it's nearly 1000x faster!
+Pyjanitor's `darglint` checks used to take on the order of 5-8 minutes.
+With pydoclint, we're down to milliseconds.
+
+## Getting Started with Pydoclint
+
+If you're convinced to make the switch, here's how to get started:
+
+### Integrate as a Pre-commit Hook
+
+Ensure code quality before even committing.
+Add the following to your `.pre-commit-config.yaml`:
+
+```yaml
+- repo: https://github.com/jsh9/pydoclint
+  rev: 0.3.3
+  hooks:
+    - id: pydoclint
+      args:
+        - "--config=pyproject.toml"
+```
+
+### Configuration
+
+One of the strengths of `pydoclint` is its sensible default configurations.
+I generally don't recommend tinkering with these settings
+unless you have very specific needs.
+The out-of-the-box settings are well-balanced for most projects.
+
+However, if you do find the need to customize its behavior, you're in good hands.
+Detailed configuration instructions are available [here](https://jsh9.github.io/pydoclint/how_to_config.html).
+
+**Closing Thoughts**
+
+As a data scientist and tool developer, I'm always on the lookout for better tools -
+tools that enhance our workflow, ensure quality, and save time.
+`pydoclint` is one such tool that promises a smoother experience
+when it comes to validating docstrings.
+While I've got to tip my hat to `darglint` for its service,
+it's time to embrace the future with `pydoclint`!
+---
+author: Eric J. Ma
+---
+twitter_handle: ericmjl
+---
+pub_date: 2023-10-09
+---
+tags:
+
+coding
+documentation
+darglint
+docstrings
+tools
+technologies
+pydoclint
+pyjanitor
+continuous integration
+---
+summary:
+
+In this blog post,
+I discuss the importance of documenting code
+and the risks of using outdated tools like darglint.
+I introduce pydoclint as a faster alternative
+and share a case study of how it solved a problem for the pyjanitor project.
+I provide instructions on getting started with pydoclint
+and highlight its default configurations.
+As a data scientist and tool developer,
+I'm always on the lookout for better tools,
+and pydoclint promises a smoother experience.
+Are you ready to embrace the future with pydoclint?
