@@ -87,6 +87,16 @@ Here's a summary table of these features.
 | **Primary Use Case**         | General-purpose with lots of pre-installed data science packages | Keeping base environment small, e.g., for Docker containers                                                                                                                                    | Access to bleeding-edge versions of packages.                                                                   |
 | **Default Installation Location** | `~/anaconda` or `~/anaconda3`             | `~/miniconda` or `~/miniconda3`                                                                                                                                                                | Not mentioned                                                                                                   |
 
+Tip: All of the distributions can be installed into the `~/anaconda` directory
+if you desire consistent behaviour regardless of the installation source.
+All three installers provide the `-p` flag when executing it,
+thus allowing us to specify the _prefix_ directory in which to install.
+We would thus do something like:
+
+```bash
+bash Miniforge3.sh -b -p "${HOME}/anaconda"
+```
+
 ## Which to use?
 
 Depends on your persona!
