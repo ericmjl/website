@@ -1,0 +1,68 @@
+title: It's time to upgrade to Ruff
+---
+author: Eric J. Ma
+---
+body:
+
+Admittedly, I'm a bit late to the party. However, if you're using Python and you care about the cleanliness and consistency of your codebase, I've got news for you: it is time to switch to Ruff!
+
+## So, What Exactly is Ruff?
+
+Ruff isn’t just another linter in the market; it's a blazing fast one. What makes it stand out?
+
+- **Speed**: Ruff can reduce your linting and code style checking times from minutes to mere seconds.
+- **Crafted in Rust**: A fun fact about Ruff is that it's written in Rust, which is renowned for its performance and safety features.
+- **For Python Projects**: If you’re working with Python, this is specifically for you. No need for adjustments or tweaks to make it fit for Python projects – it’s already tailored for it.
+
+## Getting Started with Ruff
+
+Ready to integrate Ruff into your workflow? It’s simpler than you might think. Here’s how to do it:
+
+Firstly, install the **pre-commit hook** into your repository.
+
+Pre-commit hooks are beneficial to ensure that the checks run automatically before your code gets committed, ensuring its quality.
+
+Set it up using the following configuration:
+
+```yaml
+   - repo: https://github.com/astral-sh/ruff-pre-commit
+     # Ruff version.
+     rev: v0.0.292
+     hooks:
+       - id: ruff
+         args: [--fix] # <-- Note: This is my personal suggestion to automatically fix linting issues where possible!
+```
+
+Then, **configure Ruff in `pyproject.toml`**:
+
+Now, to ensure Ruff knows what you want, you'll need to specify some configurations:
+
+```toml
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F", "I"] # <-- Note: I suggest including the "I" for additional checks!
+ignore = []
+
+# Assuming you're developing for Python 3.10
+target-version = "py310" # <-- This is my suggestion based on the latest Python version at the time of writing!
+```
+
+## Summary
+
+Linting and code style checking is a crucial step in ensuring the quality of your codebase. With tools like Ruff, this process not only becomes efficient but also lightning-fast. If you haven't tried it yet, give it a go – you might just get hooked!
+
+Happy coding!
+---
+pub_date: 2023-10-09
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss the benefits of using Ruff, a blazing fast linter for Python code. With its speed and performance, Ruff can significantly reduce linting and code style checking times. It is written in Rust, known for its performance and safety features. I provide step-by-step instructions on how to integrate Ruff into your workflow, including installing the pre-commit hook and configuring Ruff in pyproject.toml. If you're looking to improve the quality and efficiency of your Python codebase, give Ruff a try. Are you ready to switch to Ruff and experience lightning-fast code checking?
+---
+tags:
+
+python
+ruff
+tips and tricks
+rust
+pre-commit
