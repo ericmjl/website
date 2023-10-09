@@ -1,0 +1,169 @@
+title: When to write tests for your data science code
+---
+author: Eric J. Ma
+---
+body:
+
+As data scientists,
+our work often exists in a continuum
+ranging from initial, tentative exploratory analysis
+to mature, production-ready solutions.
+The ephemeral nature of exploratory code
+can sometimes mislead us into believing that it's fleeting
+and doesn't warrant the rigor of tests.
+However, I think this perspective deserves a re-evaluation.
+
+## Production vs. Research Code
+
+One might think, "It's just a preliminary analysis, not the final product."
+But herein lies a crucial distinction:
+**When decisions are derived from your research code,
+that code transitions from being 'just research' to pivotal 'production'.**
+This perspective mirrors that of [Niels Bantilan](https://www.linkedin.com/in/nbantilan/),
+who insightfully [commented on my LinkedIn post][neils]:
+
+> "but it's not production!"...
+> if you make conclusions from research findings
+> based on incorrectly implemented code,
+> then research *is* production.
+
+[neils]: https://www.linkedin.com/feed/update/urn:li:ugcPost:7112753423216730112?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7112753423216730112%2C7112806327323693056%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287112806327323693056%2Curn%3Ali%3AugcPost%3A7112753423216730112%29
+
+Such code, veiled as 'research', affects stakeholders.
+The implications of errors or oversights
+can range from minor hiccups to major organizational setbacks.
+I don't have to look too far from my professional neighborhood
+to find places where testing will be worthwhile.
+In the discovery of a drug,
+buggy machine learning code that is used to prioritize candidates
+can lead us to erroneously prioritize duds.
+As for the range of impacts,
+it could range from days (if caught early) to years (if caught very late)
+of wasted laboratory time and effort on prioritized candidates.
+
+## Not everything requires testing... initially
+
+Initiating a new project or analysis
+doesn't always imply diving straight into writing tests.
+In the nascent stages, especially during exploratory phases,
+the terrain is still unfolding.
+You're sketching possibilities, and the path isn't concrete.
+But, as your code matures and starts to take shape,
+bringing in testing becomes crucial.
+The evolution of code demands an evolution in its verification.
+
+## The Golden Principle
+
+Here's how you know when to test:
+**test the stuff that needs guarantees**!
+This isn't just about the mechanics of testing; it's a philosophy.
+Pieces of code that possess the potential to wreak havoc
+or disseminate incorrect information demand rigorous testing.
+At this point, we're not just talking about lines of code;
+we're talking about the bedrock of trustworthiness.
+
+## Levels of test-writing for data science code
+
+So, how do we embark on our testing journey?
+I'd like to suggest three levels of testing.
+Consider them as progressive milestones;
+ascending these levels not only instills confidence in your code
+but also strengthens its foundation.
+
+### Level 0: Add assertions within your notebook
+
+Even seasoned data scientists,
+while engrossed in their work,
+might resort to a mere visual inspection of variables as a sanity check.
+If you find yourself doing visual checks of variable values,
+then consider elevating this informal process to structured `assert` statements.
+Doing so lends your code an added layer of validation:
+
+```python
+# An initial piece of code yielding my_value
+...
+my_value = ...
+assert my_value < 20
+```
+
+The key here is to formalize what we're intuiting and translating it into code.
+It may take a bit of critical thinking to do that formalization,
+but it'll help us make the code much more reliable.
+If your desired code logic has changed,
+then these assertions can help you catch the effects of those changes,
+giving you additional confidence that your change is what you indeed desire.
+
+### Level 1: Migrate Your Notebook Code into a Function and Test It
+
+For those chunks of code
+that are bound within the confines of a single Jupyter notebook,
+structuring them into functions can be a game-changer.
+This compartmentalization allows for a more streamlined testing process.
+
+```python
+# Define the test function:
+def test_my_function():
+    my_value = my_function()
+    assert ...something about my_value...
+
+# Then call it within the same notebook cell:
+test_my_function()
+```
+
+Here's a caveat:
+Ensure that your tests don't become
+entangled with the specific state of your Jupyter notebook.
+Maintain their independence!
+The function being tested should be self-sufficient
+and not rely on any other state within the notebook.
+Additionally, the test function itself should also be self-sufficient.
+
+### Level 2: Refactor code into a library and associate it with a test function
+
+When you find yourself revisiting certain functions
+or realize their broader applicability,
+it's a signal to house them in a dedicated library.
+This not only amplifies reusability but also facilitates structured testing.
+
+**Library Code:**
+
+```python
+# custom_library.py
+def my_function():
+    ...
+    return my_value
+```
+
+**Test Function:**
+
+```python
+# test_custom_library.py
+def test_my_function():
+    my_value = my_function()
+    assert my_value < 20
+```
+
+## Bonus: The right time to refactor
+
+The art of refactoring isn't just about the 'how' but also about the 'when'.
+A pragmatic rule of thumb is:
+**If you find yourself cloning a notebook to make minor tweaks
+or frequently copying and pasting code segments,
+it's a beacon signaling refactor time.**
+
+Each refactoring iteration brings with it
+not just the promise of cleaner code but also the commitment to testing.
+
+## Summary
+
+Your data science journey might begin with uncharted, exploratory paths.
+And that can be exciting, exhilarating, and thrilling!
+But remember, the code you write can shape consequential decisions.
+Arm your analyses with robust testing and mindful refactoring
+to ensure their accuracy and reliability,
+guiding your organization towards informed and dependable outcomes!
+
+---
+pub_date: 2023-10-10
+---
+twitter_handle: ericmjl
