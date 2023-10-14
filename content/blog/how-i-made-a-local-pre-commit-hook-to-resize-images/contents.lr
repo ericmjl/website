@@ -1,0 +1,124 @@
+title: How I made a local pre-commit hook to resize images
+---
+author: Eric J. Ma
+---
+body:
+
+Today I learned how to make a pre-commit hook that lives locally within a repository.
+Pre-commit hooks are a powerful tool in any coder's arsenal --
+whether they are a data scientist or software developer --
+enabling us to automate certain checks before changes are committed to the repository.
+This ensures that every commit meets the defined standards and can save countless hours in code reviews.
+
+## So... what does this hook do?
+
+The primary function of the pre-commit hook I made is to resize images, particularly logos, within the repository.
+I wanted this hook so I could avoid manually resizing blog banner images,
+which I've been creating using DALLE-3.
+Let's dive into a high-level overview of the script:
+
+```python
+#!/usr/bin/env python3
+"""Resize images within the repository."""
+
+
+from PIL import Image
+from pyprojroot import here
+
+
+def resize_image(image_path, base_width):
+    with Image.open(image_path) as img:
+        if img.size[0] > base_width:
+            w_percent = base_width / float(img.size[0])
+            h_size = int(float(img.size[1]) * float(w_percent))
+            img = img.resize((base_width, h_size), Image.LANCZOS)
+            img.save(image_path)
+            return True
+    return False
+
+
+def resize_logos_in_tree(root_dir, logo_name, max_width):
+    resized_any = False
+    for path in root_dir.rglob(logo_name):
+        if resize_image(path, max_width):
+            print(f"Resized: {path}")
+            resized_any = True
+    return resized_any
+
+
+if __name__ == "__main__":
+    root_directory = here()
+    logo_filename = "logo.png"
+    maximum_width = 600
+
+    if resize_logos_in_tree(root_directory, logo_filename, maximum_width):
+        print("Some logos were resized. Commit rejected.")
+        exit(1)
+    else:
+        print("All logos are of the maximum width. Commit accepted.")
+        exit(0)
+```
+
+At its core, this script:
+
+1. **Checks images:** It examines all the logos in the repository, specifically those named "logo.png".
+2. **Resizes oversized images:** If any logo exceeds a set maximum width (600 pixels in this case), the script resizes it to fit within the defined width while maintaining its aspect ratio.
+3. **Provides feedback:** Depending on whether any logos were resized, the script either rejects or accepts the commit, informing the user of its decision.
+
+## Configuration breakdown
+
+To understand how this script integrates with the pre-commit framework, let's break down the configuration for the pre-commit hook:
+
+```yaml
+- repo: local
+  hooks:
+    - id: resize-logos
+      name: Resize Logos
+      entry: scripts/resize_images.py
+      language: python
+      language_version: python3
+      additional_dependencies: [pillow, pyprojroot]
+      types: [png]
+      files: logo\.png$
+      pass_filenames: false
+```
+
+- **repo**: Specifies that the hook is local to the repository.
+- **id**: A unique identifier for the hook.
+- **name**: A descriptive name for the hook.
+- **entry**: Path to the script that will be executed.
+- **language**: The programming language of the hook, which is Python in this case.
+- **language_version**: Specifies the Python version.
+- **additional_dependencies**: Lists external libraries the script depends on. Here, `pillow` is for image processing and `pyprojroot` helps in finding the root of the project.
+- **types**: Indicates the file types the hook applies to. It's set to PNG images.
+- **files**: A regex pattern to match specific filenames, ensuring the hook targets only "logo.png" files.
+- **pass_filenames**: This is set to `false`, meaning the script does not expect file names as command-line arguments.
+
+## Behind the scenes
+
+Now, how does this all work together? The magic of the pre-commit framework is that it creates an isolated Python environment specifically for the hook. This means the script doesn't run using the Python interpreter in your PATH. Instead, it uses a hidden, separate Python interpreter.
+
+This might initially seem confusing or even redundant. However, it offers a significant advantage. By having a separate environment, there's no need to mix dependencies required by the hook with those of your main project. This separation ensures that the main project environment remains clean and free from unnecessary dependencies.
+
+## Conclusion
+
+Harnessing the power of pre-commit hooks, especially custom ones tailored to specific project needs, is super empowering. They help maintain code and asset quality, automate checks, and streamline the development process.
+
+Moving forward, I'd like to explore how to distribute these hooks, enabling other developers to benefit from them in their projects. The world of pre-commit hooks is vast, and there's always something new to learn and implement!
+---
+pub_date: 2023-10-14
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my experience creating a custom pre-commit hook for resizing images within a repository. This hook automates the process of ensuring all logos meet a defined width, saving time and maintaining consistency. It uses Python and integrates with the pre-commit framework, running in an isolated environment to keep the main project clean. I also discuss the potential of distributing these hooks for wider use. Curious about how you can automate checks and streamline your development process with pre-commit hooks?
+---
+tags:
+
+pre-commit
+pre-commit hook
+automation
+python
+python script
+software development
+data science
+dalle-3
