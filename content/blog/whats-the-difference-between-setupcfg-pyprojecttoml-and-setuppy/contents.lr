@@ -131,7 +131,9 @@ pub_date: 2023-08-31
 ---
 twitter_handle: ericmjl
 ---
-summary: In this blog post, I explored the differences between setup.cfg, pyproject.toml, and setup.py in Python packaging. I explained their historical context and usage, and recommended using pyproject.toml as the setup configuration file for Python packages in 2023. I also discussed the importance of Python packaging for data scientists, and the distinction between environment.yml and pyproject.toml. The former defines a project's development environment, while the latter provides pip with installation and usage information for a Python package that I might be working on.
+summary:
+
+In this blog post, I explored the differences between `setup.cfg`, `pyproject.toml`, and `setup.py` in Python packaging. I explained their historical context and usage, and recommended using pyproject.toml as the setup configuration file for Python packages in 2023. I also discussed the importance of Python packaging for data scientists, and the distinction between `environment.yml` and `pyproject.toml`. The former defines a project's development environment, while the latter provides pip with installation and usage information for a Python package that I might be working on.
 ---
 tags:
 
