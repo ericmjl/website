@@ -42,6 +42,11 @@
   <div class="card-body">
     {{ render_author_tags(post) }}
     <hr>
+    {% if post.attachments.get("logo.png") %}
+    {% set img = post.attachments.get("logo.png") %}
+    <img src="{{ img|url }}" style="padding: 10px;" >
+    {% endif %}
+
     <span id="post_body" name="post_body">
       {{ post.body }}
     </span>
@@ -82,26 +87,36 @@
   <header>
     <a href="{{ post|url }}" style="color: white">{{ render_blog_header(post, from_index=True) }}</a>
   </header>
-  <div class="card-body col-md-8">
-    {{ render_author_tags(post) }}
-    {% if post.summary %}
-    <span name="post_summary" id="post_summary">
-      <p class="card-text">{{ post.summary }}</p>
-    </span>
-    <small>
-      <a href="{{ post|url }}">Read on...</a>
-      {{ render_reading_time(post) }}
-    </small>
-    {% else %}
+  <div class="card-body blog-card-container">
     <div>
-      <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
-        <a href="{{ post|url }}">(read more)</a>
-      </p>
-      <small>
-        {{ render_reading_time(post) }}
-      </small>
+      {{ render_author_tags(post) }}
+
+      {% if post.attachments.get("logo.png") %}
+      {% set img = post.attachments.get("logo.png") %}
+      <img src="{{ img|url }}" style="padding: 10px;" >
+      {% endif %}
+
+      <div class="blog-card-right">
+        {% if post.summary %}
+        <span name="post_summary" id="post_summary">
+          <p class="card-text">{{ post.summary }}</p>
+        </span>
+        <small>
+          <a href="{{ post|url }}">Read on...</a>
+          {{ render_reading_time(post) }}
+        </small>
+        {% else %}
+        <div>
+          <p class="card-text">{{ post.body.html|escape()|truncate(255, False) }}
+            <a href="{{ post|url }}">(read more)</a>
+          </p>
+          <small>
+            {{ render_reading_time(post) }}
+          </small>
+        </div>
+        {% endif %}
+      </div>
     </div>
-    {% endif %}
   </div>
 
 </div>
