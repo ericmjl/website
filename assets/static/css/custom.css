@@ -137,3 +137,20 @@ th {
   border-radius: 5px;
   margin: 3px;
 }
+
+.blog-card-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.blog-card-summary {
+  flex-basis: 100%;
+}
+
+.blog-card-left {
+  flex: 1;
+}
+
+.blog-card-right {
+  flex: 3;
+}
