@@ -1,0 +1,79 @@
+title: How to ensure that bump2version only updates the correct string
+---
+author: Eric J. Ma
+---
+body:
+
+I recently discovered how to ensure that [bump2version](https://github.com/c4urself/bump2version/) only bumps the exact version number and not other pattern-matched strings.
+
+Within a `pyproject.toml` file, I had the following configuration:
+
+```toml
+[project]
+...
+version = "0.0.8"
+dependencies = [
+    ...
+    "llamabot>=0.0.80",
+    ...
+]
+```
+
+If I wanted to do a patch release, `bump2version` would pattern-match on the exact string `0.0.8` and give me the following updated `pyproject.toml` file:
+
+```toml
+[project]
+...
+version = "0.0.9"
+dependencies = [
+    ...
+    "llamabot>=0.0.90",
+    ...
+]
+```
+
+This is undesirable; really, we should be only updating the string `version = "{version_number}"`.
+
+Turns out, the configuration that we need within `.bumpversion.cfg` is:
+
+```toml
+[bumpversion:file:pyproject.toml]
+search = version = "{current_version}"
+replace = version = "{new_version}"
+```
+
+With this configuration, we get:
+
+```toml
+[project]
+...
+version = "0.0.9"
+dependencies = [
+    ...
+    "llamabot>=0.0.80",
+    ...
+]
+```
+
+Which is correct!
+
+I am going to add this to the `pyds-cli` configuration to make sure I never encounter the same problem again.
+---
+pub_date: 2023-10-18
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share a solution to a problem I encountered with `bump2version`, where it was incorrectly updating all pattern-matched strings instead of just the version number. I found that by modifying the `.bumpversion.cfg` file, I could ensure only the version number was updated. This has been a game-changer for me and I'm excited to implement it into my `pyds-cli` default project templates. Curious about how this could streamline your own version control process? Read on to find out more!
+---
+tags:
+
+bump2version
+version control
+pyproject.toml
+configuration
+pattern matching
+patch release
+dependencies
+llamabot
+pyds-cli
+problem solving
