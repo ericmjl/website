@@ -1,0 +1,122 @@
+title: How to run Ollama with LlamaBot
+---
+author: Eric J. Ma
+---
+body:
+
+If you've been following the [LlamaBot](https://github.com/ericmjl/llamabot) project, you know it's my pet Pythonic project to interface with Large Language Models (LLMs). I've had fun building some cool stuff, like [GitBot](https://ericmjl.github.io/gitbot/), a chatbot for your Zotero library, and even a blogging assistant (more on that later, promise!).
+
+However, there's been one area I've shied away from until now: using local LLMs. The setup could be daunting, but I finally found a way to simplify it with [Ollama](https://ollama.ai/).
+
+## A request sparks an idea
+
+A community member [posted an issue](https://github.com/ericmjl/llamabot/issues/7) on GitHub:
+
+> "Hi @ericmjl, thank you for making this! I'd sent a PR but it's a little beyond me but I was wondering if there is a simple way to use local models such as Ollama?"
+
+And I thought, why not? Can it work? Let's find out.
+
+## First steps with Ollama
+
+Ollama made setting up local LLMs a breeze. I was pleasantly surprised at the smooth installation process; you simply need to follow the instructions on their [main page](https://ollama.ai/).
+
+### Two ways to run Ollama models
+
+Following that, there are two ways to access Ollama models.
+
+1. **Chat in the Terminal**: Run `ollama run <model name>`
+2. **Local API Mode**: Run `ollama serve <model name>`
+
+**One thing to note:** Ollama pulls in models on the fly. They range from 3GB to 16GB, so pack some patience while they download.
+
+## Ollama + LlamaBot: How I integrated them
+
+### A happy architectural decision
+
+My earlier decision to use LangChain paid off, even with all of the frustrations I had trying to track a fast-evolving Python package. LangChain's architecture made it straightforward to write a [model dispatcher](https://github.com/ericmjl/llamabot/commit/3dee9ea6724647ad28d1955dee3c763f247e3d22#diff-02aaaed9c5ddfaf09f4b1040ef70942a97413df618c1dc1a035746b120cd6c61).
+
+```python
+def create_model(
+    model_name,
+    temperature=0.0,
+    streaming=True,
+    verbose=True,
+):
+    """Dispatch and create the right model.
+    This is necessary to validate b/c LangChain doesn't do the validation for us.
+    :param model_name: The name of the model to use.
+    :param temperature: The model temperature to use.
+    :param streaming: (LangChain config) Whether to stream the output to stdout.
+    :param verbose: (LangChain config) Whether to print debug messages.
+    :return: The model.
+    """
+    ModelClass = ChatOpenAI
+    if model_name.split(":")[0] in ollama_model_keywords:
+        ModelClass = ChatOllama
+
+    return ModelClass(
+        model_name=model_name,
+        temperature=temperature,
+        streaming=streaming,
+        verbose=verbose,
+        callback_manager=BaseCallbackManager(
+            handlers=[StreamingStdOutCallbackHandler()] if streaming else []
+        ),
+    )
+```
+### Making the adjustments
+
+I made some tweaks in [SimpleBot](https://github.com/ericmjl/llamabot/commit/491ab6fa12faba11d414ce0bed1612f71cd2695d#diff-8cb751fcf25b0adbdbeff71579b05d94a16a429bfe4be7db1577e888c99fdb01R50), [ChatBot](https://github.com/ericmjl/llamabot/commit/491ab6fa12faba11d414ce0bed1612f71cd2695d#diff-8cb751fcf25b0adbdbeff71579b05d94a16a429bfe4be7db1577e888c99fdb01R50), and [QueryBot](https://github.com/ericmjl/llamabot/commit/f2a1f467b61eb9fdff5715e201dc603f0bb433bf#diff-1f3b440b3578b279e203a29504499f0e07dae021eb13d8acec91191aa1277e9dR102) to ensure that they work with Ollama models.
+
+## How to use Ollama models with LlamaBot
+
+So, how exactly do we use Ollama models with LlamaBot?
+
+Firstly, start by serving an Ollama model:
+
+```bash
+ollama serve <ollama model name>
+```
+
+Secondly, in your Jupyter notebook, initialize the bot:
+
+```python
+bot = SimpleBot(..., model_name=<ollama model name>)
+```
+
+And that's it!
+
+## A Quick Demo with Zotero Chat
+
+I’ve already enabled Zotero chat to use Ollama models to give you a taste. Try it out:
+
+```bash
+llamabot zotero chat --model-name <ollama model name>
+```
+
+## What's more
+
+While OpenAI's GPT-4 still sets the benchmark in speed and response quality, local models offer the freedom of being cost-free. This opens up new avenues for fine-tuning and prompt engineering!
+
+Thanks for reading, and happy coding!
+---
+pub_date: 2023-10-22
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the integration of local Large Language Models (LLMs) with my LlamaBot project using Ollama. I discuss how Ollama simplifies the setup of local LLMs and demonstrate how to use Ollama models with LlamaBot. I also share a quick demo with Zotero chat using Ollama models. While OpenAI's GPT-4 remains the benchmark, local models offer cost-free alternatives. Curious to read more?
+---
+tags:
+
+python
+large language models
+llms
+gitbot
+zotero library
+local llms
+ollama
+langchain
+openai
+gpt-4
+prompt engineering
+llamabot
