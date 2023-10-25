@@ -16,6 +16,7 @@ def compose_linkedin_post(text):
     Include hashtags inline with the LinkedIn post and at the end of the post too.
     Hashtags should be all lowercase.
     Ensure that there is a placeholder for me to paste in the URL.
+    Also ensure that it is written in first-person, humble, and inviting tone.
     Please return this for me in JSON format using the following schema:
 
         "post_text": "post text goes here"
@@ -37,6 +38,7 @@ def compose_patreon_post(text):
     Ensure that there is a call to action
     to interact with the post after reading,
     such as commenting.
+    Also ensure that it is written in first-person, humble, and inviting tone.
     Please return this for me in JSON format using the following schema:
 
         "post_text": "post text goes here"
@@ -57,6 +59,7 @@ def compose_twitter_post(text):
     Include hashtags inline with the Twitter post.
     Hashtags should be all lowercase.
     Ensure that there is a placeholder for me to paste in the URL.
+    Also ensure that it is written in first-person, humble, and inviting tone.
 
     Please return this for me in JSON format using the following schema:
 
@@ -73,7 +76,7 @@ def compose_substack_post(text):
         {{ text }}
 
     Please compose for me a Substack post
-    that entices my readers on Substack to read the blog post I just gave you.
+    that encourages my readers on Substack to read the blog post I just gave you.
     Please address my readers by opening with,
     "Hello fellow datanistas!"
     And then open off with a question that the post answers.
@@ -81,7 +84,7 @@ def compose_substack_post(text):
     such as forwarding the post to others they think may benefit from it.
     Ensure that there is a placeholder for me
     to paste in the URL to the blog post.
-    Also ensure that it is written in first-person tone.
+    Also ensure that it is written in first-person, humble, and inviting tone.
 
     Please return this for me in JSON format using the following schema:
 
