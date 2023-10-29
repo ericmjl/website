@@ -37,7 +37,7 @@ Upon investigating, I narrowed down the problem to a few key points:
 
 Given the diagnosis, one way to fix this would be to ensure that `interrogate` explicitly lists `setuptools` as a dependency. Doing this would ensure that `pkg_resources` is available, eliminating the `ModuleNotFoundError`. To that end, I [submitted a bug report](https://github.com/econchick/interrogate/issues/162) and immediately [put in a pull request](https://github.com/econchick/interrogate/pull/163) to fix the bug.
 
-## How to Workaround the Issue Until It's Fixed
+## Workaround the issue
 
 While waiting for an official fix, the workaround for the pre-commit hook is to ensure that you are running Python<3.12 when installing `pre-commit`. In my case, I set the Python version to 3.11 within the relevant GitHub Actions YAML file:
 
