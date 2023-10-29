@@ -1,0 +1,84 @@
+title: How to debug a ModuleNotFoundError in the interrogate pre-commit hook
+---
+author: Eric J. Ma
+---
+body:
+
+Pre-commit hooks are an indispensable tool in the modern development workflow. They help enforce code quality and consistency right at the stage of committing the code, well before it becomes a part of the codebase or enters the CI/CD pipeline. Recently, while working with `interrogate`, a popular pre-commit hook for checking Python docstrings, I encountered a puzzling `ModuleNotFoundError`. Here's how I debugged the issue and some potential solutions to the problem.
+
+## The Error
+
+I ran the `pre-commit` command like usual within LlamaBot's CI/CD pipelines, and all seemed well until I hit this snag:
+
+```bash
+interrogate..............................................................Failed
+- hook id: interrogate
+- exit code: 1
+
+Traceback (most recent call last):
+  File "/home/runner/.cache/pre-commit/repox_7d0awa/py_env-python3/bin/interrogate", line 5, in <module>
+    from interrogate.cli import main
+  File "/home/runner/.cache/pre-commit/repox_7d0awa/py_env-python3/lib/python3.12/site-packages/interrogate/cli.py", line 11, in <module>
+    from interrogate import badge_gen
+  File "/home/runner/.cache/pre-commit/repox_7d0awa/py_env-python3/lib/python3.12/site-packages/interrogate/badge_gen.py", line 11, in <module>
+    import pkg_resources
+ModuleNotFoundError: No module named 'pkg_resources'
+```
+
+## Diagnosis
+
+Upon investigating, I narrowed down the problem to a few key points:
+
+1. **Python Version:** Pre-commit was defaulting to the latest Python version, which at the time was Python 3.12.
+2. **Missing Package:** Python 3.12 no longer ships with `setuptools`, which provides the missing `pkg_resources`, by default within a virtual environment (venv).
+3. **Dependency Gap:** The `interrogate` package itself doesn't explicitly depend on `setuptools`.
+
+## The Solution
+
+Given the diagnosis, one way to fix this would be to ensure that `interrogate` explicitly lists `setuptools` as a dependency. Doing this would ensure that `pkg_resources` is available, eliminating the `ModuleNotFoundError`. To that end, I [submitted a bug report](https://github.com/econchick/interrogate/issues/162) and immediately [put in a pull request](https://github.com/econchick/interrogate/pull/163) to fix the bug.
+
+## How to Workaround the Issue Until It's Fixed
+
+While waiting for an official fix, the workaround for the pre-commit hook is to ensure that you are running Python<3.12 when installing `pre-commit`. In my case, I set the Python version to 3.11 within the relevant GitHub Actions YAML file:
+
+```yaml
+# Run code style checks on each pull request.
+name: Code style checks
+
+on: [pull_request]
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+      - uses: pre-commit/action@v2.0.0
+```
+
+This ensured that `setuptools` was installed within the virtual environment for each hook, and should solve any similar issues in the short-term.
+
+## Conclusion
+
+This experience underscores the importance of keeping track of dependencies and being mindful of how language and library updates can break existing setups. The good news is that this issue is quite fixable, either through an update to `interrogate` or through manual intervention.
+
+Issues like these are bound to happen in a continually evolving ecosystem like Python, and troubleshooting them is part and parcel of a developer's life. If you've faced similar issues or have suggestions, feel free to share them in the comments below!
+---
+pub_date: 2023-10-29
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss a `ModuleNotFoundError` I encountered while using the pre-commit hook, interrogate, in Python 3.12. The issue arose due to a missing package, `setuptools`, which is no longer included by default in Python 3.12's virtual environments. I proposed a solution and provided a workaround by using Python<3.12 for pre-commit installation. This experience highlights the importance of tracking dependencies and adapting to language and library updates. Have you ever faced similar issues in your development workflow? Read on to find out more about my debugging journey.
+---
+tags:
+
+pre-commit hooks
+code quality
+debugging
+python version
+setuptools
+dependency management
+github actions
+code style checks
