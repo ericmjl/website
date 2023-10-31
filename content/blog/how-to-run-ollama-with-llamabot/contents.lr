@@ -25,7 +25,7 @@ Ollama made setting up local LLMs a breeze. I was pleasantly surprised at the sm
 Following that, there are two ways to access Ollama models.
 
 1. **Chat in the Terminal**: Run `ollama run <model name>`
-2. **Local API Mode**: Run `ollama serve <model name>`
+2. **Local API Mode**: Run `ollama serve`
 
 **One thing to note:** Ollama pulls in models on the fly. They range from 3GB to 16GB, so pack some patience while they download.
 
@@ -72,10 +72,11 @@ I made some tweaks in [SimpleBot](https://github.com/ericmjl/llamabot/commit/491
 
 So, how exactly do we use Ollama models with LlamaBot?
 
-Firstly, start by serving an Ollama model:
+Firstly, start by serving an Ollama:
 
 ```bash
-ollama serve <ollama model name>
+ollama pull <ollama model name>
+ollama serve
 ```
 
 Secondly, in your Jupyter notebook, initialize the bot:
