@@ -28,4 +28,7 @@ jobs:
           # `automerge-fail`.
           automerge_fail_label: 'merge-schedule-failed'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use the GHPAGES_TOKEN so that it is merged in my name.
+          # That way we allow triggering of the publishing workflow on merge to main.
+          # This is not allowed if we use the built-in GITHUB_TOKEN.
+          GITHUB_TOKEN: ${{ secrets.GHPAGES_TOKEN }}
