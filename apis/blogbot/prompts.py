@@ -29,16 +29,13 @@ def compose_patreon_post(text):
 
         {{ text }}
 
-    Please compose for me a patreon post
+    Based on the blog post, please compose for me a patreon post
     that encourages my Patreon supporters to read it.
-    that thanks my readers for their continued support.
-    Please ensure that it starts with, "Dear Patreon supporters,".
-    Additionally, please emphasize that
-    the post will go out on social media blast later.
-    Ensure that there is a call to action
-    to interact with the post after reading,
-    such as commenting.
-    Also ensure that it is written in first-person, humble, and inviting tone.
+    Ensure that it is written in first-person, humble, and inviting tone.
+    Ensure that there is a placeholder for me to paste in the URL,
+    which reads as "Please find the preview [here](url goes here)
+    before it goes live on my blog."
+    Sign off with "Cheers,\nEric".
     Please return this for me in JSON format using the following schema:
 
         "post_text": "post text goes here"
