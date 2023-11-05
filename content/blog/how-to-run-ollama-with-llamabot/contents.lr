@@ -27,13 +27,16 @@ Following that, there are two ways to access Ollama models.
 1. **Chat in the Terminal**: Run `ollama run <model name>`
 2. **Local API Mode**: Run `ollama serve`
 
-**One thing to note:** Ollama pulls in models on the fly. They range from 3GB to 16GB, so pack some patience while they download.
+**One thing to note:** Ollama pulls in models on the fly.
+They range from 3GB to 16GB, so you may need to be patient while they download.
 
 ## Ollama + LlamaBot: How I integrated them
 
 ### A happy architectural decision
 
-My earlier decision to use LangChain paid off, even with all of the frustrations I had trying to track a fast-evolving Python package. LangChain's architecture made it straightforward to write a [model dispatcher](https://github.com/ericmjl/llamabot/commit/3dee9ea6724647ad28d1955dee3c763f247e3d22#diff-02aaaed9c5ddfaf09f4b1040ef70942a97413df618c1dc1a035746b120cd6c61).
+My earlier decision to use LangChain paid off,
+even with all of the frustrations I had trying to track a fast-evolving Python package.
+LangChain's architecture made it straightforward to write a [model dispatcher](https://github.com/ericmjl/llamabot/commit/3dee9ea6724647ad28d1955dee3c763f247e3d22#diff-02aaaed9c5ddfaf09f4b1040ef70942a97413df618c1dc1a035746b120cd6c61).
 
 ```python
 def create_model(
@@ -43,7 +46,9 @@ def create_model(
     verbose=True,
 ):
     """Dispatch and create the right model.
+
     This is necessary to validate b/c LangChain doesn't do the validation for us.
+
     :param model_name: The name of the model to use.
     :param temperature: The model temperature to use.
     :param streaming: (LangChain config) Whether to stream the output to stdout.
@@ -64,6 +69,7 @@ def create_model(
         ),
     )
 ```
+
 ### Making the adjustments
 
 I made some tweaks in [SimpleBot](https://github.com/ericmjl/llamabot/commit/491ab6fa12faba11d414ce0bed1612f71cd2695d#diff-8cb751fcf25b0adbdbeff71579b05d94a16a429bfe4be7db1577e888c99fdb01R50), [ChatBot](https://github.com/ericmjl/llamabot/commit/491ab6fa12faba11d414ce0bed1612f71cd2695d#diff-8cb751fcf25b0adbdbeff71579b05d94a16a429bfe4be7db1577e888c99fdb01R50), and [QueryBot](https://github.com/ericmjl/llamabot/commit/f2a1f467b61eb9fdff5715e201dc603f0bb433bf#diff-1f3b440b3578b279e203a29504499f0e07dae021eb13d8acec91191aa1277e9dR102) to ensure that they work with Ollama models.
