@@ -1,0 +1,312 @@
+title: Zephyr vs. GPT4: What's your verdict?
+---
+author: Eric J. Ma
+---
+body:
+
+Zephyr, a new LLM by the HuggingFace H4 team, has been making the rounds as being super competitive with GPT3.5. I thought I'd take it for a drive and decided to benchmark Zephyr on a thing I've been building, [GitBot](https://ericmjl.github.io/gitbot), but with a twist: I decided to benchmark it against GPT4 instead of 3.5. Here's what I did.
+
+## Benchmarking Setup
+
+### The Bots
+
+I set up two [LlamaBot](https://github.com/ericmjl/llamabot) `SimpleBot`s, one using the Zephyr model, and the other using GPT4:
+
+```python
+from llamabot import SimpleBot
+zephyrbot = SimpleBot(
+    "You are an expert user of Git.",
+    model_name="zephyr",
+    temperature=0.0,
+)
+
+gptbot = SimpleBot(
+    "You are an expert user of Git.",
+    model_name="gpt-4",
+    temperature=0.0,
+)
+```
+
+### Prompt
+
+Then, I pulled out the original Git diff commit writing prompt that I used for prototyping:
+
+```python
+from llamabot.prompt_manager import prompt
+
+@prompt
+def write_commit_message(diff: str):
+    """Please write a commit message for the following diff.
+
+    {{ diff }}
+
+    # noqa: DAR101
+
+    Use the Conventional Commits specification to write the diff.
+
+    [COMMIT MESSAGE BEGIN]
+    <type>[optional scope]: <description>
+
+    [optional body]
+
+    [optional footer(s)]
+    [COMMIT MESSAGE END]
+
+    The commit contains the following structural elements,
+    to communicate intent to the consumers of your library:
+
+    fix: a commit of the type fix patches a bug in your codebase
+        (this correlates with PATCH in Semantic Versioning).
+    feat: a commit of the type feat introduces a new feature to the codebase
+        (this correlates with MINOR in Semantic Versioning).
+    BREAKING CHANGE: a commit that has a footer BREAKING CHANGE:,
+        or appends a ! after the type/scope,
+        introduces a breaking API change
+        (correlating with MAJOR in Semantic Versioning).
+        A BREAKING CHANGE can be part of commits of any type.
+
+    types other than fix: and feat: are allowed,
+    for example @commitlint/config-conventional
+    (based on the Angular convention) recommends
+    build:, chore:, ci:, docs:, style:, refactor:, perf:, test:, and others.
+
+    footers other than BREAKING CHANGE: <description> may be provided
+    and follow a convention similar to git trailer format.
+
+    Additional types are not mandated by the Conventional Commits specification,
+    and have no implicit effect in Semantic Versioning
+    (unless they include a BREAKING CHANGE).
+    A scope may be provided to a commit's type,
+    to provide additional contextual information and is contained within parenthesis,
+    e.g., feat(parser): add ability to parse arrays.
+    Within the optional body section, prefer the use of bullet points.
+
+    Final instructions:
+
+    1. Do not fence the commit message with back-ticks or quotation marks.
+    2. Do not add any other text except the commit message itself.
+    3. Only write out the commit message.
+
+    [BEGIN COMMIT MESSAGE]
+    """
+```
+
+### Git Diff
+
+The diff I had was one that I had previously used for benchmarking other local LLMs such as Llama2:
+
+```python
+print(diff)
+```
+
+```text
+diff --git a/llamabot/bot/model_dispatcher.py b/llamabot/bot/model_dispatcher.py
+index eab00d5..abe4d70 100644
+--- a/llamabot/bot/model_dispatcher.py
++++ b/llamabot/bot/model_dispatcher.py
+@@ -12,6 +12,7
+@@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+ from langchain.callbacks.base import BaseCallbackManager
+ from time import sleep
+ from loguru import logger
++from functools import partial
+
+ # get this list from: https://ollama.ai/library
+ ollama_model_keywords = [
+@@ -62,13 +63,14 @@ def create_model(
+     :param verbose: (LangChain config) Whether to print debug messages.
+     :return: The model.
+     """
+-    ModelClass = ChatOpenAI
++    # We use a `partial` here to ensure that we have the correct way of specifying
++    # a model name between ChatOpenAI and ChatOllama.
++    ModelClass = partial(ChatOpenAI, model_name=model_name)
+     if model_name.split(":")[0] in ollama_model_keywords:
+-        ModelClass = ChatOllama
++        ModelClass = partial(ChatOllama, model=model_name)
+         launch_ollama(model_name, verbose=verbose)
+
+     return ModelClass(
+-        model_name=model_name,
+         temperature=temperature,
+         streaming=streaming,
+         verbose=verbose,
+```
+
+## Comparing Zephyr vs. GPT4's Outputs
+
+Following that, I executed the bots and observed what they produced. First the Zephyr bot:
+
+```python
+zephyrbot(write_commit_message(diff))
+```
+
+```text
+fix(model_dispatcher.py): implement error handling for ChatOllama model initialization
+
+When initializing a ChatOllama model, an error may occur due to the specific version of Ollama being used or network connectivity issues. This commit introduces error handling for such scenarios by wrapping the ChatOllama initialization in a try-except block and logging any errors that occur. The verbose flag is also passed to the logger to provide additional debugging information if needed.
+
+[optional body]
+- If an error occurs during model initialization, a descriptive error message will be logged and the function will return None instead of the initialized model.
+- This error handling ensures that the rest of the application can continue running without crashing due to an unhandled exception.
+
+[optional footer(s)]
+BREAKING CHANGE: this commit introduces a new exception type (OllamaInitializationError) and changes the return value of the create_model function in case of an error during model initialization. This may require updates to any code that relies on this function's behavior.
+```
+
+And then the GPT4 bot:
+
+```python
+gptbot(write_commit_message(diff))
+```
+
+```text
+refactor(model_dispatcher): use partial function for model class assignment
+
+- Replaced direct assignment of ModelClass with the use of the `partial` function from the functools module. This ensures the correct way of specifying a model name between ChatOpenAI and ChatOllama.
+- Removed the redundant `model_name` parameter from the ModelClass instantiation as it's now included in the partial function.
+- Added a comment to explain the use of `partial`.
+[END COMMIT MESSAGE]
+```
+
+### Commentary
+
+Before I go on, I should explain what constitutes a good "commit" message. A good commit message (1) accurately describes the changes in detail while also summarizing it, and it (2) also describes the intent of the change. I would expect that an LLM that writes commit messages for me should be able to do (1) pretty well and (2) moderately okay, occasionally guessing the intent incorrectly unless I have documented the intent in-line as a code change as well (which is good practice too), in which case it should just "parrot-phrase" (repeat but summarize) my comments.
+
+What I'm noticing here is a few things.
+
+Conditioned on the prompt, GPT-4 gets the change type ("refactor") more precise compared to Zephyr ("fix"), though both are, strictly speaking, writing this part of the commit message correctly. Secondly, GPT-4 is more compact and less verbose. Thirdly, GPT-4 describes the changes more accurately than Zephyr -- the diff has nothing to do with connectivity issues at all, which Zephyr guesses incorrectly.
+
+### Re-running the models
+
+Knowing that the models are sampling tokens at each step, I decided to re-run the bots one extra time just to compare their outputs.
+
+Zephyr produces:
+
+```text
+fix(model_dispatcher.py): implement error handling for ChatOllama model
+
+When using the ChatOllama model, we encountered an issue where the model would occasionally fail to load due to a timeout error. This led to unexpected behavior and crashes in our application. To address this, we have implemented error handling specifically for the ChatOllama model within the `create_model` function of `model_dispatcher.py`. The error message will now be printed to the console and the function will return None instead of raising an exception. This should prevent any further crashes or unexpected behavior when using the ChatOllama model.
+
+[COMMIT MESSAGE END]
+
+This commit follows the Conventional Commits specification with a type of fix, indicating that it addresses a bug in our codebase. The scope is omitted as this issue affects all instances where we use the ChatOllama model. No footer is provided as this is not a breaking change. The commit message includes a brief description of the issue and the solution implemented to address it. The optional body section is omitted, but bullet points could be used if necessary to provide additional context or details about the fix.
+```
+
+While GPT-4 produces:
+
+```text
+refactor(model_dispatcher): use partial for model class instantiation
+
+This commit refactors the way we instantiate the ModelClass in the create_model function. Instead of directly assigning the class, we now use the `partial` function from the functools module. This ensures that we have the correct way of specifying a model name between ChatOpenAI and ChatOllama. This change does not introduce any breaking changes or new features, it is purely a code quality improvement.
+[END COMMIT MESSAGE]
+```
+
+Consistently, both of them are producing the `[END COMMIT MESSAGE]` (or variation) at the end of the commit message. Notably, Zephyr is also producing a meta-level commentary on the commit message, which I personally find hilarious.
+
+## Prompt Engineering
+
+I then surmised that it may be the case that different models need variations on the prompt in order to do the task they're asked to do correctly. Observing the patterns that Zephyr was producing, I decided to modify the commit message prompt in the following ways:
+
+1. Format the prompt a bit differently to get rid of the [BEGIN/END COMMIT MESSAGE] fences.
+2. Changing the final instructions to steer the Zephyr bot to exclude meta-level commentary and section headers.
+
+The prompt then looked like this:
+
+```python
+@prompt
+def write_commit_message(diff):
+    """Please write a commit message for the following diff.
+
+    {{ diff }}
+
+    Use the Conventional Commits specification to write the diff.
+    Here is the template:
+
+        <type>[optional scope]: <description>
+
+        [body detailing the changes in bullet point]
+
+        [optional footer]
+
+    The commit contains the following structural elements,
+    to communicate intent to the consumers of your library:
+
+    fix: a commit of the type fix patches a bug in your codebase
+        (this correlates with PATCH in Semantic Versioning).
+    feat: a commit of the type feat introduces a new feature to the codebase
+        (this correlates with MINOR in Semantic Versioning).
+    BREAKING CHANGE: a commit that has a footer BREAKING CHANGE:,
+        or appends a ! after the type/scope,
+        introduces a breaking API change
+        (correlating with MAJOR in Semantic Versioning).
+        A BREAKING CHANGE can be part of commits of any type.
+
+    types other than fix: and feat: are allowed,
+    for example @commitlint/config-conventional
+    (based on the Angular convention) recommends
+    build:, chore:, ci:, docs:, style:, refactor:, perf:, test:, and others.
+
+    footers other than BREAKING CHANGE: <description> may be provided
+    and follow a convention similar to git trailer format.
+
+    Additional types are not mandated by the Conventional Commits specification,
+    and have no implicit effect in Semantic Versioning
+    (unless they include a BREAKING CHANGE).
+    A scope may be provided to a commit's type,
+    to provide additional contextual information and is contained within parenthesis,
+    e.g., feat(parser): add ability to parse arrays.
+    Within the optional body section, prefer the use of bullet points.
+
+    Write only the commit message. Do not add any more text.
+    Do not include the headers [body detailing changes...] and [short explanation why...]
+    but write the content out nonetheless.
+    """
+```
+
+The Zephyr model then produces this commit message:
+
+```text
+fix(model_dispatcher.py): simplify model selection logic
+
+- Use ChatOpenAI by default for all models
+- Introduce a new partial function to select between ChatOllama and ChatOpenAI based on the model name
+- Call launch_ollama only when using an Ollama model keyword
+
+This commit simplifies the model selection logic in the model dispatcher by making ChatOpenAI the default choice for all models. It also introduces a new partial function to select between ChatOllama and ChatOpenAI based on the model name, which is called only when using an Ollama model keyword. This change improves code readability and reduces the complexity of the dispatcher logic. No breaking changes are introduced in this commit.
+```
+
+While GPT-4, for comparison completeness, produces:
+
+```text
+refactor(model_dispatcher): use partial for model class assignment
+
+- Replaced direct assignment of `ModelClass` with `partial` function to ensure correct model name specification between `ChatOpenAI` and `ChatOllama`.
+- Removed `model_name` parameter from `ModelClass` instantiation as it's now included in the `partial` function.
+- Added a comment explaining the use of `partial`.
+```
+
+## Reflections on this experiment
+
+It seems to me that GPT4 is still the model to beat here. GPT-4, in my own experience, seems to have a higher probability of "just working" out of the box with little prompt design, while Zephyr needs a bit of prompt tweaking (not really "engineering" per se) to produce the desired results. More important is the lesson that different models will need different prompts; the one prompt designed for one model won't likely "just work" with another model out-of-the-box.
+
+Overall, while Zephyr shows promise and could potentially be tailored to perform better with more specific prompts or further training, GPT-4 seems to offer a more out-of-the-box solution for accurately interpreting and summarizing code changes. As the field of LLMs continues to evolve, it'll be interesting to see how models like Zephyr develop and what niches they find themselves filling.
+---
+pub_date: 2023-11-19
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I benchmarked Zephyr, a new language model by HuggingFace, against GPT-4 using GitBot. I found that while Zephyr shows promise, GPT-4 seems to offer a more out-of-the-box solution for accurately interpreting and summarizing code changes. However, different models may require different prompts to perform optimally. Curious about how these language models could change up your coding workflow?
+---
+tags:
+
+huggingface
+zephyr
+gpt4
+benchmarking
+gitbot
+llm
+language models
+code summarization
+prompt engineering
+machine learning
