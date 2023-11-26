@@ -1,0 +1,78 @@
+title: Speeding up CI Pipelines with Micromamba: A LlamaBot Case Study
+---
+author: Eric J. Ma
+---
+body:
+
+Nobody likes waiting around for continuous integration (CI) pipelines to finish. I'm sure many of you can relate to the frustration of slow build times. In my recent post, [How to choose a (conda) distribution of Python](https://ericmjl.github.io/blog/2023/10/7/how-to-choose-a-conda-distribution-of-python/), I touched upon Python distributions. However, a comment on LinkedIn by Wade Rosko, referencing Hugo Shi's post about [speeding up a Saturn Cloud CI job with micromamba](https://www.linkedin.com/posts/hugo-shi_github-mamba-orgsetup-micromamba-github-activity-7127750718760914944-Vyzs/), got me thinking. They achieved a 40X speedup! This was something I had to try.
+
+## The Experiment
+
+I decided to use LlamaBot's CI system as a test case. The original setup used Miniconda with the following YAML configuration:
+
+```yaml
+- name: Setup miniconda
+  if: matrix.environment-type == 'miniconda'
+  uses: conda-incubator/setup-miniconda@v2
+  with:
+    auto-update-conda: true
+    miniforge-variant: Mambaforge
+    channels: conda-forge
+    activate-environment: llamabot
+    environment-file: environment.yml
+    use-mamba: true
+    python-version: ${{ matrix.python-version }}
+```
+
+In my new approach, I switched to using micromamba with the following YAML:
+
+```yaml
+- uses: mamba-org/setup-micromamba@v1
+  if: matrix.environment-type == 'miniconda'
+  with:
+    micromamba-version: '1.4.5-0'
+    environment-file: environment.yml
+    init-shell: bash
+    cache-environment: true
+    cache-environment-key: environment-${{ steps.date.outputs.date }}
+    cache-downloads-key: downloads-${{ steps.date.outputs.date }}
+    post-cleanup: 'all'
+```
+
+The rest of the YAML file remained unchanged.
+
+## Benchmarking Results
+
+I meticulously recorded the timings, and you can find the full record [here](https://github.com/ericmjl/llamabot/actions/workflows/pr-tests.yaml).
+
+| Configuration | Run 1                                                        | Run 2                                                        | Run 3                                                        | Run 4                                                        |
+|---------------|--------------------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------|
+| Old YAML      | [2m 4s](https://github.com/ericmjl/llamabot/actions/runs/6780353666/job/18428874764)    | [3m 16s](https://github.com/ericmjl/llamabot/actions/runs/6780211799/job/18428532153)   | [2m 3s](https://github.com/ericmjl/llamabot/actions/runs/6780151366/job/18428366493)    | [6m 34s](https://github.com/ericmjl/llamabot/actions/runs/6770245060/job/18398243459)   |
+| New YAML      | [1m 1s](https://github.com/ericmjl/llamabot/actions/runs/6829427068/job/18575540904)    | [1m 19s](https://github.com/ericmjl/llamabot/actions/runs/6829415636/job/18575502047)   | [2m 9s](https://github.com/ericmjl/llamabot/actions/runs/6829406882/job/18575474537)    | N/A                                                          |
+
+## Analysis and Conclusion
+
+The timings on my latest PRs with the new setup feel more consistent. Not only is there a noticeable reduction in build and test times, averaging around 1 minute, but there's also no difference in the final environment, and all tests pass.
+
+The primary win here comes from the built-in, turnkey caching of the entire environment, a stark contrast to the more complicated caching methods suggested by [mambaforge](https://github.com/marketplace/actions/setup-miniconda#caching). Opting for caching based on the date seems to be a practical compromise, especially since I often test against bleeding-edge packages.
+
+## Wrapping Up
+
+Switching to micromamba for the LlamaBot's CI system was a rewarding experience. It's a straightforward and effective way to reduce CI times significantly. If you're dealing with similar CI delays, consider giving micromamba a try. It could just be the solution you're looking for.
+---
+pub_date: 2023-11-26
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I experimented with speeding up LlamaBot's CI system by switching from Miniconda to micromamba. The results were impressive, with more consistent timings and a significant reduction in build and test times. The primary advantage was the built-in, turnkey caching of the entire environment. This change made a noticeable difference, especially when testing against bleeding-edge packages. Could micromamba be the solution to your CI delays? Read on to find out!
+---
+tags:
+
+continuous integration
+python
+micromamba
+llamabot
+conda
+yaml
+mambaforge
+caching
