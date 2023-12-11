@@ -33,7 +33,7 @@ def resize_logos_in_tree(root_dir: Path, logo_name: str, max_width: int) -> bool
 if __name__ == "__main__":
     root_directory = here()  # This returns a Path object
     logo_filename = "logo.png"
-    maximum_width = 800  # Updated to 800px
+    maximum_width = 1024  # Updated to 1024px
 
     if resize_logos_in_tree(root_directory, logo_filename, maximum_width):
         print("Some logos were resized. Commit rejected.")
