@@ -62,9 +62,15 @@ By contrast, here is a better version of the comment.
 
 Being effusive means defusing tension, reducing uncertainty, and increasing clarity. Doing so enhances psychological safety, which in turn leads to high-performing teams. Please don't take it from me: [Googlers have done this research!](https://www.linkedin.com/pulse/five-keys-successful-google-team-laszlo-bock/)
 
-## Make Feedback _in situ_
+## Make Feedback `in situ`
 
-Technical feedback is often most effective _in situ_. Doing so stems from one property that I have uncovered about deeply technical work. Until it is implemented in code or drawn out as a diagram, there are often (1) too many abstractions to wrap one's head around and (2) too much contextual knowledge needed for specific feedback to be effective. More often than not, technical feedback needs to be shown rather than told. As such, rather than providing technical feedback in the absence of code, documentation, or diagrams, it is much more effective to provide technical feedback _in situ_, i.e. within the context of actual work being done and just-in-time.
+Technical feedback is often most effective [_in situ_](https://en.wikipedia.org/wiki/In_situ):
+
+> In situ (/ɪn ˈsɪtjuː, - ˈsaɪtjuː, - ˈsiː-/; often not italicized in English) is a Latin phrase that translates literally to "on site" or "in position."
+>
+> ([Wikipedia entry on _in situ_, accessed on Monday, 11 December 2023](https://en.wikipedia.org/wiki/In_situ))
+
+Doing so stems from one property that I have uncovered about deeply technical work. Until it is implemented in code or drawn out as a diagram, there are often (1) too many abstractions to wrap one's head around and (2) too much contextual knowledge needed for specific feedback to be effective. More often than not, technical feedback needs to be shown rather than told. As such, rather than providing technical feedback in the absence of code, documentation, or diagrams, it is much more effective to provide technical feedback _in situ_, i.e. within the context of actual work being done and just-in-time.
 
 Here is a real example from work. One of my teammates performed a calculation and called it a probability measure. When we discussed the matter, my feedback was vague as I did not see the mathematical implementation in the code. Only when I saw the code could I pinpoint that the calculation did not constitute a probability measure as the sum of so-called probabilities did not equal 1.0, which is a definition of probabilities. Giving the feedback _in situ_ meant that they had a concrete memory of their own professional experience to rely on when remembering this point.
 
