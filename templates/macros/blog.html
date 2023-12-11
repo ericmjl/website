@@ -42,9 +42,7 @@
   <div class="card-body">
     {{ render_author_tags(post) }}
     <hr>
-    {% if post.attachments.get("logo.png") %}
-    {% set img = post.attachments.get("logo.png") %}
-    {% elif post.attachments.get("logo.webp") %}
+    {% if post.attachments.get("logo.webp") %}
     {% set img = post.attachments.get("logo.webp") %}
     <img src="{{ img|url }}" style="padding: 10px;" >
     {% endif %}
@@ -92,9 +90,7 @@
     <div>
       {{ render_author_tags(post) }}
 
-      {% if post.attachments.get("logo.png") %}
-      {% set img = post.attachments.get("logo.png") %}
-      {% elif post.attachments.get("logo.webp") %}
+      {% if post.attachments.get("logo.webp") %}
       {% set img = post.attachments.get("logo.webp") %}
       <img src="{{ img|url }}" style="padding: 10px;" >
       {% endif %}
