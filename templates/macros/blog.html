@@ -44,6 +44,8 @@
     <hr>
     {% if post.attachments.get("logo.png") %}
     {% set img = post.attachments.get("logo.png") %}
+    {% elif post.attachments.get("logo.webp") %}
+    {% set img = post.attachments.get("logo.webp") %}
     <img src="{{ img|url }}" style="padding: 10px;" >
     {% endif %}
 
@@ -93,6 +95,8 @@
 
       {% if post.attachments.get("logo.png") %}
       {% set img = post.attachments.get("logo.png") %}
+      {% elif post.attachments.get("logo.webp") %}
+      {% set img = post.attachments.get("logo.webp") %}
       <img src="{{ img|url }}" style="padding: 10px;" >
       {% endif %}
 

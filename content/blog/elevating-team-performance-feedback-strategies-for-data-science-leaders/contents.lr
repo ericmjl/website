@@ -1,0 +1,115 @@
+title: Elevating Team Performance: Feedback Strategies for Data Science Leaders
+---
+author: Eric J. Ma
+---
+body:
+
+## Introduction
+
+In data science (and most) teams, how team leads give feedback can significantly influence team members' growth and development. Being close to the end of the year, I reflected on 2.5 years of providing feedback and coaching to my teammates. I decided to document the nuances of delivering constructive feedback with concrete (but anonymized) examples from my work. These essentially are things that I've learned over the years.  ￼
+
+## Stay Positive and Specific
+
+When giving feedback, you want to stay positive. Doing so is essential for fostering a supportive and motivating environment. Additionally, you want to be specific. Doing so is necessary for coaching an individual contributor toward improvement.
+
+For example, I remember one of our teammates delivered an excellent presentation on behalf of a project team. At the same time, I noticed that this public speaking session revealed some pointers where he could have improved. I could have just said, "Great job! I loved it!" and moved on, but instead, I said something along the lines of:
+
+> That was an excellent presentation - based on feedback from others in the audience, they could follow along the main concepts. Your delivery was smooth and confident - no noticeable hiccups, even if there were any.
+> In the spirit of continual improvement, I noticed that your eyes made more contact with the speaker's monitor than the audience. If you switched your attention to the audience, that would double the effectiveness of your presentation instantly. Consider that for the future!
+
+Some key pointers I strived to accomplish include:
+Opening off with the positives in concrete ways.
+Pivoting to improvements (and not to critiques).
+Providing actionable suggestions that my teammates could put into action in the future.
+
+This kind of feedback acknowledges the strengths while offering specific areas for improvement, making it constructive and encouraging. By contrast, without specific feedback, your teammates would be left wondering what they did well and what they needed to improve upon. In a worst-case scenario, change something they did well (which they should preserve) while continuing to do something that wasn't effective (which should be changed).
+
+## Encourage Self-Reflection
+
+In providing feedback, I avoid injecting my opinions first. Instead, I encourage self-reflection first. My opening lines in a feedback session often are:
+
+> What did you think went well, and what would you like to improve?
+
+Even though I ask that my teammates begin first, I still take notes and have an opinion on where they can improve. The key idea I'm going for here is to encourage self-reflection. From personal experience, I am more receptive to feedback once I've had the chance to rewind and play back my performance tape in my head first. Following the Golden Rule, I want to afford my teammates the same opportunity.
+
+From that point onwards, there is a discussion rather than a top-down lecture. If I've done the hiring part right, my teammates will be self-conscious and technically adept. As a result, we will agree with most of what we discuss and only have to focus our energies on places where I, or they, may have missed something.
+
+## Be Effusive in Asynchronous Feedback
+
+As with general feedback, code review feedback must be specific and positive. Unlike general feedback, however, _asynchronous_ code review needs additional care.
+
+In asynchronous code review, being biased towards being effusive is essential. If we were to metaphorically measure the bandwidth available for carrying _intent_, text is limited compared to in-person reviews or reviews done over video calls. Being effusive is a way to help communicate assumed positive intent. Doing so can help foster a psychologically safe environment within the team.
+
+Suppose you are the reviewer of an algorithm that requires refactoring. A poor way to leave a review comment might look like this:
+
+> This code needs refactoring.
+
+A better way to communicate here would be:
+
+> Thanks for implementing the algorithm -- this is a non-trivial and technically challenging piece of code. How could we refactor this further to make the implementation match our understanding of the problem better? And how could we test it so that we can gain a guarantee of the mathematical correctness of the overall algorithm?
+
+In that response, I followed the abovementioned principles - being positive, encouraging specificity, and encouraging self-reflection. Also, I avoid using the term "you" to convey that this code is co-created by us as a team, even though my teammate is the reviewer. (Using "you" can also come across as being accusatory, even if that's not the intent.)
+
+There will be times when I find a nitpicky error that requires a nitpicky response. In those cases, I will prefix my review comment with a clarification that my comment is nitpicky. To illustrate, here is a nitpicky comment without that clarification:
+
+> A blank line between the function description and argument docs is needed.
+
+Imagine being a newcomer to the team and receiving that review comment - you have little established trust with the rest of the team. You may wonder, "Why is my team lead being so nitpicky with me?" You may even second-guess your decision to join the group!
+
+By contrast, here is a better version of the comment.
+
+> Minor nitpick: typical documentation style includes a blank line between the description of the function and its argument documentation. Can you fix this throughout, please?
+
+Being effusive means defusing tension, reducing uncertainty, and increasing clarity. Doing so enhances psychological safety, which in turn leads to high-performing teams. Please don't take it from me: [Googlers have done this research!](https://www.linkedin.com/pulse/five-keys-successful-google-team-laszlo-bock/)
+
+## Make Feedback `in situ`
+
+Technical feedback is often most effective [_in situ_](https://en.wikipedia.org/wiki/In_situ):
+
+> In situ (/ɪn ˈsɪtjuː, - ˈsaɪtjuː, - ˈsiː-/; often not italicized in English) is a Latin phrase that translates literally to "on site" or "in position."
+>
+> ([Wikipedia entry on _in situ_, accessed on Monday, 11 December 2023](https://en.wikipedia.org/wiki/In_situ))
+
+Doing so stems from one property that I have uncovered about deeply technical work. Until it is implemented in code or drawn out as a diagram, there are often (1) too many abstractions to wrap one's head around and (2) too much contextual knowledge needed for specific feedback to be effective. More often than not, technical feedback needs to be shown rather than told. As such, rather than providing technical feedback in the absence of code, documentation, or diagrams, it is much more effective to provide technical feedback _in situ_, i.e. within the context of actual work being done and just-in-time.
+
+Here is a real example from work. One of my teammates performed a calculation and called it a probability measure. When we discussed the matter, my feedback was vague as I did not see the mathematical implementation in the code. Only when I saw the code could I pinpoint that the calculation did not constitute a probability measure as the sum of so-called probabilities did not equal 1.0, which is a definition of probabilities. Giving the feedback _in situ_ meant that they had a concrete memory of their own professional experience to rely on when remembering this point.
+
+## Point to Impact
+
+When giving feedback, particularly positive feedback, it helps to contextualize the accomplishment by connecting it to the team's broader mission (or company goals). Doing so is a suggestion written by Ron Carucci in the Harvard Business Review Article, ["What Not To Do When You're Trying To Motivate Your Team"](https://hbr.org/2018/07/what-not-to-do-when-youre-trying-to-motivate-your-team). With few exceptions, at work, we all want to know why what we've done matters -- why else would we dedicate just under 1/4 of our adult lives to it?
+
+Pointing to impact implies that I am personally on the hook for knowing _why_ a project matters. I am responsible for understanding this for all of my teammates' work. I need to articulate the importance of everyone's work and their connections to a broader vision of what discovery science can be -- accelerated and quantified. I also need to know how every part of our practice relates to our broader mission and its impact _beyond our company_.
+
+## Be uplifting when mistakes happen
+
+Providing uplifting feedback, especially when a teammate realizes they've made a mistake, is crucial in maintaining team morale and encouraging a growth mindset. In such situations, it's essential to approach the feedback with empathy and understanding.
+
+I remember a case where one of my teammates invested months of work in building new tricks to improve our internal deep learning library but overlooked a minor but critical technical detail that led to data leakage within our data loaders. Doing so caused no shortage of a confidence crisis in that teammate, as they felt it was way too silly of an error! At the same time, it was the kind of mistake I could relate to because _I made the same category of error during grad school_. I shared my personal experience and noted how that teammate's effort had yielded, as a side product, other foundational improvements to our code library, which were going to be high leverage and ROI.
+
+Begin by acknowledging the good intentions and efforts behind their actions, emphasizing that mistakes are a natural part of the learning process and an opportunity for growth. You might say, "This mistake is uncommon, but in your case, it happened when trying something challenging. I can understand how the excitement can lead to looking over some details; don't bang yourself up over it. The code error is fixable, and you did it straight away, and it was timely too, as nobody was impacted over the time that the bug was present." I addressed the error and reinforced the broader value of that teammate's work to the team. My goal is to foster a supportive environment where team members feel safe to experiment, learn, and improve.
+
+## Summary
+
+Effective feedback in a data science team is as much an art as a science. It involves staying positive and specific, encouraging self-reflection, being effusive (especially in asynchronous scenarios), giving technical feedback _in situ_, connecting accomplishments to broader impacts, and uplifting when mistakes occur. These approaches ensure that feedback is not just a formality but also a powerful tool for growth and team cohesion. Focusing on these aspects fosters an environment where team members feel valued, motivated, and aligned with the team's broader mission.
+
+My goal is to create a culture of continuous improvement, where feedback forms a stepping stone to professional excellence and a deeper understanding of the intricacies and wonders of data science. What resonated with you? And what did I miss out that you'd like to share?
+---
+pub_date: 2023-12-11
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my experiences and insights on providing effective feedback in a data science team. I discuss the importance of positivity, specificity, self-reflection, effusiveness, in situ technical feedback, connecting accomplishments to broader impacts, and uplifting when mistakes occur. These strategies foster a supportive environment, promote continuous improvement, and align team members with the broader mission. How can these feedback strategies improve your team's dynamics and performance? I hope my experiences shared here can give you inspiration!
+---
+tags:
+
+data science
+team management
+culture
+feedback
+coaching
+code review
+asynchronous feedback
+technical feedback
+team
+morale
+continuous improvement
