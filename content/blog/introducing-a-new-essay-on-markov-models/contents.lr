@@ -4,20 +4,43 @@ author: Eric J. Ma
 ---
 body:
 
-Two weeks ago on a Monday afternoon, I hacked on a work project with a colleague Zachary Barry (who was in the same program as I was in grad school). In that project, we wanted to build an autoregressive hidden Markov model that could model motion. (I cannot go further than that, given that this touches front-line workplace work.) This turned out to be both
+Two weeks ago on a Monday afternoon,
+I hacked on a work project with a colleague Zachary Barry
+(who was in the same program as I was in grad school).
+In that project, we wanted to build
+an autoregressive hidden Markov model that could model motion.
+(I cannot go further than that, given that this touches front-line workplace work.)
+This turned out to be both
 
 1. non-trivial, because of the high degree of problem-specificity involved, and
 2. difficult to grok, because of the lack of explanatory papers and teaching material out there that was oriented towards programming-types.
 
-Not all was lost, though, as the last time I touched Markov models was in 2014, when I first encountered it in a computational biology class at MIT. Leveraging that, my familiarity with PyMC3, and Zach's prior background, we hacked together a prototype that he could take forth (or that we would at least schedule another hack session for).
+Not all was lost, though, as the last time I touched Markov models was in 2014,
+when I first encountered it in a computational biology class at MIT.
+Leveraging that, my familiarity with PyMC3, and Zach's prior background,
+we hacked together a prototype that he could take forth
+(or that we would at least schedule another hack session for).
 
-That second difficulty, though, stuck with me. Since I couldn't find a satisfactory explainer on Markov models for programmers, I decided I'd write one.
+That second difficulty, though, stuck with me.
+Since I couldn't find a satisfactory explainer on Markov models for programmers,
+I decided I'd write one.
 
-The result is the [latest essay](https://ericmjl.github.io/essays-on-data-science/machine-learning/markov-models/) on Markov models, which I have just posted to my [Essays collection](https://ericmjl.github.io/essays-on-data-science/). This is a culmination of two days of continuous writing plus two weeks of review by gracious colleagues and collaborators who have generously given their time to help me improve it.
+The result is the [latest essay](https://ericmjl.github.io/essays-on-data-science/machine-learning/markov-models/) on Markov models,
+which I have just posted to my [Essays collection](https://ericmjl.github.io/essays-on-data-science/).
+This is a culmination of two days of continuous writing
+plus two weeks of review by gracious colleagues and collaborators
+who have generously given their time to help me improve it.
 
-In this essay, we cover what Markov models are, interleaving prose, equations, code, and figures to help communicate to programmer-types what exactly Markov models are, particularly the mathematics behind them but presented with more code than equations.
+In this essay, we cover what Markov models are,
+interleaving prose, equations, code, and figures
+to help communicate to programmer-types what exactly Markov models are,
+particularly the mathematics behind them but presented with more code than equations.
 
-It's also a preview of the kind of writing I'd like to focus on going forth. I'm launching a monthly newsletter curating programmer-friendly data science tools, tips and techniques at [Tinyletter](https://tinyletter.com/ericmjl). And if you'd like to support **more programmer-oriented data science learning material**, please consider pledging me a cup of coffee on [Patreon](https://www.patreon.com/ericmjl)!
+It's also a preview of the kind of writing I'd like to focus on going forth.
+I'm launching a monthly newsletter curating programmer-friendly data science tools,
+tips and techniques at [Tinyletter](https://tinyletter.com/ericmjl).
+And if you'd like to support **more programmer-oriented data science learning material**,
+please consider pledging me a cup of coffee on [Patreon](https://www.patreon.com/ericmjl)!
 ---
 pub_date: 2020-04-12
 ---
