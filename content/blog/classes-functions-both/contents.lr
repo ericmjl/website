@@ -1,0 +1,168 @@
+title: Classes? Functions? Both?
+---
+author: Eric J. Ma
+---
+body:
+
+Should I adopt a class- or function-based programming style as a data scientist?
+
+Recently, one of my colleagues asked me this question, and his question reminded me that I get asked this question pretty often. Additionally, I've written [one take on this question before, too](https://ericmjl.github.io/blog/2022/4/1/functional-over-object-oriented-style-for-pipeline-esque-code/). But with the benefit of additional years of experience from that previous post, I figured it'd be good to do another take.
+
+So here it is:
+
+> Objects are for data, and functions are for processing data. We can implement configurable functions both ways.
+
+Ok, let's break it down.
+
+## Objects are for grouping data
+
+Objects are good places for storing related pieces of data together. One example would be neural network configuration. Another example would be a collection of file paths accessed throughout your code. The key here is to _require_ those variables to be present when instantiating the object, ensuring they are present when needed. Here's an example:
+
+```python
+class FilePathConfig:
+    def __init__(self, data_path, log_path, model_path, results_path):
+        self.data_path = data_path
+        self.log_path = log_path
+        self.model_path = model_path
+        self.results_path = results_path
+
+# Example usage
+paths = FilePathConfig(
+    data_path="/path/to/data",
+    log_path="/path/to/logs",
+    model_path="/path/to/models",
+    results_path="/path/to/results"
+)
+```
+
+Because all of the `*_path` arguments are _required_ when instantiating the `paths` object, we have the safety and guarantees necessary to access `paths.data_path` or `paths.results_path` anywhere in the program.
+
+Doing so necessitates declaring all of the paths up-front rather than scattering the paths throughout the program, _which turns out to be a good pattern to follow anyway_. If, for whatever reason, you need to reorder operations within the program, then by declaring all of the paths beforehand and encapsulating them within the `paths` object, you can avoid NameErrors due to objects not being found.
+
+As a side note, there's a refrain about programming that comes from Linus Torvalds, creator of Linux and Git:
+
+> Bad programmers worry about the code. Good programmers worry about data structures and their relationships.
+
+(I would recommend reading through [the discussion on StackExchange](https://softwareengineering.stackexchange.com/questions/163185/torvalds-quote-about-good-programmer) as well!)
+
+Thinking hard about our data structures, which by definition are always going to be classes, makes writing functions much more effortless later.
+
+## Functions are for processing data
+
+Wherever possible, I recommend that colleagues use functions for data processing. In doing so, we help encourage a state-less pattern of programming. What do I mean by that? Let's use an example to illustrate.
+
+Let's say we're writing a data-processing chunk of code. One _could_ choose to do this in an object-oriented way, which might look like:
+
+```python
+class DataProcessor:
+    def __init__(self):
+        pass
+
+    def process(self, arg1, arg2, kwarg1=value1):
+        self.read(arg1)
+        self.compute_value(arg1, arg2)
+        self.write(value1)
+
+    def read(self, arg):
+        with open(arg, "r+") as f:
+            self.item = f.read()
+
+    def compute_value(self, arg1, arg2):
+        self.other_value = ... # (something that processes self.item)
+
+...
+```
+
+I struggled hard to write that example because it contains so many anti-patterns that I would avoid, to begin with:
+We lack a single location where class attributes are defined, making it difficult to reason about what class attributes _should_ exist.
+`process`, a higher-order function, is at the same indentation level as `read`. This organization makes it difficult to reason whether `read` or `process` should have precedence when reading the code; indeed, as mentioned in [my other blog post](https://ericmjl.github.io/blog/2022/4/1/functional-over-object-oriented-style-for-pipeline-esque-code/), one could (in theory) call any of the class methods in any order, only to be frustrated because we did not set a class attribute.
+We cannot easily read off the flow of information within the `process` class method, as there are no return values here.
+The critical overarching problem here is using state where state is not warranted.
+
+By contrast, using a function helps alleviate some of these issues. Rewriting the code above as functions instead gives us the following:
+
+```python
+def compute_value(data, arg1, arg2) -> pd.DataFrame:
+    other_value = ... # (something that processes data)
+    return other_value
+
+# and then the main program:
+
+if __name__ == "__main__":
+    with open("/path/to/raw/data.txt", "r+") as f:
+        data = f.read()
+
+    transformed = compute_value(data, arg1, arg2)
+    # You can even do:
+    # transformed2 = another_computation(transformed, arg3, arg4)
+
+    transformed.to_csv("/path/to/data.csv")
+```
+
+There were two design decisions here. The first is that there are only _primitive_ data transformation operations (`compute_value`) that are declared as functions, while disk I/O is left unencapsulated. Doing so assures the next reader of code that we did not sneak in auxiliary data processing code into disk I/O functions for convenience. Second, we express each logical data transformation unit as a Python function. Its scope should match existing domain knowledge about how that transformation should work. By adhering to these design decisions, we make it easy for anyone with domain knowledge to follow the code.
+
+## Configurable functions can be implemented both ways
+
+This idea is where we muddy and blur the lines between objects and functions. We can implement configurable functions as _partially initialized functions_ or as _callable objects_.
+
+One example from deep learning is our `Dense` neural network layer.
+
+As a function, we might implement it as follows:
+
+```python
+from functools import partial
+
+def init_params(in_dims, out_dims):
+    return random_array((in_dims, out_dims)), random_array((out_dims,))
+
+def dense(params, x):
+    w, b = params
+    return np.dot(x, w) + b
+
+layer = partial(dense, params)
+out = layer(x)
+```
+
+The neural network layer is nothing more than a Python function, though we have to initialize `params` ourselves.
+
+As a configurable class, we might implement it according to the following pseudocode:
+
+```python
+class Dense:
+    def __init__(self, in_dims, out_dims):
+        self.w = random_array((in_dims, out_dims))
+        self.b = random_array((out_dims,))
+    def __call__(self, x):
+        return np.dot(x, w) + b
+layer = Dense(in_dims, out_dims)
+out = layer(x)
+```
+
+Indeed, this is the pattern used by major neural network libraries, such as [Chainer](https://chainer.org/), from which [PyTorch](https://pytorch.org/) adopted the pattern, which was then further propagated in the [Equinox](https://github.com/patrick-kidger/equinox) library as well.
+
+In both cases, we initialize our neural net `layer` so we only have to pass in `x`. We have to initialize parameters with the _partially initialized function_ pattern, which may be a bit hasslesome. However, with the _callable function_ pattern, parameters are attached to the object directly as part of the initialization. The latter is a generally helpful pattern **when we reuse data associated with the callable function** and **when we can configure the data**. In this case, the data here are the parameters of the layer.
+
+## How do we choose?
+
+It'll ultimately depend on the problem that you're working on. My personal programming philosophy is to lean on a functional programming style more often than not, relying on classes to organize related pieces of data into a single object and pass them around. However, on occasion, like with `llamabot`, I will adopt the _callable object_ pattern, as configuring a stateless LLM with a system prompt and then reusing it matches well with the callable object pattern. (For an example, see [SimpleBot's source code](https://github.com/ericmjl/llamabot/blob/main/llamabot/bot/simplebot.py).)
+
+What patterns do you use? And where have you seen these patterns? I'd love to hear from you, too!
+---
+pub_date: 2023-12-12
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss the choice between class- or function-based programming for data scientists. I argue that objects are best for grouping data, while functions are ideal for processing data. However, configurable functions that need to be reused can be implemented both ways. I lean towards a functional programming style, using classes to organize related data. But sometimes, like with callable objects, I adopt a different approach. Curious about when to use each style in your data science projects? Read on!
+---
+tags:
+
+data science
+programming style
+function-based programming
+class-based programming
+data processing
+object-oriented
+data structures
+neural network
+data transformation
+callable objects
