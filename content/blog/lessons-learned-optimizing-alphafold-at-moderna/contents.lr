@@ -12,11 +12,11 @@ At its core, the key object passed from the MSA job to the structure prediction 
 
 ## Lesson 1: Static analysis tools can help catch code errors early
 
-The first lesson I wanted to share is investing in mastering an integrated development environment (IDE). VSCode, when fully configured, can be a super powerful tool! While hacking on the deployment codebase, I used static analysis tools (pyright, flake8, ruff) to check that we had the correct code inside the Typer CLI we built for AlphaFold. Along the way, when splitting functions up, if we weren't using an argument in a function or if we didn't declare it in the function signature, then I would get a red squiggly line under that variable, immediately giving me a visual check that the code contained errors. Catching these errors early on helped with development cycle time.
+The first lesson I wanted to share is investing in mastering an integrated development environment (IDE). VSCode, when fully configured, can be a super powerful tool! While hacking on the deployment codebase, I used static analysis tools (pyright, flake8, ruff) to check that we had the correct code inside the Typer CLI we built for AlphaFold. Along the way, when splitting functions up, if we weren't using an argument in a function or didn't declare it in the function signature, I would get a red squiggly line under that variable, immediately giving me a visual check that the code contained errors. Catching these errors early on helped with development cycle time.
 
 ## Lesson 2: CI/CD caching is incredibly useful
 
-This lesson is an inverse lesson for me because we use Bitbucket at work and don't have the kind of cache sizes available to GitHub Actions users that I'm used to in my open-source projects. As such, my cycle times for testing were 30-45 minutes rather than 2-3 minutes, which can be incredibly distracting. On the other hand, I could work around the long cycle times by setting a watch timer for AlphaFold. I am sure that would have finished the refactor faster if we had better caching!
+This lesson is an inverse lesson for me because we use Bitbucket at work and don't have the kind of cache sizes available to GitHub Actions users that I'm used to in my open-source projects. As such, my cycle times for testing were 30-45 minutes rather than 2-3 minutes, which can be incredibly distracting. On the other hand, I could work around the long cycle times by setting a watch timer for AlphaFold. I am sure that we would have finished the refactor faster if we had better caching!
 
 ## Lesson 3: It pays to read code first before writing code
 
@@ -44,7 +44,7 @@ I've had the privilege of reverse engineering, designing, and building some comp
 
 1. reverse-engineering a hierarchical Dirichlet process autoregressive Gaussian hidden Markov model (2018 with an intern at NIBR),
 2. re-implementing a protein language model (recurrent neural network) from scratch (2019 with [Arkadij Kummer]() at NIBR) and speeding it up 100X,
-3. co-designing an abstracted data model for laboratory process capture (2023 at Moderna), and
+3. co-designing an abstracted data model for laboratory process capture (2023 at Moderna) and
 4. building a scalable, automated machine learning system for chemical property prediction (2019-2020 at NIBR)
 
 But this one feels like the crowning achievement of 2023, given the intensity of the refactor, the speed at which we managed to pull it through, and the impact it should have on my colleagues in the Research organization. It touched on cloud limits, which was a first for me. I also had the support of a larger group of colleagues - both the maintainers of our internal infrastructure in Seattle and the power AlphaFold users in Cambridge, and having that very human support was important for pulling through. Refactoring AlphaFold was also, in the words of my teammate Jackie, the B-plot to the hackathon that was ongoing concurrently. That made it double the fun.
