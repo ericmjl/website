@@ -1,0 +1,322 @@
+title: Evolving LlamaBot
+---
+author: Eric J. Ma
+---
+pub_date: 2024-01-10
+---
+tags:
+
+llamabot
+api
+chromadb
+openai
+mistral
+anthropic
+claude
+mixtral
+simplebot
+chatbot
+querybot
+llm
+large language model
+---
+twitter_handle: ericmjl
+---
+body:
+
+# Reworking LlamaBot
+
+In my spare time (if I can find any), I've been hacking on LlamaBot to make a bunch of internal improvements to the package. It's about ready, and I'd like to document what's changed here.
+
+## Change 1: LiteLLM
+
+The first thing worth discussing is how the text-based models now use [LiteLLM](https://github.com/BerriAI/litellm) behind the scenes. With the explosion of models, switching between them without building out extensive internal code infrastructure is something that's going to facilitate experimentation. In my case, I was initially building out against OpenAI's GPT-4 API. Later, I experimented with Ollama for local LLMs on my tiny MacBook Air. Later, I became curious about Claude (by Anthropic) and Mixtral (by Mistral) and realized what a headache it would be to maintain my own switchboard for dispatching out to different APIs. LiteLLM fixed that problem for me efficiently, providing a uniform API interface to the various models I wanted to try. In short, LiteLLM became the API switchboard I desperately needed, and I'd recommend checking it out!
+
+## Change 2: Document Store and History
+
+The second thing I'd like to discuss here is the new DocumentStore class available in LlamaBot. I ripped out the internals of QueryBot, made DocumentStore an independent class, and reinstalled DocumentStore into the QueryBot class.
+
+What was the motivation for doing so? It was primarily my realization that I needed an interface on document storage and retrieval that (1) could be consistent across different storage backends and (2) customizable internally to work with different forms of storage + retrieval logic.
+
+As such, I started out with the following `DocumentStore` API:
+
+```python
+class DocumentStore:
+    def __init__(
+        self,
+        collection_name: str,
+        storage_path: Path = Path.home() / ".llamabot" / "chroma.db",
+    ):
+        client = chromadb.PersistentClient(path=str(storage_path))
+        collection = client.create_collection(collection_name, get_or_create=True)
+
+        self.storage_path = storage_path
+        self.client = client
+        self.collection = collection
+        self.collection_name = collection_name
+
+    def append(self, document: str, metadata: dict = {}):
+        doc_id = sha256(document.encode()).hexdigest()
+
+        self.collection.add(documents=document, ids=doc_id, metadatas=metadata)
+
+    def extend(self, documents: list[str]):
+        for document in documents:
+            self.append(document)
+
+    def retrieve(self, query: str, n_results: int = 10) -> list[str]:
+        results: QueryResult = self.collection.query(
+            query_texts=query, n_results=n_results
+        )
+        return results["documents"][0]
+
+    def reset(self):
+        self.client.delete_collection(self.collection_name)
+        self.collection = self.client.create_collection(
+            self.collection_name, get_or_create=True
+        )
+
+    def add_documents(
+        self,
+        document_paths: Path | list[Path],
+        chunk_size: int = 2_000,
+        chunk_overlap: int = 500,
+    ):
+        if isinstance(document_paths, Path):
+            document_paths = [document_paths]
+
+        for document_path in document_paths:
+            document = magic_load_doc(document_path)
+            splitted_document = split_document(
+                document, chunk_size=chunk_size, chunk_overlap=chunk_overlap
+            )
+            splitted_document = [doc.text for doc in splitted_document]
+            self.extend(splitted_document)
+```
+
+Here, `append`, `extend`, `retrieve`, and `reset` are the core APIs, while `add_documents` is a higher-level API that lets us add documents to the `DocumentStore` based on file paths. What's cool is that this core interface (init, append, extend, retrieve, and reset) applies to document storage and chat history! Let's think carefully about it, with chat history. We are always appending (or extending) it and retrieving (the last K messages) within a ChatBot setting. Re-imagining and treating chat history as a collection of documents allows us to build a uniform interface for both, simplifying the internals of our Bots. Here's what the `History` class looks like, then, with the exact same interface and adding a `__getitem__` method:
+
+```python
+class History:
+    """History of messages."""
+
+    def __init__(self, session_name: str):
+        self.messages: list[BaseMessage] = []
+        self.session_name = session_name
+
+    def append(self, message: BaseMessage):
+        """Append a message to the history."""
+        self.messages.append(message)
+
+    def retrieve(self, query: BaseMessage, character_budget: int) -> list[BaseMessage]:
+        """Retrieve messages from the history up to the the character budget.
+
+        We use the character budget in order to simplify how we retrieve messages.
+
+        :param query: The query to use to retrieve messages. Not used in this class.
+        :param character_budget: The number of characters to retrieve.
+        """
+        return retrieve_messages_up_to_budget(self.messages, character_budget)
+
+    def reset(self):
+        self.messages = []
+
+    def __getitem__(self, index):
+        """Get the message at the given index."""
+        return self.messages[index]
+```
+
+You may have noticed that I used ChromaDB instead of LlamaIndex's tooling. There were multiple reasons for doing so, but the primary drivers were as follows.
+
+The first was the layers of complexity in LlamaIndex's tooling, which primarily revolves around a `VectorStoreIndex`, an `LLMPredictor`, a `ServiceContext`, and a `StorageContext. The documentation does not clearly explain what each of these abstractions is all about. Additionally, it felt peculiar to pair an LLMPredictor with a VectorStoreIndex when the LLMPredictor was primarily present to synthesize answers - at most, we need an embedding function. By contrast, ChromaDB's abstractions are much more natural: we have documents (text) that are stored as vectors (numbers), and they are linked together; when we `query` the vector database with a `query_text`, we get back a collection of results that have the document and metadata linked together.
+
+The other was the so-called "cost of sane defaults": ChromaDB defaults to using SentenceTransformer from HuggingFace to compute embeddings (which is zero-cost out of the box), while LlamaIndex's examples commonly default to using OpenAI's API, which costs some money.
+
+Taken together, though I had already become somewhat familiar with LlamaIndex's API, ChromaDB felt much more natural for the way that LlamaBot's internal APIs were being designed -- bots that do text-in/text-out and document stores with customizable retrieval.
+
+Change 3: SimpleBot as the core natural language programmable bot interface
+
+One critical insight I arrived at in building LlamaBot is that there is one general and valuable use case for LLMs: we can use natural language to build text-in, text-out robots. Granted, this is less rigorous than using formal programming languages, but this is really useful for applications that need human-sounding natural language outputs. I'm also not the first to arrive at this conclusion: OpenAI's "GPTs" feature is also the result of this insight!
+
+Additionally, the mechanics of sending messages out to APIs often means that we need to compose a collection of messages that get sent to the API. The APIs (OpenAI, Mistral, etc.) are stateless, meaning they do not remember the previous context. This is a natural consequence of how the neural network models are trained behind the scenes. What's usually different between `SimpleBot`, `ChatBot`, `QueryBot`, and perhaps future `XBots`, would be how the messages are composed before being sent to the API.
+
+Finally, the mechanics of streaming, which usually involve copying and pasting the same chunk of code, feel stable enough that it should be abstracted behind a boolean toggle.
+
+Taking all of this together, I thought that if I could further use `SimpleBot` to simplify the interface to LiteLLM, we could then use `SimpleBot` in such a way that we could bang out specialized little bots that operate within a bigger `XBot` for various other applications.
+
+The result is a new `SimpleBot` interface:
+
+```python
+class SimpleBot:
+    def __init__(
+        self,
+        system_prompt: str,
+        temperature=0.0,
+        model_name=default_language_model(),
+        stream=True,
+        json_mode: bool = False,
+    ):
+        self.system_prompt: SystemMessage = SystemMessage(content=system_prompt)
+        self.model_name = model_name
+        self.temperature = temperature
+        self.stream = stream
+        self.json_mode = json_mode
+
+    def __call__(self, human_message: str) -> AIMessage:
+        messages: list[BaseMessage] = [
+            self.system_prompt,
+            HumanMessage(content=human_message),
+        ]
+        response = self.generate_response(messages)
+        autorecord(human_message, response)
+        return AIMessage(content=response)
+
+    def generate_response(self, messages: list[BaseMessage]) -> AIMessage:
+        """Generate a response from the given messages."""
+
+        messages_dumped: list[dict] = [m.model_dump() for m in messages]
+        completion_kwargs = dict(
+            model=self.model_name,
+            messages=messages_dumped,
+            temperature=self.temperature,
+            stream=self.stream,
+        )
+        if self.json_mode:
+            completion_kwargs["response_format"] = {"type": "json_object"}
+        response = completion(**completion_kwargs)
+        if self.stream:
+            ai_message = ""
+            for chunk in response:
+                delta = chunk.choices[0].delta.content
+                if delta is not None:
+                    print(delta, end="")
+                    ai_message += delta
+            return AIMessage(content=ai_message)
+
+        return AIMessage(content=response.choices[0].message.content)
+```
+
+(I omitted the docstrings here for ease of reading, but the actual thing has full docstrings!)
+
+Here, `__call__` is the high-level interface that does `str --> AIMessage`, while `generate_response` is a lower-level interface that does `list[{Human/System}Message] --> AIMessage`. The key difference here is what the input is. `__call__` allows us to pass in a single string as input, while `generate_response` allows a developer to compose together a more complex suite of messages that get sent to the downstream APIs. In both cases, to ensure uniformity across downstream bots, `__call__` is intentionally designed to return an `AIMessage` rather than a `str`, but I may revisit that design decision in the future too. After all, turning `__call__` into a `str --> str` interface is attractive too!
+
+Additionally, note how `generate_response` contains the code for streaming. By abstracting that code out, we can toggle between streamed vs. non-streamed results at will without needing to bother with that chunk of code. As has been my rule of thumb, the time for a refactor is as soon as we copy/paste the code!
+
+## Change 4: Complex Bots as Mixins of SimpleBot and Document Stores
+
+With this refactor, SimpleBot can be used standalone or made part of other bots. Here's an example from ChatBot: we use the Mixin pattern to compose ChatBot from SimpleBot and History.
+
+```python
+class ChatBot(SimpleBot, History):
+    def __init__(
+        self,
+        system_prompt: str,
+        session_name: str,
+        temperature=0.0,
+        model_name=default_language_model(),
+        stream=True,
+        response_budget=2_000,
+    ):
+        SimpleBot.__init__(
+            self,
+            system_prompt=system_prompt,
+            temperature=temperature,
+            model_name=model_name,
+            stream=stream,
+        )
+        History.__init__(self, session_name=session_name)
+        self.response_budget = response_budget
+
+    def __call__(self, message: str) -> AIMessage:
+        human_message = HumanMessage(content=message)
+        history = self.retrieve(
+            query=human_message, character_budget=self.response_budget
+        )
+        messages = [self.system_prompt] + history + [human_message]
+        response = self.generate_response(messages)
+        autorecord(message, response.content)
+
+        self.append(human_message)
+        self.append(response)
+        return response
+```
+
+Notice how `ChatBot` now inherits all of the class methods from `SimpleBot` and `History`. Therefore, it can use `generate_response` from SimpleBot and `append` from `History`. It's `__call__` is a bit more complicated than `SimpleBot`'s, so the custom logic gets placed there. After all, `ChatBot` is nothing more than the two things mashed together. This is called the Mixin pattern, where a composite class inherits from two or more parent classes, each with its own unique set of attributes and class methods. Using the Mixin pattern results in more composable object class definitions but can also be a more significant mental burden for a code developer.
+
+That said, this isn't the only way to build a ChatBot. Instead of using the Mixin pattern, we can hard-code a `self.bot = SimpleBot(...)` and `self.history = History(...)` in the class. Indeed, this was the original updated design of ChatBot before I experimented with the Mixin pattern. It has some advantages; for example, I could have both a `DocumentStore` and a `History` system (which, if you remember, have the same interface); these interfaces would invariably clash if we tried to do a mixin from both. But it also has some disadvantages: if I wanted to access an attribute such as the `model_name`, I would have to do `self.bot.model_name`; and if I wanted to use `self.model_name` instead, I would have counterfactually had to set the attribute in the `__init__` as well -- a duplication of information.
+
+The same can be said for `QueryBot`; here's what it looks like:
+
+```python
+class QueryBot(SimpleBot, DocumentStore):
+    def __init__(
+        self,
+        system_prompt: str,
+        document_paths: Path | list[Path],
+        collection_name: str,
+        temperature: float = 0.0,
+        model_name: str = default_language_model(),
+        stream=True,
+    ):
+        SimpleBot.__init__(
+            self,
+            system_prompt=system_prompt,
+            temperature=temperature,
+            model_name=model_name,
+            stream=stream,
+        )
+        DocumentStore.__init__(self, collection_name=collection_name)
+        self.add_documents(document_paths=document_paths)
+        self.response_budget = 2_000
+
+    def __call__(self, query: str, n_results: int = 20) -> AIMessage:
+        messages = []
+
+        context_budget = model_context_window_sizes.get(
+            self.model_name, DEFAULT_TOKEN_BUDGET
+        )
+        retrieved = retrieve_messages_up_to_budget(
+            messages=[
+                RetrievedMessage(content=chunk)
+                for chunk in self.retrieve(query, n_results=n_results)
+            ],
+            character_budget=context_budget - self.response_budget,
+        )
+        messages.extend(retrieved)
+        messages.append(HumanMessage(content=query))
+        response: AIMessage = self.generate_response(messages)
+        return response
+```
+
+Similar to ChatBot, `__call__` is the only overridden class method. Because we inherit from `DocumentStore`, the `add_documents` class method becomes available to QueryBot, so we can do things like:
+
+```python
+qb = QueryBot(system_prompt=..., document_paths=[..., ...])
+# do stuff with qb
+# ...
+# then realize we need another document added in:
+qb.add_document(document_paths=...)
+```
+
+The Mixin pattern is one that I have come to appreciate. It encourages composability through modularity in our Python classes; in doing so, this helps force clarity in thinking when designing our classes. It's like being spiritually functional in style, even though we have stateful objects. As you can tell, many other bots we can build are nothing more than a `SimpleBot` composed together with some storage system, whether that storage system is `History` or `DocumentStore`. The biggest thing that differentiates `SimpleBot`, `ChatBot`, `QueryBot`, and maybe even `ChatQueryBot` is how messages get put together to be sent over the wire (API) and how documents are retrieved. Llamabot's new design reflects this updated knowledge.
+
+At the same time, I will freely admit that as a trained biologist, I fantasized for a moment about building bots composed of other bots... just like how biological systems are composed!
+
+Change 5: Switching to character-based lengths instead of tokens
+
+While working with the OpenAI API, measuring the length of texts in terms of tokens was natural. However, now that I've worked with multiple LLMs and their providers, I've found knowing what kind of tokenization scheme each model works with is opaque. As such, I decided to switch back to counting the length of strings by the number of characters. Doing so will ensure that we stay conservatively under the actual token length (counting characters over-estimates the number of tokens used) but will also give a more humanly understood way of calculating sequence length, which will be a bit more user-friendly.
+
+## Conclusion
+
+Having had some time to pause actual coding on LlamaBot and think carefully about how to organize the underlying code is something I felt the need to do for a while, especially as the tooling for building LLM applications begins to mature. The highlight here was changing the abstractions to build composite bots -- e.g., bots with document retrieval -- more efficiently. Greg Brockman once said that,
+
+> Much of the challenge in machine learning engineering is fitting the complexity into your head. Best way to approach is with great patience & a desire to dig into any detail.
+>
+> Source: [Twitter](https://twitter.com/gdb/status/1720204306903650712)
+
+The same goes for any software system being built, including LLM applications. This was the primary motivation for the refactor; the previous set of abstractions made it challenging for me to wrap my head around what was happening.
+
+More than that, **abstractions reflect working knowledge**. Suppose my working understanding of a problem domain is clean. In that case, I'll write code that cleanly maps those abstractions. By contrast, if my working knowledge is fuzzy, I'll write fuzzy code. The code state of LlamaBot reflects my working knowledge of applied LLM usage. Hopefully, this iteration is much clearer than before!
+
+---
+summary: In this blog post, I discuss the major changes I've made to LlamaBot, a project I've been working on in my spare time. I've integrated LiteLLM for text-based models, created a new DocumentStore class, and reimagined the SimpleBot interface. I've also experimented with the Mixin pattern to create more complex bots and switched to character-based lengths for more user-friendly calculations. How did these changes improve the functionality and efficiency of LlamaBot? Read on to find out!
