@@ -1,0 +1,46 @@
+title: GitHub Actions secrets need to be explicitly declared
+---
+author: Eric J. Ma
+---
+body:
+
+Today, in releasing a new version of LlamaBot, I also made a change for one of the `SimpleBot`s that I wrote to use the Mistral AI models instead of GPT-4. That meant that I needed to use a Mistral API key as part of the environment variables. However, no matter what  I tried, I couldn't seem to get the environment variable set within my GitHub action, even though it was declared as an Actions Repository-level secret.
+
+Turns out, declaring an Actions Repository secret doesn't immediately make it available to the GitHub Actions runner! According to the official documentation,
+
+> GitHub Actions can only read a secret if you explicitly include the secret in a workflow.
+>
+> (Source: [GitHub Actions docs](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#using-encrypted-secrets-in-a-workflow))
+
+This turns out to be a great security practice, even if it caused me no end of frustration for over 3 hours this evening. But how do we include it in a workflow step? It is done this way:
+
+```python
+    - step:
+      - name: Write release notes
+        ##### PAY ATTENTION HERE! #####
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        ##### PAY ATTENTION HERE! #####
+        run: |
+          python -m pip install -e .
+          llamabot configure api-key --api-key="${{ secrets.OPENAI_API_KEY }}"
+          llamabot configure default-model --model-name="${{ secrets.DEFAULT_LANGUAGE_MODEL }}"
+          llamabot git write-release-notes # <-- this line needs access to the MISTRAL_API_KEY environment variable!
+```
+---
+pub_date: 2024-01-11
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my experience of debugging GitHub Actions for LlamaBot. I encountered a challenge with setting the Mistral API key as an environment variable in my GitHub action. After hours of frustration, I discovered that GitHub Actions can only read a secret if it's explicitly included in a workflow. I explain how to include it in a workflow step. Curious about how to securely manage your API keys in GitHub Actions? Read on!
+---
+tags:
+
+llamabot
+mistral
+gpt-4
+api key
+environment variables
+github actions
+repository secret
+workflow step
