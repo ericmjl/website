@@ -134,7 +134,7 @@ The other was the so-called "cost of sane defaults": ChromaDB defaults to using 
 
 Taken together, though I had already become somewhat familiar with LlamaIndex's API, ChromaDB felt much more natural for the way that LlamaBot's internal APIs were being designed -- bots that do text-in/text-out and document stores with customizable retrieval.
 
-Change 3: SimpleBot as the core natural language programmable bot interface
+## Change 3: SimpleBot as the core natural language programmable bot interface
 
 One critical insight I arrived at in building LlamaBot is that there is one general and valuable use case for LLMs: we can use natural language to build text-in, text-out robots. Granted, this is less rigorous than using formal programming languages, but this is really useful for applications that need human-sounding natural language outputs. I'm also not the first to arrive at this conclusion: OpenAI's "GPTs" feature is also the result of this insight!
 
@@ -302,7 +302,7 @@ The Mixin pattern is one that I have come to appreciate. It encourages composabi
 
 At the same time, I will freely admit that as a trained biologist, I fantasized for a moment about building bots composed of other bots... just like how biological systems are composed!
 
-Change 5: Switching to character-based lengths instead of tokens
+## Change 5: Switching to character-based lengths instead of tokens
 
 While working with the OpenAI API, measuring the length of texts in terms of tokens was natural. However, now that I've worked with multiple LLMs and their providers, I've found knowing what kind of tokenization scheme each model works with is opaque. As such, I decided to switch back to counting the length of strings by the number of characters. Doing so will ensure that we stay conservatively under the actual token length (counting characters over-estimates the number of tokens used) but will also give a more humanly understood way of calculating sequence length, which will be a bit more user-friendly.
 
