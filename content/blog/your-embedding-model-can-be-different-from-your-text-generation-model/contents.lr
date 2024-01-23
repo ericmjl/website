@@ -23,7 +23,7 @@ To start, we should dispel the notion that our choice of embeddings will directl
 I prefer to have sane defaults in life to handle most Pareto-distributed scenarios. The same applies here. The most important thing to look at here is which embedding model has the best performance, measured along a few axes. As a pragmatic start, I would consider the following criteria:
 
 1. Hardware requirements
-2. MTEB performance (see [this paper](https://arxiv.org/abs/2210.07316) and the [leaderboard here](https://huggingface.co/spaces/mteb/leaderboard))
+2. MTEB (Massive Text Embedding Benchmark) performance (see [this paper](https://arxiv.org/abs/2210.07316) and the [leaderboard here](https://huggingface.co/spaces/mteb/leaderboard))
 3. Cost of operation
 
 A detailed comparison is likely the topic of a different blog post. However, after test-driving a few embedding models (OpenAI's `text-ada-002`, Mistral's embedding model, and the `SentenceTransformer` that ChromaDB uses by default), I now use `SentenceTransformer` on the basis that it is the cheapest -- it is free and runs on my hardware. It is also the (sane) default encoded within LlamaBot's new and shiny `DocumentStore`.
