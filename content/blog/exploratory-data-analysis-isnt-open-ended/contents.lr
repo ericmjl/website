@@ -1,0 +1,67 @@
+title: Exploratory data analysis isn’t open-ended
+---
+author: Eric J. Ma
+---
+body:
+
+## Misconceptions
+
+A common thing that data scientists are taught to do in our line of work is to do "exploratory data analysis," also known as EDA. The way I've seen curricula teaching data science approach EDA is to emphasize the tools: pandas, matplotlib, seaborn, and techniques: find correlations, look for "anything interesting."
+
+This pedagogical approach misses the mark. Exploratory data analysis should be directed and purposeful, not undirected and purposeless. Let me break this down with an example.
+
+## Directed and purposeful EDA
+
+At work, we are exploring training our generative models with end-goal use cases in mind. (I will not describe them in detail here, but it all pertains to molecules and biological sequences.) Our space of generative models needs to be tailored to the therapeutics that we make. Therefore, a generative model's inputs (i.e., the data) must also be appropriately tailored.
+
+We've got many public data sources and internal proprietary datasets that could be used. So, what does EDA look like in this context? Do we go about "just exploring" the sequence data and its metadata for new insights? Do we open `pandas` and `seaborn` and go to town on the keyboard, hammering out every visualization possible?
+
+Heck no!
+
+Within our generative model exercise, we came up with specific questions of the following patterns: what subgroups of sequences were there that could bias our generation process? Which sequences were annotated with valid subgroup names and which had invalid names (so we could re-annotate them with alternative computational methods to better curate the subset we are interested in)? Did the biological sequences we wanted to use as training data match the synthetic sequences we hoped to generate? What was the distribution of pairwise sequence similarity to one another (affecting whether we would be over-training on a very narrow sliver of sequence space)?
+
+Notice how none of the EDA questions are asked in isolation. Instead, they are logically linked up to 2-3 steps downstream to our overarching goals. They serve as defensive sanity checks on our data to ensure that the data are suitable for our purposes, with the ability to disprove our hypotheses around the data's suitability up-front before investing further time into model-building.
+## Key Principles
+
+### Principle 1: Falsify your purpose
+
+The first key idea that I want to communicate here is that we need to do is to falsify our assumption/hypothesis that the datasets we have on hand are suitable for _our purposes_, and I hold that this is the real goal behind exploratory data analysis! We needed to find warts in the data that may negatively impact our ability to make that tailored generative model. If you remember, we're data _scientists_, so there has to be _science_ somewhere:
+
+> The _science_ in data science includes the scientific discovery process, the constant checking and falsification of hypotheses that are core to our role.
+
+### Principle 2: The end purpose must be clear
+
+A key operative word here is "our purposes." Do you know what you're building towards? Can you describe it with sufficient clarity to multiple diverse audiences? If not, your EDA will wander, meander, and likely be fruitless. 
+
+### Principle 3: Iteration emerges when purposes are invalidated
+
+When viewed from the lens of our daily activities, EDA is the "backward" process counterpart to the problem ideation ("forward") process. Going backwards from the problem, we start searching for warts in our data that'll invalidate our effort to solve the problem and, in doing so, allow us to _fail fast and early_. If our problem statement survives the data-backed scrutiny, we use that data to solve the problem. On the other hand, if we find that our data invalidates our problem statement, then we need to go back to the drawing board and figure out whether (a) we need to look at a different data source, (b) generate our own data, or (c) reformulate the problem entirely into something else that is of value.
+
+### Principle 4: Practice
+
+How do we develop this muscle? With experience and, more crucially, domain expertise comes the judgment necessary to begin by asking these questions. Classroom teaching can only go so far; much more important is constant practice and feedback from others, or in other words, research training. For me, it's come from 11 years of research-oriented training + career work to finally realize this, including twists and turns being confused about how to do EDA and then how to teach others to do EDA.
+
+## Conclusions
+
+I hope this post helps shortcut your learning journey! What were your thoughts after reading this post? Let me know below!
+---
+pub_date: 2024-01-28
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I challenge the traditional approach to exploratory data analysis (EDA) in data science. I argue that EDA should be directed and purposeful, not aimless. I share key principles for effective EDA, including falsifying our assumptions, having a clear end purpose, and embracing iteration when purposes are invalidated. I also emphasize the importance of practice and domain expertise in developing this skill. How can we make EDA more purposeful and effective in our data science work? Read on to find out!
+---
+tags:
+
+data science
+eda
+exploratory data analysis
+pandas
+matplotlib
+seaborn
+correlations
+generative models
+therapeutics
+biological sequences
+metadata
+visualization
