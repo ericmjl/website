@@ -1,0 +1,111 @@
+title: An (incomplete and opinionated) survey of LLM tooling
+---
+author: Eric J. Ma
+---
+body:
+
+As the large language model (LLM) world has exploded in popularity, I see the need for clarity on the state of LLM tooling. More critical than specifying specific tools, my goal with this blog post is to outline a framework for thinking about the components of LLM tools. I hope you find it valuable!
+
+> Disclaimer: As someone who was professionally raised in the community-driven open source software (CDOSS) world, you will probably see my biases shine through company-backed open source software (CBOSS) that is used as a play to attract business. (CBOSS that is a derivative of one's core business, is a different story.) As such, I can confidently assure you that I am not paid by any tool developers or the companies that back them.
+
+## Access
+
+To build anything that uses LLMs, one needs access to LLMs. There are two sources: APIs and locally hosted.
+### APIs
+
+The easiest way is to get access using an API provider, and the one that has the most mindshare is OpenAI's API. (Much of the LLM Python tooling I've seen is built around OpenAI's API.) Another contender is the Mistral API, which provides the Mixtral models hosted. Anyscale also has an offering for hosted LLM APIs. As we will see in the API Switchboards section below, there are more!
+
+### Self-Hosted
+
+Alternatively, you can self-host open-source models. Self-hosting requires more tooling but allows for control of costs. To this end, [Ollama](https://ollama.ai/) is a fast-growing alternative to hosted APIs (its community Discord is active with ~2k members online on 30 January 2024). Ollama provides a dead-simple (and, most straightforward) mechanism for exposing an API endpoint for open-source models. The alternative would be to build a [FastAPI](https://fastapi.tiangolo.com/) server and combine it with HuggingFace's [Transformers](https://github.com/huggingface/transformers) models, which would take more technical finesse.
+
+## API Switchboards
+
+One may desire to switch between different models or even model providers. Hence, one will need an API switchboard for experimentation. To that end, [LiteLLM](https://github.com/BerriAI/litellm) provides an API switchboard that enables OpenAI API compatibility for the broadest subset of API providers: Claude, Anyscale, OpenAI, Mistral, Azure, AWS Bedrock... you name it!
+
+## Python-based LLM Application SDKs
+
+Regarding the Python toolkits needed to build LLM applications, [LangChain](https://github.com/langchain-ai/langchain) is possibly the first thing most people will think of. Indeed, it has grown massively in popularity, hitting 75K stars on GitHub (as of 29 January 2024) through a concerted community-building effort, content marketing, and (I am imagining) VC dollars.
+
+[LlamaIndex](https://github.com/run-llama/llama_index) is another application-building toolkit focusing on Retrieval-Augmented Generation (RAG) applications. It is also another hugely popular toolkit, hitting 25K stars on GitHub (as of 29 January 2024).
+
+There are also high-level developer tools, such as [EmbedChain](https://github.com/embedchain/embedchain), an open-source retrieval augmented generation (RAG) framework. (More on RAG below.)
+
+## Vector-based Retrieval
+
+For RAG applications, one needs a vector database to store vector embeddings of text and retrieve them based on vector similarity. The number of different vector databases available has exploded in number, and so it may be challenging to keep track of what to use. My choice of vector database has been [ChromaDB](https://www.trychroma.com/), but there are other compelling offerings as well: [Pinecone](https://www.pinecone.io/), [Weaviate](https://weaviate.io/), [LanceDB](https://github.com/lancedb/lancedb) and [FAISS](https://github.com/facebookresearch/faiss?tab=readme-ov-file) are all examples of vector storage systems, and packages like [RAGatouille](https://github.com/bclavie/ragatouille) provide state-of-the-art vector search & retrieval systems (like [ColBERT](https://github.com/stanford-futuredata/ColBERT?tab=readme-ov-file)). Additionally, LlamaIndex implements vector indexes that live entirely in memory and are cacheable to disk as standalone files.
+
+The primary use case for vector-based retrieval systems is RAG. RAG is emerging as an essential method for augmenting LLMs with additional data that lives outside the scope of its training data. As such, the criteria used to evaluate RAG tools are worth considering.
+
+But what should one focus on? As a builder type, I focus on the following criteria: ease of setup, ease of retrieval, cost, and quality of documentation. Here's what I think about them.
+
+For **ease of setup**, this meant gravitating towards anything that could be stored locally (or in memory) without manually setting up a server/client interface, akin to what SQLite does for relational databases. (Both ChromaDB and LanceDB do this.)
+
+For **ease of retrieval**, this meant picking tools that, within a single API call (e.g. `.query("some query string here")`), would automatically embed the query string and return texts rank-ordered.
+
+For **cost**, the key driver here is money spent on embedding texts to obtain vector representations of it; ChromaDB, for example, defaults to the HuggingFace SentenceTransformer (which is free to run locally), while LlamaIndex defaults to using the OpenAI Embedding models, which requires a modest (but affordable) amount of spend for prototyping.
+
+Finally, the **documentation quality** matters as always: we developer types will spend much time wrangling tools, and good documentation will deliver us from immense headaches. (Good documentation will also help developers robustly build their mental model!)
+
+## Prompt Experimentation and Evaluation
+
+From an application developer's perspective, experimenting with prompts and evaluating the quality of the outputs is hugely important. HegelAI develops [PromptTools](https://github.com/hegelai/prompttools), which is a toolkit for recording prompts and outputs. Jumping ahead to my work, [LlamaBot](https://github.com/ericmjl/llamabot) contains a [PromptRecorder](https://ericmjl.github.io/llamabot/examples/recorder/) that does the same.
+
+Evaluation is trickier, because "evaluation" as a concept is very broad. Evaluation is used to ensure that outputs conform to both hard rules (e.g. do not mention the phrase, "As an AI") and softer rules (e.g. positive mood). The usual playbook for evaluation is to mix custom rules and code; getting a human to score the outputs is not scalable (if scale is what one is concerned with), but it is the highest quality way to score outputs. The tooling for prompt evaluation is evolving fast (alongside the rest of the ecosystem), but there are a few to note, including [PromptFoo](https://github.com/promptfoo/promptfoo), [Promptimize](https://github.com/preset-io/promptimize), and [TruLens](https://github.com/truera/trulens/).
+
+## UI Builders
+
+Sometimes, you may be on a team where you don't have dedicated front-end developers, or you're at a point where you need to set up a UI front-end for your LLM-based application quickly. For someone in the Python world, [Panel](https://panel.holoviz.org/), [Streamlit](https://streamlit.io/), and [Gradio](https://www.gradio.app/) all provide UI-building toolkits. Of the three, Panel is close to my heart because of its flexibility. That said, Streamlit is a compelling alternative with a different technical execution model behind it. HuggingFace backs Gradio, so it offers tight integration with its platform.
+## Command-Line Interfaces
+
+If you are a command-line type of person, Simon Willison built the [`llm`](https://github.com/simonw/llm) CLI tool that enables access to LLMs. I'm unaware of any other tooling here -- Simon is unique in his ability to build composable tools!
+
+## My work
+
+The content of this post came through because of my experience building a Python application toolkit ([LlamaBot](https://github.com/ericmjl/llamabot)), which is built on top of ChromaDB, LiteLLM, and other LLM toolkits. As I built out LlamaBot, I also built test case applications further to develop my understanding of the LLM space. What resulted was a bunch of use cases, such as [Zotero Chat](https://ericmjl.github.io/llamabot/cli/zotero/), a [Git commit writer](https://ericmjl.github.io/llamabot/cli/git/), a [blog social media composer](https://github.com/ericmjl/website/blob/main/apis/blogbot/api.py) written using FastAPI, HTMX, and LlamaBot, and many more tools where LLMs were part of the workflow.
+
+## Make smart (and sane) choices
+
+Amidst this flurry of activity and excitement about LLMs, how do we make smart and sane choices on our tech stack when it's ever-evolving?
+
+I'll outline briefly a few principles for doing so.
+
+Firstly, work backwards from desired measurable outcomes. If your goal for using LLMs is to improve accessibility of technical tools to non-technical folks, find a way to measure "accessibility" first by defining it quantitatively and qualitatively, emphasizing quantification. Only then should you proceed with an effort on prototyping using LLMs. Ensure that you agree with your collaborators on that definition of value first.
+
+Secondly, once you're at the prototyping stage, pick and evaluate tools according to the criteria that give you the fastest path to demonstrating value without compromising on the engineering side (composability of tools). Make sure you're always thinking 4 steps downstream about the implications of your choices now! But don't get paralyzed by the analysis: every tech stack choice comes with tradeoffs, none will be optimal, and all choices are reversible. Learn from my lesson building LlamaBot: I initially built on top of LangChain, but its abstractions eventually locked me in, so getting out of the ecosystem was quite a huge lift. But more important than the toolset is your ability to demonstrate _value_ quickly.
+
+To that end, my personal favourite stack choice is reflected in LlamaBot's default settings:
+
+- `mistral/mistral-medium` for APIs (cheaper than GPT-4 but with qualitatively similar outputs),
+- `litellm` for the switchboard (open source software)
+- `chromadb` for vector database (open source software)
+- LlamaBot's PromptRecorder (which is in active development) for simple prompt evaluation.
+
+Of course, that's all subject to change over time.
+
+Once you've demonstrated value, you can have some credibility points (and breathing room) to spend on making the stack that backs your LLM application easier to manage. At this point, consider the cost of maintenance, technical proficiency of your staff (hopefully, you have high-quality and talented individuals), and flexibility in architecture to pivot away from what you already have built.
+
+## Summary
+
+This blog post will be outdated as soon as it gets released in the wild. That's because the LLM space is growing extremely fast. More important than that is having a thought framework to organize one's work and a sense of taste for what tools to use. I hope this post helps you develop your thought framework for the LLM tooling space!
+---
+pub_date: 2024-02-01
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the rapidly evolving landscape of large language model (LLM) tooling, discussing APIs, self-hosting, API switchboards, Python-based LLM Application SDKs, vector-based retrieval, prompt experimentation, evaluation, UI builders, and command-line interfaces. I share my experiences building LlamaBot and offer principles for making smart tech stack choices in this ever-changing field. How can you navigate this dynamic ecosystem and make the best decisions for your LLM projects? Read on to find out!
+---
+tags:
+
+language model
+open source
+api switchboards
+python
+vector retrieval
+prompt experimentation
+ui builders
+command line interfaces
+large language models
+llms
+thought framework
+thought leadership
