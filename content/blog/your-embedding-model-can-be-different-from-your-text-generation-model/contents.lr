@@ -16,7 +16,7 @@ In this way, embedding models are decoupled from the text generation model — t
 
 ## Which embedding should we use?
 
-For RAG purposes, the short answer is "probably not." But the long answer is, "It's a bit more complicated."
+Will embedding choice affect our text generation model? For RAG purposes, the short answer is "probably not directly." But the long answer is, "It's a bit more complicated."
 
 To start, we should dispel the notion that our choice of embeddings will directly affect the performance of our text generator. As my diagram showed, the retrieval function in the most common RAG setup separates text generation and embedding usage. At most, the embedding choice will affect the quality of our similarity measure, affecting the kind of content we retrieve from the vector database and the content we pass to the text generator.
 
