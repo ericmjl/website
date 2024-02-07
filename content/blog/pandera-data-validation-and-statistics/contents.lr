@@ -21,7 +21,7 @@ and have been keeping an eye on the space ever since.
 But let’s step back a bit.
 
 What do we mean by schema/data validation? It’s merely a fancy way of checking,
-“are my data as I expect them to be?”
+"are my data as I expect them to be?"
 
 Here’s an example.
 Imagine you have a data table,
@@ -36,7 +36,7 @@ I may have numeric measurements of each sample,
 and I need to guarantee that they cannot be negative or zero.
 Hence,
 for those columns,
-I need “greater than zero” check.
+I need "greater than zero" check.
 For another column,
 it may be that we expect that the values in there take one of two values.
 An example dataframe could be as follows:
@@ -153,7 +153,7 @@ Congratulations to the package author Niels Bantilan,
 it's a package that has all of the _right_ API ideas in place!
 Its design is very lightweight,
 which helps encourage fast iteration and turnaround on schema validation.
-Being one of those “eagerly executable” and “interactively debuggable” tools
+Being one of those "eagerly executable" and "interactively debuggable" tools
 helps its case as well.
 The package focuses on doing only one thing well,
 and doesn't try to be a "God package" that does all sorts of things in one package.
@@ -172,13 +172,13 @@ I can see that data validation _actually_ has its roots in statistical evaluatio
 Humour me for a moment.
 
 Say we have a column that can only take two values,
-such as “yes” and “no”.
+such as "yes" and "no".
 
 From a statistical viewpoint,
 that data are generated from Bernoulli distribution,
-with “yes”/1 and “no”/0 being the outcomes.
+with "yes"/1 and "no"/0 being the outcomes.
 
-If you get a “maybe” in that column,
+If you get a "maybe" in that column,
 that value is outside of the _support_ of the distribution.
 It’s like trying to evaluate the likelihood of observing a 2 from a Bernoulli.
 It won’t compute.
@@ -186,7 +186,7 @@ It won’t compute.
 So every time we run a `pandera` check,
 we are effectively expressing a _statistical_ check of some kind.
 The byline of the package,
-“Statistical Data Validation for Pandas”,
+"Statistical Data Validation for Pandas",
 is _even more apt_ once we consider this viewpoint!
 
 ## Conclusions

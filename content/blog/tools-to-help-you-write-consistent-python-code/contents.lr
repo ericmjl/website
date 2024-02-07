@@ -81,7 +81,7 @@ Likewise for `flake8`:
 flake8 .
 ```
 
-What pops out is an entire collection of “error codes”, which specify one and only one error that it caught.
+What pops out is an entire collection of "error codes", which specify one and only one error that it caught.
 The error messages will tell you what’s _wrong_, so correcting the error is a matter of doing the opposite.
 For example, `flake8` might tell me that a line is too long at 89 characters,
 which is greater than the 79 that it is configured for,
@@ -95,7 +95,7 @@ Sometimes, two tools might come with defaults that conflict with one another.
 `black`, being opinionated, will format lines to fit in 88 characters,
 but `flake8` will by default look for 79 characters.
 (I’m in favour of 79,
-because it allows me to look at my code in its entirety side-by-side on a 15” MacBook Pro.)
+because it allows me to look at my code in its entirety side-by-side on a 15" MacBook Pro.)
 
 Each tool comes with its own configuration documentation page.
 The Python community has started gravitating towards
