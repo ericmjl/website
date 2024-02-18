@@ -4,7 +4,7 @@ author: Eric J. Ma
 ---
 body:
 
-This is something interesting that I've noticed: Dashboard-ready data is often machine-learning-ready data.
+This may be something obvious to some but not others: Dashboard-ready data is often machine-learning-ready data.
 
 Dashboards, in my experience, are the place where data science projects go to die, and that's why the DSAI teams at Moderna generally don't build UIs or dashboards but instead have a laser focus on delivering CLI tools that can be run on the cloud, or Python packages. But one thing recently became clear: **the data that might power a dashboard is often ML-ready data.**
 
