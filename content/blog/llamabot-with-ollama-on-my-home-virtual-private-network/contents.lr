@@ -1,0 +1,246 @@
+title: LlamaBot with Ollama on my home virtual private network
+---
+author: Eric J. Ma
+---
+body:
+
+## Introduction
+
+At home, I have a relatively idle GPU tower. It's something I bought way back in 2016 to do deep learning. It has an NVIDIA GTX1080 GPU in there with 8GB of RAM. By today's standards, it's puny. Over the years, however, I've used it less frequently to do GPU-heavy things because of time. But I recently found a way to give it a new lease of life: running an Ollama server on my home's private network! I wanted to share how I made that happen in this blog post.
+
+## Setup Tailscale
+
+I have all my personal devices (my M1 MacBook Air, phone, tablet, a DigitalOcean server running Dokku, NAS, and my home GPU box) running on a Tailscale virtual private network. Since my home GPU box is running Ubuntu Linux, I used [the official Tailscale Linux installation instructions](https://tailscale.com/kb/1031/install-linux) to get Tailscale installed on my GPU box, ensuring that it was on the same VPN as my MacBook.
+
+## Install Ollama on GPU box
+
+Once I did that, I then installed Ollama on my GPU box. While `ssh`-ed into my GPU server, I executed the command on the [Ollama Linux installation page](https://ollama.com/download/linux), which was:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+To verify that Ollama was installed correctly, on my GPU box, I executed the command:
+
+```bash
+ollama run mistral
+```
+
+Doing so allowed me to verify that Ollama was installed correctly.
+
+## Configure Ollama for network access
+
+By default, the Ollama web server runs on 127.0.0.1:11434, which doesn't allow for inbound connections from other computers. To change that behaviour, we must change the `OLLAMA_HOST` [environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/) to `0.0.0.0`. I followed the instructions in [Ollama's documentation](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/). To start, we edit the `systemd` service:
+
+```bash
+systemctl edit ollama.service
+```
+
+Then, we add the following contents to the text file that gets opened up:
+
+```toml
+[Service]
+Environment="OLLAMA_HOST=0.0.0.0"
+```
+
+Finally, after saving and exiting the text file, we reload `systemd` and restart Ollama:
+
+```bash
+systemctl daemon-reload
+systemctl restart ollama
+```
+
+## Test Ollama access remotely
+
+Now, Ollama will be running on host `0.0.0.0`. To verify that it is running correctly, I went back to my laptop and ran the following `curl` command:
+
+```bash
+curl http://<my-gpu-box-ip-address-here>:11434/api/chat -d '{
+  "model": "mistral",
+  "messages": [
+    { "role": "user", "content": "hey there, how are you doing?" }
+  ]
+}'
+```
+
+I got back a long stream of JSONs:
+
+```bash
+{"model":"mistral","created_at":"2024-02-21T01:53:12.747357134Z","message":{"role":"assistant","content":" Hello"},"done":false}
+{"model":"mistral","created_at":"2024-02-21T01:53:12.769246194Z","message":{"role":"assistant","content":"!"},"done":false}
+...
+{"model":"mistral","created_at":"2024-02-21T01:53:14.054314656Z","message":{"role":"assistant","content":""},"done":true,"total_duration":2734292991,"load_duration":1320868996,"prompt_eval_count":17,"prompt_eval_duration":106030000,"eval_count":61,"eval_duration":1306913000}
+```
+
+I thus verified that I could connect to the Ollama server running on my GPU box!
+
+## Check GPU usage
+
+Knowing Ollama's behaviour, I knew that the mistral model should be loaded into GPU memory for a little while before being taken down. To verify that it was indeed using the GPU, I ran:
+
+```bash
+nvidia-smi
+```
+
+Which gave me:
+
+```bash
+ericmjl in 🌐 ubuntu-gpu in ~
+❯ nvidia-smi
+Wed Feb 21 05:41:50 2024
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 520.61.05    Driver Version: 520.61.05    CUDA Version: 11.8     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  NVIDIA GeForce ...  On   | 00000000:01:00.0 Off |                  N/A |
+| 27%   31C    P2    50W / 180W |   4527MiB /  8192MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|    0   N/A  N/A      1453      G   /usr/lib/xorg/Xorg                 18MiB |
+|    0   N/A  N/A      2282      G   /usr/bin/gnome-shell                2MiB |
+|    0   N/A  N/A   3192354      C   /usr/local/bin/ollama            4502MiB |
++-----------------------------------------------------------------------------+
+```
+
+Perfect!
+
+## Interact with Ollama using LlamaBot
+
+Taking it one step further, I decided to connect to my Ollama server using `llamabot`'s `SimpleBot` class. In principle, it should be easy to do so because we have a LiteLLM pass-through for additional keyword arguments, and that meant I should be able to do so with:
+
+```python
+import os
+
+system_prompt = "You are a funny bot!"
+
+bot = SimpleBot(
+    model_name="ollama/mistral", # Specifying Ollama via the model_name argument is necessary when pointing to an Ollama server!
+    system_prompt=system_prompt,
+    stream_target="stdout", # this is the default!
+    api_base=f"http://<my-gpu-box-ip-address-here>:11434",
+)
+
+response = bot("Hello!")
+```
+
+And indeed, it works! I get back my usual mistral bot response:
+
+```text
+Why, thank you! I'm here to make your day brighter with my witty and humorous remarks. So, tell me, why did the tomato turn red? Because it saw the salad dressing! Get it? *laughs manically* But seriously, how about we discuss something more important, like pizza or memes?
+```
+
+## Try a different model
+
+I can even easily swap out models (as long as they've been downloaded to my machine):
+
+```python
+bot = SimpleBot(
+    model_name="ollama/llama2:13b", # Specifying Ollama via the model_name argument is necessary when pointing to an Ollama server!
+    system_prompt=system_prompt,
+    stream_target="stdout", # this is the default!
+    api_base=f"http://<my-gpu-box-ip-address-here>:11434",
+)
+
+response = bot("Hello!")
+```
+
+This gives me:
+
+```text
+WOOHOO! *party popper* OH MY GOSH, IT'S SO GLORIOUS TO BE A FUNNY BOT! *confetti* HELLO THERE, MY DEAR HUMAN FRIEND! *sunglasses* I'M READY TO BRING THE LAUGHS AND MAKE YOUR DAY A LITTLE BIT BRIGHTER! 😄❤️ WHAT CAN I DO FOR YOU, MY HUMAN PAL?
+```
+
+(Llama2 appears to have a goofier personality.)
+
+## Limitation: models need to be downloaded and available
+
+One limitation (?) that I see right now is that Ollama needs to have downloaded a model before it can be used from SimpleBot. As an example, I don't have the Microsoft Phi2 model downloaded on my machine:
+
+```bash
+ericmjl in 🌐 ubuntu-gpu in ~
+❯ ollama list
+NAME                    ID              SIZE    MODIFIED
+llama2:13b              d475bf4c50bc    7.4 GB  8 hours ago
+mistral:7b-text-q5_1    05b86a2ea9de    5.4 GB  8 hours ago
+mistral:latest          61e88e884507    4.1 GB  44 hours ago
+```
+
+Thus, when running SimpleBot using Phi:
+
+```python
+bot = SimpleBot(
+    model_name="ollama/phi", # phi is not on my GPU box!
+    system_prompt=system_prompt,
+    stream_target="stdout", # this is the default!
+    api_base=f"http://<my-gpu-box-ip-address-here>:11434",
+)
+
+response = bot("Hello!")
+```
+
+I get the following error:
+
+```python
+{
+	"name": "ResponseNotRead",
+	"message": "Attempted to access streaming response content, without having called `read()`.",
+	"stack": "---------------------------------------------------------------------------
+ResponseNotRead                           Traceback (most recent call last)
+Cell In[15], line 10
+      1 system_prompt = \"You are a funny bot!\"
+      3 bot = SimpleBot(
+      4     model_name=\"ollama/phi\", # Specifying Ollama via the model_name argument is necessary when pointing to an Ollama server!
+      5     system_prompt=system_prompt,
+      6     stream_target=\"stdout\", # this is the default!
+      7     api_base=f\"http://{os.getenv('OLLAMA_SERVER')}:11434\",
+      8 )
+---> 10 response = bot(\"Hello!\")
+...
+File ~/anaconda/envs/llamabot/lib/python3.11/site-packages/httpx/_models.py:567, in Response.content(self)
+    564 @property
+    565 def content(self) -> bytes:
+    566     if not hasattr(self, \"_content\"):
+--> 567         raise ResponseNotRead()
+    568     return self._content
+
+ResponseNotRead: Attempted to access streaming response content, without having called `read()`."
+}
+```
+
+The way I solved this was by SSH-ing into my GPU box and running:
+
+```bash
+ollama pull phi
+```
+
+You can think of the Ollama server as being a curated and local library of models.
+## Conclusion
+
+Because of Ollama, running an LLM server on my home private network was much easier than I initially imagined. LlamaBot - and its use of LiteLLM underneath the hood - enabled me to build bots that used the Ollama server. This turned out to be a great way to extend the usable life of my GPU box!
+---
+pub_date: 2024-02-21
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how I breathed new life into my idle GPU tower by running an Ollama server on my home's private network. I connected all my devices via a Tailscale virtual private network and installed Ollama on my GPU server. I then used LlamaBot to build bots that utilized the Ollama server. This turned out to be an effective way to extend the usable life of my GPU box. Curious about how you can do the same with your idle GPU? Read on!
+---
+tags:
+
+gpu
+deep learning
+ollama
+llm
+tailscale
+linux
+ubuntu
+gpu
+llamabot
