@@ -1,0 +1,145 @@
+title: How to keep sharp with technical skills as a data science team lead
+---
+author: Eric J. Ma
+---
+body:
+
+I've been a data science team lead for 2.5 years now.
+Over that period, the team grew from myself + 1 to now myself + 5,
+with four co-ops cycling through our team.
+The amount of time that I spend on the following stuff has gradually decreased:
+
+- Developing and deploying models
+- Dissecting papers in-depth
+- Being the primary collaborator relationship holder
+
+On the other hand,
+the amount of time that I spend on the following stuff has gradually increased:
+
+- Project Meetings
+- Reporting progress
+- 1:1 coaching and mentorship
+
+Over time, I should expect my technical skills
+(mathematical modelling, software development, and scientific) to wane;
+indeed, Andy Grove makes this point in his book,
+[High Output Management](https://www.goodreads.com/en/book/show/324750).
+But I'm determined not to let that happen --
+**only by maintaining those skills can I retain credibility with my teammates**.
+If I do not practice [Stephen Covey's and Jim Collins' 7th habit ("sharpen the saw")](https://www.goodreads.com/en/book/show/36072),
+how can I offer coaching, mentorship, and growth to those within my influence?
+
+Reflecting on my time in this role, I wanted to share some things that have worked for me.
+
+## Constraints
+
+The primary constraint I have to deal with is time.
+That constraint becomes even more pronounced when one factors in two kids,
+one in preschool with set hours that bookends the day.
+Working long hours is not tenable in the long run.
+As such, maintaining technical skills
+means I have to be in perpetual learning mode from everyone around me.
+
+## Strategy 1: Opportunistically perform lower-level tasks
+
+There are times when I will find an opportunity to perform lower-level tasks.
+One example of this might be working on a machine learning project
+that has the rough shape of using routine and automated ML methods,
+leveraging packages like [`pycaret`](https://pycaret.org/) or similar.
+Another example of this might be deploying a Compute task for a colleague.
+Doing these things occasionally (but not actively seeking them out routinely)
+has helped me to remain abreast of the challenges my teammates face
+when they do these things themselves.
+At the same time, they free up my teammates' mental bandwidth
+to focus on thinking deeper and executing excellently on challenging and fun problems.
+
+## Strategy 2: Pair coding
+
+Pair coding is another strategy that I have used to keep my coding muscles warm.
+I remember a recent pair coding session where my teammate Marcus and I
+were doing some [defensive exploratory data analysis](https://ericmjl.github.io/blog/2024/1/28/exploratory-data-analysis-isnt-open-ended/).
+For two of the sessions we did, we switched roles multiple times based on where we were in our notebook --
+him taking over when it was imaging-related code and me taking over
+when we hit the need to write `pandas` and `matplotlib` code.
+Apart from having a ton of fun figuring out
+the most method-chained way to write `pandas` data processing code,
+we also had a chance to share our thought processes in structuring `pandas` code
+and figuring out how to design dataframes to fit our problem.
+
+## Strategy 3: Code review
+
+Code review is another place for me to stay sharp. With my teammates' work,
+I ask to be included as a reviewer on pull requests for their work.
+Doing so allows me to keep up-to-date on our team's work.
+Given the breadth of topics the team covers collectively,
+I may be unable to keep up with every last detail.
+Still, I have a chance to look for the key lines of code
+that map to critical concepts in my head
+to ensure I understand how those pieces are implemented.
+
+## Strategy 4: Asking lots of questions
+
+This is a hack I learned in graduate school.
+Verbal discussions, especially those involving a whiteboard in the mix,
+are among the highest bandwidth avenues for knowledge acquisition,
+especially when compared to independently reading a paper.
+As such, the easiest way to learn something is to ask.
+Nowadays, when I don't get something, or when something doesn't match my mental model,
+I'll invariably be the person who asks the dumb question to clarify my misunderstandings.
+
+(FYI, for new grads, I have observed that asking dumb questions is a rare trait,
+but it is a personal development hack!)
+
+## Strategy 5: Work things out by hand and prototyping
+
+The next thing I'd like to share is occasionally working things out by hand.
+Victor M. Zavala, a University of Wisconsin at Madison professor,
+[mentioned this on LinkedIn post](https://www.linkedin.com/posts/vzavala_science-phdresearch-computation-activity-7167163381718732800-O-3-),
+which I also archived on [GitHub Gists](https://gist.github.com/ericmjl/e4e97283f2a85bcc0c60ca1849ab7c73).
+Part of this practice is finding ways to distill a complex problem down to its minimally complex version --
+one that is at least tractable on a whiteboard
+but still contains the essential elements of the complexity of the real problem.
+When doing this with my teammates,
+this practice enables us to focus on the essence of the problem
+without necessarily working through the complete details.
+As Victor mentions,
+this practice helps us develop an instinct for
+the solution space to the problems we're tackling,
+levelling up our ability to sniff out potential pitfalls to our solution.
+
+After working things out by hand, the logical next step is to prototype in code.
+Doing so allows me to stay sharp with coding skills,
+giving me the space to experiment with
+(a) more advanced patterns of programming,
+(b) less commonly used data structures, and
+(c) patterns of code organization.
+In doing so, I get to sharpen my technical saw.
+
+## How do you keep sharp?
+
+These are strategies that have worked for me.
+I hope they serve as inspiration for you.
+At the same time, I'm curious to hear:
+how do you keep your technical skills up-to-date?
+---
+pub_date: 2024-02-25
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my strategies for maintaining technical skills as a data science team lead.
+Balancing management duties with technical tasks,
+I use strategies like performing lower-level tasks, pair coding, code reviews, asking questions, and prototyping.
+These methods help me stay sharp and credible with my team, while also fostering personal growth.
+How do you keep your technical skills up-to-date?
+---
+tags:
+
+data science
+leadership
+coaching
+mentorship
+continuous learning
+technical skills
+machine learning
+pair coding
+code review
