@@ -1,5 +1,8 @@
-<div class="youtube-video-{{ this.url }}">
+<div class="youtube-video-{{ this.url }}" style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin-bottom: 20px;">
   {% set url = this.url | string %}
-  <iframe width="100%" src="https://www.youtube.com/embed/{{ url.split('=')[1] }}" frameborder="0"
+  <iframe
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+    src="https://www.youtube.com/embed/{{ url.split('=')[1] }}"
+    frameborder="0"
     allow="autoplay; encrypted-media" allowfullscreen></iframe>
 </div>
