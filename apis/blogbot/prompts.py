@@ -17,9 +17,6 @@ def compose_linkedin_post(text):
     Hashtags should be all lowercase.
     Ensure that there is a placeholder for me to paste in the URL.
     Also ensure that it is written in first-person, humble, and inviting tone.
-    Please return this for me in JSON format using the following schema:
-
-        "post_text": "post text goes here"
     """
 
 
@@ -36,9 +33,6 @@ def compose_patreon_post(text):
     which reads as "Please find the preview [here](url goes here)
     before it goes live on my blog."
     Sign off with "Cheers,\nEric".
-    Please return this for me in JSON format using the following schema:
-
-        "post_text": "post text goes here"
     """
 
 
@@ -57,11 +51,6 @@ def compose_twitter_post(text):
     Hashtags should be all lowercase.
     Ensure that there is a placeholder for me to paste in the URL.
     Also ensure that it is written in first-person, humble, and inviting tone.
-
-    Please return this for me in JSON format using the following schema:
-
-        "post_text": "post text goes here"
-
     """
     return prompt
 
@@ -82,10 +71,6 @@ def compose_substack_post(text):
     Ensure that there is a placeholder for me
     to paste in the URL to the blog post.
     Also ensure that it is written in first-person, humble, and inviting tone.
-
-    Please return this for me in JSON format using the following schema:
-
-        "post_text": "post text goes here"
     """
 
 
@@ -98,9 +83,6 @@ def compose_tags(text):
     Spaces are okay, so for example, if you have "webdevelopment",
     you can change it to "web development".
     Here is the blog post: {{ text }}.
-    Please return this for me in JSON format using the following schema:
-
-        "post_text": "tag1,tag2,tag3,..."
     """
 
 
@@ -115,9 +97,6 @@ def compose_summary(text):
     Please write in first person.
     Please start the summary with, "In this blog post".
     Please end the summary with a question that entices the reader to read on.
-    Return as JSON with key='post_text'
-    and value=<the summary>.
-    Ensure that it is valid JSON!
     """
 
 
