@@ -1,4 +1,3 @@
-import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
@@ -18,7 +17,6 @@ from .prompts import (
     compose_summary,
     compose_tags,
     compose_twitter_post,
-    fix_json,
 )
 from .scraper import get_latest_blog_posts, get_post_body
 
@@ -74,15 +72,7 @@ async def social_media(
     response, post_body = get_post_body(blog_url)
     if response.status_code == 200:
         social_post = bot(prompt(post_body))
-        try:
-            text = json.loads(social_post.content)["post_text"]
-            if post_type == "tags":
-                text = "\n".join(text.split(","))
-        except Exception as e:
-            print(e)
-            jsonbot = SimpleBot("You are an accurate JSON fixer.")
-            fixed_json = jsonbot(fix_json(social_post.content))
-            text = json.loads(fixed_json.content)["post_text"]
+        return social_post.content
     else:
         text = "Error"
     return text
