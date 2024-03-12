@@ -1,0 +1,67 @@
+title: Mixtral-8x7b-Instruct works on an old GTX1080!
+---
+author: Eric J. Ma
+---
+body:
+
+Today, on a whim, I decided to try running the Mixtral 8x7b-Instruct model (via Ollama) on my old Linux GPU tower. Specifically, I am using the 4-bit quantized model. To my surprise, it works!
+
+As always, in LlamaBot, this is relatively easy. To start, on my GPU server, I ran:
+
+```bash
+ollama pull mixtral:8x7b-instruct-v0.1-q4_0
+```
+
+Then, within my Jupyter on my MacBook Air:
+
+```python
+keywords_sysprompt = """"Generate keywords for the document provided to you.
+Please return JSON of format:
+
+    {'keywords': ['keyword', 'keyword', 'keyword',...]}.
+
+
+Keywords should be one or two words, separated by a space.
+Return only keywords, nothing else.
+Do not add your own commentary.
+"""
+
+keyword_generator_ollama = SimpleBot(
+    model_name="ollama/mixtral:8x7b-instruct-v0.1-q4_0",  # Specifying Ollama via the model_name argument is necessary!s
+    system_prompt=keywords_sysprompt,
+    stream_target="stdout",  # this is the default!
+    api_base=f"http://{os.getenv('OLLAMA_SERVER')}:11434",
+    # json_mode=True,
+    # format="json",
+)
+
+response = keyword_generator_ollama(document)
+```
+
+In generating keywords for a paper on protein engineering and machine learning, I had the following:
+
+```python
+{'keywords': ['machine learning', 'functional protein design', 'AI', 'protein sequence', 'structure data', 'core data modalities', 'enzymes', 'antibodies', 'vaccines', 'nanomachines', 'large-scale assays', 'robust benchmarks', 'multimodal foundation models', 'enhanced sampling strategies', 'laboratory automation', 'protein fitness landscape', 'rational design methods', 'directed evolution', 'combinatorial libraries', 'biophysics-based models', 'DNA sequencing', 'algorithmic advances', 'computing advances', 'machine learning-based design methods']}
+```
+
+This wasn't too bad at all; it feels similar to what GPT-4 would provide, which has been on par with what I've observed with Mixtral-8x7b's output quality. The thing is qualitatively much slower than running mistral-7b (I have not measured tokens per second yet), but it does work.
+
+As I mentioned in my [previous post](/blog/2024/2/21/llamabot-with-ollama-on-my-home-virtual-private-network/), running LLMs on my old GPU tower helped me breathe some new usage life into it. Running Mixtral-8x7b was another hardware challenge that I was eager to see, and I'm glad to have more evidence that LLMs can run on older commodity hardware!
+---
+pub_date: 2024-03-10
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my experience running the Mixtral 8x7b-Instruct model on my old Linux GPU tower. I used the 4-bit quantized model and was pleasantly surprised that it worked. I generated keywords for a paper on protein engineering and machine learning using the model, and the results were comparable to GPT-4. Although the model was slower than running mistral-7b, it was still functional on older hardware. Have you tried running large language models on older hardware? Read on to find out more about my experience.
+---
+tags:
+
+mixtral 8x7b-instruct
+old gpu
+linux tower
+4-bit quantized
+llama bot
+keyword generator
+protein engineering
+machine learning
+older commodity hardware
