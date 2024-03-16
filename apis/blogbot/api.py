@@ -1,3 +1,4 @@
+import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
@@ -23,8 +24,17 @@ from .scraper import get_latest_blog_posts, get_post_body
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static")
 
-bot = SimpleBot(
-    "You are an expert blogger. Whenever you use hashtags, they are always lowercase."
+social_bot = SimpleBot(
+    "You are an expert blogger.",
+    model="gpt-4-0125-preview",
+    format="json",
+)
+
+tagbot = SimpleBot(
+    ("You are an expert tagger of blog posts. "
+     "Return lowercase tags for the following blog post."),
+    model="gpt-4-0125-preview",
+    format="json"
 )
 
 templates = Jinja2Templates(directory="apis/blogbot/templates")
@@ -57,12 +67,14 @@ async def get_latest_blog_posts_api(request: Request):
 async def social_media(
     request: Request, blog_url: Annotated[str, Form()], post_type: str
 ):
+    bot = social_bot
     if post_type == "linkedin":
         prompt = compose_linkedin_post
     elif post_type == "twitter":
         prompt = compose_twitter_post
     elif post_type == "tags":
         prompt = compose_tags
+        bot = tagbot
     elif post_type == "summary":
         prompt = compose_summary
     elif post_type == "patreon":
@@ -72,7 +84,10 @@ async def social_media(
     response, post_body = get_post_body(blog_url)
     if response.status_code == 200:
         social_post = bot(prompt(post_body))
-        return social_post.content
+        text = json.loads(social_post.content)["response_text"]
+
+        if post_type == "tags":
+            text = "\n".join(line for line in text)
     else:
         text = "Error"
     return text

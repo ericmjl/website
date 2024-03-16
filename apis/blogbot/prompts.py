@@ -17,6 +17,10 @@ def compose_linkedin_post(text):
     Hashtags should be all lowercase.
     Ensure that there is a placeholder for me to paste in the URL.
     Also ensure that it is written in first-person, humble, and inviting tone.
+
+    Return in the following format:
+
+        {"response_text": linkedin_text}
     """
 
 
@@ -33,6 +37,11 @@ def compose_patreon_post(text):
     which reads as "Please find the preview [here](url goes here)
     before it goes live on my blog."
     Sign off with "Cheers,\nEric".
+
+
+    Return in the following format:
+
+        {"response_text": patreon_text}
     """
 
 
@@ -51,6 +60,10 @@ def compose_twitter_post(text):
     Hashtags should be all lowercase.
     Ensure that there is a placeholder for me to paste in the URL.
     Also ensure that it is written in first-person, humble, and inviting tone.
+
+    Return in the following format:
+
+        {"response_text": twitter_text}
     """
     return prompt
 
@@ -71,6 +84,11 @@ def compose_substack_post(text):
     Ensure that there is a placeholder for me
     to paste in the URL to the blog post.
     Also ensure that it is written in first-person, humble, and inviting tone.
+
+    Return in the following format:
+
+        {"response_text": substack_text}
+
     """
 
 
@@ -82,7 +100,13 @@ def compose_tags(text):
     No `#` symbol is needed.
     Spaces are okay, so for example, if you have "webdevelopment",
     you can change it to "web development".
-    Here is the blog post: {{ text }}.
+    Here is the blog post:
+
+        {{ text }}
+
+    Return in the following format:
+
+        {"response_text": [tag1, tag2, tag3, tag4, tag5...]}
     """
 
 
@@ -97,6 +121,11 @@ def compose_summary(text):
     Please write in first person.
     Please start the summary with, "In this blog post".
     Please end the summary with a question that entices the reader to read on.
+
+    Return in the following format:
+
+        {"response_text": summarized_text}
+
     """
 
 
