@@ -20,7 +20,7 @@ def compose_linkedin_post(text):
 
     Return in the following format:
 
-        {"response_text": linkedin_text}
+        {"response_text": <linkedin text goes here>}
     """
 
 
@@ -41,7 +41,7 @@ def compose_patreon_post(text):
 
     Return in the following format:
 
-        {"response_text": patreon_text}
+        {"response_text": <patreon text goes here>}
     """
 
 
@@ -63,7 +63,7 @@ def compose_twitter_post(text):
 
     Return in the following format:
 
-        {"response_text": twitter_text}
+        {"response_text": <twitter text goes here>}
     """
     return prompt
 
@@ -87,7 +87,7 @@ def compose_substack_post(text):
 
     Return in the following format:
 
-        {"response_text": substack_text}
+        {"response_text": <substack text goes here>}
 
     """
 
@@ -124,7 +124,7 @@ def compose_summary(text):
 
     Return in the following format:
 
-        {"response_text": summarized_text}
+        {"response_text": <summary text goes here>}
 
     """
 

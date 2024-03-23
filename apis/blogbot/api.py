@@ -27,14 +27,18 @@ app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static"
 social_bot = SimpleBot(
     "You are an expert blogger.",
     model="gpt-4-0125-preview",
-    format="json",
+    # format="json",
+    # api_base=f"http://{os.getenv('OLLAMA_SERVER')}:11434/",
+    response_format={ "type": "json_object" },
 )
 
 tagbot = SimpleBot(
     ("You are an expert tagger of blog posts. "
      "Return lowercase tags for the following blog post."),
-    model="gpt-4-0125-preview",
-    format="json"
+    model="ollama/mistral",
+    format="json",
+    # api_base=f"http://{os.getenv('OLLAMA_SERVER')}:11434/",
+    # response_format={ "type": "json_object" },
 )
 
 templates = Jinja2Templates(directory="apis/blogbot/templates")
@@ -84,10 +88,15 @@ async def social_media(
     response, post_body = get_post_body(blog_url)
     if response.status_code == 200:
         social_post = bot(prompt(post_body))
-        text = json.loads(social_post.content)["response_text"]
+        try:
+            text = json.loads(
+                social_post.content.replace("\n", "\\n").replace("\t", "\\t")
+            )["response_text"]
 
-        if post_type == "tags":
-            text = "\n".join(line for line in text)
+            if post_type == "tags":
+                text = "\n".join(line for line in text)
+        except Exception as e:
+            text = f"Error: {e}"
     else:
         text = "Error"
     return text
