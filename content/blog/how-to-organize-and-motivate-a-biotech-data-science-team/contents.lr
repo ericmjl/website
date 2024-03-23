@@ -1,0 +1,88 @@
+title: How to organize and motivate a biotech data science team
+---
+author: Eric J. Ma
+---
+body:
+
+How can we organize a team of data scientists for maximum impact, and how do we keep them motivated? There are many factors [which I have discussed before](https://ericmjl.github.io/blog/2024/2/7/success-factors-for-data-science-teams-in-biotech/), but in this blog post, I would like to home in on the activities that a data science team engages in. How do we organize the team's activities? And how do we keep the team motivated?
+
+## Organization
+
+Let's answer the first question, "**How do we organize the team's activities?**" To answer this question, we must start with the key entities a research organization engages in. We need to look at Target, Indication, and Molecule. Within small molecule-focused research organizations, the "Molecule" entity will be relatively simple (though not trivial by anybody's standards) -- discovering a small molecule will be of prime importance. Within biologics-focused companies, the biologics product being produced should be a focal point. As such, we can see an organizational axis emerging that can include:
+
+- Small molecules
+- Nucleotides
+- Proteins
+    - Therapeutic antibodies can be split into an independent category depending on the company's scale.
+- Cellular therapeutics
+- Microbial ensembles
+- Gene editing
+
+At the same time, there may be a secondary axis of organization, which is methodological in nature. These are primarily organized by the entity delivered to the group(s) that the DS team serves. For example, a lead optimization team looking to accelerate its pace will want delivered libraries of small molecules to increase their odds of finding a good hit. Another team looking to do image quantification may ask for a computer vision model that helps them perform segmentation and geometric + intensity quantification, with a PDF report and charts returned as output. Yet another team may look for a custom algorithm that enables them to [automatically design chromatography gradients using Bayesian optimization](https://www.sciencedirect.com/science/article/pii/S0003267023000107), with the output being a gradient list created by a machine to maximize separation. With this framing, we are decidedly in the [product-oriented (rather than service-oriented) camp](https://ericmjl.github.io/blog/2023/8/28/service-vs-product-oriented-data-science/). As such, we can see a secondary organizational axis emerging, which might look like:
+
+- Machine-designed libraries (including AI-designed ones)
+- Computer vision
+- Probabilistic models
+- Custom algorithms
+- Bayesian Optimization
+
+One can also imagine a third axis that deals with laboratory methods instead. While interesting, to keep this post brief, this will be dealt with during my ODSC tutorial, "[Data Science in the Biotech and Pharma Research Organization](https://odsc.com/speakers/data-science-in-the-biotech-pharma-research-organization/)," at [ODSC East 2024](https://odsc.com/boston/).
+
+Within the Moderna DSAI (Research) team, we adopt the following organizational axes and the main reason why for each:
+
+- Entities:
+    - mRNA - the product we make
+    - Proteins - the therapeutic that gets expressed
+    - LNPs - the cargo delivery method
+- Methods:
+    - Machine-designed libraries - to serve wet lab teams directly
+    - Computer vision - for coverage on imaging.
+    - Probabilistic models & custom algorithms - our catch-all for other things that don't fit neatly into the first two.
+
+Having a clear set of organizational axes gives us two advantages:
+
+1. It allows us to communicate how work is organized and gives colleagues an easy framework for understanding when they should come to us and when they shouldn't.
+2. The same framework provides a scaffold for assigning assignments to team members in a way that panders to their interests and professional development goals.
+
+Nothing is perfect, though; there is a risk that our 3x3 limits our thinking about delivering value to our organization. For example, there is nothing that dictates that this 3x3 matrix has to remain this way; it can also become a 3x4 matrix, with methods expanding to LLM-based methods that aid in discovering each of the three entities. As team leads, it is imperative that we continually evaluate whether it is necessary to evolve (ideally without negatively disrupting) our work's organizational axes.
+
+## Motivation
+
+The second point is a perfect segue into the second question: "**How do we keep the team motivated?**"
+
+Mastery is deeply satisfying, and I would argue that satisfaction from technical mastery is a fairly universal trait among data scientists. We chose such a technical career path for a reason, after all. At the same time, career progression is essential to many people, so it's unwise to pigeonhole people for too long within any box. People may also want to take on leadership duties, but the organization may not yet be mature enough to support those ambitions through formal management duties. At the same time, it is vital to focus on a few threads to complete things so that the team has a portfolio and a constant stream of delivered value over time. With so many factors existing in tension with one another, how do we ensure that our teammates remain productive, connected, and motivated all at the same time?
+
+The obvious thing to do is to ask what they want for their future career right when they start and through check-ins during the year. As such, within the Moderna DSAI (Research) team, we ensure that (1) each person is involved in 2 of the nine cells that cover the matrix and that (2) at any point in time, nobody is working on more than three concurrent projects or products at any given point in time. I retain the conviction that most people are reasonable and understand that when there is a business need, they can temporarily pivot away from their interests to help the team (and themselves) gain credibility points for the things they want to work on. At the same time, over a longer time horizon, I make my best effort to commit to matching their skills and interests to the multiple lines of work that emerge within the organization.
+
+While management roles may not always exist (they must be based on business needs first), leadership roles always abound. After all, one can be a leader without the baggage associated with formal management duties! Recognizing this point will help team leads unlock new ways of approaching career development. Here are some examples of concrete opportunities for leadership development:
+
+- Organizing internal innovation events (hackathon, docathon, etc.)
+- Organizing internal seminar series
+- Spearheading the development and improvement of internal tooling
+- Formal mentorship or coaching pairings
+
+As data science leaders, we should recognize and celebrate such efforts! They enhance the experience of everyone within the company and keep individuals with leadership traits deeply engaged. For the individual contributor with the leadership itch (who may also be staring down a dead-end in their organization's career ladder), these may be productive outlets to explore!
+
+People are, by nature, hierarchical creatures, and the organizational structure may lead individuals to mentally box themselves into waiting for "more senior" folks to take the initiative. But things don't have to be that way! Encouraging people to break through these mental boxes takes time. Also, it may take some behind-the-scenes encouragement and nudging to have them create the opportunities for leadership development that they may desire. If you're in a senior leadership position, your sponsorship and commitment to back them can be the strongest signal of your support for their development.
+
+## Summary
+
+Keeping the team's activities organized and motivated are two aspects of structuring, organizing, and leading a biotech data science team in the research space. During my ODSC East hands-off tutorial, I will also explore other angles, such as the challenges associated with hiring, the instability of research practices, and more. Meanwhile, I would love to hear from you -- how do you organize your team's activities and keep your teammates motivated?
+---
+pub_date: 2024-03-23
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss about organizing and motivating a data science team within a biotech research setting, focusing on structuring team activities around key research entities and methodologies. I highlight the importance of aligning team members with projects that match their interests and professional goals, and suggest ways to foster leadership skills without formal management roles. How do we balance the technical and career aspirations of data scientists to maintain productivity and motivation?
+---
+tags:
+
+data science
+organization
+motivation
+research
+biotech
+team activities
+product-oriented
+service-oriented
+career development
