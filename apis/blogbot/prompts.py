@@ -18,7 +18,7 @@ def compose_linkedin_post(text):
     Ensure that there is a placeholder for me to paste in the URL.
     Also ensure that it is written in first-person, humble, and inviting tone.
 
-    Return in the following format:
+    Return in the following json format:
 
         {"response_text": <linkedin text goes here>}
     """
@@ -38,8 +38,7 @@ def compose_patreon_post(text):
     before it goes live on my blog."
     Sign off with "Cheers,\nEric".
 
-
-    Return in the following format:
+    Return in the following json format:
 
         {"response_text": <patreon text goes here>}
     """
@@ -61,7 +60,7 @@ def compose_twitter_post(text):
     Ensure that there is a placeholder for me to paste in the URL.
     Also ensure that it is written in first-person, humble, and inviting tone.
 
-    Return in the following format:
+    Return in the following json format:
 
         {"response_text": <twitter text goes here>}
     """
@@ -85,7 +84,7 @@ def compose_substack_post(text):
     to paste in the URL to the blog post.
     Also ensure that it is written in first-person, humble, and inviting tone.
 
-    Return in the following format:
+    Return in the following json format:
 
         {"response_text": <substack text goes here>}
 
@@ -104,7 +103,7 @@ def compose_tags(text):
 
         {{ text }}
 
-    Return in the following format:
+    Return in the following json format:
 
         {"response_text": [tag1, tag2, tag3, tag4, tag5...]}
     """
@@ -122,7 +121,7 @@ def compose_summary(text):
     Please start the summary with, "In this blog post".
     Please end the summary with a question that entices the reader to read on.
 
-    Return in the following format:
+    Return in the following json format:
 
         {"response_text": <summary text goes here>}
 
