@@ -1,0 +1,156 @@
+title: How to grow software development skills in a data science team
+---
+author: Eric J. Ma
+---
+body:
+
+I recently read [this article](https://martinfowler.com/articles/productize-data-sci-notebooks.html) on Martin Fowler's website; the contents resonated powerfully with me! Essentially, the article explains why notebooks in production are a terrible idea and that:
+
+> This requires moving out of notebook style development after the initial exploratory phase rather than making it a continuing pattern of work requiring constant integration support. This way of working not only empowers data scientists to continue to improve the working software, it includes them in the responsibility of delivering working software and actual value to their business stakeholders.
+
+The article didn't touch on how to ensure that one's data science team avoids notebook-in-production syndrome. A related question is what I'd like to discuss in this blog post: How do we grow a data science team's software development skillsets?
+
+Distilling what I've learned from my 7 years in the industry, the key ideas I want to touch on are as follows:
+
+- We need tooling that makes it easy to do the right thing.
+- We need practices that normalize doing the right thing.
+
+These are tied together in a system of working, ideally, one that is generally stable over time but can be evolved according to changing internal needs or external conventions, backed by a philosophy that none of our work is solely our own but shared, and therefore needs to be accessible by others.
+
+## What "the right thing" is
+
+I should first define what I mean by "the right thing". Within the context of this article, it'll mean only one thing: taking one's work to production without deploying the notebook in production. Backing this idea is the philosophy that:
+
+> Data scientists in most companies must treat their work as software to deliver lasting impact.
+
+## Tooling that makes it easy to do the right thing
+
+We need _tooling that makes it easy to migrate our work from exploratory notebook code into production-quality code_. Production-quality code is essentially code that has been (a) refactored, organized, and standardized to a basic level of quality, (b) tested for correctness and subject to automated testing, and (c) documented. For most data scientists, the most significant challenges about writing production-quality code include remembering minutiae such as:
+
+1. What to put inside each of the myriad of configuration files,
+2. The structure of a Python code library,
+3. Where to place tests,
+4. How to automatically run tests on every commit,
+5. Where to place documentation,
+6. How to get documentation to become auto-publishable,
+7. Where to publish documentation,
+8. How to automatically ensure that code stays compliant with minimum code style standards,
+9. Commands to deploy code to deployment endpoints (e.g. a pip-compatible store like CodeArtifacts),
+
+We can break this down into the following categories of things to remember:
+
+- File structure
+- Configuration file contents
+- Deployment target
+
+These problems can be solved through:
+
+1. **initiating** a new code repository that is templated with an opinionated and minimally complete file structure,
+2. **templating** the files that are created with the necessary information for development and automated deployment,
+3. defining a stable set of **endpoints** for deploying one’s work and
+4. executing any **routine commands** automatically for environment creation to minimize the mental overhead of remembering those commands.
+
+What is an example of this? Allow me to provide an example inspired by how we do it at Moderna:
+
+| Step       | Example                                                                                                                                                                                                                                                                                                                      |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Initiation | CLI tool with a command to scaffold out entire Python package: `{{ project_name_as_source_dir }}/`, `tests/`, and `docs/`; also creates a `notebooks/` directory for storing notebooks.                                                                                                                                      |
+| Templating | Source directory files have an `__init__.py` and python modules, each equipped with docstrings to illustrate their use.                                                                                                                                                                                                      |
+| Endpoints  | Configuration files exist for continuous deployment (i.e. on every commit to main) to internal compute backend (`*.json` files), CodeArtifacts, and Confluence for documentation.                                                                                                                                            |
+| Commands   | CLI tool automatically creates project's `conda` environment, installs custom source package into project's `conda` environment, installs pre-commit hooks for automatic code checking, and, as a bonus, installs the Conventional Commits-based automatic commit message writer that we developed on top of the OpenAI API! |
+Accompanying this is reference documentation about why each file exists and what it is intended for within the context of a new project.
+
+### Contextualized within development workflow
+
+Let's consider how a data scientist can leverage this file structure to support moving from prototype to production.
+
+Early on, when the code is being actively developed and is unstable, the data scientist only needs to operate within the `notebooks/` directory (*which has already been scaffolded for them!*) and can safely ignore the rest of the files present. Individuals may prototype to their heart's content.
+
+Over time, some code may get duplicated within or between notebooks. This is a good signal to start defining functions within the source library (*already scaffolded for the data scientist!*) that can be imported back into the notebook(s) that use that function. Over time, the source library will organically grow as code becomes progressively stabilized. When code is known to be stable and critical for the functionality of the codebase, it gets tested by writing tests inside the `tests/` directory (*also already present for use!*).
+
+**LLM Tip!:** If you have a Jupyter notebook that is poorly refactored but at least can be executed from top-to-bottom linearly like a script, you can copy and paste the entirety of a Jupyter notebook's raw JSON into ChatGPT and prompt it to propose a set of functions to fill out to refactor. The prompt looks like this:
+
+> I have a notebook that I need help refactoring:
+>
+> {{ paste notebook JSON here }}
+>
+> Can you propose a collection of functions that can be used to organize the code into logical steps?
+
+If you're feeling like you're having a coder’s block when refactoring and organizing your code, this prompt can help!
+
+As code is progressively committed into the source library, pre-commit hooks automatically check that the docstrings are present and conform to minimum standards (remember, they have *already been installed!*). When the code gets pushed to Bitbucket on a branch, it gets tested automatically on every commit (*thanks to the standard CICD configuration files that have already been installed!*).
+
+Once the data scientist's work is ready for final deployment, the presence of CICD configuration files streamlines the deployment of one's work onto the target deployment endpoints: Python packages, cloud runners, Dash apps, or other well-defined targets.
+
+Finally, what about docs? Well, they never get written...
+
+I jest! Docs seem like a chore to write, but LLMs are your most efficient drafting tool available! Paste your code in and ask for a tutorial (based on the [Diataxis framework](https://diataxis.fr/)). Or ask it to draft a Diataxis-style reference, explainer, or how-to guide. Then, place the documentation in the docs/ directory (*also already scaffolded!*) and watch the CICD bots (*remember, they are also already configured!*) auto publish those docs into accessible places (e.g. Confluence or Notion) that the team has previously agreed upon.
+
+### Open source tooling to support this philosophy
+
+Mirroring the tooling that we have at work, I created [`pyds-cli`](https://github.com/ericmjl/pyds-cli), that is freely available on GitHub and is `pip`-installable:
+
+```bash
+pip install -U pyds-cli
+```
+
+Rather than manually creating files by hand, one only needs to run `pyds project init` and a complete repository structure gets scaffolded for you. Additionally, rather than needing to remember `mamba env update -f environment.yml && pip install -e .`, one runs `pyds project update` at the terminal. The core philosophy here is to _stabilize processes and automate them as much as possible.
+
+## Practices that normalize doing the right thing
+
+If one person is writing the code, however, there is a risk that it becomes unintelligible to another person -- including one's future self! How do we encourage people to think about software development as a necessary skill in data science and, as such, avoid the temptation to deploy notebooks in production? This is particularly relevant in research-oriented work where code exists in notebooks for a long time because it remains experimental until business adoption. The solution is *community practices that normalize doing the right thing*. Ensuring that these are _community_ practices provides the psychological support necessary to encourage the team to embrace them. What kind of practices might these include? Here is a non-exhaustive list of examples.
+
+### Co-ownership of shared tooling
+
+To start, the data science team must encourage co-ownership of shared tooling, following an internal open-source model. In such an operating model, anybody can propose changes to the tools and with guidance from core tool maintainers, can shepherd their idea into existence. One example is this: a data scientist finds a bug in the project initialization tooling where pre-commit hooks run on initial commits fail due to misformatted code in the template. She fixes the mis-formatted code and creates a pull request that gets accepted. Now, the improvement is shared with everyone. This operating model increases the team's investment and feeling of ownership of shared tooling, serves as a great training ground for junior teammates to improve their code design sense, and provides an outlet for outsized impact beyond one's main line of work.
+
+### Design discussions
+
+Code written in isolation is prone to swerving off into unintelligible and non-portable design spaces. I know because I was there before: my thesis code targeted MIT's high-performance computing cluster and had many hard-coded variables, so folks from the Influenza Research Database probably found it too high of an energy barrier to integrate into their systems. Getting around this is not difficult: Encourage discussions of code while it is in progress, particularly informal and impromptu sessions where one asks a colleague to explore the design space of one's code! For example, if there is legacy code where two models are written in two different frameworks and are being joined by glue code, it may help to modernize the implementations by harmonizing the frameworks they are written in. Discussion pointers here include which framework to choose, sketches of the unit tests, possible code organization in different modules, and more. Investments here can pay dividends later when one wants to modify the code to introduce additional functionality or remove unnecessary functionality -- a thoughtful base gives us speed for the future.
+
+### Code review
+
+Code review sessions are a great place to ensure that quality code is what gets merged. As a group, we require that pull requests be made for review and encourage that the PRs be put up early rather than later. This practice helps surface up work-in-progress, reducing the odds that the code gets lost through being uncommitted or being on stale branches. Occasionally, imperfect PRs can be merged as long as they are relatively isolated and don't impact the release of other code. An example of this was work on an intern's branch, where the intern explored neural network models and had a ton of code written. To avoid impeding progress, we decided to allow the relatively messy code through first on the condition that the next PR would be a refactor of the working model and its training loop, allowing us to keep the PR diff smaller and hence reviewable.
+
+### Use robots to do code-checking
+
+When porting code from notebooks into source `.py` files, there will often be warts associated with it: dangling references, unused variables, lack of docstrings, and more. Experienced humans may notice them, but it becomes a nuisance for humans to nitpick other humans. On the other hand, delegating these checks to a robot eliminates the psychosocial burden of humans, reminding other humans to write code to conform to minimum standards. As such, we leverage automatic checking of code to minimize the number of times a human needs to leave nitpicky comments and require that these checks pass before merging.
+
+### Leaders must champion this practice over a long period
+
+Within a data science team, the team leader(s) should champion this practice to be successful and sustainable. This necessary condition is a direct consequence of most humans being naturally hierarchical. Additionally, the practice must be championed over a long period (I would wager at least 1-2 years) for it to become ingrained as part of the team's psyche. All good things take time to foster, and software development skills for data scientists are no exception.
+
+## Summary
+
+In this article, we discussed two ways to encourage a data science team to grow in software development skills. There were two main points we touched on:
+
+1. Providing tooling to make doing software easy and
+2. Providing the right environment to normalize doing software work in our day-to-day.
+
+Both are necessary, as this represents a mindset shift for most data scientists, especially when compared to the kind of prior training they would have. How would you approach making software development more accessible for your data science team?
+
+## FAQ
+
+### Won't this slow my work down?
+
+Yes... at first. But as time progresses, these habits gradually become ingrained in the team, and collectively, our work gains a productivity flywheel. Having a stable *and* flexible base stack, i.e. the templated repo and configuration files, allows for a large proportion of work to be easily and quickly shipped while also enabling customization for work that doesn't neatly fit within the framework.
+
+### What do we do with one-offs?
+
+At times, there will be one-off work that gets done. Do we put them all in one repo? Or do we have one repo per one-off? One will need to make this choice, and each choice comes with its tradeoff. Putting one-offs inside a single repo, the `one-off-work` repository, helps with the mental organization of work. Still, it can also hinder one's ability to recap work done if the one-off-work repository's environment definitions conflict. Putting one-offs in individual repos can help with environment isolation but comes with a bit more mental overhead of knowing which repo to look at. I tend to see the potential of one-offs to grow into more systematically practical projects, so I would err on the side of more repositories than a mono repo.
+---
+pub_date: 2024-04-05
+---
+twitter_handle: ericmjl
+---
+tags:
+
+data science
+data science team
+software development
+upskilling
+tooling
+environment
+productivity
+---
+summary: In this blog post, I share insights from my 7 years in the industry on how to enhance a data science team's software development skills, focusing on the necessity of tooling and practices that make it easy and normal to do the right thing: moving from notebook explorations to production-ready code. I also discuss the importance of community practices in fostering a culture of quality software development within data science teams. How can these strategies streamline your team's workflow and elevate their software development capabilities?
