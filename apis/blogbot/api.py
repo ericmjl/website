@@ -10,6 +10,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from llamabot import SimpleBot
+from loguru import logger
 
 from .prompts import (
     compose_linkedin_post,
@@ -36,9 +37,9 @@ tagbot = SimpleBot(
     ("You are an expert tagger of blog posts. "
      "Return lowercase tags for the following blog post."),
     model="ollama/mistral",
-    format="json",
+    # format="json",
     # api_base=f"http://{os.getenv('OLLAMA_SERVER')}:11434/",
-    # response_format={ "type": "json_object" },
+    response_format={ "type": "json_object" },
 )
 
 templates = Jinja2Templates(directory="apis/blogbot/templates")
@@ -86,19 +87,23 @@ async def social_media(
     elif post_type == "substack":
         prompt = compose_substack_post
     response, post_body = get_post_body(blog_url)
+    text = "Error"
     if response.status_code == 200:
         social_post = bot(prompt(post_body))
+        # Post-processing
+
         try:
-            text = json.loads(
-                social_post.content.replace("\n", "\\n").replace("\t", "\\t")
-            )["response_text"]
+            bot_text = social_post.content.replace("'response_text'", '"response_text"')
+            logger.info(bot_text)
+            bot_text = bot_text.replace("\n", "\\n").replace("\t", "\\t")
+            logger.info(bot_text)
+            text = json.loads(bot_text)["response_text"]
+            logger.info(text)
 
             if post_type == "tags":
                 text = "\n".join(line for line in text)
         except Exception as e:
             text = f"Error: {e}"
-    else:
-        text = "Error"
     return text
 
 
