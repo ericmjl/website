@@ -1,0 +1,98 @@
+title: pyds-cli version 0.4.0 released!
+---
+author: Eric J. Ma
+---
+body:
+
+I have released a new version of `pyds-cli`, and I wanted to share what's new there!
+
+Following on the heels of my [last blog post](https://ericmjl.github.io/blog/2024/4/5/how-to-grow-software-development-skills-in-a-data-science-team/), I decided to update `pyds-cli` to include the following upgrades:
+
+1. The package now uses `cookiecutter` templates to scaffold a repo.
+2. Included in the package is a new `talks` initializer that scaffolds out a talk based on the use of `reveal-md`.
+
+Let's take a look at each of them.
+
+## Cookiecutter Templates
+
+Previously, pyds-cli had a `templates/` directory within the repo from which we copied files over to a new repository. However, maintaining the code that copied over files was tedious, especially if I wanted to evolve the structure of new repositories to keep up with evolving Python community standards. (One example would be the adoption of `pyproject.toml` as a single configuration file for Python projects.)
+
+By switching over to [cookiecutter](https://cookiecutter.readthedocs.io/) templates, knowing which files get copied over is much easier -- it is everything as templated out in the source directory:
+
+```bash
+❯ tree "{{ cookiecutter.__repo_name }}/"
+Permissions Size User    Date Modified Git Name
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- {{ cookiecutter.__repo_name }}
+.rw-r--r--   173 ericmjl  7 Apr 12:14   -- ├── .bumpversion.cfg
+.rw-r--r--    34 ericmjl  7 Apr 12:14   -- ├── .darglint
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- ├── .devcontainer
+.rw-r--r--   797 ericmjl  7 Apr 12:14   -- │  ├── devcontainer.json
+.rw-r--r--  2.6k ericmjl  7 Apr 12:14   -- │  └── Dockerfile
+.rw-r--r--   242 ericmjl 30 Mar 19:07   -I ├── .env
+.rw-r--r--    29 ericmjl  7 Apr 12:14   -- ├── .flake8
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- ├── .github
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- │  └── workflows
+.rw-r--r--  2.3k ericmjl  7 Apr 12:14   -- ├── .gitignore
+.rw-r--r--   788 ericmjl  7 Apr 12:14   -- ├── .pre-commit-config.yaml
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- ├── docs
+.rw-r--r--    90 ericmjl  7 Apr 12:14   -- │  ├── api.md
+.rw-r--r--   607 ericmjl  7 Apr 12:14   -- │  ├── apidocs.css
+.rw-r--r--    21 ericmjl  7 Apr 12:14   -- │  ├── config.js
+.rw-r--r--   560 ericmjl  7 Apr 12:14   -- │  └── index.md
+.rw-r--r--   697 ericmjl  7 Apr 12:14   -- ├── environment.yml
+.rw-r--r--   124 ericmjl  7 Apr 12:14   -- ├── MANIFEST.in
+.rw-r--r--  1.7k ericmjl  7 Apr 12:14   -- ├── mkdocs.yaml
+.rw-r--r--  1.9k ericmjl  7 Apr 12:14   -- ├── pyproject.toml
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- ├── tests
+.rw-r--r--    49 ericmjl  7 Apr 12:14   -- │  ├── test___init__.py
+.rw-r--r--    54 ericmjl  7 Apr 12:14   -- │  ├── test_cli.py
+.rw-r--r--    75 ericmjl  7 Apr 12:14   -- │  └── test_models.py
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- └── {{ cookiecutter.__module_name }}
+.rw-r--r--   237 ericmjl  7 Apr 12:14   --    ├── __init__.py
+.rw-r--r--   661 ericmjl  7 Apr 12:14   --    ├── cli.py
+.rw-r--r--    61 ericmjl  7 Apr 12:14   --    ├── models.py
+.rw-r--r--    35 ericmjl  7 Apr 12:14   --    ├── preprocessing.py
+.rw-r--r--   205 ericmjl  7 Apr 12:14   --    ├── schemas.py
+.rw-r--r--    53 ericmjl  7 Apr 12:14   --    └── utils.py
+```
+
+An additional benefit of using `cookiecutter` is the simplification of the CLI! Because `cookiecutter` comes with its own tools to prompt users for information, I could remove a lot of CLI code that was concerned with the same task.
+
+(If you're wondering why there are so many files inside a repo, it follows the core idea of treating data science projects as software. You can read more about it [on my previous blog post](https://ericmjl.github.io/blog/2024/4/5/how-to-grow-software-development-skills-in-a-data-science-team/).)
+
+## Talks Templating
+
+Apart from using `cookie-cutter` templates, I also took the chance to write `pyds talk init`, which initializes a new repository with materials necessary to build a talk that gets hosted on GitHub pages, with auto-publishing using GitHub actions.
+
+```bash
+❯ tree "{{ cookiecutter.__repo_name }}/" -L 3
+Permissions Size User    Date Modified Git Name
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- {{ cookiecutter.__repo_name }}
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- ├── .github
+drwxr-xr-x     - ericmjl  7 Apr 12:14   -- │  └── workflows
+.rw-r--r--   762 ericmjl  7 Apr 12:14   -- │     └── publish.yaml
+.rw-r--r--     8 ericmjl  7 Apr 12:14   -- ├── .gitignore
+.rw-r--r--   169 ericmjl  7 Apr 12:14   -- ├── index.md
+.rw-r--r--   439 ericmjl  7 Apr 12:14   -- └── Makefile
+```
+
+As you can see, it's a relatively simple setup with only an `index.md` file for the talk. There is a Makefile to host the talk locally. This was prompted by my distaste for flashy PowerPoint slide decks and my preference for using plain text to create content. My upcoming talks at BioIT world and ODSC East 2024 will be written using this templating system!
+
+## Try it out
+
+I wrote `pyds-cli` to democratize standardized project initialization for data scientists. Making it easier for data scientists to do the right thing goes a long way to encouraging best practices. If you're in the same camp, please give `pyds-cli` a shot!
+---
+pub_date: 2024-04-07
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share the latest updates to `pyds-cli`, including the use of `cookiecutter` templates for easy repo scaffolding and a new talks initializer for creating talk presentations using `reveal-md`. These updates simplify the CLI and offer a streamlined approach to project and talk setup, reflecting my commitment to promoting best practices among data scientists. With these tools, I aim to make it easier for data scientists to adopt standardized project structures. Curious about how these updates can enhance your workflow?
+---
+tags:
+
+pyds-cli
+data science
+standards
+cookiecutter
+templates
+github actions
