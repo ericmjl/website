@@ -89,6 +89,10 @@ Let's recap how do we create a pre-commit hook that can be distributed to others
 
 As you develop the hook, continue cutting new releases through `git` tags. When you cut new releases, go to your downstream project code and ask `pre-commit` to update the hooks by running `pre-commit autoupdate`.
 
+## For teams...
+
+Now that you know how to build your own pre-commit hooks, you can be empowered to create custom checks for your code that hold it to your company's own internal standards! I can also imagine many creative uses, including the use of LLM APIs within the pre-commit hooks that get run that parse code for issues that are difficult to detect using programmatic rules, not unlike [writing commit messages based on git diffs](https://ericmjl.github.io/llamabot/cli/git/)!
+
 Happy code checking!
 ---
 pub_date: 2024-04-09
