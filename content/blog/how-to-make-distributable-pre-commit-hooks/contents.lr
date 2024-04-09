@@ -1,0 +1,105 @@
+title: How to make distributable pre-commit hooks
+---
+author: Eric J. Ma
+---
+body:
+
+Following my [previous blog post on how to make pre-commit hooks](https://ericmjl.github.io/blog/2023/10/14/how-i-made-a-local-pre-commit-hook-to-resize-images/), I finally made my first *distributable* pre-commit hook that is installable by the [`pre-commit`](https://pre-commit.com/) framework! The pre-commit hook is called `convert-to-webp`, and is housed in the repo [`ericmjl/webp-pre-commit`](https://github.com/ericmjl/webp-pre-commit).
+
+Pre-commit hooks are fantastic! They enable us to run automatic checks on files to be committed into a repository before they are committed. This allows us to automatically ensure that, for example, large files are not committed into the repository or, in the case of `convert-to-webp`, images are converted to the highly optimized `.webp` format before being committed.
+
+Having just learned how to make a distributable pre-commit hook, I am documenting how it works here for future reference.
+
+## Essential configuration files in the source repository
+
+The most important configuration file we need within the repository is called `.pre-commit-hooks.yaml`. This defines what hooks are available from within the repository. In my case, I have only one defined, `convert-to-webp`, and it is configured as follows:
+
+```yaml
+- id: convert-to-webp
+  name: Convert images to WebP
+  description: This hook converts image files to WebP format.
+  entry: webp-hook
+  language: python
+  files: \.(png|jpg|jpeg|gif|bmp|tiff)$
+  additional_dependencies:
+    - Pillow
+    - typer
+```
+
+Let's explain what each line is:
+
+- `id`: This is the name identifier of the pre-commit hook to run.
+- `name`: This is the display name of the hook when it is run at the terminal.
+- `description`: Something human-readable.
+- `entry`: This is the command that gets run. All relevant files are added as arguments automatically, so in this case, it'll be `$ webp-hook file1.png file2.tiff file3.bmp` etc.
+- `language`: This is the programming language that it's written in.
+- `files`: A regex pattern for the kind of file extensions that will be subject to checks by this hook.
+- `additional_dependencies`: An array of dependencies necessary to run the hook. In this case, I have a list of package dependencies.
+
+A few questions may be lingering here: what is this `webp-hook` command that I wrote?
+
+It turns out to be a Typer CLI! This is implemented within the `webp_hook` directory:
+
+```bash
+drwxr-xr-x     - ericmjl  7 Apr 23:56   -- ├── webp_hook
+.rw-r--r--   922 ericmjl  8 Apr 08:38   -- │  └── cli.py
+```
+
+To ensure that the CLI gets run as a command entry point at the command line, we configure this in `pyproject.toml`:
+
+```toml
+[project.scripts]
+webp-hook = "webp_hook.cli:app"
+```
+
+Because there's only one command in `cli.py` (defined under the `convert` function) I can get away with using `webp-hook` as the command to run rather than `webp-hook convert` as the command.
+
+Another crucial thing is to have tagged versions of the repository. To ensure this is done efficiently, I use `bumpversion` (but should upgrade to `bump-my-version` soon) when cutting a new tagged release. This tagged version is referenced in my individual project repo's configuration files.
+
+## Obtaining the pre-commit hook
+
+To obtain the pre-commit hook, all we need to do is add the following line into the `.pre-commit-config.yaml` (not to be confused with the `.pre-commit-hooks.yaml`) file:
+
+```yaml
+- repo: https://github.com/ericmjl/webp-pre-commit # <-- URL to repository
+  rev: v0.0.8 # <-- this is the tagged version
+  hooks:
+  - id: convert-to-webp # <-- this is the `id` defined above
+```
+
+Now, the `pre-commit` framework will automatically manage the installation of the pre-commit hook within its own virtual environment, install dependencies, and run the command `webp-hook` upon committing new files. The output should look like this:
+
+```bash
+❯ git commit
+check yaml...........................................(no files to check)Skipped
+fix end of files.....................................(no files to check)Skipped
+trim trailing whitespace.............................(no files to check)Skipped
+Convert images to WebP...............................(no files to check)Skipped
+# notice the name of the pre-commit hook above!
+```
+
+## Summary of steps
+
+Let's recap how do we create a pre-commit hook that can be distributed to others. The key steps, in order, are:
+
+1. Create a new repository in which you develop an installable and distributable command-line tool.
+2. In that repository, ensure that you have a `.pre-commit-hooks.yaml` configuration file that declares that the pre-commit hook is.
+3. Use `bump-my-version` (or manual git tagging) to cut new tagged releases of your pre-commit hook.
+4. In a different project repository, add the hook to your `.pre-commit-config.yaml` file.
+
+As you develop the hook, continue cutting new releases through `git` tags. When you cut new releases, go to your downstream project code and ask `pre-commit` to update the hooks by running `pre-commit autoupdate`.
+
+Happy code checking!
+---
+pub_date: 2024-04-09
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my journey of creating my first distributable pre-commit hook, `convert-to-webp`, using the pre-commit framework. This hook automatically converts images to the `.webp` format before they're committed to a repository, ensuring optimized image storage. I detail the essential configuration files, the creation of a Typer CLI for the hook, and how to make the hook available for others by tagging versions and adding it to a project's .pre-commit-config.yaml file. Curious about how to streamline your codebase with automated checks? How might this improve your project's efficiency?
+---
+tags:
+
+pre-commit
+webp
+optimization
+python
