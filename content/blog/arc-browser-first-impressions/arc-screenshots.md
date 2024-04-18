@@ -2,7 +2,7 @@
 
 ---
 
-![](./social.png)
+![](./social.webp)
 
 ---
 
@@ -10,7 +10,7 @@
 
 ---
 
-![](./blogging.png)
+![](./blogging.webp)
 
 ---
 
@@ -18,4 +18,4 @@
 
 ---
 
-![](./nams.png)
+![](./nams.webp)
