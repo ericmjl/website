@@ -48,7 +48,7 @@ def resize_logos_in_tree(root_dir, logo_name, max_width):
 
 if __name__ == "__main__":
     root_directory = here()
-    logo_filename = "logo.png"
+    logo_filename = "logo.webp"
     maximum_width = 600
 
     if resize_logos_in_tree(root_directory, logo_filename, maximum_width):
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
 At its core, this script:
 
-1. **Checks images:** It examines all the logos in the repository, specifically those named "logo.png".
+1. **Checks images:** It examines all the logos in the repository, specifically those named "logo.webp".
 2. **Resizes oversized images:** If any logo exceeds a set maximum width (600 pixels in this case), the script resizes it to fit within the defined width while maintaining its aspect ratio.
 3. **Provides feedback:** Depending on whether any logos were resized, the script either rejects or accepts the commit, informing the user of its decision.
 
@@ -79,7 +79,7 @@ To understand how this script integrates with the pre-commit framework, let's br
       language_version: python3
       additional_dependencies: [pillow, pyprojroot]
       types: [png]
-      files: logo\.png$
+      files: logo\.webp$
       pass_filenames: false
 ```
 
@@ -91,7 +91,7 @@ To understand how this script integrates with the pre-commit framework, let's br
 - **language_version**: Specifies the Python version.
 - **additional_dependencies**: Lists external libraries the script depends on. Here, `pillow` is for image processing and `pyprojroot` helps in finding the root of the project.
 - **types**: Indicates the file types the hook applies to. It's set to PNG images.
-- **files**: A regex pattern to match specific filenames, ensuring the hook targets only "logo.png" files.
+- **files**: A regex pattern to match specific filenames, ensuring the hook targets only "logo.webp" files.
 - **pass_filenames**: This is set to `false`, meaning the script does not expect file names as command-line arguments.
 
 ## Behind the scenes
