@@ -39,7 +39,7 @@ A = nx.to_numpy_array(G)
 sns.heatmap(A)
 ```
 
-![png](output_2_1.png)
+![png](output_2_1.webp)
 
 Because the matrix is so sparse, we can actually store it as a **sparse matrix**:
 
@@ -71,7 +71,7 @@ sns.heatmap(sp.block_diag([A, A2]).todense())
 
 
 
-![png](output_6_1.png)
+![png](output_6_1.webp)
 
 
 Now, notice how there's 25 nodes in total (0 to 24), and that they form what we call a "block diagonal" format. In its "dense" form, we have to represent $25^2$ values inside the matrix. That's fine for small amounts of data, but if we have tens of thousands of graphs, that'll be impossible to deal with!
@@ -124,7 +124,7 @@ plt.xlabel('number of graphs')
 plt.ylabel('time (s)')
 ```
 
-![png](output_12_1.png)
+![png](output_12_1.webp)
 
 
 It is quite clear that the increase in time is super-linear, showing $O(n^2)$ scaling. (Out of impatience, I did not go beyond 50,000 graphs in this post, but at work, I did profile performance up to that many graphs. For reference, it took about 5 minutes to finish creating the scipy sparse matrix for 50K graphs.
@@ -178,7 +178,7 @@ plt.xlabel('number of graphs')
 plt.ylabel('time (s)')
 ```
 
-![png](output_18_1.png)
+![png](output_18_1.webp)
 
 
 I also happened to have listened in on a [talk by Siu Kwan Lam](https://www.youtube.com/watch?v=6oXedk2tGfk) during lunch, on `numba`, the JIT optimizer that he has been developing for the past 5 years now. Seeing as how the code I had written in `_block_diag` was all numeric code, which is exactly what `numba` was designed for, I decided to try optimizing it with JIT.
@@ -197,7 +197,7 @@ plt.xlabel('number of graphs')
 plt.ylabel('time (s)')
 ```
 
-![png](output_21_1.png)
+![png](output_21_1.webp)
 
 
 Notice the speed-up that JIT-ing the code provided! (Granted, that first run was a "warm-up" run; once JIT-compiled, everything is really fast!)
@@ -220,7 +220,7 @@ plt.xlabel('number of graphs')
 plt.ylabel('time (s)')
 ```
 
-![png](output_24_1.png)
+![png](output_24_1.webp)
 
 
 You'll notice that the array creation step induces a consistent overhead on top of the sparse matrix triplet creation routine, but stays flat and trends the "jit" dots quite consistently. It intersects the "custom" dots at about $10^3$ graphs. Given the problem that I've been tackling, which involves $10^4$ to $10^6$ graphs at a time, it is an absolutely worthwhile improvement to JIT-compile the `_block_diag` function.
