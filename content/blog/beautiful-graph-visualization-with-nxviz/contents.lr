@@ -61,7 +61,7 @@ ax = nv.circos(
 nv.annotate.circos_group(G, group_by="group")
 ```
 
-<img style="width:250px" src="./circos.png">
+<img style="width:250px" src="./circos.webp">
 
 `nxviz` assumes that node attribute fields, i.e.
 the keys in the Python dictionary that constitutes the node attribute dictionary,
@@ -75,7 +75,7 @@ and edges to have their transparency controlled by some other attribute.
 
 Apart from Circos plots, other plots are available: Hive plots, Arc plots, and Matrix plots, as you can see below.
 
-![](./nxviz-gallery.png)
+![](./nxviz-gallery.webp)
 
 ## What is the underlying philosophy of `nxviz`?
 
