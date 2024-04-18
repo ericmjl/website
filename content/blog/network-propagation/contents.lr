@@ -55,7 +55,7 @@ matrix([[ 0.,  0.,  1.,  1.,  1.],
 
 This basically corresponds to the following graph:
 
-![](./graph.png)
+![](./graph.webp)
 
 Great! Now, let's mark out some "seed" nodes. These are the "nodes" of interest. To represent this, we use a binary vector - each slot in the vector represents one node in the graph. Let's start by highlighting two nodes, the second and third one:
 
@@ -107,7 +107,7 @@ On a previous blog post, I've alluded to the fact that recursive functions are p
 
 So, let's take a look at the result of a few rounds of propagation.
 
-![](./figure_1_sm.png)
+![](./figure_1_sm.webp)
 
 The first thing that I'd like to highlight is that the information propagation process converges on a final result fairly quickly. The second thing I'd like to highlight is that the purple nodes (there are two lines!), which weren't highlighted at the start, ended up having the highest propagation scores, followed by the red node.
 
