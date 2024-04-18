@@ -94,7 +94,7 @@ Find the corresponding configuration fields, and change them to the following (m
 
 Today I learned that ST3 has a "Distraction Free Writing Mode", under the `View` menu. Earlier on, I also learned that it has a pane view mode, also under `View -->Layout`. Both have associated shortcut keys. My writing interface ended up looking something like what's in Figure {@fig:two-pane}.
 
-![Two pane view.](two-pane.png){#fig:two-pane}
+![Two pane view.](two-pane.webp){#fig:two-pane}
 
 My outline is on the right, and the main text is on the left, and there's no distracting tabs, sliding preview, or directory structure (as is what I'm used to for coding).
 
@@ -102,7 +102,7 @@ My outline is on the right, and the main text is on the left, and there's no dis
 
 Get started by adding the YAML headers in the document (Figure {@fig:yaml-header}).
 
-![YAML Headers.](yaml-header.png){#fig:yaml-header}
+![YAML Headers.](yaml-header.webp){#fig:yaml-header}
 
 Specifically, the format of what I have above is:
 
@@ -143,13 +143,13 @@ Within ST3, we can use the Command Palette to quickly generate the PDF output de
 1. Inspect that gorgeous PDF! (Figure {@fig:view-output})
 1. Check your references! (Figure {@fig:view-references})
 
-![Command Palette: Select Pandoc.](cmd-01-pandoc.png){#fig:cmd-pandoc}
+![Command Palette: Select Pandoc.](cmd-01-pandoc.webp){#fig:cmd-pandoc}
 
-![Command Palette: Select PDF.](cmd-02-pdf.png){#fig:cmd-pdf}
+![Command Palette: Select PDF.](cmd-02-pdf.webp){#fig:cmd-pdf}
 
-![Look at this gorgeous output!](cmd-03-output.png){#fig:view-output}
+![Look at this gorgeous output!](cmd-03-output.webp){#fig:view-output}
 
-![Look at those perfectly Nature-formatted references!](cmd-04-references.png){#fig:view-references}
+![Look at those perfectly Nature-formatted references!](cmd-04-references.webp){#fig:view-references}
 
 Just to show how the figures get numbered correctly (I don't have any in the draft whitepaper I'm writing), you can inspect the [source code for this blog post](blog-source.md), and the associated [pdf file](blog-post.pdf). Note how I've not numbered anything except the associated files. It's pretty cool.
 
