@@ -14,7 +14,7 @@ The tl;dr is:
 
 It'll look something like this:
 
-![](./screenshot.png)
+![](./screenshot.webp)
 
 Underneath the hood, there is a default `secrets.GITHUB_TOKEN` that is granted to a GitHub Actions' Workflow runner. The default permissions are read-only, as it needs to be able to clone the repo. However, we can enable it to push by enabling write permissions.
 
