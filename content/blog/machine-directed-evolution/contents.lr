@@ -84,7 +84,7 @@ Still, you know that we always measured selectivity
 for a subset of highest activity mutants --
 a subset, because chirality is harder to measure at scale.
 
-![](./dms.png)
+![](./dms.webp)
 
 _Fig. 2(a) from our paper, deep mutational scan measurements.
 X-axis: position on linear amino acid sequence of IRED-88.
@@ -92,7 +92,7 @@ Y-axis: amino acid substitution.
 Heatmap shows activity measurements for ~81%
 of all 6000+ possible single point mutations._
 
-![](./activity-dist.png)
+![](./activity-dist.webp)
 
 _Fig. 2(b) from our paper, activity distributions.
 X-axis: Bayesian estimated activity of IRED-88 mutants.
@@ -174,7 +174,7 @@ I've resurfaced the figure below - see the "ML" panel.)
 In this way, with a good-enough model,
 machine-directed evolution can be pretty sample-efficient.
 
-![](./activity-dist.png)
+![](./activity-dist.webp)
 
 ### Structure-informed machine-directed evolution
 
@@ -190,7 +190,7 @@ _neighboring_ the active site (N),
 or _distal_ to the active site (D).
 You can get a visual feel for these positions in the figure below.
 
-![](./sgm-positions.png)
+![](./sgm-positions.webp)
 
 _Fig. 3(a) from our paper.
 Here, we highlight the active site, neighboring, and distal positions
@@ -209,7 +209,7 @@ If you don't touch the active site,
 then you have a pretty good chance of being able to predict combination activity
 by simply adding up their individual activity values.
 
-![](./linear-additivity.png)
+![](./linear-additivity.webp)
 
 _Fig. 3(b) from our paper.
 The results shown here are from our experiments probing linear additivity of mutations.
@@ -238,7 +238,7 @@ Just like the machine-directed round -
 right-shifted and with only $10^2$ samples measured.
 See Fig. 2(b)'s "SGM panel" (resurfaced below for convenience).
 
-![](./activity-dist.png)
+![](./activity-dist.webp)
 
 ### Low N Engineering
 
