@@ -12,25 +12,25 @@ Let’s start by thinking about a few questions involving the most venerable dis
 
 Let’s start by thinking about a single draw from a standard Gaussian. Drawing one number from the standard Gaussian yields a scalar. In tensor space, a scalar is a rank 0 tensor, and this colloquially means that there’s no dimensions involved. If we drew out the distribution, and drew out the process of drawing numbers from the distribution, it might look like the following:
 
-![](./one-draw-one-normal.png)
+![](./one-draw-one-normal.webp)
 
 *The distribution we are drawing from is on the left, and a draw is represented by a line (on the same numerical axis as the probability distribution), and the *event shape*, *batch shape* and *sample shape* shown to their right, followed by a "plain English" description. Over the course of this blog post, the shape concepts will be disambiguated; sit tight and enjoy the ride!*
 
 What if we were to draw two numbers from this one Gaussian? We could use a vector with two slots to represent those draws. This might look like the following:
 
-![](./two-draws-one-normal.png)
+![](./two-draws-one-normal.webp)
 
 However, the elementary *event* of drawing a single number did not fundamentally change when we drew two numbers, as we merely repeated the same *event* to draw two. With my hands waving in the air, I will claim that this holds true even with K *samples* drawn from the distribution.
 
 Now, what if I had a second Gaussian, say, with a different mean and/or variance? If I were to draw one number from the first Gaussian alongside one number from the second Gaussian, and then concatenate them into a vector, we can represent this as us drawing numbers from independent Gaussians. The illustration below should help clarify how this is different from the first.
 
-![](./one-draw-two-normals.png)
+![](./one-draw-two-normals.webp)
 
 In this case, we may argue that per distribution, the elementary shape of the *event* did not change. However, since we have a *batch* of two distributions, this contributes to the final shape of the tensor. Again, with much waving of my hands in the air, this should extend to more than two distributions.
 
 Now, what if we had a multivariate Gaussian, with two variates? This makes for a very interesting case! The elementary *event* drawn from this multivariate Gaussian is a two-element vector, not a scalar, which means that its shape is apparently identical to the case where we have a single pair of numbers drawn from a batch of two independent Gaussians! This looks like the following:
 
-![](./one-draw-bivariate-normal.png)
+![](./one-draw-bivariate-normal.webp)
 
 This is interesting, because a single draw from a bivariate Gaussian has the same overall shape as two draws from one Gaussian, which also has the same shape as one draw from a batch of two Gaussians. Yet, these apparently same-shaped draws are shaped differently semantically! In particular, the two independent Gaussians individually have elementary *event* shapes that are scalar, but when drawn as a *batch* of two, that is when their shape of `(2,)` forms. On the other hand, the multivariate Gaussian cannot have its two numbers drawn independent of one another (unless this is the special case of diagonal-only covariance - in which case, this is equivalent to independent Gaussians). Hence, the elementary *event* shape is not scalar, but vector (or more generally, same rank tensor as the mean tensor), but the *batch* has only a single distribution, hence it has a scalar batch shape.
 
@@ -44,7 +44,7 @@ To summarize, here are the various kinds of shapes, defined:
 
 And finally, here’s the full spread of possibilities, using one or two draws, uni- or bi-variate Gaussians, and one or two batches of distributions as an illustration.
 
-![](./shapes-blog-post-md.png)
+![](./shapes-blog-post-md.webp)
 
 Special thanks goes to fellow PyMC devs, Ravin Kumar, Brandon Willard, Colin Carroll, and Peadar Coyle, who provided feedback on the figure over a late-night tea/dinner/bar session at the end of Day 2.
 
@@ -60,7 +60,7 @@ In the case of the batch of two Gaussians, how many log probabilities should we 
 
 Borrowing from the above master figure, here's the a figure that shows how likelihood computations happen:
 
-![](./likelihood-computation.png)
+![](./likelihood-computation.webp)
 
 *To compute the likelihood over the data, we multiply the likelihoods of each of the individual data points (or since we're doing computation on a computer, we sum the log probabilities). You will noticed that essentially, in each case, the dimension we intend to collapse is the `sample` dimension - and that means keeping track of the sample dimension is extremely important! Also important to note is that we do *not* intend to collapse the `batch` dimension, as it does not carry the same statistical meaning as a `sample` from a distribution, but is a tensor computation construct.*
 
