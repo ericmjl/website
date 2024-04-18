@@ -103,7 +103,7 @@ and just have a regular laser/inkjet printer make a printout of the QR code.
 To do so, you can save the QR code to disk as a PNG file:
 
 ```python
-qr.png('home_guest_wifi.png')
+qr.webp('home_guest_wifi.webp')
 ```
 
 ## Conclusions
