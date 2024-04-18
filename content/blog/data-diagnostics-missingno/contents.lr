@@ -8,7 +8,7 @@ body:
 
 Sometimes, all that you need is a visual cue on whether the data you have on hand are complete or not. Looking at a table can be dizzying at times, so I'm very glad I found this packaged called [`missingno`](https://github.com/ResidentMario/missingno)! It provides a way to quickly visualize the **"nullity"** of your dataset. See an example below:
 
-[![Displaying nullity of a data set.](./data-completeness-small.jpg)](./data-completeness.jpg)
+[![Displaying nullity of a data set.](./data-completeness-small.webp)](./data-completeness.webp)
 
 It's built on top of `matplotlib`, and takes in `pandas` DataFrames, which means it plays very nicely with the rest of the PyData stack. I recently took it for a tour when I did a quick stats consult with Mia Lieberman (DCM); the above plot was made using her data, used with permission.
 
