@@ -10,7 +10,7 @@ We embed a document to perform a semantic (or vector similarity) search, a disti
 
 Once we have that text retrieved, the rest of what we do is to use that text as part of the prompt that we provide to an LLM, which can generate text without using the embeddings, just the text. See the diagram below to make this clear:
 
-![](rag-embedding-vs-llm.png)
+![](rag-embedding-vs-llm.webp)
 
 In this way, embedding models are decoupled from the text generation model — the latter does not use the output of the former. But they are nonetheless linked by the text associated with the embedding.
 
