@@ -14,11 +14,11 @@ The goal of the contest was "to build a visualization of the UCI forest dataset 
 
 What I eventually built were two things. The first one was a linked scatter-plot dashboard to visualize how the quantitative variables varied with one another and how they grouped by forest cover type. Here, the user can select the two variables that they want to visualize together, using drop-down menus.
 
-[![Bokeh scatterplot](./bokehscatter-small.png)](./bokehscatter-full.png)
+[![Bokeh scatterplot](./bokehscatter-small.webp)](./bokehscatter-full.webp)
 
 The second one was a bar chart showing the mutual information between the categorical variable values and the forest cover type. Here, the user can select from over 40+ variables, and their mutual information score will be displayed as one of the bars in the bar chart.
 
-[![Bokeh select](./bokehselect-small.png)](./bokehselect-full.png)
+[![Bokeh select](./bokehselect-small.webp)](./bokehselect-full.webp)
 
 As usual, I copied heavily from the examples and then modified it for my own use. Breaking the copied app helped me figure out where my cognitive blind spots were.
 
