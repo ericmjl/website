@@ -36,7 +36,7 @@ social_bot = SimpleBot(
 tagbot = SimpleBot(
     ("You are an expert tagger of blog posts. "
      "Return lowercase tags for the following blog post."),
-    model="ollama/mistral",
+    model="gpt-4-0125-preview",
     response_format={ "type": "json_object" },
 )
 
