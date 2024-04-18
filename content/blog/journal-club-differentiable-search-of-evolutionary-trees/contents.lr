@@ -95,7 +95,7 @@ ax = sns.heatmap(aaSeqLike("MATHEMA").to_onehot())
 ax.set_xticklabels(alphabet);
 ```
 
-![png](output_11_0.png)
+![png](output_11_0.webp)
 
 By default,
 SeqLike will construct the matrix such that positions are rows and letters are columns.
@@ -127,7 +127,7 @@ ax = sns.heatmap(probs)
 ax.set_xticklabels(alphabet);
 ```
 
-![png](output_14_0.png)
+![png](output_14_0.webp)
 
 Phylogenies, however, don't operate with just one observed sequence;
 there usually are a handful of sequences.
@@ -206,7 +206,7 @@ Doing so gives us the following tensors,
 as illustrated in the paper
 (with my own annotations added for clarity):
 
-![image.png](4217e1e3-63f9-4fce-ae2b-2224ebb7d98f.png)
+![image.webp](4217e1e3-63f9-4fce-ae2b-2224ebb7d98f.webp)
 
 In the figure above,
 Figure 3 from the paper,
@@ -317,7 +317,7 @@ Visualized, it'll look like this:
 sns.heatmap(branch_probabilities)
 ```
 
-![png](output_38_1.png)
+![png](output_38_1.webp)
 
 But if each row must sum to 1.0,
 how do we guarantee that each column must sum to 2.0?
@@ -485,7 +485,7 @@ It's what we expect:
 As such, we get the node representation matrix from Figure 6A.
 (Figure 6 is reproduced below, with my own hand-written annotations on top.)
 
-![image.png](./figure-6a.png)
+![image.webp](./figure-6a.webp)
 
 ## Loss Function Term 2: Parsimony Loss
 
@@ -554,7 +554,7 @@ Let's think about why -
 by looking at how each entry in that table is calculated.
 (Figure 6B)
 
-![image.png](./figure-6b.png)
+![image.webp](./figure-6b.webp)
 
 We first calculate the probability of an edge
 and multiply it by the probability of observing the letter $k$ at a position,
@@ -566,7 +566,7 @@ We get the total difference between the observed sequence and its ancestor
 by taking the difference between $S_{pk}$ and $L$.
 (Figure 6C)
 
-![6c](./figure-6c.png)
+![6c](./figure-6c.webp)
 
 ```python
 # NOTE: taking the absolute value of the difference is necessary;
