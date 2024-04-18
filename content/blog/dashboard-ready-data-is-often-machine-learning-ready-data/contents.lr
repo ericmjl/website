@@ -10,7 +10,7 @@ Dashboards, in my experience, are the place where data science projects go to di
 
 Here's an example from my past life: a chemical screening campaign. For a team embarking on a campaign, it would be nice to know the lead molecules within a campaign and how they stack up against all of the other molecules tested in the same campaign. We'd usually collect extremely raw assay data, ideally with replicates but sometimes without. We may collect a dose-response curve, for which the IC50 value needs to be quantified. As such, we first need to transform that raw measurement data into IC50s by fitting them through a dose-response curve. The process looks like this for two molecules, one blue and one red.
 
-![](./molecules-summarized-property.png)
+![](./molecules-summarized-property.webp)
 
 But now, we have a table that can be made with the following schema:
 
