@@ -102,6 +102,9 @@ async def social_media(
                 text = "\n".join(line for line in text)
         except Exception as e:
             text = f"Error: {e}"
+            text += "\n\n"
+            text += "Generated text: \n\n"
+            text += social_post.content
     return text
 
 
