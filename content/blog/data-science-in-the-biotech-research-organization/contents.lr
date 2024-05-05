@@ -1,0 +1,168 @@
+title: Data Science in the Biotech Research Organization
+---
+author: Eric J. Ma
+---
+body:
+
+On 23 April 2024, I delivered a hands-off tutorial at the ODSC East. This was my first time attempting a topic like this; I've usually focused on hands-on technical tutorials, e.g., Network Analysis Made Simple. Attempting a non-technical tutorial was a change; I would like to document what I've learned in this blog post.
+
+## The topic
+
+The topic of this tutorial was a discussion about how to set up a data science team for success within a biotech research organization. I specifically chose this topic because of its relevance to my current role at Moderna but also because a biotech's research setting offers some fairly unique challenges that other data science teams may not face.
+
+## The agenda
+
+The specific sub-topics that we discussed in this session covered the following four items:
+
+1. Formulating a team's mission
+2. Identifying the kinds of problems that the data science team works on
+3. Accurately describing and articulating the value of the work that the team engages in
+4. Identifying the challenges *en route* to setting the team up for success.
+
+In my usual nerdy style, I actually flashed up this pseudo-code on the screen:
+
+```python
+themes = ["mission", "problem classes", "value delivery", "challenges"]
+
+for theme in themes:
+    discuss()
+```
+
+Rather than lecturing, I opted to engage in discussion instead. `discuss()`, however, is a rather ambiguous thing, so I broke it down further into:
+
+```python
+def discuss():
+    preface()
+    small_group_discussion()
+    large_group_discussion()
+```
+
+Here, I provided a small preface based on how I think about each topic but then opened up the floor for the audience to discuss amongst their neighbours how they thought about each topic, done for a few minutes. Once that was done, I then invited a small group of audience members to share what they had discussed in their own group, offering my own synthesis at the end.
+
+Based on an informal poll of the audience, about 1/3 of the crowd came from the biotech/pharma space, while 2/3 did not. Of the latter group, approximately 1/5 of them were exploring a career change into biotechs in general, while the rest were generally curious to see what kind of differences existed. Acknowledging the diversity of domain expertise within the audience, I made it a point to document interesting and insightful points made by members of the audience who were *not* from a biotech setting.
+
+## Mission
+
+We started off by discussing *why a data science team has to exist within the biotech research organization*. Specifically, I was looking to explore what different team charters looked like, and what each team defined as their north star.
+
+During the large group discussion, one audience member's commentary was insightful: the team needs to build a narrative around what the team enables the company to do, something that the company wouldn't be able to do without them, that also links to business outcomes. One example of this might look like:
+
+> 10x-ing the efficiency of material usage in aerospace manufacturing
+
+During the session, I offered why the Moderna DSAI (Research) team exists:
+
+> to accelerate discovery science to the speed of thought and to quantify the previously unquantified.
+
+By no means is this mission a final statement, never to be changed. Rather, it reflects the current state of the DSAI team. The statement was derived from a synthesis of the kinds of work that we do and is a reflection of the team's desire (and my own desire, too) to have a broad impact.
+
+Within other biotech research organizations, I can see varying mission statements for the data science team. A data science team situated within a company focused on the production of AAV capsids might have a narrower and deeper mission statement, such as:
+
+> to enable rapid and IP-safe AAV capsid designs
+
+On the other hand, a research data science team within a company focused on microbial ensembles might have one that aligns with the company:
+
+> enabling robust identification of microbes that enhance crop yields
+
+Each team's mission statement is going to be situation-specific, and also dynamic. As such, I would not fuss over getting it right the first time around. It's best to craft something sufficiently bold to inspire the team at first and adapt it to the team's and company's changing ambitions.
+## Problem Classes
+
+From the mission statement, we moved on to the topic of problem classes. The key question I posed to the audience to discuss here was:
+
+> What does your biotech data science team work on? What does it _not_ work on? How does one delineate the work?
+
+Here, because of the more practical nature of the topic, the discussion was livelier than the first topic. One lucid point that was raised was as follows:
+
+> To delineate work, one can define it at the point of handoff.
+
+To draw on an example from my home team at Moderna, we collaborate with both computational scientists and wet lab scientists and vary the capacity in which we partner based on our collaborators' needs. For work with wet lab teams doing protein engineering that have less support from data engineering and statistics teams, we may play a more end-to-end role by taking care of standardization of data, data reduction/statistical estimation by Bayesian estimation, and designing new libraries using machine learning models. For work with computational teams, we may focus deeply on building machine learning models or custom Python programs. But the point of hand-off is always one of three things:
+
+1. a Compute task (cloud-run command line interface tool that is automatically skinned with a UI),
+2. a Python package that they can import and use within their own Python code, or
+3. a library of molecule designs that laboratory colleagues can test.
+
+By gaining clarity on our side on what we deliver to other teams, we help set our collaborators' expectations. Expectations of internal/external clients can also, in the reverse direction, shape the delineation of scope.
+
+This is the perfect segue to the next point that came out of this discussion: the idea that there is a *relational* aspect to defining ways of working. Some biotech research data science teams are formed in the absence of other teams, while others are formed in the presence of those teams -- bioinformatics and statistics being two examples. Some biotech research data science teams include them, whereas, for historical reasons, the Moderna DSAI Research team doesn't include those two teams but instead collaborates with them.
+
+What about the topics on which a team works? While we did not get to discuss this point in detail during the session, I penned down some thoughts based on my experiences at Moderna.
+
+At Moderna, the DSAI Research team's focus is bounded by a 3x3 matrix that I often refer back to:
+
+|                                                                              | <span style="color: #6495ED">mRNA</span> | <span style="color: #6495ED">Proteins</span> | <span style="color: #6495ED">LNPs</span> |
+| ---------------------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------- | ---------------------------------------- |
+| <span style="color: #40E0D0">AI library design</span>                        | ✅                                        | ✅                                            | ✅                                        |
+| <span style="color: #40E0D0">Computer vision</span>                          | ✅                                        | ❌                                            | ✅                                        |
+| <span style="color: #40E0D0">Probabilistic models + custom algorithms</span> | ✅                                        | ✅                                            | ✅                                        |
+
+The three columns cover the key entities that form an mRNA medicine where:
+
+- mRNA is the product that we make,
+- Proteins are the medicine, and
+- LNPs are the cargo delivery method
+
+The three rows cover the three main categories of methods that we use. Notice how bioinformatics, statistics, computational chemistry, and computational protein modelling work aren't listed there. It's not that we won't chip in and either (a) help find the right people or (b) just do the work when needed, but we deprioritize doing those in favour of focusing on core machine learning and software development strengths.
+
+Organizationally, notice how we also don't work on anything clinical-related, such as enrollment modelling and forecasting or regulatory document processing. These are firmly situated with the clinical and regulatory data science team. This came out of a desire to match the DSAI teams' mandates to the organizational structure of the company more broadly, an organizational principle also used by the software engineering and product teams within Digital.
+
+## Value
+
+The third topic that we discussed was _value_. Every team that exists within a company must deliver some kind of tangible value that enables the company to do what it does and, in an ideal world, should be able to quantify the return on investment for that team's existence. The challenge for a biotech research data science team is that:
+
+1. the value that our actual value is often not *realized* until many years later, with no guarantees of success and
+2. research is a revenue-consuming organization, not a revenue-generating one, even if it is essential to revenue generation.
+
+To illustrate this, let me share an anonymized story of what we did at Moderna.
+
+One of my teammates worked on a custom algorithm for our colleagues in another department. Our collaborators wanted to use the custom algorithm to design a protein. We did our part of the work in late 2021, but because (a) laboratory validation takes time and (b) our collaborators' priorities fluctuate, we didn't see results of our collaborative work until early 2024 -- a whole 2+ years later! And even then, we have no guarantees that the protein they made would make it into a clinical trial, much less onto the market.
+
+Under such circumstances, how do we demonstrate the value of our work within a quarterly (or even yearly) cadence when performance check-ins and reviews happen? Here are a few thoughts synthesized from the session and my personal experience.
+
+Firstly, we need to look at our value proposition through the lens of **counterfactuals**. Using the protein design example, we can ask counterfactual questions:
+
+> What would my colleagues have done if they didn't have access to our expertise in building ML models?
+
+Based on that, we can get a rough order of magnitude estimate on the number of person-hours it would have taken to execute on a non-ML-model-based design, such as an error-prone PCR-based mutagenesis protocol. Once we have that number, we can estimate the time it would take to execute the experiments needed for ML-model-based designs. An alternative framing to "personnel hours" would be the number of individual measurements that must be executed to achieve the same goals. Suppose one can make the case that an ML-model-based experiment design would reduce the number of measurements needed. In that case, that is another viable metric by which to quantify the value of the experiments. In many cases, counterfactual experiments can't be performed, so if one wants to be rigorous, one needs to identify the lowest-cost (while still plausible) counterfactual as a comparator.
+
+Secondly, we need to look at our value proposition critically through the eyes of **leading and lagging indicators**. Until final experimental results are collected and analyzed, quantifying the reduction in personnel hours or measurements taken can only be read as a leading indicator of success. We must stay clear-headed. Suppose the experiments were successfully executed, but no data were returned for analysis. In that case, we can only claim that we helped reduce the amount of experimentation needed (leading indicator) but can only know the success of the experiment once the data have been collected (lagging indicator), for which there is a dependency on the wet lab colleagues to finish the experiment as designed. (h/t to my current manager, Wade Davis, for sharing the leading/lagging indicator framework with the Digital for Research team.)
+
+Thirdly, we need to look at the **compounding value** by critically examining whether or not we have helped accelerate an experiment or research process that will be executed more than once. This point is related to ways of working. At Moderna, the DSAI teams choose to work on problem classes that are recurring rather than one-offs so that we gain a compounding flywheel effect: we have a chance to improve and extend our core methodologies so that they can be deployed ever more efficiently on new instances of those problems. This point is also related to the narratives we build around the team: we can translate these investments into real efficiencies by curating a collection of multiple stories and weaving the individual threads into the value story that the team can speak to.
+
+## Challenges
+
+Due to time constraints, we did not get to this particular topic, though I did get to discuss some challenges surrounding hiring after the session. Nonetheless, it's an important one that I did not feel I could leave out of this post.
+
+### Hiring
+
+The first challenge that I wanted to note was hiring. The team that I am part of has a primary mandate to work with laboratory and computational scientists on often cutting-edge interdisciplinary science (think "gene editors") or on deeply established domains (think "antibody engineering"). What this means is that we cannot afford to have individuals who lack graduate-level (MSc or PhD) biology, biochemistry, molecular biology, genetics, bioengineering, organic chemistry, chemical engineering, or analytical chemistry training (depending on the primary domain of work that they will be working on). This becomes a double-edged sword: on the one hand, it gives me and the talent acquisition team a very easy filter on resumes. On the other hand, it also dramatically narrows down the pool of people that we can hire.
+
+Indeed, the graduate-level bio/chem training requirement ruffled a few audience members' feathers. Would I not consider someone like [Douglas Applegate](https://www.linkedin.com/in/douglas-e-applegate/), my colleague at Novartis, whose entire PhD training was in astrophysics but has gone on to have a successful career at Novartis in biomarker discovery? Indeed, I would miss out on Doug based on my criteria. But Doug is uniquely suited to the team he was hired into: projects that didn't depend on deep biology knowledge but instead depended on finding signals from data with complex data-generating processes and a supportive manager who was comfortable coaching the specific scientific knowledge needed. On the other hand, the situation within the Moderna DSAI team is dramatically different: we need to work with PhD- and MSc-trained laboratory and computational scientists who are experts in their specific and related domains, and I do not have the confidence to be able to coach everyone about the depth and breadth of science that they will encounter in their role. (Instead, I'm much more comfortable with coaching programming and software development skills, but only if the candidate is at a certain level of competency.) If I were to hire someone without the necessary concepts, vocabulary, and intuitions about laboratory work, I would be doing them a disservice and setting them up for failure -- not a situation any responsible hiring manager would want to put their newly hired teammate into.
+
+As we can see, criteria will vary from team to team; what is considered table stakes in one team may be entirely optional in another.
+### Marketing our work in an understandable way
+
+The Research data science team has a dual reporting structure where we are accountable to our colleagues in Research, organizationally situated within Research. Still, we follow a career trajectory aligned across other data science teams (Clinical Development, CMC, and Commercial) and have other strong digital connections. This federation of software development, product management, and data science has many advantages and disadvantages. Nonetheless, I wanted to touch on one particular challenge: communicating the value of our work., especially to audiences that may not have the experience being (a) in a revenue-consuming organization, with (b) long turn-around times to _impact_.
+
+If your organization has leaders who have _not_ experienced the long arc of progress that is associated with the making of a single medicine, then it may appear challenging to them to understand _why_ it can take months to years to know whether a digital team's bet has paid off or not. Helping them understand the long wait times to realize ROI, especially those associated with the lab, is crucial to communicating the value of the work. This does not mean throwing the laboratory team under the bus and blaming them for all the delays, though! It does mean, however, being transparent about the points of handoff, and hence the separation of responsibilities, thus bringing clarity to where the data science team helped accelerate science and what’s left to be done. I also believe that an infectious enthusiasm for science, coupled with a Feynman-sequel ability to explain deep scientific concepts, can pique the interest of such leaders, and as such, taking every chance possible to showcase one’s work is essential.
+
+## Summary
+
+Because of time limitations, we didn’t cover the full slate of topics, but I nonetheless found the discussion engaging and informative. What was helpful for me, as the tutorial instructor, was to see the contrasts between (a) data science, as I’ve seen it in a biotech research setting, and (b) data science in other faster-paced industries. I found that much of the discussion commentary helped me to think more clearly about this topic. By no means have I perfected the art of everything mentioned here; after all, I've only done this team-lead thing since July 2021, but nonetheless, I hope that what I've written above, as incomplete as it currently is, prompts the same kind of clarity in thought for you as well.
+---
+pub_date: 2024-05-05
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share discussion insights from a hands-off tutorial I led at ODSC East on setting up a successful data science team within a biotech research organization. We explored formulating a mission, identifying problem classes, articulating value, and addressing challenges. I used my experience at Moderna to illustrate points, emphasizing the unique aspects of biotech data science. Despite not covering all topics due to time constraints, the discussion was enlightening, highlighting the contrast between biotech and other industries. How can these insights apply to your organization's data science team?
+---
+tags:
+
+data science
+biotech
+team management
+tutorial
+odsc east
+mission statement
+problem solving
+value delivery
+hiring challenges
+leadership
