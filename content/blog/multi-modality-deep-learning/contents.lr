@@ -146,7 +146,7 @@ What if we added only one objective: a neural network that converts between the 
 
 ### Masked infilling v.s. auto-regressive decoding
 
-When thinking about the ProST model and how to modify it, I also had a chance to think more critically about the difference between masked language modelling and auto-regressive text generation. I’ve realized that masked language modelling is a more natural fit for small-scale edits (in-filling) conditioned on the rest of the sequence context. At the same time, auto-regressive text generation is a more natural fit for de novo generation.
+When thinking about the ProST model and how to modify it, I also had a chance to think more critically about the difference between masked language modelling and auto-regressive text generation. Thanks to my teammates at Moderna, I’ve realized that masked language modelling is a more natural fit for small-scale edits (in-filling) conditioned on the rest of the sequence context. At the same time, auto-regressive text generation is a more natural fit for de novo generation.
 
 <iframe src="https://link.excalidraw.com/readonly/R2m0k7rF5LjtWjJqqoOX" width="100%" height="200px" style="border: none;"></iframe>
 
