@@ -4,6 +4,11 @@ author: Eric J. Ma
 ---
 body:
 
+> **UPDATE 9 June 2024:** With thanks to the kind efforts of [Vyas Ramasubramani](https://github.com/vyasr),
+> there is actually no need to set `LD_LIBRARY_PATH` at all,
+> as long as one's `conda` environment is set up correctly!
+> I detail what works right at the end of the blog post.
+
 If you're like me, you've tried to install JAX pre-compiled against CUDA, and have probably also wrestled with issues that look like this:
 
 ```text
@@ -143,13 +148,53 @@ Fri May 31 12:31:08 2024
 
 ## Which way should I use?
 
-Both are good, and both come with a common tradeoff that we need to remember: the environment configuration isn't portable from machine to machine.
+Both are good, and both come with a common tradeoff that we need to remember:
+the environment configuration isn't portable from machine to machine.
 
-In the case of the `env_var.sh` scripts housed under `activate.d` and `deactivate.d`, they need to be recreated any time the conda environment is recreated. This means that if one deletes the environment and recreates it, or simply moves to a different machine and recreates it, one will need to re-run the shell commands listed above to recreate the environment variables.
+In the case of the `env_var.sh` scripts housed under `activate.d` and `deactivate.d`,
+they need to be recreated any time the conda environment is recreated.
+This means that if one deletes the environment and recreates it,
+or simply moves to a different machine and recreates it,
+one will need to re-run the shell commands listed above
+to recreate the environment variables.
 
-In the case of `.env` configuration, this is much more lightweight, but as a matter of common idioms, `.env` files are _not_ committed to source control, which makes distributing them a hassle.
+In the case of `.env` configuration, this is much more lightweight,
+but as a matter of common idioms, `.env` files are _not_ committed to source control,
+which makes distributing them a hassle.
 
-My preference is to use `.env` files, as they are more easily accessible to us as we work within a project repository. My solution to the problem of portability is to ensure that the specific configuration of individual `.env` files is at least initialized as part of a standard project structure (akin to what I do with [`pyds-cli`](https://github.com/ericmjl/pyds-cli) or what [`cookie-cutter-data-science`](https://cookiecutter-data-science.drivendata.org/) does), so that newly created repositories come with these environment variables. And in the *absolute* worst case, one can simply copy/paste those two lines between two repos' `.env` files.
+My preference is to use `.env` files,
+as they are more easily accessible to us as we work within a project repository.
+My solution to the problem of portability
+is to ensure that the specific configuration of individual `.env` files
+is at least initialized as part of a standard project structure
+(akin to what I do with [`pyds-cli`](https://github.com/ericmjl/pyds-cli)
+or what [`cookie-cutter-data-science`](https://cookiecutter-data-science.drivendata.org/) does),
+so that newly created repositories come with these environment variables.
+And in the *absolute* worst case,
+one can simply copy/paste those two lines between two repos' `.env` files.
+
+**UPDATE (9 June 2024):** Thanks to Vyas Ramasubramani from NVIDIA,
+[who did a deep dive after reading my blog post](https://github.com/conda-forge/jaxlib-feedstock/issues/255),
+it turns out it is unnecessary to set environment variables
+as long as the correct CUDA packages are installed.
+`cudatoolkit` was necessary with CUDA11, but is no longer necessary with CUDA12.
+An example `environment.yml` file that I verified as working on my system are:
+
+```yaml
+name: my-env
+channels:
+    - conda-forge
+dependencies:
+    - python=3.10
+    - cuda-libraries # this is the cuda metapackage
+    - cudnn # this is specifically for cudnn
+    - cuda-nvcc # ensures that a compatible nvidia C compiler is available!
+    - jaxlib
+    - cuda-version # necessary for pulling in packages that are CUDA12-compatible!
+    - jax
+```
+
+
 
 ---
 pub_date: 2024-06-01
