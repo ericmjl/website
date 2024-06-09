@@ -28,16 +28,14 @@ app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static"
 social_bot = SimpleBot(
     "You are an expert blogger.",
     model="gpt-4-0125-preview",
-    # format="json",
-    # api_base=f"http://{os.getenv('OLLAMA_SERVER')}:11434/",
-    response_format={ "type": "json_object" },
+    json_mode=True,
 )
 
 tagbot = SimpleBot(
     ("You are an expert tagger of blog posts. "
      "Return lowercase tags for the following blog post."),
     model="gpt-4-0125-preview",
-    response_format={ "type": "json_object" },
+    json_mode=True,
 )
 
 templates = Jinja2Templates(directory="apis/blogbot/templates")
