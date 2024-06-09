@@ -194,7 +194,13 @@ dependencies:
     - jax
 ```
 
-
+As I learned [through the discussion thread that Vyas created](https://github.com/conda-forge/jaxlib-feedstock/issues/255),
+`cudatoolkit` is needed for CUDA11, while `cuda-version` is usable for any version of CUDA running back to version 9.2.
+This turns out to be the result of
+hard work by open source community members who also work at NVIDIA
+(see [this thread](https://github.com/conda-forge/cuda-version-feedstock/issues/1) for an example).
+Back in graduate school, NVIDIA's stack used to be confusing to me,
+but I'm thankful that many people are hard at work making it easier to use!
 
 ---
 pub_date: 2024-06-01
