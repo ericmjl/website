@@ -20,7 +20,7 @@ What, then, does all of this have to do with the von Mises distribution and the 
 
 This is related to the *scientific* premise of the paper, which is to generate protein backbones. Every protein structure comprises amino acids arranged in some 3-dimensional conformation, and between the backbone chain of $N$, $C_\alpha$, and $C$ atoms, there exists phi ($\phi$), psi ($\psi$), and omega ($\omega$) angles associated, which are also known as the torsion or dihedral angles. Below, I simplify an illustration from [Justas Dauparas' excellent blog post](https://dauparas.github.io/post/af2/):
 
-<iframe src="https://link.excalidraw.com/readonly/oeN2gctwjLfuzzWEsqTr" width="100%" height="400px" style="border: none;"></iframe>
+<iframe src="https://link.excalidraw.com/readonly/oeN2gctwjLfuzzWEsqTr" width="100%" height="600px" style="border: none;"></iframe>
 
 All credit to Justas Dauparas for the original illustration, from which I created a simplification. In the illustration above:
 
@@ -110,7 +110,7 @@ According to the paper, each residue's angles are calculated from a factorized j
 
 I've modified the original figure provided by the authors to annotate clearly (for myself) where neural networks exist and what their outputs are.
 
-<iframe src="https://link.excalidraw.com/readonly/uZeW71dYxAJtVu4TfGoE" width="100%" height="500px" style="border: none;"></iframe>
+<iframe src="https://link.excalidraw.com/readonly/uZeW71dYxAJtVu4TfGoE" width="100%" height="600px" style="border: none;"></iframe>
 
 Here is how information flows through the model. If we focus in on $S_{t+1}$ (the right blue box), we can first see the autoregressive nature of the beast.
 
