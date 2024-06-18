@@ -1,0 +1,209 @@
+title: Headache-free, portable, and reproducible handling of data access and versioning
+---
+author: Eric J. Ma
+---
+body:
+
+Recently, I discussed the following question with colleagues:
+"How do we ensure that data scientists work in a reproducible fashion?"
+It turns out that related to reproducibility is being able to work portably.
+Some tools provide what I call "technological guardrails"
+to ensure that one's work doesn't fall into bad patterns,
+but those can only go so far.
+Adopting and, more importantly, learning a certain way of working
+is the long-term sustainable way of ensuring that
+a data scientist's work is portable and reproducible.
+
+Software skills help,
+and I have written [multiple](https://ericmjl.github.io/blog/2024/4/5/how-to-grow-software-development-skills-in-a-data-science-team/)
+[blog](https://ericmjl.github.io/blog/2022/3/31/everything-gets-a-package-yes-everything-gets-a-package/)
+[posts](https://ericmjl.github.io/blog/2024/4/17/how-llms-can-accelerate-data-science/)
+[about](https://ericmjl.github.io/blog/2022/4/1/functional-over-object-oriented-style-for-pipeline-esque-code/)
+[them](https://ericmjl.github.io/blog/2023/7/21/behind-the-scenes-developing-llamabot/),
+but today, points about software skills are adjacent to my main point;
+this article is primarily about _data_.
+In the open source world, a tool from [Posit PBC](https://posit.co/) called [`pins`](https://rstudio.github.io/pins-python/)
+provides tooling that supports a superbly ergonomic pattern of interacting with data,
+one that mirrors the way we do so at Moderna.
+I want to highlight these data access patterns through examples that use `pins`.
+
+Here are the key ideas that I'd like to highlight:
+
+1. Always reference data from a centrally accessible source of truth.
+2. Reference data versions explicitly rather than implicitly.
+
+Let's explore them in detail below.
+
+## Idea 1: Reference data from an accessible source of truth
+
+Because of its convenience,
+it is tempting to reference files on one's local filesystem.
+Example code that one ends up writing might look like this:
+
+```python
+# within notebooks/your_name/analysis.ipynb
+data_path = "../../data/finances.csv"
+df = pd.read_csv(data_path, index_col=0)
+```
+
+This is a guaranteed recipe for non-reproducibile disaster.
+If your colleague clones the repository after you've pushed up your changes,
+chances are they won't have access to `finances.csv`,
+allowing them to re-run your notebook to reproduce your data.
+They will need to ask you for your copy of the data,
+which comes with its own boatload of problems that I discuss later.
+
+A better solution would be to use `pins`,
+which lets one reference data from an authenticated source of truth,
+such as Google Cloud Storage, AWS S3, or Dropbox.
+With `pins`, what one would do is the following:
+
+```python
+# within notebooks/your_name/analysis.ipynb
+import pins
+
+# assumes that AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_REGION environment variables are set
+board = pins.board_s3("bucket_name/optional/subdirectory")
+
+# read dataframe directly
+df = board.pin_read("em.finances")
+```
+
+(If you need a refresher on environment variables,
+[this article](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/) may help.)
+
+Alternatively, if one wants to work with file paths (my preferred way, [more explicit](https://peps.python.org/pep-0020/))
+rather than objects in memory with magical read/write methods (less preferred, less explicit),
+one can use the `pin_upload/download` API:
+
+```python
+# one-time:
+board.pin_upload(paths="finances.csv", name="em.finances")
+
+# then in your code:
+fpath = board.pin_download("em.finances")[0]
+df = pd.read_csv(fpath)
+```
+
+Using file paths is more flexible.
+It allows us to pull in any data to and from the pin board
+before deciding how to load it into memory.
+
+`pins` is not the only tool available for defined access to data;
+[Intake](https://intake.readthedocs.io/en/latest/quickstart.html) by Anaconda
+is another framework that can accomplish similar goals.
+
+## Idea 2: Reference data versions explicitly
+
+In an ideal world, data would never be committed to source code version control systems.
+Instead, they would be treated as separate entities and version-controlled separately.
+Doing so allows us to cleanly separate the major entities comprising a project:
+code and data.
+
+If we treat data as immutable and versioned in the same way as code within a `git` repository,
+we can reference data by explicit version numbers.
+`pins` provides such a facility;
+specific versions of a file can be pulled in and referenced by a particular version hash:
+
+```python
+fpath = board.pin_download("em.finances", version="20240618T161609Z-7f10d")[0]
+df = pd.read_csv(fpath)
+```
+
+Using this pattern, we can avoid the pathologies of "versioning by filename",
+such as that illustrated by
+[slide 14 of Isabel Zimmerman's PyData Global 2022 talk](https://isabelizimm.me/talks/pydataglobal2022/),
+copied and modified shamelessly below:
+
+```text
+finances.csv
+finances_final.csv
+finances_final_final.csv
+finances_final_final_actually.csv
+finances_final_final_actually (1).csv
+```
+
+## Benefits
+
+What are the benefits of thinking about and accessing data in this fashion?
+What's wrong with `../../data/em/finances.csv`?
+The biggest problem is the _ease of portability_.
+In the absence of data versions accessed by code,
+for the next person to access data, they need to
+(a) manually request a teammate to provide them with the data file and
+(b) ensure that the data file is placed in the same directory
+as specified by the relevant relative path.
+
+Point (a) means additional viscosity in requesting access:
+imagine pinging a teammate for data only to find out she is busy in back-to-back meetings
+and hasn't responded all morning.
+Regardless, you've just lost an entire morning of potential productivity.
+Additionally, point (a) means that you have *absolutely zero guarantees*
+that the file your colleague sends to you
+will be the exact file that has been distributed to everyone else.
+Any changes in the input data can introduce insidious bugs in the downstream analysis code.
+
+Point (b) introduces further viscosity in the form of *confusion*
+when running code that depends on data.
+What if another colleague, operating in a separate notebook,
+placed the same data file in a different directory (`../../data/finances.csv`)
+and referenced it there?
+Now, you have two code files referencing
+what _should_ be the same data source but with different file paths.
+
+By referencing data from an immutable source of truth and pulling it in via code, we get around the aforementioned problems:
+
+- we no longer need to ask someone else for a file,
+- we can guarantee that we will access the exact that is intended, and
+- we will never encounter the issue of the same file being referenced in two different paths.
+
+The only major obstacle left is data access permissions, which is easily solvable:
+Data access permissions can be automated during colleagues' onboarding,
+especially if one's entire stack is in the cloud.
+
+## Summary
+
+While I've highlighted one tool (`pins`)
+for accessing data headache-free, portably, and reproducibly,
+it isn't the only feasible tool.
+More important than the tool is the data access pattern for data scientists.
+As I see it, because of a mixture of business necessity, economics, and ego,
+almost every company will build custom data infrastructure
+through a mix of commercial (vendor) products and in-house efforts.
+The data science team lead, if not the whole team, is guaranteed to be involved.
+What I hope to accomplish with this blog post
+is to provide a sense of "good taste" to you, the reader,
+so that you can bring the ideas back to your organization's data engineering teams.
+Happy building and happy coding!
+
+---
+pub_date: 2024-06-18
+---
+twitter_handle: ericmjl
+---
+tags:
+
+data science
+reproducibility
+portability
+open source
+data management
+software skills
+data access
+version control
+data patterns
+technology guardrails
+---
+summary:
+
+In this blog post,
+I explore the importance of reproducibility and portability in data science,
+focusing on data access patterns.
+I introduce `pins`,
+an open-source tool that enables data scientists to reference data
+from a central source of truth and manage data versions explicitly.
+By using `pins`, we can avoid common pitfalls like non-reproducible analyses
+and streamline the process of accessing and versioning data.
+This approach not only enhances productivity
+but also ensures that data is accessed in a consistent and error-free manner.
+Curious about how `pins` and analogous tools can robustify your data science workflow?
