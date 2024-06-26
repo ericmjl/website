@@ -15,5 +15,9 @@ dependencies:
   - fastapi
   - uvicorn
   - python-multipart
+  - nbconvert>=7.16.4
+  - werkzeug>=2.3.8
+  - tqdm
+  - panel
   - pip:
       - llamabot>=0.4.6
