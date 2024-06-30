@@ -1,0 +1,295 @@
+title: Two years of docathons: Insights and lessons learned
+---
+author: Eric J. Ma
+---
+body:
+
+At work, we recently concluded our 8th quarterly docathon.
+This means we've officially run two years of docathons.
+I wanted to reflect on the docathon:
+what it is, why we run it, how to run it, and how to make it effective.
+
+## What are docathons?
+
+Docathons are what you might think they are:
+two days set aside to focus on writing high-quality documentation about our work.
+We ask colleagues to block off time on their calendars,
+minimize meetings (if it's impossible to eliminate them),
+and cater specialty food that we don't usually get to eat.
+
+## Why a docathon?
+
+The subtext question is usually,
+"Shouldn't you be doing documentation as part of your work anyway?"
+
+The answer is "yes, we should," but the reality is "no, we don't."
+Work documentation can easily fall by the wayside
+when there's constant pressure on shipping stuff.
+To help foster the habit of documentation,
+I hypothesized that teams need a chill, lightweight, and socially fun setting
+in which to write documentation.
+With the blessings of my then-manager, Andrew Giessel,
+we organized the first docathon.
+
+The intent was simple:
+get everybody engaged in the same activity for two days
+so that it was socially acceptable to be
+laser-focused, silent, and relatively meeting-free.
+Doing so lowered the energy barrier to making time for documentation.
+Leaders took part in the exercise as well;
+we modelled the values that we wanted to put on.
+
+Two days a quarter is a sweet spot in terms of time investment:
+it's sufficiently long for focused work
+and a sufficiently small proportion of time in the grand scheme of things
+that it's not too disruptive to daily work (if planned).
+
+## How does one organize a docathon?
+
+A docathon may seem like a big task to organize,
+but in practice, it can be made super lightweight.
+One needs three core things: a calendar invite, a sign-up sheet, and food.
+That's it.
+Physical space is optional (though helpful),
+workshops are optional (though helpful too!),
+and prizes are not necessary at all (the work product is the prize).
+
+Here's what a possible timeline might look like, playbook-style.
+
+### Beginning of quarter
+
+- Decide on the date of the docathon, ideally at least two months in advance. Send out calendar invites to groups of people who are invited to participate.
+- Decide on what food to order. Don't over-rotate on this one; the most important criterion is that it's special but not too expensive.
+- Set up a sign-up page (e.g. Confluence page, Notion page) that everyone invited can edit. A possible sign-up table might look like this:
+
+| Name    | Documentation Topic   | Reviewer(s)                | Day 1 Food           | Day 2 Food     | Work Product Link |
+| :-----: | --------------------- | -------------------------- | -------------------- | -------------- | ----------------- |
+| Eric Ma | How to run a docathon | Wade Davis, Andrew Giessel | Spicy Crispy Chicken | Hawaiian Pizza |                   |
+| ...     | ...                   | ...                        | ...                  | ...            | ...               |
+
+The Work Product link is filled in during or after the docathon.
+It usually links to a confluence page,
+a Word document (permissions need not necessarily be visible; just a link is sufficient),
+or a pull request.
+Seeing the work products being populated can be superbly motivating for everyone,
+and it can also be useful documentation
+if you ever need to justify the money spent on the docathon.
+
+- Book a room for a kickoff - where you (re-)introduce the docathon to all participants, new and old. (More on this below).
+- Call for special workshop topics that individuals may want to lead.
+- Set up reminders to yourself to send a reminder to invitees to sign up for food on the sign-up page, while also declaring what they will work on, at the following times before the start of the docathon:
+    - one month,
+    - two weeks, and
+    - one week before
+    - two days before
+
+> **NOTE:** Setting the calendar reminders right at the beginning is highly recommended!
+> Automate reminding yourself of what you need to do.
+
+### Throughout the quarter
+
+- Send reminders out as previously decided.
+
+### Day 1 of Docathon
+
+- Kickoff the docathon, explaining:
+    - Logistics for the two days (where and when food will take place, primarily)
+    - Why the docathon exists and the importance of documentation,
+    - Commentary, advice, or policies regarding the use of LLMs in writing documentation,
+    - Call out any special workshops that may be organized, and invite their organizers to speak to those workshops' logistics,
+- And then let everyone go for documentation.
+- Enjoy food and social time over lunch, and
+- Continue documenting until the end of the day.
+
+### Day 2 of Docathon
+
+- Continue documenting till lunch
+- Enjoy food and social time over lunch,
+- continue documenting until the debrief session,
+- Debrief with everybody, reminding participants to:
+    - Fill out the table with their work products, and
+    - Ensure reviewers have reviewed the documentation
+- Conclude docathon
+
+## That looks very lightweight...?
+
+Is it really that simple?
+
+Yes, I've solo organized docathons at least 4 times without workshops,
+and collaborated with others on workshops at least 2 times.
+One key tenet is to keep things uber simple:
+the most important ingredients of a docathon are
+the food and the activity of documentation.
+Everything else (e.g. the workshops) are enhancements.
+
+## The return on investment on a docathon
+
+What's the ROI of a docathon?
+
+To calculate that,
+we need to first understand the cost of investment, i.e. the "I" in ROI.
+Now that I've had 8 docathons worth of experience,
+I've noticed that we spend approximately $40/person over the two days for catered lunches.
+This is the primary number that I will use.
+
+I will not use the hourly cost of an FTE doing documentation over the two days
+(which would amount to $2,400 at an assumed rate of $150/hr)
+because documentation should have been done as part of our daily work.
+Organizing a docathon represents just a shift in time spent without additional spending.
+It may be an opportunity cost to do other things,
+but we would have lost fundamentally important documentation in exchange.
+
+What about the return on investment?
+
+We need to make many simplifying assumptions to calculate that fully and accurately.
+I will focus on a single counterfactual scenario that is plausible without exaggeration -
+one of many scenarios where documentation will benefit others.
+Assuming that I am writing documentation
+on how to use a new Python package that I've developed,
+and 5 colleagues will use that package in their work
+to automate moderately complex processes.
+Without that documentation,
+those colleagues may need to spend approximately 1-2 hours more
+figuring out how to compose their work together
+(if they are skilled Python programmers).
+At an assumed hourly FTE rate of \$150/hr, that is
+
+$$5 \text{ people} \times \$150 \text{ per hr per person} \times 2 \text{ hrs} = \$1500$$
+
+The ROI calculation is thus:
+
+$$\frac{\$1500}{$40} = 37.5$$
+
+$1,500 in return for $40 of cost for one person's work, a 37.5X return on investment.
+
+Remember that I've only calculated ROI one way for one mode of benefit,
+so 37.5X is a highly conservative estimate.
+Documentation benefits our work in many other ways,
+for which I did not calculate an ROI.
+The exact ROI will depend on the nature of the documentation and how it is used.
+I focused on only developer documentation for skilled developers.
+If our Python programmers were less skilled, expect to take more time.
+
+We can imagine a more consequential scenario:
+lack of laboratory documentation invalidates a patent that our company relies on,
+with a knock-on effect of hundreds of millions of dollars of lost sales
+because competitors developed a biosimilar product.
+I would argue that the ROI of documentation in this case is not a mere 37.5X,
+but hundreds to thousands of times higher.
+
+The more important tenet is this:
+
+> While automation scales our labour, documentation scales our brains.
+
+## Questions and Answers
+
+### Where did the inspiration for a docathon come from?
+
+The docathon idea was a synthesis of three sources:
+
+- The [Write The Docs](https://www.writethedocs.org/conf/) conference,
+- Hackathons that I've taken part in and
+- Open source software development sprints at the PyCon and SciPy conferences
+
+It also came from the knowledge that
+our onboarding docs were at risk of going stale if it wasn't kept up-to-date,
+resulting in lost efficiency in onboarding.
+We already ask newcomers to update documentation along the way for future newcomers,
+but there were still legacy cracks in the documentation.
+We used the docathon to further patch those holes.
+
+### Is a common space where everyone is writing necessary?
+
+No, but it can be very helpful!
+If you can find a meeting room that can be booked for a day
+or a common space that doesn't necessarily have to be booked but can be occupied,
+then having everyone co-located at that spot
+can be helpful for levelling up everyone's focus.
+I recommend finding a place where library silence is possible
+and where foot traffic is relatively low,
+thereby making it easier to avoid impromptu disruptions.
+
+### What are these docathon "workshops"?
+
+The best workshops I've seen impart something practical,
+very much on the "how-to guide" documentation style.
+We've had workshops on the following topics:
+
+- How to use CI/CD to publish documentation to Confluence
+- How to use LLMs to auto-generate OpenAPI documentation specifications
+- How to use the [Diataxis framework](https://diataxis.fr/) to help guide documentation writing
+
+These workshops can be as long or as short as the workshop organizer needs it to be.
+Just make sure they don't occupy the full time of the docathon, that's all.
+
+### Can LLMs be used to aid in documentation writing?
+
+Yes! It's a great way for us to bootstrap documentation and overcome writer's block.
+All that we ask is that you be willing to defend every character that you accept
+if you accept the outputs of LLMs.
+
+### What if multiple sites are taking part?
+
+I strongly suggest designating site captains
+if you have a docathon across multiple sites.
+Their primary roles are to book rooms and order food for those sites.
+It's a great way to share responsibility
+and provide an onramp for junior folks to take on more leadership roles
+without management responsibilities.
+
+### Why is a review necessary?
+
+Documentation is written for another person to use.
+Ideally, the person who will need your documentation
+should review what you write so that it is crystal clear what you need to change.
+Without the feedback given through review,
+it can be challenging to know where to make changes to one's documentation
+to make it useful for others.
+Without review,
+your documentation may collect dust in an obscure corner of Confluence,
+never to be used.
+
+Additionally, those who review your documentation become _invested_ in it,
+because reviewing written work is part of the process of co-creating it!
+Inviting a collaborator to be your reviewer
+helps to increase their investment in your work,
+which in turn ensures that your work has a higher chance of realizing its long-term ROI.
+
+### Shouldn't documentation be done during the regular course of work?
+
+Yep! Already addressed that question above,
+but it's important enough that I thought to re-address it again here.
+
+While documentation should be part of our regular work,
+it is usually not done at all
+or at the highest quality commensurate with its importance.
+One of the intents of the quarterly docathon is to help people build the habit.
+It starts being done once a quarter.
+As constructive feedback from review comes back,
+it becomes socially recognized to invest time in documentation,
+and as the importance of documentation becomes evident in the individual (through quarterly practice),
+the habit should form. Documentation gradually becomes something one is aware of
+and knows the importance of,
+and one resists pressure to drop documentation in favour of other work.
+It becomes easier and easier to say to collaborators,
+"Please give me 1-2 more days to document the work,
+and please review it for me so that we know it works for you."
+---
+pub_date: 2024-06-30
+---
+twitter_handle: ericmjl
+---
+tags:
+
+docathon
+documentation
+team productivity
+event planning
+work culture
+knowledge sharing
+writing tips
+collaboration
+project management
+continuous improvement
+---
+summary: In this blog post, I reflect on two years of running quarterly docathons at work, dedicated two-day events focused on writing high-quality documentation. I discuss what docathons are, their purpose, and the simple yet effective way to organize them, emphasizing the importance of food, documentation, and optional workshops. Based on both cost and the invaluable benefits of improved documentation practices, I also discuss the significant return on investment these docathons have yielded. How can such a straightforward event substantially enhance the quality of documentation and team engagement? Read on to find out.
