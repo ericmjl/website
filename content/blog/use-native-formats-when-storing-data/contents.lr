@@ -1,0 +1,97 @@
+title: Use native formats when storing data
+---
+author: Eric J. Ma
+---
+body:
+
+The subtext to this blog post is to "avoid using pickles"!
+
+I won't repeat other reasons why we should avoid pickles --
+the fact that they execute arbitrary code upon reload is the primary one,
+as it makes pickles a security hazard.
+
+But I have an alternative take on this from an experience at work recently.
+There was a notebook that was created about two years ago.
+I wanted to re-run the notebook to verify that the code was still usable.
+The code depended on `pandas`,
+but we didn't pin the version of `pandas`
+as we were happy to ride the wave of innovations coming on the horizon
+and because I was eagerly awaiting the `2.x` releases of `pandas`.
+
+One of the cells in this notebook also depended on
+programmatically pulling in a pickle file from our internal data versioning systems.
+It was supposed to be an ArviZ InferenceData file,
+but I uploaded it as a Python pickle back in the day.
+This came about because I used our tooling's object upload interface
+rather than saving it in its native `.nc` (netCDF) format and checking in the file.
+
+Two years later,
+when I recreated the environment on a new AWS instance
+and attempted to re-run the notebook,
+I was heartened to know that it mostly ran but would hiccup on loading that pickle file.
+It would throw an error whose message was `no module named pandas.core.indexes.numeric`.
+Baffling! Until I realized that the module in question was removed in Pandas >=2.0,
+but it was still available pre-2.0.
+Downgrading `pandas` and re-creating the environment turned out to be the fix.
+But it exposed a huge flaw in saving Python objects as pickle files:
+they will depend on certain package versions,
+and if those package versions are not pinned in the environment,
+then we are virtually guaranteeing
+the inability to reproduce results from computational notebooks later on.
+
+My takeaways from this incident are two-fold.
+
+Firstly, **use native formats over pickles!**
+Native formats are stable and independent of the computing environment,
+giving us stronger stability guarantees.
+Pickles, on the other hand, depend on the computing environment—specifically,
+the dependencies present at the time of pickle creation.
+If we use pickles, then it will be on us to know
+which packages to pin to ensure the continued usability of those pickle files.
+
+Secondly, **software skills pay handsome dividends!**
+Part of a software developer's mental toolkit is knowing the ecosystem of dependencies
+and how they are evolving.
+It turns out that I _just_ happened to know
+that the offending module in question was removed from `pandas>=2.0`,
+because I had to figure it out in another context.
+(It was in that other context that I first hypothesized that
+missing modules were likely due to package version changes --
+something I would only intuit because I am a software developer as well.)
+Of the three skills I often refer to (refactoring, documenting, and testing),
+constant testing would have been the key here.
+If we invested in continuous testing,
+we would have caught this issue much earlier than two years later
+as the PyData ecosystem evolved.
+---
+pub_date: 2024-07-02
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this blog post,
+I share a cautionary tale from my work experience
+about the pitfalls of using pickle files for data storage,
+particularly highlighting their dependency on the computing environment
+and specific package versions.
+I encountered an issue when a notebook failed to run
+due to a pickle file not being compatible with the updated version of pandas.
+This experience led me to advocate for using native formats over pickles
+for better stability and reproducibility,
+and underscored the importance of software skills like continuous testing.
+How can we ensure our data storage methods
+don't become obsolete with evolving dependencies?
+---
+tags:
+
+software development
+data science
+python pickles
+code security
+pandas
+programming best practices
+version control
+computational notebooks
+dependency management
+software skills
