@@ -50,6 +50,30 @@
     <span id="post_body" name="post_body">
       {{ post.body }}
     </span>
+
+    {% set slug = post._slug.split("/")[-1] %}
+    {% set date_str = post.pub_date | string %}
+    {% set year = date_str.split("-")[0] %}
+    {% set month = date_str.split("-")[1] %}
+    {% set day = date_str.split("-") [2] %}
+
+    <hr>
+
+    <i>Cite this blog post</i>
+    <div class="hll">
+    <pre class="language-bibtex">
+@article{
+    {{ post.twitter_handle }}-{{ year }}-{{ slug.split("-")[0] }}-{{ slug.split("-")[-1] }},
+    author = { {{ post.author }} },
+    title = { {{ post.title }} },
+    year = { {{ year }} },
+    month = { {{ month }} },
+    day = { {{ day }} },
+    publisher = { Data Science Product Newsletter },
+    howpublished = { \url{https://ericmjl.github.io} },
+    url = { https://ericmjl.github.io/{{ post._slug }} }
+}</pre>
+    </div>
     <hr>
     <p>
       <i>I send out a newsletter with tips and tools
@@ -62,8 +86,8 @@
         <a href="https://github.com/sponsors/ericmjl">GitHub Sponsors</a>!</i>
     </p>
     <p>
-      <i><span>Finally, I do free 30-minute GenAI strategy calls for organizations
-        who are seeking guidance on how to best leverage this technology. Consider </span>
+      <i><span>Finally, I do free 30-minute GenAI strategy calls for teams
+        that are looking to leverage GenAI for maximum impact. Consider </span>
         <a href="https://calendly.com/ericmjl/llm-chat">booking a call on Calendly</a>
         if you're interested!</i>
       </i>
