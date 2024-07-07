@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block highlighting %}
-<!-- Syntax Highlighter. Use both pygments and hl.js. -->
+<!-- Syntax Highlighter. Use pygments. -->
 <link rel="stylesheet" href="{{ get_pygments_stylesheet()|url }}">
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"> -->
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
+<!-- <script>hljs.initHighlightingOnLoad();</script> -->
 {% endblock %}
 
 {% block title %}{{ this.title }}{% endblock %}
