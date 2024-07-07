@@ -63,16 +63,18 @@
     <i>Cite this blog post:</i>
     <div class="hll">
     <pre>
-@article{
-    {{ post.twitter_handle }}-{{ year }}-{{ slug.split("-")[0] }}-{{ slug.split("-")[-1] }},
-    author = { {{ post.author }} },
-    title = { {{ post.title }} },
-    year = { {{ year }} },
-    month = { {{ month }} },
-    day = { {{ day }} },
-    howpublished = { \url{https://ericmjl.github.io} },
-    url = { https://ericmjl.github.io/{{ post._slug }} }
-}</pre>
+<span><span style="color: darkblue; font-weight: bold">@article</span>{
+    <span style="color: black; font-weight: bold">{{ post.twitter_handle }}-{{ year }}-{{ slug.split("-")[0] }}-{{ slug.split("-")[-1] }}</span>,
+    <span style="color: green; font-weight:bold">author</span> = <span style="color: maroon">{{'{'}}{{post.author}}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">title</span> = <span style="color: maroon">{{'{'}}{{ post.title }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">year</span> = <span style="color: maroon">{{'{'}}{{ year }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">month</span> = <span style="color: maroon">{{'{'}}{{ month }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">day</span> = <span style="color: maroon">{{'{'}}{{ day }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">howpublished</span> = <span style="color: maroon">{\url{https://ericmjl.github.io}}</span>,
+    <span style="color: green; font-weight:bold">journal</span> = <span style="color: maroon">{Eric J. Ma's Blog}</span>,
+    <span style="color: green; font-weight:bold">url</span> = <span style="color: maroon">{https://ericmjl.github.io/{{ post._slug }}{{'}'}}</span>,
+}
+  </span></pre>
     </div>
     <hr>
     <p>
