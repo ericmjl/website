@@ -37,6 +37,7 @@
 {% endmacro %}
 
 {% macro render_blog_post(post, from_index=false) %}
+
 <div class="terminal-card">
   <header id="post_title" name="post_title">{{ render_blog_header(post, from_index) }}</header>
   <div class="card-body">
@@ -69,7 +70,6 @@
     year = { {{ year }} },
     month = { {{ month }} },
     day = { {{ day }} },
-    publisher = { Data Science Product Newsletter },
     howpublished = { \url{https://ericmjl.github.io} },
     url = { https://ericmjl.github.io/{{ post._slug }} }
 }</pre>

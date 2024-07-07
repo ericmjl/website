@@ -11,6 +11,52 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
+<script>
+hljs.registerLanguage('bibtex', function(hljs) {
+  return {
+    name: 'BibTeX',
+    case_insensitive: true,
+    keywords: {
+      keyword: '@article @book @inproceedings @misc',
+      literal: ['author', 'title', 'journal', 'year', 'volume', 'number', 'pages', 'month', 'note', 'publisher', 'address', 'booktitle', 'editor']
+    },
+    contains: [
+      hljs.COMMENT('%', '$', {
+        relevance: 0
+      }),
+      {
+        className: 'title',
+        begin: /@[a-zA-Z]+/, end: /{/,
+        illegal: /;/,
+        contains: [
+          hljs.inherit(hljs.TITLE_MODE, { begin: /[^@]+/ })
+        ]
+      },
+      {
+        className: 'variable',
+        begin: /\w+\s*=\s*/, end: /,/,
+        excludeEnd: true,
+        relevance: 0
+      },
+      {
+        className: 'string',
+        variants: [
+          { begin: /\{/, end: /\}/ },
+          { begin: /"/, end: /"/ }
+        ],
+        contains: [
+          {begin: /\\./, relevance: 0}  // Handle escaped characters within strings
+        ]
+      },
+      {
+        className: 'number',
+        begin: /\d+/,
+        relevance: 0
+      }
+    ]
+  };
+});
+</script>
 {% endblock %}
 
 {% block title %}{{ this.title }}{% endblock %}
