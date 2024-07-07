@@ -37,6 +37,7 @@
 {% endmacro %}
 
 {% macro render_blog_post(post, from_index=false) %}
+
 <div class="terminal-card">
   <header id="post_title" name="post_title">{{ render_blog_header(post, from_index) }}</header>
   <div class="card-body">
@@ -50,6 +51,31 @@
     <span id="post_body" name="post_body">
       {{ post.body }}
     </span>
+
+    {% set slug = post._slug.split("/")[-1] %}
+    {% set date_str = post.pub_date | string %}
+    {% set year = date_str.split("-")[0] %}
+    {% set month = date_str.split("-")[1] %}
+    {% set day = date_str.split("-") [2] %}
+
+    <hr>
+
+    <i>Cite this blog post:</i>
+    <div class="hll">
+    <pre>
+<span><span style="color: darkblue; font-weight: bold">@article</span>{
+    <span style="color: black; font-weight: bold">{{ post.twitter_handle }}-{{ year }}-{{ slug.split("-")[0] }}-{{ slug.split("-")[-1] }}</span>,
+    <span style="color: green; font-weight:bold">author</span> = <span style="color: maroon">{{'{'}}{{post.author}}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">title</span> = <span style="color: maroon">{{'{'}}{{ post.title }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">year</span> = <span style="color: maroon">{{'{'}}{{ year }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">month</span> = <span style="color: maroon">{{'{'}}{{ month }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">day</span> = <span style="color: maroon">{{'{'}}{{ day }}{{'}'}}</span>,
+    <span style="color: green; font-weight:bold">howpublished</span> = <span style="color: maroon">{\url{https://ericmjl.github.io}}</span>,
+    <span style="color: green; font-weight:bold">journal</span> = <span style="color: maroon">{Eric J. Ma's Blog}</span>,
+    <span style="color: green; font-weight:bold">url</span> = <span style="color: maroon">{https://ericmjl.github.io/blog/{{ post._slug }}{{'}'}}</span>,
+}
+  </span></pre>
+    </div>
     <hr>
     <p>
       <i>I send out a newsletter with tips and tools
@@ -62,8 +88,8 @@
         <a href="https://github.com/sponsors/ericmjl">GitHub Sponsors</a>!</i>
     </p>
     <p>
-      <i><span>Finally, I do free 30-minute GenAI strategy calls for organizations
-        who are seeking guidance on how to best leverage this technology. Consider </span>
+      <i><span>Finally, I do free 30-minute GenAI strategy calls for teams
+        that are looking to leverage GenAI for maximum impact. Consider </span>
         <a href="https://calendly.com/ericmjl/llm-chat">booking a call on Calendly</a>
         if you're interested!</i>
       </i>
