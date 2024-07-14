@@ -1,3 +1,27 @@
+[project]
+name = "ericmjl-website"
+version = "0.0.1"
+dependencies = [
+    "lektor>=3.2.0",
+    "mistune<2.0",
+    "flask",
+    "requests",
+    "jinja2",
+    "pre-commit",
+    "ipykernel",
+    "jupyterlab",
+    "nbconvert",
+    "panel",
+    "tqdm",
+    "llamabot>=0.4.6",
+]
+requires-python = "==3.11"
+description = "Eric Ma's Personal Website"
+
+[tool.setuptools.packages.find]
+where = [""]
+namespaces = false
+
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
 lint.select = ["E", "F", "I"]
@@ -44,3 +68,27 @@ target-version = "py310"
 [tool.ruff.mccabe]
 # Unlike Flake8, default to a complexity level of 10.
 max-complexity = 10
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64"]
+
+[tool.pixi.pypi-dependencies]
+ericmjl-website = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+website = "lektor server --port 5959 --host 0.0.0.0"
+blogbot = "panel serve apis/blogbot/app.ipynb --address 0.0.0.0 --allow-websocket-origin=0.0.0.0:5006 --dev"
+
+[tool.pixi.dependencies]
+python = "==3.11"
+lektor = ">=3.2.0"
+mistune = "<2.0"
+nbconvert = "*"
+flask = "*"
+requests = "*"
+jinja2 = "*"
+pre-commit = "*"
+ipykernel = "*"
+jupyterlab = "*"
+tqdm = "*"
