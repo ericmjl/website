@@ -5,18 +5,12 @@ dependencies:
   - python>=3.11
   - pip
   - lektor>=3.2.0
-  - flask
-  - requests
-  - jinja2
-  - mamba>=0.7.12
+  # - mamba>=0.7.12
   - pre-commit
-  - ipykernel
-  - jupyterlab
-  - fastapi
-  - uvicorn
-  - python-multipart
-  - nbconvert>=7.16.4
-  - werkzeug>=2.3.8
+  # - ipykernel
+  # - jupyterlab
+  - nbconvert
+  # - werkzeug>=2.3.8
   - tqdm
   - panel
   - pip:
