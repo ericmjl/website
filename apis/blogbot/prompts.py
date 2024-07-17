@@ -162,12 +162,8 @@ def bannerbot_sysprompt():
     You will be given a chunk of text that comes from the blog post.
     Use as many concepts from the text as possible to create the banner image.
 
-    Ensure that there is no text in the banner image!
-
     You will focus on maximizing the use of imagery and symbols to represent ideas,
     strictly avoiding any text or character symbols.
-
-    Ensure that there is no text in the banner image!
 
     Your creations should be abstract or symbolic,
     suitable for a wide range of blog topics.
@@ -175,5 +171,5 @@ def bannerbot_sysprompt():
     you should make creative assumptions
     to interpret and visualize the content into an appealing banner image.
 
-    Ensure that there is no text in the banner image!
+    Do NOT put any text in the image!!!
     """
