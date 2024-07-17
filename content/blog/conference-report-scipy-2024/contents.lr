@@ -1,0 +1,345 @@
+title: Conference report: SciPy 2024
+---
+author: Eric J. Ma
+---
+body:
+
+And just like that, SciPy 2024 is a wrap!
+
+Because I missed last year's conference,
+attending it this year in person was a real treat.
+I met old friends, made new connections,
+and got caught up with the Python scientific computing
+and data science tooling ecosystem in line with my goals.
+
+## Tutorials
+
+This year, I was not chosen as a tutorial presenter.
+That was all good, as I delivered two talks.
+(There will be separate posts going out on them.)
+As such, I decided to attend tutorials and learn what I could.
+
+### Tutorial 1: Quarto
+
+The first tutorial I attended was the Quarto tutorial
+"[Unlocking Dynamic Reproducible Documents: A Quarto Tutorial for Scientific Communication](https://cfp.scipy.org/2024/talk/9FATTN/)",
+led by [Mine Çetinkaya-Rundel](https://mine-cr.com/).
+Though I had tried Quarto two years ago, I have not tried it since.
+As such, I thought it would be prudent
+to see if I could find a new trick or two from the tutorial,
+and I was not left disappointed.
+
+Quarto has improved immensely over the past two years!
+Of the many improvements I saw,
+the two that stuck with me the most were
+special syntax used in creating `reveal.js` presentations:
+creating _tabs_ within presentations
+and enabling incremental reveal of elements on slides.
+Two days before I was slated to speak,
+I was inspired enough to re-create my talks in Quarto markdown just for funsies.
+
+Additionally, I learned that Quarto comes with
+the ability to publish pages to Confluence!
+This is definitely something worth testing when I'm back at work.
+
+### Tutorial 2: LLMs
+
+The second tutorial I attended was an LLM tutorial titled
+"[Pretraining and Finetuning LLMs from the Ground Up](https://cfp.scipy.org/2024/talk/VTQMZH/)."
+In this tutorial, famed machine learner [Sebastian Raschka](https://sebastianraschka.com/)
+led a tutorial that did a fairly deep dive into the fundamentals of training LLMs:
+tokenization, model architecture,
+formatting data for training, and actually training an LLM.
+Lightning.ai provided a workspace for executing code,
+but I opted to remotely SSH back into my home GPU server
+and follow the tutorial from there.
+
+From my anecdotal interactions with others,
+the response seemed a mixed bag.
+This tutorial was too basic for those who were well-versed in LLMs.
+On the other hand,
+those whose skill level with language models was elementary
+but with prior machine-learning experience found this tutorial quite informative.
+This commentary shouldn't detract from the level of preparation that Sebastian put in;
+I think it's just a reflection of the hype cycle surrounding LLMs at the moment,
+where it's hard to target a particular skill level
+given the diverse groups who are interested in LLMs.
+My skill level was closer to the advanced side,
+but I haven't yet prepped data for training LLMs
+(or protein language models for that matter),
+so seeing that in action was informative.
+
+### Tutorial 3: Anywidget
+
+The third tutorial I attended was the Anywidgets tutorial,
+"[Bring your \_\_repr\_\_’s to life with anywidget](https://cfp.scipy.org/2024/talk/PLWHZF/)",
+led by Anywidgets creators [Trevor Manz](https://trevorma.nz/) and [Nezar Abdennur](https://abdenlab.org/).
+I believe this tutorial was the best taught of the ones I attended!
+Trevor and Nezar taught it in such a way that
+it gave us a very gentle on-ramp to Anywidget.
+It also included much commentary on how to map JavaScript idioms to Python idioms.
+
+This was essentially a 3-notebook tutorial,
+paced at one notebook per hour (as I perceived it).
+The first notebook really boiled down the basics of an Anywidget:
+a Python class that enables a developer
+to add JavaScript to control the DOM associated with the next Jupyter notebook cell
+_and_ link it back to Python objects.
+The second notebook added some complexity
+by creating widgets that interacted with others.
+
+But the real fun was the third notebook: `ipymario`.
+The goal of that notebook was to create an Anywidget that sounded the Mario chime!
+If you can, picture yourself being in a tutorial room
+where the Mario chime randomly rings out from laptops across the room.
+That's how it was like, and it contributed immensely to the fun that we had.
+
+### Tutorial 4: Handling Unusually-Sized Data
+
+The final tutorial was
+"[Data of an Unusual Size (2024 edition): A practical guide to analysis and interactive visualization of massive datasets](https://cfp.scipy.org/2024/talk/UKLNLQ/)"
+by [Pavithra Eswaramoorthy](https://pavithraes.me/)
+and [Dharhas Pothina](https://www.linkedin.com/in/dharhas/).
+This tutorial covered many concepts that I already knew,
+but there were nuggets of information I absolutely cherished:
+how to store data in the cloud.
+It turns out that Parquet files are an excellent choice
+for storing large tabular data in the cloud,
+as the tooling has caught up to allow us to read _slices_ of data from Parquet files
+natively in the cloud,
+(a) omitting the need to set up databases for small and medium data, while
+(b) ensuring rapid read/write access.
+Tying this point with a [recent tweet from Nikita Melkozerov](https://twitter.com/meln1k/status/1812116658300817477)
+(essentially how to use a $5 VPS + SQLite to rival hefty Postgres deployments),
+our choice of data storage system can make a lot of difference
+when accessing large data via the cloud.
+
+## Talks
+
+My experience with talks this year
+was primarily from a speaker's viewpoint rather than an attendee.
+I'll summarize what I spoke about below,
+knowing that I'll be sharing a deeper dive into the two talks later.
+I'll also highlight what I found to be the best part of the talks program —
+the Lightning Talks.
+
+### Talk 1: How to Foster an Open Source Culture within Your Data Science Team
+
+The first talk I delivered was titled
+"[How to Foster an Open Source Culture within Your Data Science Team](https://cfp.scipy.org/2024/talk/NPLDJF/)."
+To foster that kind of culture,
+I had a two-fold thesis,
+one internally-facing and one externally-facing.
+
+Facing internally, we, as data science team leads,
+can import into our organization ways of working from the open source world,
+most crucially introducing a do-ocracy and modelling the behaviour of
+"anyone can make a pull request."
+A do-ocracy is an organization where
+the do-ers are the ones who get to influence the direction of the organization
+by just rolling up their sleeves, organizing people, and making stuff happen.
+This stands in contrast to a culture of top-down management
+or worse, a culture of whining and complaining.
+Adopting a do-ocracy ensures that our team has a culture
+compatible with the open-source world.
+
+Externally facing,
+I built upon the distinction between community-driven
+and company-backed open-source software
+and dissected the multiple motivations behind companies that release such software.
+In particular, I focused on companies like those I have worked at --
+Moderna, Novartis, and other companies
+that do not have a commercialization thesis surrounding open source
+but use it instead as a recruitment and marketing tool.
+I then dissected the multiple stakeholders we may need to interact with and convince
+before releasing OSS software,
+such as colleagues in legal, management, leadership, and technical teams --
+and, more importantly, their motivations.
+
+After the talk, discussions with others revealed a consensus that
+someone in leadership must be willing to sponsor open-source software.
+A do-er in the organization must step up and create the framework
+for clearly deciding when to open-source a piece of software.
+This is no easy work.
+It takes time to gain the clarity necessary to set company-wide policy,
+but once in place, it can provide an impactful framework
+that others can rely on to make best-faith judgment calls on what to do with their work.
+
+### Talk 2: LlamaBot: a Pythonic interface to Large Language Models
+
+My [second talk](https://cfp.scipy.org/2024/talk/TPTYCR/) was on [LlamaBot](https://github.com/ericmjl/llamabot)!
+This passion-driven pedagogical project
+originated from my desire to learn how to build LLM applications,
+and my approach of "build to learn" has helped me forge a clearer mental model of
+how LLM application components work.
+This is reflected in the library.
+This one being the final talk of the final session
+on the final day of the main conference,
+I decided to lighten things up a bit.
+
+I showed a demo of the automatic git commit message writer
+with audience live participation.
+Things got funnier when I demoed
+the Poor Man's Paul Ivanov Bad Pun Generator to the audience!
+
+(For those who are unaware, [Paul Ivanov](https://www.linkedin.com/in/paulivanov/)
+is exceedingly well-known in the community for his timely, sharp, witty,
+and _bad_ puns in response to almost _any_ situation in the conference.
+For example, when a speaker recovers from slides failing to show up on screen,
+he'll quip, "I'll let that slide!")
+
+But demos aside,
+I also took the chance to describe
+some of the design decisions made in building the library.
+I shared how I needed to engage in several rebuilds of the library
+to gain a level of clarity
+that also allowed me to make better design choices after the fact.
+I had a lot of audience engagement for this talk in the form of follow-up questions,
+and the sprints afterward
+gave me more ideas about a tutorial to propose for next year's conference.
+
+### Lightning Talks
+
+Lightning talks are, arguably,
+the crowd's favourite part of the SciPy conference.
+Lightning talks are a maximum of 5 minutes long,
+and speakers cycle through until the hour of lightning talks is up.
+Speakers signed up at the NumFOCUS booth,
+with the queue of speakers clearing out each day.
+There's a designated Pun Table,
+where a roster of PUN-dits deliver their PUN-ny puns on the mic for the crowd to groan.
+Most of the talks are light-hearted and fun!
+Many of them are on tools that people are developing,
+which is the real value of lightning talks.
+It ends up being the highest-density source of information
+on the zeitgeist of the SciPy community.
+
+As an example, I learned that there are three ways to access GPUs on CI/CD:
+
+- GitHub provides it natively (and hence easily),
+- Ubicloud provides it cheaply, and
+- Quansight provides a limited server freely (!)
+
+What otherwise would have felt like a challenge to set up
+is much easier than I originally thought!
+(For example, I no longer need to designate my home GPU tower as a CI runner.)
+
+As another example,
+through a hilarious demo of a real-time synthesized
+David Attenborough-style commentary of live video (of the speakers and then of us),
+I learned of a new vendor, ElevenLabs,
+capable of hyper-realistic text-to-speech,
+which was pretty amazing to witness.
+
+## Sprints
+
+With the main conference over, it was time for the sprints.
+The sprints are 2-day events,
+where code maintainers come together with first-timers
+and everyone in between to hack on the scientific Python ecosystem software.
+I led a sprint on LlamaBot,
+focusing on notebooks that show how to use LlamaBot
+in situations that are useful to the sprinters.
+
+But what was illuminating for me was
+how frustrating it could be to get set up in the first place.
+Because I had no API keys to give out,
+I had to set up the sprinters with Ollama,
+which clogged the internet at the hotel where the sprints were hosted!
+If we had access to the conference center WiFi instead,
+that would have massively alleviated the problem.
+
+Nonetheless, all was good:
+by the time we departed for lunch,
+most of us had gotten Ollama downloaded
+and set up the conda environment for development.
+It just took more time than I initially expected.
+By the end of the day, we had three pull requests merged,
+all of them focused on documentation improvements,
+which made it much easier for others to get started with LlamaBot.
+
+As a side bonus, I also had a chance to see a diversity of setups and their restrictions,
+ranging from Linux machines to locked down and fire-walled Windows PC laptops,
+as well as folks using VSCode, PyCharm, Jupyter Lab, Jupyter Classic, and raw terminal.
+It was, most certainly, a plurality of environments that I hadn't considered before.
+
+Day 2 was slower, and I only sprinted in the morning,
+working with the Prefix devs to set up `pixi` in my LlamaBot environment.
+It was supremely convenient to ask them questions in person
+rather than wait for an asynchronous online communication cycle.
+By lunchtime, I had pixi-based testing environments up and running,
+which gave me more confidence in incorporating it into my daily workflow.
+
+## Activities
+
+A feature of the SciPy conference is the Activities Committee.
+This committee suggests possible activities for attendees to join,
+especially if they are alone at the conference.
+
+The Activities Committee did an amazing job
+organizing activities for conference participants.
+On Friday, the last day of the conference,
+I went to a rock climbing gym with many other attendees,
+and thanks to the guidance of others like Alex Chabot-Leclerc,
+I could pick up some of the fundamentals of rock climbing and use them.
+I found it to be a very mentally stimulating activity!
+It was like solving a vertical and lateral puzzle simultaneously.
+As I write, I'm still physically aching in my forearm from climbing,
+but it felt awesome.
+
+Apart from that, I spent the afternoon of the second day of sprints exploring Tacoma.
+At noon, we went to an arboretum that was a good 30 minutes of walking away,
+so I got in many steps (and a lot of hill climbing -- Tacoma is filled with hills).
+After lunch, I knew I couldn't miss out on the Tacoma Glass Museum
+since that was what Tacoma is known for.
+The highlight there was the live glass blowing!
+That said, sitting there and watching the painstaking process of glass blowing
+in front of glowing hot furnaces was too much for my Eskimo-conditioned body to bear,
+so I left early to view the glass art gallery instead.
+
+## Food
+
+No conference report can be considered complete
+without an accounting of local restaurants.
+Here's what I had.
+
+I have fond memories of going to Chili Thai for meals
+three times throughout the conference week,
+each time ordering a different spicy Thai curry.
+If not for going out with other groups,
+I would have gone twice more —- it's *that* good!
+
+Apart from that, I checked in twice at Thekoi for their XO Ramen,
+twice at La Isabella for their Mexican food,
+thrice at Bite at the Murano Hotel (two breakfasts and one dinner),
+and once at the Courtyard Marriott's Bistro.
+But my favourite remains Chilli Thai!
+
+---
+pub_date: 2024-07-14
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this blog post, I share my enriching experience at SciPy 2024,
+from attending insightful tutorials on Quarto, LLMs, Anywidget,
+and handling large datasets,
+to delivering talks on fostering an open-source culture and LlamaBot.
+I also highlight the vibrant lightning talks, the collaborative sprints,
+and the engaging social activities that made this conference memorable.
+Not to forget, the delicious Tacoma cuisine that added flavor to the whole experience.
+Curious to know which tutorial inspired me to recreate my talks just for fun?
+---
+tags:
+
+scipy2024
+python
+data science
+quarto tutorial
+llms
+anywidget
+large datasets
+open source
+llamabot
+conference activities
