@@ -4,6 +4,8 @@ author: Eric J. Ma
 ---
 body:
 
+**This is part 2 of my series on protein language models. If you're
+
 ## How exactly are protein language models trained?
 
 If you're familiar with how natural language models are trained, then this should come as no surprise to you: protein language models are trained in exactly the same way! There are generally two ways to train a protein language model: **masked language modelling** and **autoregressive training**. I will provide a brief overview of these training methods.
@@ -128,7 +130,7 @@ To the best of my knowledge, no theory dictates what ought to be the best hyperp
 
 I don't think the answers to these questions are well-known. My only guide is to (a) train the model in the way it's intended to be used and (b) ensure that its intended use is also in line with the goals of the protein engineering campaign.
 ---
-pub_date: 2024-07-27
+pub_date: 2024-08-02
 ---
 twitter_handle: ericmjl
 ---
