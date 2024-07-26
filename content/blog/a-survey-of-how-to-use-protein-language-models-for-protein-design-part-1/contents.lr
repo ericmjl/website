@@ -1,0 +1,68 @@
+title: A survey of how to use protein language models for protein design: Part 1
+---
+author: Eric J. Ma
+---
+body:
+
+**This is part 1 of a three-part series on protein language models for protein engineering. I hope you find it useful!**
+
+With the explosion of Generative Artificial Intelligence (GenAI) and its applications in the life sciences, I thought it would be helpful to write out what I see as the technical state of the world for protein sequence generation. Here is my attempt at summarizing what I know about the state-of-the-art in protein language models are when it comes to generating protein sequences, and how to actually use them in practice.
+
+## What is a protein language model (PLM)?
+
+Put simply, it is a neural network model that is trained in a fashion not unlike natural language GenAI models. All we've done is change the inputs from a "chain of words" to a "chain of amino acids." Indeed, one of the best analogies that I've encountered is that:
+
+> a protein language model is a model, like GPT-4, trained to generate protein sequences rather than natural language text.
+
+## What kind of situations call for the use of PLMs in protein engineering?
+
+There are many creative use cases for a PLM! Below, I will outline three specific examples and their commonalities.
+
+### Example 1: Patent-breaking
+
+In this case, we wish to design a protein with a low sequence identity to an existing patented protein. The team has the necessary laboratory budget to test tens, hundreds, or even thousands of PLM-generated variants. The goal is to identify a new variant that is sufficiently different from the patented protein, with success defined as **finding a protein variant that has equal or better assayed functional activity at less than 80% sequence identity.**
+
+### Example 2: Prioritized deep mutational scan
+
+In this case, we wish to test the effect of point mutations on a protein's functional activity, but because the protein is 900 amino acids long, it would be cost-prohibitive to test all 17,100 single point variants -- we only have a budget to test two 96-well plates worth of variants, and factoring in the need to have appropriate experimental positive, negative, and well position effect controls, we are down to just 148 variants that we can test. Here, we can use a PLM to prioritize the list of single mutations to test (without other functional assay data available) by taking advantage of its ability to generate pseudo-likelihood scores that are also treated as mutational effect scores. We may choose to divide up the laboratory budget of 148 variants such that 75% of them (111 in total) are top-ranked by PLM pseudo-likelihoods. In contrast, the other 25% (37 in total) may be the bottom-ranked mutations, excluding proline and tryptophan substitutions (as they are often known to be deleterious in most contexts). Here, because our goals are to answer the question of mutational effects, **success is defined by successfully ordering the variants and testing them, as well as producing an evaluation of how strongly correlated mutational effects were with PLM pseudo-likelihoods.**
+
+### Example 3: Candidate expansion via natural mimicry
+
+We want to generate thousands of variants of a protein family without explicitly doing ancestral sequence reconstruction (ASR) as an alternative to the dozens of sequence candidates proposed by ASR. In spirit, the goals of ASR and PLM-based candidate expansion are identical. Additionally, the methods by which we do candidate expansion and patent-breaking are also mostly identical, with the differences most likely being in the training dataset and parameters. For the technical folks reading this, you should note that for these goals, other sequence generation methods, such as a variational autoencoder trained on aligned protein sequences, are also a viable way.
+
+### Common threads above: plausibility
+
+The three examples above constitute a non-exhaustive list of applied situations where we may want to use a PLM. What's common about them? Firstly, the goal is to generate plausible-looking protein sequences. But apart from that, did you notice how we didn't predicate the use of PLMs on the availability of assay data? This is because our goals here weren't to generate optimal protein sequences, they were just to generate _plausible_ ones. The situations above called for the direct use of protein language models, where our goal is *diversification*. This is also referred to as library expansion or diversification in the chemistry world.
+
+### What about optimization?
+
+As described above, direct use of a protein language model usually implies using the model contrasts with the *optimization* goal, where we wish to generate protein sequences that maximize (or minimize) one or more protein properties (as measured by laboratory assays). But wait, we know that protein language models like the ESM family can produce **mutational effect scores**, which are essentially derived from the model itself without knowledge of any assay data. Can't this be used directly for optimization?
+
+Indeed, one of the earliest protein language model papers (for ESM-1) included a benchmarking exercise that showed certain assays could be predicted from protein language models' mutational effect scores. Quoting the figure in the paper:
+
+![](https://www.pnas.org/cms/10.1073/pnas.2016239118/asset/faaf83e4-f8fa-499a-ae24-ba4377a6687f/assets/images/large/pnas.2016239118fig07.jpg)
+
+This figure shows zero-shot performance measurement between a model's score of mutational effect and the actual mutational effect as measured within a deep mutational scan. On the x-axis we have deep mutational scanning assays that were considered. A deep mutational scan is a great way to measure mutational effects because it involves a complete measurement of single-point mutations from a reference sequence. On the y-axis we have the absolute value of the Spearman correlation between a model's zero-shot prediction and the actual measured mutational effect. (Zero-shot means the model was not trained to predict a specific assay's result from protein sequence.) Spearman correlation is a rank correlation metric; the higher the correlation score, the more confident we can use a protein language model's score to predict an assay's results.
+
+The blue dots in the figure are what we want to focus on. Some assays' results are easily predictable from PLM scores, with correlations in the 0.8-1.0 regime, while others are not easily predictable (in the 0.4-0.8 regime). At least within the assays considered, none were in the 0.0-0.4 regime, meaning that there is _some_ zero-shot assay signal, though it is not perfect. While promising, it's near impossible to know, before laboratory measurements are taken, whether a protein language model's mutational effect score will be in the predictable or challenging regimes. As such, we don't typically directly use a mutational effect score to make direct statements about an actual property value (i.e. "this score means we have a binding affinity of 21 nM"), but rather in an indirect way, to rank-order protein variants (with the knowledge that the rank ordering will be wrong but possibly not too off).
+
+Rather, the way that one usually uses a PLM for optimization is by extracting numerical embeddings from them and training models that use these embeddings to predict the properties of that protein. Data scientists seasoned in the use of language models will know what this entails, but in the interest of brevity, I will not do a deep dive in this essay and leave it for another day. What's important to know is that in the presence of assay data, it is possible to use PLMs for optimization.
+
+> If you've made it this far, thank you! Do stay tuned for the next part, which will go into how protein language models are trained.
+---
+pub_date: 2024-07-26
+---
+twitter_handle: ericmjl
+---
+tags:
+
+protein engineering
+generative ai
+protein language models
+neural networks
+bioinformatics
+protein sequences
+life sciences
+optimization
+---
+summary: In part 1 of a three-part series on protein language models, I do a deep dive into the fascinating world of protein language models (PLMs) for protein engineering, drawing parallels between PLMs and GenAI models like GPT-4. I explore three distinct applications: patent-breaking, prioritized deep mutational scans, and candidate expansion via natural mimicry, highlighting the goal of generating plausible protein sequences for diversification. I also touch upon the potential of PLMs for optimization, using mutational effect scores for predictive purposes. How can PLMs revolutionize protein engineering and what lies ahead in this promising field?
