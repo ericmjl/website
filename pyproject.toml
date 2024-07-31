@@ -59,26 +59,34 @@ max-complexity = 10
 channels = ["conda-forge"]
 platforms = ["osx-arm64"]
 
-[tool.pixi.pypi-dependencies]
-ericmjl-website = { path = ".", editable = true }
-lektor = "==3.4.0b4"
-llamabot = ">=0.5.0"
-
-[tool.pixi.tasks]
-website = "lektor server --port 5959 --host 0.0.0.0"
-blogbot = "panel serve apis/blogbot/app.ipynb --address 0.0.0.0 --allow-websocket-origin=0.0.0.0:5006 --dev"
-
-[tool.pixi.dependencies]
-python = "==3.11"
+[tool.pixi.feature.blogbot.dependencies]
+panel = "*"
 nbconvert = "*"
-flask = "*"
-requests = "*"
-jinja2 = "*"
-pre-commit = "*"
 ipykernel = "*"
 jupyterlab = "*"
 tqdm = "*"
-werkzeug = "<3"
-mistune = "<3"
-panel = "*"
 numpy = "<2"
+
+[tool.pixi.feature.blogbot.pypi-dependencies]
+llamabot = ">=0.5.1"
+
+[tool.pixi.feature.devtools.dependencies]
+pre-commit = "*"
+
+[tool.pixi.feature.lektor.pypi-dependencies]
+lektor = "==3.4.0b4"
+
+[tool.pixi.feature.lektor.dependencies]
+python = "==3.11"
+mistune = "<3"
+werkzeug = "<3"
+
+[tool.pixi.feature.blogbot.tasks]
+blogbot = "panel serve apis/blogbot/app.ipynb --address 0.0.0.0 --allow-websocket-origin=0.0.0.0:5006 --dev"
+
+[tool.pixi.feature.lektor.tasks]
+website = "lektor server --port 5959 --host 0.0.0.0"
+
+[tool.pixi.environments]
+default = ["lektor", "devtools"]
+blogbot = ["blogbot", "devtools"]
