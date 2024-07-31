@@ -48,7 +48,7 @@ and as such, need special permissions to upgrade.
 
 Try it out in your terminal:
 
-```
+```bash
 $ which which
 /usr/bin/which
 $ which top
@@ -57,14 +57,14 @@ $ which top
 
 Other programs are installed (for whatever reason) into `/bin` instead. `ls` is one example:
 
-```
+```bash
 $ which ls
 /bin/ls
 ```
 
 Yet other programs might be installed in other special directories:
 
-```
+```bash
 $ which nano
 /usr/local/bin/nano
 ```
@@ -73,7 +73,7 @@ How does your Bash terminal figure out where to go to look for stuff?
 It uses the `PATH` environment variable.
 It looks something like this:
 
-```
+```bash
 $ echo $PATH
 /usr/bin:/bin:/usr/local/bin
 ```
@@ -105,7 +105,7 @@ Wait, you can actually modify your `PATH` variable? Yep, and there's a few ways 
 The first way is transient, or temporary, and only occurs for your particular bash session.
 You can make a folder have higher priority than the existing paths by "pre-pending" it to the `PATH` variable:
 
-```
+```bash
 $ export PATH=/path/to/my/folder:$PATH
 $ echo $PATH
 /path/to/my/folder:/usr/bin:/bin:/usr/local/bin
@@ -113,7 +113,7 @@ $ echo $PATH
 
 Or I can make it have a lower priority than existing paths by "appending" it to the `PATH` variable:
 
-```
+```bash
 $ export PATH=$PATH:/path/to/my/folder
 $ echo $PATH
 /usr/bin:/bin:/usr/local/bin:/path/to/my/folder
@@ -132,7 +132,7 @@ and is a file that your bash interpreter will execute first load.
 It will execute all of the commands inside there.
 This means, you can change your PATH variable by simply putting inside your `.bashrc`:
 
-```
+```bash
 ...other stuff above...
 # Make /path/to/folder have higher priority
 export PATH=/path/to/folder:$PATH
@@ -157,7 +157,7 @@ each time you type `python` into your Bash terminal,
 ou execute the Python interpreter shipped with the Anaconda Python distribution.
 In my case, after installing the Anaconda Python distribution, my `PATH` looks like:
 
-```
+```bash
 $ echo $PATH
 /Users/ericmjl/anaconda/bin:/usr/bin:/bin:/usr/local/bin
 ```
@@ -168,7 +168,7 @@ while the environment is activated.
 For example, with my blog, I keep it in an environment named `lektor`.
 Thus...
 
-```
+```bash
 $ echo $PATH
 /Users/ericmjl/anaconda/bin:/usr/bin:/bin:/usr/local/bin
 $ which python
@@ -194,7 +194,7 @@ Now, what other environment variables might a data scientist encounter? These ar
 
 **For general use**, you'll definitely want to know where your `HOME` folder is -- on Linux systems, it's often `/home/username`, while on macOS systems, it's often `/Users/username`.  You can figure out what `HOME` is by doing:
 
-```
+```bash
 $ echo $HOME
 /Users/ericmjl
 ```
@@ -297,7 +297,7 @@ so that you can manually prepend/append while debugging.
 To do this, place the following line inside a file named `.path_default`,
 inside your home directory:
 
-```
+```bash
 export PATH=""  # resets PATH to an empty string.
 export PATH=/usr/bin:/bin:/usr/local/bin:$PATH  # this is a sensible default; customize as needed.
 ```
@@ -305,7 +305,7 @@ export PATH=/usr/bin:/bin:/usr/local/bin:$PATH  # this is a sensible default; cu
 After something goes wrong,
 you can reset your PATH environment variable by using the "source" command:
 
-```
+```bash
 $ echo $PATH
 /some/complicated/path:/more/complicated/paths:/really/complicated/paths
 $ source ~/.path_default
