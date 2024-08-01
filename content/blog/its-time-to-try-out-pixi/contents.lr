@@ -250,26 +250,19 @@ you run `pixi shell` rather than `conda activate <env_name>`.
 Running `pixi shell` at my terminal results in something that looks like this:
 
 ```bash
-pixi-cuda-environment on  re-initialize [✘!?] via 🐳 desktop-linux is 📦 v0.1.0 via 🐍 v3.12.4 on ☁️
 ❯ which python
 python not found
 
-pixi-cuda-environment on  re-initialize [✘!?] via 🐳 desktop-linux is 📦 v0.1.0 via 🐍 v3.12.4 on ☁️
 ❯ pixi shell
  . "/var/folders/lb/fzbrctwd2klcrwsg63vzqj0r0000gn/T/pixi_env_37v.sh"
-Linking to home folder binaries.
-Adding /usr/local/bin to PATH
-Adding Homebrew to PATH
-/opt/homebrew/bin/exa
 
-pixi-cuda-environment on  re-initialize [✘!?] via 🐳 desktop-linux is 📦 v0.1.0 via 🐍 v3.12.4 on ☁️
 ❯  . "/var/folders/lb/fzbrctwd2klcrwsg63vzqj0r0000gn/T/pixi_env_37v.sh"
+
 (pixi-cuda-environment)
-pixi-cuda-environment on  re-initialize [✘!?] via 🐳 desktop-linux is 📦 v0.1.0 via 🐍 v3.12.4 via 🅒 pixi-cuda-environment on ☁️
 ❯ which python
 /Users/ericmjl/github/incubator/pixi-cuda-environment/.pixi/envs/default/bin/python
+
 (pixi-cuda-environment)
-pixi-cuda-environment on  re-initialize [✘!?] via 🐳 desktop-linux is 📦 v0.1.0 via 🐍 v3.12.4 via 🅒 pixi-cuda-environment on ☁️
 ❯
 ```
 
@@ -316,21 +309,26 @@ jaxlib = { version = "*", build = "cuda12" }
 cuda = ["cuda"] # maps my "cuda" environment to the "cuda" feature
 ```
 
-Here, I used `pixi`'s `feature` definitions. This concept comes from the Rust world if I remember correctly my conversation with the Prefix devs about specifying a CUDA-centric specification for my Linux machine. With the above modifications to my `pyproject.toml` file, I now have two ways to run `pixi shell`:
+Here, I used `pixi`'s `feature` definitions.
+This concept comes from the Rust world
+if I remember correctly my conversation with the Prefix devs
+about specifying a CUDA-centric specification for my Linux machine.
+With the above modifications to my `pyproject.toml` file,
+I now have two ways to run `pixi shell`:
 
 - `pixi shell -e cuda` will start a shell environment with `cuda` enabled while
 - `pixi shell` will start a shell environment without cuda.
 
-We can tell which environment we're in through the environment name upon activation. Using `pixi shell -e cuda` on my home lab, we get:
+We can tell which environment we're in through the environment name upon activation.
+Using `pixi shell -e cuda` on my home lab, we get:
 
 ```bash
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize [!] is 📦 v0.1.0 via 🐍 v3.10.2
 ❯ pixi shell -e cuda
  . "/tmp/pixi_env_41w.sh"
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize [!] is 📦 v0.1.0 via 🐍 v3.10.2
+
 ❯  . "/tmp/pixi_env_41w.sh"
+
 (pixi-cuda-environment:cuda)
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize [!] is 📦 v0.1.0 via 🐍 v3.12.4 via 🅒 pixi-cuda-environment:cuda
 ❯ ipython
 Python 3.12.4 | packaged by conda-forge | (main, Jun 17 2024, 10:23:07) [GCC 12.3.0]
 Type 'copyright', 'credits' or 'license' for more information
@@ -351,15 +349,15 @@ Out[5]: tensor([1., 2., 3.], device='cuda:0')
 
 Notice how I've been able to run JAX and PyTorch with CUDA enabled.
 
-On the other hand, using `pixi shell` (without `-e cuda`), we have the following behaviour:
+On the other hand, using `pixi shell` (without `-e cuda`),
+we have the following behaviour:
 
 ```bash
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize [!] is 📦 v0.1.0 via 🐍 v3.10.2 took 2m1s
 ❯ pixi shell
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize [!] is 📦 v0.1.0 via 🐍 v3.10.2
+
 ❯  . "/tmp/pixi_env_YJX.sh"
+
 (pixi-cuda-environment)
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize [!] is 📦 v0.1.0 via 🐍 v3.12.4 via 🅒 pixi-cuda-environment
 ❯ ipython
 Python 3.12.4 | packaged by conda-forge | (main, Jun 17 2024, 10:23:07) [GCC 12.3.0]
 Type 'copyright', 'credits' or 'license' for more information
@@ -398,13 +396,29 @@ AssertionError: Torch not compiled with CUDA enabled
 In [6]:
 ```
 
-As you can tell above, our arrays are instantiated on CPU memory rather than GPU memory in the non-CUDA-enabled environment. With a relatively elegant syntax, we can create two separate environments within the same project for different hardware specifications.
+As you can tell above, our arrays are instantiated on CPU memory
+rather than GPU memory in the non-CUDA-enabled environment.
+With a relatively elegant syntax,
+we can create two separate environments
+within the same project for different hardware specifications.
 
 ### Building docker containers with caching on CI/CD
 
-Another need I have at work is the ability to build docker containers that contain our source code library and can be shipped into the cloud. Additionally, these containers should be as small as possible. Finally, when building these containers via CI/CD, we need caching enabled to ensure that build times are reasonably short when nothing changes in the environment, as defined by the `pyproject.toml` and `pixi.lock` files that are generated. (More on `pixi.lock` later.)
+Another need I have at work is the ability to build docker containers
+that contain our source code library and can be shipped into the cloud.
+Additionally, these containers should be as small as possible.
+Finally, when building these containers via CI/CD,
+we need caching enabled to ensure that build times are reasonably short
+when nothing changes in the environment,
+with the environment defined by the `pyproject.toml` file
+and generated `pixi.lock` file.
+(More on `pixi.lock` later.)
 
-I went about test-driving how to make this happen. It turns out not to be too challenging! To make build times shorter, I removed `pytorch` from the environment (as specified above) for the following environment definitions:
+I went about test-driving how to make this happen.
+It turns out not to be too challenging!
+To simplify the build, thereby allowing me to iterate more,
+I removed `pytorch` from the environment (as specified above)
+for the following environment definitions:
 
 ```toml
 # FILE: pyproject.toml
@@ -448,7 +462,12 @@ RUN chmod 700 /repo/entrypoint.sh
 ENTRYPOINT [ "/repo/entrypoint.sh" ]
 ```
 
-Notice how there is an official `pixi` Docker container! Most crucially, it _does not_ ship with anything CUDA-related; this is now possible thanks to the many efforts of conda-forge community members who work for NVIDIA, as we can specify whether we need GPU-related packages or not entirely within our conda/pixi environments instead.
+Notice how there is an official `pixi` Docker container!
+Most crucially, it _does not_ ship with anything CUDA-related;
+it is now possible to use non-NVIDIA docker containers to run GPU code
+thanks to the many efforts of `conda-forge` community members who work for NVIDIA,
+as we can specify whether we need GPU-related packages or not
+entirely within our `conda`/`pixi` environments instead.
 
 To start, I built the docker container locally on my home lab machine:
 
@@ -456,7 +475,9 @@ To start, I built the docker container locally on my home lab machine:
 docker build -f Dockerfile . -t pixi-cuda
 ```
 
-On my home lab machine, Docker build took about 3 minutes to complete. The longest build step was the Pixi install command in the Dockerfile; the second longest build step was exporting the layers.
+On my home lab machine, Docker build took about 3 minutes to complete.
+The longest build step was the Pixi install command in the Dockerfile;
+the second longest build step was exporting the layers.
 
 ```shell
 [+] Building 194.3s (12/12) FINISHED                      docker:defaultl
@@ -482,10 +503,11 @@ On my home lab machine, Docker build took about 3 minutes to complete. The longe
 To verify that I could indeed run CUDA-accelerated JAX, I entered into the container:
 
 ```shell
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize is 📦 v0.1.0 via 🐍 v3.10.2
 ❯ docker run --gpus all -it docker.io/library/pixi-cuda /bin/bash
  . "/tmp/pixi_env_5FU.sh"
+
 root@295a84b64679:/repo#  . "/tmp/pixi_env_5FU.sh"
+
 (pixi-cuda-environment:cuda) root@295a84b64679:/repo# ipython
 Python 3.12.4 | packaged by conda-forge | (main, Jun 17 2024, 10:23:07) [GCC 12.3.0]
 Type 'copyright', 'credits' or 'license' for more information
@@ -499,21 +521,37 @@ Out[2]: {cuda(id=0)}
 In [3]:
 ```
 
-Therefore, I was able to verify that I was indeed able to run the container with GPU acceleration. I had to wrestle with installing the NVIDIA docker container toolkit, but that's tangential to exploring `pixi` + Docker. At this point, it's a no-brainer to have: any sane ML Platform team at a company should be baking it into your AMIs (if you're on AWS) or equivalent.
+I was indeed able to run the container with GPU acceleration!
+I had to wrestle with installing the NVIDIA docker container toolkit on my home lab,
+which was a one-time installation to work through,
+but that's tangential to exploring `pixi` + Docker.
+At this point, I'm pretty sure that `pixi` is a no-brainer to have:
+any sane ML Platform team at a company
+should be baking it into your AMIs (if you're on AWS) or equivalent.
 
-What about that `entrypoint.sh` file? Well, did you notice this line in my shell output above?
+What about that `entrypoint.sh` file?
+Well, did you notice this line in my shell output above?
 
 ```bash
 (pixi-cuda-environment:cuda) root@295a84b64679:/repo# ipython
 ```
 
-Yes, that's right: we have the `cuda` environment for my `pixi-cuda-environment` project enabled! That is courtesy of `entrypoint.sh`. Here's what it looks like:
+Yes, that's right:
+we have the `cuda` environment for my `pixi-cuda-environment` project enabled,
+rather than just a plain shell.
+That is courtesy of `entrypoint.sh`.
+Here's what it looks like:
 
 ```bash
 #!/bin/bash
 # FILE: entrypoint.sh
-# Taken from: https://stackoverflow.com/a/44079215
-# Check for NVIDIA hardware
+# Modified from: https://stackoverflow.com/a/44079215
+# This script ensures that within a Docker container
+# we have the right pixi environment activated
+# before executing a command
+
+# If `nvidia-smi` is available, then execute command in the `cuda` environment
+# as defined in `pyproject.toml`.
 if command -v nvidia-smi &> /dev/null; then
     pixi shell -e cuda
 else
@@ -524,12 +562,16 @@ exec "$@"
 
 ### Running software tests
 
-Software tests are another integral part of our work workflow, so I explored what it would take to run tests with `pixi` in the loop. A few important contextual matters:
+Software tests are another integral part of our work workflow,
+so I explored what it would take to run tests with `pixi` in the loop.
+A few important contextual matters:
 
 1. The software environment only exists at the terminal if we run `pixi shell`.
 2. `pixi` does allow us to define tasks like in Makefiles and specify the environment in which they run.
 
-Taking advantage of these two, we can continue configuring our `pixi` environment and demonstrate how to make software tests run.
+Taking advantage of these two,
+we can continue configuring our `pixi` environment
+and demonstrate how to make software tests run.
 
 Firstly, we use `pixi` to add `pytest` and `pytest-cov` to the environment:
 
@@ -537,7 +579,8 @@ Firstly, we use `pixi` to add `pytest` and `pytest-cov` to the environment:
 pixi add pytest pytest-cov
 ```
 
-This added `pytest-cov` to `pyproject.toml`. Because I already had `pytest` defined, it was not overwritten:
+This added `pytest-cov` to `pyproject.toml`.
+Because I already had `pytest` defined, it was not overwritten:
 
 ```toml
 # FILE: pyproject.toml
@@ -578,10 +621,11 @@ Now, how do we run this test? Turns out it's doable this way:
 pixi run test
 ```
 
-When run outside of a specified `pixi shell`, it will run inside the `default` environment, giving an output like this:
+When run outside of a specified `pixi shell`,
+it will run inside the `default` environment,
+giving an output like this:
 
 ```shell
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize [✘!?] is 📦 v0.1.0 via 🐍 v3.10.2
 ❯ pixi run test
 ✨ Pixi task (test in default): pytest
 ================== test session starts ==================
@@ -596,18 +640,23 @@ test_arrays.py .                                  [100%]
 =================== 1 passed in 0.38s ===================
 ```
 
-But what if I want to run it inside the `cuda` environment? The easiest way to do this is to specify the environment to run it in:
+But what if I want to run it inside the `cuda` environment?
+The easiest way to do this is to specify the environment to run it in:
 
 ```bash
 pixi run -e cuda test
 ```
 
-> **NOTE:** Don't get the order wrong! `-e cuda` must be specified before the task name (i.e. `test`), as anything passed in after the task name will be passed to the task's executable as an argument!
+> **NOTE:** Don't get the order wrong!
+> `-e cuda` must be specified before the task name (i.e. `test`),
+> as anything passed in after the task name
+> will be passed to the task's executable as an argument!
 
-There are other ways to accomplish the same thing, but this is the easiest and most unambiguous. In any case, the output of that last command looks like this:
+There are other ways to accomplish the same thing,
+but this is the easiest and most unambiguous.
+In any case, the output of that last command looks like this:
 
 ```bash
-ericmjl in 🌐 ubuntu-gpu in pixi-cuda-environment on  re-initialize is 📦 v0.1.0 via 🐍 v3.10.2
 ❯ pixi run -e cuda test
 ✨ Pixi task (test in cuda): pytest  ### NOTE: We are using the `cuda` env now!
 ==================== test session starts =====================
@@ -626,7 +675,12 @@ Notice how we are running tests within the `cuda` environment!
 
 ### Running tests with pixi on GitHub Actions
 
-Now that we can run tests with `pixi` locally, and do it in two environments, the next thing I think we need to look at is running tests on CI/CD. Because I am on GitHub, GitHub Actions is my CI/CD choice. Let's see how to run tests with `pixi` on GitHub Actions. To start, we will need the GitHub Action definition, which I place at `.github/workflows/test.yaml`
+Now that we can run tests with `pixi` locally, and do it in two environments,
+the next thing I think we need to look at is running tests on CI/CD.
+Because I am on GitHub, GitHub Actions is my CI/CD choice.
+Let's see how to run tests with `pixi` on GitHub Actions.
+To start, we will need the GitHub Action definition,
+which I place at `.github/workflows/test.yaml`:
 
 ```yaml
 # FILE: .github/workflows/test.yaml
@@ -654,15 +708,32 @@ jobs:
     - run: pixi run test
 ```
 
-I intentionally omitted the `cuda` environment because GPU runners are unavailable on GitHub actions' native runners. However, if we use self-hosted runners, it is, in principle, possible to set up the `cuda` environment that we defined.
+I intentionally omitted the `cuda` environment
+because GPU runners are unavailable on GitHub actions' native runners.
+However, if we use self-hosted runners,
+it is, in principle, possible to set up the `cuda` environment that we defined.
 
-Nonetheless, the biggest and most important piece to know here is that the prefix devs have provided us with a `setup-pixi` action! This allows us to set up `pixi` and automatically create the `pixi` environments associated with it. Better yet is the ability to do caching! This massively speeds up the time taken to create the `pixi` env on CI/CD, which can cut down the turn-around time to fixing bugs.
+Nonetheless, the biggest and most important piece to know here
+is that the prefix devs have provided us with a `setup-pixi` action!
+This allows us to set up `pixi`
+and automatically create the `pixi` environments associated with it.
+Better yet is the ability to do caching!
+This massively speeds up the time taken to create the `pixi` env on CI/CD,
+which can cut down the turn-around time to fixing bugs.
 
-To recap, running `pixi install` from scratch on my home lab takes about 23 seconds for the default environment, while `pixi install -e cuda` takes about 3 minutes or so. With caching on GitHub actions, loading the `default` environment from the cache takes only 8 seconds. Imagine the speedup that one would have with caching provided by `pixi`!
+To recap, running `pixi install` from scratch on my home lab
+takes about 23 seconds for the default environment,
+while `pixi install -e cuda` takes about 3 minutes or so.
+With caching on GitHub actions,
+loading the `default` environment from the cache takes only 8 seconds.
+Imagine the speedup that one would have with caching provided by `pixi`!
 
 ### Docker container build with GitHub Actions
 
-In addition to running tests on GitHub Actions, it's also important for me to be able to build Docker containers using Actions. This way, we offload the time needed to babysit a local machine off to a remote computer that is automatically triggered by a code commit.
+In addition to running tests on GitHub Actions,
+it's also important for me to be able to build Docker containers using Actions.
+This way, we offload the time otherwise needed to babysit a local machine
+to a remote computer that is automatically triggered by a code commit.
 
 To do this, we need an Actions workflow file:
 
@@ -715,46 +786,102 @@ jobs:
         cache-to: type=gha,mode=max
 ```
 
-Nothing within this Actions YAML file is `pixi`-related, but because we're building the container from the Dockerfile, which is based on the official `pixi` image, we take advantage of building a Docker container using the official GitHub Action -- with caching involved too!
+Nothing within this Actions YAML file is `pixi`-related,
+but because we're building the container from the Dockerfile,
+which is based on the official `pixi` image,
+we take advantage of building a Docker container using the official GitHub Action --
+with caching involved too!
 
-When comparing the time it takes to generate the container image without caching, it takes about 3 minutes to build the container and another 2-ish minutes to push it to Dockerhub. (Your internet connection will determine how fast pushes happen.) With image layer caching, as long as the `pyproject.toml` and `pixi.lock` files are unchanged between commits, the entire GitHub Actions build time falls to ~30 seconds, representing an approximately 10X speed-up between iterations. If you have anything downstream dependent on a Docker image being built, this massive reduction in iteration time is a definite big treat!
+When comparing the time it takes to generate the container image without caching,
+it takes about 3 minutes to build the container
+and another 2-ish minutes to push it to Dockerhub.
+(Your internet connection will determine how fast pushes happen.)
+With image layer caching, as long as the `pyproject.toml` and `pixi.lock` files
+are unchanged between commits,
+the entire GitHub Actions build time falls to ~30 seconds,
+representing an approximately 10X speed-up between iterations.
+If you have anything downstream dependent on a Docker image being built,
+this massive reduction in iteration time is a definite big treat!
 
 ### Lock files
 
-Every `pixi` command that depends on an environment will result in a check that the lock files are kept in sync with the configuration file (or manifest, in `pixi` parlance). What `pixi` commands do this? What I've seen includes:
+Every `pixi` command that depends on an environment
+will result in a check that the lock files are kept in sync with the configuration file
+(or manifest, in `pixi` parlance).
+What `pixi` commands do this? What I've seen includes:
 
 - `pixi run <task>` or `pixi run <shell command>`, ± `-e <env name>`
 - `pixi shell`
 - `pixi install`
 
-The full behaviour is documented [here](https://pixi.sh/v0.26.1/reference/cli/#install). This is incredibly useful for ensuring the lock file syncs with the environment configuration file!
+The full behaviour is documented [here](https://pixi.sh/v0.26.1/reference/cli/#install).
+This is incredibly useful for ensuring
+the lock file syncs with the environment configuration file!
 
 ## Putting it all together
 
-While writing this post, I implemented and test-drove the ideas in a new repo named [`pixi-cuda-environment`](https://github.com/ericmjl/pixi-cuda-environment). This serves as a minimal implementation of the ideas above. h/t Ben Mares and Adrian Seyboldt, who helped review the repo.
+While writing this post,
+I implemented and test-drove the ideas in a new repo named [`pixi-cuda-environment`](https://github.com/ericmjl/pixi-cuda-environment).
+This serves as a minimal implementation of the ideas above.
+h/t Ben Mares and Adrian Seyboldt, who helped review the repo.
 
-To apply everything I learned from this exercise, I decided to update [`pyds-cli`](https://github.com/ericmjl/pyds-cli), [`llamabot`](https://github.com/ericmjl/llamabot), and [my personal website](https://github.com/ericmjl/website) to depend solely on `pixi`. This turned out to be an incredible thing to do! I could move from my MacBook Air to my laptop and get up and running easily using `pixi install`, simply by investing some time and thought into the configuration file. On another code repository that I wasn't the core developer of, thanks to a well-configured `pixi.toml` file (the alternative to `pyproject.toml`), I could immediately run the web app associated with the repository.
+To apply everything I learned from this exercise,
+I decided to update [`pyds-cli`](https://github.com/ericmjl/pyds-cli),
+[`llamabot`](https://github.com/ericmjl/llamabot),
+and [my personal website](https://github.com/ericmjl/website) to depend solely on `pixi`.
+This turned out to be an incredible thing to do!
+I could move from my MacBook Air to my laptop
+and get up and running easily using `pixi install`,
+simply by investing some time and thought into the configuration file.
+On another code repository that I wasn't the core developer of,
+thanks to a well-configured `pixi.toml` file (the alternative to `pyproject.toml`),
+I could immediately run the web app associated with the repository.
 
-All taken together, although there are many benefits to adopting `pixi` -- reproducibility and task execution, to name two -- I think its secret sauce for Python-centric adoption lies in the following two points:
+All taken together, although there are many benefits to adopting `pixi` --
+reproducibility and task execution, to name two --
+I think its secret sauce for Python-centric adoption lies in the following two points:
 
 - It pulls Python packages from the two canonical sources of packages (`conda` and `pip`).
 - It can unify Python project configuration into a single file (`pyproject.toml`).
 
-The thought and care that went into `pixi`'s design are quite evident. I hope that it continues to get the development attention that is commensurate with its impact!
+The thought and care that went into `pixi`'s design are quite evident.
+I hope that it continues to get the development attention
+that is commensurate with its impact!
 
 ## Tips for using `pixi`
 
-Any change will feel slightly uncomfortable, and I experienced some of it. I needed to adjust to this change, having come from a world where `~/anaconda` and `mamba` were what I depended on and then suddenly going cold turkey. Here's some tips that I have for using `pixi`, based on test-driving it at home and at work.
+Any change will feel slightly uncomfortable, and I experienced some of it.
+I needed to adjust to this change,
+having come from a world where `~/anaconda` and `mamba` were what I depended on
+and then suddenly going cold turkey.
+Here's some tips that I have for using `pixi`,
+based on test-driving it at home and at work.
 
 ### Lock file errors? Keep calm and `pixi install`!
 
-**Lock files** can represent a big change, a departure from an `environment.yml` file without a `conda-lock` file. Lock files can also look intimidating! After all, they're filled with many, many lines of auto-generated text. At the same time, they _are_ intended to be checked into source control! (That last point broke my mental model of never checking in auto-generated files.)
+**Lock files** can represent a big change,
+a departure from an `environment.yml` file without a `conda-lock` file.
+Lock files can also look intimidating!
+After all, they're filled with many, many lines of auto-generated text.
+At the same time, they _are_ intended to be checked into source control!
+(That last point broke my mental model of never checking in auto-generated files.)
 
-At the same time, lock files can also go out of sync with your manifest file (i.e. `pyproject.toml` or `pixi.toml`) if one is not careful. `pixi` tries to manage this complexity by (a) auto-updating the `pixi.lock` file on almost all commands, making it more convenient than `conda-lock`, and (b) loudly erroring with a friendly error message. If ever you encounter that error, whether locally or on CI, saying that the lock files are out of date, a `pixi install` + `git commit` and `git push` will do the trick.
+At the same time,
+lock files can also go out of sync with your manifest file
+(i.e. `pyproject.toml` or `pixi.toml`) if one is not careful.
+`pixi` tries to manage this complexity by
+(a) auto-updating the `pixi.lock` file on almost all commands,
+making it more convenient than `conda-lock`, and
+(b) loudly erroring with a friendly error message.
+If ever you encounter that error, whether locally or on CI,
+saying that the lock files are out of date,
+**a `pixi install` + `git commit` and `git push` will do the trick.**
 
 ### CUDA specification syntax
 
-The syntax for specifying CUDA packages from `conda-forge`, is also something we need to commit to memory. Some patterns might look like:
+The syntax for specifying CUDA packages from `conda-forge`,
+is also something we need to commit to memory.
+Some patterns might look like:
 
 ```toml
 package_name = { version = "some version", build = "*cuda*" }
@@ -763,16 +890,63 @@ package_name = { version = "some version", build = "*cuda12*" }
 
 ### Default channels
 
-The default pixi behaviour is to look for packages from `conda-forge`. If your Python package can't be resolved from there, try moving it to the `pypi-dependencies` section instead.
+The default pixi behaviour is to look for packages from `conda-forge`.
+If your Python package can't be resolved from there,
+try moving it to the `pypi-dependencies` section instead.
 
 ### Global tool installation
 
-If you went cold turkey as I did but still need to install Python tooling globally, then there's muscle memory that you'll need to un-learn very quickly. Whereas previously I could rely on a base environment through my `mambaforge` installation, it no longer exists. Rather, I needed to install Python and `pipx` globally with `pixi` and then use `pipx` (not `pixi`!) to install that tool using `pipx global install --python $(which python) <tool name>`. In this way, I could install `pyds-cli` and `llamabot` "globally" rather than within each environment.
+If you went cold turkey as I did but still need to install Python tooling globally,
+then there's muscle memory that you'll need to un-learn very quickly.
+Whereas previously I could rely on a base environment
+through my `mambaforge` installation, it no longer exists.
+Rather, I needed to install Python and `pipx` globally with `pixi`
+and then use `pipx` (not `pixi`!) to install that tool using
+
+```bash
+pipx global install --python $(which python) <tool name>
+```
+
+In this way, I could install `pyds-cli` and `llamabot` "globally"
+rather than within each environment.
 
 ### Define `pixi` tasks thoughtfully
 
-Providing a task that allows for a one-command "get something useful accomplished" can be incredibly confidence-building for the next person who clones your repo locally and tries to run something. Examples might be a `lab` command to run JupyterLab, a `start` command that runs a Python script that demos the output of your work, or a `test` command to help software developers gain confidence that they've got the repo installed correctly. Be sure to provide that command in the README!
+Providing a task that allows for a one-command "get something useful accomplished"
+can be incredibly confidence-building for the next person
+who clones your repo locally and tries to run something.
+Examples might be a `lab` command to run JupyterLab,
+a `start` command that runs a Python script that demos the output of your work,
+or a `test` command to help software developers
+gain confidence that they've got the repo installed correctly.
+Be sure to provide that command in the README!
 
+### Minimal analyses
+
+What if you're not a tool developer
+and just want a quick environment to do some analyses
+without touching other environments?
+For this persona, there is a simplified workflow that I have used
+which may be helpful as a reference.
+
+Navigate to an empty directory.
+Then:
+
+```bash
+# Initialize pixi files
+pixi init
+# Add packages that you need
+pixi add jupyter ipython ipykernel pixi-kernel numpy pandas matplotlib seaborn scikit-learn
+# Run Jupyter lab
+pixi run jupyter lab
+```
+
+Thanks to `pixi-kernel`, there will be a Jupyter kernel named `Pixi - Python 3 (ipykernel)`
+which will contain the packages contained in your environment.
+If you commit the notebooks + pixi configuration files to source control,
+someone else can download it and reproduce the environment easily.
+And as long as you don't rely on data living at a hard-coded path,
+that other person should be able to reproduce your work as well!
 
 ---
 pub_date: 2024-08-16
