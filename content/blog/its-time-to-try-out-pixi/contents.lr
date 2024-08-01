@@ -4,11 +4,19 @@ author: Eric J. Ma
 ---
 body:
 
-I recently switched LlamaBot and my personal website repository to `pixi`, and having test-driven it for a few weeks now, I think the time is right to do so. During this test-drive, I went cold turkey: I deleted `~/anaconda` from my home directory, leaving me with no choice but to use `pixi` 100%. In this post, I'd like to share what I've learned from my perspective as a data scientist and software developer.
+I recently switched LlamaBot and my personal website repository to `pixi`,
+and having test-driven it for a few weeks now,
+I think the time is right to do so.
+During this test-drive, I went cold turkey:
+I deleted `~/anaconda` from my home directory,
+leaving me with no choice but to use `pixi` 100%.
+In this post, I'd like to share what I've learned from my perspective
+as a data scientist and software developer.
 
 ## What is pixi?
 
-In my mind, pixi is a package management multi-tool. `pixi` plays many roles, but here are the big, salient ones:
+In my mind, pixi is a package management multi-tool.
+`pixi` plays many roles, but here are the big, salient ones:
 
 | Role                | Analogy                                                  |
 | ------------------- | -------------------------------------------------------- |
@@ -19,62 +27,107 @@ In my mind, pixi is a package management multi-tool. `pixi` plays many roles, bu
 
 ## My needs under two personas
 
-To motivate the content in this post, we first need to understand what I see as needs from a data scientist's and software developer's perspective.
+To motivate the content in this post,
+we first need to understand what I see as needs
+from a data scientist's and software developer's perspective.
 
 ### Data scientist
 
 #### Reproducible Environments
 
-I need to replicate my computational environment from machine to machine. Strict versioning will be handy but shouldn't be unwieldy -- especially with lock files. Compared to my older ways of working using `environment.yml` files, where I manually pin versions when something broke, I now prefer to have my environment management tool automatically produce a lock file that locks in package versions defined when solving the environment.
+I need to replicate my computational environment from machine to machine.
+Strict versioning will be handy but shouldn't be unwieldy -- especially with lock files.
+Compared to my older ways of working using `environment.yml` files,
+where I manually pin versions when something broke,
+I now prefer to have my environment management tool automatically produce a lock file
+that locks in package versions defined when solving the environment.
+
 #### Containerization
 
-Containerization is also important. At work, we ship stuff within Docker containers. Whatever environment or package management tool I use must work well with Docker containers. Additionally, as a bonus, we need it to have GPU access, too! Moreover, the built container needs to be as lightweight as possible.
+Containerization is also important.
+At work, we ship stuff within Docker containers.
+Whatever environment or package management tool I use
+must work well with Docker containers.
+Additionally, as a bonus, we need it to have GPU access, too!
+Moreover, the built container needs to be as lightweight as possible.
 
 #### Composable GPU-enabled and CPU-only environments
 
-With a single `environment.yml` file, I can only define a GPU-enabled or CPU-only environment. In most cases, we would default to GPU-enabled environments, which induces a huge overhead when the code is run on CPU-only environments. Ideally, I'd like to be able to do composable environment specification: a default setting for CPU-only environments, with the ability to specify GPU-only dependencies in a fashion that composes with the CPU-only environment within a single, canonical configuration file (e.g. `pyproject.toml`).
+With a single `environment.yml` file,
+I can only define a GPU-enabled or CPU-only environment.
+In most cases, we would default to GPU-enabled environments,
+which induces a huge overhead when the code is run on CPU-only environments.
+Ideally, I'd like to be able to do composable environment specification:
+a default setting for CPU-only environments,
+with the ability to specify GPU-only dependencies
+in a fashion that composes with the CPU-only environment
+within a single, canonical configuration file (e.g. `pyproject.toml`).
 
 ### Software developer
 
 #### Publishing to PyPI
 
-As a Python tool developer, I create stuff that needs to be distributed to other Pythonistas. As such, I need to be able to leverage existing Python publishing tooling (e.g., PyPI or conda-forge).
+As a Python tool developer,
+I create stuff that needs to be distributed to other Pythonistas.
+As such, I need to be able to leverage
+existing Python publishing tooling (e.g., PyPI or conda-forge).
 
 #### Running tests
 
-Whatever tool I use, I also need to be able to run software tests easily. Ideally, this would be done with one command, e.g., `pytest`, with minimal overhead. The software testing environment should be the same as my development environment.
+Whatever tool I use, I also need to be able to run software tests easily.
+Ideally, this would be done with one command, e.g., `pytest`, with minimal overhead.
+The software testing environment should be the same as my development environment.
 
 ### Both personas' needs
 
 #### Simplified environment specification
 
-As mentioned above, I currently use `environment.yml` and `pyproject.toml` to specify runtime and development dependencies. Runtime dependencies are declared in `pyproject.toml`, while development dependencies are declared in `environment.yml`. However, this way of separating concerns means that we have duplication in our dependencies specification! Ideally, we'd like to do this with a single file.
+As mentioned above, I currently use `environment.yml` and `pyproject.toml`
+to specify runtime and development dependencies.
+Runtime dependencies are declared in `pyproject.toml`,
+while development dependencies are declared in `environment.yml`.
+However, this way of separating concerns means that
+we have duplication in our dependencies specification!
+Ideally, we'd like to do this with a single file.
 
 #### Tooling for fast environment builds
 
-Whether we are in a Docker container or not, I'd like to see much faster container and environment build times with tooling for caching when compared to what I currently experience.
+Whether we are in a Docker container or not,
+I'd like to see much faster container and environment build times
+with tooling for caching when compared to what I currently experience.
 
-(Note to self: Product-oriented folks keep talking about "don't solution, tell me the problem", but I have to say -- I only really knew how much of a problem this was once I touched the solution I'm about to talk about!)
+(Note to self:
+Product-oriented folks keep talking about "don't solution, tell me the problem",
+but I have to say -- I only really knew how much of a problem this was
+once I touched the solution I'm about to talk about!)
 
 #### Automatic updates of lock files
 
-When I add a dependency to my environment, I'd like to see the lock file automatically updated so that I don't have to remember to do that in the future.
+When I add a dependency to my environment,
+I'd like to see the lock file automatically updated
+so that I don't have to remember to do that in the future.
 
 ## How pixi operates
 
-With the desiderata outlined above as contextual information, let's now see how `pixi` works.
+With the desiderata outlined above as contextual information,
+let's now see how `pixi` works.
 
 ### Installation
 
-What's awesome is that `pixi` is installed via a simple, one-bash-script install. Official instructions are available [here](https://pixi.sh/latest/#installation), but as of the time of writing, the only thing we need to run is:
+What's awesome is that `pixi` is installed via a simple, one-bash-script install.
+Official instructions are available [here](https://pixi.sh/latest/#installation),
+but as of the time of writing, the only thing we need to run is:
 
 ```bash
 curl -fsSL https://pixi.sh/install.sh | bash
 ```
 
-This sets up `pixi` within your home directory and adds the `pixi` path to your [PATH environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/).
+This sets up `pixi` within your home directory
+and adds the `pixi` path to your [PATH environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/).
 
-I also recommend getting set up with autocompletion for your shell. Once again, official instructions are [here](https://pixi.sh/latest/#autocompletion), and what I used for the `zsh` (macOS' default shell) was:
+I also recommend getting set up with autocompletion for your shell.
+Once again, official instructions are [here](https://pixi.sh/latest/#autocompletion),
+and what I used for the `zsh` (macOS' default shell) was:
 
 ```bash
 echo 'eval "$(pixi completion --shell zsh)"' >> ~/.zshrc
@@ -82,7 +135,17 @@ echo 'eval "$(pixi completion --shell zsh)"' >> ~/.zshrc
 
 ### Starting a new project with `pixi` enabled
 
-For those who are used to `conda` idioms, `pixi` won't create a centralized `conda` environment but instead will create a `.pixi` sub-directory within the directory of your `pixi` configuration file (either `pyproject.toml` or `pixi.toml`). In line with my desire to be able to specify sets of dependencies for runtime environments and development environments and also minimize the number of configuration files present, it makes sense to initialize with a `project.toml` configuration rather than the default `pixi.toml` configuration file. This is done by executing:
+For those who are used to `conda` idioms,
+`pixi` won't create a centralized `conda` environment
+but instead will create a `.pixi` sub-directory
+within the directory of your `pixi` configuration file
+(either `pyproject.toml` or `pixi.toml`).
+In line with my desire to be able to specify sets of dependencies
+for runtime environments and development environments
+and also minimize the number of configuration files present,
+it makes sense to initialize with a `project.toml` configuration
+rather than the default `pixi.toml` configuration file.
+This is done by executing:
 
 ```bash
 pixi init --pyproject -c conda-forge -v
@@ -113,11 +176,27 @@ pixi-cuda-environment = { path = ".", editable = true }
 [tool.pixi.tasks]
 ```
 
-What's important to note here is that `[project] -> dependencies` lists the Python project's runtime dependencies, which will be respected when `pixi` creates or updates the environment. Apart from that, other default configuration settings within the configuration file should look familiar to those who have experience with `pyproject.toml` configuration.
+What's important to note here is that `[project] -> dependencies`
+lists the Python project's runtime dependencies,
+which will be respected when `pixi` creates or updates the environment.
+Apart from that, other default configuration settings within the configuration file
+should look familiar to those who have experience with `pyproject.toml` configuration.
 
 ### Adding dependencies
 
-As mentioned above, runtime dependencies, which must exist when someone else installs your package to be used in their project, are distinct from development dependencies, which are usually extra things needed to develop your package properly. My goal is that if someone `pip install`s my package, they will automatically have the full runtime dependency set. To that end, there is a two-step process that I would use to add packages to the project. The first step is to set up your development environment using `pixi add <package name>`, which pulls from `conda-forge`, and develop the data science project. Then, once one is ready for distributing the project as a Python package, we use the `pixi add --pypi <package names here>` command (note the `--pypi` flag!) to ensure that they get added into the `project --> dependencies` section.
+As mentioned above, runtime dependencies,
+which must exist when someone else installs your package to be used in their project,
+are distinct from development dependencies,
+which are usually extra things needed to develop your package properly.
+My goal is that if someone `pip install`s my package,
+they will automatically have the full runtime dependency set.
+To that end, there is a two-step process that I would use
+to add packages to the project.
+The first step is to set up your development environment using `pixi add <package name>`,
+which pulls from `conda-forge`, and develop the data science project.
+Then, once one is ready for distributing the project as a Python package,
+we use the `pixi add --pypi <package names here>` command (note the `--pypi` flag!)
+to ensure that they get added into the `project --> dependencies` section.
 
 For example, if my code depends on `pandas` to be used, I would run:
 
@@ -163,7 +242,10 @@ pytest = ">=8.3.2,<8.4"
 
 ### "Activating" an environment
 
-Because there's no centralized conda environment, if you need to run commands within the pixi environment (which has the same structure as a conda environment), you run `pixi shell` rather than `conda activate <env_name>`.
+Because there's no centralized conda environment,
+if you need to run commands within the pixi environment
+(which has the same structure as a conda environment),
+you run `pixi shell` rather than `conda activate <env_name>`.
 
 Running `pixi shell` at my terminal results in something that looks like this:
 
@@ -191,13 +273,26 @@ pixi-cuda-environment on  re-initialize [✘!?] via 🐳 desktop-linux is �
 ❯
 ```
 
-Notice how _before_ running `pixi shell`, I couldn't execute Python natively in my terminal. (After all, I went cold turkey and deleted my `mambaforge` installation!) But _after_ running `pixi shell`, I can -- because the `/Users/ericmjl/github/incubator/pixi-cuda-environment/.pixi/envs/default/bin/python` path is now set on my [`PATH` environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/).
+Notice how _before_ running `pixi shell`, I couldn't execute Python natively in my terminal.
+(After all, I went cold turkey and deleted my `mambaforge` installation!)
+But _after_ running `pixi shell`, I can --
+because the `/Users/ericmjl/github/incubator/pixi-cuda-environment/.pixi/envs/default/bin/python` path
+is now set on my [`PATH` environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/).
 
 ### Adding CUDA dependencies
 
-At this point, NVIDIA hardware is the default hardware used by data scientists for GPU-accelerated computation. As such, I need to know how to use `pixi` to install GPU-enabled packages. I went to my go-to, JAX and PyTorch, to figure out how to install the GPU-enabled versions of these packages.
+At this point, NVIDIA hardware is
+the default hardware used by data scientists for GPU-accelerated computation.
+As such, I need to know how to use `pixi` to install GPU-enabled packages.
+I went to my go-to, JAX and PyTorch,
+to figure out how to install the GPU-enabled versions of these packages.
 
-To make this happen, we must distinguish between both environments: CPU-only, like on my Mac, and GPU-enabled, like on my home lab that runs Ubuntu. First, we define the common and CUDA-specific dependencies on CUDA-enabled systems. To start, my `pyproject.toml` file changes a bit on the `dependencies` section within the `pyproject.toml` file:
+To make this happen, we must distinguish between both environments:
+CPU-only, like on my Mac,
+and GPU-enabled, like on my home lab that runs Ubuntu.
+First, we define the common and CUDA-specific dependencies on CUDA-enabled systems.
+To start, my `pyproject.toml` file changes a bit on the `dependencies` section
+within the `pyproject.toml` file:
 
 ```toml
 # FILE: pyproject.toml
