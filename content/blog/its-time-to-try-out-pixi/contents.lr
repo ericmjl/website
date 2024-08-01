@@ -818,7 +818,6 @@ Summarized as a table:
 | No             | 600            |
 | Yes            | 30             |
 
-
 If you have anything downstream dependent on a Docker image being built,
 this massive reduction in iteration time is a definite big treat!
 
@@ -958,9 +957,12 @@ pixi init
 pixi add jupyter ipython ipykernel pixi-kernel numpy pandas matplotlib seaborn scikit-learn
 # Run Jupyter lab
 pixi run jupyter lab
+# Add more packages as you see fit when it's needed; pixi will keep things in sync!
+pixi add statsmodels
 ```
 
-Thanks to `pixi-kernel`, there will be a Jupyter kernel named `Pixi - Python 3 (ipykernel)`
+Thanks to `pixi-kernel`,
+there will be a Jupyter kernel named `Pixi - Python 3 (ipykernel)`
 which will contain the packages contained in your environment.
 If you commit the notebooks + pixi configuration files to source control,
 someone else can download it and reproduce the environment easily.
