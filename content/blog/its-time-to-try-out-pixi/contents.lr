@@ -728,6 +728,17 @@ With caching on GitHub actions,
 loading the `default` environment from the cache takes only 8 seconds.
 Imagine the speedup that one would have with caching provided by `pixi`!
 
+| Build Machine | Environment | Cache | Build Time (s) |
+| :-----------: | :---------: | :---: | :------------: |
+| Home Lab      | default     | No    | 23             |
+| Home Lab      | cuda        | No    | 180            |
+| GH Actions    | default     | No    | 33             |
+| GH Actions    | default     | Yes   | 8              |
+| GH Actions    | cuda        | N/A   | N/A            |
+
+> NOTE: Home lab build times and GH Actions build times without caching are similar!
+> The point of the table above was to illustrate the power of caching on CI/CD.
+
 ### Docker container build with GitHub Actions
 
 In addition to running tests on GitHub Actions,
@@ -800,6 +811,14 @@ With image layer caching, as long as the `pyproject.toml` and `pixi.lock` files
 are unchanged between commits,
 the entire GitHub Actions build time falls to ~30 seconds,
 representing an approximately 10X speed-up between iterations.
+Summarized as a table:
+
+| Cache Present? | Build Time (s) |
+| :------------: | :------------: |
+| No             | 600            |
+| Yes            | 30             |
+
+
 If you have anything downstream dependent on a Docker image being built,
 this massive reduction in iteration time is a definite big treat!
 
