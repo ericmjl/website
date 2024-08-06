@@ -218,7 +218,7 @@ Those two commands will give us the following modified `pyproject.toml` file:
 name = "pixi-cuda-environment"
 version = "0.1.0"
 description = "Add a short description here"
-authors = [{name = "Eric Ma", email = "ericmajinglong@gmail.com"}]
+authors = [{name = "Eric Ma", email = "e************@gmail.com"}]
 requires-python = ">= 3.11"
 dependencies = ["pandas>=2.2.2,<2.3"] # <-- NOTE: stuff added via `pixi add --pypi` goes here!
 
