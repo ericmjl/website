@@ -922,7 +922,7 @@ Rather, I needed to install Python and `pipx` globally with `pixi`
 and then use `pipx` (not `pixi`!) to install that tool using
 
 ```bash
-pipx global install --python $(which python) <tool name>
+pipx install --python $(which python) <tool name>
 ```
 
 In this way, I could install `pyds-cli` and `llamabot` "globally"
