@@ -128,6 +128,7 @@ I'll also note here that curating the training set often involves making judgmen
 If one decides to do a custom-trained (a.k.a. fine-tuned) model, then the usual neural network model training concerns become things to consider. These include training hyperparameters, such as the number of epochs, learning rate, etc. Thankfully, fine-tuning a model implies keeping _model hyperparameters_ constant, so we have one less concern to consider.
 
 To the best of my knowledge, no theory dictates what ought to be the best hyperparameters, so it's often down to running computational experiments to decide which ones to use empirically. Running experiments implies identifying metrics to evaluate the model, which can be tricky: a generative model's training metrics (such as final loss score) may not necessarily indicate what we care about (the performance of generated sequences). This implies that much thought is needed to develop good leading indicators of modelling strategy performance. (More on that later -- the reality of the wet lab places constraints on how many computational modelling decisions we can iterate on!)
+
 ### Outlook on these questions
 
 I don't think the answers to these questions are well-known. My only guide is to (a) train the model in the way it's intended to be used and (b) ensure that its intended use is also in line with the goals of the protein engineering campaign.
