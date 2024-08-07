@@ -155,7 +155,7 @@ This gives me the following `pyproject.toml` file:
 
 ```toml
 [project]
-name = "pixi-cuda-environment" # defaults to my repo name.
+name = "pixi-cuda-environment" # defaults to my directory name.
 version = "0.1.0"
 description = "Add a short description here"
 authors = [{name = "Eric Ma", email = "e************@gmail.com"}]
