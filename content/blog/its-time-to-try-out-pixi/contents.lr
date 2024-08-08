@@ -18,12 +18,13 @@ as a data scientist and software developer.
 In my mind, pixi is a package management multi-tool.
 `pixi` plays many roles, but here are the big, salient ones:
 
-| Role                | Analogy                                                  |
-| ------------------- | -------------------------------------------------------- |
-| Package installer   | `conda` and `pip`                                        |
-| Environment manager | `environment.yml` + `conda`, or `pyproject.toml` + `pip` |
-| Environment lock    | `conda-lock` or `pip-lock`                               |
-| Task runner         | `Makefile`                                               |
+| Role                  | Analogy                                                  |
+| --------------------- | -------------------------------------------------------- |
+| Package installer     | `conda`, `pip`                                           |
+| Global tool installer | `pipx`, `apt-get` and `homebrew`                         |
+| Environment manager   | `environment.yml` + `conda`, or `pyproject.toml` + `pip` |
+| Environment lock      | `conda-lock` or `pip-lock`                               |
+| Task runner           | `Makefile`                                               |
 
 ## My needs under two personas
 
@@ -140,15 +141,18 @@ For those who are used to `conda` idioms,
 but instead will create a `.pixi` sub-directory
 within the directory of your `pixi` configuration file
 (either `pyproject.toml` or `pixi.toml`).
+This is akin to `poetry` for Pythonistas,
+or `npm` for those coming from the NodeJS ecosystem
+and `cargo` for Rustaceans.
 In line with my desire to be able to specify sets of dependencies
 for runtime environments and development environments
 and also minimize the number of configuration files present,
-it makes sense to initialize with a `project.toml` configuration
+it makes sense to initialize with a `pyproject.toml` configuration
 rather than the default `pixi.toml` configuration file.
 This is done by executing:
 
 ```bash
-pixi init --pyproject -c conda-forge -v
+pixi init --format pyproject -c conda-forge -v
 ```
 
 This gives me the following `pyproject.toml` file:
@@ -463,8 +467,9 @@ ENTRYPOINT [ "/repo/entrypoint.sh" ]
 ```
 
 Notice how there is an official `pixi` Docker container!
-Most crucially, it _does not_ ship with anything CUDA-related;
-it is now possible to use non-NVIDIA docker containers to run GPU code
+Most crucially, it _does not_ ship with anything CUDA-related,
+so how do we get CUDA packages into it?
+Well, it is now possible to use non-NVIDIA docker containers to run GPU code
 thanks to the many efforts of `conda-forge` community members who work for NVIDIA,
 as we can specify whether we need GPU-related packages or not
 entirely within our `conda`/`pixi` environments instead.
@@ -522,7 +527,9 @@ In [3]:
 ```
 
 I was indeed able to run the container with GPU acceleration!
-I had to wrestle with installing the NVIDIA docker container toolkit on my home lab,
+I had to wrestle with installing
+the [NVIDIA docker container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+on my home lab,
 which was a one-time installation to work through,
 but that's tangential to exploring `pixi` + Docker.
 At this point, I'm pretty sure that `pixi` is a no-brainer to have:
@@ -971,7 +978,7 @@ that other person should be able to reproduce your work as well!
 
 ## Acknowledgments
 
-I'd like to thank Sean Law for reviewing this content.
+I'd like to thank Sean Law and Reuben Arts for reviewing this content.
 
 ---
 pub_date: 2024-08-16
