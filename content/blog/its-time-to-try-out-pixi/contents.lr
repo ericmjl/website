@@ -182,7 +182,43 @@ pixi-cuda-environment = { path = ".", editable = true }
 
 What's important to note here is that `[project] -> dependencies`
 lists the Python project's runtime dependencies,
-which will be respected when `pixi` creates or updates the environment.
+which will be respected when `pixi` creates or updates the environment,
+as it is interpreted as being pulled from PyPI.
+In other words, the following two configurations are equivalent:
+
+```toml
+[project]
+dependencies = [
+    "docutils",
+    "BazSpam == 1.1",
+]
+
+[project.optional-dependencies]
+PDF = ["ReportLab>=1.2", "RXP"]
+```
+
+and
+
+```toml
+[tool.pixi.pypi-dependencies]
+docutils = "*"
+BazSpam = "== 1.1"
+
+[tool.pixi.feature.PDF.pypi-dependencies]
+ReportLab = ">=1.2"
+RXP = "*"
+```
+
+(h/t Ruben Arts, one of the core developers of `pixi`,
+who educated me on this point.)
+
+The advantage of putting runtime dependencies for distributed Python packages
+inside the `project.dependencies` section
+is that when you build the package to be distributed on PyPI,
+there's no need to double-specify the dependency chain
+within the `tool.pixi.dependencies` section,
+since `project.dependencies` is already respected by `pixi`.
+
 Apart from that, other default configuration settings within the configuration file
 should look familiar to those who have experience with `pyproject.toml` configuration.
 
