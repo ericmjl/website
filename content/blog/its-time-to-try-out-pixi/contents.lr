@@ -209,8 +209,7 @@ ReportLab = ">=1.2"
 RXP = "*"
 ```
 
-(h/t Ruben Arts, one of the core developers of `pixi`,
-who educated me on this point.)
+h/t Ruben Arts, one of the core developers of `pixi`, who educated me on this point.
 
 The advantage of putting runtime dependencies for distributed Python packages
 inside the `project.dependencies` section
@@ -307,7 +306,11 @@ python not found
 ```
 
 Notice how _before_ running `pixi shell`, I couldn't execute Python natively in my terminal.
-(After all, I went cold turkey and deleted my `mambaforge` installation!)
+After all, I went cold turkey and deleted my `mambaforge` installation!
+(There is a twist: you _can_ use `pixi` to install Python globally!
+I address this below.
+Though for the sake of simplicity for now,
+let's assume that a global Python installation doesn't exist.)
 But _after_ running `pixi shell`, I can --
 because the `/Users/ericmjl/github/incubator/pixi-cuda-environment/.pixi/envs/default/bin/python` path
 is now set on my [`PATH` environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/).
@@ -356,7 +359,7 @@ about specifying a CUDA-centric specification for my Linux machine.
 With the above modifications to my `pyproject.toml` file,
 I now have two ways to run `pixi shell`:
 
-- `pixi shell -e cuda` will start a shell environment with `cuda` enabled while
+- `pixi shell -e cuda` will start a shell environment with `cuda` enabled, while
 - `pixi shell` will start a shell environment without cuda.
 
 We can tell which environment we're in through the environment name upon activation.
@@ -510,7 +513,7 @@ thanks to the many efforts of `conda-forge` community members who work for NVIDI
 as we can specify whether we need GPU-related packages or not
 entirely within our `conda`/`pixi` environments instead.
 
-To start, I built the docker container locally on my home lab machine:
+To test-drive, I built the docker container locally on my home lab machine:
 
 ```shell
 docker build -f Dockerfile . -t pixi-cuda
@@ -602,6 +605,11 @@ else
 fi
 exec "$@"
 ```
+
+I'll note that it's become standard to build Docker containers on CI/CD runners,
+This gives us the advantage of triggering a build automatically on every commit,
+as opposed to triggering a build manually like I did on my home lab.
+This will be discussed below!
 
 ### Running software tests
 
@@ -891,7 +899,7 @@ I decided to update [`pyds-cli`](https://github.com/ericmjl/pyds-cli),
 [`llamabot`](https://github.com/ericmjl/llamabot),
 and [my personal website](https://github.com/ericmjl/website) to depend solely on `pixi`.
 This turned out to be an incredible thing to do!
-I could move from my MacBook Air to my laptop
+I could move from my MacBook Air to my home lab
 and get up and running easily using `pixi install`,
 simply by investing some time and thought into the configuration file.
 On another code repository that I wasn't the core developer of,
@@ -942,7 +950,7 @@ saying that the lock files are out of date,
 
 The syntax for specifying CUDA packages from `conda-forge`,
 is also something we need to commit to memory.
-Some patterns might look like:
+The patterns to remember look like:
 
 ```toml
 package_name = { version = "some version", build = "*cuda*" }
@@ -1014,7 +1022,7 @@ that other person should be able to reproduce your work as well!
 
 ## Acknowledgments
 
-I'd like to thank Sean Law and Ruben Arts for reviewing this content,
+I'd like to thank Sean Law, Rahul Dave, and Ruben Arts for reviewing this content,
 as well as Juan Orduz for battle-testing the blog post
 in support of his own project's migration.
 
