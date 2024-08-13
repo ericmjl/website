@@ -327,8 +327,7 @@ To make this happen, we must distinguish between both environments:
 CPU-only, like on my Mac,
 and GPU-enabled, like on my home lab that runs Ubuntu.
 First, we define the common and CUDA-specific dependencies on CUDA-enabled systems.
-To start, my `pyproject.toml` file changes a bit on the `dependencies` section
-within the `pyproject.toml` file:
+To start, my `pyproject.toml` file changes a bit on the `dependencies` section:
 
 ```toml
 # FILE: pyproject.toml
