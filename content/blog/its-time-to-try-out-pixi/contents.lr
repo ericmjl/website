@@ -351,6 +351,14 @@ jaxlib = { version = "*", build = "cuda12" }
 cuda = ["cuda"] # maps my "cuda" environment to the "cuda" feature
 ```
 
+For simplicity in explanation, and to show how conda package dependencies are solved,
+I've opted to list `jax` and `pytorch` under the `tool.pixi.dependencies` section
+rather than under `project.dependencies`.
+I am also using a floating version for simplicity's sake.
+If you're curious what happens,
+I'd encourage you to try listing `jax` or `pytorch` under `project.dependencies` instead
+and see what happens to the resolved environments!
+
 Here, I used `pixi`'s `feature` definitions.
 This concept comes from the Rust world
 if I remember correctly my conversation with the Prefix devs
