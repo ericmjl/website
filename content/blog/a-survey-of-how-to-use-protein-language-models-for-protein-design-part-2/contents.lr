@@ -60,6 +60,13 @@ Examples of models that were trained this way include:
 - [CARP](https://github.com/microsoft/protein-sequence-models), by Microsoft Research, and
 - [ESM 1 and 2](https://github.com/facebookresearch/esm), by Meta AI, and now Evolutionary Scale ([ESM3](https://github.com/evolutionaryscale/esm))
 
+To use the model for generating new sequences, one starts out by masking out a fraction of positions and calculating the probability of an amino acid at each masked position. Then, one has a choice:
+
+- **Independent Sampling:** Either sample all masked positions at one shot, or
+- **Iterative Decoding:** Iteratively sample a subset of masked positions, recalculate the positional probabilities, and repeat sampling until all positions are sampled.
+
+Independent sampling assumes that the amino acid probabilities per position are independent of one another, while the iterative decoding allows for conditional dependence on previously sampled positions. For the technically-minded, the second is akin to an MCMC sample across all potential position-wise conditional dependencies, and in spirit looks similar to the next method we will discuss.
+
 ### Autoregressive Training
 
 Autoregressive training is another way of training a protein language model. Here, the model is trained with a "prompt", which, depending on the model goal, can be different. One example might be setting up the training data set by prompting with a natural language description of the protein and getting back a generated protein sequence, as seen below:
