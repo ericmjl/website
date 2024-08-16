@@ -1,0 +1,163 @@
+title: A survey of how to use protein language models for protein design: Part 2
+---
+author: Eric J. Ma
+---
+body:
+
+**This is part 2 of my series on protein language models.
+If you're looking for part 1,
+please find it [here](https://ericmjl.github.io/blog/2024/7/26/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-1/).**
+
+## How exactly are protein language models trained?
+
+If you're familiar with how natural language models are trained, then this should come as no surprise to you: protein language models are trained in exactly the same way! There are generally two ways to train a protein language model: **masked language modelling** and **autoregressive training**. I will provide a brief overview of these training methods.
+
+### Masked Language Modeling
+
+Masked language modelling training can be thought of like this:
+
+1. taking a protein sequence
+2. mask out a fraction of the positions - we call this the **masked sequence**
+3. pass the masked sequence into the masked language model and have it predict what amino acid letter should have been at the masked position, given the rest of the un-masked letters
+4. score the performance by measuring how wrong the model was
+
+That’s it!
+
+To prepare the training data, we would using Python code that looks like this:
+
+```python
+import random
+
+def mask_amino_acid_sequence(sequence, fraction):
+    if not (0 <= fraction <= 1):
+        raise ValueError("Fraction must be between 0 and 1.")
+
+    sequence_list = list(sequence)
+    total_length = len(sequence_list)
+    num_to_mask = int(total_length * fraction)
+    indices_to_mask = random.sample(range(total_length), num_to_mask)
+
+    for index in indices_to_mask:
+        sequence_list[index] = '-'
+
+    return ''.join(sequence_list)
+```
+
+This thus produces training set sequences that look like this (this example has 15% of sequences randomly masked):
+
+```json
+{
+	"masked_sequence": "MD-DIAA-VV-NGSGMCKAG-AGDDAP-AVFP-IVGRPRHQGVMV-MGQKDSYVGDEAQSKR-ILTLKYP-EH-IVTNWDD-EKIWHHTF--ELRVA-E--PVLLTEAPL--KAN-EKMT-IMFETFNTPAMYVAIQ-VLSL--SGRTT-IVMDS--GVTHTVPIYEGYALPHAILRL-LAGRDLT-YL-KILTE-GYSFTTTAEREIVR--KE-L-YVALDFEQE-ATAASSSSLEKSY-LP-GQVI-IGNE-FRCPEAL-QPSF-GME-CGIHETTFN-IMK-DV-I-KDLYANTV-SGGTTMYPGIADRMQ-E-TALAPSTM-IKIIAP-ERKYS-WIG-SIL-SLSTFQQMWI-KQEYDESGPSIV-RKCF",
+	"original_sequence": "MDDDIAALVVDNGSGMCKAGFAGDDAPRAVFPSIVGRPRHQGVMVGMGQKDSYVGDEAQSKRGILTLKYPIEHGIVTNWDDMEKIWHHTFYNELRVAPEEHPVLLTEAPLNPKANREKMTQIMFETFNTPAMYVAIQAVLSLYASGRTTGIVMDSGDGVTHTVPIYEGYALPHAILRLDLAGRDLTDYLMKILTERGYSFTTTAEREIVRDIKEKLCYVALDFEQEMATAASSSSLEKSYELPDGQVITIGNERFRCPEALFQPSFLGMESCGIHETTFNSIMKCDVDIRKDLYANTVLSGGTTMYPGIADRMQKEITALAPSTMKIKIIAPPERKYSVWIGGSILASLSTFQQMWISKQEYDESGPSIVHRKCF"
+},
+...
+```
+
+And so the model is trained, over thousands to millions of examples, with the dataset designed by a data scientist, to reconstruct the original sequence from the masked sequence.
+
+Examples of models that were trained this way include:
+
+- [CARP](https://github.com/microsoft/protein-sequence-models), by Microsoft Research, and
+- [ESM 1 and 2](https://github.com/facebookresearch/esm), by Meta AI, and now Evolutionary Scale ([ESM3](https://github.com/evolutionaryscale/esm))
+
+To use the model for generating new sequences, one starts out by masking out a fraction of positions and calculating the probability of an amino acid at each masked position. Then, one has a choice:
+
+- **Independent Sampling:** Either sample all masked positions at one shot, or
+- **Iterative Decoding:** Iteratively sample a subset of masked positions, recalculate the positional probabilities, and repeat sampling until all positions are sampled.
+
+Independent sampling assumes that the amino acid probabilities per position are independent of one another, while the iterative decoding allows for conditional dependence on previously sampled positions. For the technically-minded, the second is akin to an MCMC sample across all potential position-wise conditional dependencies, and in spirit looks similar to the next method we will discuss.
+
+### Autoregressive Training
+
+Autoregressive training is another way of training a protein language model. Here, the model is trained with a "prompt", which, depending on the model goal, can be different. One example might be setting up the training data set by prompting with a natural language description of the protein and getting back a generated protein sequence, as seen below:
+
+```json
+{
+	"prompt": "This protein forms building blocks of intracellular cytoskeleton.",
+	"generated": "MDDDIAALVVDNGSGMCKAGF...*"
+}
+```
+
+But what I have seen more commonly done is prompting with the first N amino acids of a sequence and asking the model to generate the rest of the sequence:
+
+```json
+{
+	"prompt": "MDDDIAALVVDNGSGMCKAGF",
+	"generated": "AGDDAPRAVFPSIVGRPRHQGVMVGMGQKDSYVGDEAQSKRGILTLKYPIEHGIVTNWDDMEKIWHHTFYNELRVAPEEHPVLLTEAPLNPKANREKMTQIMFETFNTPAMYVAIQAVLSLYASGRTTGIVMDSGDGVTHTVPIYEGYALPHAILRLDLAGRDLTDYLMKILTERGYSFTTTAEREIVRDIKEKLCYVALDFEQEMATAASSSSLEKSYELPDGQVITIGNERFRCPEALFQPSFLGMESCGIHETTFNSIMKCDVDIRKDLYANTVLSGGTTMYPGIADRMQKEITALAPSTMKIKIIAPPERKYSVWIGGSILASLSTFQQMWISKQEYDESGPSIVHRKCF*"
+}
+```
+
+Examples of such protein language models include:
+
+- [ProGen](https://github.com/salesforce/progen) by Salesforce AI, which was [used by Profluent to design OpenCRISPR1](https://www.biorxiv.org/content/10.1101/2024.04.22.590591v1)
+- [ProteinMPNN](https://github.com/dauparas/ProteinMPNN) by Baker Lab (UW)
+
+## Wait, are the training paradigms really that simple?
+
+Good instincts! I've made some simplifications above to introduce the training paradigm, but that means I've masked out (pun intended!) some of the complexities in training these models. Here are a few considerations that one needs to think about when training these models and designing their training data.
+
+### Decision 1: Which modelling paradigm?
+
+The first is to choose which model family to use. As you probably can tell, the masked language modelling paradigm fits naturally with sampling point mutations across the sequence. On the other hand, autoregressive generation fits quite naturally with a *de novo* design paradigm, where one prompts with the N-terminus of a protein and ask the model to generate the rest of the protein.
+
+With the right training modifications, it is possible have an autoregressive model generate sequences in the C-to-N direction (rather than N-to-C); this entails training the model with sequences reversed. It is also possible to train a masked language model to do larger-scale edits, such as by masking 80-90% of a sequence randomly and training the model to reconstruct them.
+
+### Decision 2: What fraction to mask/prompt?
+
+If doing masked language modelling, one must ask the question: how much of a sequence should we mask? Do we follow convention and only mask 10-30% of a sequence? Or do we go more aggressively and mask a large fraction of the sequence? Is there a threshold at which masking too much becomes infeasible?
+
+Or if we are doing autoregressive training, how much prompting do we do? Do we prompt it with only 10 amino acids, or do we prompt it with 50? Keep in mind that even though autoregressive generation is stochastic after the prompt, the prompt remains constant. Is this a desirable property? Or will this cause issues with the diversity of sequences needed?
+
+Another question for autoregressive generation: when a model is used to autoregressively generate sequences, it needs to know when to stop. Most commonly, this is done by asking the model to predict when it should sample a stop character (which would likely be the `*` character, if we adopt standard protein bioinformatics convention), but the model developer can also choose to set lower-bound and upper-bound limits for the protein sequence length. Essentially, the for-loop for generation could look something like this (for upper-bound limits):
+
+```python
+def generate(model, prompt: str, max_sequence_length: int):
+    sequence = ""
+    sequence += prompt
+    for i in range(max_sequence_length):
+        new_char = model(sequence)
+        sequence += new_char
+        if new_char == "*":
+            break
+    return sequence
+```
+
+### Decision 3: Do we need to curate our own training set (to train our own model)?
+
+Profluent spent a lot of effort curating an expanded CRISPR-Cas9 training set for its language models, while the Protein Informatics Group at Oxford (led by Charlotte Dean) did a similar thing for the Observed Antibody Space (with its openly released AbLang and AbLang2 models). One question can be asked: is it worth our time to generate a training set for our own protein?
+
+I think the answer depends both on the goals of the protein engineering campaign and the known sequence diveristy of the protein to be engineered. For example, if a protein is either (a) known to be present across the tree of life (i.e. it has highly evolutionarily conserved homologues) or (b) has undergone known gene duplication with sequence drift (i.e. it has known paralogues), then a protein family-specific model can be a useful thing to do, especially if one can curate on the order of thousands to millions of diverse sequences. On the other hand, if there is little known diversity (even after trying BLAST and HMMer searches of sequence databases), it may be more prudent to sample directly from the language model itself.
+
+I'll also note here that curating the training set often involves making judgment calls that are challenging to revisit later. Examples include deciding what e-value to use as a cutoff when doing a BLAST search or deciding on a likelihood threshold when using HMMer. The effect of these decisions on the performance of generated protein sequences is almost impossible to divine without doing multiple rounds of laboratory experiments, and this might not even be the highest-value thing to worry about. As such, these are often left as judgment calls that are documented but not necessarily justified.
+
+### Decision 4: Fine-tuning hyperparameters
+
+If one decides to do a custom-trained (a.k.a. fine-tuned) model, then the usual neural network model training concerns become things to consider. These include training hyperparameters, such as the number of epochs, learning rate, etc. Thankfully, fine-tuning a model implies keeping _model hyperparameters_ constant, so we have one less concern to consider.
+
+To the best of my knowledge, no theory dictates what ought to be the best hyperparameters, so it's often down to running computational experiments to decide which ones to use empirically. Running experiments implies identifying metrics to evaluate the model, which can be tricky: a generative model's training metrics (such as final loss score) may not necessarily indicate what we care about (the performance of generated sequences). This implies that much thought is needed to develop good leading indicators of modelling strategy performance. (More on that later -- the reality of the wet lab places constraints on how many computational modelling decisions we can iterate on!)
+
+### Outlook on these questions
+
+I don't think the answers to these questions are well-known. My only guide is to (a) train the model in the way it's intended to be used and (b) ensure that its intended use is also in line with the goals of the protein engineering campaign.
+
+Up next is [part 3](https://ericmjl.github.io/blog/2024/8/9/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-3/) of this series, in which we discuss how we can evaluate generated sequences from protein language models, and how to work with wet lab teams.
+---
+pub_date: 2024-08-02
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In part 2 of my three-part series on PLMs in protein engineering, I do a deep dive into the training methods of protein language models, specifically focusing on masked language modeling and autoregressive training. I explain how these models are trained, highlighting the complexities and considerations involved in training, such as model choice, masking fraction, and the need for curated training sets. With these insights, I aim to shed light on the intricate process of preparing protein language models for protein design. Curious about how these models could revolutionize protein engineering?
+
+
+---
+tags:
+
+protein modeling
+machine learning
+bioinformatics
+data science
+protein engineering
+autoregressive training
+masked language modeling
