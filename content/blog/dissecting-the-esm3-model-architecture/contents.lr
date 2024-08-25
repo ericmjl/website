@@ -98,13 +98,14 @@ import numpy as np
 
 dim_size = 3
 
-# Create embedding for sequence 1
+# Create embedding for modality 1
 rng = np.random.default_rng(seed=44)
 alphabet1 = list("ABCDE*")
 trainable_embeddings1 = rng.normal(size=(len(alphabet1), dim_size))
 tokenization1 = [alphabet1.index(letter) for letter in "EECADEB"]
 sequence_embedding1 = np.vstack([trainable_embeddings1[i] for i in tokenization1]) # shape: (len(sequence), dim_size)
 
+# Create embedding for modality 2
 rng2 = np.random.default_rng(seed=42)
 alphabet2 = list("12345*")
 trainable_embeddings2 = rng2.normal(size=(len(alphabet2), dim_size))
@@ -129,23 +130,24 @@ Let's view what happens when we visualize all four cases (modality 2 not missing
 
 ```python
 fig = plt.figure(figsize=(10, 10))
-ax_no_missing = fig.add_subplot(221, projection="3d")
 
+# Plot embeddings when no modality is missing
+ax_no_missing = fig.add_subplot(221, projection="3d")
 ax_no_missing.plot(sequence_embedding1[:, 0], sequence_embedding1[:, 1], sequence_embedding1[:, 2], marker="o", label="Mod. 1", ls="--", color="black")
 ax_no_missing.plot(trainable_embeddings2[:, 0], trainable_embeddings2[:, 1], trainable_embeddings2[:, 2], marker="o", label="Mod. 2", ls="--", color="gray")
 ax_no_missing.plot(summed_embedding[:, 0], summed_embedding[:, 1], summed_embedding[:, 2], marker="o", label="Sum. Embed.")
 ax_no_missing.legend()
 ax_no_missing.set_title("All Modalities Present")
 
+# Plot embeddings when modality 2 is missing and is represented by a vector of ones.
 ax_missing_ones = fig.add_subplot(222, projection="3d")
-
 ax_missing_ones.plot(sequence_embedding1[:, 0], sequence_embedding1[:, 1], sequence_embedding1[:, 2], marker="o", label="Mod. 1", ls="--", color="black")
 ax_missing_ones.plot(sequence_embedding2_ones[:, 0], sequence_embedding2_ones[:, 1], sequence_embedding2_ones[:, 2], marker="o", label="Mod. 2 (ones)", ls="--", color="gray")
 ax_missing_ones.plot(summed_embedding_ones[:, 0], summed_embedding_ones[:, 1], summed_embedding_ones[:, 2], marker="o", label="Sum. Embed.")
 ax_missing_ones.legend()
 ax_missing_ones.set_title("Mod. 2 Pad = 1.0")
 
-
+# Plot embeddings when modality 2 is missing and represented with a vector of zeros.
 ax_missing_zero = fig.add_subplot(223, projection="3d")
 ax_missing_zero.plot(sequence_embedding1[:, 0], sequence_embedding1[:, 1], sequence_embedding1[:, 2], marker="o", label="Mod. 1", ls="--", color="black")
 ax_missing_zero.plot(sequence_embedding2_zeros[:, 0], sequence_embedding2_zeros[:, 1], sequence_embedding2_zeros[:, 2], marker="o", label="Mod. 2 (zeros)", ls="--", color="gray")
@@ -153,7 +155,7 @@ ax_missing_zero.plot(summed_embedding_zeros[:, 0], summed_embedding_zeros[:, 1],
 ax_missing_zero.legend()
 ax_missing_zero.set_title("Mod. 2 Pad = 0.0")
 
-
+# Plot embeddings when modality 2 is missing and represented with trainable embeddings.
 ax_missing_trainable = fig.add_subplot(224, projection="3d")
 ax_missing_trainable.plot(sequence_embedding1[:, 0], sequence_embedding1[:, 1], sequence_embedding1[:, 2], marker="o", label="Mod. 1", ls="--", color="black")
 ax_missing_trainable.plot(sequence_embedding2_missing[:, 0], sequence_embedding2_missing[:, 1], sequence_embedding2_missing[:, 2], marker="o", label="Mod. 2 (trained)", ls="--", color="gray")
@@ -173,6 +175,7 @@ for ax in fig.axes:
     yaxes_vals.extend(y_vals)
     zaxes_vals.extend(z_vals)
 
+# Set all of the x/y/z labels.
 for ax in fig.axes:
     ax.set_xlabel("Dim 1")
     ax.set_ylabel("Dim 2")
