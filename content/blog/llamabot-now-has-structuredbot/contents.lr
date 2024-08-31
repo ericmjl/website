@@ -1,0 +1,215 @@
+title: LlamaBot now has StructuredBot!
+---
+author: Eric J. Ma
+---
+body:
+
+I've been hacking on LlamaBot on the side since SciPy, and I wanted to share some of the updates that have been coming. This will be the topic of the coming few blog posts.
+
+The first update I wanted to discuss is LlamaBot's ability to provide structured outputs using `StructuredBot`. [Elliot Salisbury](https://www.linkedin.com/in/elliot-salisbury/?originalSubdomain=ca) made this contribution and provided the first implementation during SciPy 2024. Underneath the hood, it relies on the JSON mode of LLMs (routed by LiteLLM), and like Instructor, it requires the passing in of a Pydantic class.
+
+Once Elliot’s PR was merged, I had an easy and reliable way to start with structured generation. Not needing to do string parsing of  LLM outputs was a huge mental burden lifted off my shoulders. Being able to use any API via LiteLLM also allowed me to test the capabilities of a variety of LLMs, including but not limited to Llama3.1 (via Groq), Gemma2 (via Ollama), Claude, and GPT-4o. With that came a bunch of experimentation, and with that experimentation, I saw a lot of applications in my work!
+
+## How to use StructuredBot
+
+Let's see how to use StructuredBot in an LLM-as-a-judge setting. I use this within an automated documentation checker and writer setting, which I will touch on in a later blog post.
+
+Firstly, we set up a StructuredBot called `ood_checker`, to judge whether documentation is out-of-date. It accepts a Pydantic class that has just one field:
+
+```python
+class DocumentationOutOfDate(BaseModel):
+    """Status indicating whether a documentation is out of date."""
+
+    is_out_of_date: bool = Field(
+        ..., description="Whether the documentation is out of date."
+    )
+```
+
+One thing to note here is that the description of each field is provided to the LLM as part of its intended context, so the LLM is supposed to be "aware" of your intent for the field. Naturally, the more granular, the better!
+
+I then set up a StructuredBot with its system prompt to check whether the docs are outdated. The prompt looks like this:
+
+```python
+@prompt
+def ood_checker_sysprompt() -> str:
+    """You are an expert in documentation management.
+    You will be provided information about a written documentation file,
+    what the documentation is intended to convey,
+    a list of source files that are related to the documentation,
+    and their contents.
+    """
+```
+
+And then the bot is defined as such:
+
+```python
+ood_checker = StructuredBot(
+    system_prompt=ood_checker_sysprompt(), pydantic_model=DocumentationOutOfDate
+)
+```
+
+Finally, I have a function that returns the user prompt formatted correctly:
+
+```python
+@prompt
+def documentation_information(source_file: MarkdownSourceFile) -> str:
+    """Here, I will provide you with contextual information to do your work.
+
+    ## Referenced source files
+
+    These are the source files to reference:
+
+    {% for filename, content in source_file.linked_files.items() %}
+    [[ {{ filename }} BEGINS ]]
+
+    {{ content }}
+    [[ {{ filename }} ENDS ]]
+    {% endfor %}
+
+    ## Documentation source file
+
+    Here is the documentation in its current state, {{ source_file.file_path }}:
+
+    [[ CURRENT DOCUMENTATION BEGINS ]]
+    {% if source_file.post.content %}
+    {{ source_file.post.content | safe }}
+    {% else %}
+    <The documentation is empty.>
+    {% endif %}
+    [[ CURRENT DOCUMENTATION ENDS ]]
+
+    ## Intents about the documentation
+
+    Here is the intent about the documentation:
+
+    [[ INTENTS BEGIN ]]
+    {% for intent in source_file.post.get("intents", []) %}- {{ intent }}{% endfor %}
+    [[ INTENTS END ]]
+    """
+```
+
+Once these components are in place, keeping documentation up-to-date becomes a matter of writing a Python program:
+
+```python
+@app.command()
+def write(file_path: Path, from_scratch: bool = False):
+    """Write the documentation based on the given source file.
+
+    The Markdown file should have frontmatter that looks like this:
+
+    ```markdown
+     ---
+    intents:
+    - Point 1 that the documentation should cover.
+    - Point 2 that the documentation should cover.
+    - ...
+    linked_files:
+    - path/to/relevant_file1.py
+    - path/to/relevant_file2.toml
+    - ...
+     ---
+    ```
+
+    :param file_path: Path to the Markdown source file.
+    :param from_scratch: Whether to start with a blank documentation.
+    """
+    src_file = MarkdownSourceFile(file_path)
+
+    if from_scratch:
+        src_file.post.content = ""
+
+    docwriter = StructuredBot(
+        system_prompt=docwriter_sysprompt(),
+        pydantic_model=DocumentationContent,
+        model_name="gpt-4o",
+    )
+    ood_checker = StructuredBot(
+        system_prompt=ood_checker_sysprompt(), pydantic_model=DocumentationOutOfDate
+    )
+    result: DocumentationOutOfDate = ood_checker(documentation_information(src_file))
+
+    if not src_file.post.content or result.is_out_of_date:
+        response: DocumentationContent = docwriter(
+            documentation_information(src_file) + "\nNow please write the docs."
+        )
+        src_file.post.content = response.content
+    src_file.save()
+```
+
+I wrapped this all into a LlamaBot CLI tool, which you can run on your own Markdown documentation:
+
+```bash
+pip install -U llamabot
+llamabot docs write /path/to/my/documentation.md
+```
+
+You can see the result on [Llamabot's docwriter documentation](https://github.com/ericmjl/llamabot/blob/main/docs/cli/docs.md), which was generated using this exact program!
+## Structured generation brings reliability
+
+As the [.txt folks](https://dottxt.co/) (the creators of [Outlines](https://outlines-dev.github.io/outlines/)) have espoused, structured generation provides a much more reliable text generation method than relying on an LLM to conform to a schema in free-form text generation mode. In the case of StructuredBot, we take it one step further: we return a Pydantic model, which guarantees the Python types of the attributes stored underneath the hood. The `result.is_out_of_date` attribute above is boolean, thus allowing me to check its truthiness with a simple `if ... or result.is_out_of_date`. This level of reliability makes it much easier to write automation that involves LLMs!
+
+## Agentic workflows?
+
+Agentic workflows are the hot rage, but they have issues. While I like the premise for decision-making automation, there are compounding error probabilities when one relies solely on LLM-based agents to coordinate work, one that makes it infeasible to construct extensive chains of LLM agents to do things reliably. In my testing of using `ood_checker` to evaluate a decision point (i.e. *"Is the documentation out of date?"*), there is always a risk that the `ood_checker` will be incorrect and not behave as intended. This would lead to the documentation writer either (a) rewriting documentation when it was not supposed to or (b) ignoring changes in source code and failing to fix them.
+
+A more reliable, productive path forward is to blend LLM-based flow control with deterministic flow control, effectively fusing agent-centric program design with traditional programming. The documentation writer is a minimally complex example of this idea. The example above shows that even though we have a bot to make a judgment call (agent-centric design), a user can override the LLM's judgment through a flag (traditional programming).
+
+## LLM as a Data Engineer
+
+StructuredBot can be used in other use cases. I may, in the future, provide an example of some of these.
+
+The biggest I can think of is a structured information extractor from documents. If we have a large collection of plain text documents for which we want to extract standardized and structured information, we can create a Pydantic model that captures the fields that we are interested in:
+
+```python
+class MyOrganizedData(BaseModel):
+    field1: int = Field(..., description="...")
+    field2: bool = Field(..., description="Whether or not...")
+    field3: str = Field(..., description="Name of...")
+    field4: ...
+```
+
+Then, we create a program that loops over the documents and feeds each of the docs to a StructuredBot to extract the information:
+
+```python
+extractor = StructuredBot(system_prompt="...", pydantic_model=MyOrganizedData)
+
+responses = []
+for document in documents:
+    response = extractor(document)
+    responses.append(response)
+```
+
+And finally, we can turn it into a pandas DataFrame:
+
+```python
+df = pd.DataFrame([response.model_dump() for response in responses])
+```
+
+This is precisely the kind of example that Elliot provided in [the LlamaBot examples gallery](https://github.com/ericmjl/llamabot/blob/main/docs/examples/structuredbot.ipynb) as well.
+## Please try it out!
+
+I'd love to get feedback on how the StructuredBot performs for you! Please do give it a try by installing llamabot:
+
+```bash
+pip install -U llamabot
+```
+
+---
+pub_date: 2024-08-31
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I discuss the latest updates to LlamaBot, particularly focusing on the StructuredBot feature introduced by Elliot Salisbury. StructuredBot leverages JSON mode of LLMs for structured outputs, significantly simplifying the process of generating reliable and type-safe outputs without manual string parsing. I illustrate its application in an automated documentation checker and writer, enhancing productivity by integrating LLM-based and traditional programming methods. Curious about how StructuredBot can streamline your documentation process?
+---
+tags:
+
+structured generation
+llamabot
+python
+documentation
+llm
+pydantic
+software development
+testing
+structuredbot
+technology
