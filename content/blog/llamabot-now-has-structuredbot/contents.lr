@@ -97,8 +97,7 @@ def write(file_path: Path, from_scratch: bool = False):
 
     The Markdown file should have frontmatter that looks like this:
 
-    ```markdown
-     ---
+    ```yaml
     intents:
     - Point 1 that the documentation should cover.
     - Point 2 that the documentation should cover.
@@ -107,7 +106,6 @@ def write(file_path: Path, from_scratch: bool = False):
     - path/to/relevant_file1.py
     - path/to/relevant_file2.toml
     - ...
-     ---
     ```
 
     :param file_path: Path to the Markdown source file.
