@@ -135,7 +135,7 @@ def write(file_path: Path, from_scratch: bool = False):
 I wrapped this all into a LlamaBot CLI tool, which you can run on your own Markdown documentation:
 
 ```bash
-pip install -U llamabot
+pipx install -U llamabot # or `pip install`!
 llamabot docs write /path/to/my/documentation.md
 ```
 
