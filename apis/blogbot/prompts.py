@@ -21,10 +21,6 @@ def compose_linkedin_post(text, url):
     Ensure that you insert the URL of the blog post in an appropriate place,
     using Markdown syntax to link to the post.
     Also ensure that it is written in first-person, humble, and inviting tone.
-
-    Return in the following json format:
-
-        {"response_text": <linkedin text goes here>}
     """
 
 
@@ -43,10 +39,6 @@ def compose_patreon_post(text, url):
     which reads as "Please find the preview [here](url goes here)
     before it goes live on my blog."
     Sign off with "Cheers,\nEric".
-
-    Return in the following json format:
-
-        {"response_text": <patreon text goes here>}
     """
 
 
@@ -68,10 +60,6 @@ def compose_twitter_post(text, url):
     Ensure that you insert the URL of the blog post in an appropriate place,
     using Markdown syntax to link to the post.
     Also ensure that it is written in first-person, humble, and inviting tone.
-
-    Return in the following json format:
-
-        {"response_text": <twitter text goes here>}
     """
     return prompt
 
@@ -94,11 +82,6 @@ def compose_substack_post(text, url):
     Ensure that you insert the URL of the blog post in an appropriate place,
     using Markdown syntax to link to the post.
     Also ensure that it is written in first-person, humble, and inviting tone.
-
-    Return in the following json format:
-
-        {"response_text": <substack text goes here>}
-
     """
 
 
@@ -113,10 +96,6 @@ def compose_tags(text):
     Here is the blog post:
 
         {{ text }}
-
-    Return in the following json format:
-
-        {"response_text": [tag1, tag2, tag3, tag4, tag5...]}
     """
 
 
@@ -133,11 +112,6 @@ def compose_summary(text, url):
     Please write in first person.
     Please start the summary with, "In this blog post".
     Please end the summary with a question that entices the reader to read on.
-
-    Return in the following json format:
-
-        {"response_text": <summary text goes here>}
-
     """
 
 
