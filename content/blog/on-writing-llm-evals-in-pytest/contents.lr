@@ -1,0 +1,162 @@
+title: On writing LLM evals in pytest
+---
+author: Eric J. Ma
+---
+body:
+
+This long weekend, I tried my hand at writing evaluations for my LLM doc writing system, not unlike what we might do with software tests, so that I could move beyond the "vibe test" in my work. My experiment this time round was to see whether we could write an LLM evaluation in pytest without relying on any other frameworks but pytest. Turns out this is doable!
+
+Evals (short for evaluations) check that an LLM system is doing what we want. In the vast majority of applications I've seen, human checks are the most important, but, with a little critical thought, other validity checks on an LLM system can be designed too!
+
+Continuing what I was building [in my last post](https://ericmjl.github.io/blog/2024/8/31/llamabot-now-has-structuredbot/), I wanted to check that my prompts for doc checking "worked" across different LLMs. If I were to do this manually, it would be challenging to stay disciplined, especially since I experienced [criteria drift](https://twitter.com/sh_reya/status/1782425962246033436) while observing the behaviour of my doc writing system. Using automated software testing systems gives me a more structured and disciplined approach to writing LLM evals.
+
+## Implementing evals in pytest
+
+Here's the reveal: one of the tests I wrote illustrates the pattern for writing LLM evals as Python software tests.
+
+```python
+@pytest.mark.llm_evals
+@pytest.mark.parametrize("original_docs,new_source_code,system_prompt,pydantic_model,expected_status", [(tuple(case.values())) for case in test_cases])
+@pytest.mark.parametrize("model_name", [
+    "ollama_chat/gemma2:2b",  # passes all tests
+    # "gpt-4-turbo", # passes all tests, but costs $$ to run
+    # ollama_chat/phi3", # garbage model, doesn't pass any tests.
+    # "gpt-4o-mini", # passes all tests, but costs $$ to run
+])
+def test_out_of_date_when_source_changes(
+    original_docs: str, new_source_code: str, system_prompt: str, pydantic_model, model_name: str, expected_status: bool,
+):
+    """Test out-of-date checker when source changes.
+
+    This test assumes that any model specified by `model_name`
+    will correctly identify the out-of-date status of documentation.
+    """
+    source_file = MarkdownSourceFile(
+        here() / "tests" / "cli" / "assets" / "next_prime" / "docs.md"
+    )
+    source_file.post.content = original_docs
+    source_file.linked_files["tests/cli/assets/next_prime/source.py"] = new_source_code
+
+    doc_issue_checker = StructuredBot(
+        system_prompt=system_prompt, pydantic_model=pydantic_model, model_name=model_name, stream_target="none"
+    )
+    doc_issue = doc_issue_checker(documentation_information(source_file))
+    assert doc_issue.status == expected_status
+    if doc_issue.status:
+        assert doc_issue.reasons
+```
+
+To arrive at this test, I went through a winding and twisted process -- driven mainly by a need for more clarity about what I wanted to test. But things became much clearer once I quieted my head and treated this task like an experiment. I sketched out the axes of variation that were all possible in this system:
+
+- The prompts in my documentation intent list,
+- The system prompt for the judge bot,
+- The prompt phrasing in `documentation_information`, which formats a prompt that effectively serves as the human message sent to the bot,
+- The LLM model used -- admittedly, the easiest to vary.
+
+Since the last bullet point was the easiest to set up, I went with it for this test. However, varying the prompts (the other three bullet points) would have allowed me to be more rigorous, even though it would have been a messier and more laborious task. (For example, I'd have to develop reasonable variations of documentation intents.)
+
+## The biggest challenge: eval criteria
+
+Thinking about the evaluation criteria was the hardest part. The goal was to evaluate whether an LLM could provide a way of judging that the documentation needed to be updated as a human would without me going into excessive text parsing detail. Intuitively, this was the right scope of work for an LLM to handle, but it could have been better. This seemed okay until I did some ad-hoc testing in a notebook with my source files... which was slow, cumbersome, and laborious. (This pain motivated me to try doing this automatically and systematically.) Eventually, I settled on three sub-criteria to test:
+
+1. Source files contain content not covered in the documentation.
+2. Documentation contains factually incorrect material that contradicts the source code.
+3. Documentation fails to cover the content as specified by the intents.
+
+Each of them would be a boolean (`True` vs. `False`) check, and we could measure the performance of an LLM by providing an example of stale documentation that a human (at least myself) would rate as stale under source code changes. For each sub-criteria, I had to provide an example of a change that should prompt the model to return a boolean `True`, and I would also ask the LLM to give reasons. Once I had this level of clarity, I could construct a plausible example for each criterion that illustrated the kind of issue an LLM should be able to catch.
+## Criteria drift isn't a bad thing, but it is real
+
+But let's first talk about criteria drift. As I mentioned above, I experienced it myself. When I first built the documentation staleness evaluator, my goal was to produce an "out-of-date" evaluator -- one that said, "Is the documentation out of date for the source code file(s) specified?" This is effectively using LLMs as a judge. I implemented this as a Pydantic model that was provided to StructuredBot:
+
+```python
+class DocumentationOutOfDate(BaseModel):
+    """Status indicating whether a documentation is out of date."""
+
+    is_out_of_date: bool = Field(
+        ..., description="Whether the documentation is out of date."
+    )
+```
+
+This is a hugely simplistic way of looking at documentation staleness.
+
+To evaluate the behaviour of the out-of-date judge, I created a synthetic example of a 'next prime number' finder using ChatGPT and then asked ChatGPT for an alternative implementation. Then, I did the following:
+
+1. Asked a docwriter bot (using `gpt-4-turbo`) to generate documentation based on the intended goals in the documentation,
+2. Swapped the source code implementation for a new one, and
+3. Asked the LLM judge (using `gpt-4-turbo` with a different prompt) to independently evaluate whether the docs were out-of-date.
+
+To my surprise, the LLM judge would return `False` most of the time! Upon deeper inspection, it was because the generated docs were written at a high level and did not reference a particular detail in the source code. I injected into the generated docs a reference to that specific detail in the source code that changed in the new implementation and fundamentally changed what I was evaluating; only then would the LLM judge get the "staleness" evaluation correct.
+
+However, what happened between me figuring out the system's behaviour led me to think more carefully about the implicit criteria in my head, which inevitably led to criteria drift, leading me to rethink the automatic documentation system.
+
+I initially thought an LLM could judge whether the docs needed to be updated (in a generic sense). But this was a vague instruction to a human, no less an LLM. (This is a general rule of thumb: if a criterion is unclear to another person, it will likely be an unclear criterion to an LLM.) Under the test I ran, the out-of-date judge should have recognized that the docs needed updating. With this realization, I set out to (a) create a more granular set of instructions and (b) determine staleness in a deterministic fashion.
+
+As mentioned above, here are the more granular criteria that I came up with:
+
+1. Source files contain content not covered in the documentation.
+2. Documentation contains factually incorrect material that contradicts the source code.
+3. Documentation fails to cover the content as specified by the intents.
+
+I implemented them as Pydantic models to be passed into a StructuredBot.
+
+```python
+class SourceContainsContentNotCoveredInDocs(ModelValidatorWrapper):
+    """Status indicating whether the source contains content not covered in the documentation."""
+    status: bool = Field(..., description="Whether the source contains content not covered in the documentation.")
+    reasons: list[str] = Field(
+        default_factory=list, description="Reasons why the source contains content not covered in the documentation."
+    )
+
+class DocsContainFatuallyIncorrectMaterial(ModelValidatorWrapper):
+    """Status indicating whether docs contain factually incorrect material that contradicts the source code."""
+    status: bool = Field(..., description="Whether the documentation contains factually incorrect material that contradicts the source code.")
+    reasons: list[str] = Field(
+        default_factory=list, description="The factually incorrect material that contradicts the source code."
+    )
+
+class DocDoesNotCoverIntendedMaterial(ModelValidatorWrapper):
+    """Status indicating whether or not the documentation does not cover the intended material."""
+    status: bool = Field(..., description="Whether the intents of the documentation are not covered by the source.")
+    reasons: list[str] = Field(
+        default_factory=list, description="Reasons why the intents of the documentation are not covered by the source."
+    )
+```
+
+## Test cases
+
+Once I had that done, I could set up test cases. These test cases involved were rather laborious to set up, but I finally settled on the following:
+
+- One set of prompts,
+- A before and after for one chunk of code (ChatGPT generated this)
+- Four models to test (`gpt-4o-mini`, `gpt-4-turbo`, `ollama_chat/gemma2:2b`, `ollama_chat/phi3`),
+- Three criteria for being out-of-date
+- LLM-generated documentation for the next prime number calculations *in which I also spiked in a particular detail* -- incrementing by two from an odd number to avoid prime checking on even numbers (it took me time to get this right!), and
+- Two test expectations:
+    - When new source code is provided, each of the out-of-date criteria is labelled as True (which is my expectation)
+    - When the *original* source code is provided as the "changed code", the out-of-date criteria is labelled as False (which is also within expectation)
+
+With that done, I executed the test as described using pytest. Within two minutes, I could see the results -- not surprisingly, the `gpt` family of models passed all tests, while `gemma` passed 5 out of 6, and `phi3` passed 3 out of 6.
+
+## Lessons learned
+
+I will admit that running the test felt a bit underwhelming. Given the amount of up-front prep work I did, I was psychologically primed for an hour-long experiment with rich information being returned on how I could improve the prompts. But I also got the information I needed. The more significant lesson here was how to set up the evaluation system - making sure it was at a granular level that made sense for the application. Setting up evals will take effort, and making sure the evals measured what I wanted them to measure is where the bulk of effort will take. This is not easily automatable!
+
+Apart from that, once we know the behaviour of an LLM version within the confines of well-defined examples, it's worth our time to encode them as part of software tests. These can serve as longer-term guardrails against model performance degradation, such as if a new model version was released under the same model name.
+---
+pub_date: 2024-09-06
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the process of writing evaluations for LLM systems using pytest, aiming to move beyond subjective assessments to more structured testing. I detail the creation of specific tests to assess if LLMs can accurately determine documentation staleness, using various models and criteria. The challenges and insights gained from setting up these evaluations reveal the complexities involved in ensuring that LLMs perform as expected. Could this method enhance the reliability of your LLM evaluations?
+---
+tags:
+
+evaluations
+pytest
+documentation
+automation
+testing
+validation
+changes
+criteria
+staleness
