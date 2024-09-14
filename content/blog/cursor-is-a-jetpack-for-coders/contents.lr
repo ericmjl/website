@@ -1,0 +1,122 @@
+title: Cursor is a jetpack for coders
+---
+author: Eric J. Ma
+---
+pub_date: 2024-09-14
+---
+twitter_handle: ericmjl
+---
+body:
+
+Last Friday (September 6th),
+I finally took the plunge and downloaded Cursor for the first time.
+I know, I know—I was late to the party.
+Looking back,
+I can't believe it took me this long to give it a try.
+But boy, am I glad I did!
+
+To put Cursor through its paces,
+I decided to build something out of curiosity:
+an app that takes a plain text description of a calendar event and spits out an ICS file ready for import into my calendar.
+I leveraged [LlamaBot's StructuredBot](https://ericmjl.github.io/llamabot/examples/structuredbot/) to translate natural language into the ICS file format.
+Now, I'll be the first to admit that CSS isn't my strong suit,
+so I turned to Claude 3.5 Sonnet (Cursor's default language model) to style it for me using Bootstrap.
+
+But I didn't stop there.
+I asked Cursor to help me implement a login page,
+email-based authentication (to avoid storing passwords),
+and user sessions to keep multiple simultaneous users from interfering with each other.
+The kicker?
+I accomplished all of this in under four hours of actual work time (not counting breaks to entertain the kids).
+
+Since that initial project, Cursor has become an integral part of my workflow.
+Take this blog post, for instance.
+I started with a rough outline and some stream-of-consciousness narration, then asked Cursor to flesh it out into a coherent article.
+I've also used it to improve LlamaBot, following a similar workflow: declare what I want, review the proposed code changes, and iterate.
+
+I even attempted to create an email version of my calendar event generator.
+While I hit a snag with timeout issues,
+I was still able to get it to return a calendar invite successfully.
+
+
+## Cursor: Game-Changer for coding productivity
+
+So, what makes Cursor stand out?
+For me, it boils down to four key features:
+
+1. The intuitive composer UI
+2. Its ability to show a diff of proposed file changes
+3. The capability to edit multiple files simultaneously
+4. Most importantly, its accuracy in inserting diffs in the right places (I estimate GitHub Copilot misses the mark about 20% of the time)
+
+But wait, there's more!
+Cursor's user interface is full of delightful surprises.
+As you interact with the AI,
+you'll notice it starts to anticipate your needs,
+surfacing contextual suggestions that can save you even more time.
+
+For instance,
+I asked Cursor to add line breaks to my blog content.
+After applying the change to the first paragraph using Command+K,
+Cursor proactively suggested extending the same formatting to the next three paragraphs.
+With a single tab press,
+the changes were instantly applied across all four paragraphs.
+It was a moment of pure magic that left me thinking,
+"Wow, this is absolutely incredible!"
+
+These intuitive features demonstrate Cursor's ability
+to not just follow instructions,
+but to understand the broader context of your work.
+It's this level of intelligent assistance
+that truly sets Cursor apart from other coding tools.
+
+Now, I want to be clear:
+I'm not being paid by Cursor to sing its praises.
+I genuinely believe it's a game-changer.
+In my experience,
+it's significantly more effective than GitHub Copilot.
+And when paired with macOS's dictation feature,
+I can breeze through tasks like writing this blog post
+with unprecedented speed and ease.
+
+## Supercharge your workflow: A summary of Cursor's usefulness
+
+Let's recap the key points that make Cursor a game-changer for coding productivity:
+
+1. Intuitive composer UI for seamless interaction
+2. Accurate diff display of proposed file changes
+3. Multi-file editing capabilities
+4. Precise code insertion (outperforming GitHub Copilot)
+5. Contextual suggestions that anticipate your needs
+6. Intelligent understanding of your work's broader context
+
+These features combine to create a powerful tool
+that not only follows instructions
+but enhances your entire coding and writing process.
+Whether you're crafting code or composing blog posts,
+Cursor acts as your intelligent assistant,
+streamlining your workflow
+and boosting your productivity to new heights.
+
+In short, Cursor has quickly become my secret weapon for coding productivity.
+It's not just an IDE — it's a jetpack for coders and writers!
+If you haven't tried it yet,
+don't make the same mistake I did by waiting.
+Give it a shot,
+and prepare to have your coding and writing productivity transformed.
+
+---
+summary: In this post, I explore how Cursor, an AI-powered IDE, transformed my coding workflow and supercharged my productivity. Learn about its standout features and why it's become my secret weapon for efficient development and writing. Are you ready to revolutionize your coding experience?
+---
+tags:
+
+coding
+productivity
+ai
+cursor
+developertools
+ide
+automation
+programming
+efficiency
+innovation
