@@ -1,0 +1,80 @@
+title: Sync GitHub secrets with your .env and gh CLI
+---
+author: Eric J. Ma
+---
+body:
+
+So I learned something new today.
+We can set GitHub secrets using a `.env` file and the `gh` CLI.
+
+This is how it's done.
+
+Suppose you have a `.env` file with the following content:
+
+```bash
+export SECRET_KEY=my-secret-key
+export DATABASE_URL=my-database-url
+```
+
+You can set these secrets using the following command:
+
+```bash
+gh secret set -f .env
+```
+
+This will set the SECRET_KEY and DATABASE_URL secrets in your GitHub repository
+_automatically_.
+
+The pre-requisite is that you have the `gh` CLI installed and you have set up your
+local git config with your GitHub user.
+
+```bash
+gh auth login
+```
+
+Additionally, your git remote should be set to your GitHub repository.
+
+```bash
+git remote -v
+```
+
+If it's not set to your GitHub repository, you can set it with the following command:
+
+```bash
+git remote set-url origin git@github.com:YOUR_USERNAME/YOUR_REPOSITORY.git
+```
+
+(Remember to change YOUR_USERNAME and YOUR_REPOSITORY to the appropriate values!)
+
+Now, instead of doing the tedious work of setting each secret manually
+using the GitHub web interface,
+you can use the `gh` CLI to set them.
+This streamlines the process
+and reduces the chance of human error.
+
+```bash
+gh secret set -f .env
+```
+
+This will set the SECRET_KEY and DATABASE_URL secrets in your GitHub repository
+_automatically_.
+---
+pub_date: 2024-09-15
+---
+twitter_handle: ericmjl
+---
+summary: Today, I learned that we can easily sync our local .env file with GitHub secrets using the GitHub CLI (gh).
+This method is much faster and less error-prone than manually entering secrets through the web interface.
+Curious to see how it works?
+---
+tags:
+
+github
+secrets
+environment-variables
+gh-cli
+automation
+devops
+productivity
+security
+til
