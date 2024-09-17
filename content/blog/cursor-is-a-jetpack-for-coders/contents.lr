@@ -114,6 +114,21 @@ don't make the same mistake I did by waiting.
 Give it a shot,
 and prepare to have your coding and writing productivity transformed.
 
+## Addendum
+
+I wanted to address some commentary I've heard about Cursor's Composer view.
+In particular, Chris Albon on Twitter has noted how Cursor + Composer
+can make large-scale mistakes across multiple files in the codebase.
+I've observed this myself several times as well,
+though I also noticed it primarily occurred in situations where my requests were vaguely worded
+and I blindly accepted the changes without review.
+Granted, reviewing large-scale changes is challenging.
+However, I still believe the Composer UI is a net positive
+if we know how to effectively guide our interactions with the underlying LLM model.
+This means scoping down our requests to be more precise
+and asking for smaller and more well-defined changes.
+This resonates with what Chris mentions as "keep[ing] them on a short lease to be useful".
+
 ---
 summary: In this post,
 I explore how Cursor,
