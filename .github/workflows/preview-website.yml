@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies and build website
         run: |
           pixi install
-          pixi run lektor build --output-path site/
+          pixi run build
 
       # Taken from: https://github.com/drivendataorg/cloudpathlib/blob/master/.github/workflows/docs-preview.yml
       - name: Deploy site preview to Netlify
