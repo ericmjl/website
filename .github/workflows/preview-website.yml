@@ -6,23 +6,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          python-version: "3.9"
+          pixi-version: v0.28.0
 
-      - name: Upgrade pip
+      - name: Install dependencies and build website
         run: |
-          # install pip=>20.1 to use "pip cache dir"
-          python3 -m pip install --upgrade pip
-
-      - name: Install dependencies
-        run: |
-          python3 -m pip install -r requirements.txt
-
-      - name: Build website
-        run: lektor build --output-path site/
+          pixi install
+          pixi run lektor build --output-path site/
 
       # Taken from: https://github.com/drivendataorg/cloudpathlib/blob/master/.github/workflows/docs-preview.yml
       - name: Deploy site preview to Netlify
