@@ -87,6 +87,9 @@ werkzeug = "<3"
 website = "lektor server --port 5959 --host 0.0.0.0"
 build = "lektor build --output-path site/"
 
+[tool.pixi.feature.blogbot.tasks]
+blogbot = "panel serve apis/blogbot/app.ipynb --allow-websocket-origin=0.0.0.0:5006"
+
 [tool.pixi.environments]
 default = ["lektor", "devtools"]
 blogbot = ["blogbot", "devtools"]

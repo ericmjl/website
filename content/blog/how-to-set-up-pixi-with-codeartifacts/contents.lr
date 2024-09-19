@@ -1,0 +1,216 @@
+title: How to set up Pixi with CodeArtifacts
+---
+author: Eric J. Ma
+---
+body:
+
+Following my endeavors test-driving Pixi,
+I encountered a critical challenge that could hamper its adoption at work:
+integrating Pixi with AWS CodeArtifact.
+At my workplace, we publish internal packages on CodeArtifact,
+and I was uncertain about how to configure Pixi to work with AWS authentication.
+To address this, I took the following steps:
+
+1. I filed an issue on the Pixi issue tracker (https://github.com/prefix-dev/pixi/issues/1783).
+2. I sought assistance from my colleagues, Anand Murthy and Albert Lam.
+3. I received guidance from Tim de Jaeger and Olivier Lacroix of the Prefix dev team.
+
+Through these collaborative efforts,
+I successfully resolved the integration challenges.
+This blog post serves as a comprehensive guide on how to achieve this integration,
+excluding any work-specific idiosyncrasies.
+
+## Pre-requisites
+
+Firstly, I'm assuming you have the ability to login to CodeArtifacts.
+You should be able to successfully login to CodeArtifacts
+using a command that might look like this:
+
+```bash
+aws codeartifact login --tool pip --domain DOMAIN --domain-owner ACCOUNT --repository CA_REPOSITORY_NAME
+```
+
+Running that command should give you:
+
+```
+Successfully configured pip to use AWS CodeArtifact repository https://DOMAIN-ACCOUNT.d.codeartifact.REGION.amazonaws.com/pypi/CA_REPOSITORY_NAME/
+Login expires in 12 hours at 2024-09-19 14:33:40+00:00
+```
+
+If this isn't true, then you can skip this blog post altogether!
+
+## Set up globally installed tools
+
+If you don't already have it, install `pipx` globally:
+
+```bash
+pixi global add pipx
+```
+
+Now, you'll have `pipx` available globally:
+
+```bash
+$ which pipx
+/home/username/.pixi/bin/pipx
+```
+
+Now, you'll need to ensure that `keyring` and `keyrings.codeartifact`
+are installed globally using `pipx`:
+
+```bash
+pipx install keyring
+pipx inject keyring keyrings.codeartifact
+```
+
+The second command injects `keyrings.codeartifact`
+into the same virtual environment that `pipx` set up for `keyring`.
+
+**Pro tip:** If you don't use `pipx inject`
+but instead try to do `pipx install keyrings.codeartifact`,
+it'll get installed into its own isolated environment separated from `keyring`,
+and that will result in `keyring` not being able to pass CodeArtifact credentials to `pip`/`uv`.
+
+Now, check the configuration for `keyring`. It should look something like this:
+
+```bash
+$ keyring diagnose
+config path: /home/username/.config/python_keyring/keyringrc.cfg
+data root: /home/username/.local/share/python_keyring
+```
+
+We'll want to edit the config:
+
+```bash
+$ nano /home/ema/.config/python_keyring/keyringrc.cfg
+```
+
+(Don't judge, I love using nano!) Now, edit `keyringrc.cfg` to have the following contents:
+
+```toml
+[codeartifact]
+token_duration = 1800
+```
+
+Note: The official `keyrings.codeartifact` [README](https://github.com/jmkeyes/keyrings.codeartifact?tab=readme-ov-file#single-section-configuration)
+specifies an example with more keys,
+but it turns out `profile_name`, `aws_access_key_id`, and `aws_secret_access_key` are all optional
+if you are logged into AWS and CodeArtifacts already, which I am assuming is true.
+
+## Pixi global configuration
+
+Now we need to set up pixi's global configuration. On UNIX-style systems, this should be:
+
+```bash
+nano ~/.pixi/config.toml
+```
+
+Make sure your configuration includes the following:
+
+```toml
+[pypi-config]
+extra-index-urls = ["https://DOMAIN-ACCOUNT.d.codeartifact.REGION.amazonaws.com/pypi/CA_REPOSITORY_NAME/"]
+keyring-provider = "subprocess"
+```
+
+**Pro tip:** Don't mis-spell anything here!
+I had `prod` mis-spelled as `prd`
+and that caused me so much confusion
+that I left this effort on the backburner for over a week
+before Anand live-troubleshooted with me.
+
+This configuration is super important on our machines,
+as it enables us to avoid needing to specify `--pypi-keyring-provider subprocess` on every `pixi` call,
+which we'll see below.
+
+Now, you should be able to pull in from your company's CodeArtifacts!
+Let's see how to verify this.
+
+## Verify correct configuration
+
+Navigate to an empty directory, and then run:
+
+```bash
+pixi init
+```
+
+This will give you a `pixi.toml` file.
+
+Now, try adding a package that can only be found on your company's CodeArtifacts:
+
+```bash
+pixi add --pypi MY_PACKAGE_NAME
+```
+
+This should successfully work.
+
+If you're familiar with `pixi`,
+you may notice that we didn't have to add `--pypi-keyring-provider subprocess`.
+This is because we configured the keyring provider globally above.
+
+## Keyrings? What's that?
+
+This was the new thing for me:
+using the Python package `keyring` and its associated extension `keyrings.codeartifact`
+to magically pull in AWS credentials from my system
+and injecting it into `pixi`'s (underneath the hood, it's `uv`'s) call to CodeArtifacts.
+Without this, `uv` will not be able to access CA.
+
+A few other minor notes.
+
+Firstly, yes, there is a `.` in the name of the package.
+I don't know why that's okay,
+because I freaked out when I saw `keyrings-codeartifact` being installed.
+Apparently in Python, package names get kebab-cased.
+
+Secondly, `keyrings.codeartifact` MUST be in the same global virtual environment
+when managed by `pipx`!
+Can't repeat this enough.
+
+## Conclusion
+
+In conclusion, setting up Pixi with CodeArtifacts involves several steps.
+
+First, you need to ensure you can successfully log in to CodeArtifacts.
+
+Then, you need to install `pipx` globally
+and ensure that `keyring` and `keyrings.codeartifact`
+are installed globally using `pipx`.
+You also need to configure `keyring` and Pixi's global configuration.
+
+Finally, you can verify the correct configuration
+by initializing Pixi in an empty directory
+and adding a package that can only be found on your company's CodeArtifacts.
+
+The, ahem, *key* to this setup is the Python package `keyring`
+and its associated extension `keyrings.codeartifact`,
+which pull in AWS credentials from your system
+and injects them into Pixi's call to CodeArtifacts.
+
+Now that I've figured out how to get `pixi` working with CodeArtifacts,
+I'm in a better position to socialize `pixi` at work!
+
+---
+pub_date: 2024-09-19
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my experience integrating Pixi with AWS CodeArtifact,
+detailing the steps needed to configure Pixi for internal package publishing at work.
+I discuss the installation of `pipx` and `keyrings.codeartifact`,
+editing `keyring` configurations,
+and setting up Pixi's global configuration.
+The guide aims to help others overcome similar integration challenges
+(obviously without revealing company-specific details).
+Curious about how these configurations can streamline your development process?
+
+
+---
+tags:
+
+pixi
+aws
+codeartifacts
+package management
+devops
+python
+configuration
