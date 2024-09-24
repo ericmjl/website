@@ -390,6 +390,8 @@ we always conduct code reviews.
 While this process may slow us down in the short term,
 typically adding a day or two of waiting for colleagues to review,
 it pays off significantly in the long run.
+(Moreover, we use AI-assisted coding to speed up our code writing anyway,
+so not much is lost!)
 We move faster overall because of the growing shared knowledge across the team.
 Code reviews are particularly crucial
 for ensuring both the correctness and maintainability of our code.
@@ -398,29 +400,36 @@ to learn coding patterns from each other and maintain high code quality.
 It's worth noting that a hallmark of an experienced programmer
 is their ability to deploy effective patterns in their codebase.
 
-### Docathons
+### Docathons and AI-assisted documentation
 
-We also prioritize documentation through regular "docathons."
+We also emphasize the habit of writing documentation through regular "docathons."
 Every quarter, we set aside two days specifically for working on documentation.
 During these events, we focus on updating documentation for our various projects.
 These docathons serve a dual purpose:
-they're not only productive work sessions but also great team-building exercises.
-We find that newcomers to the team are particularly helpful in these events,
+they are not only productive work sessions but also great team-building exercises.
+We find that newcomers to the team are particularly helpful during these events,
 as they assist in keeping our onboarding documentation up to date,
 providing fresh perspectives on what new team members need to know.
+
+In addition, we use AI to help us draft documentation.
+Modeling after [documentation tooling that I built for LlamaBot](https://github.com/ericmjl/llamabot/blob/main/docs/cli/docs.md),
+we use the same pattern at work to help us draft documentation,
+especially for routine, templated, and tedious-to-write documentation.
+Humans are still responsible for checking the drafted documentation,
+but at least we use AI tools to help us get started.
 
 ### Standard project templates and automation
 
 To streamline our development process,
-we've implemented standard project templates and automation tools.
+we have implemented standard project templates and automation tools.
 Our approach is similar to Cookiecutter Data Science-templated projects,
 but with additional automation and customization specific to Moderna's needs.
 We make extensive use of pre-commit hooks and GitHub Actions
-to automatically check our code on every commit.
+to automatically check our code with every commit.
 This automation significantly alleviates
 the mental burden associated with manual checking.
 By leveraging these tools,
-we've effectively removed much of the human burden
+we have effectively removed much of the human burden
 typically associated with nitpicking another person's code.
 Instead, we let the automated systems handle these checks,
 and we simply respond to what the "robots" tell us needs attention.
@@ -428,14 +437,15 @@ and we simply respond to what the "robots" tell us needs attention.
 ### The impact of these practices
 
 Through these practices,
-we've created an environment where clean, distributable,
+we have created an environment where clean, distributable,
 and well-documented code is not just an ideal,
 but a daily reality.
 This approach has significantly enhanced our team's efficiency,
 collaboration, and the overall quality of our data science projects at Moderna.
-We get to engage in long-term research partnerships with our colleagues,
-and can reliably take code from prototype to production
-with minimal overhead.
+We engage in long-term research partnerships with our colleagues
+and can reliably take code from prototype to production with minimal overhead.
+We easily onboard new people onto projects
+thanks to the high-quality documentation provided.
 
 ## Conclusion
 
