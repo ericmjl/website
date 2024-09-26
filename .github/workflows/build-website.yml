@@ -60,3 +60,5 @@ jobs:
           force_orphan: true
           enable_jekyll: false
           disable_nojekyll: false
+          exclude_assets: |
+            .lektor/buildstate
