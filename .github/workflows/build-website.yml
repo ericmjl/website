@@ -14,36 +14,15 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4.2.0
 
-      # https://github.com/actions/setup-python
-      - name: Setup Python
-        uses: actions/setup-python@v5.2.0
+
+      # setup pixi
+      - uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          python-version: "3.10"
-
-      - name: Upgrade pip
-        run: |
-          # install pip=>20.1 to use "pip cache dir"
-          python3 -m pip install --upgrade pip
-
-      - name: Get pip cache dir
-        id: pip-cache
-        run: echo "::set-output name=dir::$(pip cache dir)"
-
-      # https://github.com/actions/cache
-      - name: Cache dependencies
-        uses: actions/cache@v4.0.2
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install dependencies
-        run: |
-          python3 -m pip install -r requirements.txt
+          pixi-version: v0.30.0
+          cache: true
 
       - name: Build website
-        run: lektor build --output-path site/
+        run: pixi run build
 
       # https://github.com/peaceiris/actions-gh-pages
       - name: Deploy website to ericmjl.github.io
