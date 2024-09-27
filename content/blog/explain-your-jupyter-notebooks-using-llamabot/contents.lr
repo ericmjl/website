@@ -12,7 +12,7 @@ using author intents and source files,
 I've now added another tool to my toolkit:
 a system for drafting Markdown cells within Jupyter notebooks.
 
-## How It Works
+## How it works
 
 The process is straightforward and seamless.
 You begin by coding in your notebook as usual,
@@ -28,7 +28,7 @@ your notebook will then be populated with Markdown cells
 that explain what to expect in the upcoming code cells.
 
 
-## Design Considerations
+## Design considerations
 
 In developing this tool, I took into account several key factors.
 First, I considered the lifecycle of a notebook.
@@ -47,7 +47,7 @@ Rather than generating robotic comments about each cell's contents,
 the tool provides context-aware explanations
 that contribute to an overall narrative throughout the notebook.
 
-## Current Limitations
+## Current limitations
 
 While powerful, the tool does have some limitations.
 Much of the "why" behind the code remains in the human's mind.
@@ -59,7 +59,7 @@ every cell receives an explanation in three sentences.
 This approach may be excessive for simple, single-line cells used for output inspection,
 and insufficient for complex cells that perform multiple tasks.
 
-## Recommended Usage
+## Recommended usage
 
 To get the most out of this tool,
 I recommend completing your notebook code to your satisfaction
@@ -77,7 +77,7 @@ There's a chance the LLM will pick it up and attempt to clarify it.
 Finally, try to keep individual code blocks focused
 on performing one specific, useful task.
 
-## Try It Out!
+## Try it out!
 
 I'd love to have you give it a try.
 You can install it using pip:
