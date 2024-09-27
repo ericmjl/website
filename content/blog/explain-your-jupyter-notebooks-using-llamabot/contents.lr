@@ -1,0 +1,119 @@
+title: Explain your Jupyter notebooks using LlamaBot
+---
+author: Eric J. Ma
+---
+body:
+
+Recently, I've been exploring ways to leverage Large Language Models (LLMs)
+to enhance my documentation practices.
+After developing the LlamaBot documentation writer system (`llamabot docs write`),
+which creates initial drafts of routine documentation
+using author intents and source files,
+I've now added another tool to my toolkit:
+a system for drafting Markdown cells within Jupyter notebooks.
+
+## How It Works
+
+The process is straightforward and seamless.
+You begin by coding in your notebook as usual,
+allowing your coding flow to remain uninterrupted.
+Once you've finished coding, you simply run the `llamabot notebook explain` command.
+
+```bash
+llamabot notebook explain /path/to/notebook.ipynb
+```
+
+As if by magic,
+your notebook will then be populated with Markdown cells
+that explain what to expect in the upcoming code cells.
+
+
+## Design Considerations
+
+In developing this tool, I took into account several key factors.
+First, I considered the lifecycle of a notebook.
+Data scientists typically prefer to focus on coding without interruption.
+While they might leave occasional comments,
+creating detailed Markdown cells can disrupt their flow.
+It's more efficient to add explanations after the fact.
+
+Another important consideration was the automation-friendly CLI interface.
+Implementing this feature directly within a notebook
+could interrupt the analysis process,
+so a command-line interface allows for easier automation.
+
+Lastly, I aimed for narrative-style explanations.
+Rather than generating robotic comments about each cell's contents,
+the tool provides context-aware explanations
+that contribute to an overall narrative throughout the notebook.
+
+## Current Limitations
+
+While powerful, the tool does have some limitations.
+Much of the "why" behind the code remains in the human's mind.
+Even the best LLMs can typically only guess 30-60% of a developer's thought process,
+necessitating human input to fill in the gaps.
+
+Currently, the tool uses a single style:
+every cell receives an explanation in three sentences.
+This approach may be excessive for simple, single-line cells used for output inspection,
+and insufficient for complex cells that perform multiple tasks.
+
+## Recommended Usage
+
+To get the most out of this tool,
+I recommend completing your notebook code to your satisfaction
+before running the notebook explainer.
+
+It's also helpful to include code comments
+to provide additional context,
+especially regarding the "why" behind your code.
+These comments can be incorporated into the generated Markdown cells
+for a more natural narrative flow.
+If anything is unclear in your head right now that you want the LLM to attempt to explain,
+write down what's in your head, however muddled, into the notebook as code comments.
+There's a chance the LLM will pick it up and attempt to clarify it.
+
+Finally, try to keep individual code blocks focused
+on performing one specific, useful task.
+
+## Try It Out!
+
+I'd love to have you give it a try.
+You can install it using pip:
+
+```bash
+pip install -U llamabot>=0.8.0
+llamabot notebook explain /path/to/notebook.ipynb
+```
+
+---
+pub_date: 2024-09-27
+---
+summary:
+
+In this blog post,
+I introduce a new tool that uses LLMs
+to automatically generate explanations for Jupyter notebook cells.
+I discuss the motivation behind creating this tool,
+its current capabilities and limitations,
+and provide recommendations for optimal usage.
+The post also includes instructions
+on how to install and try out the tool for yourself.
+Curious about how it can streamline your data science projects?
+Why not give it a try?
+
+---
+tags:
+
+jupyter
+notebooks
+llm
+automation
+documentation
+productivity
+data science
+python
+llamabot
+---
+twitter_handle: ericmjl
