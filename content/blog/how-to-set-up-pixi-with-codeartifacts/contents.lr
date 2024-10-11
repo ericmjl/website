@@ -44,7 +44,7 @@ If this isn't true, then you can skip this blog post altogether!
 If you don't already have it, install `pipx` globally:
 
 ```bash
-pixi global add pipx
+pixi global install pipx
 ```
 
 Now, you'll have `pipx` available globally:
@@ -58,12 +58,14 @@ Now, you'll need to ensure that `keyring` and `keyrings.codeartifact`
 are installed globally using `pipx`:
 
 ```bash
-pipx install keyring
-pipx inject keyring keyrings.codeartifact
+pipx install keyring --index-url https://pypi.org/simple
+pipx inject keyring keyrings.codeartifact --index-url https://pypi.org/simple
 ```
 
 The second command injects `keyrings.codeartifact`
 into the same virtual environment that `pipx` set up for `keyring`.
+We also explicitly specify the `--index-url`
+in case your CodeArtifact repository doesn't have a mirror of PyPI public packages.
 
 **Pro tip:** If you don't use `pipx inject`
 but instead try to do `pipx install keyrings.codeartifact`,
