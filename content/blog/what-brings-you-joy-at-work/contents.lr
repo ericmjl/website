@@ -1,0 +1,65 @@
+title: What brings you joy at work?
+---
+author: Eric J. Ma
+---
+body:
+
+In a recent 1:1 conversation with my manager Wade Davis, the question of, "What brings you joy at work?" came up. I thought I would pen down everything that came to mind.
+
+## Things I enjoy doing, in no particular order
+
+**Setting the standard for how we work:** When I first joined Moderna, it was because I saw an opportunity to do what I couldn't do when I was at NIBR: to set a standard, a high minimum bar, for how we work and ship stuff into the hands of the folks we serve. Back in 2021, Moderna was small enough that this was a possibility. With Andrew Giessel and Dave Johnson's support, we were able to set up a standardized repository structure (and evolve it gradually over the years as our environment evolved), define two deployment endpoints (Python packages, and Dockerized CLI applications that run on the web), and setting a standard for the sub-team I lead on how we interview for core competencies.
+
+**Sharing and mentoring others in sane patterns of work:** For those who adopt and embrace the standard ways of working, I enjoy seeing their eyes light up when they realize that years of pain induced by a lack of structure gets cured by introducing structure in their lives. (Yes, I was a Montessori kid, and yes, expensive as it might be, I insist on sending my kids to Montessori school, it's worth it!)
+
+**Building tools:** On the build vs. buy spectrum, I fall very hard on "build" unless it's something I genuinely don't understand. I'd rather we simplify business processes and build custom tooling around them than buy tools and introduce complex business processes around them. It brings me joy when things I build help others reclaim the joy of work.
+
+**Executing on the mission to make science run at the speed of thought and quantify the previously unquantified:** The data science work that my teammates and I engage in should result in high power tools that help shortcut experimentation, standardize the way quantification happens, automates repetitive work, and helps us reclaim the joy of work! (Yes, this is a theme!)
+
+**Bringing people together _purposefully_:** Things like the docathon that we run at work bring me joy when I can marshall resources to purposefully bring folks together. Gathering purposelessly doesn't bring me joy; social events take a drain on my energy. I much prefer coming together to work on a problem and socializing that way.
+
+**The thrill of solving challenging puzzles en route to solving scientific problems:** In making the building blocks of some of our deep neural network models, I've encountered the thrill of (a) figuring out how to express a deep learning operation in elegant boolean logic, (b) finding a simple mathematical approximation after attacking a problem from multiple angles, and (c) figuring out a complex deployment and making it work. When, one day, I figured out, that codon to amino acid translation boils down to a single dot product in tensor land, that was a glorious day!
+
+**Building tools that have extremely high ROI:** When something I build has a very high return on investment, that brings me a ton of joy! If my investment of a few hours at work helps save dozens to hours of others' time, that brings me satisfaction. As I've learned over the years, sometimes, it isn't the fancy and complex solution to a problem that has the highest ROI -- sometimes, building a simple thing is all that's needed.
+
+**Deep 1:1 conversations with colleagues:** I would take these over big social events any day. (Especially the ones that are noisy and have alcohol.) In these 1:1s, it doesn't matter if we're talking about technical matters or philosophical ones, it just needs to be deep and non-superficial. I like podcast-style 1:1s too. I remember talking with a Literature professor over our kids' play date, and when I could ask deep, complex, and probing questions, that was super energizing!
+
+**Pair coding:** Pair coding is a supremely fun activity for me, and it provides me with an opportunity to engage in technical mentorship of others, even those outside of my home team. It remains my favorite mode of socialization as well!
+
+**Working with tools that provide flexible standardization:** As much as this might sound like an oxymoron, it's not. High-power computing tools are insanely flexible, and on top of those, we can build sane patterns of standardization without introducing excessive (or even any) abstractions. Those tools are the ones I enjoy working with the most: slightly opinionated, but mostly gets out of the way. Conversely, tools that restrict my flexibility to work are the tools I would rather we never see.
+
+## Things that don't bring me joy
+
+Since I've written about what brings me joy at work, I thought I would also touch on what does not bring me joy. Some of it is a necessary part of my job, things that my colleague Frank Pickard would say are "the stuff we get paid to do." For those things, I try to automate as much as possible, but it's not always possible. Here's a partial listing of the stuff that doesn't bring me joy.
+
+**Writing upward-reporting material:** This is 100% necessary, but not joy-inducing. To solve this, I ask for a template that I can fill out, record audio of myself talking through what I'm reporting upwards, and ask an LLM to write the content for me.
+
+**Operational tasks:** Apart from the simplest of such tasks, I am horrible at operational stuff. It gets boring, I will forget details, and soon enough I'm demotivated to work on them. As such, I have the utmost respect for the people who are skilled at keeping a ship running.
+
+Continuing the theme of operational stuff, believe it or not, for my home team (the DSAI Research team), I held off from organizing a weekly group meeting, instead favouring the thrice-a-month Data Science Guild meetings for us to get together with other data scientists. Part of it was to defend against an insular focus within the team, and instead to maintain a collaborative and collegial connection with the other data science teams. But part of it was genuinely that I would be bored to death nagging people to sign up and present and maintaining the sign-up page. Only recently did we institute monthly group meetings to replace a monthly Jira Epic review, which I found less and less relevant, but I left the planning of the group meeting to the team instead. We'll see how this experiment goes!
+
+**Engaging in, and wrestling with, needless complexity in business processes:** Complexity terrifies me. Especially business processes. The simpler our business processes, the better. The more complex our business processes, the more automation we need to build, and the more we need to simplify. This isn't to say that complexity sometimes cannot be reduced, but _needless_ complexity really should be eliminated.
+
+**Dealing with individuals and teams that talk more than they do:** As a builder, I find it incredibly difficult to handle individuals and teams that talk more than they build. 'Nuff said, they can blabber on their own, outside of the office, beyond the reach of the builders please!
+---
+pub_date: 2024-10-09
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this blog post, I explore what brings me joy at work, highlighting my passion for setting high standards, mentoring, building tools, and engaging in meaningful projects at Moderna. I discuss the satisfaction derived from creating efficient solutions and the thrill of solving complex problems. Conversely, I touch on aspects of my job that are less joyful, like operational tasks and unnecessary complexity, which I strive to minimize through automation and effective processes. What brings you joy at work, and what removes joy from work for you?
+
+---
+tags:
+
+joy
+standardization
+mentorship
+building
+speed
+gatherings
+puzzles
+investment
+conversations
+standardization
