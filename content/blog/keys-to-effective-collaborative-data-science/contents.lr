@@ -1,0 +1,233 @@
+title: Keys to effective collaborative data science
+---
+author: Eric J. Ma
+---
+body:
+
+_Note: This is a blog post version of a guest lecture that I gave at Duke University on 16 October 2024._
+
+I've been working as a data scientist in the life sciences space for ~7 years now;
+~10 years if you count my graduate school days.
+Over the years, I've observed how the absence of standardized practices
+can cause our work to fade away once we leave a company.
+I've also witnessed the friction that can arise
+between laboratory teams—the data producers—
+and computational teams—the data consumers—
+often stemming from a lack of empathy for each other's challenges.
+
+Today, I want to share some thoughts
+on how we can improve our collaborative efforts
+between data scientists and non-computational colleagues
+and ensure our work has a lasting impact.
+My exhortations for today are simple:
+
+1. Bring structure to how you work individually.
+2. Bring empathy to how you work collaboratively.
+3. Bring clarity to how you work!
+
+Towards this end, I have four ideas to share:
+
+1. For quantitative-types, standardize how you initialize your code repositories.
+2. Introduce code reviews, especially involving non-coders where possible.
+3. Communicate across roles with empathy.
+4. Ensure your work is runnable on any computer.
+
+Let's dive in to each of these ideas, and how they relate to the three exhortations.
+
+## Standardize how you initialize your code repositories
+
+Standardizing the way you initialize code repositories for new projects
+is more important than you might think.
+It reduces the cognitive load required to find what you need,
+making it easier for someone else to onboard onto the project in the future.
+It also helps you regain contextual knowledge
+when you return to a project after some time.
+Moreover, adding automation for standardized needs
+can streamline your workflow significantly.
+
+**How can you do this?**
+Start by using template repositories,
+such as those that your instructor Brian might have provided you.
+And if you're not already using one,
+feel free to design one collaboratively with your teammates!
+
+To put these ideas into action,
+I've built tools like `pyds-cli`
+that help you get started with a standardized yet flexible project structure.
+For instance, in `pyds-cli`,
+all projects are structured with a view towards becoming
+a Python package that can be distributed,
+and include things like a source directory,
+tests, a pyproject.toml configuration file,
+a notebooks directory, and a docs directory.
+But you don't have to start using all of these directories right from the get-go!
+Rather, you can start within the `notebooks/` directory
+and leverage other tooling later.
+
+At where I work, we also add additional automation,
+such as installing the computational environment
+using standardized tools like Pixi or Conda/Mamba.
+We also install automatic code checkers,
+which reduce the cognitive load during setup
+and help put lightweight guardrails in place.
+Every place where we can add automation
+and reduce cognitive load during setup
+is another way to increase the odds that
+someone else can pick up your project and run with it.
+
+## Introduce code reviews between coders and non-coders
+
+Introducing code reviews is a practical way
+to foster knowledge sharing between coders and non-coders.
+The dialogue that ensues during a code review
+increases the odds that implicit knowledge is made explicit.
+Including non-coders in the code review process
+elevates appreciation for the behind-the-scenes complexity that coders deal with.
+Non-coders, please reciprocate!
+Where possible, involve coders early in the manual data collection process
+to foster mutual appreciation for the challenges each of us faces.
+
+**How should you approach code reviews?**
+For the very experienced, asynchronous reviews may suffice.
+For newcomers, doing this in person can be a great socializing experience.
+Leave comments and questions about anything that's unclear.
+Non-coders should feel empowered to ask questions that might seem obvious;
+this is crucial for drawing out implicit knowledge.
+
+**Examples of questions to ask during code reviews:**
+
+- Are there lines of code that might be incorrectly implementing what's intended?
+- Are there lines where it's unclear why they exist or what they're used for?
+- Are there hard-coded file paths that prevent the code from being executable on someone else's system?
+- Is there unnecessary code duplication?
+- Are convenience functions used appropriately?
+- Is the code organized so that newcomers can easily find what they're looking for?
+- Are the names of files, variables, functions, and classes descriptive without being overly verbose?
+- Is the code following sane patterns?
+- What is the code intended to do, and is it documented?
+  (Even this question can help draw out implicit knowledge!)
+
+## Communicate across roles with empathy
+
+From what I've gathered, some of you are quantitatively inclined —
+doing data analysis and acting as data consumers—
+while others are more qualitative,
+being involved in unstructured data collection process as data producers.
+Hopefully, both types are working together to design the data collection effort.
+
+This mirrors how we collaborate with laboratory scientists at work.
+Let me use this as an example to illustrate my point.
+
+**How do you successfully communicate between the two?**
+The key is to have empathy!
+
+**For computational scientists:**
+Understand the practical challenges laboratory scientists face.
+For example, back at Novartis,
+I helped design an experiment.
+In it, I requested fully randomized positions of controls in a 96-well plate,
+done across stacks of plates that are robotically processed.
+This might be statistically ideal but turned out to be logistically challenging!
+The logistical challenge comes from the difference between
+stamp plating controls in standardized positions across plates vs.
+randomly placing them within the plate.
+Requesting fully randomized positions can place an undue burden on laboratory scientists,
+making it difficult to stamp controls from plate to plate.
+If I didn't have empathy for this,
+I might have been perceived as being out of touch with the realities of the lab,
+and my working relationship with the lab would have suffered.
+A compromise we reached was to randomize the positions once
+to achieve sufficient spatial coverage
+while easing the logistical burden.
+
+**For laboratory scientists:**
+Recognize that moving slowly upfront can enable faster progress later.
+In exploratory data analysis,
+computational folks might rush through an analysis with hacked-together code
+without considering future reuse.
+Early discussions about future data collection and analysis plans are important;
+they can help shape how code is written upfront to make it more reusable.
+Providing computational team members with additional time
+to isolate reusable code into functions and document their work
+helps when new data comes in, making automation clearer.
+
+**Set up clear hand-offs and deliverables between roles.**
+For example, between data consumers and producers,
+data should conform to programmatically checkable criteria,
+such as standardized column names in a table.
+With computational (consumer) and laboratory (producer) scientists,
+new experiments are designed collaboratively,
+ensuring both parties understand and agree on the process.
+When a data scientist understands the data generating process,
+they can iterate faster on the analysis.
+And when a laboratory scientist understands the computational process,
+they will know the importance of keeping data formatted appropriately.
+
+## Ensure your work is runnable on any computer
+
+Your work should be runnable not just in Google Colab
+or on your HPC
+but ideally on any laptop.
+In a pinch, someone should be able to reproduce the gist of your work on any computer.
+In the best-case scenario, someone else should be able to run a single command
+and reproduce your work on any computer they choose.
+It's your puzzle to figure out how!
+
+**Why is this important?**
+This allows you to collaborate more easily,
+without bottlenecks waiting for someone else to run code
+that you could have run on your own.
+It also ensures that if you need to pause work and pick it up later,
+you can do so easily and with confidence.
+This is also a prerequisite for reproducibility.
+
+**How do you ensure your work is runnable on any computer?**
+
+Here are some tips:
+
+- **Avoid hard-coding paths** to files that exist only on your computer.
+  Instead, pull directly from a source of truth like a SQL database or a cloud storage system.
+- **Define sources of truth** with others and document what they are.
+- **Use environment lock-file generating tools** like `conda-lock` or `pixi`.
+  These keep track of the exact versions of packages installed, ensuring that other environments have the same setup.
+- **Leverage automation tools** like Makefile or `pixi` tasks to create reproducible workflows that can be executed with a single command, such as `pixi run test` or `make build`.
+- **Document everything clearly** to bring clarity to others and reduce the cognitive burden of onboarding.
+
+## My exhortations for today
+
+Thanks for listening in!
+I hope these pointers help you to:
+
+1. Bring structure to how you work individually.
+2. Bring empathy to how you work collaboratively.
+3. Bring clarity to how you work!
+
+## Q&A
+
+**Jupyter notebooks vs. scripts in industry?**
+
+We use both.
+Notebooks are great for exploration
+or to help produce narrative-style documentation interwoven with code.
+Scripts are useful for one-off tasks.
+
+**How to review notebooks?**
+
+For documentation-style notebooks,
+it's best to do this live — whether over a call or in person.
+Narratives are complex, and being able to hash out unclear points
+and draw out implicit knowledge is extremely helpful.
+
+**What are ways that the qualitative folks can help the quantitative folks?**
+
+- Be involved in the definition of ontologies.
+  Usually these turn into categorical variables in a downstream analysis.
+- Keep your data collection protocols standardized as much as possible,
+  but anticipate the evolution of these protocols (especially in early days of a project).
+  Communicate these changes to the computational team
+  so that they can update the data processing code and design it for flexibility!
+
+---
+pub_date: 2024-10-18
+---
+twitter_handle: ericmjl
