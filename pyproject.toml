@@ -70,7 +70,7 @@ numpy = "<2"
 pydantic = ">=2.8.2,<3"
 
 [tool.pixi.feature.blogbot.pypi-dependencies]
-llamabot = ">=0.9.6"
+llamabot = ">=0.9.9"
 
 [tool.pixi.feature.devtools.dependencies]
 pre-commit = "*"
