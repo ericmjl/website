@@ -1,109 +1,103 @@
-import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
-from urllib.parse import unquote
 
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from llamabot import SimpleBot
-from loguru import logger
+from llamabot import ImageBot, StructuredBot
 
+from .models import LinkedInPost, SubstackPost, Summary, Tags, TwitterPost
 from .prompts import (
+    bannerbot_sysprompt,
     compose_linkedin_post,
-    compose_patreon_post,
     compose_substack_post,
     compose_summary,
     compose_tags,
     compose_twitter_post,
+    socialbot_sysprompt,
 )
 from .scraper import get_latest_blog_posts, get_post_body
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static")
 
-social_bot = SimpleBot(
-    "You are an expert blogger.",
-    model="gpt-4-0125-preview",
-    json_mode=True,
-)
-
-tagbot = SimpleBot(
-    ("You are an expert tagger of blog posts. "
-     "Return lowercase tags for the following blog post."),
-    model="gpt-4-0125-preview",
-    json_mode=True,
-)
+bannerbot = ImageBot(size="1792x1024")
 
 templates = Jinja2Templates(directory="apis/blogbot/templates")
 
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    latest_blog_posts = get_latest_blog_posts(base_url="http://localhost:5959/blog/")
+    base_url = "http://localhost:5959/blog/"
+    latest_posts = get_latest_blog_posts(base_url)
     return templates.TemplateResponse(
-        "social.html",
-        context={"request": request, "latest_blog_posts": latest_blog_posts},
+        "index.html",
+        {"request": request, "latest_posts": latest_posts, "base_url": base_url},
     )
 
 
-@app.get("/latest-blog-posts", response_class=HTMLResponse)
-async def get_latest_blog_posts_api(request: Request):
-    base_url = request.query_params.get("base_url")
-    base_url = unquote(base_url)
-    print(base_url)
-    latest_blog_posts: dict[str, str] = get_latest_blog_posts(base_url=base_url)
-    print(latest_blog_posts)
-    response = ""
-    for url, title in latest_blog_posts.items():
-        response += f"<option value='{url}'>{title}</option>\n"
-    print(response)
-    return response
+@app.get("/update_posts", response_class=HTMLResponse)
+async def update_posts(request: Request, base_url: str):
+    latest_posts = get_latest_blog_posts(base_url)
+    return templates.TemplateResponse(
+        "post_select.html", {"request": request, "latest_posts": latest_posts}
+    )
 
 
-@app.post("/{post_type}", response_class=HTMLResponse)
-async def social_media(
-    request: Request, blog_url: Annotated[str, Form()], post_type: str
+@app.post("/generate/{post_type}", response_class=HTMLResponse)
+async def generate_post(
+    request: Request, post_type: str, blog_url: Annotated[str, Form()]
 ):
-    bot = social_bot
+    _, body = get_post_body(blog_url)
+
     if post_type == "linkedin":
-        prompt = compose_linkedin_post
+        bot = StructuredBot(
+            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=LinkedInPost
+        )
+        print("Generating LinkedIn post...")
+        social_post = bot(compose_linkedin_post(body, blog_url))
+        print("Post generated!")
+        content = social_post.format_post()
     elif post_type == "twitter":
-        prompt = compose_twitter_post
-    elif post_type == "tags":
-        prompt = compose_tags
-        bot = tagbot
-    elif post_type == "summary":
-        prompt = compose_summary
-    elif post_type == "patreon":
-        prompt = compose_patreon_post
+        bot = StructuredBot(
+            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=TwitterPost
+        )
+        social_post = bot(compose_twitter_post(body, blog_url))
+        content = social_post.content
     elif post_type == "substack":
-        prompt = compose_substack_post
-    response, post_body = get_post_body(blog_url)
-    text = "Error"
-    if response.status_code == 200:
-        social_post = bot(prompt(post_body))
-        # Post-processing
+        bot = StructuredBot(
+            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=SubstackPost
+        )
+        social_post = bot(compose_substack_post(body, blog_url))
+        content = social_post.content
+    elif post_type == "summary":
+        bot = StructuredBot(
+            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=Summary
+        )
+        social_post = bot(compose_summary(body, blog_url))
+        content = social_post.content
+    elif post_type == "tags":
+        bot = StructuredBot(
+            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=Tags
+        )
+        tags = bot(compose_tags(body))
+        content = "\n".join(tags.content)
+    elif post_type == "banner":
+        bot = StructuredBot(
+            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=Summary
+        )
+        summary = bot(compose_summary(body, blog_url)).content
+        banner_url = bannerbot(bannerbot_sysprompt() + summary, return_url=True)
+        return templates.TemplateResponse(
+            "banner_result.html", {"request": request, "banner_url": banner_url}
+        )
 
-        try:
-            bot_text = social_post.content.replace("'response_text'", '"response_text"')
-            logger.info(bot_text)
-            bot_text = bot_text.replace("\n", "\\n").replace("\t", "\\t")
-            logger.info(bot_text)
-            text = json.loads(bot_text)["response_text"]
-            logger.info(text)
-
-            if post_type == "tags":
-                text = "\n".join(line for line in text)
-        except Exception as e:
-            text = f"Error: {e}"
-            text += "\n\n"
-            text += "Generated text: \n\n"
-            text += social_post.content
-    return text
+    return templates.TemplateResponse(
+        "result.html", {"request": request, "content": content, "post_type": post_type}
+    )
 
 
 # SEARCH-RELATED APIs BELOW

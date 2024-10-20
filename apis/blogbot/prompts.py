@@ -2,7 +2,21 @@
 from llamabot.prompt_manager import prompt
 
 
-@prompt
+@prompt(role="system")
+def socialbot_sysprompt():
+    """You are an expert blogger and social media manager.
+
+    You are given a blog post for which to write a social media post.
+
+    Notes:
+
+    - First person, humble, and inviting.
+    - Keep it short and concise.
+    - Always include the URL of the blog post in the social media post.
+    """
+
+
+@prompt(role="user")
 def compose_linkedin_post(text, url):
     """This is a blog post that I just wrote.
 
@@ -10,21 +24,11 @@ def compose_linkedin_post(text, url):
 
     It came from the following url: {{ url }}.
 
-    Please compose for me a LinkedIn post
-    that entices my network on LinkedIn to read it.
-    Open off with a question that the post answers.
-    Then add an overview of what the post is about but do not reveal too many details.
-    Ensure that there is a call to action to interact with the post after reading
-    to react with it, comment on it, or share the post with others.
-    Include hashtags inline with the LinkedIn post and at the end of the post too.
-    Hashtags should be all lowercase.
-    Ensure that you insert the URL of the blog post in an appropriate place,
-    using Markdown syntax to link to the post.
-    Also ensure that it is written in first-person, humble, and inviting tone.
+    Please compose for me a LinkedIn post that follows the provided JSON structure.
     """
 
 
-@prompt
+@prompt(role="user")
 def compose_patreon_post(text, url):
     """This is a blog post that I just wrote.
 
@@ -42,7 +46,7 @@ def compose_patreon_post(text, url):
     """
 
 
-@prompt
+@prompt(role="user")
 def compose_twitter_post(text, url):
     """This is a blog post that I just wrote:
 
@@ -64,7 +68,7 @@ def compose_twitter_post(text, url):
     return prompt
 
 
-@prompt
+@prompt(role="user")
 def compose_substack_post(text, url):
     """This is a blog post that I just wrote:
 
@@ -85,7 +89,7 @@ def compose_substack_post(text, url):
     """
 
 
-@prompt
+@prompt(role="user")
 def compose_tags(text):
     """Generate for me 10 tags for this blog post.
     Maximum two words.
@@ -99,7 +103,7 @@ def compose_tags(text):
     """
 
 
-@prompt
+@prompt(role="user")
 def compose_summary(text, url):
     """
     Here is my blog post:
@@ -115,7 +119,7 @@ def compose_summary(text, url):
     """
 
 
-@prompt
+@prompt(role="user")
 def fix_json(bad_json):
     """The following is a bad JSON that was returned by your sibling bot.
 
@@ -127,7 +131,7 @@ def fix_json(bad_json):
     """
 
 
-@prompt
+@prompt(role="system")
 def bannerbot_sysprompt():
     """As 'Banner Artist',
     your role is to create banner images for blog posts in a watercolor style,

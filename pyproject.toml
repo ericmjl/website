@@ -70,7 +70,7 @@ numpy = "<2"
 pydantic = ">=2.8.2,<3"
 
 [tool.pixi.feature.blogbot.pypi-dependencies]
-llamabot = ">=0.5.1"
+llamabot = ">=0.9.0"
 
 [tool.pixi.feature.devtools.dependencies]
 pre-commit = "*"
@@ -88,7 +88,8 @@ website = "lektor server --port 5959 --host 0.0.0.0"
 build = "lektor build --output-path site/"
 
 [tool.pixi.feature.blogbot.tasks]
-blogbot = "panel serve apis/blogbot/app.ipynb --allow-websocket-origin=0.0.0.0:5006"
+# blogbot = "panel serve apis/blogbot/app.ipynb --allow-websocket-origin=0.0.0.0:5006"
+blogbot = "uvicorn apis.blogbot.api:app --reload --port 8173 --host 0.0.0.0"
 
 [tool.pixi.environments]
 default = ["lektor", "devtools"]
