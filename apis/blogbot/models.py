@@ -1,10 +1,65 @@
 """Pydantic models for each of the social media posts."""
 
+from typing import List
+
 from pydantic import BaseModel, Field, model_validator
 
 
+class LinkedInPostSection(BaseModel):
+    content: str = Field(..., description=(
+        "The content of a section in the LinkedIn post"
+    ))
+
+
 class LinkedInPost(BaseModel):
-    content: str = Field(..., description="The content of the LinkedIn post")
+    hook: str = Field(..., description=(
+        "A short, thought-provoking statement to grab attention. "
+        "If it is a question, start with 'What' or 'Why' directly, "
+        "don't do things like 'Ever wondered what...'."
+    ))
+    teaser: str = Field(..., description=(
+        "A statement closer to the topic, "
+        "likely to be cut off by the default UI post fold."
+    ))
+    main_content: List[LinkedInPostSection] = Field(..., description=(
+        "The meat of the content, broken into digestible sections."
+    ))
+    call_to_action: str = Field(..., description=(
+        "A call to action for readers. I usually want people to read the blog post, "
+        "leave a like, comment, and share."
+    ))
+    ending_question: str = Field(..., description=(
+        "An ending question for the post reader to engage with via comments."
+    ))
+    hashtags: List[str] = Field(..., description=(
+        "A list of hashtags to be included in the LinkedIn post. "
+        "They should always begin with '#'."
+    ))
+
+    @model_validator(mode="after")
+    def validate_content(self):
+        """Validate the structure and content of the LinkedIn post."""
+        # Validate hashtags
+        for hashtag in self.hashtags:
+            if not hashtag.startswith("#"):
+                raise ValueError(f"Hashtag '{hashtag}' must start with '#'.")
+
+        return self
+
+    def format_post(self) -> str:
+        """Format the LinkedIn post content."""
+        post_content = f"{self.hook}\n\n{self.teaser}\n\n"
+        for section in self.main_content:
+            post_content += f"{section.content}\n\n"
+        post_content += self.call_to_action
+
+        post_content += "\n\n" + self.ending_question
+
+        # Add hashtags to the post content, ensuring they are all lowercase
+        post_content += (
+            "\n\n" + " ".join([hashtag.lower() for hashtag in self.hashtags])
+        )
+        return post_content
 
 
 class TwitterPost(BaseModel):
