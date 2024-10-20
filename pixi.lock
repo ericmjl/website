@@ -242,7 +242,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/62/a1/2027ddede72d33be2effc087580aeba07e733a7360780ae87226f1f91bd8/kubernetes-30.1.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/31/40/9b52b4da1d0c0c7cd7f91a5e10a867346104223f618ca8b7191f1a6dd32a/lancedb-0.13.0-cp38-abi3-manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/59/c2/59d87c3e25906022fa4faa152eec4f640fcb3bd469369af227678a2f8aa9/litellm-1.46.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/f1/07/82ea916d9282444983a4fa53de587354e2879a2f26eb32619ba5f11c1a21/llamabot-0.9.5-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/f6/fe/b04b16f43596b7c57b0aa35086a3483a5bce261563303ec4bebb68435aeb/llamabot-0.9.6-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/03/0a/4f6fed21aa246c6b49b561ca55facacc2a44b87d65b8b92362a8e99ba202/loguru-0.7.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/03/62/70f5a0c2dd208f9f3f2f9afd103aec42ee4d9ad2401d78342f75e9b8da36/Mako-1.3.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9a/67/7e8406a29b6c45be7af7740456f7f37025f0506ae2e05fb9009a53946860/monotonic-1.6-py2.py3-none-any.whl
@@ -550,7 +550,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/62/a1/2027ddede72d33be2effc087580aeba07e733a7360780ae87226f1f91bd8/kubernetes-30.1.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b5/ee/fff5af294dbce075a3568df3e5e8ffe0a719f1cb8f4ffccd649e668a08af/lancedb-0.11.0-cp38-abi3-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/50/b4/1f1bdc4c124119bc843223bfd26be05514171a2ae6bcf9bca8c5d55424b0/litellm-1.35.38-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/f1/07/82ea916d9282444983a4fa53de587354e2879a2f26eb32619ba5f11c1a21/llamabot-0.9.5-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/f6/fe/b04b16f43596b7c57b0aa35086a3483a5bce261563303ec4bebb68435aeb/llamabot-0.9.6-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/03/0a/4f6fed21aa246c6b49b561ca55facacc2a44b87d65b8b92362a8e99ba202/loguru-0.7.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/03/62/70f5a0c2dd208f9f3f2f9afd103aec42ee4d9ad2401d78342f75e9b8da36/Mako-1.3.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9a/67/7e8406a29b6c45be7af7740456f7f37025f0506ae2e05fb9009a53946860/monotonic-1.6-py2.py3-none-any.whl
@@ -4913,9 +4913,9 @@ packages:
   requires_python: '>=3.8,!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*'
 - kind: pypi
   name: llamabot
-  version: 0.9.5
-  url: https://files.pythonhosted.org/packages/f1/07/82ea916d9282444983a4fa53de587354e2879a2f26eb32619ba5f11c1a21/llamabot-0.9.5-py3-none-any.whl
-  sha256: d2e29543dd2958873bae3af948eb71d786fd93a53c6c7708b35c9defd71a3880
+  version: 0.9.6
+  url: https://files.pythonhosted.org/packages/f6/fe/b04b16f43596b7c57b0aa35086a3483a5bce261563303ec4bebb68435aeb/llamabot-0.9.6-py3-none-any.whl
+  sha256: fbbd111f6b50660db186963de219d1e8378325a6009085b202b24bb5aadefdcd
   requires_dist:
   - openai
   - panel
