@@ -88,7 +88,7 @@ website = "lektor server --port 5959 --host 0.0.0.0"
 build = "lektor build --output-path site/"
 
 [tool.pixi.feature.blogbot.tasks]
-# blogbot = "panel serve apis/blogbot/app.ipynb --allow-websocket-origin=0.0.0.0:5006"
+blogbot_old = "panel serve apis/blogbot/app.ipynb --allow-websocket-origin=0.0.0.0:5006"
 blogbot = "uvicorn apis.blogbot.api:app --reload --port 8173 --host 0.0.0.0"
 
 [tool.pixi.environments]

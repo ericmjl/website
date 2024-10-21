@@ -87,10 +87,11 @@ async def generate_post(
         content = "\n".join(tags.content)
     elif post_type == "banner":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=Summary
+            "You are an expert blogger.", model="gpt-4-turbo", pydantic_model=Summary
         )
         summary = bot(compose_summary(body, blog_url)).content
-        banner_url = bannerbot(bannerbot_sysprompt() + summary, return_url=True)
+        prompt = f"{bannerbot_sysprompt()}\n\nBlog post summary: {summary}"
+        banner_url = bannerbot(prompt, return_url=True)
         return templates.TemplateResponse(
             "banner_result.html", {"request": request, "banner_url": banner_url}
         )
