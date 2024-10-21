@@ -15,12 +15,12 @@
                 <h3>Control Panel</h3>
                 <div class="mb-3">
                     <label for="base_url" class="form-label">Base URL</label>
-                    <select id="base_url" class="form-select" hx-get="/update_posts" hx-target="#blog_post" hx-trigger="change">
+                    <select id="base_url" name="base_url" class="form-select" hx-get="/update_posts" hx-target="#blog_post_container" hx-trigger="change">
                         <option value="http://localhost:5959/blog/">http://localhost:5959/blog/</option>
                         <option value="https://ericmjl.github.io/blog/">https://ericmjl.github.io/blog/</option>
                     </select>
                 </div>
-                <div class="mb-3">
+                <div id="blog_post_container" class="mb-3">
                     <label for="blog_post" class="form-label">Blog Post</label>
                     <select id="blog_post" name="blog_url" class="form-select">
                         {% include "post_select.html" %}

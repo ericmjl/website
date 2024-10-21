@@ -43,7 +43,8 @@ async def home(request: Request):
 async def update_posts(request: Request, base_url: str):
     latest_posts = get_latest_blog_posts(base_url)
     return templates.TemplateResponse(
-        "post_select.html", {"request": request, "latest_posts": latest_posts}
+        "blog_post_select.html",
+        {"request": request, "latest_posts": latest_posts, "base_url": base_url},
     )
 
 
