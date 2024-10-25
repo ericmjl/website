@@ -119,7 +119,7 @@ class TwitterPost(BaseModel):
             errors.append("Twitter post can have a maximum of 2 hashtags.")
         for hashtag in self.hashtags:
             if not hashtag.startswith("#"):
-                errors.append(f"Hashtag '{hashtag}' must start with '#.")
+                errors.append(f"Hashtag '{hashtag}' must start with '#.'")
 
         # Validate total length
         total_content = self.format_post(with_url=False)
@@ -152,8 +152,68 @@ class TwitterPost(BaseModel):
         return post_content
 
 
+class SubstackSection(BaseModel):
+    heading: str = Field(
+        ..., description="The heading of a section in the Substack post"
+    )
+    content: str = Field(
+        ..., description="The content of a section in the Substack post"
+    )
+
+
 class SubstackPost(BaseModel):
-    content: str = Field(..., description="The content of the Substack post")
+    title: str = Field(..., description="The title of the Substack post")
+    subtitle: str = Field(
+        ...,
+        description=(
+            "A brief subtitle or teaser for the post. "
+            "An example that I really like is: "
+            "'Alternatively titled: <something unpretentious and fun goes here>.'"
+        ),
+    )
+    introduction: str = Field(
+        ..., description="An introductory paragraph to hook the reader"
+    )
+    main_content: List[SubstackSection] = Field(
+        ..., description="The main body of the post"
+    )
+    conclusion: str = Field(
+        ...,
+        description=("A concluding paragraph summarizing key points of the blog post."),
+    )
+    call_to_action: str = Field(
+        ...,
+        description="A call to action for readers, such as subscribing or sharing",
+    )
+
+    @model_validator(mode="after")
+    def validate_content(self):
+        """Validate the structure and content of the Substack post."""
+        errors = []
+
+        # Validate content length
+        total_content = self.format_post()
+        if len(total_content) < 500:
+            errors.append("Total content should be at least 500 characters.")
+
+        if errors:
+            raise ValueError(", ".join(errors))
+
+        return self
+
+    def format_post(self) -> str:
+        """Format the Substack post content."""
+        post_content = f"# {self.title}\n\n"
+        post_content += f"*{self.subtitle}*\n\n"
+        post_content += f"{self.introduction}\n\n"
+
+        for section in self.main_content:
+            post_content += f"## {section.heading}\n\n{section.content}\n\n"
+
+        post_content += f"{self.conclusion}\n\n"
+        post_content += f"*{self.call_to_action}*\n\n"
+
+        return post_content
 
 
 class Summary(BaseModel):

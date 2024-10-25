@@ -75,7 +75,7 @@ async def generate_post(
             socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=SubstackPost
         )
         social_post = bot(compose_substack_post(body, blog_url))
-        content = social_post.content
+        content = social_post.format_post()
     elif post_type == "summary":
         bot = StructuredBot(
             socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=Summary
