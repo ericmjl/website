@@ -153,9 +153,6 @@ class TwitterPost(BaseModel):
 
 
 class SubstackSection(BaseModel):
-    heading: str = Field(
-        ..., description="The heading of a section in the Substack post"
-    )
     content: str = Field(
         ..., description="The content of a section in the Substack post"
     )
@@ -186,6 +183,15 @@ class SubstackPost(BaseModel):
         description="A call to action for readers, such as subscribing or sharing",
     )
 
+    signoff: str = Field(
+        ...,
+        description=(
+            "A signoff to end the post. Use one of "
+            "Cheers\nEric or Happy Coding\nEric, "
+            "the latter being suited to posts about coding."
+        ),
+    )
+
     @model_validator(mode="after")
     def validate_content(self):
         """Validate the structure and content of the Substack post."""
@@ -208,11 +214,11 @@ class SubstackPost(BaseModel):
         post_content += f"{self.introduction}\n\n"
 
         for section in self.main_content:
-            post_content += f"## {section.heading}\n\n{section.content}\n\n"
+            post_content += f"{section.content}\n\n"
 
         post_content += f"{self.conclusion}\n\n"
         post_content += f"*{self.call_to_action}*\n\n"
-
+        post_content += f"{self.signoff}"
         return post_content
 
 
