@@ -66,8 +66,10 @@ async def generate_post(
         bot = StructuredBot(
             socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=TwitterPost
         )
+        print("Generating Twitter post...")
         social_post = bot(compose_twitter_post(body, blog_url))
-        content = social_post.content
+        print("Post generated!")
+        content = social_post.format_post()
     elif post_type == "substack":
         bot = StructuredBot(
             socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=SubstackPost
