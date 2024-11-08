@@ -67,6 +67,7 @@ As a prototype of how this would work within company-internal tooling, I wrapped
 `pyds analysis init` does what my friend Logan Thomas gave as early feedback for `pyds-cli`'s when I put together an initial project structure scaffold -- he wanted to see a "minimal initialization". Until PEP723 became a reality, I didn't have a good story for that. Now we do! To use `pyds-cli` to initialize a repo that contains only ad-hoc notebooks, we do:
 
 ```bash
+pipx upgrade pyds-cli # upgrade pyds-cli using pipx, or else do `pip install -U pyds-cli`
 pyds analysis init
 ```
 
@@ -224,3 +225,18 @@ All in all, I very much like the idea of _configurable and disposable_ (but none
 pub_date: 2024-11-08
 ---
 twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the innovative 'juv' package, which simplifies Python environment management for Jupyter notebooks by embedding dependencies directly within the notebook file. This approach eliminates the need for separate environment files, making notebooks easily shareable and reducing setup complexity. I also discuss integrating 'juv' with 'pyds-cli' to streamline ad-hoc data analyses within organizations, enhancing reproducibility and reducing environment conflicts. Curious about how this could change your data science workflow?
+---
+tags:
+
+python
+tooling
+data science
+notebook
+reproducibility
+juv
+uv
+environment management
+scripts
+analysis
