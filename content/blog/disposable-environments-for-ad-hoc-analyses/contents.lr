@@ -4,13 +4,30 @@ author: Eric J. Ma
 ---
 body:
 
-I recently learned about `juv`, a package by my SciPy friend Trevor Manz. It builds upon `uv`, which, alongside `pixi`, are the hottest things in Python (and more broadly, Data Science) tooling since `pip` officially replaced `easy_install` as the _de facto_ way to install Python packages. `uv` supports [PEP723](https://peps.python.org/pep-0723/), which is a Python enhancement proposal (PEP) that
+I recently learned about `juv`,
+a package by my SciPy friend Trevor Manz.
+It builds upon `uv`,
+which, alongside `pixi`,
+are the hottest things in Python (and more broadly, Data Science) tooling
+since `pip` officially replaced `easy_install`
+as the _de facto_ way to install Python packages.
+`uv` supports [PEP723](https://peps.python.org/pep-0723/),
+which is a Python enhancement proposal (PEP) that
 
-> specifies a metadata format that can be embedded in single-file Python scripts to assist launchers, IDEs and other external tools which may need to interact with such scripts.
+> specifies a metadata format
+> that can be embedded in single-file Python scripts
+> to assist launchers, IDEs and other external tools
+> which may need to interact with such scripts.
 
-Made more concretely for the purposes of this post, this enables us to specify the Python version that is supposed to be used to execute a script, and, more importantly, the dependencies that are needed!
+Made more concretely for the purposes of this post,
+this enables us to specify the Python version
+that is supposed to be used to execute a script,
+and, more importantly,
+the dependencies that are needed!
 
-It basically looks like this, as the first cell in your notebook, say, `notebook.ipynb`
+It basically looks like this,
+as the first cell in your notebook,
+say, `notebook.ipynb`
 
 ```python
 # /// script
@@ -44,22 +61,37 @@ Reading inline script metadata from `stdin`
    Built logical-unification==0.4.6
 Installed 60 packages in 329ms
 ```
-
-You'll get this notebook server, in which you can run the code, just like in regular JupyterLab.
+You'll get this notebook server,
+in which you can run the code,
+just like in regular JupyterLab.
 
 ![Jupyter session launched by `juv`.](./juv-launched-jupyter.webp)
 
-Compared to writing out a full `pyproject.toml`, `requirements.txt`, or `environment.yml` file, this reduces the burden of distributing code + environments to a single file, your notebook. In terms of mental overload, for an ad-hoc analysis conducted within a single notebook, this is much better than needing to work within, say, a `scratch` environment that is maintained to support multiple notebooks. In [the words of the `marimo` folks](https://marimo.io/blog/sandboxed-notebooks):
+Compared to writing out a full `pyproject.toml`, `requirements.txt`, or `environment.yml` file,
+this reduces the burden of distributing code + environments to a single file,
+your notebook.
+In terms of mental overload,
+for an ad-hoc analysis conducted within a single notebook,
+this is much better than needing to work within, say,
+a `scratch` environment that is maintained to support multiple notebooks.
+In [the words of the `marimo` folks](https://marimo.io/blog/sandboxed-notebooks):
 
-> **In other words, marimo makes it possible to create and share standalone notebooks, without shipping `requirements.txt` files alongside them**. This provides two key benefits:
+> **In other words, marimo makes it possible to create and share standalone notebooks,
+> without shipping `requirements.txt` files alongside them**.
+> This provides two key benefits:
 >
-> 1. Notebooks that carry their own dependencies are easy to share — just send the `.py` file!
-> 2. Isolating a notebook from other installed packages prevents obscure bugs arising from environment pollution, while also hardening reproducibility.
+> 1. Notebooks that carry their own dependencies are easy to share —
+>    just send the `.py` file!
+> 2. Isolating a notebook from other installed packages prevents obscure bugs
+>    arising from environment pollution,
+>    while also hardening reproducibility.
 
-To paraphrase `juv`'s [README](https://github.com/manzt/juv) (which is accurate as of 5 Nov 2024), this is the equivalent of having a fully-specified but also disposable environment, in which the notebook itself specifies its own environment.
+To paraphrase `juv`'s [README](https://github.com/manzt/juv)
+(which is accurate as of 5 Nov 2024),
+this is the equivalent of having a fully-specified but also disposable environment,
+in which the notebook itself specifies its own environment.
 
 (I'll note that the `marimo` notebook also supports PEP723 as well!)
-
 ## Incorporating this into pyds-cli
 
 As a prototype of how this would work within company-internal tooling, I wrapped `juv` inside `pyds-cli` as part of a new `pyds analysis init` and `pyds analysis run` set of commands.
@@ -86,7 +118,9 @@ Run 'pyds analysis add <package>' to add dependencies to your notebook
 Run 'pyds analysis run' to start working on your analysis
 ```
 
-With the `project_name` being the name of the folder, you can see that it is initialized with a `notebooks/` directory and a `pyproject.toml`
+With the `project_name` being the name of the folder,
+you can see that it is initialized with a `notebooks/` directory
+and a `pyproject.toml`
 
 ```bash
 /tmp via 🅒 pyds-cli on ☁️
@@ -105,7 +139,10 @@ drwxr-xr-x     - ericmjl wheel  5 Nov 08:09   -- notebooks
 .rw-r--r--   325 ericmjl wheel  5 Nov 08:09   -- README.md
 ```
 
-`pyproject.toml` contains a section for configuring `pyds-cli` with _default packages_ that should be specified in every new notebook created using `pyds analysi` commands:
+`pyproject.toml` contains a section for configuring `pyds-cli`
+with _default packages_
+that should be specified in every new notebook
+created using `pyds analysis` commands:
 
 ```bash
 dummy on  main is 📦 v0.0.1 via 🐍 v3.13.0 via 🅒 pyds-cli on ☁️
@@ -136,7 +173,12 @@ dummy on  main is 📦 v0.0.1 via 🐍 v3.13.0 via 🅒 pyds-cli on ☁️
 ───────┴────────────────────────────────────────────────────────────────────────────────
 ```
 
-Using `pyds analysis`, we can use the `create` command, which basically creates a new notebook in the `notebooks/` directory with the name that you specify, and additional packages on top of the default packages:
+Using `pyds analysis`,
+we can use the `create` command,
+which basically creates a new notebook in the `notebooks/` directory
+with the name that you specify,
+and additional packages
+on top of the default packages:
 
 ```bash
 dummy on  main is 📦 v0.0.1 via 🐍 v3.13.0 via 🅒 pyds-cli on ☁️  ericmajinglong@gmail.com
@@ -218,15 +260,43 @@ dummy on  main [?] is 📦 v0.0.1 via 🐍 v3.13.0 via 🅒 pyds-cli on ☁�
 ───────┴────────────────────────────────────────────────────────────────────────────────
 ```
 
-As you can see, we have the default packages but also `pymc`, `arviz`, and `numba` installed. Underneath the hood, `juv` is doing most of the magic of adding dependencies, but `pyds-cli` simply composes in the ability to read from `pyproject.toml`. In a world where company-specific tooling were built, such tooling might also include [automatically configuring keyrings for authentication on every call](https://ericmjl.github.io/blog/2024/9/19/how-to-set-up-pixi-with-codeartifacts/).
+As you can see,
+we have the default packages
+but also `pymc`, `arviz`, and `numba` installed.
+Underneath the hood,
+`juv` is doing most of the magic of adding dependencies,
+but `pyds-cli` simply composes in the ability to read from `pyproject.toml`.
+In a world where company-specific tooling were built,
+such tooling might also include [automatically configuring keyrings for authentication on every call](https://ericmjl.github.io/blog/2024/9/19/how-to-set-up-pixi-with-codeartifacts/).
 
-All in all, I very much like the idea of _configurable and disposable_ (but nonetheless configurable) environments. `juv` helps support this idea! It essentially takes what `uv` would do and apply it to Jupyter notebooks, auto-creating the necessary kernel behind-the-scenes. My wrapping of `juv` within `pyds-cli` merely has to add in opinionated configuration; the rest of it is a near one-to-one mapping. I like where the Python tooling ecosystem is headed, the future is exciting!
+All in all,
+I very much like the idea of _configurable and disposable_ (but nonetheless configurable) environments.
+`juv` helps support this idea!
+It essentially takes what `uv` would do
+and apply it to Jupyter notebooks,
+auto-creating the necessary kernel behind-the-scenes.
+My wrapping of `juv` within `pyds-cli`
+merely has to add in opinionated configuration;
+the rest of it is a near one-to-one mapping.
+I like where the Python tooling ecosystem is headed,
+the future is exciting!
 ---
 pub_date: 2024-11-08
 ---
 twitter_handle: ericmjl
 ---
-summary: In this blog post, I explore the innovative 'juv' package, which simplifies Python environment management for Jupyter notebooks by embedding dependencies directly within the notebook file. This approach eliminates the need for separate environment files, making notebooks easily shareable and reducing setup complexity. I also discuss integrating 'juv' with 'pyds-cli' to streamline ad-hoc data analyses within organizations, enhancing reproducibility and reducing environment conflicts. Curious about how this could change your data science workflow?
+summary: In this blog post,
+I explore the innovative 'juv' package,
+which simplifies Python environment management for Jupyter notebooks
+by embedding dependencies directly within the notebook file.
+This approach eliminates the need for separate environment files,
+making notebooks easily shareable
+and reducing setup complexity.
+I also discuss integrating 'juv' with 'pyds-cli'
+to streamline ad-hoc data analyses within organizations,
+enhancing reproducibility
+and reducing environment conflicts.
+Curious about how this could change your data science workflow?
 ---
 tags:
 
