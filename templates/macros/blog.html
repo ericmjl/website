@@ -126,7 +126,9 @@
 
       {% if post.attachments.get("logo.webp") %}
       {% set img = post.attachments.get("logo.webp") %}
-      <img src="{{ img|url }}" style="padding: 10px;" >
+      <a href="{{ post|url }}" style="text-decoration: none;">
+        <img src="{{ img|url }}" >
+      </a>
       {% endif %}
 
       <div class="blog-card-right">
@@ -151,6 +153,5 @@
       </div>
     </div>
   </div>
-
 </div>
 {% endmacro %}
