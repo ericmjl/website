@@ -1,0 +1,263 @@
+title: Deploying Ollama on Modal
+---
+author: Eric J. Ma
+---
+body:
+
+I recently learned how to deploy [Ollama](https://ollama.com/) to [Modal](https://modal.com/)! I mostly copied code from another source but modified it just enough that I think I have upgraded my mental model of Modal and want to leave notes. My motivation here was to gain access to open source models that are larger than can fit comfortably on my 16GB M1 MacBook Air.
+
+## Credits
+
+In this case, I feel obliged to give credit where credit is due:
+
+- The [Modal Blog](https://modal.com/blog/how_to_run_ollama_article) has a lot of great resources.
+- The [original code](https://github.com/irfansharif/ollama-modal/tree/master) by Irfan Sharif was great for my learning journey.
+
+## The script
+
+If you're here just for the script, then this is what you'll want:
+
+```python
+# file: endpoint.py
+import modal
+import os
+import subprocess
+import time
+
+MODEL = os.environ.get("MODEL", "llama3.1")
+
+DEFAULT_MODELS = ["llama3.1", "gemma2:9b", "phi3", "qwen2.5:32b"]
+
+
+def pull():
+    subprocess.run(["systemctl", "daemon-reload"])
+    subprocess.run(["systemctl", "enable", "ollama"])
+    subprocess.run(["systemctl", "start", "ollama"])
+    wait_for_ollama()
+    for model in DEFAULT_MODELS:
+        subprocess.run(["ollama", "pull", model], stdout=subprocess.PIPE)
+
+
+def wait_for_ollama(timeout: int = 30, interval: int = 2) -> None:
+    """Wait for Ollama service to be ready.
+
+    :param timeout: Maximum time to wait in seconds
+    :param interval: Time between checks in seconds
+    """
+    import httpx
+    from loguru import logger
+
+    start_time = time.time()
+    while True:
+        try:
+            response = httpx.get("http://localhost:11434/api/version")
+            if response.status_code == 200:
+                logger.info("Ollama service is ready")
+                return
+        except httpx.ConnectError:
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Ollama service failed to start")
+            logger.info(
+                f"Waiting for Ollama service... ({int(time.time() - start_time)}s)"
+            )
+            time.sleep(interval)
+
+
+image = (
+    modal.Image.debian_slim()
+    .apt_install("curl", "systemctl")
+    .run_commands(  # from https://github.com/ollama/ollama/blob/main/docs/linux.md
+        "curl -L https://ollama.com/download/ollama-linux-amd64.tgz -o ollama-linux-amd64.tgz",
+        "tar -C /usr -xzf ollama-linux-amd64.tgz",
+        "useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama",
+        "usermod -a -G ollama $(whoami)",
+    )
+    .copy_local_file("ollama.service", "/etc/systemd/system/ollama.service")
+    .pip_install("ollama", "httpx", "loguru")
+    .run_function(pull)
+)
+app = modal.App(name="ollama", image=image)
+
+
+@app.cls(
+    gpu=modal.gpu.A10G(count=1),
+    container_idle_timeout=300,
+)
+class Ollama:
+    @modal.build()
+    def build(self):
+        subprocess.run(["systemctl", "daemon-reload"])
+        subprocess.run(["systemctl", "enable", "ollama"])
+
+    @modal.enter()
+    def enter(self):
+        subprocess.run(["systemctl", "start", "ollama"])
+        wait_for_ollama()
+        subprocess.run(["ollama", "pull", MODEL])
+
+    @modal.web_endpoint(docs=True)
+    def v1_chat_completions(self, message: str, model: str = MODEL):
+        import ollama
+
+        response = ollama.chat(
+            model=model, messages=[{"role": "user", "content": message}]
+        )
+        return response
+```
+
+## Breakdown
+
+Let me break down what I'm doing in each function.
+
+Firstly, the `pull` function is used during the image build definition (more on that later). I have decided that my image should bake in at least the default models as defined by the `DEFAULT_MODELS` list.
+
+```python
+DEFAULT_MODELS = ["llama3.1", "gemma2:9b", "phi3", "qwen2.5:32b"]
+
+def pull():
+    subprocess.run(["systemctl", "daemon-reload"])
+    subprocess.run(["systemctl", "enable", "ollama"])
+    subprocess.run(["systemctl", "start", "ollama"])
+    wait_for_ollama()
+    for model in DEFAULT_MODELS:
+        subprocess.run(["ollama", "pull", model], stdout=subprocess.PIPE)
+```
+
+The Image build definition starts with a `debian_slim` base image. We then further install other linux system packages and `pip` install additional dependencies. Finally, we run the `pull` function so that we have the pre-baked models ready within the container. This design choice increases the container size by gigabytes, but it allows us to sidestep waiting for models to download on-the-fly when we are running the container live.
+
+```python
+image = (
+    modal.Image.debian_slim()
+    .apt_install("curl", "systemctl")
+    .run_commands(  # from https://github.com/ollama/ollama/blob/main/docs/linux.md
+        "curl -L https://ollama.com/download/ollama-linux-amd64.tgz -o ollama-linux-amd64.tgz",
+        "tar -C /usr -xzf ollama-linux-amd64.tgz",
+        "useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama",
+        "usermod -a -G ollama $(whoami)",
+    )
+    .copy_local_file("ollama.service", "/etc/systemd/system/ollama.service")
+    .pip_install("ollama", "httpx", "loguru")
+    .run_function(pull)
+)
+```
+
+With the container image defined, I then define the modal App:
+
+```python
+app = modal.App(name="ollama", image=image)
+```
+
+This creates a Modal app. From there, I can create the actual app class where execution happens.
+
+```python
+@app.cls(
+    gpu=modal.gpu.A10G(count=1),
+    container_idle_timeout=300,
+)
+class Ollama:
+    @modal.build()
+    def build(self):
+        subprocess.run(["systemctl", "daemon-reload"])
+        subprocess.run(["systemctl", "enable", "ollama"])
+
+    @modal.enter()
+    def enter(self):
+        subprocess.run(["systemctl", "start", "ollama"])
+
+
+
+    @modal.web_endpoint(docs=True)
+    def v1_chat_completions(self, message: str, model: str = MODEL):
+        import ollama
+
+        wait_for_ollama()
+
+        response = ollama.chat(
+            model=model, messages=[{"role": "user", "content": message}]
+        )
+        return response
+```
+
+In this class, I am taking advantage of the fact that I can explicitly define what happens within the container lifecycle. On `build`, after building the image, we ensure that `ollama` is enabled, and as soon as we `enter` into the image runtime, we start `ollama`. Finally, we have a web endpoint that is defined with Swagger API docs enabled (`docs=True`). There, we make sure `ollama` is running, wait for it, and then send out an API call to the local Ollama that is running. I also make sure that we are using a GPU-enabled container.
+
+I have a `wait_for_ollama` function, which is used within the App definition:
+
+```python
+def wait_for_ollama(timeout: int = 30, interval: int = 2) -> None:
+    """Wait for Ollama service to be ready.
+
+    :param timeout: Maximum time to wait in seconds
+    :param interval: Time between checks in seconds
+    """
+    import httpx
+    from loguru import logger
+
+    start_time = time.time()
+    while True:
+        try:
+            response = httpx.get("http://localhost:11434/api/version")
+            if response.status_code == 200:
+                logger.info("Ollama service is ready")
+                return
+        except httpx.ConnectError:
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Ollama service failed to start")
+            logger.info(
+                f"Waiting for Ollama service... ({int(time.time() - start_time)}s)"
+            )
+            time.sleep(interval)
+```
+
+This function exists because I noticed that there were occasions when the Ollama service needed additional wait time to come live before I could interact with it. In these circumstances, having the `wait_for_ollama` function available allowed me to avoid having the program error out just because Ollama wasn't ready at that exact moment.
+
+## Deploy
+
+Now, with this Python script in place, we can deploy it onto Modal:
+
+```bash
+modal deploy endpoint.py
+```
+
+Modal will build the container on the cloud and deploy it:
+
+```bash
+❯ modal deploy endpoint.py
+✓ Created objects.
+├── 🔨 Created mount /Users/ericmjl/github/incubator/ollama-modal/endpoint.py
+├── 🔨 Created mount ollama.service
+├── 🔨 Created function pull.
+├── 🔨 Created function Ollama.build.
+├── 🔨 Created function Ollama.*.
+└── 🔨 Created web function Ollama.v1_chat_completions => https://<autogenerated_subdomain>.modal.run
+✓ App deployed in 3.405s! 🎉
+
+View Deployment: https://modal.com/apps/<username>/main/deployed/<app_name>
+```
+
+It won't always be ~3 sec; usually, on first build, this will take ~5 minutes or so.
+
+Now, because of the `docs=True` parameter set in the `v1_chat_completions` method decorator, I have access to the Swagger API that is auto-generated, which lets me hand-test the API before I try to call on it:
+
+![Swagger API](./swagger.webp)
+
+My next steps are to figure out how to make this work with [LlamaBot](https://github.com/ericmjl/llamabot). I haven't yet figured out if it's possible to make the endpoint URL match the OpenAI format, in which case it'll be dead simple to drop in my Ollama-on-Modal endpoint onto [LiteLLM](https://github.com/BerriAI/litellm). However, if that's not possible, then my backup plan is to figure out a way to proxy requests to the Ollama-on-Modal endpoint with minimal configuration.
+
+---
+pub_date: 2024-11-14
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my journey of deploying Ollama to Modal, enhancing my understanding of Modal's capabilities. I detail the script used, the setup of the Modal app, and the deployment process, which includes ensuring the Ollama service is ready and operational. This exploration not only expanded my technical skills but also prepared me for future integrations with larger models. Curious about how this deployment could streamline your projects?
+---
+tags:
+
+modal
+deployment
+open source
+api
+cloud
+gpu
+software
+models
+ollama
+large language models
