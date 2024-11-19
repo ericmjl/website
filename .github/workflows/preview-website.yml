@@ -27,6 +27,9 @@ jobs:
           pixi install
           pixi run build
 
+      - name: Remove large files
+        run: rm pr-preview/pr-124/.lektor/buildstate
+
       - name: Deploy PR Preview
         uses: rossjrw/pr-preview-action@v1.4.8
         with:
