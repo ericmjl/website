@@ -31,3 +31,4 @@ jobs:
         uses: rossjrw/pr-preview-action@v1.4.8
         with:
           source-dir: ./site
+          force: true
