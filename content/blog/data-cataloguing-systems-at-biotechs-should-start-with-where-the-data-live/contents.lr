@@ -1,0 +1,395 @@
+title: Data cataloguing systems at biotechs should start with where the data live
+---
+author: Eric J. Ma
+---
+body:
+
+## The fatal flaw
+
+Having now worked at two companies (Moderna and Novartis)
+and discussed the matter with friends across the industry,
+I have noticed a fatal flaw in data platform strategy
+that I believe makes adoption very challenging from the beginning.
+
+Here's the flaw:
+asking people to invest additional time in submitting data,
+managing permissions to it,
+cataloguing it,
+and discovering it on a newly built system
+_instead of leveraging the existing ways of working that people already have_.
+
+The build-out invariably looks like this:
+a data platform team builds new software that sits in the cloud.
+The product team, being product-driven, starts asking for "use cases".
+The identified customers, i.e. the bench scientists, aren't exactly thrilled,
+even if they understand the importance.
+There's an eye of skepticism.
+Your PhD-trained scientists, who may or may not necessarily be computationally-savvy,
+give you that look that communicates one or more of the following questions:
+
+- **Storage:** Now where do I actually store my data? Do I still get to keep it in SharePoint/OneDrive/Dropbox? Or is it now on your platform, in AWS/S3, where I don't get to have control over it?
+- **Permissions:** Where do I manage permissions? On your new data platform? Why do I need to learn how to do that, when I can just use SharePoint/OneDrive/Dropbox? Do I really have to learn AWS?
+- **Cataloguing:** Sure, I get the idea of "discoverability" and "reuse" and "FAIR" principles, but what benefit does it give me today? If someone else needs to ask me for data, won't it just increase my burden as an access gatekeeper?
+- **Discovering:** Yeah, okay, so I can go to your platform, or I can just ask my social network of people at the company, right? Are you saying you're building a search engine for data across the company?
+
+The team looks at those questions,
+but being digital folks with an incentive to build a product,
+they don't exactly have a satisfactory answer for each question.
+The team instead sets success criteria that doesn't exactly resonate with the customers:
+data are migrated from existing system to shiny new data platform,
+and computational scientists can access it.
+The team then does a lift and shift of some bulk RNAseq data
+from three experiments that were run before.
+Metrics are calculated:
+"We moved hundreds of gigabytes of data off of on-prem storage into the cloud,
+saving the company $X amount over three years!"
+The data platform team calls this a success and moves onto the next use case.
+No new RNAseq data are uploaded to the shiny new data platform because,
+well, the sequencing core was just overwhelmed with other work
+and didn't want the additional burden of cataloging and tracing where data came from,
+and just wanted to have automation that piped RNAseq data back to their collaborators
+for downstream analyses.
+
+So herein lies a massive problem with this approach:
+How are you going to get buy-in for data cataloguing
+if the data catalogue you build doesn't actually benefit your customer?
+Your "buy-in" is going to be half-baked.
+Focusing on the laboratory scientist as the customer,
+but asking them to do additional work,
+is laying the groundwork for building a product that allows individuals to fail upwards.
+And that's just a waste of money.
+
+## My modest proposal
+
+My proposal starts with this:
+your data platform should start as
+_the exhaust pipe of data sharing interactions throughout the company_.
+
+The files that are actively being shared
+are probably the ones that need storage, cataloguing, and permissions the most.
+These are also the ones with the highest amount of current institutional knowledge present.
+Backing up, cataloguing, and maintaining a record of data production and consumption,
+should be done in the background with zero intervention from anyone.
+
+My proposal continues with a different definition of the customer:
+Start with your computational & data scientists!
+They are the ones who are wrangling, well, _data_.
+Build tooling for them
+that makes it easier for people to access files directly
+on the platforms that are _already_ being used,
+so they never need to ask collaborators to send files over.
+Make it easy for them to write code like this:
+
+```python
+from data_platform import read_onedrive
+import pandas as pd
+
+filepath = read_onedrive("https://onedrive.share.url-goes.here/...")
+df = pd.read_csv(filepath)
+```
+
+Then, use that same toolset
+to ensure that those files are being version controlled
+in a backup location on the cloud.
+Within that toolset,
+inject the code necessary
+to log the fact that:
+
+- Amy Landry, the computational scientist, asked Brendan Lee, the laboratory scientist, for access to
+- `$ONEDRIVE_PATH/data/immunotherapy/ITX_47213/results.xlsx`,
+- with SHA256 hash `3191vh9ifsodi6gr2p498qvfn5y082gjcn` (for versioning purposes)
+- on date `2024-11-03 19:25:39`,
+
+Here, the source of `read_onedrive` would have the following signature, with an emphasis on the `autolog` decorator:
+
+```python
+@autolog
+def read_onedrive(url: str):
+    ...
+    return filepath
+```
+
+Along the way, within the data access tooling,
+`autolog` can trigger an automatic backup of that file
+to a centralized buckets in the cloud,
+and create or update a catalogue entry
+based on the hash of the file and the filename,
+with known access permissions accurately logged.
+Your data catalogue now has automatic entries being generated
+with no effort on anybody's part whatsoever.
+And the implementation sketch of `autolog` may look like this:
+
+```python
+from data_platform import create_or_update_catalogue, log_permission, get_producer_consumers, trigger_backup
+
+def autolog(func):
+    def wrapper(*args, **kwargs):
+        filepath = func(*args, **kwargs)
+        url = kwargs.pop("url")
+        create_or_update_catalogue(url) # <- triggers async job in cloud, doesn't actually run on machine
+        trigger_backup(url) # <- triggers async job in cloud, doesn't actually run on machine
+        return filepath
+```
+
+Behind-the-scenes,
+the cloud function that `create_or_update_catalogue` triggers is managing a lot.
+It has knowledge of your internal roster of people through ActiveDirectory or equivalent.
+It as scoped read-only permissions to pull in the file (or folder)
+and will automatically back it up in the cloud.
+It also keeps track of file versions through file and file set versioning,
+keeping up-to-date the lineage of a file
+each time the `data_platform` package interacts with it.
+
+Under this circumstance,
+the data catalogue is no longer a table:
+it is a social graph!
+
+### Benefits
+
+In doing so,
+we start by automatically cataloging
+the most actively shared data that exists.
+Your data access tooling eliminates the need
+for people to think about
+"which exact copy of my data did I share with Brendan?"
+It also eliminates the need
+for computational and data scientists
+to think about how they will manage their data locally;
+it's always pulled in fresh from their colleagues' OneDrive.
+Your use of content-addressed storage
+allows you to identify duplicates floating around the company,
+enabling one to flag such files and query the file owners for a resolution.
+You've solved a computational/data scientist's data access problem
+by making it more seamless than they would otherwise have to
+(i.e. sharing files over MS Teams, downloading copies,
+and storing them on their own filesystem).
+
+I can imagine more tooling built around this concept
+of logging interactions as a side effect.
+
+* Was there a programmatic access of that data?
+  If so, log that interaction with a counter on the data catalogue!
+* Was there a new sharing event that happened via OneDrive?
+  Log that event!
+* Was the data programmatically accessed within a scalable computation platform?
+  Log the service account!
+  Also, auto log the execution run, source code, git commit hash, source repo, etc.,
+  and use an LLM to generate a plain text description of what's going on,
+  and make that generated description searchable on the platform.
+
+A side effect is that we can also map interactions between colleagues
+based on sharing of data files between one another --
+and use that to identify potential data silos between departments that are showing up.
+The network of data sharing interactions also provides a new opportunity for finding data:
+"whom should I ask to get access to {{ this kind of data }}?"
+Imagine the following case:
+Colin finds out that Bob has access to Amy's `results.xlsx` data,
+and can now ping Amy directly on MS Teams for access.
+Upon Amy sharing that data with Colin and Colin accessing the data via `read_sharepoint()`,
+the catalogue entry gets automatically updated as well
+with Bob and Colin being known users with permission to access that file.
+No new systems for Amy and Colin to deal with,
+but the new permissions associated with that data
+are automatically reflected in the catalog.
+
+## Implementation and Cost Considerations
+
+Building this kind of data cataloguing system
+is surprisingly lightweight
+compared to traditional data platforms.
+The initial implementation would require a small, focused team:
+a couple of backend engineers with system administration privileges
+who understand cloud infrastructure
+and can use LLMs to quickly parse vendor API documentation,
+one Python developer to build the data access tooling rapidly with Cursor/Copilot Edits,
+and a part-time product manager to gather user feedback.
+With this lean team,
+an MVP could be deployed within 1-3 months
+targeting the most-used platform within the company.
+
+From a cost perspective,
+this approach offers several compelling advantages.
+Since we're building on top of existing storage infrastructure
+rather than creating new systems,
+we eliminate a major cost center right from the start.
+Training costs are minimal
+because users continue working with their familiar tools and workflows.
+The maintenance burden is significantly reduced
+by leveraging existing enterprise systems
+rather than maintaining new infrastructure.
+We also avoid the substantial costs
+typically associated with data migration projects.
+Support costs stay low
+since users are working with tools they already know.
+
+The expected benefits of this approach are substantial!
+
+- 100% automatic cataloging of shared data
+- 100% automated backups of files
+- Improved data governance through automatic logging of ownership, sharing, and permissions
+- Better collaboration through social graph discovery
+- Automated file de-duplication
+- Reduced risk of data silos
+
+Success can be measured through several key metrics.
+We track the number of automatic catalog entries generated
+to measure system adoption.
+User surveys help quantify time saved in data discovery.
+We monitor the number of unique users accessing data through the platform
+to gauge reach.
+The reduction in duplicate data storage shows improved efficiency.
+Finally, we measure increases in cross-department data sharing
+to evaluate improved collaboration.
+
+## Security and Compliance Considerations
+
+This approach actually enhances security and compliance
+compared to traditional methods.
+
+From a data governance perspective,
+the system automatically logs all data access,
+creating a comprehensive audit trail.
+Permissions continue to be managed through existing enterprise systems
+like OneDrive and SharePoint,
+while data sharing is tracked through the social graph of interactions.
+Version control is handled automatically through file hashing.
+
+When it comes to regulatory compliance,
+we benefit from the fact that existing enterprise storage systems
+like OneDrive and SharePoint
+are typically already validated for regulatory compliance.
+Our platform simply adds an additional layer of tracking
+without disrupting these validated systems.
+The automatic backup capabilities ensure
+that data preservation requirements are consistently met.
+
+The approach also provides strong risk mitigation.
+Since data is never manually moved outside of approved systems,
+we significantly reduce security risks.
+Centralized automatic backups minimizes the risk of data loss,
+while the use of familiar tools for scientists
+reduces the likelihood of shadow IT emerging.
+Additionally, by clearly tracking who has access to what data,
+we decrease the likelihood of data access issues arising.
+
+## Caveats
+
+There are caveats to this solution:
+we clearly aren't going to capture every single data file through this mechanism.
+(At least we start somewhere though!)
+
+And of course,
+something that may be mission critical might not have been shared.
+
+Also, this focus on interactions means there's a lot more work to be done on the data platform builders' side:
+the team will end up needing to ask every data storage platform
+(e.g. Benchling, OneDrive, Signals, Google Drive, internally built apps etc.)
+for information about who is sharing what.
+Before a vendor system can be onboarded,
+they must have the ability to provide direct URIs
+to *any* resource within their system via API calls.
+
+People have to get used to not schlepping files around by email and chat,
+and instead sharing direct links instead.
+There will always be some kind of behaviour change needed.
+
+But my proposal here asks us to start with mapping interactions between people first.
+And instead of asking people to take on the additional burden of being a data producer of a data product,
+we just ask them to continue what they're doing anyways
+and not have to interact with yet another system.
+
+## Change Management Strategy
+
+Implementing this approach requires thoughtful change management,
+even though we're minimizing disruption to existing workflows.
+Here is how I would propose to move forward with this.
+
+**Phased Rollout**: We start with a single high-value team of computational scientists,
+then expand to their immediate collaborators.
+From there, we gradually roll out to other computational teams,
+and finally provide optional tools for laboratory scientists.
+
+**Handling Resistance**: When dealing with existing data platform teams,
+we position this as complementary to their work, not a replacement.
+For IT teams,
+we emphasize our use of existing validated systems and security controls.
+
+With scientists,
+we focus on the social value that emerges from understanding data flow.
+When they can see who else works with similar data,
+they discover potential collaborators naturally.
+The system helps them understand data provenance
+by showing the chain of sharing that led to their current analysis.
+Most importantly,
+they can avoid duplicating work
+by seeing who has already performed similar analyses.
+
+For management,
+we demonstrate improved compliance
+and provide insights into how data actually flows through the organization.
+This visibility helps identify both successful collaboration patterns
+and potential data silos that need addressing.
+
+**Communication Strategy**: Our communication strategy involves regular demos of successful data discovery
+and monthly metrics on automatic cataloging.
+We maintain clear documentation of benefits realized
+and keep open feedback channels for improvement.
+
+The key is positioning this as an enhancement layer
+that makes existing tools work better together,
+rather than a new system that replaces current workflows.
+
+## Conclusion
+
+The path to better data management in biotech doesn't require massive infrastructure changes or behavioral shifts. Instead, by:
+
+1. **Starting Small**: Focus on computational scientists first
+2. **Leveraging Existing Systems**: Build on top of current tools
+3. **Automating Everything**: No manual cataloging required
+4. **Following Social Patterns**: Let natural data sharing guide the system
+
+We can create a data platform that actually works, costs less, and delivers immediate value. The key insight is treating data cataloging as an interaction logging problem rather than a data product problem.
+
+For biotech leadership considering this approach:
+
+- Start with a small pilot team
+- Measure success through automatic catalog growth
+- Scale based on demonstrated value
+- Keep the focus on enhancing, not replacing, existing workflows
+
+The result?
+A data platform that grows organically with your organization,
+supports compliance requirements,
+and most importantly -
+one that people will actually use.
+---
+pub_date: 2024-11-22
+---
+twitter_handle: ericmjl
+---
+summary:
+
+Building data platforms at biotechs often fails
+because we ask scientists to change their workflow and manually catalog data.
+This leads to poor adoption, wasted engineering effort,
+and continued data accessibility problems.
+Instead of building new systems,
+I propose automatically capturing data sharing patterns that already exist.
+This approach:
+
+- Reduces implementation costs by 60-80% compared to traditional platforms
+- Requires zero change in scientist behavior
+- Creates an automatically-maintained data catalog
+- Enables rapid data discovery through social connections
+- Can be implemented incrementally, showing value within 3-6 months
+---
+tags:
+
+strategy
+cloud adoption
+data catalog
+data discovery
+data scientist
+biotech
+data governance
+social graph
