@@ -43,9 +43,16 @@
   <div class="card-body">
     {{ render_author_tags(post) }}
     <hr>
+
     {% if post.attachments.get("logo.webp") %}
     {% set img = post.attachments.get("logo.webp") %}
     <img src="{{ img|url }}" style="padding: 10px;" >
+    {% endif %}
+
+    {% if post.summary %}
+    <div class="post-summary" style="font-size: 0.9em; color: #666; margin-bottom: 2em; font-style: italic;">
+      {{ post.summary }}
+    </div>
     {% endif %}
 
     <span id="post_body" name="post_body">
