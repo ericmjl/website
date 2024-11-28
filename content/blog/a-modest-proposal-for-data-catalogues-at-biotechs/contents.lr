@@ -129,6 +129,7 @@ def autolog(func):
         create_or_update_catalogue(url) # <- triggers async job in cloud, doesn't actually run on machine
         trigger_backup(url) # <- triggers async job in cloud, doesn't actually run on machine
         return filepath
+    return wrapper
 ```
 
 Behind-the-scenes,
