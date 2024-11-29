@@ -136,7 +136,8 @@ Behind-the-scenes,
 the cloud function that `create_or_update_catalogue` triggers is managing a lot.
 It has knowledge of your internal roster of people through ActiveDirectory or equivalent.
 It as scoped read-only permissions to pull in the file (or folder)
-and will automatically back it up in the cloud.
+and will automatically back it up in the cloud,
+through a [content-addressed storage](https://en.wikipedia.org/wiki/Content-addressable_storage) system.
 It also keeps track of file versions through file and file set versioning,
 keeping up-to-date the lineage of a file
 each time the `data_platform` package interacts with it.
@@ -152,7 +153,7 @@ we start by automatically cataloging
 the most actively shared data that exists.
 Your data access tooling eliminates the need
 for people to think about
-"which exact copy of my data did I share with Brendan?"
+"which exact copy of my data did Brendan share with me?"
 It also eliminates the need
 for computational and data scientists
 to think about how they will manage their data locally;
