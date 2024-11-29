@@ -4,107 +4,121 @@ author: Eric J. Ma
 ---
 body:
 
-It’s definitely not easy work; anybody trying to tell you that you can "just apply this
-model and just be done with it" is probably wrong.
+It's definitely not easy work;
+anybody trying to tell you that you can "just apply this model and just be done with it" is probably wrong.
 
 ## Simple Models
 
-Let me clarify: I agree that doing the first half of the statement, "just apply this model",
-is a good starting point, but I disagree with the latter half, "and just be done with it". I
-have found that writing and fitting a very naive Bayesian model to the data I have is a very
-simple thing. But doing the right thing is not. Let’s not be confused: I don’t mean a Naive
-Bayes model, I mean naively writing down a Bayesian model that is structured very simply
-with the simplest of priors that you can think of.
+Let me clarify:
+I agree that doing the first half of the statement, "just apply this model", is a good starting point,
+but I disagree with the latter half, "and just be done with it".
+I have found that writing and fitting a very naive Bayesian model to the data I have is a very simple thing.
+But doing the right thing is not.
+Let's not be confused:
+I don't mean a Naive Bayes model,
+I mean naively writing down a Bayesian model that is structured very simply with the simplest of priors that you can think of.
 
-Write down the model, including any transformations that you may need on the variables, and
-then lazily put in a bunch of priors. For example, you might just start with Gaussians
-everywhere a parameter could take on negative to positive infinity values, or a bounded Half
-Gaussian if it can only take values above (or below) a certain value. You might assume
-Gaussian-distributed noise in the output.
+Write down the model, including any transformations that you may need on the variables,
+and then lazily put in a bunch of priors.
+For example, you might just start with Gaussians everywhere a parameter could take on negative to positive infinity values,
+or a bounded Half Gaussian if it can only take values above (or below) a certain value.
+You might assume Gaussian-distributed noise in the output.
 
-Let’s still not be confused: Obviously this would not apply to a beta-bernoulli/binomial
-model!
+Let's still not be confused:
+Obviously this would not apply to a beta-bernoulli/binomial model!
 
-Doing the right thing, however, is where the tricky parts come in. To butcher and mash-up
-two quotes:
+Doing the right thing, however, is where the tricky parts come in.
+To butcher and mash-up two quotes:
 
 > All models are wrong, but some are useful (Box), yet some models are more wrong than others (modifying from Orwell).
-
 
 ## Critiquing Models
 
 When doing modeling, a series of questions comes up:
 
 - Do my naive assumptions about "Gaussians everywhere" hold?
-- Given that my output data are continuous, is there a better distribution that can describe
-the likelihood?
+- Given that my output data are continuous, is there a better distribution that can describe the likelihood?
 - Is there are more principled prior for some of the variables?
-- Does my link function, which joins the input data to the output parameters, properly
-describe their relationship?
+- Does my link function, which joins the input data to the output parameters, properly describe their relationship?
 - Instead of independent priors per group, would a group prior be justifiable?
-- Does my model yield posterior distributions that are within bounds of reasonable ranges,
-which come from my prior knowledge? If it does not, do I need to bound my priors instead of
-naively assuming the full support for those distributions?
+- Does my model yield posterior distributions that are within bounds of reasonable ranges, which come from my prior knowledge?
+  If it does not, do I need to bound my priors instead of naively assuming the full support for those distributions?
 
-I am quite sure that this list is non-exhaustive, and probably only covers the bare minimum
-we have to think about.
+I am quite sure that this list is non-exhaustive,
+and probably only covers the bare minimum we have to think about.
 
-Doing these model critiques is not easy. Yet, if we are to work towards truthful and
-actionable conclusions, it is a necessity. We want to know ground truth, so that we can act
-on it accordingly, and hence take appropriate actions.
+Doing these model critiques is not easy.
+Yet, if we are to work towards truthful and actionable conclusions, it is a necessity.
+We want to know ground truth, so that we can act on it accordingly,
+and hence take appropriate actions.
 
 ## Prior Experience
 
-I have experienced this modeling loop that Mike Betancourt describes (in his [Principled
-Bayesian Workflow notebook](https://github.com/betanalpha/jupyter_case_studies/blob/master/principled_bayesian_workflow/principled_bayesian_workflow.ipynb)) more than once. One involved count data, with a data
-scientist from TripAdvisor last year at the SciPy conference; another involved estimating
-cycle time distributions at work, and yet another involved a whole 4-parameter dose-response
-curve. In each scenario, model fitting and critique took hours at the minimum; I’d also note
-that with real world data, I didn’t necessarily get to the "win" was looking for.
+I have experienced this modeling loop that Mike Betancourt describes
+(in his [Principled Bayesian Workflow notebook](https://github.com/betanalpha/jupyter_case_studies/blob/master/principled_bayesian_workflow/principled_bayesian_workflow.ipynb))
+more than once.
+One involved count data, with a data scientist from TripAdvisor last year at the SciPy conference;
+another involved estimating cycle time distributions at work,
+and yet another involved a whole 4-parameter dose-response curve.
+In each scenario, model fitting and critique took hours at the minimum;
+I'd also note that with real world data,
+I didn't necessarily get to the "win" was looking for.
 
-With the count data, the TripAdvisor data scientist and I reached a point where after 5
-rounds of tweaking his model, we had a model that fit the data, and described a data
-generating process that mimics closely to what we would expect given his process. It took us
-5 rounds, and 3 hours of staring at his model and data, to get there!
+With the count data,
+the TripAdvisor data scientist and I reached a point where after 5 rounds of tweaking his model,
+we had a model that fit the data,
+and described a data generating process that mimics closely to what we would expect given his process.
+It took us 5 rounds, and 3 hours of staring at his model and data, to get there!
 
-Yet with cycle time distributions from work, a task ostensibly much easier ("just fit a
-distribution to the data"), none of my distribution choices, which reflected what I thought
-would be the data generating process, gave me a "good fit" to the data. I checked by many
-means: K-S tests, visual inspection, etc. I ended up abandoning the fitting procedure, and
-used empirical distributions instead.
+Yet with cycle time distributions from work,
+a task ostensibly much easier ("just fit a distribution to the data"),
+none of my distribution choices,
+which reflected what I thought would be the data generating process,
+gave me a "good fit" to the data.
+I checked by many means:
+K-S tests, visual inspection, etc.
+I ended up abandoning the fitting procedure,
+and used empirical distributions instead.
 
-With a 4-parameter dose-response curve, it took me 6 hours to go through 6 rounds of
-modeling to get to a point where I felt comfortable with the model. I started with a
-simplifying "Gaussians everywhere" assumption. Later, though, I hesitantly and tentatively
-putting in bound priors because I knew some posterior distributions were completely out of
-range under the naive assumptions of the first model, and were likely a result of
-insufficient range in the concentrations tested. Yet even that model remained unsatisfying:
-I was stuck with some compounds that didn’t change the output regardless of concentration,
-and that data are fundamentally very hard to fit with a dose response curve. Thus I the next
-afternoon,I modeled the dose response relationship using a Gaussian Process instead. Neither
-model is completely satisfying to the degree that the count data model was, but both the GP
-and the dose-response curve are and will be roughly correct modeling choices (with the GP
-probably being more flexible), and importantly, both are actionable by the experimentalists.
-
+With a 4-parameter dose-response curve,
+it took me 6 hours to go through 6 rounds of modeling to get to a point where I felt comfortable with the model.
+I started with a simplifying "Gaussians everywhere" assumption.
+Later, though,
+I hesitantly and tentatively putting in bound priors because I knew some posterior distributions were completely out of range under the naive assumptions of the first model,
+and were likely a result of insufficient range in the concentrations tested.
+Yet even that model remained unsatisfying:
+I was stuck with some compounds that didn't change the output regardless of concentration,
+and that data are fundamentally very hard to fit with a dose response curve.
+Thus I the next afternoon,
+I modeled the dose response relationship using a Gaussian Process instead.
+Neither model is completely satisfying to the degree that the count data model was,
+but both the GP and the dose-response curve are and will be roughly correct modeling choices (with the GP probably being more flexible),
+and importantly, both are actionable by the experimentalists.
 
 ## Thoughts
 
-As you probably can see, whenever we either (1) don’t know ground truth, and/or (2) have
-messy, real world data that don’t fit idealized assumptions about the data generating
-process, **getting the model "right" is a very hard thing to do!** Moreover, data are
-insufficient on their own to critique the model; we will always need to bring in prior
-knowledge. Much as all probability is conditional probability (Venn), all modeling involves
-prior knowledge. Sometimes it comes up in non-modellable ways, though as far as possible,
-it’s a good exercise to try incorporating that into the model definition.
+As you probably can see,
+whenever we either (1) don't know ground truth,
+and/or (2) have messy, real world data that don't fit idealized assumptions about the data generating process,
+**getting the model "right" is a very hard thing to do!**
+Moreover, data are insufficient on their own to critique the model;
+we will always need to bring in prior knowledge.
+Much as all probability is conditional probability (Venn),
+all modeling involves prior knowledge.
+Sometimes it comes up in non-modellable ways,
+though as far as possible,
+it's a good exercise to try incorporating that into the model definition.
 
 ## Canned Models?
 
-Even with that said, I’m still a fan of canned models, such as those provided by
-`pymc-learn` and `scikit-learn` - provided we recognize that their "canned" nature and are
-equipped to critique and modify said models. Yes, they provide easy, convenient baselines
-that we can get started with. We can "just apply this model". But we can’t "just be done
-with it": the hard part of getting the model right takes much longer and much more hard
-work. ***Veritas!***
+Even with that said,
+I'm still a fan of canned models,
+such as those provided by `pymc-learn` and `scikit-learn` - provided we recognize that their "canned" nature and are equipped to critique and modify said models.
+Yes, they provide easy, convenient baselines that we can get started with.
+We can "just apply this model".
+But we can't "just be done with it":
+the hard part of getting the model right takes much longer and much more hard work.
+***Veritas!***
 
 ---
 pub_date: 2018-11-07
