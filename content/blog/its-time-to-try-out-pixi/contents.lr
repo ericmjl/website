@@ -340,10 +340,9 @@ jax = "*"
 pytorch = "*"
 
 [tool.pixi.feature.cuda]
-platforms = ["linux-64"]
 system-requirements = {cuda = "12"} # this will support CUDA minor/patch versions!
 
-[tool.pixi.feature.cuda.dependencies]
+[tool.pixi.feature.cuda.target.linux-64.dependencies]
 jaxlib = { version = "*", build = "cuda12" }
 
 # Environments
