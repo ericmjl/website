@@ -196,7 +196,7 @@ Overall, the MRNA stock has shown some variability in its prices over the last 1
 
 (a) **Caching intermediate results**:The agent caches results like numerical arrays,
 reducing redundant computation and saving time and cost.
-Results are stored in a memory dictionary indexed by their SHA256 hash keys,
+Results are stored in a memory dictionary indexed by their SHA-256 hash keys,
 ensuring efficient reuse of previously computed outcomes
 and cost savings on output token usage.
 
