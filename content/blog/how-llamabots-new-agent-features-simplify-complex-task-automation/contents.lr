@@ -1,0 +1,250 @@
+title: How LlamaBot's new agent features simplify complex task automation
+---
+author: Eric J. Ma
+---
+body:
+
+## A Pythonic way to build agents
+
+The concept of "agents" has been swirling in the AI space for a while now,
+often polarizing opinion.
+Some see agents as the next logical step in automating complex tasks,
+while others dismiss them as over-hyped,
+glorified "just programming."
+I believe the truth lies somewhere in between—agents are neither magical nor trivial.
+Instead,
+they're tools that,
+when well-designed,
+bring immense utility to the table.
+
+With LlamaBot's new agent capabilities,
+I aimed to create an approachable yet powerful implementation for building agents.
+This post dives into the core ideas that underpin these new features,
+how they simplify agent construction,
+and why I think they strike a balance between complexity and usability.
+
+## What makes an agent?
+
+Let's start with the fundamentals.
+What exactly is an agent?
+My working definition is as follows:
+
+An **LLM agent** is a system that demonstrates the *appearance* of making goal-directed decisions autonomously.
+It operates within a scoped set of tasks it can perform,
+without requiring pre-specification of the order in which these tasks are executed.
+Three attributes set it apart:
+
+1. **Goal-oriented non-determinism**: The agent makes decisions dynamically rather than following a pre-defined sequence of actions.
+2. **Decision-making flow control**: Decisions adapt based on context, resembling a "thinking" process.
+3. **Natural language interfaces**: Inputs and outputs are in plain language, making interactions feel intuitive.
+
+These attributes combine to give agents their apparent autonomy.
+With these principles in mind,
+I designed LlamaBot's `AgentBot` to make creating and deploying agents simple,
+flexible,
+and powerful.
+
+## The heart of LlamaBot's new AgentBot
+
+### Decision-making with tools
+
+At its core,
+the `AgentBot` orchestrates tools—Python functions annotated with the `@tool` decorator.
+Given a user prompt,
+the bot selects which tools to use and in what order,
+allowing for dynamic workflows.
+This decision-making process is powered by an LLM
+and is wrapped in a structured system prompt
+that guides the agent toward making the right choices.
+For example, consider the simple task of splitting a restaurant bill:
+
+```python
+@lmb.tool
+def calculate_total_with_tip(bill_amount: float, tip_rate: float) -> float:
+    return bill_amount * (1 + tip_rate)
+
+@lmb.tool
+def split_bill(total_amount: float, num_people: int) -> float:
+    return total_amount / num_people
+
+bot = lmb.AgentBot(
+    system_prompt=lmb.system("You are my assistant with respect to restaurant bills."),
+    functions=[calculate_total_with_tip, split_bill],
+)
+```
+Here, the bot dynamically decides which tool to use based on the input.
+For a prompt like *"My dinner was 2300 without tips. Calculate my total with an 18% tip and split the bill between 4 people,"* the bot intelligently selects both `calculate_total_with_tip` and `split_bill`,
+chaining them together to provide a complete answer:
+
+> The total bill with an 18% tip is 2714.00,
+> and when split between 4 people,
+> each person should pay 678.50.
+
+## Real-world example: Stock market analysis
+
+LlamaBot's new `AgentBot` makes it easy to perform multi-step tasks like stock market analysis.
+Here's an example where I created an agent to:
+
+1. Scrape stock prices,
+2. Calculate percentiles,
+3. Detect outliers, and
+4. Summarize statistical insights.
+
+With this setup,
+you can prompt the bot with natural language,
+like: *"Analyze the last 100 days of MRNA stock prices"*,
+and receive detailed,
+actionable insights in plain English.
+
+### Code implementation
+
+Here's how the `AgentBot` was constructed for this task:
+```python
+# Import necessary tools
+import llamabot as lmb
+import numpy as np
+import httpx
+from typing import List, Dict
+from loguru import logger
+
+@lmb.tool
+def scrape_stock_prices(symbol: str) -> List[float]:
+    """Scrape historical stock prices from Yahoo Finance API."""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+    params = {"range": "100d", "interval": "1d"}
+    try:
+        with httpx.Client() as client:
+            response = client.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+            prices = data["chart"]["result"][0]["indicators"]["quote"][0]["close"]
+            return [float(price) for price in prices if price is not None]
+    except (httpx.HTTPError, KeyError, IndexError) as e:
+        logger.error(f"Error fetching stock data: {e}")
+        raise Exception(f"Failed to fetch data for {symbol}: {e}")
+
+@lmb.tool
+def calculate_percentile(data: List[float], percentile: float) -> float:
+    """Calculate the percentile value from a list of numbers."""
+    return float(np.percentile(data, percentile))
+
+@lmb.tool
+def detect_outliers(data: List[float], threshold: float = 1.5) -> List[float]:
+    """Detect outliers in data using the IQR method."""
+    q1 = np.percentile(data, 25)
+    q3 = np.percentile(data, 75)
+    iqr = q3 - q1
+    lower_bound = q1 - threshold * iqr
+    upper_bound = q3 + threshold * iqr
+    return [x for x in data if x < lower_bound or x > upper_bound]
+
+@lmb.tool
+def summarize_statistics(data: List[float]) -> Dict[str, float]:
+    """Calculate basic statistical measures for a dataset."""
+    return {
+        "mean": float(np.mean(data)),
+        "median": float(np.median(data)),
+        "std": float(np.std(data)),
+        "min": float(np.min(data)),
+        "max": float(np.max(data)),
+    }
+
+# Create the stock analysis agent
+stats_bot = lmb.AgentBot(
+    system_prompt=lmb.system(
+        """You are a stock market analysis assistant. Help analyze stock price data
+        by providing insights about their distribution, outliers, and basic statistics."""
+    ),
+    functions=[
+        scrape_stock_prices,
+        calculate_percentile,
+        detect_outliers,
+        summarize_statistics,
+    ],
+)
+
+# Using the agent for stock analysis
+response = stats_bot(
+    """Please analyze the last 100 days of MRNA stock prices:
+    1. Scrape the price data
+    2. Calculate the 90th percentile price
+    3. Detect any price outliers
+    4. Provide basic statistical summary"""
+)
+print(response.content)
+```
+
+
+For the prompt *"Analyze the last 100 days of MRNA stock prices"*, the bot responds:
+
+```text
+The analysis of the last 100 days of MRNA stock prices is complete. Here's a summary of the findings:
+
+1. **90th Percentile Price**: The 90th percentile price is approximately \$90.38. This means that 90% of the closing prices over the last 100 days were below this value, indicating that prices above this are relatively rare.
+2. **Outliers**: No outliers were detected in the data. This suggests that the price movements have been relatively stable without any extreme highs or lows that deviate significantly from the overall trend.
+3. **Basic Statistical Summary**:
+    - **Mean (Average) Price**: The average closing price was about \$67.71.
+    - **Median Price**: The median price, which is the middle value when all prices are sorted, was \$63.93. This is slightly lower than the mean, indicating a few higher prices might be pulling the average up.
+    - **Standard Deviation**: The standard deviation was \$22.36, which measures the amount of variation or dispersion in the prices. A higher standard deviation indicates more variability in the stock price.
+    - **Minimum Price**: The lowest closing price was \$36.85.
+    - **Maximum Price**: The highest closing price was \$122.50.
+
+Overall, the MRNA stock has shown some variability in its prices over the last 100 days, with a significant range between the minimum and maximum prices. However, the absence of outliers suggests that these price changes have been consistent with the general trend, without any unexpected spikes or drops.
+```
+
+## Key features of the new AgentBot
+1. **Caching intermediate results**:
+The agent caches results like numerical arrays,
+reducing redundant computation and saving time and cost.
+Results are stored in a memory dictionary indexed by their SHA256 hash keys,
+ensuring efficient reuse of previously computed outcomes
+and cost savings on output token usage.
+
+2. **Error handling as a first-class citizen**:
+Errors are handled gracefully,
+guiding users without derailing workflows.
+The `return_error` tool,
+which is built-in to the agent,
+allows the agent to identify issues explicitly,
+providing developers with actionable feedback.
+
+3. **Dynamic tool selection**:
+The agent adapts its actions based on context and task complexity.
+It leverages a decision-making model
+that determines the most relevant tools to call
+and uses cached results dynamically where appropriate.
+
+4. **High-level APIs for streamlined usage**:
+The API design ensures readability and ease of use.
+By combining Pydantic models for structured inputs and outputs
+with well-annotated Python functions,
+developers can build powerful agents with minimal boilerplate.
+
+## Conclusion: Why agents matter
+
+LlamaBot's new agent capabilities offer developers
+a practical toolset for managing complex workflows with ease.
+Rather than reinventing the wheel,
+`AgentBot` focuses on integrating thoughtful design and simplicity,
+helping users harness the strengths of existing frameworks
+while tailoring solutions to specific needs.
+
+To explore these features further,
+check out the [LlamaBot documentation](https://ericmjl.github.io/llamabot/tutorials/agentbot/).
+Let's build something amazing together!
+---
+pub_date: 2024-12-10
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the innovative features of LlamaBot's new AgentBot, designed to simplify complex task automation. I explore how these agents operate with goal-oriented non-determinism, decision-making flow control, and natural language interfaces, making them powerful yet user-friendly. I also provide real-world examples, including a detailed walkthrough of a stock market analysis. Curious about how these agents can streamline your workflows and enhance the flexibility of your LLM applications?
+---
+tags:
+
+agents
+llamabot
+automation
+interface
+python
+analysis
+workflow
