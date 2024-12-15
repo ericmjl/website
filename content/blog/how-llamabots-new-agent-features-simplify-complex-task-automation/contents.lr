@@ -180,27 +180,27 @@ For the prompt *"Analyze the last 100 days of MRNA stock prices"*, the bot respo
 ```text
 The analysis of the last 100 days of MRNA stock prices is complete. Here's a summary of the findings:
 
-1. **90th Percentile Price**: The 90th percentile price is approximately \$90.38. This means that 90% of the closing prices over the last 100 days were below this value, indicating that prices above this are relatively rare.
+1. **90th Percentile Price**: The 90th percentile price is approximately $90.38. This means that 90% of the closing prices over the last 100 days were below this value, indicating that prices above this are relatively rare.
 2. **Outliers**: No outliers were detected in the data. This suggests that the price movements have been relatively stable without any extreme highs or lows that deviate significantly from the overall trend.
 3. **Basic Statistical Summary**:
-    - **Mean (Average) Price**: The average closing price was about \$67.71.
-    - **Median Price**: The median price, which is the middle value when all prices are sorted, was \$63.93. This is slightly lower than the mean, indicating a few higher prices might be pulling the average up.
-    - **Standard Deviation**: The standard deviation was \$22.36, which measures the amount of variation or dispersion in the prices. A higher standard deviation indicates more variability in the stock price.
-    - **Minimum Price**: The lowest closing price was \$36.85.
-    - **Maximum Price**: The highest closing price was \$122.50.
+    - **Mean (Average) Price**: The average closing price was about $67.71.
+    - **Median Price**: The median price, which is the middle value when all prices are sorted, was $63.93. This is slightly lower than the mean, indicating a few higher prices might be pulling the average up.
+    - **Standard Deviation**: The standard deviation was $22.36, which measures the amount of variation or dispersion in the prices. A higher standard deviation indicates more variability in the stock price.
+    - **Minimum Price**: The lowest closing price was $36.85.
+    - **Maximum Price**: The highest closing price was $122.50.
 
 Overall, the MRNA stock has shown some variability in its prices over the last 100 days, with a significant range between the minimum and maximum prices. However, the absence of outliers suggests that these price changes have been consistent with the general trend, without any unexpected spikes or drops.
 ```
 
 ## Key features of the new AgentBot
-1. **Caching intermediate results**:
-The agent caches results like numerical arrays,
+
+(a) **Caching intermediate results**:The agent caches results like numerical arrays,
 reducing redundant computation and saving time and cost.
 Results are stored in a memory dictionary indexed by their SHA256 hash keys,
 ensuring efficient reuse of previously computed outcomes
 and cost savings on output token usage.
 
-2. **Error handling as a first-class citizen**:
+(b) **Error handling as a first-class citizen**:
 Errors are handled gracefully,
 guiding users without derailing workflows.
 The `return_error` tool,
@@ -208,13 +208,13 @@ which is built-in to the agent,
 allows the agent to identify issues explicitly,
 providing developers with actionable feedback.
 
-3. **Dynamic tool selection**:
+(c) **Dynamic tool selection**:
 The agent adapts its actions based on context and task complexity.
 It leverages a decision-making model
 that determines the most relevant tools to call
 and uses cached results dynamically where appropriate.
 
-4. **High-level APIs for streamlined usage**:
+(d) **High-level APIs for streamlined usage**:
 The API design ensures readability and ease of use.
 By combining Pydantic models for structured inputs and outputs
 with well-annotated Python functions,
@@ -233,7 +233,7 @@ To explore these features further,
 check out the [LlamaBot documentation](https://ericmjl.github.io/llamabot/tutorials/agentbot/).
 Let's build something amazing together!
 ---
-pub_date: 2024-12-10
+pub_date: 2024-12-15
 ---
 twitter_handle: ericmjl
 ---
