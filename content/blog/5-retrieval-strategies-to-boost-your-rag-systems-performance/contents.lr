@@ -10,19 +10,41 @@ body:
     mermaid.initialize({ startOnLoad: true });
 </script>
 
-Retrieval-Augmented Generation (RAG) is gaining traction as a powerful paradigm for large language models (LLMs). At its core, RAG combines two key processes: retrieval, which fetches relevant information from an external source, and generation, where the model uses that information to produce a response. This allows systems to provide more accurate, context-aware answers beyond what the model was trained on. In Jason Liu’s blog post, [_RAG is more than just embedding search_](https://jxnl.co/writing/2023/09/17/rag-is-more-than-embeddings/), he makes a compelling argument: Retrieval in RAG systems goes far beyond vector similarity searches. Expanding on this idea, we’ll explore a basic ontology of retrieval methods, breaking down their features, use cases, and practical examples.
+Retrieval-Augmented Generation (RAG) is gaining traction
+as a powerful paradigm for large language models (LLMs).
+
+At its core,
+RAG combines two key processes:
+retrieval,
+which fetches relevant information from an external source,
+and generation,
+where the model uses that information to produce a response.
+
+This allows systems to provide more accurate,
+context-aware answers beyond what the model was trained on.
+
+In Jason Liu's blog post,
+[_RAG is more than just embedding search_](https://jxnl.co/writing/2023/09/17/rag-is-more-than-embeddings/),
+he makes a compelling argument:
+Retrieval in RAG systems goes far beyond vector similarity searches.
+
+Expanding on this idea,
+we'll explore a basic ontology of retrieval methods,
+breaking down their features,
+use cases,
+and practical examples.
 
 ## Methods of retrieval
 
 Retrieval methods in RAG can be broadly categorized based on their level of automation and how they interact with data. Below is a table summarizing the key approaches:
 
-|Method Name|Automation|Example|
-|---|---|---|
-|Human-Curated|Manual|Humans copy/paste known context into ChatGPT’s chat box, which is then used to generate a response. Lack of automation makes this non-scalable|
-|Exact Keyword Search|Automated|Use a bot to extract or enhance a query with keywords, which are in turn used to retrieve texts with exact keyword matching.|
-|Fuzzy Keyword Search|Automated|Using keywords, perform fuzzy text search of each term to identify which texts to return.|
-|Vector Similarity Search|Automated|Using the full-length query, or enhanced versions of the query, identify either the top K text chunks with embedding vector similarity or those above a threshold.|
-|Knowledge Graph-based Retrieval|Automated|Using information on a knowledge graph, retrieve text chunks based on graph structure, statistics, or information.|
+| Method Name                     | Automation | Example                                                                                                                                                            |
+|---------------------------------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Human-Curated                   | Manual     | Humans copy/paste known context into ChatGPT’s chat box, which is then used to generate a response. Lack of automation makes this non-scalable                     |
+| Exact Keyword Search            | Automated  | Use a bot to extract or enhance a query with keywords, which are in turn used to retrieve texts with exact keyword matching.                                       |
+| Fuzzy Keyword Search            | Automated  | Using keywords, perform fuzzy text search of each term to identify which texts to return.                                                                          |
+| Vector Similarity Search        | Automated  | Using the full-length query, or enhanced versions of the query, identify either the top K text chunks with embedding vector similarity or those above a threshold. |
+| Knowledge Graph-based Retrieval | Automated  | Using information on a knowledge graph, retrieve text chunks based on graph structure, statistics, or information.                                                 |
 
 Each method has unique strengths and weaknesses, and understanding these nuances is key to designing an effective RAG system.
 
@@ -30,9 +52,15 @@ Each method has unique strengths and weaknesses, and understanding these nuances
 
 ### Human-Curated
 
-Human-curated retrieval involves manually gathering the necessary context for a query. The user selects specific information from a source, such as copying a definition or relevant text, and supplies it directly to the system.
+Human-curated retrieval involves manually gathering the necessary context for a query.
+The user selects specific information from a source,
+such as copying a definition or relevant text,
+and supplies it directly to the system.
 
-**Example**: A user researching quantum mechanics copies a specific definition of “quantum entanglement” into ChatGPT before asking follow-up questions. The context is manually curated and acts as the retrieval mechanism.
+**Example**: A user researching quantum mechanics copies a specific definition of "quantum entanglement" into ChatGPT
+before asking follow-up questions.
+The context is manually curated
+and acts as the retrieval mechanism.
 
 <div class="mermaid">
 graph TD;
@@ -54,11 +82,20 @@ linked_files:
 ----
 ```
 
-**When to Use**: This method excels in scenarios where the user has domain knowledge and can curate precise context manually. However, it doesn’t scale well for larger datasets or automated systems.
+**When to Use**: This method excels in scenarios
+where the user has domain knowledge
+and can curate precise context manually.
+However,
+it doesn't scale well for larger datasets
+or automated systems.
 
 ### Exact Keyword Search
 
-Exact keyword search relies on identifying specific words or phrases in the query and using them to retrieve matching documents. It is a straightforward method that works well for structured data and predefined terminologies.
+Exact keyword search relies on identifying specific words or phrases in the query
+and using them to retrieve matching documents.
+It is a straightforward method
+that works well for structured data
+and predefined terminologies.
 
 <div class="mermaid">
 graph TD;
@@ -67,22 +104,38 @@ graph TD;
     Database --> Results[Exact Matches Returned];
 </div>
 
-**Example**: A chatbot receives the query “Python error handling.” The system extracts the keywords “Python” and “error handling” to retrieve matching documentation.
+**Example**: A chatbot receives the query "Python error handling."
+The system extracts the keywords "Python" and "error handling"
+to retrieve matching documentation.
 
-Within LlamaBot, you can stuff texts into a lightweight BM25DocStore and perform keyword-based retrieval in memory:
+Within LlamaBot,
+you can stuff texts into a lightweight BM25DocStore
+and perform keyword-based retrieval in memory:
 
-```
+```python
 import llamabot as lmb
 
 docstore = lmb.BM25DocStore(text_chunks)
 retrieved = docstore.retrieve("keyword")
 ```
 
-**When to Use**: This is effective for structured, well-tagged datasets where precision is key. However, it can miss relevant results if keywords are absent or phrased differently.
+**When to Use**: This is effective for structured,
+well-tagged datasets
+where precision is key.
+However,
+it can miss relevant results
+if keywords are absent
+or phrased differently.
 
 ### Fuzzy Keyword Search
 
-Fuzzy keyword search extends exact search by allowing for minor variations, typos, or alternate phrasings in the query. It’s particularly useful for dealing with noisy or unstructured data.
+Fuzzy keyword search extends exact search
+by allowing for minor variations,
+typos,
+or alternate phrasings in the query.
+It's particularly useful
+for dealing with noisy
+or unstructured data.
 
 <div class="mermaid">
 graph TD;
@@ -90,14 +143,37 @@ graph TD;
     FuzzyLogic --> Database[Search Database];
     Database --> Results[Fuzzy Matches Returned];
 </div>
+**Example**: A user searches for "data cleaning" in a system,
+and fuzzy search identifies relevant results
+like "data preprocessing"
+or "cleaning datasets."
 
-**Example**: A user searches for “data cleaning” in a system, and fuzzy search identifies relevant results like “data preprocessing” or “cleaning datasets.”
-
-**When to Use**: Useful for noisy or unstructured datasets. Fuzzy searches are tolerant to typos and alternate phrasings but may retrieve less precise results.
+**When to Use**: Useful for noisy
+or unstructured datasets.
+Fuzzy searches are tolerant to typos
+and alternate phrasings
+but may retrieve less precise results.
 
 ### Vector Similarity Search
 
-Vector similarity search uses dense embeddings to compare the semantic meaning of a query with chunks of text. This method is particularly popular in modern systems because it captures semantic relationships beyond exact keyword matches, making it highly effective for natural language understanding. Unlike keyword-based methods, vector search can retrieve contextually relevant information even when phrasing varies significantly, making it a critical tool for handling ambiguous or flexible queries. This method identifies top matches by calculating the similarity between the query’s embedding and stored vectors in a database.
+Vector similarity search uses dense embeddings
+to compare the semantic meaning of a query
+with chunks of text.
+This method is particularly popular in modern systems
+because it captures semantic relationships
+beyond exact keyword matches,
+making it highly effective
+for natural language understanding.
+Unlike keyword-based methods,
+vector search can retrieve contextually relevant information
+even when phrasing varies significantly,
+making it a critical tool
+for handling ambiguous
+or flexible queries.
+This method identifies top matches
+by calculating the similarity
+between the query's embedding
+and stored vectors in a database.
 
 <div class="mermaid">
 graph TD;
@@ -106,20 +182,41 @@ graph TD;
     Compare --> Results[Retrieve Top K Matches];
 </div>
 
-**Example**: Given the query “Explain neural networks,” the system generates a vector embedding of the query and retrieves top K similar documents based on cosine similarity.
+**Example**: Given the query "Explain neural networks,"
+the system generates a vector embedding of the query
+and retrieves top K similar documents
+based on cosine similarity.
 
-Within LlamaBot, you can use LanceDB or ChromaDB locally to store vector embeddings of text chunks. After chunking:
+Within LlamaBot,
+you can use LanceDB or ChromaDB locally
+to store vector embeddings of text chunks.
+After chunking:
 
-```
+```python
 docstore = lmb.LanceDBDocStore(text_chunks)
 retrieved = docstore.retrieve(query)
 ```
 
-**When to Use**: This is ideal for semantically rich, large-scale datasets. It captures nuanced relationships but requires computationally expensive indexing and may struggle with highly specific queries or vague, open-ended prompts like "tell me what's going on here," which lack semantic alignment with specific text chunks.
+**When to Use**: This is ideal
+for semantically rich,
+large-scale datasets.
+It captures nuanced relationships
+but requires computationally expensive indexing
+and may struggle with highly specific queries
+or vague, open-ended prompts
+like "tell me what's going on here,"
+which lack semantic alignment
+with specific text chunks.
 
 ### Knowledge Graph-based Retrieval
 
-Knowledge graph-based retrieval uses structured graphs that represent relationships between entities. Queries trigger graph traversals to fetch contextually connected information based on the graph’s structure.
+Knowledge graph-based retrieval
+uses structured graphs
+that represent relationships
+between entities.
+Queries trigger graph traversals
+to fetch contextually connected information
+based on the graph's structure.
 
 <div class="mermaid">
 graph TD;
@@ -128,10 +225,18 @@ graph TD;
     Entities --> RelatedTexts[Retrieve Texts from Entities];
     RelatedTexts --> Results[Output Retrieved Texts];
 </div>
+**Example**: A query about "Albert Einstein"
+triggers traversal of a knowledge graph
+to fetch connected entities
+like "Theory of Relativity"
+or "Nobel Prize 1921."
 
-**Example**: A query about “Albert Einstein” triggers traversal of a knowledge graph to fetch connected entities like “Theory of Relativity” or “Nobel Prize 1921.”
-
-**When to Use**: Best suited for structured datasets where relationships between entities are explicitly defined. While powerful, it requires the upfront construction of a knowledge graph, which can be expensive.
+**When to Use**: Best suited for structured datasets
+where relationships between entities
+are explicitly defined.
+While powerful,
+it requires the upfront construction of a knowledge graph,
+which can be expensive.
 
 ### Combining retrieval methods
 
@@ -147,29 +252,104 @@ graph TD;
     ExactKeywordSearch --> UnifiedResults[Unified Retrieved Results];
 </div>
 
-In real-world scenarios, a combination of retrieval methods often provides the most robust solution. However, blending these methods comes with its own challenges. Managing computational costs can become a concern, especially when multiple methods (e.g., vector search and graph traversal) need to run sequentially or in parallel. Prioritizing retrieved results is another challenge, as combining outputs requires careful scoring or ranking to ensure relevance without overwhelming the LLM with redundant information for generation.
+In real-world scenarios,
+a combination of retrieval methods
+often provides the most robust solution.
+However,
+blending these methods
+comes with its own challenges.
+Managing computational costs
+can become a concern,
+especially when multiple methods
+(e.g., vector search and graph traversal)
+need to run sequentially or in parallel.
+Prioritizing retrieved results
+is another challenge,
+as combining outputs
+requires careful scoring or ranking
+to ensure relevance
+without overwhelming the LLM
+with redundant information for generation.
 
-For example, a system might:
+For example,
+a system might:
 
-1. Use a knowledge graph to identify related entities or terms to refine a vague query.
-2. Generate natural language queries enhanced with these terms for embedding-based vector similarity searches.
-3. Extract keywords from the enhanced query for fuzzy and exact keyword searches.
-4. Retrieve relevant texts from all methods and merge them into a unified set of results.
+1. Use a knowledge graph
+to identify related entities or terms
+to refine a vague query.
+2. Generate natural language queries
+enhanced with these terms
+for embedding-based vector similarity searches.
+3. Extract keywords from the enhanced query
+for fuzzy and exact keyword searches.
+4. Retrieve relevant texts from all methods
+and merge them into a unified set of results.
 
-**Example**: Consider a user asking, “Tell me what’s going on here,” with no clear context. The system could use a knowledge graph to expand this vague query, identifying related concepts or entities. For instance, if the context involves neural networks, the graph might suggest terms like “gradient descent” or “backpropagation.” These terms could:
+**Example**: Consider a user asking,
+"Tell me what's going on here,"
+with no clear context.
+The system could use a knowledge graph
+to expand this vague query,
+identifying related concepts or entities.
+For instance,
+if the context involves neural networks,
+the graph might suggest terms
+like "gradient descent" or "backpropagation."
+These terms could:
 
-- Form part of an enhanced natural language query, such as “How does gradient descent relate to neural networks?” for embedding-based searches.
-- Generate keywords like “gradient,” “neural,” and “backpropagation” for exact or fuzzy keyword searches.
+- Form part of an enhanced natural language query,
+such as "How does gradient descent relate to neural networks?"
+for embedding-based searches.
+- Generate keywords like "gradient," "neural," and "backpropagation"
+for exact or fuzzy keyword searches.
 
-Results from all retrieval methods would then be merged and ranked to provide the most relevant set of texts for answering the query.
+Results from all retrieval methods
+would then be merged and ranked
+to provide the most relevant set of texts
+for answering the query.
 
-This layered approach balances broad semantic understanding with precision and contextual depth.
+This layered approach
+balances broad semantic understanding
+with precision and contextual depth.
 
 ## Conclusion
 
-Retrieval is the cornerstone of RAG systems, and the choice of method can profoundly impact performance and user experience. While vector similarity search is a popular default, it is not a one-size-fits-all solution. Depending on the data structure, query complexity, and computational resources, methods like fuzzy search, exact keyword search, or even manual curation may be more appropriate. Knowledge graph-based retrieval adds another layer of sophistication for specific use cases.
+Retrieval is the cornerstone of RAG systems,
+and the choice of method
+can profoundly impact performance
+and user experience.
+While vector similarity search
+is a popular default,
+it is not a one-size-fits-all solution.
+Depending on the data structure,
+query complexity,
+and computational resources,
+methods like fuzzy search,
+exact keyword search,
+or even manual curation
+may be more appropriate.
+Knowledge graph-based retrieval
+adds another layer of sophistication
+for specific use cases.
 
-Crucially, combining these methods can unlock even greater potential. By layering techniques, such as vector similarity, keyword filtering, and knowledge graph traversal, you can design retrieval systems that are both broad and precise. The key takeaway? Stay flexible and adaptable with your retrieval strategies. By combining methods like vector search, keyword filtering, and knowledge graph traversal, you can create systems that are both precise and versatile. Effective RAG design requires a nuanced understanding of retrieval methods and their trade-offs. By leveraging the right mix of strategies, you can unlock the full potential of retrieval-augmented generation.
+Crucially, combining these methods can unlock even greater potential.
+By layering techniques,
+such as vector similarity,
+keyword filtering,
+and knowledge graph traversal,
+you can design retrieval systems that are both broad and precise.
+The key takeaway?
+Stay flexible and adaptable with your retrieval strategies.
+By combining methods like vector search,
+keyword filtering,
+and knowledge graph traversal,
+you can create systems that are both precise and versatile.
+Effective RAG design requires a nuanced understanding
+of retrieval methods and their trade-offs.
+By leveraging the right mix of strategies,
+you can unlock the full potential
+of retrieval-augmented generation.
+
 ---
 pub_date: 2024-12-16
 ---
