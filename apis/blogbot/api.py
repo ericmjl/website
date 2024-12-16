@@ -9,9 +9,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from llamabot import ImageBot, StructuredBot
 
-from .models import LinkedInPost, SubstackPost, Summary, Tags, TwitterPost
+from .models import (
+    DallEImagePrompt,
+    LinkedInPost,
+    SubstackPost,
+    Summary,
+    Tags,
+    TwitterPost,
+)
 from .prompts import (
-    bannerbot_sysprompt,
+    bannerbot_dalle_prompter_sysprompt,
     compose_linkedin_post,
     compose_substack_post,
     compose_summary,
@@ -56,7 +63,7 @@ async def generate_post(
 
     if post_type == "linkedin":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=LinkedInPost
+            socialbot_sysprompt(), model="gpt-4o", pydantic_model=LinkedInPost
         )
         print("Generating LinkedIn post...")
         social_post = bot(compose_linkedin_post(body, blog_url))
@@ -64,7 +71,7 @@ async def generate_post(
         content = social_post.format_post()
     elif post_type == "twitter":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=TwitterPost
+            socialbot_sysprompt(), model="gpt-4o", pydantic_model=TwitterPost
         )
         print("Generating Twitter post...")
         social_post = bot(compose_twitter_post(body, blog_url))
@@ -72,29 +79,28 @@ async def generate_post(
         content = social_post.format_post()
     elif post_type == "substack":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=SubstackPost
+            socialbot_sysprompt(), model="gpt-4o", pydantic_model=SubstackPost
         )
         social_post = bot(compose_substack_post(body, blog_url))
         content = social_post.format_post()
     elif post_type == "summary":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=Summary
+            socialbot_sysprompt(), model="gpt-4o", pydantic_model=Summary
         )
         social_post = bot(compose_summary(body, blog_url))
         content = social_post.content
     elif post_type == "tags":
-        bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4-turbo", pydantic_model=Tags
-        )
+        bot = StructuredBot(socialbot_sysprompt(), model="gpt-4o", pydantic_model=Tags)
         tags = bot(compose_tags(body))
         content = "\n".join(tags.content)
     elif post_type == "banner":
-        bot = StructuredBot(
-            "You are an expert blogger.", model="gpt-4-turbo", pydantic_model=Summary
+        dalle_prompt_bot = StructuredBot(
+            bannerbot_dalle_prompter_sysprompt(),
+            model="gpt-4o",
+            pydantic_model=DallEImagePrompt,
         )
-        summary = bot(compose_summary(body, blog_url)).content
-        prompt = f"{bannerbot_sysprompt()}\n\nBlog post summary: {summary}"
-        banner_url = bannerbot(prompt, return_url=True)
+        dalle_prompt = dalle_prompt_bot(body).content
+        banner_url = bannerbot(dalle_prompt, return_url=True)
         return templates.TemplateResponse(
             "banner_result.html", {"request": request, "banner_url": banner_url}
         )

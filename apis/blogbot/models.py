@@ -226,6 +226,10 @@ class Summary(BaseModel):
     content: str = Field(..., description="The content of the summary")
 
 
+class DallEImagePrompt(BaseModel):
+    content: str = Field(..., description="The content of the DALL-E image prompt")
+
+
 class Tags(BaseModel):
     content: list[str] = Field(..., description="The list of tags")
 

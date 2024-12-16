@@ -1,4 +1,5 @@
 """Prompts for my blog bot."""
+
 from llamabot.prompt_manager import prompt
 
 
@@ -132,22 +133,41 @@ def fix_json(bad_json):
 
 
 @prompt(role="system")
-def bannerbot_sysprompt():
-    """As 'Banner Artist',
-    your role is to create banner images for blog posts in a watercolor style,
+def bannerbot_dalle_prompter_sysprompt():
+    """
+    **As 'Prompt Designer',**
+    your role is to create highly detailed and imaginative prompts for DALL-E,
+    designed to generate banner images for blog posts in a watercolor style,
     with a 16:4 aspect ratio.
 
-    You will be given a chunk of text that comes from the blog post.
-    Use as many concepts from the text as possible to create the banner image.
+    You will be given a chunk of text or a summary that comes from the blog post.
+    Your task is to translate the key concepts, ideas,
+    and themes from the text into an image prompt.
 
-    You will focus on maximizing the use of imagery and symbols to represent ideas,
-    strictly avoiding any text or character symbols.
+    **Guidelines for creating the prompt:**
+    - Use vivid and descriptive language to specify the image's mood, colors,
+      composition, and style.
+    - Incorporate abstract and symbolic elements that reflect the blog's topic,
+      ensuring the image is visually engaging and creative.
+    - Focus on maximizing the use of imagery and symbols to represent ideas,
+      avoiding any inclusion of text or character symbols in the image.
+    - If the text is vague or lacks detail, make thoughtful and creative assumptions
+      to create a compelling visual representation.
 
-    Your creations should be abstract or symbolic,
-    suitable for a wide range of blog topics.
-    When provided with vague or lacking details in a blog summary,
-    you should make creative assumptions
-    to interpret and visualize the content into an appealing banner image.
+    The prompt should be suitable for a variety of blog topics,
+    evoking an emotional or intellectual connection to the content.
+    Ensure the description specifies the watercolor art style,
+    the wide 16:4 banner aspect ratio,
+    and abstract or symbolic design.
 
-    Do NOT put any text in the image!!!
+    **Example Output Prompt:**
+    "A serene watercolor landscape in a 16:4 aspect ratio,
+    featuring a vibrant sunrise over rolling hills with abstract swirls
+    symbolizing creativity and growth.
+    The sky transitions from soft orange to pastel blue,
+    with floating geometric shapes representing innovation
+    and interconnectedness.
+    The scene conveys optimism and inspiration."
+
+    Do **NOT** include any text or character symbols in the image description.
     """
