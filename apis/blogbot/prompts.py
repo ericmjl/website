@@ -120,18 +120,6 @@ def compose_summary(text, url):
     """
 
 
-@prompt(role="user")
-def fix_json(bad_json):
-    """The following is a bad JSON that was returned by your sibling bot.
-
-        {{ bad_json }}
-
-    Can you fix it for me such that its contents are preserved
-    but it is now valid JSON?
-    Return only the JSON and nothing else.
-    """
-
-
 @prompt(role="system")
 def bannerbot_dalle_prompter_sysprompt():
     """

@@ -159,7 +159,12 @@ class SubstackSection(BaseModel):
 
 
 class SubstackPost(BaseModel):
-    title: str = Field(..., description="The title of the Substack post")
+    title: str = Field(
+        ...,
+        description=(
+            "The title of the Substack post, which is the title of the blog post."
+        ),
+    )
     subtitle: str = Field(
         ...,
         description=(
@@ -171,16 +176,17 @@ class SubstackPost(BaseModel):
     introduction: str = Field(
         ..., description="An introductory paragraph to hook the reader"
     )
-    main_content: List[SubstackSection] = Field(
-        ..., description="The main body of the post"
-    )
+    main_content: SubstackSection = Field(..., description="The main body of the post")
     conclusion: str = Field(
         ...,
         description=("A concluding paragraph summarizing key points of the blog post."),
     )
     call_to_action: str = Field(
         ...,
-        description="A call to action for readers, such as subscribing or sharing",
+        description=(
+            "A call to action for readers, such as reading the blog post, "
+            "forwarding it on, or subscribing"
+        ),
     )
 
     signoff: str = Field(
@@ -213,8 +219,7 @@ class SubstackPost(BaseModel):
         post_content += f"*{self.subtitle}*\n\n"
         post_content += f"{self.introduction}\n\n"
 
-        for section in self.main_content:
-            post_content += f"{section.content}\n\n"
+        post_content += f"{self.main_content.content}\n\n"
 
         post_content += f"{self.conclusion}\n\n"
         post_content += f"*{self.call_to_action}*\n\n"
