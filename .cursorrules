@@ -1,0 +1,14 @@
+For ad-hoc scripts, in-line script metadata can be used to provide Python versions.
+In-line Script metadata looks like this:
+
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "requests<3",
+#   "rich",
+# ]
+# ///
+
+I usually like to be at least 1 minor version behind the latest,
+and the latest Python version as of 2024-12-19 is Python 3.13.
+For any scripts that I ask you to make, make sure you also include the necessary dependencies.
