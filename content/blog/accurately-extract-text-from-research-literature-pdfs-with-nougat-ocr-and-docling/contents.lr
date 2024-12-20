@@ -143,12 +143,9 @@ a serverless platform that supports GPU-based processing.
 By deploying Nougat and Docling as APIs on Modal,
 I can:
 
-1. **Preprocess PDFs on-demand**:
-Use simple API calls to trigger text and figure extraction.
-2. **Leverage GPUs for performance**:
-Accelerate processing for large or complex PDFs.
-3. **Integrate with existing workflows**:
-Seamlessly use these APIs in multimodal LLM pipelines or downstream analysis.
+- **Preprocess PDFs on-demand**: Use simple API calls to trigger text and figure extraction.
+- **Leverage GPUs for performance**: Accelerate processing for large or complex PDFs.
+- **Integrate with existing workflows**: Seamlessly use these APIs in multimodal LLM pipelines or downstream analysis.
 
 This deployment will allow me to scale preprocessing tasks effortlessly
 and unlock the full potential of structured PDF data.
