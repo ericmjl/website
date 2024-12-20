@@ -1,0 +1,184 @@
+title: Accurately extract text from research literature PDFs with Nougat-OCR and Docling
+---
+author: Eric J. Ma
+---
+body:
+
+Parsing published literature into plain text is a task that seems deceptively simple.
+In reality, PDFs can be notoriously difficult to work with,
+especially when they include elements like equations, tables, and figures.
+If you're working with large language models (LLMs)
+or just trying to extract data for analysis,
+the standard text extraction tools often leave
+significant amounts of useful context behind.
+Recently, I explored two tools
+**Nougat-OCR** by Facebook Research and **Docling** by IBM
+to address this problem more effectively.
+
+## The problem: What vanilla tools miss
+
+Standard methods for extracting text from PDFs
+often work well for plain paragraphs
+but stumble when it comes to three critical areas:
+
+1. **Equations**: PDFs store equations as images or special font renderings, making it challenging to extract them accurately as structured text.
+2. **Tables**: Extracting tables often results in misaligned columns or garbled data, losing the relationships between rows and columns.
+3. **Figures**: Figures and diagrams frequently get ignored or reduced to low-quality placeholders, stripping away valuable visual context.
+
+Given these challenges, I wanted to find tools that could improve text extraction for equations, tables, and figures. Here’s what I found.
+
+## Nougat-OCR: Accurate equation and table extraction
+
+[Nougat-OCR](https://github.com/facebookresearch/nougat)
+is a tool developed by Facebook Research
+that focuses on converting scientific PDFs into structured text,
+including support for equations and tables.
+Its installation and usage are straightforward.
+
+### Installation
+
+I used the `uv` package manager to set up Nougat-OCR:
+
+```bash
+uv tool install nougat-ocr --python 3.12 --with transformers==4.38.2
+```
+
+Once installed, the `nougat` command becomes available on your system PATH.
+
+### Usage
+
+To extract text from a PDF, run the following command:
+
+```bash
+nougat data/curve-sim.pdf > data/curve-sim.mmd
+```
+
+This processes the PDF and redirects the extracted text into a Markdown file.
+
+### Key strengths
+
+Nougat-OCR handles equations and tables impressively well.
+For example,
+consider this equation from the paper
+*A curve similarity approach to parallelism testing in bioassay*:
+
+```latex
+\[f(\theta_{i},x)=a_{i}+\frac{(b_{i}-a_{i})}{1+\exp\{d_{i}(x-\log(c_{i}))\}}\,. \tag{1}\]
+```
+
+It also processes tables cleanly. Here’s an example table:
+
+```latex
+\begin{table}
+\begin{tabular}{l c c c c c c} \hline \hline
+& \multicolumn{3}{c}{Reference} & \multicolumn{3}{c}{Sample} \\ \cline{2-7}
+Concentration & 1 & 2 & 3 & 1 & 2 & 3 \\
+\hline
+125,000 & 2.086879 & 2.119145 & 2.273702 & 1.524275 & 1.438422 & 1.563780 \\
+... (truncated for brevity) ...
+\hline \hline
+\end{tabular}
+\end{table}
+```
+This table is extracted with alignment preserved,
+making it ideal for further analysis.
+However,
+**Nougat-OCR does not perform well with figures.**
+
+## Docling: Extracting figures accurately
+
+For figures,
+I turned to **Docling** by IBM.
+While Nougat-OCR shines at text-based elements like equations and tables,
+Docling focuses on images and visual components.
+
+### Installation
+
+Like Nougat-OCR,
+Docling can be installed with `uv`:
+
+```latex
+f(\theta_{i},x)=a_{i}+...
+```
+
+was rendered incorrectly as:
+
+```
+f θ i ; x ð Þ ¼ ai þ bi /C0 ai ð Þ 1 þ exp di x /C0 log ci ð Þ ð Þ f g : (1)
+```
+
+## Combining Nougat-OCR and Docling: A complete workflow
+
+To get the best of both tools, I used a multi-step workflow:
+
+**Extract text-based elements (equations, tables)** with Nougat-OCR:
+
+```bash
+nougat data/curve-sim.pdf > data/curve-sim.mmd
+```
+**Extract figures** with Docling:
+
+```bash
+docling data/curve-sim.pdf > data/curve-sim-figures.md
+```
+**Process figures with a multimodal LLM** like LlamaBot:
+
+```python
+import base64
+image = base64.decode(img_string)
+description = lmb.SimpleBot(lmb.user(image))
+print(description.content)
+```
+This approach ensures that you capture all critical components of a PDF—
+equations, tables, and figures—
+with minimal loss of context.
+
+## Next steps: Deploying on Modal for scalable preprocessing
+
+Both Nougat-OCR and Docling benefit significantly from GPU acceleration,
+especially when processing large volumes of PDFs.
+To make this workflow more scalable and accessible,
+my next step is to deploy these tools on [Modal](https://modal.com/),
+a serverless platform that supports GPU-based processing.
+By deploying Nougat and Docling as APIs on Modal,
+I can:
+
+1. **Preprocess PDFs on-demand**:
+Use simple API calls to trigger text and figure extraction.
+2. **Leverage GPUs for performance**:
+Accelerate processing for large or complex PDFs.
+3. **Integrate with existing workflows**:
+Seamlessly use these APIs in multimodal LLM pipelines or downstream analysis.
+
+This deployment will allow me to scale preprocessing tasks effortlessly
+and unlock the full potential of structured PDF data.
+
+## Conclusion
+
+Parsing PDFs into structured plain text is more than just a convenience;
+it's a necessity when working with LLMs or conducting scientific analysis.
+By combining Nougat-OCR for text-based elements and Docling for visual content,
+you can extract high-quality data from published literature.
+
+To make this solution scalable,
+deploying these tools on Modal with GPU support
+will ensure rapid, on-demand preprocessing through simple API calls.
+This workflow allows you to retain equations, tables, and figures,
+ensuring that no valuable knowledge is left behind.
+As tools like Nougat-OCR and Docling continue to improve,
+so too will our ability to make sense of complex, multimodal content.
+
+---
+pub_date: 2024-12-20
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the challenges of extracting structured text from PDFs, especially when dealing with equations, tables, and figures. I discuss two tools, Nougat-OCR by Facebook Research and Docling by IBM, which I found effective for this task. Nougat-OCR excels at handling equations and tables, while Docling excels on extracting figures. By combining these tools, we can develop a workflow that captures all critical components of a PDF. Want to know how to retain valuable knowledge from complex PDFs?
+---
+tags:
+
+docling
+nougat
+llms
+document parsing
+gpu
