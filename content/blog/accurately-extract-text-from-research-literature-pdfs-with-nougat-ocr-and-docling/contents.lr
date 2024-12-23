@@ -97,6 +97,30 @@ Docling focuses on images and visual components.
 Like Nougat-OCR,
 Docling can be installed with `uv`:
 
+```bash
+uv tool install docling --python 3.12
+```
+
+### Usage
+
+To extract images from a PDF, run:
+
+```bash
+docling data/curve-sim.pdf > data/curve-sim-figures.md
+```
+
+Docling processes the PDF and outputs images as base64-encoded strings embedded in a Markdown file. For example:
+
+![Figure 1](data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...)
+
+### Key strengths
+
+Docling faithfully extracts all figures and encodes them as reusable base64 strings, which can then be passed to a multimodal LLM for description or analysis.
+
+### Limitations
+
+Docling does not handle equations well. For example, the earlier equation:
+
 ```latex
 f(\theta_{i},x)=a_{i}+...
 ```
