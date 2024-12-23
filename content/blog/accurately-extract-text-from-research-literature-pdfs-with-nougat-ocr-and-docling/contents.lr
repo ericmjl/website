@@ -143,7 +143,7 @@ nougat data/curve-sim.pdf > data/curve-sim.mmd
 **Extract figures** with Docling:
 
 ```bash
-docling data/curve-sim.pdf > data/curve-sim-figures.md
+docling data/curve-sim.pdf
 ```
 **Process figures with a multimodal LLM** like LlamaBot:
 
