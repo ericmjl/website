@@ -275,121 +275,36 @@ class Ollama:
         :return: FastAPI application instance
         """
         return api
-```
 
-## Breakdown
+## Code Walkthrough
 
-Let me break down what I'm doing in each function.
+Let's walk through the code step by step to understand how it works.
 
-Firstly,
-the `pull` function is used during the image build definition
-(more on that later).
-I have decided that my image should bake in at least the default models
-as defined by the `DEFAULT_MODELS` list.
+### Core Configuration and Dependencies
+
+At the start, we define our default model and a list of models we want to pre-bake into our container:
 
 ```python
-DEFAULT_MODELS = ["llama3.1", "gemma2:9b", "phi3", "qwen2.5:32b"]
+MODEL = os.environ.get("MODEL", "gemma2:27b")
+DEFAULT_MODELS = ["gemma2:27b"]
+```
 
-def pull():
+### Helper Functions
+
+We have two important helper functions that manage the Ollama service:
+
+1. `pull()`: This function initializes the Ollama service and pulls the specified models:
+
+```python
+def pull() -> None:
     subprocess.run(["systemctl", "daemon-reload"])
     subprocess.run(["systemctl", "enable", "ollama"])
     subprocess.run(["systemctl", "start", "ollama"])
     wait_for_ollama()
-    for model in DEFAULT_MODELS:
-        subprocess.run(["ollama", "pull", model], stdout=subprocess.PIPE)
+    subprocess.run(["ollama", "pull", MODEL], stdout=subprocess.PIPE)
 ```
 
-The Image build definition starts with a `debian_slim` base image.
-We then further install other linux system packages
-and `pip` install additional dependencies.
-Finally,
-we run the `pull` function
-so that we have the pre-baked models ready within the container.
-This design choice increases the container size by gigabytes,
-but it allows us to sidestep waiting for models to download on-the-fly
-when we are running the container live.
-
-```python
-image = (
-    modal.Image.debian_slim()
-    .apt_install("curl", "systemctl")
-    .run_commands(  # from https://github.com/ollama/ollama/blob/main/docs/linux.md
-        "curl -L https://ollama.com/download/ollama-linux-amd64.tgz -o ollama-linux-amd64.tgz",
-        "tar -C /usr -xzf ollama-linux-amd64.tgz",
-        "useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama",
-        "usermod -a -G ollama $(whoami)",
-    )
-    .copy_local_file("ollama.service", "/etc/systemd/system/ollama.service")
-    .pip_install("ollama", "httpx", "loguru")
-    .run_function(pull)
-)
-```
-
-With the container image defined,
-I then define the modal App:
-
-```python
-app = modal.App(name="ollama", image=image)
-```
-
-This creates a Modal app.
-From there,
-I can create the actual app class where execution happens.
-
-```python
-@app.cls(
-    gpu=modal.gpu.A10G(count=1),
-    container_idle_timeout=300,
-)
-class Ollama:
-    @modal.build()
-    def build(self):
-        subprocess.run(["systemctl", "daemon-reload"])
-        subprocess.run(["systemctl", "enable", "ollama"])
-
-    @modal.enter()
-    def enter(self):
-        subprocess.run(["systemctl", "start", "ollama"])
-        wait_for_ollama()
-        subprocess.run(["ollama", "pull", MODEL])
-
-    @modal.asgi_app()
-    def serve(self):
-        """Serve the FastAPI application.
-
-        :return: FastAPI application instance
-        """
-        return api
-```
-
-In this class,
-I am taking advantage of the fact
-that I can explicitly define what happens within the container lifecycle.
-On `build`,
-after building the image,
-we ensure that `ollama` is enabled,
-and as soon as we `enter` into the image runtime,
-we start `ollama`.
-Finally,
-we have the `serve` method decorated with `@modal.asgi_app()`
-that exposes our FastAPI application.
-This is the crucial piece that ties everything together -
-it tells Modal to serve our FastAPI application,
-which includes our OpenAI-compatible endpoint,
-making it accessible over HTTP.
-I also make sure that we are using a GPU-enabled container.
-
-The `serve()` method is particularly important here.
-By decorating it with `@modal.asgi_app()`,
-we're telling Modal that this method should be used to serve our web application.
-The method simply returns our FastAPI `api` instance,
-which contains all our route definitions,
-including the OpenAI-compatible `/v1/chat/completions` endpoint.
-Modal takes care of all the underlying infrastructure needed to expose this API to the internet,
-including setting up the proper HTTP server and routing.
-
-I have a `wait_for_ollama` function,
-which is used within the App definition:
+2. `wait_for_ollama()`: This function ensures the Ollama service is ready before proceeding:
 
 ```python
 def wait_for_ollama(timeout: int = 30, interval: int = 2) -> None:
@@ -417,212 +332,113 @@ def wait_for_ollama(timeout: int = 30, interval: int = 2) -> None:
             time.sleep(interval)
 ```
 
-This function exists because I noticed
-that there were occasions when the Ollama service needed additional wait time
-to come live before I could interact with it.
-In these circumstances,
-having the `wait_for_ollama` function available
-allowed me to avoid having the program error out
-just because Ollama wasn't ready at that exact moment.
+### Container Image Setup
 
-## Deploy
+We define our Modal container image with all necessary dependencies:
 
-Now,
-with this Python script in place,
-we can deploy it onto Modal:
+```python
+image = (
+    modal.Image.debian_slim()
+    .apt_install("curl", "systemctl")
+    .run_commands(
+        "curl -L https://ollama.com/download/ollama-linux-amd64.tgz -o ollama-linux-amd64.tgz",
+        "tar -C /usr -xzf ollama-linux-amd64.tgz",
+        "useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama",
+        "usermod -a -G ollama $(whoami)",
+    )
+    .copy_local_file("ollama.service", "/etc/systemd/system/ollama.service")
+    .pip_install("ollama", "httpx", "loguru")
+    .run_function(pull)
+)
+```
+
+This image definition:
+1. Starts with a Debian slim base
+2. Installs system dependencies
+3. Sets up Ollama
+4. Installs Python packages
+5. Pre-pulls our models
+
+### FastAPI Application Setup
+
+We define our API models using Pydantic for request validation:
+
+```python
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatCompletionRequest(BaseModel):
+    model: Optional[str] = Field(default=MODEL)
+    messages: List[ChatMessage]
+    stream: bool = Field(default=False)
+```
+
+### The Main Endpoint
+
+The `/v1/chat/completions` endpoint is OpenAI-compatible and handles both streaming and non-streaming responses:
+
+```python
+@api.post("/v1/chat/completions")
+async def v1_chat_completions(request: ChatCompletionRequest) -> Any:
+```
+
+This endpoint:
+1. Validates the incoming request
+2. Handles streaming responses if requested
+3. Formats responses to match OpenAI's API structure
+4. Includes proper error handling
+
+### Modal App Class
+
+Finally, we tie everything together in the Modal app class:
+
+```python
+@app.cls(
+    gpu=modal.gpu.A10G(count=1),
+    container_idle_timeout=10,
+)
+class Ollama:
+```
+
+This class defines three key lifecycle methods:
+
+1. `build()`: Runs during container build time to set up systemd services
+2. `enter()`: Runs when the container starts to initialize Ollama
+3. `serve()`: Exposes our FastAPI application
+
+## Deployment
+
+To deploy this application, simply run:
 
 ```bash
 modal deploy endpoint.py
 ```
 
-Modal will build the container on the cloud and deploy it:
+Modal will:
+1. Build the container image
+2. Deploy it to Modal's infrastructure
+3. Provide a unique URL for your API endpoint
 
-```bash
-❯ modal deploy endpoint.py
-✓ Created objects.
-├── 🔨 Created mount /Users/ericmjl/github/incubator/ollama-modal/endpoint.py
-├── 🔨 Created mount ollama.service
-├── 🔨 Created function pull.
-├── 🔨 Created function Ollama.build.
-├── 🔨 Created function Ollama.*.
-└── 🔨 Created web function Ollama.v1_chat_completions => https://<autogenerated_subdomain>.modal.run
-✓ App deployed in 3.405s! 🎉
+The deployment includes automatic Swagger documentation at `/docs`, allowing you to test the API directly from your browser.
 
-View Deployment: https://modal.com/apps/<username>/main/deployed/<app_name>
-```
+## Using the API
 
-It won't always be ~3 sec;
-usually,
-on first build,
-this will take ~5 minutes or so.
-
-Now,
-because of the `docs=True` parameter set in the `v1_chat_completions` method decorator,
-I have access to the Swagger API that is auto-generated,
-which lets me hand-test the API before I try to call on it:
-
-![Swagger API](./swagger.webp)
-
-## OpenAI-Compatible Endpoint
-
-After my initial deployment,
-I realized that making the endpoint OpenAI-compatible
-would make it much easier to integrate with existing tools.
-The updated code now includes a proper OpenAI-compatible chat completions endpoint
-that follows the same format as OpenAI's API:
+Because we've made the endpoint OpenAI-compatible, you can use it with any OpenAI-compatible client. For example, with LlamaBot:
 
 ```python
-class ChatMessage(BaseModel):
-    """A single message in a chat completion request.
+import llamabot as lmb
 
-    Represents one message in the conversation history, following OpenAI's chat format.
-    """
-    role: str = Field(..., description="The role of the message sender (e.g. 'user', 'assistant')")
-    content: str = Field(..., description="The content of the message")
-
-
-class ChatCompletionRequest(BaseModel):
-    """Request model for chat completions.
-
-    Follows OpenAI's chat completion request format, supporting both streaming
-    and non-streaming responses.
-    """
-    model: Optional[str] = Field(default=MODEL, description="The model to use for completion")
-    messages: List[ChatMessage] = Field(..., description="The messages to generate a completion for")
-    stream: bool = Field(default=False, description="Whether to stream the response")
-
-
-@api.post("/v1/chat/completions")
-async def v1_chat_completions(request: ChatCompletionRequest) -> Any:
-    """Handle chat completion requests in OpenAI-compatible format.
-
-    :param request: Chat completion parameters
-    :return: Chat completion response in OpenAI-compatible format, or StreamingResponse if streaming
-    :raises HTTPException: If the request is invalid or processing fails
-    """
-    try:
-        if not request.messages:
-            raise HTTPException(
-                status_code=400,
-                detail="Messages array is required and cannot be empty",
-            )
-
-        if request.stream:
-            async def generate_stream() -> AsyncGenerator[str, None]:
-                response = ollama.chat(
-                    model=request.model,
-                    messages=[msg.dict() for msg in request.messages],
-                    stream=True,
-                )
-
-                for chunk in response:
-                    chunk_data = {
-                        "id": "chat-" + str(int(time.time())),
-                        "object": "chat.completion.chunk",
-                        "created": int(time.time()),
-                        "model": request.model,
-                        "choices": [
-                            {
-                                "index": 0,
-                                "delta": {
-                                    "role": "assistant",
-                                    "content": chunk["message"]["content"],
-                                },
-                                "finish_reason": None,
-                            }
-                        ],
-                    }
-                    yield f"data: {json.dumps(chunk_data)}\n\n"
-
-                final_chunk = {
-                    "id": "chat-" + str(int(time.time())),
-                    "object": "chat.completion.chunk",
-                    "created": int(time.time()),
-                    "model": request.model,
-                    "choices": [
-                        {
-                            "index": 0,
-                            "delta": {},
-                            "finish_reason": "stop",
-                        }
-                    ],
-                }
-                yield f"data: {json.dumps(final_chunk)}\n\n"
-                yield "data: [DONE]\n\n"
-
-            return StreamingResponse(
-                generate_stream(),
-                media_type="text/event-stream",
-            )
-
-        # Non-streaming response
-        response = ollama.chat(
-            model=request.model,
-            messages=[msg.model_dump() for msg in request.messages]
-        )
-
-        return {
-            "id": "chat-" + str(int(time.time())),
-            "object": "chat.completion",
-            "created": int(time.time()),
-            "model": request.model,
-            "choices": [
-                {
-                    "index": 0,
-                    "message": {
-                        "role": "assistant",
-                        "content": response["message"]["content"],
-                    },
-                    "finish_reason": "stop",
-                }
-            ],
-            "usage": {
-                "prompt_tokens": -1,  # Ollama doesn't provide token counts
-                "completion_tokens": -1,
-                "total_tokens": -1,
-            },
-        }
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error processing chat completion: {str(e)}"
-        )
-```
-
-This implementation provides both streaming and non-streaming responses
-in the exact same format as OpenAI's API.
-The endpoint is accessible at `/v1/chat/completions`,
-making it a drop-in replacement for OpenAI's API
-in tools like LlamaBot that use LiteLLM as their API switchboard.
-
-The endpoint supports:
-- Full chat history with multiple messages
-- Streaming responses for real-time text generation
-- OpenAI-compatible response format
-- Error handling with appropriate HTTP status codes
-
-With this in place,
-I can now use my Modal-deployed Ollama endpoint
-with any tool that supports OpenAI's API format.
-For example,
-with LlamaBot,
-I just need to specify the base URL of my Modal deployment:
-
-```python
-from llamabot import SimpleBot
-
-bot = SimpleBot(
-    model_name="ollama/qwq",  # Specifying the Ollama model
-    api_base="https://<my-modal-deployment>.modal.run/v1",  # Point to Modal deployment
+bot = lmb.SimpleBot(
+    model_name="openai/gemma2:27b",
+    api_base="https://<your-modal-deployment>.modal.run/v1",
     system_prompt="You are a helpful assistant.",
 )
 
 response = bot("Hello!")
 ```
 
-This makes it incredibly easy to experiment with different open-source models
-while maintaining compatibility with existing tools and workflows.
+This compatibility makes it easy to experiment with different open-source models while maintaining compatibility with existing tools and workflows.
 
 ---
 pub_date: 2024-11-14
