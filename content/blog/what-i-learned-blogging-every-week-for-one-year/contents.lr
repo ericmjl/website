@@ -1,0 +1,315 @@
+title: What I learned blogging every week for one year
+---
+author: Eric J. Ma
+---
+body:
+
+A challenge I set for myself this year
+was to write a blog post on average once every week for the year,
+regardless of what's going on.
+This meant writing 52 blog posts in total.
+As of December 19, I've hit 53, meaning that I've accomplished my goals!
+
+## What I learned
+
+Here's what I've learned so far.
+
+### Consistency is king!
+
+One of the biggest lessons I learned from this year-long blogging journey
+is that consistency truly is king.
+By committing to writing weekly,
+I noticed my sense of what to write about
+became increasingly refined and sharpened over time.
+The regular practice helped me:
+
+- Develop a better radar for interesting technical topics worth sharing
+- Improve my ability to explain complex concepts clearly
+- Build a more systematic approach to documenting my learning journey
+- Create a sustainable writing habit that feels natural rather than forced
+
+### Build AI-assistance tools and use them
+
+Throughout this journey,
+I found myself building quite a bit of tooling
+to support my blogging workflow,
+most of it done with AI assistance.
+Some notable examples include:
+
+**Blog Banner Generation**:
+I developed a system that uses DALL-E
+to automatically generate watercolor-style banner images for each post,
+maintaining a consistent visual identity
+while saving time on design.
+
+**Social Media Integration**:
+I built tools that use LLMs to help craft:
+
+- Twitter posts that effectively summarize and promote new blog entries
+- Substack newsletters that engage my subscriber base
+- LinkedIn updates that resonate with my professional network
+
+**Content Enhancement**:
+I created automated systems for:
+
+- Generating relevant tags for better post categorization
+- Creating compelling summaries that capture the essence of each post
+- Suggesting related content links to improve site navigation
+
+This tooling journey has been particularly valuable as it helped me:
+
+- Further hone my prompting practices with LLMs
+- Develop better intuition for designing programs
+  that incorporate LLMs as integral components
+- Create a more efficient and consistent blogging workflow
+- Experiment with different approaches to human-AI collaboration
+
+The experience of building these tools
+has not only made my blogging more efficient
+but has also sharpened my intuition for
+how to effectively integrate AI into creative workflows
+while maintaining human oversight and editorial control.
+
+## Wordcloud
+
+And here is the obligatory wordcloud of the blog posts:
+
+![Wordcloud of blog posts](./wordcloud.webp)
+
+## Reflections
+
+One year of blogging once a week,
+with regular posts on LinkedIn, Twitter, Substack, and Bluesky,
+have left my colleagues jokingly calling me a content creator.
+Jokes aside, this year has seen a significant focus on LLMs in my writing,
+as evidenced by the numerous posts in the LLMs & Data Science Tooling section.
+This reflects the broader excitement and rapid developments in the LLM space.
+At the same time,
+my core interests continue to lie at the intersection of life sciences and computation -
+you can see this in the many posts about protein language models,
+biological applications of deep learning,
+and data science in biotech organizations.
+My professional goal is to make discovery science run at the speed of thought
+and quantify the unquantified.
+This means leveraging advances in AI and computation
+to accelerate scientific discovery,
+while developing tools that help scientists
+measure and understand previously intangible aspects of biology.
+After all, the most transformative breakthroughs happen
+when we remove the friction from scientific exploration
+and shine light on unexplored territory.
+
+## Blog Posts by Theme
+
+To help you navigate through these posts more easily,
+I've organized them by major themes below.
+You'll notice some posts appear under multiple themes -
+that's because many topics naturally overlap,
+reflecting the interconnected nature of modern data science work.
+Whether you're interested in LLMs, leadership, tooling, or biology,
+you'll find relevant content in these curated lists.
+
+### Biology & Chemistry
+
+- [Success Factors for Data Science Teams in Biotech (2024-02-07)](https://ericmjl.github.io/blog/2024/2/7/success-factors-for-data-science-teams-in-biotech/)
+- [Dashboard-ready data is often machine learning-ready data (2024-02-18)](https://ericmjl.github.io/blog/2024/2/18/dashboard-ready-data-is-often-machine-learning-ready-data/)
+- [Mixtral-8x7b-Instruct works on an old GTX1080! (2024-03-10)](https://ericmjl.github.io/blog/2024/3/10/mixtral-8x7b-instruct-works-on-an-old-gtx1080/)
+- [Data Science in the Biotech Research Organization (2024-05-05)](https://ericmjl.github.io/blog/2024/5/5/data-science-in-the-biotech-research-organization/)
+- [Paper Review: Design of highly functional genome editors by modeling the universe of CRISPR-Cas sequences (2024-05-12)](https://ericmjl.github.io/blog/2024/5/12/paper-review-design-of-highly-functional-genome-editors-by-modeling-the-universe-of-crispr-cas-sequences/)
+- [How to control PyMOL from Jupyter notebooks (2024-05-16)](https://ericmjl.github.io/blog/2024/5/16/how-to-control-pymol-from-jupyter-notebooks/)
+- [Multi-modality Deep Learning (2024-05-27)](https://ericmjl.github.io/blog/2024/5/27/multi-modality-deep-learning/)
+- [The Neural Von Mises Mixture Model (2024-06-08)](https://ericmjl.github.io/blog/2024/6/8/the-neural-von-mises-mixture-model/)
+- [A survey of how to use protein language models for protein design: Part 1 (2024-07-26)](https://ericmjl.github.io/blog/2024/7/26/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-1/)
+- [A survey of how to use protein language models for protein design: Part 2 (2024-08-02)](https://ericmjl.github.io/blog/2024/8/2/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-2/)
+- [A survey of how to use protein language models for protein design: Part 3 (2024-08-09)](https://ericmjl.github.io/blog/2024/8/9/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-3/)
+- [A modest proposal for data catalogues at biotechs (2024-11-22)](https://ericmjl.github.io/blog/2024/11/22/a-modest-proposal-for-data-catalogues-at-biotechs/)
+
+### Career Advice
+
+- [GitHub Actions secrets need to be explicitly declared (2024-01-11)](https://ericmjl.github.io/blog/2024/1/11/github-actions-secrets-need-to-be-explicitly-declared/)
+- [How to keep sharp with technical skills as a data science team lead (2024-02-25)](https://ericmjl.github.io/blog/2024/2/25/how-to-keep-sharp-with-technical-skills-as-a-data-science-team-lead/)
+- [Your first 90 days at work - what should you do? (2024-02-29)](https://ericmjl.github.io/blog/2024/2/29/your-first-90-days-at-work-what-should-you-do/)
+- [From Academia to Industry: Career Advice from MIT Industry Careers Panel (2024-03-09)](https://ericmjl.github.io/blog/2024/3/9/industry-career-panel-for-phd-students-and-post-docs-at-mit/)
+- [How to organize and motivate a biotech data science team (2024-03-23)](https://ericmjl.github.io/blog/2024/3/23/how-to-organize-and-motivate-a-biotech-data-science-team/)
+- [Hire for communication skills, not conversational skills (2024-06-26)](https://ericmjl.github.io/blog/2024/6/26/hire-for-communication-skills-not-conversational-skills/)
+- [Conference report: SciPy 2024 (2024-07-14)](https://ericmjl.github.io/blog/2024/7/14/conference-report-scipy-2024/)
+- [What brings you joy at work? (2024-10-09)](https://ericmjl.github.io/blog/2024/10/9/what-brings-you-joy-at-work/)
+- [How to thrive, and not just survive, during organizational change (2024-12-17)](https://ericmjl.github.io/blog/2024/12/17/how-to-thrive-and-not-just-survive-during-organizational-change/)
+
+### Data Science Practice & Leadership
+
+- [Exploratory data analysis isn’t open-ended (2024-01-28)](https://ericmjl.github.io/blog/2024/1/28/exploratory-data-analysis-isnt-open-ended/)
+- [Success Factors for Data Science Teams in Biotech (2024-02-07)](https://ericmjl.github.io/blog/2024/2/7/success-factors-for-data-science-teams-in-biotech/)
+- [Dashboard-ready data is often machine learning-ready data (2024-02-18)](https://ericmjl.github.io/blog/2024/2/18/dashboard-ready-data-is-often-machine-learning-ready-data/)
+- [How to keep sharp with technical skills as a data science team lead (2024-02-25)](https://ericmjl.github.io/blog/2024/2/25/how-to-keep-sharp-with-technical-skills-as-a-data-science-team-lead/)
+- [How to organize and motivate a biotech data science team (2024-03-23)](https://ericmjl.github.io/blog/2024/3/23/how-to-organize-and-motivate-a-biotech-data-science-team/)
+- [How to grow software development skills in a data science team (2024-04-05)](https://ericmjl.github.io/blog/2024/4/5/how-to-grow-software-development-skills-in-a-data-science-team/)
+- [pyds-cli version 0.4.0 released! (2024-04-07)](https://ericmjl.github.io/blog/2024/4/7/pyds-cli-version-040-released/)
+- [How LLMs can accelerate data science (2024-04-17)](https://ericmjl.github.io/blog/2024/4/17/how-llms-can-accelerate-data-science/)
+- [Data Science in the Biotech Research Organization (2024-05-05)](https://ericmjl.github.io/blog/2024/5/5/data-science-in-the-biotech-research-organization/)
+- [Headache-free, portable, and reproducible handling of data access and versioning (2024-06-18)](https://ericmjl.github.io/blog/2024/6/18/headache-free-portable-and-reproducible-handling-of-data-access-and-versioning/)
+- [Hire for communication skills, not conversational skills (2024-06-26)](https://ericmjl.github.io/blog/2024/6/26/hire-for-communication-skills-not-conversational-skills/)
+- [Two years of docathons: Insights and lessons learned (2024-06-30)](https://ericmjl.github.io/blog/2024/6/30/two-years-of-docathons-insights-and-lessons-learned/)
+- [Use native formats when storing data (2024-07-02)](https://ericmjl.github.io/blog/2024/7/2/use-native-formats-when-storing-data/)
+- [Conference report: SciPy 2024 (2024-07-14)](https://ericmjl.github.io/blog/2024/7/14/conference-report-scipy-2024/)
+- [Building Pigeon Secure Notes in under 15 minutes of coding (2024-10-06)](https://ericmjl.github.io/blog/2024/10/6/building-pigeon-secure-notes-in-under-15-minutes-of-coding/)
+- [What brings you joy at work? (2024-10-09)](https://ericmjl.github.io/blog/2024/10/9/what-brings-you-joy-at-work/)
+- [Keys to effective collaborative data science (2024-10-18)](https://ericmjl.github.io/blog/2024/10/18/keys-to-effective-collaborative-data-science/)
+- [The Human Dimension to Clean, Distributable, and Documented Data Science Code (2024-10-25)](https://ericmjl.github.io/blog/2024/10/25/the-human-dimension-to-clean-distributable-and-documented-data-science-code/)
+- [A modest proposal for data catalogues at biotechs (2024-11-22)](https://ericmjl.github.io/blog/2024/11/22/a-modest-proposal-for-data-catalogues-at-biotechs/)
+
+### Data Science Tooling
+
+- [Evolving LlamaBot (2024-01-10)](https://ericmjl.github.io/blog/2024/1/10/evolving-llamabot/)
+- [GitHub Actions secrets need to be explicitly declared (2024-01-11)](https://ericmjl.github.io/blog/2024/1/11/github-actions-secrets-need-to-be-explicitly-declared/)
+- [Your embedding model can be different from your text generation model (2024-01-15)](https://ericmjl.github.io/blog/2024/1/15/your-embedding-model-can-be-different-from-your-text-generation-model/)
+- [Exploratory data analysis isn’t open-ended (2024-01-28)](https://ericmjl.github.io/blog/2024/1/28/exploratory-data-analysis-isnt-open-ended/)
+- [An (incomplete and opinionated) survey of LLM tooling (2024-02-01)](https://ericmjl.github.io/blog/2024/2/1/an-incomplete-and-opinionated-survey-of-llm-tooling/)
+- [Success Factors for Data Science Teams in Biotech (2024-02-07)](https://ericmjl.github.io/blog/2024/2/7/success-factors-for-data-science-teams-in-biotech/)
+- [Dashboard-ready data is often machine learning-ready data (2024-02-18)](https://ericmjl.github.io/blog/2024/2/18/dashboard-ready-data-is-often-machine-learning-ready-data/)
+- [LlamaBot with Ollama on my home virtual private network (2024-02-21)](https://ericmjl.github.io/blog/2024/2/21/llamabot-with-ollama-on-my-home-virtual-private-network/)
+- [Mixtral-8x7b-Instruct works on an old GTX1080! (2024-03-10)](https://ericmjl.github.io/blog/2024/3/10/mixtral-8x7b-instruct-works-on-an-old-gtx1080/)
+- [Llamabot 0.4.0 Released! (2024-03-24)](https://ericmjl.github.io/blog/2024/3/24/llamabot-040-released/)
+- [How to grow software development skills in a data science team (2024-04-05)](https://ericmjl.github.io/blog/2024/4/5/how-to-grow-software-development-skills-in-a-data-science-team/)
+- [pyds-cli version 0.4.0 released! (2024-04-07)](https://ericmjl.github.io/blog/2024/4/7/pyds-cli-version-040-released/)
+- [How to make distributable pre-commit hooks (2024-04-09)](https://ericmjl.github.io/blog/2024/4/9/how-to-make-distributable-pre-commit-hooks/)
+- [How LLMs can accelerate data science (2024-04-17)](https://ericmjl.github.io/blog/2024/4/17/how-llms-can-accelerate-data-science/)
+- [How to control PyMOL from Jupyter notebooks (2024-05-16)](https://ericmjl.github.io/blog/2024/5/16/how-to-control-pymol-from-jupyter-notebooks/)
+- [Multi-modality Deep Learning (2024-05-27)](https://ericmjl.github.io/blog/2024/5/27/multi-modality-deep-learning/)
+- [How to manage CUDA libraries within Conda environments (2024-06-01)](https://ericmjl.github.io/blog/2024/6/1/how-to-manage-cuda-libraries-within-conda-environments/)
+- [The Neural Von Mises Mixture Model (2024-06-08)](https://ericmjl.github.io/blog/2024/6/8/the-neural-von-mises-mixture-model/)
+- [Headache-free, portable, and reproducible handling of data access and versioning (2024-06-18)](https://ericmjl.github.io/blog/2024/6/18/headache-free-portable-and-reproducible-handling-of-data-access-and-versioning/)
+- [Two years of docathons: Insights and lessons learned (2024-06-30)](https://ericmjl.github.io/blog/2024/6/30/two-years-of-docathons-insights-and-lessons-learned/)
+- [Use native formats when storing data (2024-07-02)](https://ericmjl.github.io/blog/2024/7/2/use-native-formats-when-storing-data/)
+- [Conference report: SciPy 2024 (2024-07-14)](https://ericmjl.github.io/blog/2024/7/14/conference-report-scipy-2024/)
+- [It's time to try out pixi! (2024-08-16)](https://ericmjl.github.io/blog/2024/8/16/its-time-to-try-out-pixi/)
+- [Dissecting the ESM3 Model Architecture (2024-08-25)](https://ericmjl.github.io/blog/2024/8/25/dissecting-the-esm3-model-architecture/)
+- [LlamaBot now has StructuredBot! (2024-08-31)](https://ericmjl.github.io/blog/2024/8/31/llamabot-now-has-structuredbot/)
+- [On writing LLM evals in pytest (2024-09-06)](https://ericmjl.github.io/blog/2024/9/6/on-writing-llm-evals-in-pytest/)
+- [Cursor is a jetpack for coders (2024-09-14)](https://ericmjl.github.io/blog/2024/9/14/cursor-is-a-jetpack-for-coders/)
+- [Sync GitHub secrets with your .env and gh CLI (2024-09-15)](https://ericmjl.github.io/blog/2024/9/15/sync-github-secrets-with-your-env-and-gh-cli/)
+- [How to set up Pixi with CodeArtifacts (2024-09-19)](https://ericmjl.github.io/blog/2024/9/19/how-to-set-up-pixi-with-codeartifacts/)
+- [Recreating Shortwhale with AI-Assisted Coding (2024-09-23)](https://ericmjl.github.io/blog/2024/9/23/recreating-shortwhale-with-ai-assisted-coding/)
+- [Explain your Jupyter notebooks using LlamaBot (2024-09-27)](https://ericmjl.github.io/blog/2024/9/27/explain-your-jupyter-notebooks-using-llamabot/)
+- [Building Pigeon Secure Notes in under 15 minutes of coding (2024-10-06)](https://ericmjl.github.io/blog/2024/10/6/building-pigeon-secure-notes-in-under-15-minutes-of-coding/)
+- [What brings you joy at work? (2024-10-09)](https://ericmjl.github.io/blog/2024/10/9/what-brings-you-joy-at-work/)
+- [Keys to effective collaborative data science (2024-10-18)](https://ericmjl.github.io/blog/2024/10/18/keys-to-effective-collaborative-data-science/)
+- [Cursor did a one-shot rewrite of a Panel app I built (2024-10-20)](https://ericmjl.github.io/blog/2024/10/20/cursor-did-a-one-shot-rewrite-of-a-panel-app-i-built/)
+- [The Human Dimension to Clean, Distributable, and Documented Data Science Code (2024-10-25)](https://ericmjl.github.io/blog/2024/10/25/the-human-dimension-to-clean-distributable-and-documented-data-science-code/)
+- [Introducing new (local) LlamaBot logging features (2024-11-02)](https://ericmjl.github.io/blog/2024/11/2/introducing-new-local-llamabot-logging-features/)
+- [Disposable environments for ad-hoc analyses (2024-11-08)](https://ericmjl.github.io/blog/2024/11/8/disposable-environments-for-ad-hoc-analyses/)
+- [Deploying Ollama on Modal (2024-11-14)](https://ericmjl.github.io/blog/2024/11/14/deploying-ollama-on-modal/)
+- [A modest proposal for data catalogues at biotechs (2024-11-22)](https://ericmjl.github.io/blog/2024/11/22/a-modest-proposal-for-data-catalogues-at-biotechs/)
+- [How LlamaBot's new agent features simplify complex task automation (2024-12-15)](https://ericmjl.github.io/blog/2024/12/15/how-llamabots-new-agent-features-simplify-complex-task-automation/)
+- [5 retrieval strategies to boost your RAG system's performance (2024-12-16)](https://ericmjl.github.io/blog/2024/12/16/5-retrieval-strategies-to-boost-your-rag-systems-performance/)
+- [Accurately extract text from research literature PDFs with Nougat-OCR and Docling (2024-12-20)](https://ericmjl.github.io/blog/2024/12/20/accurately-extract-text-from-research-literature-pdfs-with-nougat-ocr-and-docling/)
+
+### LLMs
+
+- [Evolving LlamaBot (2024-01-10)](https://ericmjl.github.io/blog/2024/1/10/evolving-llamabot/)
+- [Your embedding model can be different from your text generation model (2024-01-15)](https://ericmjl.github.io/blog/2024/1/15/your-embedding-model-can-be-different-from-your-text-generation-model/)
+- [An (incomplete and opinionated) survey of LLM tooling (2024-02-01)](https://ericmjl.github.io/blog/2024/2/1/an-incomplete-and-opinionated-survey-of-llm-tooling/)
+- [LlamaBot with Ollama on my home virtual private network (2024-02-21)](https://ericmjl.github.io/blog/2024/2/21/llamabot-with-ollama-on-my-home-virtual-private-network/)
+- [Mixtral-8x7b-Instruct works on an old GTX1080! (2024-03-10)](https://ericmjl.github.io/blog/2024/3/10/mixtral-8x7b-instruct-works-on-an-old-gtx1080/)
+- [Llamabot 0.4.0 Released! (2024-03-24)](https://ericmjl.github.io/blog/2024/3/24/llamabot-040-released/)
+- [How LLMs can accelerate data science (2024-04-17)](https://ericmjl.github.io/blog/2024/4/17/how-llms-can-accelerate-data-science/)
+- [Paper Review: Design of highly functional genome editors by modeling the universe of CRISPR-Cas sequences (2024-05-12)](https://ericmjl.github.io/blog/2024/5/12/paper-review-design-of-highly-functional-genome-editors-by-modeling-the-universe-of-crispr-cas-sequences/)
+- [How to control PyMOL from Jupyter notebooks (2024-05-16)](https://ericmjl.github.io/blog/2024/5/16/how-to-control-pymol-from-jupyter-notebooks/)
+- [Multi-modality Deep Learning (2024-05-27)](https://ericmjl.github.io/blog/2024/5/27/multi-modality-deep-learning/)
+- [The Neural Von Mises Mixture Model (2024-06-08)](https://ericmjl.github.io/blog/2024/6/8/the-neural-von-mises-mixture-model/)
+- [A survey of how to use protein language models for protein design: Part 1 (2024-07-26)](https://ericmjl.github.io/blog/2024/7/26/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-1/)
+- [A survey of how to use protein language models for protein design: Part 2 (2024-08-02)](https://ericmjl.github.io/blog/2024/8/2/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-2/)
+- [A survey of how to use protein language models for protein design: Part 3 (2024-08-09)](https://ericmjl.github.io/blog/2024/8/9/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-3/)
+- [Dissecting the ESM3 Model Architecture (2024-08-25)](https://ericmjl.github.io/blog/2024/8/25/dissecting-the-esm3-model-architecture/)
+- [LlamaBot now has StructuredBot! (2024-08-31)](https://ericmjl.github.io/blog/2024/8/31/llamabot-now-has-structuredbot/)
+- [On writing LLM evals in pytest (2024-09-06)](https://ericmjl.github.io/blog/2024/9/6/on-writing-llm-evals-in-pytest/)
+- [Cursor is a jetpack for coders (2024-09-14)](https://ericmjl.github.io/blog/2024/9/14/cursor-is-a-jetpack-for-coders/)
+- [Recreating Shortwhale with AI-Assisted Coding (2024-09-23)](https://ericmjl.github.io/blog/2024/9/23/recreating-shortwhale-with-ai-assisted-coding/)
+- [Explain your Jupyter notebooks using LlamaBot (2024-09-27)](https://ericmjl.github.io/blog/2024/9/27/explain-your-jupyter-notebooks-using-llamabot/)
+- [Cursor did a one-shot rewrite of a Panel app I built (2024-10-20)](https://ericmjl.github.io/blog/2024/10/20/cursor-did-a-one-shot-rewrite-of-a-panel-app-i-built/)
+- [Introducing new (local) LlamaBot logging features (2024-11-02)](https://ericmjl.github.io/blog/2024/11/2/introducing-new-local-llamabot-logging-features/)
+- [Deploying Ollama on Modal (2024-11-14)](https://ericmjl.github.io/blog/2024/11/14/deploying-ollama-on-modal/)
+- [How LlamaBot's new agent features simplify complex task automation (2024-12-15)](https://ericmjl.github.io/blog/2024/12/15/how-llamabots-new-agent-features-simplify-complex-task-automation/)
+- [5 retrieval strategies to boost your RAG system's performance (2024-12-16)](https://ericmjl.github.io/blog/2024/12/16/5-retrieval-strategies-to-boost-your-rag-systems-performance/)
+- [Accurately extract text from research literature PDFs with Nougat-OCR and Docling (2024-12-20)](https://ericmjl.github.io/blog/2024/12/20/accurately-extract-text-from-research-literature-pdfs-with-nougat-ocr-and-docling/)
+
+## Blog Posts
+
+And for completeness, here's a list of all the blog posts I've written up till 29 December 2024.
+
+| Date | Title | Categories |
+|------|-------|------------|
+| 2024-01-10 | [Evolving LlamaBot](https://ericmjl.github.io/blog/2024/1/10/evolving-llamabot/) | LLMs, Data Science Tooling |
+| 2024-01-11 | [GitHub Actions secrets need to be explicitly declared](https://ericmjl.github.io/blog/2024/1/11/github-actions-secrets-need-to-be-explicitly-declared/) | Data Science Tooling, Career Advice |
+| 2024-01-15 | [Your embedding model can be different from your text generation model](https://ericmjl.github.io/blog/2024/1/15/your-embedding-model-can-be-different-from-your-text-generation-model/) | LLMs, Data Science Tooling |
+| 2024-01-28 | [Exploratory data analysis isn’t open-ended](https://ericmjl.github.io/blog/2024/1/28/exploratory-data-analysis-isnt-open-ended/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-02-01 | [An (incomplete and opinionated) survey of LLM tooling](https://ericmjl.github.io/blog/2024/2/1/an-incomplete-and-opinionated-survey-of-llm-tooling/) | LLMs, Data Science Tooling |
+| 2024-02-07 | [Success Factors for Data Science Teams in Biotech](https://ericmjl.github.io/blog/2024/2/7/success-factors-for-data-science-teams-in-biotech/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2024-02-18 | [Dashboard-ready data is often machine learning-ready data](https://ericmjl.github.io/blog/2024/2/18/dashboard-ready-data-is-often-machine-learning-ready-data/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2024-02-21 | [LlamaBot with Ollama on my home virtual private network](https://ericmjl.github.io/blog/2024/2/21/llamabot-with-ollama-on-my-home-virtual-private-network/) | LLMs, Data Science Tooling |
+| 2024-02-25 | [How to keep sharp with technical skills as a data science team lead](https://ericmjl.github.io/blog/2024/2/25/how-to-keep-sharp-with-technical-skills-as-a-data-science-team-lead/) | Data Science Practice & Leadership, Career Advice |
+| 2024-02-29 | [Your first 90 days at work - what should you do?](https://ericmjl.github.io/blog/2024/2/29/your-first-90-days-at-work-what-should-you-do/) | Career Advice |
+| 2024-03-09 | [From Academia to Industry: Career Advice from MIT Industry Careers Panel](https://ericmjl.github.io/blog/2024/3/9/industry-career-panel-for-phd-students-and-post-docs-at-mit/) | Career Advice |
+| 2024-03-10 | [Mixtral-8x7b-Instruct works on an old GTX1080!](https://ericmjl.github.io/blog/2024/3/10/mixtral-8x7b-instruct-works-on-an-old-gtx1080/) | LLMs, Data Science Tooling, Biology & Chemistry |
+| 2024-03-23 | [How to organize and motivate a biotech data science team](https://ericmjl.github.io/blog/2024/3/23/how-to-organize-and-motivate-a-biotech-data-science-team/) | Data Science Practice & Leadership, Career Advice |
+| 2024-03-24 | [Llamabot 0.4.0 Released!](https://ericmjl.github.io/blog/2024/3/24/llamabot-040-released/) | LLMs, Data Science Tooling |
+| 2024-04-05 | [How to grow software development skills in a data science team](https://ericmjl.github.io/blog/2024/4/5/how-to-grow-software-development-skills-in-a-data-science-team/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-04-07 | [pyds-cli version 0.4.0 released!](https://ericmjl.github.io/blog/2024/4/7/pyds-cli-version-040-released/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-04-09 | [How to make distributable pre-commit hooks](https://ericmjl.github.io/blog/2024/4/9/how-to-make-distributable-pre-commit-hooks/) | Data Science Tooling |
+| 2024-04-17 | [How LLMs can accelerate data science](https://ericmjl.github.io/blog/2024/4/17/how-llms-can-accelerate-data-science/) | LLMs, Data Science Practice & Leadership, Data Science Tooling |
+| 2024-05-05 | [Data Science in the Biotech Research Organization](https://ericmjl.github.io/blog/2024/5/5/data-science-in-the-biotech-research-organization/) | Data Science Practice & Leadership, Biology & Chemistry |
+| 2024-05-12 | [Paper Review: Design of highly functional genome editors by modeling the universe of CRISPR-Cas sequences](https://ericmjl.github.io/blog/2024/5/12/paper-review-design-of-highly-functional-genome-editors-by-modeling-the-universe-of-crispr-cas-sequences/) | LLMs, Biology & Chemistry |
+| 2024-05-16 | [How to control PyMOL from Jupyter notebooks](https://ericmjl.github.io/blog/2024/5/16/how-to-control-pymol-from-jupyter-notebooks/) | LLMs, Data Science Tooling, Biology & Chemistry |
+| 2024-05-27 | [Multi-modality Deep Learning](https://ericmjl.github.io/blog/2024/5/27/multi-modality-deep-learning/) | LLMs, Data Science Tooling, Biology & Chemistry |
+| 2024-06-01 | [How to manage CUDA libraries within Conda environments](https://ericmjl.github.io/blog/2024/6/1/how-to-manage-cuda-libraries-within-conda-environments/) | Data Science Tooling |
+| 2024-06-08 | [The Neural Von Mises Mixture Model](https://ericmjl.github.io/blog/2024/6/8/the-neural-von-mises-mixture-model/) | LLMs, Data Science Tooling, Biology & Chemistry |
+| 2024-06-18 | [Headache-free, portable, and reproducible handling of data access and versioning](https://ericmjl.github.io/blog/2024/6/18/headache-free-portable-and-reproducible-handling-of-data-access-and-versioning/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-06-26 | [Hire for communication skills, not conversational skills](https://ericmjl.github.io/blog/2024/6/26/hire-for-communication-skills-not-conversational-skills/) | Data Science Practice & Leadership, Career Advice |
+| 2024-06-30 | [Two years of docathons: Insights and lessons learned](https://ericmjl.github.io/blog/2024/6/30/two-years-of-docathons-insights-and-lessons-learned/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-07-02 | [Use native formats when storing data](https://ericmjl.github.io/blog/2024/7/2/use-native-formats-when-storing-data/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-07-14 | [Conference report: SciPy 2024](https://ericmjl.github.io/blog/2024/7/14/conference-report-scipy-2024/) | Data Science Practice & Leadership, Data Science Tooling, Career Advice |
+| 2024-07-26 | [A survey of how to use protein language models for protein design: Part 1](https://ericmjl.github.io/blog/2024/7/26/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-1/) | LLMs, Biology & Chemistry |
+| 2024-08-02 | [A survey of how to use protein language models for protein design: Part 2](https://ericmjl.github.io/blog/2024/8/2/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-2/) | LLMs, Biology & Chemistry |
+| 2024-08-09 | [A survey of how to use protein language models for protein design: Part 3](https://ericmjl.github.io/blog/2024/8/9/a-survey-of-how-to-use-protein-language-models-for-protein-design-part-3/) | LLMs, Biology & Chemistry |
+| 2024-08-16 | [It's time to try out pixi!](https://ericmjl.github.io/blog/2024/8/16/its-time-to-try-out-pixi/) | Data Science Tooling |
+| 2024-08-25 | [Dissecting the ESM3 Model Architecture](https://ericmjl.github.io/blog/2024/8/25/dissecting-the-esm3-model-architecture/) | LLMs, Data Science Tooling |
+| 2024-08-31 | [LlamaBot now has StructuredBot!](https://ericmjl.github.io/blog/2024/8/31/llamabot-now-has-structuredbot/) | LLMs, Data Science Tooling |
+| 2024-09-06 | [On writing LLM evals in pytest](https://ericmjl.github.io/blog/2024/9/6/on-writing-llm-evals-in-pytest/) | LLMs, Data Science Tooling |
+| 2024-09-14 | [Cursor is a jetpack for coders](https://ericmjl.github.io/blog/2024/9/14/cursor-is-a-jetpack-for-coders/) | LLMs, Data Science Tooling |
+| 2024-09-15 | [Sync GitHub secrets with your .env and gh CLI](https://ericmjl.github.io/blog/2024/9/15/sync-github-secrets-with-your-env-and-gh-cli/) | Data Science Tooling |
+| 2024-09-19 | [How to set up Pixi with CodeArtifacts](https://ericmjl.github.io/blog/2024/9/19/how-to-set-up-pixi-with-codeartifacts/) | Data Science Tooling |
+| 2024-09-23 | [Recreating Shortwhale with AI-Assisted Coding](https://ericmjl.github.io/blog/2024/9/23/recreating-shortwhale-with-ai-assisted-coding/) | LLMs, Data Science Tooling |
+| 2024-09-27 | [Explain your Jupyter notebooks using LlamaBot](https://ericmjl.github.io/blog/2024/9/27/explain-your-jupyter-notebooks-using-llamabot/) | LLMs, Data Science Tooling |
+| 2024-10-06 | [Building Pigeon Secure Notes in under 15 minutes of coding](https://ericmjl.github.io/blog/2024/10/6/building-pigeon-secure-notes-in-under-15-minutes-of-coding/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-10-09 | [What brings you joy at work?](https://ericmjl.github.io/blog/2024/10/9/what-brings-you-joy-at-work/) | Data Science Practice & Leadership, Data Science Tooling, Career Advice |
+| 2024-10-18 | [Keys to effective collaborative data science](https://ericmjl.github.io/blog/2024/10/18/keys-to-effective-collaborative-data-science/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-10-20 | [Cursor did a one-shot rewrite of a Panel app I built](https://ericmjl.github.io/blog/2024/10/20/cursor-did-a-one-shot-rewrite-of-a-panel-app-i-built/) | LLMs, Data Science Tooling |
+| 2024-10-25 | [The Human Dimension to Clean, Distributable, and Documented Data Science Code](https://ericmjl.github.io/blog/2024/10/25/the-human-dimension-to-clean-distributable-and-documented-data-science-code/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2024-11-02 | [Introducing new (local) LlamaBot logging features](https://ericmjl.github.io/blog/2024/11/2/introducing-new-local-llamabot-logging-features/) | LLMs, Data Science Tooling |
+| 2024-11-08 | [Disposable environments for ad-hoc analyses](https://ericmjl.github.io/blog/2024/11/8/disposable-environments-for-ad-hoc-analyses/) | Data Science Tooling |
+| 2024-11-14 | [Deploying Ollama on Modal](https://ericmjl.github.io/blog/2024/11/14/deploying-ollama-on-modal/) | LLMs, Data Science Tooling |
+| 2024-11-22 | [A modest proposal for data catalogues at biotechs](https://ericmjl.github.io/blog/2024/11/22/a-modest-proposal-for-data-catalogues-at-biotechs/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2024-12-15 | [How LlamaBot's new agent features simplify complex task automation](https://ericmjl.github.io/blog/2024/12/15/how-llamabots-new-agent-features-simplify-complex-task-automation/) | LLMs, Data Science Tooling |
+| 2024-12-16 | [5 retrieval strategies to boost your RAG system's performance](https://ericmjl.github.io/blog/2024/12/16/5-retrieval-strategies-to-boost-your-rag-systems-performance/) | LLMs, Data Science Tooling |
+| 2024-12-17 | [How to thrive, and not just survive, during organizational change](https://ericmjl.github.io/blog/2024/12/17/how-to-thrive-and-not-just-survive-during-organizational-change/) | Career Advice |
+| 2024-12-20 | [Accurately extract text from research literature PDFs with Nougat-OCR and Docling](https://ericmjl.github.io/blog/2024/12/20/accurately-extract-text-from-research-literature-pdfs-with-nougat-ocr-and-docling/) | LLMs, Data Science Tooling |
+
+---
+pub_date: 2024-12-31
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I reflect on my year-long challenge of writing a blog post every week, surpassing my goal with 53 posts. This journey taught me the power of consistency, improved my ability to communicate complex ideas, and helped me develop AI-assisted tools to streamline my workflow. I also explored the intersection of life sciences and computation, aiming to accelerate scientific discovery. How did these experiences shape my approach to integrating AI into creative processes and what insights can you gain from my journey?
+---
+tags:
+
+blogging
+consistency
+ai
+content
+llms
+data
+biotech
+career
+writing
+discovery
