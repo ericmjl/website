@@ -143,6 +143,7 @@ graph TD;
     FuzzyLogic --> Database[Search Database];
     Database --> Results[Fuzzy Matches Returned];
 </div>
+
 **Example**: A user searches for "data cleaning" in a system,
 and fuzzy search identifies relevant results
 like "data preprocessing"
@@ -225,6 +226,7 @@ graph TD;
     Entities --> RelatedTexts[Retrieve Texts from Entities];
     RelatedTexts --> Results[Output Retrieved Texts];
 </div>
+
 **Example**: A query about "Albert Einstein"
 triggers traversal of a knowledge graph
 to fetch connected entities
@@ -274,16 +276,10 @@ with redundant information for generation.
 For example,
 a system might:
 
-1. Use a knowledge graph
-to identify related entities or terms
-to refine a vague query.
-2. Generate natural language queries
-enhanced with these terms
-for embedding-based vector similarity searches.
-3. Extract keywords from the enhanced query
-for fuzzy and exact keyword searches.
-4. Retrieve relevant texts from all methods
-and merge them into a unified set of results.
+1. Use a knowledge graph to identify related entities or terms to refine a vague query.
+2. Generate natural language queries enhanced with these terms for embedding-based vector similarity searches.
+3. Extract keywords from the enhanced query for fuzzy and exact keyword searches.
+4. Retrieve relevant texts from all methods and merge them into a unified set of results.
 
 **Example**: Consider a user asking,
 "Tell me what's going on here,"
@@ -297,11 +293,8 @@ the graph might suggest terms
 like "gradient descent" or "backpropagation."
 These terms could:
 
-- Form part of an enhanced natural language query,
-such as "How does gradient descent relate to neural networks?"
-for embedding-based searches.
-- Generate keywords like "gradient," "neural," and "backpropagation"
-for exact or fuzzy keyword searches.
+- Form part of an enhanced natural language query, such as "How does gradient descent relate to neural networks?" for embedding-based searches.
+- Generate keywords like "gradient," "neural," and "backpropagation" for exact or fuzzy keyword searches.
 
 Results from all retrieval methods
 would then be merged and ranked
