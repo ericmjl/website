@@ -75,7 +75,7 @@ and offer additional frameworks for thinking about agent design.
 
 ## Anthropic's architectural distinction
 
-Anthropic's perspective on agents
+[Anthropic's perspective on agents](https://www.anthropic.com/research/building-effective-agents)
 particularly resonates with my thinking
 about variable scope inputs and constrained actions.
 
@@ -106,7 +106,7 @@ agents for variable ones.
 ## Google's comprehensive framework
 
 Google's definition,
-outlined in their whitepaper,
+outlined in their [whitepaper](https://drive.google.com/file/d/1oEjiRCTbd54aSdB_eEe3UShxLBWK9xkt/view?usp=sharing),
 takes a more expansive view
 while still complementing these ideas.
 They define a generative AI agent
@@ -131,19 +131,20 @@ they need clear feedback loops
 between their actions and their environment
 to make effective decisions.
 
-## An emerging paradigm
+## HuggingFace's paradigm
 
 An intriguing new perspective in the field,
-suggested by [Aymeric Roucher](https://x.com/AymericRoucher/status/1874116324898598934),
+[suggested by Aymeric Roucher](https://x.com/AymericRoucher/status/1874116324898598934),
 proposes having the agent write the code it needs to execute
 before actually executing it.
-This approach adds another layer of flexibility and control to agent systems,
+This approach introduces flexibility to the agent compared to my own definition,
 and should theoretically be much more powerful.
-However, it also requires careful consideration of security implications.
+As with anything that executes code,
+it also requires careful consideration of security implications.
 If an agent can write and execute its own code,
 it becomes vulnerable to prompt injection attacks
-that could lead to malicious code execution
-with potentially disastrous consequences.
+that could lead to malicious code written
+that gets executed with potentially disastrous consequences.
 The ideal implementation would run such code in isolated environments
 that can't affect the host system -
 similar to how we use containers and sandboxes in other contexts.
