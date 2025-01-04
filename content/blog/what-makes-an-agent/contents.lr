@@ -1,0 +1,155 @@
+title: What makes an agent?
+---
+author: Eric J. Ma
+---
+body:
+
+In [a previous blog post](https://ericmjl.github.io/blog/2024/12/15/how-llamabots-new-agent-features-simplify-complex-task-automation/), I explored how LlamaBot's agent features can simplify complex task automation. Here, I'd like to explore what exactly makes an agent.
+
+## My working definition
+
+In my view, an LLM agent is a system that demonstrates the appearance of making goal-directed decisions autonomously. It operates within a scoped set of tasks it can perform, without requiring pre-specification of the order in which these tasks are executed. Three key attributes set it apart:
+
+1. **Goal-oriented non-determinism**: The agent makes decisions dynamically rather than following a pre-defined sequence of actions.
+2. **Decision-making flow control**: Decisions adapt based on context, resembling a "thinking" process.
+3. **Natural language interfaces**: Inputs and outputs are in plain language, making interactions feel intuitive.
+
+A familiar way to understand these attributes is to think about a flight booking agent you might call on the phone. They handle diverse requests ("I want to fly to Tokyo next month" or "I need the cheapest flight to London this weekend"), make decisions based on context (checking different airlines, considering your preferences), and communicate naturally. The parallel helps clarify what we mean by agent-like behavior - though with one key distinction. While a human agent exercises genuine autonomy in their decision-making, our LLM agents create the appearance of autonomy and flexibility through careful engineering of their design and tools.
+
+These attributes combine to give agents their apparent autonomy and their flexibility in handling diverse inputs. With these principles in mind, I designed LlamaBot's AgentBot to make creating and deploying agents simple, flexible, and powerful.
+
+## A key insight: The guiding principle
+
+Through my experience with website scraping and other projects, I've developed what I believe is a crucial principle for when to use agents: You really don't want to use agents until you have *variable scope input* paired with a *constrained scope of actions* that could be taken.
+
+This principle really emerged from my observations of what makes for successful applications of agents. In fact, I've noticed that an agent's effectiveness - that is, the probability it chooses the correct action - appears to be highly dependent on two key factors:
+
+1. The number of options available to it (the more constrained, the better)
+2. The vagueness of the incoming instructions (the clearer, the better)
+
+This relationship between input clarity and action constraints isn't just theoretical. I've also observed that an agent's ability to clarify these actions when needed plays a significant role in its success. When an agent can effectively navigate between understanding variable inputs and selecting from constrained actions, it performs at its best.
+
+## Industry perspectives on agents
+
+While my observations come from hands-on experience building and deploying agents, it's worth examining how major players in the field think about agents. These perspectives, while sometimes more abstract, help contextualize the practical principles I've discovered and offer additional frameworks for thinking about agent design.
+
+## Anthropic's architectural distinction
+
+Anthropic's perspective on agents particularly resonates with my thinking about variable scope inputs and constrained actions. They make an important architectural distinction in how they categorize agentic systems:
+
+1. **Workflows**: Systems where LLMs and tools are orchestrated through predefined code paths
+2. **Agents**: Systems where LLMs dynamically direct their own processes and tool usage, maintaining control over how they accomplish tasks
+
+What's particularly compelling about their approach is how they emphasize finding the simplest solution possible. They explicitly note that agentic systems often trade latency and cost for better task performance - a tradeoff that needs careful consideration. This aligns perfectly with my observations: simple scales, while complexity doesn't. Building a Rube Goldberg machine is a recipe for long-term disaster.
+
+Their framework suggests using workflows for predictability and consistency in well-defined tasks, while reserving agents for situations where flexibility and model-driven decision-making are needed at scale. This maps well to my principle about variable scope inputs - workflows for fixed patterns, agents for variable ones.
+
+## Google's comprehensive framework
+
+Google's definition, outlined in their whitepaper, takes a more expansive view while still complementing these ideas. They define a generative AI agent as an application that attempts to achieve goals by observing and acting upon the world using available tools. Their framework emphasizes several key characteristics that help clarify when to use agents:
+
+- **Autonomy**: Agents can act independently of human intervention when provided with proper goals or objectives
+- **Proactive Planning**: They can reason about next steps even without explicit instruction sets
+- **Tool Integration**: They emphasize how agents extend beyond standalone models by interfacing with external tools and systems
+- **Observation and Action**: Agents operate in a cycle of observing their environment, making decisions, and taking actions
+
+This aligns with my observations about constrained action spaces - Google's framework suggests that while agents should be autonomous in their decision-making, they still operate within a defined set of tools and capabilities. Their emphasis on the observation-action cycle particularly resonates with how I've seen agents succeed in practice: they need clear feedback loops between their actions and their environment to make effective decisions.
+
+## An emerging paradigm
+
+An intriguing new perspective in the field, suggested by developers like Aymeric Roucher, proposes having the agent write the code it needs to execute before actually executing it. This approach adds another layer of flexibility and control to agent systems, and should theoretically be much more powerful. However, it also requires careful consideration of security implications. If an agent can write and execute its own code, it becomes vulnerable to prompt injection attacks that could lead to malicious code execution with potentially disastrous consequences. The ideal implementation would run such code in isolated environments that can't affect the host system - similar to how we use containers and sandboxes in other contexts.
+
+It's important to distinguish this paradigm from agents that help us write prototype applications or production code. Here, we're talking about agents writing throwaway code - small, single-use scripts that the agent uses to process data or perform calculations, get the output, and then decide on its next action. This is fundamentally different from code generation for applications; it's about giving agents the ability to dynamically create and execute computational tools as part of their reasoning process.
+
+## Real-world applications
+
+### A minimal example: Bill calculation bot
+
+Let's look at a concrete example: a bill calculation bot. This is a minimally complex, easily understandable example of variable scope input with constrained actions. The bot might:
+- Calculate tips
+- Split bills among people
+- Provide itemized breakdowns in table format
+
+What makes this a good use case for agents is that we're not limiting ourselves to a single input (total amount) and single output (split amount per person). Instead, users might want different combinations of actions. Some might want to calculate the total and split it, others might want to add a tip first, then split, and some might just want the total.
+
+### Life sciences example: Literature research assistant
+
+For a more sophisticated real-world example, consider a literature research assistant agent in the life sciences. This kind of agent perfectly embodies the principle of variable scope input with constrained actions:
+
+The agent might handle research queries like:
+
+- "Find recent papers about CRISPR in cancer therapy"
+- "What's the latest on protein folding algorithms?"
+- "Who else is citing this methodology paper?"
+
+Each query could trigger different combinations of constrained actions:
+
+- Searching multiple databases (PubMed, bioRxiv, etc.)
+- Filtering by publication date, citation count, or journal impact factor
+- Cross-referencing author networks
+- Extracting methodology sections
+- Generating citation summaries
+- Identifying key figures
+
+What makes this a compelling use case for agents is how the inputs can vary wildly (from broad research questions to specific citation queries) while the actions remain constrained to a well-defined set of database operations and text analysis tools. The agent needs to dynamically choose which combination of these actions will best serve the researcher's intent.
+
+### Life sciences example: Protocol optimization assistant
+
+Another life sciences example would be a protocol optimization agent that assists with experimental design. Researchers might input anything from "How should I modify this Western blot protocol for a very low-abundance protein?" to "What's the best transfection method for these primary neurons?" The agent would work with a constrained set of actions like:
+
+- Searching and comparing protocols from methods sections in published papers
+- Identifying key differences between similar protocols across labs
+- Extracting specific modifications for edge cases (e.g., low abundance proteins, difficult-to-transfect cells)
+- Compiling troubleshooting notes from supplementary materials
+- Cross-referencing protocol modifications with success rates reported in papers
+- Aggregating user experiences from protocol repositories like protocols.io
+
+What makes this realistic is that it mirrors what scientists actually do - we spend hours scouring papers and supplements, comparing different labs' approaches, and piecing together what modifications might work for our specific case. The agent operates within the constrained action space of literature analysis and comparison, but can handle the variable scope of input questions that arise during protocol optimization.
+
+These examples from life sciences highlight how agents can handle complex, variable inputs while working within carefully defined action constraints.
+
+### A roadmap for designing agent applications
+
+I've found that the most effective way to design agent applications is to progressively relax constraints on inputs and execution order.
+
+**Start with a deterministic program**
+
+1. Design your application as you would with regular API calls
+2. Define clear input/output specifications
+3. Implement core functionality with standard programming patterns
+
+**Relax input constraints**
+
+1. Accept natural language input and convert it to structured parameters for function calls
+2. Enable autonomous function calling based on natural language understanding
+
+**Relax execution order constraints**
+
+1. Only necessary when natural language inputs are varied enough to require different execution paths
+2. Allow flexible ordering of operations when needed
+3. Enable dynamic selection of which functions to call
+4. Maintain boundaries around available actions while allowing flexibility in their use
+
+This progressive relaxation approach helps us transition from traditional deterministic programming to an agent-driven paradigm where execution order is non-deterministic and inputs are natural language.
+
+## Looking forward
+
+After diving into all these different perspectives on agents, I keep coming back to a key insight: the real power of agents isn't about making them completely autonomous. It's about finding that sweet spot where they can handle all sorts of different inputs while working with a well-defined set of actions.
+
+Think about the examples we've looked at - from simple bill-splitting to complex protocol optimization. In each case, the agent's effectiveness comes from having clear boundaries around what it can do, paired with the flexibility to handle whatever questions or requests users throw at it. This is what makes agents genuinely useful in real-world contexts.
+
+I believe this is the direction we should be pushing in: not trying to make agents do everything, but rather getting really good at defining the right scope and tools for specific use cases. After all, the most successful applications of agents will be the ones that solve real problems really well.
+---
+pub_date: 2025-01-04
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore what defines an LLM agent, highlighting its goal-oriented non-determinism, decision-making flow control, and natural language interfaces. I also discuss when to use agents, emphasizing the importance of variable scope inputs and constrained actions. By examining industry perspectives from Anthropic and Google, I also explore how agents can effectively handle diverse inputs while maintaining defined action boundaries. Real-world examples, like a bill calculation bot and a literature research assistant, illustrate these principles. How can these insights transform your approach to designing agent applications?
+---
+tags:
+
+llms
+automation
+workflows
+tools
+agents
