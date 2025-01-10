@@ -1,0 +1,173 @@
+title: A practical guide to securing secrets in data science projects
+---
+author: Eric J. Ma
+---
+body:
+
+I've made my share of mistakes with secrets management - from accidentally committing API keys in Jupyter notebooks to storing passwords in plain text. Today, I want to share what I've learned about keeping secrets secure in our data science workflows.
+
+Let's face it: as data scientists, we deal with a lot of sensitive credentials. API keys for data vendors, database passwords, cloud service tokens - the list goes on. Here's my practical approach to handling these securely.
+
+## Start local: the power of environment variables
+
+The foundation of my secret management starts with environment variables. I've found that using `direnv` combined with `.env` files is a game-changer for local development. Here's the how and why.
+
+First, install [`direnv`](https://direnv.net/) in your shell. This tool automatically loads environment variables when you enter a directory and unloads them when you leave. This is way more secure than setting globals in your `.bashrc` file, where any program in your user space could potentially access them.
+
+In my projects, I create a `.env` file with permissions set to 400 (meaning only I can read it):
+
+```bash
+chmod 400 .env
+```
+
+Inside this file, I store my secrets:
+
+```bash
+DATA_VENDOR_API_KEY=abc123
+DB_PASSWORD=supersecret
+AWS_ACCESS_KEY=xyz789
+```
+
+Now, here's an important technical detail: if your Jupyter notebooks are launched in an environment where `direnv` is already active, the environment variables will be automatically available through `os.getenv()`. You won't need any additional setup:
+
+```python
+import os
+api_key = os.getenv('DATA_VENDOR_API_KEY')  # Works if direnv is active
+```
+
+However, if your notebooks launch without `direnv` support (which is common in many setups), you can fall back to `python-dotenv`:
+
+```python
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Backup for when direnv isn't available
+api_key = os.getenv('DATA_VENDOR_API_KEY')
+```
+
+I generally include `python-dotenv` in my projects anyway - it's a lightweight safeguard that ensures my code works across different environments, whether `direnv` is available or not.
+
+## Version control: the first line of defense
+
+One crucial habit I've developed is to immediately add `.env` to my `.gitignore` file. This prevents me from accidentally committing secrets to version control. Here's what I add to `.gitignore`:
+
+```
+.env # <---this is the key thing to add!
+
+# These are also good to add!
+*.pem
+*credentials*
+```
+
+## Preventing commits with pre-commit hooks
+
+While `.gitignore` helps prevent committing specific files, I've learned that having an automated check for accidental API key commits is invaluable. I use a pre-commit hook that scans for potential API keys in my code before they ever make it into a commit.
+
+Here's the pre-commit hook I use (you can find it [here on GitHub](https://github.com/ericmjl/api-key-precommit)):
+
+```yaml
+repos:
+  - repo: https://github.com/ericmjl/api-key-precommit
+    rev: v0.1.0
+    hooks:
+      - id: api-key-checker
+        args:
+          - "--pattern"
+          - "[a-zA-Z0-9]{32,}"  # Catches generic API keys
+          - "--pattern"
+          - "api[_-]key[_-][a-zA-Z0-9]{16,}"  # API keys with prefix
+          - "--pattern"
+          - "sk-[A-Za-z0-9]{48}"  # OpenAI-style keys
+          - "--pattern"
+          - "ghp_[A-Za-z0-9]{36}"  # GitHub tokens
+```
+
+This hook has saved me numerous times. Based on the configuration, you can catch keys like:
+
+- Generic 32+ character keys
+- OpenAI API keys
+- GitHub personal access tokens
+- Slack tokens
+- And any other patterns you configure it to catch
+
+Hot tip: use a local LLM to help you generate the pattern. You can copy/paste the key a few times in a plain text editor, flip around 4-5 characters in there, and then ask it for the regex pattern. Much faster than trying to decipher it yourself! Here's the prompt:
+
+```text
+I have the following example API keys (not real, obfuscated):
+
+sk-38qv80ehlkjsh4t8-dfo9387hanlc
+sk-38qv80ehl3jsh4se-dfe9387haelc
+sk-319voi4nwp8uryv4;jnyqr8gy[d9u63t
+sk-490408tyklnldsf-498324uohsiuaodf
+
+Return for me a regex pattern that can match these keys and beyond.
+```
+
+The best part? If you try to commit code containing something that looks like an API key, it stops you and shows exactly where the potential exposure is. This gives you a chance to remove the secret before it ever touches version control.
+
+I've found that combining this with `.gitignore` creates a really robust defense against accidentally exposing secrets. The `.gitignore` prevents committing known secret-containing files, while the pre-commit hook catches any secrets that might slip into your actual code.
+
+## Sharing secrets in collaborative projects
+
+First, let me address something critical: if you absolutely must share a secret with a teammate (which should be rare), never do it through chat, email, or externally hosted services. I've learned to use self-destroying notes through open source tools like Cryptgeon, which you can deploy on your internal network. Here's the thing - NEVER trust externally hosted secret-sharing services. You have no idea what they're doing with your data behind the scenes!
+
+While I've built my own tool ([pigeon notes](http://pigeon.ericmjl.com/), which I'll open source later this year), I actually recommend you don't trust my hosted version either. The safest approach is to deploy your own instance of an open source tool like Cryptgeon (https://github.com/cupcakearmy/cryptgeon) on your internal infrastructure. This way, you have full control and visibility over how your sensitive data is handled.
+
+Now, for managing secrets in your development workflow, I've found that almost every major vendor platform that involves code execution provides some form of secrets management. For example:
+
+- GitHub provides Secrets features for CI/CD pipelines
+- Workspace platforms like Domino or Nebari have their own secrets management systems
+- Cloud providers like AWS offer services like Secrets Manager to interact with their services
+- Most compute platforms come with built-in ways to handle secrets securely
+
+The key is to check your platform's documentation and invest time in understanding its secrets management capabilities. Instead of hard-coding secrets directly in your notebooks or scripts (which is both insecure and a common mistake), leverage these built-in features - they're usually well-tested and integrated with the platform's security model. While it might take some initial setup time, it's worth learning how to store and access secrets properly within each environment you work in.
+
+## What if I accidentally commit a secret?
+
+When a secret gets committed (it happens), the first step is to immediately rotate any exposed credentials - this minimizes the window of vulnerability. Then comes the cleanup: BFG Repo Cleaner helps scrub the secret from Git history. Install it using homebrew (`brew install bfg`) or download the jar file. With BFG installed, run:
+
+```bash
+bfg --replace-text secrets.txt your-repo.git
+```
+
+Where `secrets.txt` contains the patterns of secrets you want to remove. After BFG does its work, force push the cleaned repository:
+
+```bash
+git push origin --force
+```
+
+Let the team know they'll need to re-clone the repository fresh - any local copies still contain the secret in their history. How long it takes depends on your repository's history and complexity, so coordinate with your team to pause development until the cleanup is complete to avoid commit conflicts.
+
+## Best practices I've learned the hard way
+
+Through trial and error, I've developed these habits:
+
+1. Never hardcode secrets in Jupyter notebooks, even in "temporary" analysis
+2. Rotate API keys when platforms notify me about expiration or when something breaks
+3. Use pre-commit hooks to catch potential secret leaks before they happen
+4. Keep my secrets scoped to specific projects using `direnv`
+
+## Following proven paths
+
+Everything I've described here isn't unique to data science - it's exactly how software developers have been building applications for years. The principles behind the [12-factor app methodology](https://12factor.net/), which has guided software development for over a decade, apply just as well to our data science work. Whether we're building a web service or training a machine learning model, we're still writing code, and the same best practices around configuration and secrets management apply.
+
+## A note on security layers
+
+Secrets management, like Swiss cheese - each security measure has holes, but when layered together, they create a robust defense. While AWS Secrets Manager might be overkill for some projects, even simple practices like using `.env` files and proper permissions can significantly improve security.
+
+It only takes one exposed secret to potentially compromise your data or services. As data scientists, we handle sensitive information daily, so taking these precautions isn't just good practice - it's essential.
+---
+pub_date: 2025-01-10
+---
+twitter_handle: ericmjl
+---
+summary: In this post, I share a practical approach to managing secrets in data science workflows, learned from personal experience with both successes and mistakes. I cover essential tools like `direnv` and `.env` files for local development, strategies for secure secret handling in Jupyter notebooks, and crucial version control practices including pre-commit hooks to catch accidental API key commits. I also discuss team collaboration approaches for secret sharing, platform-specific secrets management features, and what to do when secrets accidentally get committed to repositories. While tools like AWS Secrets Manager exist for enterprise needs, I focus on practical, accessible methods that create robust security through layered defenses, following proven software development principles that apply equally well to data science work.
+---
+tags:
+
+cybersecurity
+pre-commit hooks
+jupyter
+secrets management
+best practices
+data science
