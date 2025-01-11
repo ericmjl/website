@@ -103,15 +103,15 @@ sk-490408tyklnldsf-498324uohsiuaodf
 Return for me a regex pattern that can match these keys and beyond.
 ```
 
-The best part? If you try to commit code containing something that looks like an API key, it stops you and shows exactly where the potential exposure is. This gives you a chance to remove the secret before it ever touches version control.
+Once you have this set up, the pre-commit hook will automatically scan your code before each commit. If it finds anything that looks like an API key, it'll stop the commit process and point out exactly where the potential exposure is. This gives you a chance to remove any secrets before they ever make it into version control - which has saved me countless times from accidentally exposing sensitive information.
 
-I've found that combining this with `.gitignore` creates a really robust defense against accidentally exposing secrets. The `.gitignore` prevents committing known secret-containing files, while the pre-commit hook catches any secrets that might slip into your actual code.
+I've found that combining this with `.gitignore` creates a double-layered defense against accidentally exposing secrets. The `.gitignore` prevents committing known secret-containing files, while the pre-commit hook catches any secrets that might slip into your actual code.
 
 ## Sharing secrets in collaborative projects
 
 First, let me address something critical: if you absolutely must share a secret with a teammate (which should be rare), never do it through chat, email, or externally hosted services. I've learned to use self-destroying notes through open source tools like Cryptgeon, which you can deploy on your internal network. Here's the thing - NEVER trust externally hosted secret-sharing services. You have no idea what they're doing with your data behind the scenes!
 
-While I've built my own tool ([pigeon notes](http://pigeon.ericmjl.com/), which I'll open source later this year), I actually recommend you don't trust my hosted version either. The safest approach is to deploy your own instance of an open source tool like Cryptgeon (https://github.com/cupcakearmy/cryptgeon) on your internal infrastructure. This way, you have full control and visibility over how your sensitive data is handled.
+While I've built my own tool ([pigeon notes](http://pigeon.ericmjl.com/), which I'll open source later this year), I actually recommend you don't trust my hosted version either. The safest approach is to deploy your own instance of an open source tool like [Cryptgeon](https://github.com/cupcakearmy/cryptgeon) on your internal infrastructure. This way, you have full control and visibility over how your sensitive data is handled.
 
 Now, for managing secrets in your development workflow, I've found that almost every major vendor platform that involves code execution provides some form of secrets management. For example:
 
