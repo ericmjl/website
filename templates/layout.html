@@ -73,6 +73,24 @@
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
         </script>
 
+    <!-- Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'neutral',
+            securityLevel: 'loose'
+        });
+    </script>
+    <style>
+        .mermaid {
+            background-color: white;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 4px;
+        }
+    </style>
+
 </head>
 
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
