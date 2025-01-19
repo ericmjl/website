@@ -46,11 +46,11 @@
 
     {% if post.attachments.get("logo.webp") %}
     {% set img = post.attachments.get("logo.webp") %}
-    <img src="{{ img|url }}" class="banner-image" style="padding: 10px;" >
+    <img src="{{ img|url }}" class="banner-image" >
     {% endif %}
 
     {% if post.summary %}
-    <div class="post-summary" style="font-size: 0.9em; color: #666; margin-bottom: 2em; font-style: italic;">
+    <div class="post-summary" style="font-size: 0.9em; color: #666; margin-bottom: 2em; font-style: italic; padding-top: 2em;">
       {{ post.summary }}
     </div>
     {% endif %}
