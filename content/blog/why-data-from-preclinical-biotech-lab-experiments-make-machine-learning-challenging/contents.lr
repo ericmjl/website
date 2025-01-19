@@ -1,0 +1,114 @@
+title: Why data from preclinical biotech lab experiments make machine learning challenging
+---
+author: Eric J. Ma
+---
+body:
+
+Biotech teams keep running into the same wall. It starts innocently enough with a promising discovery: a public dataset that appears to perfectly align with their research objectives, to identify molecules with a particular function. The excitement builds quickly. A data scientist, who is matrixed into the team, envisions combining it with internal data (about to be generated) to build better models and accelerate their research. But what begins with enthusiasm inevitably leads to hard lessons about the unique challenges of preclinical biotech data. Let's explore this prototypical story in more detail.
+
+## The initial promise: finding public data
+
+Midway through the project, an apparently perfect dataset appears. It's cleanly organized with binary classifications (active/inactive) and enough examples to train a solid classifier -- 1000+ molecules are included, a luxury number in preclinical laboratory experiments.
+
+Initial models look promising. Validation metrics are strong. Cross-validation results encourage further development. Everyone aligns behind the opportunity, and both project and department leadership provide enthusiastic support! The laboratory team is ready to generate data that, in all likelihood, could be combined with the existing public data. Together with the data scientist, the team designs the experiment and gets ready to execute on it.
+
+However, as the team dives deeper into the experiment design, complexities emerge that challenge their initial optimism.
+
+## When reality crashes in: fundamental challenges
+
+When planning out the measurement experiment, fundamental challenges with data compatibility emerge. These aren't just technical hurdles - they're systemic issues that any data scientist supporting preclinical work needs to overcome.
+
+### Challenge 1: reconciling binary and continuous measurements
+
+The first roadblock appears immediately. The lab team can generate continuous-valued activity measurements. But these aren't binary, as they were in the public data! How do you reconcile binary classifications with continuous measurements? What seems like a straightforward thresholding problem quickly spirals into deeper questions.
+
+What threshold did the original researchers use? Their methods mention a cutoff, but it turns out their dataset is an amalgamation of many other datasets, each with their own binary classification values. Different labs define "active" behavior differently, and in this case, these definitions were poorly documented; even when they are documented, the experimental conditions behind those definitions may differ dramatically from the new team's setup. We are now in a logical deadlock.
+
+### Challenge 2: hunting invisible variables
+
+Next, certain experimental factors were not recorded in the public dataset, making them difficult to compare against the internal data. These include temperature, pH levels, incubation times, and buffer composition for dissolving the molecule -- potentially important process information that was not captured.
+
+Do these matter? They may play a role, but without the data recorded, it's impossible to know. Much of this information remains forever lost, buried in lab notebooks that will never see the light of day. (This, in case you weren't aware, represents a fundamental problem in biotech data collection!)
+
+### Challenge 3: navigating the domain shift maze
+
+The most insidious challenge lurks in domain shifts between experiments. The team is working with HEK293 cells. The public dataset, however, used HEK293T cells. The similar names suggest compatibility, but reality proves far more complex: dramatic differences can exist between these cell lines!
+
+*For those who didn't know, HEK293 and HEK293T cells are both derived from human embryonic kidney cells, but HEK293T cells contain an additional gene expressing the SV40 Large T antigen. This key difference makes HEK293T cells capable of episomal replication of plasmids containing the SV40 origin, resulting in higher transfection efficiency (of the external DNA added, it'll take up more) and protein expression levels (overall, more protein produced) compared to standard HEK293 cells.*
+
+Bridging this domain shift demands careful validation through "bridging experiments." Only then can teams confidently build hybrid models combining both datasets. But practical constraints often fight against these technical requirements. Funding for the project may be running out. Or there may be an important deadline that leads the team to conclude that it isn't high enough of a priority to do so.
+
+### Challenge 4: wrestling with biological complexity
+
+All these challenges stem from a fundamental truth: biological systems are inherently complex. Teams aren't working with static, controlled systems. They're dealing with living organisms that change over time. These systems interact in non-linear ways. Their behavior often defies expectations.
+
+Teams are forced to make critical assumptions, like stability of their cell lines over time. A card-carrying biologist would laugh at this assumption -- and yet it is the best we have! And what's the alternative? Comprehensive genetic sequencing at every passage? The cost and time requirements make this impossible for most research programs.
+
+## Switching from a machine learning perspective to a decision support perspective
+
+And so the data scientist is left scratching their head. Clearly, it's not the right idea to threshold and binarize the lab's continuous measurements and then smash them together as new rows in the data table from the public dataset. And ignoring the public data feels deeply wrong too, as if we're passing up a huge opportunity to gain leverage from publicly available information. What are we supposed to do under these circumstances?
+
+In reflecting on this prototypical story, which I've seen everywhere I've worked, it's pointed me towards a more nuanced approach to machine learning in biotech. Force-fitting disparate datasets into a single model is a dead end. My description of the options reveals how the data scientist is thinking about the issue as a machine learning problem rather than as a decision support problem. I suspect other digital teams, in their fervor to support machine learning or due to their prior bias as data scientists, may end up thinking about the problem the same way, with consequences for the final design of their data platform.
+
+If we take the decision support perspective, we quickly realize that it's illogical to try building a single model that combines the two datasets. Instead, we should build two separate models and combine their results in a decision fusion step guided by human judgment about which model is more reliable. There are multiple ways to approach this fusion: we could use weighted ranking between the two models, calculate a weighted average of their predictions, or employ Bayesian model averaging, to combine the two models' predictions into a single prediction. It might look like this:
+
+<pre class="mermaid">
+flowchart LR
+    subgraph Data1[Public Dataset]
+        D1[Binary Classifications]
+        E1[Experimental Context 1]
+    end
+
+    subgraph Data2[Internal Dataset]
+        D2[Continuous Measurements]
+        E2[Experimental Context 2]
+        B[Bridging Experiments]
+    end
+
+    subgraph Models[Model Predictions]
+        D1 --> M1[Model 1 Predictions]
+        E1 --> M1
+        D2 --> M2[Model 2 Predictions]
+        E2 --> M2
+        B --> M2
+    end
+
+    subgraph WeightingLayer[Model Weighting Layer]
+        H1[Human Expertise]
+        note1[Understanding of:<br/>- Experimental conditions<br/>- Model limitations<br/>- Data quality<br/>- Biological context]
+        H1 --- note1
+
+        H1 --> W1[Weight Assignment]
+        M1 --> W1
+        M2 --> W1
+    end
+
+    W1 --> F[Final Molecule Prioritization]
+
+    note2[Bridging experiments help<br/>determine appropriate<br/>weighting between models]
+    note2 -.-> WeightingLayer
+</pre>
+
+As illustrated above, each dataset gets its own model, maintaining statistical and logical integrity. At the decision fusion layer, the team combines these model predictions with human knowledge about experimental conditions, model limitations, and biological context to do a final weighted selection of molecules to work with.
+
+This strategy naturally leads us into the realm of multi-criteria decision analysis (MCDA) and hybrid decision support systems. Instead of relying solely on machine learning outputs, these methods formally incorporate multiple evidence sources - including human expertise, experimental contexts, and various model predictions.
+
+Success in this framework doesn't require perfect dataset integration -- which comes from thinking about the problem as a machine learning problem. Rather, it comes from building thoughtful decision support systems that help researchers weigh evidence from multiple sources. For the community of ML builders in biotech, this opens exciting new opportunities! The next generation of tools might look less like monolithic predictive engines and more like hybrid systems that empower researchers to navigate complex trade-offs and effectively combine evidence from diverse experiments.
+
+By embracing this nuanced perspective, we can harness the power of machine learning while respecting the inherent complexity of biological systems. This balanced approach, I believe, will be key to accelerating discovery in the fast-moving world of biotech research.
+---
+pub_date: 2025-01-19
+---
+twitter_handle: ericmjl
+---
+tags:
+
+biotech
+datasets
+machine learning
+research
+data fusion
+decision support systems
+data science
+---
+summary: In this blog post, I explore the challenges biotech teams face when integrating public datasets with internal data for machine learning. Despite initial excitement, issues like data compatibility, missing variables, domain shifts, and biological complexity often arise. I suggest a shift from a machine learning perspective to a decision support approach, advocating for separate models and a decision fusion layer that incorporates human expertise. This method respects the complexity of biological systems and aids in effective decision-making. How can we better navigate these challenges to accelerate biotech discoveries?
