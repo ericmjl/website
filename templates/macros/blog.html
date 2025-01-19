@@ -46,7 +46,7 @@
 
     {% if post.attachments.get("logo.webp") %}
     {% set img = post.attachments.get("logo.webp") %}
-    <img src="{{ img|url }}" style="padding: 10px;" >
+    <img src="{{ img|url }}" class="banner-image" style="padding: 10px;" >
     {% endif %}
 
     {% if post.summary %}
@@ -134,7 +134,7 @@
       {% if post.attachments.get("logo.webp") %}
       {% set img = post.attachments.get("logo.webp") %}
       <a href="{{ post|url }}" style="text-decoration: none;">
-        <img src="{{ img|url }}" >
+        <img src="{{ img|url }}" class="banner-image" >
       </a>
       {% endif %}
 
