@@ -1,0 +1,369 @@
+title: Lightening the LlamaBot
+---
+author: Eric J. Ma
+---
+body:
+
+In my recent work with LlamaBot, I faced a challenge that many developers might recognize: dependency bloat. What started as a simple bot framework had grown into a monolithic beast that pulled in everything but the kitchen sink. Let me share how I tackled this issue and what I learned along the way.
+
+## The weight of dependencies
+
+When I looked at LlamaBot's dependency chain, it was extensive: Panel, Bokeh, LanceDB, ChromaDB, Tantivy, Astor, PyperClip, PromptToolkit - the list went on. Being honest with myself, I had gotten lazy with dependencies. The consequence was that every LlamaBot installation involved downloading seven gigabytes worth of packages. 7 GB!! All to just use either the git hooks (`llamabot git hooks`) CLI, or just to use `StructuredBot`.
+
+This is what the dependencies looked like before, on commit `5a1f67d96bbcbd031fdc7f8888aabb0a1f225e10` (which you can also view [here](https://github.com/ericmjl/llamabot/blob/5a1f67d96bbcbd031fdc7f8888aabb0a1f225e10/pyproject.toml)):
+
+```toml
+...
+dependencies = [
+    "openai",
+    "panel",
+    "jupyter_bokeh",
+    "bokeh",
+    "loguru",
+    "pyperclip",
+    "astor",
+    "python-dotenv",
+    "typer",
+    "gitpython",
+    "pyprojroot",
+    "frozenlist",
+    "beautifulsoup4",
+    "rich",
+    "pyzotero",
+    "case-converter",
+    "prompt-toolkit",
+    "sh",
+    "pre-commit",
+    "beartype",
+    "litellm>=1.59.1", # this is necessary to guarantee that ollama_chat models are supported for structured outputs
+    "python-slugify",
+    "pydantic>=2.0",
+    "pdfminer.six",
+    "rank-bm25",
+    "lancedb",
+    "chromadb",
+    "tantivy",
+    "numpy", # https://github.com/ericmjl/llamabot/issues/56
+    "python-frontmatter",
+    "diskcache",
+    "nbformat",
+    "alembic",
+    "jinja2",
+    "fastapi",
+    "uvicorn",
+    "sentence-transformers",
+    "tenacity",
+    "python-multipart",
+    "httpx",
+    "tqdm",
+    "docker", "duckduckgo-search>=7.2.1,<8", "markdownify>=0.14.1,<0.15",  # For secure script execution
+]
+...
+```
+
+The real kicker came from dependencies like ChromaDB, which pulled in sentence-transformers, which then required PyTorch. On Linux systems, this cascade would drag in all the CUDA packages too. It was overkill for what most users needed.
+
+## Breaking down the monolith
+
+I started by mapping out where each dependency was actually used. As an example:
+
+- CLI components: pyzotero, Rich, GitPython, nbformat
+- RAG functionality: ChromaDB and related packages
+- Agent features: Docker, python-docker, markdownify, dotgosearch
+
+For context, I developed a few prototype CLI applications within LlamaBot to test drive the user experience of some tools I had in mind. Most of them, it turns out, I don't use, and at some future date, I may just deprecate them. Others, however, like the git commit writer, are now fully integrated into my workflow that I can't do without it.
+
+An interesting realization hit me: the RAG (Retrieval-Augmented Generation) corner of LlamaBot wasn't getting much use. While cosine similarity RAG had its moment in the spotlight, it wasn't as revolutionary as I had thought it would be -- it turns out to still be useful for small context window models, but with many models hitting 128K to 2M token context lengths, and with other advances in RAG (e.g. GraphRAG), it may become less and less useful. But it still lives around just in case it's handy, as there are use cases for small LMs.
+
+Finally, the Agent features were new and experimental, so it didn't make sense to ship them as part of the core dependencies.
+
+## The refactoring strategy
+
+For the core of LlamaBot, I decided to focus on `SimpleBot` and `StructuredBot` - the core components that delivered the most value. After all, I find myself using `StructuredBot` the most. The strategy? Move non-essential imports outside of `SimpleBot` and `StructuredBot` into try-except blocks. Yes, this meant more try-except blocks throughout the codebase, but the trade-off was worth it. Here's an example of what this looks like:
+
+```python
+class LanceDBDocStore(AbstractDocumentStore):
+    """A document store for LlamaBot that wraps around LanceDB."""
+
+    def __init__(
+        self,
+        table_name: str,
+        storage_path: Path = Path.home() / ".llamabot" / "lancedb",
+    ):
+        try:
+            import lancedb
+            from lancedb.embeddings import EmbeddingFunctionRegistry, get_registry
+            from lancedb.pydantic import LanceModel, Vector
+        except ImportError:
+            raise ImportError(
+                "LanceDB is required for LanceDBDocStore. "
+                "Please `pip install llamabot[rag]` to use the LanceDB document store."
+            )
+
+```
+
+Cursor absolutely helped here; I was able to eliminate a lot of repetitive error message typing through Cursor's tab-completion.
+
+In the CLI, I went a step further. Instead of importing optional dependencies at the module level, I moved imports into specific functions. This meant managing imports at runtime rather than import time. Here's an example from the my experimental Zotero chat CLI tool:
+
+```python
+@app.command()
+def chat(
+    query: str = typer.Argument("", help="The thing you want to chat about."),
+    sync: bool = typer.Option(
+        True, help="Whether or not to synchronize the Zotero library."
+    ),
+    model_name: str = default_language_model(),
+):
+    """Chat with a paper.
+
+    :param query: A paper to search for, whether by title, author, or other metadata.
+    :param sync: Whether or not to synchronize the Zotero library.
+    :param model_name: The name of the model to use.
+    """
+    try:
+        from caseconverter import snakecase
+    except ImportError:
+        raise ImportError(
+            "caseconverter is not installed. Please install it with `pip install llamabot[cli]`."
+        )
+
+    try:
+        from prompt_toolkit import prompt
+    except ImportError:
+        raise ImportError(
+            "prompt_toolkit is not installed. Please install it with `pip install llamabot[cli]`."
+        )
+
+```
+
+## New dependency specification
+
+With these changes, I could change my `pyproject.toml` dependency specification to look like this:
+
+```toml
+dependencies = [
+    "openai",
+    "loguru",
+    "python-dotenv",
+    "typer",
+    "pyprojroot",
+    "beautifulsoup4",
+    "litellm>=1.59.1", # this is necessary to guarantee that ollama_chat models are supported for structured outputs
+    "python-slugify",
+    "pydantic>=2.0",
+    "numpy", # https://github.com/ericmjl/llamabot/issues/56
+    "jinja2",
+    "fastapi>=0.104.0",  # This version requires Python >=3.8
+    "uvicorn",
+    "tenacity",
+    "python-multipart",
+    "httpx",
+    "tqdm",
+    "sqlalchemy",
+    "pdfminer.six",
+]
+
+...
+
+[project.optional-dependencies]
+notebooks = [
+  "ics",
+  "tzlocal",
+  "chonkie[all]>=0.2.2,<0.3"
+]
+ui = [
+    "panel",
+    "jupyter_bokeh",
+    "bokeh"
+]
+rag = [
+    "lancedb",
+    "chromadb",
+    "tantivy",
+    "rank-bm25",
+]
+agent = [
+    "docker",
+    "duckduckgo-search",
+    "markdownify",
+]
+cli = [
+    "pyzotero",
+    "nbformat",
+    "python-frontmatter",
+    "rich",
+    "gitpython",
+    "prompt-toolkit",
+    "case-converter",
+    "pyperclip",
+    "astor",
+]
+all = [
+    "llamabot[notebooks,ui,rag,agent,cli]"
+]
+```
+
+The new dependency specification is much more organized!
+
+## Measuring success
+
+The results were dramatic. I created two Dockerfiles, one for the full suite of optional dependencies, and one without. Here's what the two Dockerfiles looked like:
+
+```Dockerfile
+# filename: llamabot.all.Dockerfile
+# All optional dependencies
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+COPY . /src
+
+RUN uv venv && \
+    uv pip install /src[all]
+```
+
+```Dockerfile
+# filename: llamabot.bare.Dockerfile
+# Only core dependencies.
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+COPY . /src
+
+RUN uv venv && \
+    uv pip install /src
+```
+
+To build the containers, I used the following commands:
+
+```bash
+docker build -t llamabot.bare -f llamabot.bare.Dockerfile .
+docker build -t llamabot.all -f llamabot.all.Dockerfile .
+```
+
+And to view the container sizes:
+
+```bash
+❯ docker images llamabot.bare --format "{{.Size}}"
+390MB
+
+❯ docker images llamabot.all --format "{{.Size}}"
+6.75GB
+```
+
+The numbers don't lie -- we have an approximately 20X smaller container size by removing unnecessary dependencies. I'm all for anything that lets me squeeze out 80% of performance with 20% of effort!
+##
+
+## Securing the changes
+
+I would consider these changes to be somewhat brittle; it relies on a developer's knowledge of the codebase to know that something should be considered core v.s. non-core. To secure these changes for the future, I added safeguards:
+
+1. PR tests that verify SimpleBot and StructuredBot functionality
+2. A bare package test that runs against Gemma 2B
+
+The PR tests look like this:
+
+```yaml
+# File: pr-tests.yaml
+...
+  bare-package-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11, 3.12]
+        environment-type: ['pixi', 'uv']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        if: ${{ matrix.environment-type == 'pixi' }}
+        with:
+          pixi-version: latest
+          cache: true
+          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          environments: bare
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        if: ${{ matrix.environment-type == 'uv' }}
+
+      - name: Set up Python
+        run: uv venv llamabot-env --python ${{ matrix.python-version }}
+        if: ${{ matrix.environment-type == 'uv' }}
+
+      - name: Install gemma2:2b
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl -fsSL https://ollama.com/install.sh | sh
+          sleep 3
+          ollama pull gemma2:2b
+
+      - name: Test running llamabot (pixi)
+        if: ${{ matrix.environment-type == 'pixi' }}
+        run: |
+          pixi run -e bare python scripts/yo.py
+
+      - name: Test running llamabot (uv)
+        if: ${{ matrix.environment-type == 'uv' }}
+        run: |
+          source llamabot-env/bin/activate
+          uv pip install .
+          python scripts/yo.py
+
+```
+
+And that infamous `yo.py`:
+
+```python
+"""A simple script to test the llamabot package."""
+
+import llamabot as lmb
+from pydantic import BaseModel
+
+bot = lmb.SimpleBot("yo", model_name="ollama_chat/gemma2:2b")
+
+print(bot("sup?"))
+
+
+class Person(BaseModel):
+    """A person."""
+
+    name: str
+    age: int
+
+
+sbot = lmb.StructuredBot(
+    "yo", model_name="ollama_chat/gemma2:2b", pydantic_model=Person
+)
+
+print(sbot("what is your name and age?"))
+```
+
+Essentially, I wanted to guarantee that this script's behaviour worked whenever we installed the package without optional dependencies. That's what motivated this test.
+## Looking forward
+
+Even before this refactor, I've found myself gravitating more toward `StructuredBot` than `SimpleBot`. Its abstractions build naturally on `SimpleBot`'s patterns, making it more versatile for my needs.
+
+The refactoring exercise taught me valuable lessons about dependency management and the importance of regular codebase maintenance. Sometimes, less really is more - especially when "more" means downloading half the Python ecosystem.
+
+Now, I have a leaner, more focused tool that does exactly what it needs to do, without the bloat. That's a win in my book!
+
+---
+pub_date: 2025-02-07
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my journey of tackling dependency bloat in LlamaBot. What began as a simple LLM bot framework had grown into a monolithic system with an extensive dependency chain, leading to massive installation sizes. By mapping dependencies, refactoring the code, and organizing optional dependencies, I managed to reduce the container size significantly. This exercise taught me the importance of regular codebase maintenance and focusing on core functionalities. Now, LlamaBot is leaner and more efficient. Curious about the strategies I used to achieve this transformation?
+---
+tags:
+
+refactoring
+llamabot
+optimization
+docker
+python
+cli
+packages
+performance
+engineering
