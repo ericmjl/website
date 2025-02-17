@@ -1,0 +1,47 @@
+title: Let me ship you the Python you need
+---
+author: Eric J. Ma
+---
+body:
+
+Recently, I watched Peter Wang's PyBay talk, [The Five Demons of Python Packaging That Fuel Our Persistent Nightmare](https://www.youtube.com/watch?v=qA7NVwmx3gw), and have been reflecting on a quote from Peter's talk:
+
+> ...I don't care you'll get a Python we'll get you the Python you need what's the thing you want to do
+
+It's the difference between first worrying about "what Python do you have", instead of worrying about "what Python do you need".
+
+`uv`, and in particular `uvx`, really adopts this paradigm. When I install a tool using `uv tool` or run a tool using `uvx <toolname>`, I can specify the exact Python interpreter version that I'd like:
+
+```bash
+uv tool install <toolname> --python <version_number>
+uvx <toolname> --python <version_number> ...tool args here...
+```
+
+This is incredibly liberating as a user who is looking to install globally-available tools.
+
+It's come to the point that for one-off work, I now do one of the following.
+
+```bash
+# If I'm in the mood for marimo:
+uvx marimo edit --sandbox /path/to/notebook.py
+
+# If I'm in the mood for jlab:
+uvx juv run /path/to/notebook.ipynb
+```
+
+`uvx` coupled with `marimo`/`juv` and PEP723 now helps invert the process of getting started. There's no more finagling with first creating a Python environment and then getting to work. Instead, we just get to work and install packages on an as-needed basis, done on-the-fly. `marimo` and `juv` will _ship you the Python that you need to do what you want to do_. That's pretty rad.
+---
+pub_date: 2025-02-17
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore how modern Python tooling is flipping the script on the age-old "which Python should I use?" question. Through my experience with `uvx`, `marimo`, and `juv`, I show how we're moving away from the traditional headache of environment setup and toward a world where tools automatically ship you the exact Python you need. No more environment setup puzzles – just specify your Python version and get straight to work. It's a liberating shift that's changing how I approach one-off Python work, and I think it's pretty exciting!
+---
+tags:
+
+packaging
+uv
+tools
+marimo
+juv
+environments
