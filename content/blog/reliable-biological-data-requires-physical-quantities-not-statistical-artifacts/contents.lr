@@ -1,0 +1,147 @@
+title: Reliable biological data requires physical quantities, not statistical artifacts
+---
+author: Eric J. Ma
+---
+body:
+
+In my work with building machine learning models in the life sciences, I've noticed a recurring pattern that needs addressing. We might try to use sequence to predict a quantity that is normalized against a control (that might then be normalized again against some baseline), and we might be asked to make our model predict a statistical quantity that is an artifact of our experimental noise and has nothing to do with sequence. I argue that this is fundamentally flawed. Let me explain by highlighting a prototypical example.
+
+## A prototypical example
+
+A team is looking at developing novel non-antibody binders using modern protein design tools (such as ProteinMPNN and RFDiffusion). It being a new startup, at the behest of company management, the laboratory scientists design the experiment such that only controls are replicated across plates, while test proteins were not -- all to save on cost and iteration time.
+
+As such, we only have a single value readout per test protein. To make matters worse, this being a novel non-antibody binder, we have no non-antibody binders to act as positive controls, and instead can only look towards an antibody to establish a positive control.
+
+To get around this problem, the data scientist, who was not involved in the experiment design but was involved in analysis of the data, decides to pool the negative controls, estimate a distribution for the control, and calculate a one-sided p-value of the test protein against the pooled control distributions. He does the same for the positive controls. The more extreme the p-value of the test protein against the negative controls, the better the protein is.
+
+The two numbers that get recorded for data archival purposes is something like this:
+
+| Sequence               | Neg control p-value | Pos control p-value |
+| ---------------------- | ------------------- | ------------------- |
+| MKLLTVFLGLLLLWPGAQS... | 0.003               | 0.891               |
+| DVQLVESGGGLVQPGGSL...  | 0.008               | 0.756               |
+| EVQLLESGGGLVKPGGSL...  | 0.001               | 0.945               |
+| QVQLQESGPGLVKPSQTL...  | 0.015               | 0.682               |
+| MALWMRLLPLLALLALWG...  | 0.042               | 0.523               |
+
+Single replicate binding measurements were deemed not sufficiently reliable to record as archival data, and as such, but the massaged version of that data (in the form of p-values) gave 1-3 hits, so the team felt confident in the decision-making process and went ahead with this. The data scientists decided to train a machine learning model to predict two p-values, and use those p-values to prioritize new non-antibody designs.
+
+## Whoa, hold your horses here...
+
+Let's think carefully about the long-term state of this data. It being the company crown jewels, we need to make sure it has the following qualities:
+
+- It's easily interpretable: as few pieces of experiment-specific background knowledge are necessary to understand
+- It is comparable with other datasets *with as few caveats as possible*.
+- It is easy to document and justify the design choices in the data that are present.
+
+I argue that the methodology that the data scientist chose completely fails these three tests.
+
+## What's wrong with p-values as archival data?
+
+*A LOT!* p-values are a statistical artifact, a property of the noise of your measurement system. If you store a p-value (as the estimated quantity) next to a sequence in a table, the next unsuspecting data scientist and member of leadership looking at the table will think that sequence can be used to predict p-value, and that is *completely illogical*!
+
+The p-value depends on the noise of the measurement system in the negative controls and positive controls. That noise level can evolve over time as laboratory experimenters get better and better at ferreting out sources of noise in their system. If the noise of the system gets progressively reduced, the controls will have tighter bounds. In turn, your non-control measurements may appear to have a smaller and smaller p-value, thereby giving the illusion that you are gaining more and more hits, when in fact all you've done is just made your control distribution tighter.
+
+Moreover, storing of p-values as archival data fails the test of easy interpretability and comparability. Proper data archival requires three key pieces of context:
+
+1. The exact experimental protocol used (which can change over time)
+2. The statistical analysis method used to process the raw data
+3. The identity of controls used for comparison
+
+Without versioning both protocols and analysis code, and without explicitly storing control identities, data becomes increasingly difficult to interpret over time. Even small changes in laboratory technique or analysis methods can dramatically affect p-values, making historical comparisons meaningless.
+
+Some might argue that p-values are the standard in biological research and have served us well for decades. However, just because something is standard practice doesn't make it optimal. Many fields, from physics to engineering, have evolved beyond relative measurements to absolute physical quantities, leading to more reproducible and cumulative progress.
+
+## What's wrong with predicting p-values from sequence?
+
+*EVERYTHING!* Once again, p-values are a statistical artifact. A p-value is more heavily influenced by the noise in your experimental system than the sequence that you're trying to design. And if your laboratory scientists are also improving their laboratory technique and reducing the amount of uncertainty that are present in the measurement, you, the data scientist, are going to be fooled by the fact that your p-values are getting smaller and smaller, thinking that your models are getting better and better.
+
+## Let's not fool ourselves here
+
+Richard Feynman once said:
+
+> The first principle is that you must not fool yourself—and you are the easiest person to fool.
+
+When we introduce a complex statistical procedure into the mix like I just described above, it's easy to fool ourselves into thinking that we're doing something that handles the complexity of the data.
+
+Unfortunately, the reality is this: The simpler our systems, the easier it is for us to wrangle, understand, interpret, and wield them. Complex statistical transformations and normalizations introduce more opportunities for error, make our data harder to interpret, and obscure the underlying physical relationships we're trying to understand. Every layer of statistical manipulation we add is another layer where we can introduce bias, lose information, or make incorrect assumptions. When we keep our systems simple—measuring physical quantities directly and minimizing transformations—we maintain a clearer connection to the actual biology we're studying and make our results more reproducible and trustworthy.
+
+So what's the path forward? Instead of adding layers of statistical complexity to compensate for poor experimental design and non-physical measurements, we need to focus on three fundamental improvements: better experimental design, direct measurement of physical quantities, and appropriate statistical estimation methods. Let's examine each of these solutions in detail.
+
+## Design better experiments and estimate physical units
+
+So we've outlined the problems above. The solutions here is actually simpler than we think.
+
+**Firstly, we have to design better experiments.** Basic design of experiments dictates that we should have at least three replicates for each test protein we're measuring; if budget constrained, it's fine to do two replicates while acknowledging that we'll have more noisy estimates. If we're doing plate-based assays that involve incubation, then it is imperative to do at least a single experiment of controls-only to measure positional variation that can be regressed out later.
+
+Secondly, we should avoid collecting *relative* quantities as much as possible and instead **collect data with physical units.** With physical quantities that have units (e.g. time, concentration, velocity, counts), there are fewer layers of calculation that go into the final collected quantity that need to be documented, and that makes for a simpler system of data collection. Quantities for physical units are also easier to interpret without specific knowledge of an experiment. Finally, machine learning models trained on quantities with physical units are also mentally easier to connect to the laboratory experiment itself, making it easier to trust the model if it's performing well.
+
+(On that point, try explaining to a laboratory scientist, who is used to measuring concentrations, that you will now predict for them the "z-score transformation of binding for the target of interest" instead -- and watch out for the puzzled look that envelopes their expression.)
+
+While some normalization may still be necessary to arrive at physical quantities (e.g., using calibration curves), these transformations should be standardized, documented, and result in interpretable physical units rather than relative or statistical quantities.
+
+Thirdly, armed with replicates and physical quantities, **we should build simple Bayesian estimation models of those quantities from replicate measurement data.** This gives us an opportunity to quantify the amount of noise that is present inside the experimental system, while also simultaneously doing a principled aggregation of replicate measurements. The presence of at least one more replicate affords us the ability to generate an estimate of uncertainty for each test protein. Bayesian estimation models also force us to be explicit about the distribution from which we believe our data were generated, including batch effects and experimental variation. For example, in a binding assay, we might model:
+
+$$\text{measurement} = \text{true\_binding\_strength} + \text{batch\_effect} + \text{measurement\_noise}$$
+
+By keeping our models simple and grounded in physical reality, we create data that stands the test of time—data that future scientists can build upon without having to decode layers of statistical manipulation.
+
+## The speed of light as an analogy
+
+If you think about it, the speed of light and its history of measurement provides a useful, if imperfect, analogy here. The first known measurement of the speed of light was roughly in the 1600s and has been refined ever since. The methods have changed, and the precision of the estimate has as well, but we're able to compare these over time and show how progress has been made because we chose to store the speed of light with physical units rather than as a dimensionless relative quantity.
+
+Of course, biological measurements face challenges that physics doesn't - day-to-day variability in living systems, batch effects, and environmental sensitivities that necessitate internal controls. But this actually strengthens the argument for physical units: when we need to account for these biological variables, it's far better to do so explicitly (e.g., by measuring and correcting for batch effects) while maintaining physical units, rather than obscuring them through relative measurements and p-values.
+
+Thinking bigger picture, biology has suffered immensely from a lack of influence from the world of metrology (the science of measurement itself). This is why we have relative quantities and normalization to controls, which themselves are noisy, as a widespread practice amongst life scientists.
+
+## A different story
+
+To cap things off, let me retell the story of the non-antibody binder design campaign where they decide to do things in a better way.
+
+The team decides to collect the data with duplicate measurements, striking a compromise between the cost of running an experiment and the reliability of the data collected. It is now twice as expensive per data point but also at least twice as reliable as without replicate measurements. While this initial investment might seem steep, the team recognizes that unreliable data is ultimately more expensive—failed follow-up experiments, missed opportunities, and wasted development time cost far more than getting the data right the first time.
+
+Because this is a binding experiment, the team decides upfront to collect data in units of concentration, which is a canonical unit for binding strength.
+
+The data are collected, yielding the following table, which now has four columns: sequence, binding strength (in nM), and uncertainty (in nM), and estimation model source code commit hash, and assay protocol version.
+
+| Sequence | Binding Strength (nM) | Uncertainty (nM) | Model Hash | Protocol Version |
+|----------|---------------------|------------------|------------|------------------|
+| MKLLTVFLGLLLLWPGAQS... | 42.3 | ±3.1 | a7bc93e | v1.2.0 |
+| DVQLVESGGGLVQPGGSL... | 156.8 | ±12.4 | a7bc93e | v1.2.0 |
+| EVQLLESGGGLVKPGGSL... | 28.9 | ±2.8 | a7bc93e | v1.2.0 |
+| QVQLQESGPGLVKPSQTL... | 89.5 | ±7.2 | a7bc93e | v1.2.0 |
+| MALWMRLLPLLALLALWG... | 203.7 | ±15.6 | a7bc93e | v1.2.0 |
+
+The team decides that this assay is important enough for further investment that they decide to systematically record the uncertainty in controls over time, thus providing a benchmark on how well the experiments are being conducted, while also giving the machine learner an upper bound on their model's performance — it logically cannot be any better than experimental noise, otherwise there is overtraining happening.
+
+When prioritizing what protein to use as a basis for further engineering, the only thing that the data scientist needs to do is to calculate the probability of superiority of one protein against other proteins and to pick the one that has the highest probability of superiority — and all of these are calculations easily doable using posterior samples from Bayesian estimation. Unlike p-values which only tell us about statistical significance against controls, probability of superiority directly compares the estimated binding strengths between proteins while accounting for measurement uncertainty.
+
+The data scientist then designs a million new proteins *in silico* using ProteinMPNN and RFDiffusion. He then trains a probabilistic machine learning model on the first round of non-antibody binders, and then uses it to prioritize new binders, according to their probability of superiority amongst each other. These are then synthesized by the laboratory team and tested again, allowing the data scientist to properly compare the accuracy of his probabilistic machine learning model.
+
+All in all, through their choices, the team effectively said, "We are going to slow down a little bit now so that we can run really fast in the future." And yes, this team will run fast *and* run far!
+
+---
+pub_date: 2025-02-23
+---
+twitter_handle: ericmjl
+---
+summary:
+
+When building machine learning models in biology, we often encounter data that's been heavily processed with statistical transformations like p-values and normalizations. This essay argues that this practice fundamentally undermines our ability to build reliable models and maintain interpretable datasets. Through a real-world example of protein binding experiments, it demonstrates why collecting physical quantities (like binding strength in nM) with proper replicates is vastly superior to statistical artifacts, and how Bayesian estimation can help us properly handle experimental variation while maintaining physical units. Are you tired of wrestling with hard-to-interpret biological data and ready to build more reliable experimental pipelines?
+
+---
+tags:
+
+machine learning
+biology
+measurement
+data science
+bayesian
+statistics
+metrology
+reproducibility
+biophysics
+protein design
+protein engineering
+uncertainty
+experimental design
