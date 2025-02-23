@@ -10,7 +10,7 @@ In my work with building machine learning models in the life sciences, I've noti
 
 A team is looking at developing novel non-antibody binders using modern protein design tools (such as ProteinMPNN and RFDiffusion). It being a new startup, at the behest of company management, the laboratory scientists design the experiment such that only controls are replicated across plates, while test proteins were not -- all to save on cost and iteration time.
 
-As such, we only have a single value readout per test protein. To make matters worse, this being a novel non-antibody binder, we have no non-antibody binders to act as positive controls, and instead can only look towards an antibody to establish a positive control.
+As such, we only have a single value readout per test protein. To make matters worse, this being a novel non-antibody binder, we have no non-antibody binders to act as positive controls, and can only look at a positive control antibody instead.
 
 To get around this problem, the data scientist, who was not involved in the experiment design but was involved in analysis of the data, decides to pool the negative controls, estimate a distribution for the control, and calculate a one-sided p-value of the test protein against the pooled control distributions. He does the same for the positive controls. The more extreme the p-value of the test protein against the negative controls, the better the protein is.
 
@@ -64,7 +64,11 @@ Richard Feynman once said:
 
 When we introduce a complex statistical procedure into the mix like I just described above, it's easy to fool ourselves into thinking that we're doing something that handles the complexity of the data.
 
-Unfortunately, the reality is this: The simpler our systems, the easier it is for us to wrangle, understand, interpret, and wield them. Complex statistical transformations and normalizations introduce more opportunities for error, make our data harder to interpret, and obscure the underlying physical relationships we're trying to understand. Every layer of statistical manipulation we add is another layer where we can introduce bias, lose information, or make incorrect assumptions. When we keep our systems simple—measuring physical quantities directly and minimizing transformations—we maintain a clearer connection to the actual biology we're studying and make our results more reproducible and trustworthy.
+Unfortunately, the reality is this: The simpler our systems, the easier it is for us to wrangle, understand, interpret, and wield them. Complex statistical transformations and normalizations introduce more opportunities for error, make our data harder to interpret, and obscure the underlying physical relationships we're trying to understand. Every layer of statistical manipulation we add is another layer where we can introduce bias, lose information, or make incorrect assumptions.
+
+But let's be clear: "simple" doesn't mean "simplistic." As Einstein famously advised, "Everything should be made as simple as possible, but no simpler." While we should avoid unnecessary statistical complexity, we still need appropriate models to handle experimental variation and uncertainty. The key is choosing models that maintain the physical interpretability of our measurements while accounting for the inherent structure of our experimental system.
+
+When we keep our systems simple—measuring physical quantities directly and minimizing transformations—we maintain a clearer connection to the actual biology we're studying and make our results more reproducible and trustworthy.
 
 So what's the path forward? Instead of adding layers of statistical complexity to compensate for poor experimental design and non-physical measurements, we need to focus on three fundamental improvements: better experimental design, direct measurement of physical quantities, and appropriate statistical estimation methods. Let's examine each of these solutions in detail.
 
@@ -72,7 +76,7 @@ So what's the path forward? Instead of adding layers of statistical complexity t
 
 So we've outlined the problems above. The solutions here is actually simpler than we think.
 
-**Firstly, we have to design better experiments.** Basic design of experiments dictates that we should have at least three replicates for each test protein we're measuring; if budget constrained, it's fine to do two replicates while acknowledging that we'll have more noisy estimates. If we're doing plate-based assays that involve incubation, then it is imperative to do at least a single experiment of controls-only to measure positional variation that can be regressed out later.
+**Firstly, we have to design better experiments.** Basic design of experiments dictates that we should have at least three replicates for each test protein we're measuring; if budget constrained, it's fine to do two replicates while acknowledging that we'll have more noisy estimates. If we're doing plate-based assays that involve incubation, then it is imperative to do at least a single experiment of controls-only to measure positional variation that can be regressed out later.
 
 Secondly, we should avoid collecting *relative* quantities as much as possible and instead **collect data with physical units.** With physical quantities that have units (e.g. time, concentration, velocity, counts), there are fewer layers of calculation that go into the final collected quantity that need to be documented, and that makes for a simpler system of data collection. Quantities for physical units are also easier to interpret without specific knowledge of an experiment. Finally, machine learning models trained on quantities with physical units are also mentally easier to connect to the laboratory experiment itself, making it easier to trust the model if it's performing well.
 
@@ -80,7 +84,7 @@ Secondly, we should avoid collecting *relative* quantities as much as possible a
 
 While some normalization may still be necessary to arrive at physical quantities (e.g., using calibration curves), these transformations should be standardized, documented, and result in interpretable physical units rather than relative or statistical quantities.
 
-Thirdly, armed with replicates and physical quantities, **we should build simple Bayesian estimation models of those quantities from replicate measurement data.** This gives us an opportunity to quantify the amount of noise that is present inside the experimental system, while also simultaneously doing a principled aggregation of replicate measurements. The presence of at least one more replicate affords us the ability to generate an estimate of uncertainty for each test protein. Bayesian estimation models also force us to be explicit about the distribution from which we believe our data were generated, including batch effects and experimental variation. For example, in a binding assay, we might model:
+Thirdly, armed with replicates and physical quantities, we should **build simple Bayesian estimation models of those quantities from replicate measurement data**. This gives us an opportunity to quantify the amount of noise that is present inside the experimental system, while also simultaneously doing a principled aggregation of replicate measurements. The presence of at least one more replicate affords us the ability to generate an estimate of uncertainty for each test protein. Bayesian estimation models also force us to be explicit about the distribution from which we believe our data were generated, including batch effects and experimental variation. For example, in a binding assay, we might model:
 
 $$\text{measurement} = \text{true\_binding\_strength} + \text{batch\_effect} + \text{measurement\_noise}$$
 
@@ -119,7 +123,6 @@ When prioritizing what protein to use as a basis for further engineering, the on
 The data scientist then designs a million new proteins *in silico* using ProteinMPNN and RFDiffusion. He then trains a probabilistic machine learning model on the first round of non-antibody binders, and then uses it to prioritize new binders, according to their probability of superiority amongst each other. These are then synthesized by the laboratory team and tested again, allowing the data scientist to properly compare the accuracy of his probabilistic machine learning model.
 
 All in all, through their choices, the team effectively said, "We are going to slow down a little bit now so that we can run really fast in the future." And yes, this team will run fast *and* run far!
-
 ---
 pub_date: 2025-02-23
 ---
