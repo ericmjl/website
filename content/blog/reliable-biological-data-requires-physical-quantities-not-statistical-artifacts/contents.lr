@@ -28,19 +28,21 @@ Single replicate binding measurements were deemed not sufficiently reliable to r
 
 ## Whoa, hold your horses here...
 
+(If you're looking at the state of affairs I just described and are puzzled, confused, and perhaps even incredulous at why this is even happening, just know that you're not alone -- it's why I'm writing this down. Bear with me!)
+
 Let's think carefully about the long-term state of this data. It being the company crown jewels, we need to make sure it has the following qualities:
 
 - It's easily interpretable: as few pieces of experiment-specific background knowledge are necessary to understand
 - It is comparable with other datasets *with as few caveats as possible*.
 - It is easy to document and justify the design choices in the data that are present.
 
-I argue that the methodology that the data scientist chose completely fails these three tests.
+I would like to argue that the team collectively failed the data scientist and circumstances forced him into poor choices.
 
 ## What's wrong with p-values as archival data?
 
 *A LOT!* p-values are a statistical artifact, a property of the noise of your measurement system. If you store a p-value (as the estimated quantity) next to a sequence in a table, the next unsuspecting data scientist and member of leadership looking at the table will think that sequence can be used to predict p-value, and that is *completely illogical*!
 
-The p-value depends on the noise of the measurement system in the negative controls and positive controls. That noise level can evolve over time as laboratory experimenters get better and better at ferreting out sources of noise in their system. If the noise of the system gets progressively reduced, the controls will have tighter bounds. In turn, your non-control measurements may appear to have a smaller and smaller p-value, thereby giving the illusion that you are gaining more and more hits, when in fact all you've done is just made your control distribution tighter.
+Here's why: The p-value depends on the noise of the measurement system in the negative controls and positive controls. That noise level can evolve over time as laboratory experimenters get better and better at ferreting out sources of noise in their system. If the noise of the system gets progressively reduced, the controls will have tighter bounds. In turn, your non-control measurements may appear to have a smaller and smaller p-value, thereby giving the illusion that you are gaining more and more hits, when in fact all you've done is just made your control distribution tighter.
 
 Moreover, storing of p-values as archival data fails the test of easy interpretability and comparability. Proper data archival requires three key pieces of context:
 
@@ -66,29 +68,39 @@ When we introduce a complex statistical procedure into the mix like I just descr
 
 Unfortunately, the reality is this: The simpler our systems, the easier it is for us to wrangle, understand, interpret, and wield them. Complex statistical transformations and normalizations introduce more opportunities for error, make our data harder to interpret, and obscure the underlying physical relationships we're trying to understand. Every layer of statistical manipulation we add is another layer where we can introduce bias, lose information, or make incorrect assumptions.
 
-But let's be clear: "simple" doesn't mean "simplistic." As Einstein famously advised, "Everything should be made as simple as possible, but no simpler." While we should avoid unnecessary statistical complexity, we still need appropriate models to handle experimental variation and uncertainty. The key is choosing models that maintain the physical interpretability of our measurements while accounting for the inherent structure of our experimental system.
+But let's be clear: "simple" doesn't mean "simplistic." As Einstein famously advised,
 
-When we keep our systems simple—measuring physical quantities directly and minimizing transformations—we maintain a clearer connection to the actual biology we're studying and make our results more reproducible and trustworthy.
+> Everything should be made as simple as possible, but no simpler.
 
-So what's the path forward? Instead of adding layers of statistical complexity to compensate for poor experimental design and non-physical measurements, we need to focus on three fundamental improvements: better experimental design, direct measurement of physical quantities, and appropriate statistical estimation methods. Let's examine each of these solutions in detail.
+While we should avoid unnecessary statistical complexity, we still need appropriate models to handle experimental variation and uncertainty. The key is choosing models that maintain the physical interpretability of our measurements while accounting for the inherent structure of our experimental system.
 
-## Design better experiments and estimate physical units
+When we keep our systems as simple as possible -- measuring physical quantities directly and minimizing transformations -- we maintain a clearer connection to the actual biology we're studying and make our results more easily reproducible and trustworthy.
 
-So we've outlined the problems above. The solutions here is actually simpler than we think.
+## How do we solve this problem?
 
-**Firstly, we have to design better experiments.** Basic design of experiments dictates that we should have at least three replicates for each test protein we're measuring; if budget constrained, it's fine to do two replicates while acknowledging that we'll have more noisy estimates. If we're doing plate-based assays that involve incubation, then it is imperative to do at least a single experiment of controls-only to measure positional variation that can be regressed out later.
+So what's the path forward? Instead of adding layers of statistical complexity to compensate for poor experimental design and non-physical measurements, we need to focus on three fundamental improvements:
 
-Secondly, we should avoid collecting *relative* quantities as much as possible and instead **collect data with physical units.** With physical quantities that have units (e.g. time, concentration, velocity, counts), there are fewer layers of calculation that go into the final collected quantity that need to be documented, and that makes for a simpler system of data collection. Quantities for physical units are also easier to interpret without specific knowledge of an experiment. Finally, machine learning models trained on quantities with physical units are also mentally easier to connect to the laboratory experiment itself, making it easier to trust the model if it's performing well.
+1. better experimental design,
+2. direct measurement of quantities with physical units, and
+3. appropriate statistical estimation methods.
+
+Let's examine each of these solutions in detail.
+
+**Firstly, we have to design better experiments.** Basic design of experiments dictates that we should have at least three replicates for each test protein we're measuring; if budget constrained, it's fine to do two replicates while acknowledging that we'll have noisier estimates. If we're doing plate-based assays that involve incubation, then it is imperative to do at least a single experiment of controls-only to measure positional variation that can be regressed out later.
+
+Secondly, we should avoid collecting *relative* quantities as much as possible and instead **collect data with physical units.** With physical quantities that have units (e.g. time, concentration, velocity, distance, counts), there are fewer layers of calculation that go into the final collected quantity that need to be documented, and that makes for a simpler system of data collection. Quantities for physical units are also easier to interpret without specific knowledge of an experiment. Finally, machine learning models trained on quantities with physical units are also mentally easier to connect to the laboratory experiment itself, making it easier to trust the model if it's performing well.
 
 (On that point, try explaining to a laboratory scientist, who is used to measuring concentrations, that you will now predict for them the "z-score transformation of binding for the target of interest" instead -- and watch out for the puzzled look that envelopes their expression.)
 
 While some normalization may still be necessary to arrive at physical quantities (e.g., using calibration curves), these transformations should be standardized, documented, and result in interpretable physical units rather than relative or statistical quantities.
 
-Thirdly, armed with replicates and physical quantities, we should **build simple Bayesian estimation models of those quantities from replicate measurement data**. This gives us an opportunity to quantify the amount of noise that is present inside the experimental system, while also simultaneously doing a principled aggregation of replicate measurements. The presence of at least one more replicate affords us the ability to generate an estimate of uncertainty for each test protein. Bayesian estimation models also force us to be explicit about the distribution from which we believe our data were generated, including batch effects and experimental variation. For example, in a binding assay, we might model:
+And if you're a card-carrying statistician, you'll know that as soon as you take a ratio of estimators, all of the "nice properties" you've derived for those estimators go out the window. But being Bayesian, I'm not in the business of deriving estimators, I'm in the business of building generative probabilistic models, which leads me to the third point...
+
+Thirdly, armed with replicates and physical quantities, we should **build the simplest possible Bayesian estimation models of those quantities from replicate measurement data**. This gives us an opportunity to quantify the amount of noise that is present inside the experimental system, while also simultaneously doing a principled aggregation of replicate measurements. The presence of at least one more replicate affords us the ability to generate an estimate of uncertainty for each test protein. Bayesian estimation models also force us to be explicit about the distribution from which we believe our data were generated, including batch effects and experimental variation. For example, in a binding assay, we might model:
 
 $$\text{measurement} = \text{true\_binding\_strength} + \text{batch\_effect} + \text{measurement\_noise}$$
 
-By keeping our models simple and grounded in physical reality, we create data that stands the test of time—data that future scientists can build upon without having to decode layers of statistical manipulation.
+By keeping our models simple and grounded in physical reality, we create data that stands the test of time -- data that future scientists can build upon without having to decode layers of statistical manipulation.
 
 ## The speed of light as an analogy
 
@@ -102,7 +114,7 @@ Thinking bigger picture, biology has suffered immensely from a lack of influence
 
 To cap things off, let me retell the story of the non-antibody binder design campaign where they decide to do things in a better way.
 
-The team decides to collect the data with duplicate measurements, striking a compromise between the cost of running an experiment and the reliability of the data collected. It is now twice as expensive per data point but also at least twice as reliable as without replicate measurements. While this initial investment might seem steep, the team recognizes that unreliable data is ultimately more expensive—failed follow-up experiments, missed opportunities, and wasted development time cost far more than getting the data right the first time.
+The team decides to collect the data with duplicate measurements, striking a compromise between the cost of running an experiment and the reliability of the data collected. It is now twice as expensive per data point but also at least twice as reliable as without replicate measurements. While this initial investment might seem steep, the team recognizes that unreliable data is ultimately more expensive: failed follow-up experiments, missed opportunities, and wasted development time cost far more than getting the data right the first time.
 
 Because this is a binding experiment, the team decides upfront to collect data in units of concentration, which is a canonical unit for binding strength.
 
