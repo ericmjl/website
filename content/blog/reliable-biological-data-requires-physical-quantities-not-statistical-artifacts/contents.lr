@@ -94,7 +94,7 @@ Secondly, we should avoid collecting *relative* quantities as much as possible a
 
 While some normalization may still be necessary to arrive at physical quantities (e.g., using calibration curves), these transformations should be standardized, documented, and result in interpretable physical units rather than relative or statistical quantities.
 
-And if you're a card-carrying statistician, you'll know that as soon as you take a ratio of estimators, all of the "nice properties" you've derived for those estimators go out the window. But being Bayesian, I'm not in the business of deriving estimators, I'm in the business of building generative probabilistic models, which leads me to the third point...
+And if you're a card-carrying statistician, you'll know that as soon as you take a ratio of estimators, all of the "nice properties" you've derived for those estimators go out the window. But being a practically self-trained Bayesian with no formal training in statistics, I'm not in the business of deriving estimators, I'm in the business of building generative probabilistic models, which leads me to the third point...
 
 Thirdly, armed with replicates and physical quantities, we should **build the simplest possible Bayesian estimation models of those quantities from replicate measurement data**. This gives us an opportunity to quantify the amount of noise that is present inside the experimental system, while also simultaneously doing a principled aggregation of replicate measurements. The presence of at least one more replicate affords us the ability to generate an estimate of uncertainty for each test protein. Bayesian estimation models also force us to be explicit about the distribution from which we believe our data were generated, including batch effects and experimental variation. For example, in a binding assay, we might model:
 
@@ -136,9 +136,9 @@ The data scientist then designs a million new proteins *in silico* using Protein
 
 All in all, through their choices, the team effectively said,
 
-> "Slow is smooth, and smooth is fast." -- just like the US Navy Seals.
+> "Slow is smooth, and smooth is fast."
 
-And yes, this team will run fast *and* run far!
+Just like the US Navy Seals. And yes, this team will run fast *and* run far!
 ---
 pub_date: 2025-02-23
 ---
