@@ -132,9 +132,13 @@ The team decides that this assay is important enough for further investment that
 
 When prioritizing what protein to use as a basis for further engineering, the only thing that the data scientist needs to do is to calculate the probability of superiority of one protein against other proteins and to pick the one that has the highest probability of superiority — and all of these are calculations easily doable using posterior samples from Bayesian estimation. Unlike p-values which only tell us about statistical significance against controls, probability of superiority directly compares the estimated binding strengths between proteins while accounting for measurement uncertainty.
 
-The data scientist then designs a million new proteins *in silico* using ProteinMPNN and RFDiffusion. He then trains a probabilistic machine learning model on the first round of non-antibody binders, and then uses it to prioritize new binders, according to their probability of superiority amongst each other. These are then synthesized by the laboratory team and tested again, allowing the data scientist to properly compare the accuracy of his probabilistic machine learning model.
+The data scientist then designs a million new proteins *in silico* using ProteinMPNN, RFDiffusion, and institutes some preliminary filters using ESMFold, AlphaFold, and finally custom-designed code. He then trains a probabilistic machine learning model on the first round of non-antibody binders, and then uses it to prioritize new binders, according to their probability of superiority amongst each other. These are then synthesized by the laboratory team and tested again, allowing the data scientist to properly compare the accuracy of his probabilistic machine learning model.
 
-All in all, through their choices, the team effectively said, "We are going to slow down a little bit now so that we can run really fast in the future." And yes, this team will run fast *and* run far!
+All in all, through their choices, the team effectively said,
+
+> "Slow is smooth, and smooth is fast." -- just like the US Navy Seals.
+
+And yes, this team will run fast *and* run far!
 ---
 pub_date: 2025-02-23
 ---
