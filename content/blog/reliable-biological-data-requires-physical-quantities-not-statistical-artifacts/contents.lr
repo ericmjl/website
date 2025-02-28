@@ -122,11 +122,11 @@ The data are collected, yielding the following table, which now has four columns
 
 | Sequence | Binding Strength (nM) | Uncertainty (nM) | Model Hash | Protocol Version |
 |----------|---------------------|------------------|------------|------------------|
-| MKLLTVFLGLLLLWPGAQS... | 42.3 | ±3.1 | a7bc93e | v1.2.0 |
-| DVQLVESGGGLVQPGGSL... | 156.8 | ±12.4 | a7bc93e | v1.2.0 |
-| EVQLLESGGGLVKPGGSL... | 28.9 | ±2.8 | a7bc93e | v1.2.0 |
-| QVQLQESGPGLVKPSQTL... | 89.5 | ±7.2 | a7bc93e | v1.2.0 |
-| MALWMRLLPLLALLALWG... | 203.7 | ±15.6 | a7bc93e | v1.2.0 |
+| MSYQQKFLDAIAKMTGWVD... | 42.3 | ±3.1 | a7bc93e | v1.2.0 |
+| PWHEVFKKLREAYGLSKTV... | 156.8 | ±12.4 | a7bc93e | v1.2.0 |
+| MDKKWLNALRQFYEQHPSL... | 28.9 | ±2.8 | a7bc93e | v1.2.0 |
+| GSRVLWEAIKKFPGDYTNV... | 89.5 | ±7.2 | a7bc93e | v1.2.0 |
+| PNWQYFKDLAKSTRGVMEK... | 203.7 | ±15.6 | a7bc93e | v1.2.0 |
 
 The team decides that this assay is important enough for further investment that they decide to systematically record the uncertainty in controls over time, thus providing a benchmark on how well the experiments are being conducted, while also giving the machine learner an upper bound on their model's performance — [it logically cannot be any better than experimental noise](https://pubs.acs.org/doi/full/10.1021/jm300131x), otherwise there is overtraining happening.
 
