@@ -1,0 +1,121 @@
+title: How to fix PyPI upload errors related to license metadata
+---
+author: Eric J. Ma
+---
+body:
+
+## Background
+
+I use a [GitHub Actions workflow](https://github.com/ericmjl/llamabot/blob/main/.github/workflows/release-python-package.yaml) to automate the release process for my Python packages. The workflow was designed to:
+
+1. Bump the version number
+2. Automatically generate release notes using [LlamaBot](https://github.com/ericmjl/llamabot)
+3. Build the package
+4. Upload to PyPI
+5. Create a GitHub release
+
+Everything worked smoothly until the PyPI upload step, where I encountered this error:
+
+```text
+error: Upload failed with status code 400 Bad Request. Server says: 400 license-file introduced in metadata version 2.4
+```
+
+## The problem
+
+The error occurred because my `pyproject.toml` was using a newer metadata feature (the `license` field with a `file` specification) that requires core metadata version 2.4, but the package build process wasn't explicitly configured to use this version.
+
+## The solution
+
+### Pre-requisites
+
+- A Python package with a `pyproject.toml` file
+- GitHub Actions workflow for package publishing
+
+### Steps
+
+1. First, check your current license specification in `pyproject.toml`. If it looks like this:
+
+```toml
+[project]
+# ... other fields ...
+license = { file = "LICENSE" }
+```
+
+2. Replace it with the direct license identifier:
+
+```toml
+[project]
+# ... other fields ...
+license = "MIT"  # or whatever license you're using
+```
+
+3. Ensure you have a classifier that matches your license:
+
+```toml
+[project]
+# ... other fields ...
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    # ... other classifiers ...
+]
+```
+
+### Verification
+
+After making these changes:
+
+1. Run your GitHub Actions workflow
+2. The PyPI upload step should complete successfully
+3. Your package's license information will still be correctly displayed on PyPI
+
+## Explanation
+
+### Why did this happen?
+
+The Python packaging ecosystem has been evolving, and with it, the metadata specification for packages. The `license` field in `pyproject.toml` can be specified in two ways:
+
+1. As a simple string (`license = "MIT"`)
+2. As a file reference (`license = { file = "LICENSE" }`)
+
+The file reference syntax was introduced in metadata version 2.4 (August 2024) to better handle complex licensing scenarios. However, not all packaging tools and package indexes are ready to handle this newer format.
+
+### Best practices
+
+1. **For simple licenses**: Use the string format (`license = "MIT"`)
+2. **For complex licenses**: If you need to reference a license file, ensure your build system is configured to use metadata version 2.4 or higher
+3. **Always include**:
+   - The license classifier in your project metadata
+   - The actual LICENSE file in your package repository
+
+### Alternative solutions
+
+If you absolutely need to use the file reference format, you can explicitly set the metadata version in your build configuration. However, this might require additional setup and could potentially cause issues with older packaging tools.
+## References
+
+These references may also come in handy if you're curious to read more!
+
+- [Python Packaging Metadata Specification](https://packaging.python.org/en/latest/specifications/core-metadata/)
+- [PyPI's Documentation on License Fields](https://pypi.org/help/#license)
+- [Python Packaging User Guide](https://packaging.python.org/)
+
+
+---
+pub_date: 2025-03-01
+---
+twitter_handle: ericmjl
+---
+summary: When automating Python package releases through GitHub Actions, encountering PyPI upload errors related to license metadata can halt your deployment pipeline. This post explains how a simple mismatch between your license specification in pyproject.toml and supported metadata versions can cause cryptic "400 license-file introduced in metadata version 2.4" errors. Learn the straightforward fix by switching from file-based license references to string identifiers, along with best practices for handling license information in your Python packages. Are you ready to troubleshoot your PyPI deployment workflow and ensure smooth releases?
+---
+tags:
+
+python
+packaging
+pypi
+troubleshooting
+metadata
+license
+github actions
+workflow
+automation
+deployment
+error handling
