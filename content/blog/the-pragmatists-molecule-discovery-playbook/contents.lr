@@ -1,0 +1,241 @@
+title: The pragmatist's molecule discovery playbook
+---
+author: Eric J. Ma
+---
+body:
+
+Recently, I've been writing about my thoughts on data science in the biotech world, especially for those who are molecule hunters. You can find some of those posts below:
+
+- [Reliable biological data requires physical quantities, not statistical artifacts](https://ericmjl.github.io/blog/2025/2/23/reliable-biological-data-requires-physical-quantities-not-statistical-artifacts/)
+- [Why data from preclinical biotech lab experiments make machine learning challenging](https://ericmjl.github.io/blog/2025/1/19/why-data-from-preclinical-biotech-lab-experiments-make-machine-learning-challenging/)
+- [A modest proposal for data catalogues at biotechs](https://ericmjl.github.io/blog/2024/11/22/a-modest-proposal-for-data-catalogues-at-biotechs/)
+- [The Human Dimension to Clean, Distributable, and Documented Data Science Code](https://ericmjl.github.io/blog/2024/10/25/the-human-dimension-to-clean-distributable-and-documented-data-science-code/)
+- [Keys to effective collaborative data science](https://ericmjl.github.io/blog/2024/10/18/keys-to-effective-collaborative-data-science/)
+
+This post kicks off a series on how cross-functional molecule design teams can achieve operational speed and efficiency. Through the lens of a fictitious startup, Catalyst Therapeutics (any similarities to real companies are coincidental), I'll share insights drawn from patterns and challenges that I have seen and heard. This series represents a strategic playbook I've developed to accelerate molecule discovery to what I call "the speed of thought."
+
+Here's my goal: I want to illustrate that none of this has to be fancy. **It just has to be a stable enough crank to be turned into a flywheel.**
+
+Throughout this series, I'll address the crucial aspects every biotech data science team must master: data capture and engineering, with statistical modeling at its core, supercharged with machine learning and proper experimental design. Catalyst's mission—developing novel protein binders for an oncology target that has eluded conventional methods—serves as the perfect vehicle to demonstrate the principles in this playbook. If your interest is piqued, read on, and I hope you enjoy it :).
+
+## The Catalyst Therapeutics story: designing a novel protein binder
+
+When I first walked into their lab, I met the core team who would become the heroes of this story:
+
+**Maya**, the protein engineer with a decade of wet lab experience and a healthy skepticism about computational methods. "Models are nice," she often said, "but proteins don't read papers."
+
+**Dev**, the junior scientist fresh from a top-tier PhD program, eager to apply cutting-edge techniques but still learning the gap between academic benchmarks and real-world biology.
+
+**Sophie**, the pragmatic data scientist with stints at three different biotechs—one acquired, one failed, and one struggling with scaling challenges. As she told me, "I've seen enough ways this can go wrong across different contexts. I'm here to avoid repeating those mistakes."
+
+This team was about to embark on a campaign to develop a novel protein scaffold that could bind to their target with high specificity and favorable biophysical properties. What made their approach work—when so many similar efforts fail—was their integrated approach to experimental design from day one.
+
+## First Meeting: Setting the Foundation
+
+I sat in on their kickoff meeting, where Sophie immediately steered the conversation away from fancy algorithms.
+
+"Before we talk about deep learning or any computational methods," she said, "let's map out what we're measuring and how we'll control for variables that have nothing to do with our protein sequences."
+
+Maya nodded enthusiastically. "In my last role, we spent six months optimizing the wrong property because our assay was actually measuring something else entirely."
+
+They spent the entire first day diagramming their experimental workflow on a whiteboard, identifying every potential confounder:
+
+"If we use different plates on different days, we need to track that," Sophie noted, creating a column in her spreadsheet.
+
+"The position in the plate matters too," Dev added. "Edge wells behave differently due to evaporation."
+
+"And don't forget who's running the experiment," Maya said. "Different hands, different results."
+
+What struck me was how Sophie approached this not as a statistics problem but as a practical data collection issue. She wasn't trying to impress anyone with complex experimental designs—she was making sure their foundation was solid.
+
+"Every variable we don't control for now becomes noise that we can't remove later," she explained. "And noise puts a hard ceiling on what our models can achieve."
+
+## The experimental design takes shape
+
+Over the next week, the team developed an experimental plan:
+
+- Every plate would include control proteins in the same positions—a practical compromise since truly randomized placement would be statistically ideal but experimentally infeasible
+- Each experimental run would include samples from previous runs to detect day-to-day drift
+- They included standardized control samples that both Maya and Dev would process independently once a week to quantify operator effects, also taking advantage of these controls to measure well position effects
+- They created detailed metadata sheets that captured everything from reagent lot numbers to ambient temperature
+
+"Slow is smooth, and smooth is fast," Maya said when Dev worried about the extra controls. "Taking time to set this up properly now will save us months of troubleshooting later."
+
+When I asked Dev if this felt like overkill, his response was telling: "Sophie showed us simulations of how much signal we'd lose if we didn't do this. The extra work now saves months later."
+
+These simulations revealed Sophie's deeper approach to experimental design. Rather than focusing on traditional power calculations to determine sample sizes, she had modeled how each source of variability would impact their ability to detect meaningful signals about molecular properties.
+
+"Think about it this way," Sophie explained to me later. "Every time we run an experiment, we're not just collecting data points. We're updating our beliefs about how these molecules behave. That's why this is fundamentally a Bayesian problem."
+
+What Catalyst understood—that biotech data science teams may miss—is that effective experimental design in molecular discovery is about maximizing the information we gain from each experiment while explicitly accounting for sources of uncertainty. Sophie's approach treated every experimental result as a way to update their beliefs about molecular properties, requiring them to carefully model all sources of noise that could obscure the signal they actually cared about.
+
+Sophie explained her philosophy: "In biotech, we're not trying to publish a paper with p-values and hypothesis tests. We're building a Bayesian model that explicitly represents all the factors influencing our measurements. The traditional approach asks 'what's the probability of seeing this data given my hypothesis?' But we need to instead ask, 'what's the probability my molecule has this property given all the confounding factors in my data?' That means our north star is signal-to-noise ratio and explicit modeling of uncertainty, not statistical significance."
+
+## Initial data collection reveals biases in data
+
+**Week 2:** Two weeks into their campaign, the first data started coming in. During their analysis meeting, Sophie projected a heatmap showing expression levels across their first set of variants.
+
+"See this pattern?" she asked, pointing to subtly higher values on the right side of each plate. "This is a systematic bias in the reader. Thankfully we planned to control for well position. If not, we might have thought these sequences were actually better."
+
+Maya looked concerned. "So we throw out the data?"
+
+"No," Sophie smiled. "Because we designed for this. We can model the positional effect and subtract it out." She pulled up her statistical model, which included terms for plate, position, date, and operator.
+
+This moment illustrated something crucial: good experimental design means experiments where you can identify and account for imperfections. No perfect experiment exists, but if we can capture as much data as possible up-front, we afford ourselves the chance of controlling for those confounding imperfections.
+
+The team continued their first round, generating expression and binding data for their initial library of 500 variants. Unlike many campaigns that rush to make thousands of variants, they deliberately kept this round small.
+
+"We need to validate our measurement pipeline before scaling," Sophie explained. "A thousand noisy measurements are worth less than a hundred clean ones."
+
+## Statistical estimation of molecular property
+
+**Week 4:** One month in, they had enough data to build their first statistical models. I watched Sophie work through this methodically:
+
+"The first thing we need to do is to build a protein property estimation model that regresses out all our known confounders," she explained to the team. "We're not trying to predict anything yet—we're just trying to get clean property estimates for each sequence, while quantifying the fundamental noise level that we have not measured."
+
+She walked them through her model, which looked approximately like:
+
+```
+Binding Observation = f(Sequence) + Expression Level + Plate + Position + Date + Operator + (Instrument × Date) + ε
+```
+
+"This is crucial to understand," Sophie explained. "Our binding observation is the sum of the true property value dictated by the sequence—that's the f(Sequence) part—plus the effect of expression level, plus all these shifts induced by experimental factors, plus `ε`, which represents the remaining noise intrinsic to the system that cannot be explained by the rest of the factors."
+
+"Notice that last term," she pointed out. "We think the instrument behaves differently on different days, so we have an interaction term to capture that."
+
+Dev seemed confused. "Couldn't a machine learning model figure this out automatically?"
+
+Sophie shook her head. "ML models can find patterns, but they can't tell you which patterns matter for your science and which are just experimental artifacts. We need to be explicit about our assumptions."
+
+When she fitted the model, it provided estimates for how much each factor contributed to the measurements. The plate effect was substantial. The position effect was moderate. The operator effect was surprisingly small.
+
+"Good news," Sophie told Maya and Dev. "You two are performing the assay very consistently. That's one less factor to worry about."
+
+This analysis gave them clean property estimates for each sequence, with confounders regressed out. But it also provided something equally valuable: a measure of their experimental noise.
+
+"Our statistical analysis shows that the unexplained variance,  `ε`, is about 1.3 in our binding measurement, while the total variance of our measurements is about 3.0," Sophie noted. "That means our theoretical maximum variance explained can be calculated as 1 - (variance of noise/total variance of measurements), which gives us about 56.7%. No model, no matter how sophisticated, can exceed that ceiling. That's our measurement limit."
+
+This reality check sparked immediate action from the team. Maya studied the plate effect data and suggested modifications to their protocol. "If we pre-equilibrate the plates for 30 minutes at room temperature before reading, we might reduce that variance," she hypothesized. Meanwhile, Dev focused on the position effect, designing a randomization scheme that would distribute key variants across different plate positions in future experiments.
+
+"Every bit of noise we eliminate now increases what our models can learn later," Sophie reminded them. "Let's implement these improvements for our next round."
+
+This reality check is something many teams miss. If your experimental precision is low, no amount of modeling sophistication will overcome it.
+
+## Predictive modeling of molecular properties
+
+**Week 6:** With clean property estimates in hand, the team moved to the predictive modeling phase. Sophie started simple:
+
+"Before we try anything fancy, let's establish a baseline with a random forest on one-hot encoded sequences," she told the team. "This gives us the simplest possible pipeline from sequence to prediction, with minimal choices to debug."
+
+She showed them her approach in code, explaining both the model source definition and the training procedure:
+
+"There are two distinct parts to this exercise. First, our model source—the code that defines how we transform sequences and what algorithm we use. Second, our model version—the actual trained model with parameters fit to our specific dataset."
+
+Sophie's baseline consisted of:
+
+- A simple flattened one-hot encoding for sequence featurization
+- A default random forest implementation with minimal hyperparameter tuning
+- A clear evaluation protocol that would remain consistent across iterations
+
+"This entire pipeline should take under an hour to implement and train, especially with AI assistance," she explained. "It establishes our lower bound on expected performance. I bet a deep neural network model could work, but it would be quite a bit more time to code up and verify that it's working correctly. This model gives me a baseline to work with for our prioritization efforts."
+
+When the results came back, the model explained about 30% of the variance in binding affinity.
+
+"Is that good?" Dev asked.
+
+"It's promising," Sophie replied. "Given our experimental noise and total measurement variance, the theoretical maximum is about 56.7%. We're capturing more than half of the explainable signal, which is reasonable for a first pass."
+
+Dev continued, "I also heard there are other featurization methods, would you want to test-drive them?"
+
+"Maybe, but I'm more concerned about our computational workflow being scaffolded out end-to-end," Sophie replied., "and modularizing it such that we can target individual components for improvements later on. The more important thing is for us to find binders; we can test the effect of computational design workflows opportunistically later."
+
+Maya had a practical question, asking, "Can we use it to find better binders?"
+
+"That's the real test," Sophie agreed. "But there's another benefit to this simple baseline—it helps us diagnose whether our modeling task is even feasible. If we'd gotten variance explained of 0.1 or 0.2, we'd probably need to revisit our statistical estimation or experimental design. The baseline tells us that this is a tractable problem."
+
+What I appreciated about Sophie's approach was her pragmatism. She wasn't trying to publish a methods paper—she was trying to help the team find better molecules. She later quickly evaluated several model architectures, but always with an eye toward practical utility rather than theoretical sophistication.
+
+"A model that explains 5% more variance but takes a week longer to build isn't worth it at this stage," she explained. "Speed of iteration matters more than squeezing out the last bits of performance. We version both our code and our trained models, but we don't let perfect be the enemy of good."
+
+## Generation and prioritization
+
+**Week 8:** Two months into the campaign, the team was ready to generate new candidates. Sophie convened a strategy meeting where each member brought different ideas to the table: computational predictions from her model, Maya's structural insights, and Dev's literature-derived variants.
+
+"We have budget for about 1,000 new sequences," Maya said. "Given our lab capacity, reagent costs, and screening throughput, that's our practical limit for this round. Let's allocate our experimental real estate thoughtfully instead of just picking the top model predictions."
+
+Sophie nodded in agreement. "A mentor of mine who was a computational chemist used to say, 'Show me your hypothesis in the form of a molecule.' That's what we're doing here—translating our different hypotheses into actual sequences we can test."
+
+After a focused afternoon of debate, they divided their budget:
+
+- 512 sequences for model-guided optimization
+- 243 for testing Maya's structural hypotheses
+- 217 for exploring diverse regions of sequence space
+- 28 for controls and replicates
+
+This wasn't arbitrary allocation, and in a later post I will detail the method by which they arrived at this budget allocation. Sophie reminded them that their model explained 30% variance against a theoretical maximum of 56.7% - "Good enough to guide us, but not to trust blindly."
+
+Maya argued for her structural approaches: "The model finds patterns but doesn't understand physics." Dev pushed for diversity of mutations sourced from the literature: "That's how we'll improve the model most efficiently." Sophie mediated, pushing them to quantify their confidence in each approach.
+
+They ultimately balanced exploitation (model-guided sequences) with exploration (structural hypotheses and diversity) while maintaining experimental quality control. This embodied a key principle: models serve the science, not vice versa. The goal was finding molecules that would actually work, not optimizing model metrics.
+
+## Learning and iteration
+
+The results from their second round were enlightening. The model-guided sequences showed improved binding, but two of Maya's structural hypotheses produced even better variants.
+
+"This is why we need both approaches," Sophie explained during their review. "The model found the local optimum, but Maya's intuition helped us jump to a different part of the fitness landscape."
+
+What was equally impressive was the impact of their experimental improvements. Thanks to Maya's plate pre-equilibration protocol and Dev's position randomization scheme, the unexplained assay variability had decreased from 56.7% to just 31.4%.
+
+"Look at this," Sophie highlighted during their review meeting. "Our noise floor dropped substantially. The theoretical maximum variance we can explain is now 68.6% instead of 56.7%."
+
+They updated their models with the new data, and the predictive performance improved substantially. The model now explained nearly 47.2% of the variance—a significant improvement in absolute terms, but even more impressive relative to their new theoretical maximum.
+
+"The model is getting better because we're giving it better data," Sophie pointed out. "This is the virtuous cycle we want: better experiments lead to better models lead to better designs lead to better experiments."
+
+Dev nodded appreciatively. "It's not just about more data—it's about cleaner data."
+
+"Exactly," Sophie agreed. "We're not just climbing the hill faster; we've actually made the hill higher."
+
+## Lessons for biotech data science leads
+
+Catalyst's story illustrates several principles that biotech founders should embrace:
+
+**1. Integration is more important than specialization** Sophie's ability to work across experimental design, statistics, and machine learning was more valuable than deep expertise in any one area. Look for data scientists who can bridge these domains rather than hiring separate specialists.
+
+**2. Experimental design sets your ceiling** No computational method can extract information that isn't in your data. Invest heavily in experimental design before scaling data collection.
+
+**3. Control what you can, measure what you can't** You can't eliminate all experimental variability, but you can measure and account for it. Track everything that might confound your measurements, or find plausible and logical surrogates for them.
+
+**4. Know your noise floor** Measure your experimental precision early. It tells you the theoretical maximum performance of any predictive model.
+
+**5. Start simple, add complexity carefully** Begin with baseline models that establish performance benchmarks. Add complexity *only when it demonstrably improves decisions, not metrics*.
+
+**6. Balance computation and intuition** The most powerful approaches combine computational methods with human expertise and intuition.
+
+**7. Allocate experimental resources thoughtfully** Don't just test the top predictions from your model. Allocate your experimental budget across different strategies.
+
+----
+
+In the next parts of this series, we'll see how:
+
+1. The team designed the experiment collaboratively and why that was important,
+2. The use of Bayesian estimation was crucial for generating archival data,
+3. Sophie approached model building with speed and pragmatism put together (hint: AI was used!), and
+4. The team specifically arrived at that design budget allocation.
+
+Stay tuned for more!
+---
+pub_date: 2025-03-06
+---
+twitter_handle: ericmjl
+---
+tags:
+
+data science
+biotech
+molecule discovery
+experiment design
+machine learning
+protein engineering
+---
+summary: In this blog post, I explore how cross-functional teams in biotech can accelerate molecule discovery using a strategic playbook. Through the story of a fictitious biotech, Catalyst Therapeutics, I highlight the importance of robust experimental design, integrating data science with human intuition, and balancing computational methods with practical insights. The team's journey reveals how better experiments lead to better models and ultimately, better molecules. Are you ready to discover how these principles can transform your biotech projects?
