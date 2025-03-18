@@ -1,0 +1,57 @@
+title: Why you should take part in the SciPy sprints!
+---
+author: Eric J. Ma
+---
+body:
+
+If you're a newcomer to the scientific Python open source community, hear me out: I would like to share with you why participating in sprints can be incredibly valuable, beneficial, and possibly even transformative for you!
+
+My first open source contribution was with the Matplotlib project at the SciPy 2015 sprints. I was assigned what seemed like a simple task: replace all PyLab imports in the examples gallery with proper import statements. Instead of this:
+
+```python
+from matplotlib.pylab import *
+```
+
+The examples would now have this:
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+And I would make sure that each example that I changed ran correctly. Manually. By hand. One-by-one. Painstaking done for posterity.
+
+What started as a straightforward assignment turned into 70 pull requests over three months. But here's the thing - I learned so much during that process!
+
+First off, I got **so many reps** with `git` that by the end, I finally had the confidence to do `git`-based software development on my own. When people say repetitions are the key to mastery, this rang absolutely true for me. My software skills improved dramatically. I witnessed firsthand how CI/CD was used to automatically check code, which I later applied to my own open source projects.
+
+I also observed how people collaborate both in-person and remotely. This became invaluable when I later worked at Novartis, where half my time was spent working remotely with teams in Basel while I was in Cambridge. I was used to asynchronous communication. And because there was always the risk of being blocked on one thing and not knowing how to proceed for a few days, I got used to juggling multiple projects in parallel so that I would always have something moving forward.
+
+Perhaps most importantly, I got to meet Matplotlib maintainers! Through those interactions, I learned how to communicate with them - understanding what information they needed whenever I reported an issue and how to provide minimal reproducible examples. The face time with them and our consistent interactions through those pull requests built trust, making it easier to approach maintainers when I needed help. And a side effect is that as my time in the open source world grew, I could build that same trust with other open source project maintainers.
+
+This way of working with maintainers and understanding their perspective has helped me tremendously throughout my career. It's also been a great networking opportunity and an excellent way to learn new skills - especially for data scientists who can benefit significantly from stronger software development skills.
+
+For students especially (as I was back in 2015), sprints provide an invaluable opportunity to connect with the people developing the tools that you may rely on. You get to become more familiar with Python packages you might use in your day job while simultaneously giving back to the codebases you care about.
+
+If you're looking to make a permanent impact, contributing to software is a great way to do it. My impact on Matplotlib was helping people understand they shouldn't use PyLab by eliminating PyLab examples, reducing support questions for the developers.
+
+Here's my encouragement to you: book an extra day or two at your hotel, delay your return flight, and join the sprints. Network, write some code, and have fun. It could be an experience that absolutely changes the arc of your career trajectory!
+---
+pub_date: 2025-03-17
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my transformative experience participating in the SciPy sprints, where I made my first open source contribution to Matplotlib. Through this journey, I gained confidence in git, improved my software skills, and learned the importance of effective communication with maintainers. Sprints offer invaluable networking opportunities and skill development, especially for students and data scientists. By contributing, you can make a lasting impact on projects you care about. Are you ready to join a sprint and potentially change the trajectory of your career? Read on to find out more!
+---
+tags:
+
+open source
+python
+sprints
+matplotlib
+git
+networking
+career
+community
+skills
+development
