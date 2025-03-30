@@ -4,8 +4,6 @@ author: Eric J. Ma
 ---
 body:
 
-# Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening
-
 > Note: The original `marimo` notebook can be found [here](./protein_estimation.py).
 > To run it, download it, and then execute:
 >
@@ -1354,3 +1352,5 @@ probability of superiority
 probabilistic modelling
 data science
 statistics
+---
+summary: In this blog post, I explore how to tackle experimental noise and candidate ranking in protein screening using Bayesian methods. By employing R2D2 priors, we can decompose variance into interpretable components, helping us understand the true biological signal versus experimental artifacts. Additionally, Bayesian superiority calculation allows us to quantify the probability that one protein outperforms another, providing a more robust comparison than traditional methods. These techniques are not only applicable to protein screening but also to drug discovery, materials science, and more. Are you ready to enhance your experimental insights with Bayesian logic?
