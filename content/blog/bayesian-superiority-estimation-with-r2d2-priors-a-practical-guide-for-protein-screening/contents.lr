@@ -4,11 +4,14 @@ author: Eric J. Ma
 ---
 body:
 
-```python
-import marimo as mo
-```
-
 # Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening
+
+> Note: The original `marimo` notebook can be found [here](./protein_estimation.py).
+> To run it, download it, and then execute:
+>
+> ```bash
+> uvx marimo edit --sandbox protein_estimation.py
+>
 
 When screening hundreds of molecules, proteins, or interventions,
 two critical questions often arise:
