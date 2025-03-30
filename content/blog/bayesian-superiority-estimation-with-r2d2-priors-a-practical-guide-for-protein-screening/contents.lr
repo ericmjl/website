@@ -1259,8 +1259,8 @@ To better understand how protein activity relates to superiority probability, le
 
 1. The posterior mean protein activity (x-axis)
 2. Two measures of superiority probability (y-axis):
-   - Mean probability of superiority
-   - Minimum probability of superiority (a conservative estimate)
+    1. Mean probability of superiority
+    2. Minimum probability of superiority (a conservative estimate)
 
 This will help identify proteins that are consistently superior versus those that have high mean activity but with high uncertainty.
 
@@ -1342,3 +1342,15 @@ Bayesian methods allow us to move beyond simplistic "winners and losers" to a nu
 pub_date: 2025-03-30
 ---
 twitter_handle: ericmjl
+---
+tags:
+
+bayesian
+r2d2
+variance modelling
+fluorescence
+experimental design
+probability of superiority
+probabilistic modelling
+data science
+statistics
