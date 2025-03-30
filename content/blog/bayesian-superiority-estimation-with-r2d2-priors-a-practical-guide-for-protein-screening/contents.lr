@@ -4,11 +4,33 @@ author: Eric J. Ma
 ---
 body:
 
+Recently, I've been thinking and writing a lot about statistics.
+It's because good statistical practice is both under-rated, under-taught, and under-valued
+amongst machine learning practitioners,
+and yet it underpins the ability of machine learning practitioners
+to build high performing machine learning models.
+Without good statistical practice underlying the data generating process --
+and by that I mean good experimental design,
+and explicit quantification of uncertainty --
+all ML models become equal: equally bad.
+
+In this blog post, I want to show you how to use Bayesian methods
+to tackle two critical questions:
+
+1. Is our experimental setup actually measuring the effect we care about
+   (vs. experimental noise)?
+2. Which candidates are truly superior to others?
+
+As always, I go back to my favorite example: screening proteins.
+But as you read, note the generalities: they aren't specific to protein screening at all!
+
+---
+
 > Note: The original `marimo` notebook can be found [here](./protein_estimation.py).
 > To run it, download it, and then execute:
 >
 > ```bash
-> uvx marimo edit --sandbox protein_estimation.py
+> uvx marimo edit --sandbox /path/to/protein_estimation.py
 >
 
 When screening hundreds of molecules, proteins, or interventions,
