@@ -987,15 +987,29 @@ def plot_effect_sizes(proteins_to_plot: list[str] = None, num_to_plot: int = Non
     # Effect size = (protein_activity - control_activity) / pooled_std
     effect_sizes = np.zeros((n_samples, n_proteins))
 
+    # In a Bayesian framework, we're already dealing with posterior distributions
+    # of the true parameters, so each sample represents a possible "true" value.
+    # We'll calculate the standardized effect size (Cohen's d) for each sample.
+
+    # Calculate unexplained variance (sigma) from the model
+    # This represents the residual variation in our model
+    unexplained_sd = trace.posterior["unexplained_sd"].values.flatten()
+
     for i in range(n_samples):
         control_value = prot_activity_flat[i, control_idx]
+        # Use the residual standard deviation for this posterior sample
+        sigma = unexplained_sd[i]
+
         for j in range(n_proteins):
             if j != control_idx:
-                # Calculate effect size for this sample
-                effect = prot_activity_flat[i, j] - control_value
-                # Using a simplified effect size calculation (mean difference)
-                # In practice, you might use a pooled standard deviation
-                effect_sizes[i, j] = effect
+                # Calculate Cohen's d for this posterior sample
+                # Since we're working with log-scale activities in the model,
+                # this directly gives us d = (μ1 - μ2) / σ
+                mean_diff = prot_activity_flat[i, j] - control_value
+                if sigma > 0:  # Avoid division by zero
+                    effect_sizes[i, j] = mean_diff / sigma
+                else:
+                    effect_sizes[i, j] = 0.0
 
     # Create a DataFrame with effect size statistics
     effect_size_stats = pd.DataFrame(
@@ -1037,7 +1051,7 @@ def plot_effect_sizes(proteins_to_plot: list[str] = None, num_to_plot: int = Non
 
     plt.yticks(range(len(top_proteins)), top_proteins["Protein"])
     plt.axvline(x=0, color="gray", linestyle="--")
-    plt.xlabel("Effect Size (difference from Control)")
+    plt.xlabel("Standardized Effect Size (Cohen's d vs Control)")
     plt.title("Posterior Effect Sizes of Top Proteins vs Control")
     sns.despine()
     return plt.gca(), effect_sizes
