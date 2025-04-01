@@ -416,7 +416,8 @@ def _():
             "global_mean", mu=7, sigma=1
         )  # log scale for fluorescence
 
-        # Residual variance (unexplained)
+        # Prior on total variance, which will be scaled by R²
+        # before being decomposed into components.
         sigma_squared = pm.HalfNormal("sigma_squared", sigma=1)
 
         # Global variance derived from R² and residual variance
@@ -1193,7 +1194,7 @@ Now that we've examined both replicate effects and explored why effect sizes are
 
 ## Bayesian Superiority Calculation
 
-Now that we've properly modeled the sources of variation and examined the protein activities, we can tackle our second question: which proteins are truly superior?
+Let's tackle our second question: which proteins are truly superior?
 
 The traditional approach would be to compare point estimates (means) and judge significance using p-values. But the Bayesian approach offers something more powerful: the probability that one protein is superior to another, calculated directly from posterior samples.
 
@@ -1229,13 +1230,13 @@ The calculation is straightforward but powerful:
 2. For each posterior sample, check if protein i's activity exceeds protein j's
 3. Calculate the proportion of samples where i > j
 
-This gives us a probability interpretation: "There's an 85% chance that protein A is superior to protein B" rather than the frequentist approach of "protein A is significantly better than protein B with p<0.05."
+This _directly_ gives us a probability interpretation: "There's an 85% chance that protein A is superior to protein B" rather than the frequentist approach of "protein A is significantly better than protein B with p<0.05."
 
-Let's visualize this matrix:
+Let's visualize the superiority matrix:
 
 ```python
 # Create heatmap
-sns.heatmap(superiority_matrix, annot=True, cmap="YlOrRd", fmt=".2f")
+sns.heatmap(superiority_matrix, cmap="YlOrRd", fmt=".2f")
 plt.title("Superiority Matrix")
 plt.gca()
 ```

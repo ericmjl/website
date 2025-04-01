@@ -402,7 +402,8 @@ def _(df, np, pd, pm):
                 "global_mean", mu=7, sigma=1
             )  # log scale for fluorescence
 
-            # Residual variance (unexplained)
+            # Prior on total variance, which will be scaled by R²
+            # before being decomposed into components.
             sigma_squared = pm.HalfNormal("sigma_squared", sigma=1)
 
             # Global variance derived from R² and residual variance
@@ -975,7 +976,7 @@ def _(plt, sns, superiority_matrix):
 def _(mo):
     mo.md(
         r"""
-        The heatmap shows the pairwise superiority probabilities between all proteins. Brighter colors indicate higher probabilities that the row protein is superior to the column protein.
+        The heatmap shows the pairwise superiority probabilities between all proteins. Redder colors indicate higher probabilities that the row protein is superior to the column protein.
         """  # noqa: E501
     )
     return
