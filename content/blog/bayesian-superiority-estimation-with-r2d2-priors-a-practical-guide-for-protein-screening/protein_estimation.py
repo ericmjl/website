@@ -18,7 +18,7 @@
 
 import marimo
 
-__generated_with = "0.11.26"
+__generated_with = "0.11.27"
 app = marimo.App(width="medium")
 
 
@@ -29,7 +29,7 @@ def _():
     return (mo,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -54,7 +54,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -79,7 +79,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -100,7 +100,7 @@ def _():
     return (pm,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -147,7 +147,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -257,7 +257,7 @@ def _():
     )
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -280,7 +280,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -314,7 +314,7 @@ def _(df):
     return filtered_df, mask, plt, sns
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -342,7 +342,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -473,7 +473,7 @@ def _(df, np, pd, pm):
     return model, trace
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -497,7 +497,7 @@ def _(trace):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -509,19 +509,19 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(trace):
     import arviz as az
 
-    axes_posterior_props = az.plot_posterior(trace, var_names=["props"])
-    axes_posterior_props[0].set_title("experiment")
-    axes_posterior_props[1].set_title("replicate")
-    axes_posterior_props[2].set_title("protein")
-    axes_posterior_props[3].set_title("unexplained")
+    axes_posterior_props = az.plot_posterior(trace, var_names=["props"], grid=(2, 2))
+    axes_posterior_props.flatten()[0].set_title("experiment")
+    axes_posterior_props.flatten()[2].set_title("replicate")
+    axes_posterior_props.flatten()[1].set_title("protein")
+    axes_posterior_props.flatten()[3].set_title("unexplained")
     return axes_posterior_props, az
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -539,19 +539,17 @@ def _(az, trace):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
         Let's examine the posterior distributions of each variance component. In the ridgeline plot below, we see that unexplained variance currently constitutes a tiny fraction of total variation, while experiment and replicate -- two components that really should not contribute much to the output variation, are actually significant contributors to the readout variation. This can serve as a metric on laboratory consistency. Ideally, the protein that we're engineering should contribute the most variation to the output that we see.
-
-        The R2D2 prior answers our first critical question in a way that guides practical action: we should focus on improving experimental execution to make our experiments more consistent. Ideally, the protein effect should be the majority contributor to the readout variation. This analysis suggests that refining our experimental protocol to reduce batch effects between experiments and variability between replicates would substantially improve the signal-to-noise ratio of our screening platform.
         """  # noqa: E501
     )
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(pd, plt, trace):
     import joypy
 
@@ -585,7 +583,18 @@ def _(pd, plt, trace):
     return axes, col, fig, i, joypy, props_df, props_samples
 
 
-@app.cell
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+        The R2D2 prior answers our first critical question in a way that guides practical action: we should focus on improving experimental execution to make our experiments more consistent. Ideally, the protein effect should be the majority contributor to the readout variation. This analysis suggests that refining our experimental protocol to reduce batch effects between experiments and variability between replicates would substantially improve the signal-to-noise ratio of our screening platform.
+
+        """  # noqa: E501
+    )
+    return
+
+
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -604,7 +613,7 @@ def _(az, trace):
     return (ax,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -620,7 +629,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -636,7 +645,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(np, pd, plt, sns, trace):
     def plot_effect_sizes(proteins_to_plot: list[str] = None, num_to_plot: int = None):
         # Get posterior samples of protein activities
@@ -717,7 +726,7 @@ def _(np, pd, plt, sns, trace):
     return axes_effect_sizes, effect_sizes, plot_effect_sizes
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -741,7 +750,7 @@ def _(plot_effect_sizes):
     return (axes_effect_sizes_filtered,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -759,7 +768,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -786,7 +795,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(np, plt, sns, trace):
     def _():
         # Get posterior samples
@@ -845,7 +854,7 @@ def _(np, plt, sns, trace):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -865,7 +874,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -883,7 +892,7 @@ def _(az, trace):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -895,7 +904,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -933,7 +942,7 @@ def _(np, trace):
     return superiority_matrix, tqdm
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -953,34 +962,26 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(plt, sns, superiority_matrix):
     # Create heatmap
-    sns.heatmap(superiority_matrix, annot=True, cmap="YlOrRd", fmt=".2f")
+    sns.heatmap(superiority_matrix, annot=False, cmap="YlOrRd", fmt=".2f")
     plt.title("Superiority Matrix")
     plt.gca()
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
         The heatmap shows the pairwise superiority probabilities between all proteins. Brighter colors indicate higher probabilities that the row protein is superior to the column protein.
-
-        We can also look at the column-wise mean of the superiority matrix, which gives us a different perspective on protein performance:
         """  # noqa: E501
     )
     return
 
 
-@app.cell
-def _(sns, superiority_matrix):
-    sns.heatmap(superiority_matrix.mean(axis=0).reshape(-1, 1))
-    return
-
-
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""We can rank proteins by their average probability of superiority. While this may seem disingenuous, given that I just ranted against point estimates, it gives us at least one meaningful basis of comparison. Let's plot both the average probability of superiority and the full underlying pairwise comparisons."""  # noqa: E501
@@ -988,7 +989,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(df, np, pd, plt, sns, superiority_matrix):
     def _():
         # Calculate average probability of superiority and sort proteins
@@ -1026,7 +1027,7 @@ def _(df, np, pd, plt, sns, superiority_matrix):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""Looking at our results, some proteins emerge as the clear top performers, followed by others with moderate superiority. This ranking is particularly valuable because it differs from what we might conclude by simply examining forest plots of the posterior distributions. In forest plots, we would only see the estimated activity levels and their uncertainty intervals, which might lead us to favor proteins with high mean activity but also high uncertainty. The superiority metric, in contrast, directly quantifies the probability that one protein outperforms others, properly accounting for the full posterior distribution and the uncertainty in each comparison."""  # noqa: E501
@@ -1034,7 +1035,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -1096,7 +1097,7 @@ def _(np, plt, sns, superiority_matrix, trace):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -1111,7 +1112,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -1130,7 +1131,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
