@@ -19,7 +19,6 @@ jobs:
 
       - name: Install dependencies and build website
         run: |
-          pixi install
           pixi run build
 
       # Taken from: https://github.com/drivendataorg/cloudpathlib/blob/master/.github/workflows/docs-preview.yml
