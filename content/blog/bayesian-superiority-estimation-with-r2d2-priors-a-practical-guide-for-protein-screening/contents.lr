@@ -8,7 +8,7 @@ Recently, I've been thinking and writing a lot about statistics.
 It's because good statistical practice is both under-rated, under-taught, and under-valued
 amongst machine learning practitioners _and_ laboratory scientists,
 and yet it underpins the ability of machine learning practitioners in life sciences
-to build high performing machine learning models that impact decisions in the lab.
+to build high performing machine learning models that accelerate decisions in the lab.
 It also enables laboratory scientists to design experiments that yield interpretable,
 and actionable results.
 
@@ -1379,6 +1379,7 @@ Together, these techniques transform screening data into actionable insights. Wh
 
 Bayesian methods allow us to move beyond simplistic "winners and losers" to a nuanced understanding of which candidates are most likely to succeed, with what degree of certainty, and how we can improve our measurement process itself. And more meta-level: none of this needs fancy names. It's just logic and math, applied to data. Wasn't that what statistics was supposed to be?
 
+_With thanks to Jackie Valeri for sanity-checking the code while also learning the ins-and-outs of the R2D2 prior._
 ---
 pub_date: 2025-03-30
 ---
