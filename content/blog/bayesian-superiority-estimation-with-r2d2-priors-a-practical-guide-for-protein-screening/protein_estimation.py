@@ -268,7 +268,7 @@ def _(mo):
         r"""
         ## The R2D2 Prior for Variance Decomposition
 
-        The R2D2 prior (R-squared Dirichlet decomposition) provides an interpretable framework
+        The [R2D2 prior (R-squared Dirichlet decomposition)](https://arxiv.org/abs/2111.10718) provides an interpretable framework
         for variance decomposition by placing a prior on the Bayesian coefficient of determination ($R^2$),
         which then induces priors on individual parameters.
 
