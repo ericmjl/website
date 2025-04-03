@@ -95,7 +95,3 @@ blogbot = "uvicorn apis.blogbot.api:app --reload --port 8173 --host 0.0.0.0"
 [tool.pixi.environments]
 default = ["lektor", "devtools"]
 blogbot = ["blogbot", "devtools"]
-
-[tool.pixi.dependencies]
-nbformat = ">=5.10.4,<6"
-click = ">=8.1.8,<9"
