@@ -37,7 +37,7 @@ We made this decision early on to avoid building things like dashboards, which i
 
 Yet at the same time, there is a strong "engineering" component to our work, because we want to reduce the friction that occurs from handover. I've heard stories in finance of data science and quant teams completing their prototype in a notebook within a month, but the ML engineering team needing 8 months to productionize it because the deployment language was different (Java, not Python), the runtime environment was different, and the engineering team was not intimately familiar with the problem domain, and so they were delayed on the appropriate suite of tests to write. So at Moderna, every data scientist must understand that our return on investment is only realized if we package our work as software, and we avoid these problems associated with handoff by ensuring that we have the tools to make deployment easy.
 
-Moreover, I don't care if you know how to build a fancy Transformer ML model in a Jupyter notebook. If your work cannot be operationalized hands-free without your involvement, you have not delivered a return on investment in your time. Software is how we scale labor.
+Moreover, I don't care if you know how to build a fancy Transformer ML model in a Jupyter notebook. If your work cannot be operationalized hands-free without your involvement, you have not delivered a return on investment on your time. Software is how we scale labour!
 
 The benefits? Consistency, reusability, and very clear paths from exploration to production. Expectations with stakeholders are crystal clear, yet what we deliver is flexible enough to work with a variety of collaborators.
 
@@ -48,7 +48,7 @@ Consistent organization and automation reduces cognitive load and frees up menta
 We've implemented several tactical best practices that make a big difference:
 
 - **One project, one code repository**: Every project gets its own code repository – you can break this rule when you know the rule, but it's a good starting point.
-- **Standardized project scaffolding**: We've invested in command-line tools (not unlike `pyds-cli`) that, after a quick questionnaire, generate a full Python project package structure with:
+- **Standardized project scaffolding**: We've invested in command-line tools (not unlike [`pyds-cli`](https://ericmjl.github.io/pyds-cli/)) that, after a quick questionnaire, generate a full Python project package structure with:
 	- Dedicated locations for tests (signaling that testing is expected)
 	- Documentation templates (encouraging thorough documentation)
 	- Proper code organization with examples of submodules
@@ -101,7 +101,7 @@ At Moderna, we've found this balance by being intentional about where we apply s
   - Visualization choices and design
   - Local development environment preferences
 
-The key insight is **focusing standardization on interfaces, not implementations**.
+The key insight is **focusing standardization on interfaces, not implementations**. You're free to use whatever Python packages you need, but by standardizing on the language and the structure, we can make it easier to jump in and help each other.
 
 In doing so, we help make data science teams fly by:
 - Eliminating decision fatigue on routine aspects of projects
@@ -122,11 +122,10 @@ What's particularly powerful about our approach is that it can be implemented wi
 
 The ultimate goal isn't standardization for its own sake — it's creating an environment where data scientists can do their best thinking and most innovative work. When done right, good standards don't constrain scientists; they liberate them.
 
-It's taken three and a half years of my life at Moderna to build this culture, but it's been worth it. I'm optimistic about our future regardless of the stock price – I'm long on the technology.
+It's taken three and a half years of my life at Moderna to build this culture, but it's been worth it. I'm optimistic about our future regardless of the stock price – I'm long on the technology, and concomitantly, I would love to see science run at the speed of thought!
 
 Thanks for coming to my TED Talk! :)
 
-*If you're interested in learning more about our compute platform at Moderna, my colleague Anand Murthy spoke about "Powering AI/ML at Scale: Building a Cloud-Native Infrastructure for Biopharma Innovation" on Friday at the same conference.*
 ---
 pub_date: 2025-04-02
 ---
