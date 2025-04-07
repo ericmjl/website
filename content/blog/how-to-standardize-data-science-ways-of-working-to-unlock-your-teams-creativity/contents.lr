@@ -1,0 +1,146 @@
+title: How to standardize Data Science ways of working to unlock your team's creativity
+---
+author: Eric J. Ma
+---
+body:
+
+On 2 April 2025, I had the opportunity to speak at BioIT World about my experiences building data science teams and the associated tooling at Moderna. Unlike most speakers, I ditched the slides and went for a more interactive approach – that's just my style. Why subject everyone to 25 minutes of me blabbering when we could have an engaging discussion instead?
+
+For those who couldn't attend, I wanted to share the key insights from my talk on how we've made our data science team fly at Moderna. These lessons come from my experience as a data science team lead, where I manage a team of six (including myself), serving Moderna's 600-person research organization, and where we share tools with other data science teams totaling 12, serving a wide remit across Moderna’s ~6000-person organization.
+
+## The Mission
+
+First, a bit about us: my home team's mission is to "make science run at the speed of thought and to quantify the unquantified." I joined Moderna in summer 2021 – too late to profit from the pandemic, so I'm really there for the science, not the money! Part of making science run at the speed of thought is to make sure we data scientists have the tools and practices at hand that enable *us* to work at the speed of thought. That is where standardization comes in.
+
+## Talk Overview
+
+In my talk, I focused on three key aspects of standardizing data science workflows:
+
+1. How to design delivery models that serve stakeholder, customer, and/or collaborator needs
+2. Ways to make best practices the path of least resistance
+3. Strategies for implementing standards on the path of least resistance
+
+I shared concrete examples from my experience at Moderna, but also encouraged the audience to discuss these topics with their neighbors so we could learn from the collective wisdom in the room. My goal was for everyone to leave with practical ideas they could implement right away—regardless of their team or org size. I will admit, the room was relatively quiet at first (I think most people came not expecting my talk delivery format), but gradually the room warmed up.
+
+### 1. Standardized Delivery Models
+
+The first thing to address is the question: what exactly does your data science team deliver? And I don't mean "insights" – that's not a specific enough answer. I'm talking about concrete work products. Something tangible that people can interact with or mull over.
+
+Before choosing delivery formats, it's essential to understand the "jobs to be done" (from Clayton Christensen's Innovator's Solution) – what are stakeholders actually trying to accomplish with your outputs? Delivery models should be tailored to what your company actually needs, not just what's trendy.
+
+At Moderna, we deliver two things as a data science team:
+
+- **Python packages**: Reusable components that encapsulate data science work that other computational and data scientists can reuse.
+- **Compute tasks**: CLI tools that serve as a wrapper for computational workflows, which are deployed on the cloud and accessible via web UI, RESTful API, and Python client. These serve both technical and non-technical users.
+
+We made this decision early on to avoid building things like dashboards, which in my opinion are where data science projects go to die. Dashboards should be built by the people who actually want to see the data. I've also been in the position of promising a UI and suffering the maintenance costs later. It was not a happy time. So we cut out building any kind of user interface from our work products, preferring to leave this to professional front-end engineers.
+
+Yet at the same time, there is a strong "engineering" component to our work, because we want to reduce the friction that occurs from handover. I've heard stories in finance of data science and quant teams completing their prototype in a notebook within a month, but the ML engineering team needing 8 months to productionize it because the deployment language was different (Java, not Python), the runtime environment was different, and the engineering team was not intimately familiar with the problem domain, and so they were delayed on the appropriate suite of tests to write. So at Moderna, every data scientist must understand that our return on investment is only realized if we package our work as software, and we avoid these problems associated with handoff by ensuring that we have the tools to make deployment easy.
+
+Moreover, I don't care if you know how to build a fancy Transformer ML model in a Jupyter notebook. If your work cannot be operationalized hands-free without your involvement, you have not delivered a return on investment on your time. Software is how we scale labour!
+
+The benefits? Consistency, reusability, and very clear paths from exploration to production. Expectations with stakeholders are crystal clear, yet what we deliver is flexible enough to work with a variety of collaborators.
+
+### 2. Making Best Practices the Path of Least Resistance
+
+Consistent organization and automation reduces cognitive load and frees up mental energy for creative problem-solving. Our philosophy is simple: "Make the right thing the easy thing to do."
+
+We've implemented several tactical best practices that make a big difference:
+
+- **One project, one code repository**: Every project gets its own code repository – you can break this rule when you know the rule, but it's a good starting point.
+- **Standardized project scaffolding**: We've invested in command-line tools (not unlike [`pyds-cli`](https://ericmjl.github.io/pyds-cli/)) that, after a quick questionnaire, generate a full Python project package structure with:
+	- Dedicated locations for tests (signaling that testing is expected)
+	- Documentation templates (encouraging thorough documentation)
+	- Proper code organization with examples of submodules
+	- Configuration files
+	- Pre-configured CI/CD pipelines that run on every commit
+- We invested early on in **automated workflows** that reduce friction, such as:
+  - Automatic installation of pre-commit hooks for code quality
+  - Automated authentication for internal systems
+  - Tools that manage cloud workstation usage (e.g., auto-shutdown for workstations)
+- **Documentation**: We invest heavily in documentation, running quarterly "docathons" to ensure our work is adequately documented for future team members. As I like to say, "Software scales labor, documentation scales brains."
+- **Modern dependency management** with tools like pixi and uv (we've evolved from conda to mamba to reduce build times, and now we're transitioning to pixi/uv)
+
+> Software scales labor, documentation scales brains!
+
+These standardized practices reduce cognitive overhead. If I jump into a colleague's project, I immediately know where to look for documentation and tests, which helps me onboard faster than having one-on-one sessions. Shared idioms and patterns make it easier to jump in and help each other, fostering stronger team dynamics.
+
+I would note that the tech stack is merely one piece of the whole puzzle. The practices we build around the tech stack are another integral portion. The goal is for scientists to spend less time on configuration and more time on science. The investment of my time hopefully yields thirty, sixty, or a hundredfold in terms of what we give back to our teammates.
+
+The best part? We enable all of this at extremely low software licensing spend — our only vendor spends on our technology stack for data scientists are on AWS, GitHub, and GitHub Copilot.
+
+### 3. Implementation Strategy
+
+Change management principles apply to workflow standardization. Successful implementation requires both technical and cultural elements.
+
+Our standardization journey at Moderna involved several key elements:
+
+- **Leadership buy-in was critical**: The support chain included my direct manager Andrew Giessel and Dave Johnson, our Chief Data and AI Officer. When I implemented our standardized project structure, Dave personally reviewed the pull request. His comment – "I love the user-facing emojis" – showed me he had actually read my code and was supportive of this change.
+- **Evolution through multiple iterations**: We started with a basic template that codified our best practices, each time making things better. Because we have so many repos flying around, we don't worry about upgrading all of them at once, but instead opportunistically update them when we get back to touching them.
+- **Empowering others to contribute**: If someone finds a pain point, I guide them through the process for improving our command-line interface tools. The benefit is that shared knowledge grows and spreads.
+- **Documentation of ways-of-working**: We leverage our two-day quarterly docathons to improve documentation for the long haul.
+
+The command-line tooling we've developed isn't just my project – it's now shared with the ML platform team, and data scientists actively make code changes to it. We "dog food" our own tools, which is incredibly empowering. You've got to give power back to the frontliners so they can make the changes they need to move at the speed they want.
+
+Sustainable change requires leadership support, frontline champions, visible benefits, and evolution at a pace teams can absorb.
+
+## Balancing Standards with Innovation
+
+The perceived tension between standardization and creativity is often a false dichotomy. Well-designed standards actually create freedom through constraints.
+
+At Moderna, we've found this balance by being intentional about where we apply standards:
+
+- **Areas where we apply standardization**:
+  - Project structure and organization
+  - Deployment pipelines and processes
+  - Documentation formats and expectations
+  - Code review and quality check workflows
+- **Areas where we preserve flexibility**:
+  - Algorithm selection and implementation
+  - Analysis approaches and methodologies
+  - Visualization choices and design
+  - Local development environment preferences
+
+The key insight is **focusing standardization on interfaces, not implementations**. You're free to use whatever Python packages you need, but by standardizing on the language and the structure, we can make it easier to jump in and help each other.
+
+In doing so, we help make data science teams fly by:
+- Eliminating decision fatigue on routine aspects of projects
+- Reducing cognitive load from context-switching between different project structures
+- Automating repeatable processes, freeing mental energy for scientific challenges
+- Enabling faster onboarding and collaboration, reducing time spent explaining project basics
+- Creating predictable workflows where scientists can anticipate next steps rather than inventing them
+
+## AI-Assisted Coding
+
+Though not a focus of my talk, many asked about AI-assisted coding. This is completely ingrained at Moderna – everyone has access to ChatGPT Enterprise (that's public knowledge), and every developer who asks for GitHub Copilot gets it. We're developing extensive documentation on how to productively use AI assistance in daily coding.
+
+The testimonials are powerful. Just yesterday, I interviewed a DevOps engineer who's doing three to four people's worth of work and coasting because of GitHub Copilot in agent mode. It's the ultimate productivity tool if you know how to wield it properly.
+
+## Final Thoughts
+
+What's particularly powerful about our approach is that it can be implemented with minimal vendor dependencies. At Moderna, our data science and deployment infrastructure is built almost entirely on open-source tools — our only significant software expenses are AWS, GitHub Enterprise, and GitHub Copilot. This deliberate choice to avoid vendor lock-in provides significant cost savings and the flexibility to adapt quickly as the scientific landscape changes.
+
+The ultimate goal isn't standardization for its own sake — it's creating an environment where data scientists can do their best thinking and most innovative work. When done right, good standards don't constrain scientists; they liberate them.
+
+It's taken three and a half years of my life at Moderna to build this culture, but it's been worth it. I'm optimistic about our future regardless of the stock price – I'm long on the technology, and concomitantly, I would love to see science run at the speed of thought!
+
+Thanks for coming to my TED Talk! :)
+
+---
+pub_date: 2025-04-02
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share insights from my talk at BioIT World about leading one of Moderna's data science teams. I discuss our mission to make science run at the speed of thought and how we standardize workflows across the data scientists to enhance creativity. Key points include designing delivery models, making best practices easy, and balancing standards with innovation. I also touch on AI-assisted coding and our open-source infrastructure. Our approach aims to liberate scientists for their best work. Curious about how we achieve this balance and what it means for the future of data science at Moderna?
+---
+tags:
+
+data science
+leadership
+workflows
+best practices
+software
+change management
+innovation
+ai
+open source

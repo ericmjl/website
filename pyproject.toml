@@ -3,6 +3,7 @@ name = "ericmjl-website"
 version = "0.0.1"
 requires-python = "==3.11"
 description = "Eric Ma's Personal Website"
+dependencies = ["marimo", "click"]
 
 [tool.setuptools.packages.find]
 where = [""]
