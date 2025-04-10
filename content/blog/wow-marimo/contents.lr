@@ -1,0 +1,217 @@
+title: Wow, Marimo!
+---
+author: Eric J. Ma
+---
+body:
+
+I have been using Marimo notebooks recently, and I'm thoroughly impressed. There are many benefits to using `marimo`. The biggest are fully reactive notebooks, such that if you change a cell and execute it, all cells that depend on it will automatically re-execute, and self-contained notebook environments, so you never have to create a scratch environment to run a notebook. If you haven't started test-driving Marimo to see whether it works for you, I think it's time to start experimenting!
+
+## Run Marimo... without ever installing it
+
+Thanks to `uv`, we can run `marimo` without every needing to explicitly install it. This is a major upgrade from installing it with `pip`/`conda` and having to remember where on my [PATH environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/) `marimo` is. No more asking the question, "Did I install it in my base conda environment? Or was it installed in another env?"
+
+To do this, with `uv` installed on your `PATH`:
+
+```bash
+uvx marimo edit --sandbox /path/to/notebook.py
+```
+
+The notebook will get created automatically if it doesn't exist.
+
+What I love about this is that I get to use the latest `marimo` all the time. And I don't have to think about what version of `marimo` I'm carrying around in my local machine. `uv` is providing the equivalent of a serverless API for CLI tools.
+
+## Ensure notebooks carry their own environment
+
+Marimo notebooks can be self-contained, with Python dependencies fully-specified in-file with [PEP723-compatible in-line script metadata](https://packaging.python.org/en/latest/specifications/inline-script-metadata/). The way to ensure that this is done is by running exactly the command above, with `--sandbox` being the key. Additionally, if you add packages to the self-contained notebook via UI, they automagically get added into the in-line script metadata. The resulting file looks something like this:
+
+```python
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "anthropic==0.49.0",
+#     "arviz==0.21.0",
+#     "joypy==0.2.6",
+#     "jupyter-core==5.7.2",
+#     "marimo",
+#     "matplotlib==3.10.1",
+#     "nbformat==5.10.4",
+#     "numba==0.61.0",
+#     "numpy==2.1.0",
+#     "nutpie==0.14.3",
+#     "pandas==2.2.3",
+#     "pymc==5.21.1",
+#     "seaborn==0.13.2",
+#     "tqdm==4.67.1",
+# ]
+# ///
+
+import marimo
+
+__generated_with = "0.12.2"
+app = marimo.App(width="medium")
+
+
+@app.cell
+def _():
+    import marimo as mo
+
+    return (mo,)
+
+# ...the rest of the notebook below...
+```
+
+## Enable AI assistance with Marimo notebooks
+
+At this point, for anyone experienced enough in code writing, writing code with AI assistance is pretty much table stakes. (If you are just starting out, I would still encourage you to seek out a human mentor to teach you good patterns for writing reliable code!) Marimo has support for AI-assisted coding, and though it has some rough spots, I think it's worth taking a look at.
+
+To enable AI assistance, you'll need an API key for one of the major API providers (OpenAI, Anthropic, Google), and you can enable code completion using GitHub Copilot, Codeium, or Ollama (custom).
+
+That said, having gotten used to Cursor's more interactive style of coding assistance, I found Marimo's implementation of AI assistance to be a tad constraining. I can't do multi-cell edits, for example, and the connection to GitHub Copilot (for inline assistance) often shows an error connecting. My workaround for now has been to write a bunch of cells in Marimo, and then switch over to Cursor to directly edit the `.py` file (e.g. to condense it to be less verbose, or correct inconsistencies I might have accumulated).
+
+## Run a marimo notebook directly from the web
+
+```bash
+uvx marimo edit --sandbox https://url.to/your/notebook.py
+```
+
+This is so, so, so, so powerful and convenient! Simply point `marimo` to an existing URL that constitutes the notebook, and `marimo` will clone it and run it within a sandboxed environment for you. There is also an option there to run it within a Dockerized container of its own too, so it'll be entirely fenced off from your system.
+
+## Export Marimo notebooks as Markdown, Jupyter notebook-style
+
+When I wrote my blog post on the use of the [R2D2 prior and Bayesian probability of superiority calculation](https://ericmjl.github.io/blog/2025/4/3/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/), I used `marimo` alongside `uvx` to write the post with prose alongside code. One thing I wanted to do was to export it as a Markdown file with cell execution outputs, but Marimo's markdown exports don't carry the capability to do so natively.
+
+Pre-requisites:
+
+1. Make sure that your notebooks contain `nbformat` as part of its PEP723-style dependency declaration, and
+2. Make sure you have `uv` installed on your system.
+
+Firstly, export Marimo notebook while including outputs to a Jupyter notebook:
+
+```bash
+uvx marimo export ipynb /path/to/notebook.py -o /path/to/notebook.ipynb --include-outputs --sandbox
+```
+
+Secondly, export the Jupyter notebook to Markdown:
+
+```bash
+uvx --with nbconvert --from jupyter-core jupyter nbconvert --to markdown /path/to/notebook.ipynb
+```
+
+And in this way, your notebook will be exportable to Markdown with outputs from the notebook cells. It took me a little while to figure this out, but now that I did, I'm glad I have it as an option, as I can now write entire notebooks in Marimo notebooks and have them exportable to my blog or eBooks.
+
+## Serve a marimo notebook as a Modal app
+
+As it turns out, with Modal's ability to serve up _any_ arbitrary web server, we can deploy Marimo notebooks to Modal easily.
+
+Given a Marimo notebook that looks like this:
+
+```python
+# file: demo.py
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "anthropic==0.49.0",
+#     "pandas==2.2.3",
+# ]
+# ///
+
+import marimo
+
+__generated_with = "0.12.2"
+app = marimo.App(width="medium", layout_file="layouts/demo.grid.json")
+
+
+@app.cell
+def _():
+    import pandas as pd
+    return (pd,)
+
+
+@app.cell
+def _(pd):
+    data = {
+        'Name': ['John', 'Emma', 'Michael', 'Sarah', 'David'],
+        'Age': [25, 30, 35, 28, 32],
+        'City': ['New York', 'London', 'Paris', 'Tokyo', 'Berlin'],
+        'Salary': [50000, 60000, 75000, 55000, 65000]
+    }
+
+    df = pd.DataFrame(data)
+    df
+    return data, df
+
+
+if __name__ == "__main__":
+    app.run()
+```
+
+And a Modal deployment script that looks like this:
+
+```python
+# file: deployment.py
+import modal
+
+image = (
+    modal.Image.debian_slim()
+    .pip_install(["marimo", "uv"])
+    .add_local_file("demo.py", "/app/demo.py", copy=True)
+    .add_local_dir("layouts", "/app/layouts", copy=True)
+    .workdir("/app")
+)
+
+app = modal.App(name="marimo-app")
+
+
+@app.function(image=image, allow_concurrent_inputs=100)
+@modal.web_server(8000, startup_timeout=60)
+def marimo_app():
+    print("Hello, World!")
+    import subprocess
+
+	# Port must match the web_server port, and host must be 0.0.0.0 for this to work.
+    cmd = "uvx marimo run demo.py --sandbox --port 8000 --host 0.0.0.0 --headless"
+    subprocess.Popen(cmd, shell=True)
+```
+
+One can iterate quickly on the notebook in Marimo, and then once you're ready, check that the deployment works (for fast iteration):
+
+```bash
+modal serve deployment.py
+```
+
+And to do the final deployment (best done via GitHub CI/CD):
+
+```bash
+modal deploy deployment.py
+```
+
+This gives you an outlet to deploy Marimo apps in a completely serverless fashion. Super good for runtime costs!
+
+## What one needs to get used to
+
+Here are some things that I know I had to get used to with Marimo:
+
+1. The keybindings are different from Jupyter notebooks. I can't just `Esc+a` or `Esc+b` to quickly add a new cell above or below my current cell. `Cmd+Enter` is what's used, not `Ctrl+Enter`. Having default keybindings that were different was a weird design choice, and I would love to see keybinding "profiles" enabled on Marimo that let me quickly switch them out to be Jupyter-compatible. Specifically, the ones I really want to have are:
+	1. `Esc+a`/`Esc+b` to quickly switch from cell editing mode to cell selection mode, and then to add above/below current cell,
+	2. `Enter` to go from cell selection mode to cell editing mode,
+	3. `Ctrl+Enter` to execute a cell,
+	4. `Cmd+I` or `Cmd+K` to reveal the prompt for cell generation mode with AI,
+2. Reactive execution takes some time to get used to, but once you do, you'll never want to work without it. It's a bit like AI-assisted coding at this point.
+3. AI-assistance requires you to decide whether to pass in the whole notebook as context or not. I think it should be turned on by default.
+4. Marimo has a UI builder built-in, which is nice, but is a bit clunky to get used to. Perhaps it's because I'm not used to building UIs, and prefer building CLIs. I can definitely see others finding it to be a wholesome front-end solution though. It's nice to have the toolkit built into the notebook system.
+---
+pub_date: 2025-04-08
+---
+twitter_handle: ericmjl
+---
+tags:
+
+marimo
+reactive notebooks
+uv
+deployment
+serverless
+data science
+modal
+---
+summary: In this blog post, I share my experience with Marimo notebooks, highlighting their fully reactive nature and self-contained environments. I discuss how to run Marimo without installation using `uv`, and the benefits of AI-assisted coding. I also cover exporting notebooks to Markdown and deploying them as Modal apps. While Marimo's keybindings differ from Jupyter, its reactive execution and UI builder offer unique advantages. Curious about how Marimo can transform your coding workflow?
