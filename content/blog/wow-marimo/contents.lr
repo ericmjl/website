@@ -181,8 +181,42 @@ modal serve deployment.py
 
 And to do the final deployment (best done via GitHub CI/CD):
 
-```bash
-modal deploy deployment.py
+```yaml
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+      MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+      DEPLOY_ENV: ${{ github.event_name == 'pull_request' && 'test' || 'main' }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Install Modal
+        run: |
+          uv tool install modal
+      - name: Deploy job
+        run: |
+          echo "Deploying with $DEPLOY_ENV environment"
+          modal deploy deployment.py -e $DEPLOY_ENV
 ```
 
 This gives you an outlet to deploy Marimo apps in a completely serverless fashion. Super good for runtime costs!
