@@ -8,7 +8,7 @@ I have been using Marimo notebooks recently, and I'm thoroughly impressed. There
 
 ## Run Marimo... without ever installing it
 
-Thanks to `uv`, we can run `marimo` without every needing to explicitly install it. This is a major upgrade from installing it with `pip`/`conda` and having to remember where on my [PATH environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/) `marimo` is. No more asking the question, "Did I install it in my base conda environment? Or was it installed in another env?"
+Thanks to `uv`, we can run `marimo` without ever needing to explicitly install it. This is a major upgrade from installing it with `pip`/`conda` and having to remember where on my [PATH environment variable](https://ericmjl.github.io/essays-on-data-science/software-skills/environment-variables/) `marimo` is. No more asking the question, "Did I install it in my base conda environment? Or was it installed in another env?"
 
 To do this, with `uv` installed on your `PATH`:
 
