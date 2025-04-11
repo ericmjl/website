@@ -153,7 +153,7 @@ import modal
 
 image = (
     modal.Image.debian_slim()
-    .pip_install(["marimo", "uv"])
+    .pip_install(["uv"])
     .add_local_file("demo.py", "/app/demo.py", copy=True)
     .add_local_dir("layouts", "/app/layouts", copy=True)
     .workdir("/app")
