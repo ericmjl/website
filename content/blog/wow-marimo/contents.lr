@@ -60,6 +60,27 @@ def _():
 # ...the rest of the notebook below...
 ```
 
+## Install local package in editable mode
+
+You can interact with your local package in editable mode with Marimo notebooks. To do so you can add the package using the `packages` tab in the UI:
+
+```bash
+-e <package-name> @ .
+```
+
+It will be installed in editable mode, and it will be added to the in-line script metadata:
+
+```python
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "<package-name>==<version-in-pyproject.toml>",
+#     "marimo",
+#     ...
+# ]
+# ///
+```
+
 ## Enable AI assistance with Marimo notebooks
 
 At this point, for anyone experienced enough in code writing, writing code with AI assistance is pretty much table stakes. (If you are just starting out, I would still encourage you to seek out a human mentor to teach you good patterns for writing reliable code!) Marimo has support for AI-assisted coding, and though it has some rough spots, I think it's worth taking a look at.
