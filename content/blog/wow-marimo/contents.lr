@@ -242,6 +242,8 @@ jobs:
 
 This gives you an outlet to deploy Marimo apps in a completely serverless fashion. Super good for runtime costs!
 
+But Modal apps can run in WASM already, though, so why bother? It turns out not every Python package is built with WASM as a target or has issues running in WASM (PyMC is one of the latter), so this gives us an alternative way of sharing notebooks with others.
+
 ## What one needs to get used to
 
 Here are some things that I know I had to get used to with Marimo:
