@@ -1,0 +1,114 @@
+title: Good practices for AI-assisted development from a live protein calculator demo
+---
+author: Eric J. Ma
+---
+body:
+
+[In a previous blog post](/blog/2025/4/2/how-to-standardize-data-science-ways-of-working-to-unlock-your-teams-creativity/), I explored how standardization helps data science teams fly and actually unleashes creativity rather than constraining it. Here, I'd like to share my experience from a live coding demonstration I gave at BioIT World 2025 as part of the AI in Software Engineering track.
+
+## What I built
+
+During my presentation, I built a protein mass spectrometry calculator tool live in front of the audience. This command-line tool mirrors the delivery model that I helped co-design at work, where we typically deliver our solutions as command-line tools. For this demonstration, I specifically chose to build a tool that simulates proteolytic digests and calculates mass spectra.
+
+The goal was to create a tool that could:
+
+- Accept a protein sequence input in various file formats
+- Simulate proteolytic digestion
+- Calculate what the mass spectra would look like
+- Display results as a plot or PNG file
+
+I wanted this tool to have three interfaces:
+
+1. A Python library for notebook interaction
+2. A command-line interface using the Python library
+3. A web frontend backed by an API (though I didn't implement this during the demo)
+
+## Starting with structure
+
+I began by scaffolding a new project repository using my personal open-source tool called [`pyds-cli`](). This automatically creates a standardized project structure - something I emphasized is critical for collaborative data science work.
+
+"Standardization is really important for a data science team to fly," I explained. "We've standardized our ways of working such that every project looks pretty much exactly the same."
+
+The key design principle here is consistency in interface while maintaining flexibility in implementation. As I noted during the presentation, "the project looks the same, but underneath the hood, what methods you use, what plotting packages you like, what algorithms you choose, they don't matter. You do what you need." This standardization means that when someone else needs to jump in and help with a project, they can do so without wasting time figuring out how things are organized. The familiar structure lets them focus immediately on the substance of the work rather than deciphering a new system.
+
+Far from constraining creativity, this standardization enables it by removing unnecessary cognitive overhead. Data scientists can concentrate on solving problems instead of reinventing project structures and interfaces for each new initiative.
+
+## Design first, code second
+
+Instead of diving straight into "vibe coding" (coding without clear direction), I started with a design document. I dictated my requirements to the AI assistant:
+
+- The functionality I needed
+- The three interfaces I wanted
+- The overall architecture
+
+The AI generated a comprehensive design document that included:
+
+- Project overview
+- Functional requirements
+- Architecture design
+- Key modules (parsers, digestion simulation, mass spec calculation, visualization)
+- Usage patterns
+
+As I reviewed this document, I noted areas where I lacked expertise: "I don't have enough expertise to evaluate this. Got to talk with a biologist or mass spec expert." This self-awareness is crucial when working with AI tools to ensure that you don't end up building something with a fundamental logical error.
+
+## Implementing with AI assistance
+
+After reviewing the design, I switched to using the AI agent mode to implement the library and command-line interface. The agent created:
+
+- Parsers for protein sequences
+- A digestion module with support for various enzymes
+- Mass spec calculation functionality
+- Visualization capabilities
+- A command-line interface
+
+What would have taken me about three days of work was accomplished in minutes. However, I emphasized that this wasn't the end of the process - I would normally spend at least an hour or two reviewing the code to ensure it was correct and identify knowledge gaps.
+
+## The final product
+
+When I tried to demonstrate the tool's functionality, I ran into some issues - a common occurrence in live demos! In my case, it was a package dependency problem. As I joked to the audience, "It is these moments like these that make me go, alright, I'm going to pull out the cooking show style thing and switch over to the pre-baked, already-working thing that I have prepared for everybody."
+
+This "cooking show mode" saved the demo, allowing me to showcase the working version I had prepared beforehand:
+
+- Calculating protein mass
+- Performing trypsin digestion
+- Outputting mass/charge values
+- Generating a visualization of the mass spectrum
+
+To the audience's applause, I concluded with the lessons learned.
+
+## Key lessons learned
+
+Throughout this exercise, I noted several important principles for effective AI collaboration. **Context is key** - the more contextual information you provide to AI, the better its output. As Michael Smallegen had mentioned in his preceding lightning talk, trying to vibe code from scratch with minimal context would inevitably result in "spaghetti" code that's difficult to maintain.
+
+Even as data scientists, we need to **apply software development judgment** to the process. Data scientists who can build the operational software around their analytical work minimize handoff delays and dependencies on other teams. AI assistance significantly lowers the energy barrier to making this software work, but without critical oversight and software development principles, AI-generated code can quickly become unmaintainable. Throughout the demo, I found myself constantly evaluating the code against established patterns and identifying areas where I lacked expertise and needed to consult with specialists.
+
+**Interactive communication enhances development**. During the demo, I discovered that dictating my requirements was faster than typing, and AI tools acted like "an intellectual sparring partner" to help clarify what I really needed. Even when my initial instructions weren't perfectly formed, the back-and-forth conversation helped refine my thinking as I worked through the problem.
+
+**Documentation emerged as another crucial advantage with these patterns**. One powerful aspect of this development process was getting comprehensive documentation without having to write it myself - a task that often gets neglected in rapid development cycles.
+
+My ex-colleague Matt Whitfield, who now works at Dash Bio, has taken this approach further with **requirements-driven development**, where requirements become part of the codebase itself, serving as context for both humans and AI. This seamless integration of specifications and implementation creates a powerful feedback loop.
+
+When used thoughtfully, AI tools can dramatically accelerate development while still allowing us to apply our domain expertise and judgment. The key is **maintaining human agency** in the process - using AI as a powerful assistant rather than letting it take over completely.
+
+## One more thing: the repository
+
+I put the repository up here for anyone who wants to explore it: [https://github.com/ericmjl/protein-mass-spec-calculator](https://github.com/ericmjl/protein-mass-spec-calculator).
+
+---
+pub_date: 2025-04-19
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my experience from a live coding demo at BioIT World 2025, where I built a protein mass spectrometry calculator tool. I emphasize the importance of standardization in data science, starting with a design document, and using AI assistance for rapid development. Despite a live demo hiccup, I showcased the tool's capabilities and highlighted key lessons in AI collaboration, such as the value of context and interactive communication. How can AI tools enhance your development process while maintaining human oversight and creativity?
+---
+tags:
+
+standardization
+ai
+coding
+protein
+mass
+tools
+project
+collaboration
+development
