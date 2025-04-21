@@ -60,6 +60,30 @@ def _():
 # ...the rest of the notebook below...
 ```
 
+Also, you can specify alternate sources in-line, with this example coming from my Network Analysis Made Simple repository:
+
+```python
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "ipython==9.1.0",
+#     "marimo",
+#     "matplotlib==3.10.1",
+#     "nams==0.0.2",
+#     "networkx==3.4.2",
+#     "numpy==2.2.5",
+#     "pyprojroot==0.3.0",
+#     "tqdm==4.67.1",
+# ]
+# [[tool.uv.index]]
+# name = "ericmjl-personal-packages"
+# url = "https://ericmjl--pypiserver-server.modal.run/simple/"
+# explicit = true
+# [tool.uv.sources]
+# nams = { index = "ericmjl-personal-packages" }
+# ///
+```
+
 ## Install local package in editable mode
 
 You can interact with your local package in editable mode with Marimo notebooks. To do so you can add the package using the `packages` tab in the UI:
