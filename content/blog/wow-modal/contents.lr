@@ -1,0 +1,98 @@
+title: Wow, Modal!
+---
+author: Eric J. Ma
+---
+body:
+
+I've finally got back to playing with Modal, and I'm thoroughly impressed.
+
+Stuff you can do with Modal are a dime a dozen, and their docs are so good and chock full of real-life examples that I won't reiterate them here. I instead wanted to highlight some of the things I've tried that were useful to me.
+
+## Deploy entire web apps on Modal
+
+My recent experiments with Modal are to use it as a PaaS, where I deploy whole apps onto Modal backed by a SQLite database on a Modal Volume. This turns out to be an uber cost-efficient way to deploy stuff -- fully serverless with no constitutively-running server.
+
+My previous stack was Docker + a self-hosted Dokku instance on DigitalOcean, and while I was able to get it running after a few tries, it was hard for me to nail down the patterns because of the sheer number of manual steps involved. With Modal, the simplicity of configuration-as-Python (for someone who is familiar with Python) coupled with very simple CI/CD configuration makes this super easy for solo builders to quickly ship deployments on every commit.
+
+To show an example, I hosted a quick PyPI server with Basic Auth on Modal through [this git repository](https://github.com/ericmjl/modal-pypi-server). If you study the repository, you'll also see the endpoints created for registering a user (using an authentication token that should only be known by administrators). Moreover, the CI/CD pipelines allow me to re-deploy the app fresh on each commit to `main`. While I didn't necessarily put the highest degree of security on it, the deployed PyPI server can get the job done if one just needs to quickly stand up one for internal packages.
+
+## Host Ollama with low latency
+
+One of the most exciting use cases I've found is deploying Ollama on Modal with remarkably low latency. After some experimentation with [this repository](https://github.com/ericmjl/ollama-on-modal/blob/main/endpoint_v2.py), I was able to get a super responsive setup by using a Modal volume to host the model weights.
+
+The architecture is straightforward but powerful:
+
+1. Create a Modal function dedicated to downloading and pre-caching LLMs on a Modal volume
+2. Run an Ollama web endpoint on Modal that accesses these cached models
+3. Benefit from Modal's GPU infrastructure without the overhead of spinning up your own instances
+
+What makes this particularly compelling is the cost efficiency. Rather than maintaining a dedicated GPU instance 24/7, Modal lets you pay only for what you use while still keeping your models readily available thanks to the persistent volume storage. Ollama's container also loads very quickly from the persistent volume, giving me *at most* seconds of wait time for larger models like Mistral Small 3.1 when I send an API call over the wire.
+
+To test this API, I did two experiments: (a) I connected to it using OpenWebUI (running locally, though in principle, this can be run on Modal as well), and (b) through LlamaBot. In both cases, all I needed to do was to provide `https://<my-modal-app-service-url>.modal.run` (without a trailing `/`!) as the API endpoint to hit, and it worked seamlessly:
+
+```python
+bot = SimpleBot(
+    "You are an expert user of Git.",
+    model_name="ollama_chat/llama3",
+    temperature=0.0,
+    api_base=os.getenv("OLLAMA_API_BASE"),
+    stream=True,
+)
+diff = 'diff --git a/llamabot/bot/model_dispatcher.py...'
+bot(write_commit_message(diff))
+```
+
+The entire setup requires surprisingly little code—just define your volumes, create functions for model management, and set up the web endpoint. Modal handles all the complex infrastructure orchestration behind the scenes, letting you focus on actually using the models rather than maintaining them.
+
+*My first contribution to the Modal examples gallery was this exact one! You can find it [here](https://github.com/modal-labs/modal-examples/pull/1138).*
+
+## Spin up a "serverless workstation"
+
+I also thought of asking the question: can we create a serverless cloud-based workstation?
+
+If this term confuses you, let me explain.
+
+The heart of a workstation is nothing more than a persistent hard disk that stores user-level configuration inside their home directory. RAM, CPU, and GPU are fungible and swappable; what makes a "workstation" feel at home is the level of customization you can put into it to make it feel like your own machine. My gut told me that we should be able to do this as well on Modal, and the answer is yes!
+
+My implementation uses a Debian-based container with VSCode, Git, and both `uv` and `pixi` pre-installed. The magic happens with three Modal volumes that persist between sessions: one for VSCode settings, another for server data, and a third for my code repositories.
+
+VSCode runs in "tunnel" mode, which means I can securely access my development environment from any device with a web browser. I can clone repositories to the persistent `/root/_repos` directory, install all my favorite extensions, and use Pixi to manage Python environments for different projects.
+
+To keep costs low, I configured the server to automatically time out after 5 minutes of inactivity. The flexibility to adjust RAM, CPU, and even GPU allocations based on what I'm working on has been incredibly useful—lightweight coding sessions can use minimal resources, while data processing tasks can scale up as needed.
+
+I wouldn't generally recommend doing this because you already have access to interactive GPU compute via Modal functions, so in principle, it's easy for you to primarily work out of your laptop and burst to the cloud through modal Functions. Nonetheless, it was fun to try to replicate some of the architectures that I've seen at work. From the Slack community channel, I can see there may be thought put into serverless-based interactive work, and I'm excited for that direction! And if you're curious about how I did it, check it out [at this repo](https://github.com/ericmjl/modal-vscode-workstation).
+
+## What Modal did so well
+
+What impressed me most about Modal is how they've dramatically simplified cloud infrastructure in several key ways. First, they made volume management intuitive—you can spin up persistent storage using code and easily transfer data to and from it with minimal fuss (e.g. using the CLI). The resource specification is refreshingly straightforward too; just declare what you need in Python code and Modal handles the rest.
+
+Modal truly shines in how it unifies abstractions that AWS spreads across multiple services. Instead of juggling between Lambda, Batch, ECS, and EC2, Modal gives you a single "function" concept that can transform into various types of web endpoints as needed. This simplification makes a world of difference for productivity.
+
+I appreciate their approach to secrets management. You specify env vars using `.env` during the image build, and you specify secrets on the web UI. Their configuration-as-Python-code philosophy keeps makes it super intuitive to declare infrastructure as code, reminiscent of Marimo notebooks and Python scripts following PEP723 standards.
+
+Perhaps most underrated is how Modal makes debugging a program super simple. With a simple `modal shell` command, I can inspect the environment directly. This might sound minor, but as someone who's wrestled with Linux systems before, knowing where everything lives is often the biggest hurdle to overcome. And to do it on the remote container itself, in a live session, is uber enabling.
+
+## Show me the repos again
+
+- [Modal PyPI server](https://github.com/ericmjl/modal-pypi-server)
+- [Ollama on Modal](https://github.com/ericmjl/ollama-on-modal/blob/main/endpoint_v2.py)
+- [Serverless workstation](https://github.com/ericmjl/modal-vscode-workstation)
+---
+pub_date: 2025-04-26
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my experiences with Modal, a platform that simplifies cloud infrastructure. I discuss deploying web apps and hosting Ollama with low latency using Modal's cost-efficient, serverless solutions. I also explore creating a 'serverless workstation' with persistent storage and flexible resource allocation. Modal's intuitive volume management, unified abstractions, and easy debugging make it a standout choice for developers. Curious about how Modal can transform your cloud projects?
+---
+tags:
+
+modal
+serverless
+pypi
+ollama
+gpu
+vscode
+storage
+cloud
+deployment
+cicd
