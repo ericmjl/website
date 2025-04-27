@@ -72,6 +72,8 @@ I appreciate their approach to secrets management. You specify env vars using `.
 
 Perhaps most underrated is how Modal makes debugging a program super simple. With a simple `modal shell` command, I can inspect the environment directly. This might sound minor, but as someone who's wrestled with Linux systems before, knowing where everything lives is often the biggest hurdle to overcome. And to do it on the remote container itself, in a live session, is uber enabling.
 
+Finally... the pricing! Every other PaaS that I've seen charges a flat fee *per month per app*. For an app that gets little usage but for which I want to be available on-demand, that's not worthwhile for me. With Modal's free tier, we have 8 web endpoints that we can deploy, for which their usage cost is entirely determined by _usage_ alone. That's the right way to do the cloud.
+
 ## Show me the repos again
 
 - [Modal PyPI server](https://github.com/ericmjl/modal-pypi-server)
