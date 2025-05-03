@@ -20,7 +20,7 @@
 
 import marimo
 
-__generated_with = "0.12.2"
+__generated_with = "0.13.0"
 app = marimo.App(width="medium")
 
 
@@ -56,6 +56,13 @@ def _(mo):
     return
 
 
+@app.cell
+def _():
+    import pymc as pm
+
+    return (pm,)
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
@@ -74,13 +81,6 @@ def _(mo):
         """  # noqa: E501
     )
     return
-
-
-@app.cell
-def _():
-    import pymc as pm
-
-    return (pm,)
 
 
 @app.cell(hide_code=True)
@@ -113,7 +113,6 @@ def _():
     # Define parameters
     n_experiments = 3
     n_replicates = 2
-    n_proteins_per_exp = 40
     n_crossover = 4
 
     # Create protein names
@@ -163,28 +162,7 @@ def _():
     # Convert to DataFrame
     df = pd.DataFrame(data)
     df
-    return (
-        base_values,
-        control,
-        crossover_proteins,
-        data,
-        df,
-        exp,
-        exp_effects,
-        exp_proteins,
-        n_crossover,
-        n_experiments,
-        n_proteins_per_exp,
-        n_replicates,
-        np,
-        other_proteins,
-        p,
-        pd,
-        protein,
-        rep,
-        rep_effects,
-        value,
-    )
+    return df, np, pd
 
 
 @app.cell(hide_code=True)
@@ -239,7 +217,7 @@ def _(df):
     plt.title("Activity for Controls and Crossover Samples")
     plt.ylabel("Fluorescence")
     plt.gca()
-    return filtered_df, mask, plt, sns
+    return plt, sns
 
 
 @app.cell(hide_code=True)
@@ -294,69 +272,48 @@ def _(mo):
 @app.cell
 def _(df, np, pd, pm):
     def _():
-        # Create categorical indices
+        # create categorical indices
         exp_idx = pd.Categorical(df["Experiment"]).codes
         rep_idx = pd.Categorical(df["Replicate"]).codes
         prot_idx = pd.Categorical(df["Protein"]).codes
 
-        # Define coordinates for dimensions
+        # define coords for dimensions
         coords = {
             "experiment": df["Experiment"].unique(),
             "replicate": df["Replicate"].unique(),
             "protein": df["Protein"].unique(),
+            "component": ["experiment", "replicate", "protein"],
         }
 
         with pm.Model(coords=coords) as model:
-            # Explicitly define R² prior (core of R2D2)
-            r_squared = pm.Beta("r_squared", alpha=1, beta=1)
-
-            # Global parameters
-            global_mean = pm.Normal(
-                "global_mean", mu=7, sigma=1
-            )  # log scale for fluorescence
-
-            # Prior on total variance, which will be scaled by R²
-            # before being decomposed into components.
+            # 1. residual variance (σ²) stands alone
             sigma_squared = pm.HalfNormal("sigma_squared", sigma=1)
+            residual_sd = pm.Deterministic("residual_sd", pm.math.sqrt(sigma_squared))
 
-            # Global variance derived from R² and residual variance
-            # For normal models: W = sigma² * r²/(1-r²)
-            global_var = pm.Deterministic(
-                "global_var", sigma_squared * r_squared / (1 - r_squared)
-            )
+            # 2. R² prior and induced total signal variance W
+            r_squared = pm.Beta("r_squared", alpha=1, beta=1)
+            W = pm.Deterministic("W", sigma_squared * r_squared / (1 - r_squared))
 
-            # R2D2 decomposition parameters
-            # 4 components: experiment, replicate (nested in experiment), protein,
-            # and unexplained
-            props = pm.Dirichlet("props", a=np.ones(4))
+            # 3. split W among the three signal components
+            props = pm.Dirichlet("props", a=np.ones(3), dims="component")
+            exp_var, rep_var, prot_var = props * W
 
-            # Component variances (for interpretability)
-            exp_var = pm.Deterministic("exp_var", props[0] * global_var)
-            rep_var = pm.Deterministic("rep_var", props[1] * global_var)
-            prot_var = pm.Deterministic("prot_var", props[2] * global_var)
-            unexplained_var = pm.Deterministic("unexplained_var", props[3] * global_var)
-
-            # Component standard deviations
+            # component standard deviations
             exp_sd = pm.Deterministic("exp_sd", pm.math.sqrt(exp_var))
             rep_sd = pm.Deterministic("rep_sd", pm.math.sqrt(rep_var))
             prot_sd = pm.Deterministic("prot_sd", pm.math.sqrt(prot_var))
-            unexplained_sd = pm.Deterministic(
-                "unexplained_sd", pm.math.sqrt(unexplained_var)
-            )
 
-            # Component effects
+            # 4. group effects
             exp_effect = pm.Normal("exp_effect", mu=0, sigma=exp_sd, dims="experiment")
             rep_effect = pm.Normal(
                 "rep_effect", mu=0, sigma=rep_sd, dims=("experiment", "replicate")
             )
             prot_effect = pm.Normal("prot_effect", mu=0, sigma=prot_sd, dims="protein")
 
-            # Protein activity (what we're ultimately interested in)
-            prot_activity = pm.Deterministic(  # noqa: F841
-                "prot_activity", global_mean + prot_effect, dims="protein"
-            )
+            # global mean on log scale
+            global_mean = pm.Normal("global_mean", mu=7, sigma=1)
 
-            # Expected value
+            # expected value for each observation
             y_hat = (
                 global_mean
                 + exp_effect[exp_idx]
@@ -364,26 +321,30 @@ def _(df, np, pd, pm):
                 + prot_effect[prot_idx]
             )
 
-            # Calculate model R² directly (for verification)
-            model_r2 = pm.Deterministic(  # noqa: F841
+            # optional: compute implied model R² for checking
+            pm.Deterministic(
                 "model_r2",
                 (exp_var + rep_var + prot_var)
-                / (exp_var + rep_var + prot_var + unexplained_var),
+                / (exp_var + rep_var + prot_var + sigma_squared),
             )
 
-            # Likelihood
-            y = pm.Normal(  # noqa: F841
-                "y", mu=y_hat, sigma=unexplained_sd, observed=np.log(df["Fluorescence"])
+            # 5. likelihood uses only the residual_sd
+            pm.Normal(
+                "y",
+                mu=y_hat,
+                sigma=residual_sd,
+                observed=np.log(df["Fluorescence"]),
             )
 
-            # Sample
+            # sample
             trace = pm.sample(
                 2000, tune=1000, return_inferencedata=True, nuts_sampler="nutpie"
             )
+
         return model, trace
 
     model, trace = _()
-    return model, trace
+    return (trace,)
 
 
 @app.cell(hide_code=True)
@@ -431,7 +392,7 @@ def _(trace):
     axes_posterior_props.flatten()[2].set_title("replicate")
     axes_posterior_props.flatten()[1].set_title("protein")
     axes_posterior_props.flatten()[3].set_title("unexplained")
-    return axes_posterior_props, az
+    return (az,)
 
 
 @app.cell(hide_code=True)
@@ -448,14 +409,14 @@ def _(mo):
 
 @app.cell
 def _(az, trace):
-    az.plot_posterior(trace, var_names=["model_r2"])
+    az.plot_posterior(trace, var_names=["model_r2", "r_squared"])
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""Taken together, we can interpret that the model fits the data very well (`model_r2` close to 1), but it is concerning to me that protein only explains 19% of the variation in readout, while experiment and replicate explains more than 70% of the output variation, which signals to me that the measurements are not particularly tight, and a lot could be done to control experiment-to-experiment variation."""  # noqa: E501
+        r"""Taken together, we can interpret that the model fits the data very well (`model_r2` close to 1), but it is concerning to me that protein only explains 19% of the variation in readout, while experiment and replicate explains more than 70% of the output variation, which signals to me that the measurements are not particularly tight, and a lot could be done to control experiment-to-experiment variation. Additionally, the fact that our `model_r2` and `r_squared` parameters are self-consistent is reassuring as well."""  # noqa: E501
     )
     return
 
@@ -476,9 +437,9 @@ def _(mo):
 
 @app.cell
 def _(az, trace):
-    ax = az.plot_forest(trace.posterior["prot_activity"])[0]
+    ax = az.plot_forest(trace.posterior["prot_effect"])[0]
     ax.set_xlabel("log(protein activity)")
-    return (ax,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -539,7 +500,7 @@ def _(mo):
 def _(np, plt, sns, trace):
     def _():
         # Get posterior samples
-        prot_activity = trace.posterior["prot_activity"].values
+        prot_activity = trace.posterior["prot_effect"].values
         prot_activity_flat = prot_activity.reshape(-1, prot_activity.shape[2])
 
         # Get protein names
@@ -618,8 +579,8 @@ def _(np, trace):
     from tqdm.auto import tqdm
 
     def _():
-        n_proteins = trace.posterior["prot_activity"].shape[-1]
-        prot_activity = trace.posterior["prot_activity"].values.reshape(-1, n_proteins)
+        n_proteins = trace.posterior["prot_effect"].shape[-1]
+        prot_activity = trace.posterior["prot_effect"].values.reshape(-1, n_proteins)
 
         superiority_matrix = np.zeros((n_proteins, n_proteins))
 
@@ -632,7 +593,7 @@ def _(np, trace):
         return superiority_matrix
 
     superiority_matrix = _()
-    return superiority_matrix, tqdm
+    return (superiority_matrix,)
 
 
 @app.cell(hide_code=True)
@@ -732,7 +693,7 @@ def _(np, plt, sns, superiority_matrix, trace):
 
         # Get protein activity statistics from trace
         protein_activity_mean = (
-            trace.posterior["prot_activity"].mean(dim=["chain", "draw"]).values
+            trace.posterior["prot_effect"].mean(dim=["chain", "draw"]).values
         )
 
         # Create scatter plot

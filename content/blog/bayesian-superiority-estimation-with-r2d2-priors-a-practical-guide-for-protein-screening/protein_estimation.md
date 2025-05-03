@@ -1,46 +1,9 @@
-title: Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening
----
-author: Eric J. Ma
----
-body:
+```
+import marimo as mo
 
-Recently, I've been thinking and writing a lot about statistics.
-It's because good statistical practice is both under-rated, under-taught, and under-valued
-amongst machine learning practitioners _and_ laboratory scientists,
-and yet it underpins the ability of machine learning practitioners in life sciences
-to build high performing machine learning models that accelerate decisions in the lab.
-It also enables laboratory scientists to design experiments that yield interpretable,
-and actionable results.
+```
 
-My prior experience doing the full spectrum of laboratory and computational science
-is one of the reasons why it pains me to see potentially good data go to waste
-due to poor experimental design and statistical analysis.
-Without good statistical practice underlying the data generating process --
-and by that I mean good experimental design,
-and explicit quantification of uncertainty --
-all ML models become equal: equally bad.
-
-In this blog post, I want to show you how to use Bayesian methods
-to tackle two critical questions:
-
-1. Is our experimental setup actually measuring the effect we care about
-   (vs. experimental noise)?
-2. Which candidates are truly superior to others?
-
-As always, I go back to my favorite example: screening proteins.
-But as you read, note the generalities: they aren't specific to protein screening at all!
-
-----
-
-> Note: The original `marimo` notebook can be found [here](./protein_estimation.py).
-> If there are discrepancies between my blog post and the original marimo notebook,
-> I note that the original notebook is correct.
-> To run it, download it, and then execute:
->
-> ```bash
-> uvx marimo edit --sandbox https://ericmjl.github.io/blog/2025/4/3/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/protein_estimation.py
-> ```
->
+# Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening
 
 When screening hundreds of molecules, proteins, or interventions,
 two critical questions often arise:
@@ -58,7 +21,7 @@ Both techniques generalize to drug discovery, material science,
 or any domain requiring rigorous comparison of multiple alternatives.
 
 
-```python
+```
 import pymc as pm
 ```
 
@@ -86,7 +49,7 @@ To demonstrate our approach, we'll generate synthetic data that mimics a realist
 - Measurement noise
 
 
-```python
+```
 import numpy as np
 import pandas as pd
 
@@ -277,7 +240,7 @@ where we need to separate biological signal from technical noise.
 Before modeling, let's visualize the control and crossover proteins to understand experimental variation:
 
 
-```python
+```
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -297,7 +260,7 @@ plt.gca()
 
 
 
-![png](protein_estimation_8_0.webp)
+![png](protein_estimation_files/protein_estimation_8_0.png)
 
 
 
@@ -335,7 +298,7 @@ This approach has key advantages over traditional hierarchical models:
 Here's our implementation of the model:
 
 
-```python
+```
 def _():
     # create categorical indices
     exp_idx = pd.Categorical(df["Experiment"]).codes
@@ -418,7 +381,7 @@ After fitting our model, zero divergent transitions confirm good convergence.
 Let's examine how variance is partitioned across components:
 
 
-```python
+```
 trace.sample_stats.diverging.sum()
 ```
 
@@ -806,7 +769,7 @@ of variation. This analysis suggests that improving experimental protocols to re
 would substantially improve our signal-to-noise ratio.
 
 
-```python
+```
 import arviz as az
 
 axes_posterior_props = az.plot_posterior(trace, var_names=["props"], grid=(2, 2))
@@ -818,7 +781,7 @@ axes_posterior_props.flatten()[3].set_title("unexplained")
 
 
 
-![png](protein_estimation_15_0.webp)
+![png](protein_estimation_files/protein_estimation_15_0.png)
 
 
 
@@ -827,7 +790,7 @@ These posterior plots show the distributions of the variance components. Each re
 We can also look at the total $R^2$ value, which represents the proportion of variance explained by the model:
 
 
-```python
+```
 az.plot_posterior(trace, var_names=["model_r2", "r_squared"])
 ```
 
@@ -845,14 +808,14 @@ let's examine the protein activity estimates—the "true" biological signal afte
 removing experimental noise:
 
 
-```python
+```
 ax = az.plot_forest(trace.posterior["prot_effect"])[0]
 ax.set_xlabel("log(protein activity)")
 ```
 
 
 
-![png](protein_estimation_20_0.webp)
+![png](protein_estimation_files/protein_estimation_20_0.png)
 
 
 
@@ -895,7 +858,7 @@ avoids arbitrary references, and produces an intuitive metric for decision-makin
 Let's illustrate this with a comparison between two specific proteins:
 
 
-```python
+```
 def _():
     # Get posterior samples
     prot_activity = trace.posterior["prot_effect"].values
@@ -954,7 +917,7 @@ _()
 
 
 
-![png](protein_estimation_23_0.webp)
+![png](protein_estimation_files/protein_estimation_23_0.png)
 
 
 
@@ -970,7 +933,7 @@ better than that one?"
 Now let's calculate this for all pairs of proteins to create a comprehensive superiority matrix:
 
 
-```python
+```
 from tqdm.auto import tqdm
 
 def _():
@@ -991,6 +954,18 @@ superiority_matrix = _()
 ```
 
 
+  0%|                                                                                                   | 0/95 [00:00<?, ?it/s]
+
+
+ 40%|███████████████████████████████████▌                                                     | 38/95 [00:00<00:00, 372.42it/s]
+
+
+ 80%|███████████████████████████████████████████████████████████████████████▏                 | 76/95 [00:00<00:00, 373.04it/s]
+
+
+100%|█████████████████████████████████████████████████████████████████████████████████████████| 95/95 [00:00<00:00, 372.76it/s]
+
+
 This superiority matrix gives us, for each pair of proteins (i, j), the probability
 that protein i has higher activity than protein j, incorporating all model uncertainty.
 
@@ -1001,7 +976,7 @@ significantly better than protein B with p<0.05."
 Let's visualize this matrix:
 
 
-```python
+```
 # Create heatmap
 sns.heatmap(superiority_matrix, annot=False, cmap="YlOrRd", fmt=".2f")
 plt.title("Superiority Matrix")
@@ -1010,14 +985,14 @@ plt.gca()
 
 
 
-![png](protein_estimation_27_0.webp)
+![png](protein_estimation_files/protein_estimation_27_0.png)
 
 
 
 We can rank proteins by their average probability of superiority across all comparisons:
 
 
-```python
+```
 def _():
     # Calculate average probability of superiority and sort proteins
     avg_superiority = superiority_matrix.mean(axis=1)
@@ -1053,7 +1028,7 @@ _()
 
 
 
-![png](protein_estimation_29_0.webp)
+![png](protein_estimation_files/protein_estimation_29_0.png)
 
 
 
@@ -1066,7 +1041,7 @@ To better understand how protein activity relates to superiority probability,
 let's compare their posterior mean activity with two superiority measures:
 
 
-```python
+```
 def _():
     # Calculate probability of superiority distribution for each protein
     superiority_dist = [
@@ -1109,7 +1084,7 @@ _()
 
 
 
-![png](protein_estimation_31_0.webp)
+![png](protein_estimation_files/protein_estimation_31_0.png)
 
 
 
@@ -1146,28 +1121,3 @@ drug discovery, materials science, A/B testing, clinical trials, and more.
 Bayesian methods move us beyond simplistic "winners and losers" to a nuanced
 understanding of which candidates are most likely to succeed, with what degree
 of certainty, and how we can improve our measurement process itself.
-
-And more meta-level: none of this needs fancy names.
-It's just logic and math, applied to data.
-Wasn't that what statistics was supposed to be?
-
-_With thanks to Jackie Valeri for sanity-checking the code while also learning the ins-and-outs of the R2D2 prior,
-and Virgile Andreani for first introducing me to the R2D2 prior!_
----
-pub_date: 2025-04-03
----
-twitter_handle: ericmjl
----
-tags:
-
-bayesian
-r2d2
-variance modelling
-fluorescence
-experimental design
-probability of superiority
-probabilistic modelling
-data science
-statistics
----
-summary: In this blog post, I explore how to tackle experimental noise and candidate ranking in protein screening using Bayesian methods. By employing R2D2 priors, we can decompose variance into interpretable components, helping us understand the true biological signal versus experimental artifacts. Additionally, Bayesian superiority calculation allows us to quantify the probability that one protein outperforms another, providing a more robust comparison than traditional methods. These techniques are not only applicable to protein screening but also to drug discovery, materials science, and more. Are you ready to enhance your experimental insights with Bayesian logic?
