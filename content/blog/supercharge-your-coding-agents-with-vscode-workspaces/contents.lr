@@ -24,7 +24,7 @@ Now save this setup: File → Save Workspace As. I recommend saving it outside a
 
 Here's where it gets interesting. Fire up Cursor's AI or GitHub Copilot and give it a specific prompt that references files across both repos. Try something like:
 
-"Look at the SimpleBot class in `llamabot/llamabot/bot/simplebot.py` and create a tutorial example in `building-with-llms-made-simple/notebooks/03_advanced_bot.py` that demonstrates how to use it for document summarization."
+> "Look at the SimpleBot class in `llamabot/llamabot/bot/simplebot.py` and create a tutorial example in `building-with-llms-made-simple/notebooks/03_advanced_bot.py` that demonstrates how to use it for document summarization."
 
 Your agent can now see both codebases simultaneously. It understands how your LlamaBot library works and can create coherent examples in your tutorial repo, suggesting coordinated changes across repos while maintaining consistency between your library code and tutorial examples.
 
