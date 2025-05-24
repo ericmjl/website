@@ -6,7 +6,7 @@ body:
 
 I was building out my [LLM tutorial repository](https://github.com/ericmjl/building-with-llms-made-simple) for [SciPy 2025](https://www.scipy2025.scipy.org/) and found myself constantly switching between windows—improving the [LlamaBot](https://github.com/ericmjl/llamabot) library in one window, then flipping to my tutorial repo in another to update examples that used the new features. Every time I added a new method or changed an API in LlamaBot, I had to remember to update the corresponding tutorial examples. The constant context switching was slowing me down and making it easy to miss places where the tutorial needed updates.
 
-Then I discovered something that changed how I code across repos: VSCode workspaces aren't just convenient for organizing multiple repositories, they're also game-changers for coding agents.
+Then I discovered something that changed how I code across repos: Workspaces! They aren't just convenient for organizing multiple repositories, they're also game-changers for coding agents in Cursor.
 
 When you add multiple repositories to the same workspace, your coding agent magically gains context across all your repos simultaneously. No more window switching, no more explaining relationships between codebases. Instead, your coding assistants can access code in multiple repositories at once.
 
@@ -16,7 +16,7 @@ Here's how to set this up and why it matters.
 
 ### Step 1: Create the workspace
 
-Open a blank VSCode window and immediately save it as a workspace file (File → Save Workspace As). I recommend saving it outside any repository; I keep mine as a sibling directory to my repos, like `~/github/llm-scipy-tutorial.code-workspace`.
+Open a blank Cursor/VSCode window and immediately save it as a workspace file (File → Save Workspace As). I recommend saving it outside any repository; I keep mine as a sibling directory to my repos, like `~/github/llm-scipy-tutorial.code-workspace`.
 
 Then, go to File → Add Folder to Workspace to add your first repository (my main tutorial project `~/github/building-with-llms-made-simple`), and repeat for your second repo (the companion library I was improving, `~/github/llamabot`). You'll see both folders appear in the Explorer sidebar.
 
@@ -61,7 +61,7 @@ pub_date: 2025-05-24
 ---
 twitter_handle: ericmjl
 ---
-summary: In this blog post, I share how using VSCode workspaces transformed my workflow while building a tutorial repository for SciPy 2025. By adding multiple repositories to a single workspace, I eliminated constant window switching and enabled my coding agent to access context across all repos simultaneously. This setup allows for seamless coordination between library code and tutorial examples. I provide a step-by-step guide to setting up a multi-repo workspace and offer tips for maximizing its benefits. Curious about how this can streamline your coding process and enhance your productivity?
+summary: In this blog post, I share how using Workspaces transformed my workflow while building out my tutorial repositories for SciPy 2025. By adding multiple repositories to a single workspace, I eliminated constant window switching and enabled my coding agent to access context across all repos simultaneously. This setup allows for seamless coordination between library code and tutorial examples. I provide a step-by-step guide to setting up a multi-repo workspace and offer tips for maximizing its benefits. Curious about how this can streamline your coding process and enhance your productivity?
 ---
 tags:
 
