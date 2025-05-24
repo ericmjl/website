@@ -68,10 +68,13 @@
     <hr>
 
     <i>Cite this blog post:</i>
-    <div class="hll">
+    <div class="hll" style="position: relative;">
+    <button class="copy-button" onclick="copyCitation()" title="Copy citation">
+      <span class="copy-icon">📋</span>
+    </button>
     <pre>
-<span><span style="color: darkblue; font-weight: bold">@article</span>{
-    <span style="color: black; font-weight: bold">{{ post.twitter_handle }}-{{ year }}-{{ slug.split("-")[0] }}-{{ slug.split("-")[-1] }}</span>,
+<span id="citation-text"><span><span style="color: darkblue; font-weight: bold">@article</span>{
+    <span style="color: black; font-weight: bold">{{ post.twitter_handle }}-{{ year }}-{{ slug }}</span>,
     <span style="color: green; font-weight:bold">author</span> = <span style="color: maroon">{{'{'}}{{post.author}}{{'}'}}</span>,
     <span style="color: green; font-weight:bold">title</span> = <span style="color: maroon">{{'{'}}{{ post.title }}{{'}'}}</span>,
     <span style="color: green; font-weight:bold">year</span> = <span style="color: maroon">{{'{'}}{{ year }}{{'}'}}</span>,
@@ -83,6 +86,63 @@
 }
   </span></pre>
     </div>
+
+    <script>
+    function copyCitation() {
+      const citationElement = document.getElementById('citation-text');
+      const text = citationElement.textContent;
+
+      // Create a temporary textarea element
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+
+      // Select and copy the text
+      textarea.select();
+      document.execCommand('copy');
+
+      // Remove the temporary textarea
+      document.body.removeChild(textarea);
+
+      // Visual feedback
+      const button = document.querySelector('.copy-button');
+      const originalText = button.innerHTML;
+      button.innerHTML = '<span class="copy-icon">✓</span>';
+      button.style.backgroundColor = '#4CAF50';
+
+      // Reset button after 2 seconds
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.backgroundColor = '';
+      }, 2000);
+    }
+    </script>
+
+    <style>
+    .copy-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background-color: transparent;
+      color: #666;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+
+    .copy-button:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      color: #333;
+    }
+
+    .copy-icon {
+      font-size: 14px;
+    }
+    </style>
     <hr>
     <p>
       <i>I send out a newsletter with tips and tools
