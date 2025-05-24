@@ -6,9 +6,9 @@ body:
 
 I was building out my [LLM tutorial repository](https://github.com/ericmjl/building-with-llms-made-simple) for [SciPy 2025](https://www.scipy2025.scipy.org/) and found myself constantly switching between windows—improving the [LlamaBot](https://github.com/ericmjl/llamabot) library in one window, then flipping to my tutorial repo in another to update examples that used the new features. Every time I added a new method or changed an API in LlamaBot, I had to remember to update the corresponding tutorial examples. The constant context switching was slowing me down and making it easy to miss places where the tutorial needed updates.
 
-Then I discovered something that completely changed my workflow: VSCode workspaces aren't just convenient for organizing multiple repositories—they're game-changers for coding agents.
+Then I discovered something that changed how I code across repos: VSCode workspaces aren't just convenient for organizing multiple repositories, they're also game-changers for coding agents.
 
-When you add multiple repositories to the same workspace, your coding agent magically gains context across all your repos simultaneously. No more window switching, no more explaining relationships between codebases.
+When you add multiple repositories to the same workspace, your coding agent magically gains context across all your repos simultaneously. No more window switching, no more explaining relationships between codebases. Instead, your coding assistants can access code in multiple repositories at once.
 
 Here's how to set this up and why it matters.
 
@@ -16,15 +16,17 @@ Here's how to set this up and why it matters.
 
 ### Step 1: Create the workspace
 
-Open a blank VSCode window and go to File → Add Folder to Workspace. Add your first repository (maybe your main project like `~/github/llamabot`), then repeat for your second repo (perhaps a related tutorial project like `~/github/building-with-llms-made-simple`). You'll see both folders appear in the Explorer sidebar.
+Open a blank VSCode window and immediately save it as a workspace file (File → Save Workspace As). I recommend saving it outside any repository; I keep mine as a sibling directory to my repos, like `~/github/llm-scipy-tutorial.code-workspace`.
 
-Now save this setup: File → Save Workspace As. I recommend saving it outside any repository—I keep mine as a sibling directory to my repos, like `~/github/llamabot-tutorial-workspace.code-workspace`.
+Then, go to File → Add Folder to Workspace to add your first repository (my main tutorial project `~/github/building-with-llms-made-simple`), and repeat for your second repo (the companion library I was improving, `~/github/llamabot`). You'll see both folders appear in the Explorer sidebar.
 
 ### Step 2: Watch the magic happen
 
 Here's where it gets interesting. Fire up Cursor's AI or GitHub Copilot and give it a specific prompt that references files across both repos. Try something like:
 
-> "Look at the SimpleBot class in `llamabot/llamabot/bot/simplebot.py` and create a tutorial example in `building-with-llms-made-simple/notebooks/03_advanced_bot.py` that demonstrates how to use it for document summarization."
+> "Look at @llamabot/llamabot/bot/simplebot.py and edit @building-with-llms-made-simple/notebooks/03_advanced_bot.py to update the StructuredBot example for document summarization."
+
+(If you're using VSCode instead of Cursor, just replace the @ symbols with #.)
 
 Your agent can now see both codebases simultaneously. It understands how your LlamaBot library works and can create coherent examples in your tutorial repo, suggesting coordinated changes across repos while maintaining consistency between your library code and tutorial examples.
 
