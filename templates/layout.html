@@ -38,7 +38,7 @@
 
         /* Theme toggle button styles */
         .theme-toggle {
-            position: fixed;
+            position: absolute;
             top: 20px;
             right: 20px;
             z-index: 1000;
@@ -53,6 +53,10 @@
             background-color: #333;
             color: #fff;
             border-color: #666;
+        }
+
+        .container {
+            position: relative;
         }
     </style>
     {% block highlighting %}
@@ -152,8 +156,8 @@
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
     <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
         <h1 class="logo">
             <a href="/">
                 Eric J Ma's Website
