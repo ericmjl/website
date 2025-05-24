@@ -2,3 +2,35 @@
 .blog-summary {
   padding-top: 2em;
 }
+
+/* Dark mode button overrides for pagination */
+body.dark-mode .btn,
+body.dark-mode .btn-primary,
+body.dark-mode .btn-ghost {
+  color: var(--font-color) !important;
+  background-color: var(--background-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+body.dark-mode .btn-primary {
+  background-color: var(--primary-color) !important;
+  color: var(--invert-font-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+body.dark-mode .btn-ghost {
+  background-color: transparent !important;
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+body.dark-mode .btn.disabled,
+body.dark-mode .btn:disabled {
+  opacity: 0.5;
+  color: var(--secondary-color) !important;
+}
+
+body.dark-mode .btn-primary.disabled,
+body.dark-mode .btn-primary:disabled {
+  color: #fff !important;
+}
