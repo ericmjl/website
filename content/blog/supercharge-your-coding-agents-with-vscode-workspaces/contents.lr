@@ -1,0 +1,75 @@
+title: Supercharge your coding agents with VSCode workspaces
+---
+author: Eric J. Ma
+---
+body:
+
+I was building out my [LLM tutorial repository](https://github.com/ericmjl/building-with-llms-made-simple) for [SciPy 2025](https://www.scipy2025.scipy.org/) and found myself constantly switching between windows—improving the [LlamaBot](https://github.com/ericmjl/llamabot) library in one window, then flipping to my tutorial repo in another to update examples that used the new features. Every time I added a new method or changed an API in LlamaBot, I had to remember to update the corresponding tutorial examples. The constant context switching was slowing me down and making it easy to miss places where the tutorial needed updates.
+
+Then I discovered something that completely changed my workflow: VSCode workspaces aren't just convenient for organizing multiple repositories—they're game-changers for coding agents.
+
+When you add multiple repositories to the same workspace, your coding agent magically gains context across all your repos simultaneously. No more window switching, no more explaining relationships between codebases.
+
+Here's how to set this up and why it matters.
+
+## Setting up your first multi-repo workspace
+
+### Step 1: Create the workspace
+
+Open a blank VSCode window and go to File → Add Folder to Workspace. Add your first repository (maybe your main project like `~/github/llamabot`), then repeat for your second repo (perhaps a related tutorial project like `~/github/building-with-llms-made-simple`). You'll see both folders appear in the Explorer sidebar.
+
+Now save this setup: File → Save Workspace As. I recommend saving it outside any repository—I keep mine as a sibling directory to my repos, like `~/github/llamabot-tutorial-workspace.code-workspace`.
+
+### Step 2: Watch the magic happen
+
+Here's where it gets interesting. Fire up Cursor's AI or GitHub Copilot and give it a specific prompt that references files across both repos. Try something like:
+
+"Look at the SimpleBot class in `llamabot/llamabot/bot/simplebot.py` and create a tutorial example in `building-with-llms-made-simple/notebooks/03_advanced_bot.py` that demonstrates how to use it for document summarization."
+
+Your agent can now see both codebases simultaneously. It understands how your LlamaBot library works and can create coherent examples in your tutorial repo, suggesting coordinated changes across repos while maintaining consistency between your library code and tutorial examples.
+
+### Step 3: Reopening your workspace
+
+Next time you open Cursor or VSCode, you'll see your workspace listed on the welcome screen under "Recent". Click it to instantly load all your repositories with the same folder structure and settings.
+
+## Quick tips that make this even better
+
+**Keep workspaces outside repositories:**
+I always save workspace files as siblings to my repo directories, never inside them. This prevents workspace files from accidentally getting committed and keeps things clean when you're working across multiple projects.
+
+```
+~/github/
+├── llamabot/
+├── building-with-llms-made-simple/
+└── llm-scipy-tutorial.code-workspace
+```
+
+**Quick tip on scale:**
+You can add as many repositories as you need. I've had workspaces with multiple model experiment repos, shared data utilities, and production pipelines, and Cursor's agent could reference files across all of them. When you use `@workspace` in Cursor, it considers every file in every repository. Fair warning though—I recently worked across 5 repos at work and my head was spinning even with LLM help. Sometimes less is more.
+
+**Be prescriptive with file references:**
+Prompting across repos works best when you can pinpoint exactly which file to reference or edit. In Cursor, use `@<file>` syntax, while in VSCode it's `#<file>`. This helps the agent focus on the specific files you care about rather than wandering through your entire workspace.
+
+**Use this pattern strategically:**
+This approach shines when your current project depends on functionality that was developed beforehand in other repositories. Think data science projects that depend on internal tools built by other teams, or tutorial repositories that need to stay consistent with the underlying library they're demonstrating. When you have models or analyses that depend on utilities, libraries, or frameworks developed separately, workspaces let your coding agent understand both the dependency and the dependent code simultaneously. For single-repo exploratory work, stick to regular folders.
+
+That's it. Next time you're coordinating changes across multiple data science repositories, set up a workspace and let your coding agent see the full picture.
+---
+pub_date: 2025-05-24
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how using VSCode workspaces transformed my workflow while building a tutorial repository for SciPy 2025. By adding multiple repositories to a single workspace, I eliminated constant window switching and enabled my coding agent to access context across all repos simultaneously. This setup allows for seamless coordination between library code and tutorial examples. I provide a step-by-step guide to setting up a multi-repo workspace and offer tips for maximizing its benefits. Curious about how this can streamline your coding process and enhance your productivity?
+---
+tags:
+
+vscode
+workspaces
+coding
+agents
+llamabot
+tutorial
+context
+ai
+organization
+efficient
