@@ -1,0 +1,66 @@
+title: The invisible polish of automatic model routing
+---
+author: Eric J. Ma
+---
+body:
+
+I've been using Cursor's latest updates, and while the surface-level improvements are nice—better edge rounding, refined colors, thoughtful layering—there's one change that's got me genuinely excited: automatic model routing.
+
+No more model picker. No more stopping mid-thought to decide between OpenAI's models, Claude, or whatever other model might be appropriate for my current task. Cursor just figures it out and routes my request to the right model automatically.
+
+## Why model pickers are UI bugs
+
+I remember reading somewhere (probably on Twitter, let's be honest) that model pickers are fundamentally a UI bug. The argument was simple: users shouldn't need to understand the technical differences between models to get their work done. They should just describe what they want, and the system should handle the rest.
+
+At the time, I nodded along but didn't fully appreciate how right this was until I experienced Cursor's implementation. Before this change, I was making micro-decisions about model selection multiple times per day. Should I use the faster model for this simple refactoring? Do I need the more capable model for this complex architectural question? Each decision was small, maybe taking 2-3 seconds, but they added up.
+
+## The cognitive tax of micro-decisions
+
+These tiny decisions represent what I think of as cognitive tax—small mental overhead that accumulates throughout the day. Each model selection forced a brief context switch: I had to step out of my coding flow, evaluate the complexity of my request, weigh speed versus capability, and make a choice.
+
+The individual cost was negligible. The cumulative cost was not. By the end of the day, I'd made dozens of these micro-decisions, each one pulling a small amount of mental energy away from the actual problem I was trying to solve.
+
+Cursor's automatic routing eliminates this entirely. I describe what I want, hit enter, and trust that the right model will handle it. The decision-making burden shifts from me to the system, where it belongs.
+
+## Parallels to Apple's design
+
+This reminds me of something I read about Apple's design philosophy during the Jony Ive era. The idea wasn't just about making things look beautiful—it was about removing friction at every possible level, even in places users might not consciously notice.
+
+Think about the original iPhone's lack of a keyboard. Everyone said it was crazy, that people needed physical keys. But Apple understood that the mental model of "keyboard for typing" was actually limiting. By removing the physical keyboard, they freed up space for context-sensitive interfaces that could adapt to what you were actually trying to do.
+
+Cursor's automatic model routing feels like the same kind of thinking. Instead of optimizing the model picker interface, they eliminated the need for it entirely. The best interface is often no interface at all.
+
+## The broader principle
+
+What makes this interesting isn't just that it saves me a few seconds per day. It's that it represents a shift in how we think about AI tool design. Instead of exposing the complexity of the underlying system to users, we can build intelligence into the routing layer itself.
+
+This has implications beyond just model selection. How many other micro-decisions are we forcing users to make that could be automated away? How many interface elements exist because we haven't figured out how to make them unnecessary?
+
+I suspect we'll see more of this pattern as AI tools mature. The first generation of AI interfaces were necessarily explicit—users needed to understand models, parameters, and context windows because the tools couldn't make those decisions reliably. But as the underlying systems get smarter, the interfaces can get simpler.
+
+## The invisible improvements
+
+The best improvements are often the ones you don't notice consciously but feel in your workflow. Cursor's automatic model routing is exactly this kind of enhancement. I don't think about it while I'm coding, but I feel its absence when I use other tools that still require manual model selection.
+
+This is the kind of polish that compounds. Each eliminated micro-decision, each removed point of friction, each automated choice creates space for deeper focus on the work that actually matters. It's not revolutionary on its own, but it's part of building tools that feel like extensions of thought rather than obstacles to it.
+
+The question for other AI tool builders is: what other invisible friction exists in your interfaces? What decisions are you forcing users to make that your system could handle automatically? The model picker was just the beginning.
+---
+pub_date: 2025-05-25
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore Cursor's latest update featuring automatic model routing, which eliminates the need for manual model selection. This change reduces the cognitive tax of micro-decisions, allowing me to focus more on coding. Drawing parallels to Apple's design philosophy, I discuss how removing unnecessary interfaces can enhance user experience. This shift in AI tool design suggests a future where systems handle complexity, simplifying user interactions. What other invisible frictions in AI tools could be automated away to improve our workflow?
+---
+tags:
+
+cursor
+routing
+ui
+cognitive
+ai
+automation
+apple
+workflow
+design
+improvement
