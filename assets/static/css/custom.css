@@ -34,3 +34,38 @@ body.dark-mode .btn-primary.disabled,
 body.dark-mode .btn-primary:disabled {
   color: #fff !important;
 }
+
+/* Dark mode overrides for inline code and code blocks */
+body.dark-mode code,
+body.dark-mode pre,
+body.dark-mode pre code {
+  background-color: #232326 !important;
+  color: #e8e9ed !important;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+
+body.dark-mode code {
+  padding: 0.2em 0.4em;
+  font-size: 95%;
+}
+
+/* Dark mode overrides for citation/BibTeX block */
+body.dark-mode #citation-text,
+body.dark-mode #citation-text span,
+body.dark-mode #citation-text span[style] {
+  color: #e8e9ed !important;
+}
+
+body.dark-mode #citation-text span[style*="color: darkblue"] {
+  color: #62c4ff !important;
+}
+body.dark-mode #citation-text span[style*="color: green"] {
+  color: #7fd962 !important;
+}
+body.dark-mode #citation-text span[style*="color: maroon"] {
+  color: #ffb86c !important;
+}
+body.dark-mode #citation-text span[style*="color: black"] {
+  color: #e8e9ed !important;
+}
