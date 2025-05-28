@@ -177,7 +177,13 @@ class SubstackPost(BaseModel):
     introduction: str = Field(
         ..., description="An introductory paragraph to hook the reader"
     )
-    main_content: SubstackSection = Field(..., description="The main body of the post")
+    main_content: SubstackSection = Field(
+        ...,
+        description=(
+            "A concise summary of the blog post that gives enough detail "
+            "for people to *want* to read the actual blog post."
+        ),
+    )
     conclusion: str = Field(
         ...,
         description=("A concluding paragraph summarizing key points of the blog post."),
