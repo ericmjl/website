@@ -86,15 +86,44 @@
         var copyBtn = document.getElementById("copy-btn");
         if (copyBtn) {
           copyBtn.onclick = function() {
-            navigator.clipboard.writeText(window.easyMDE.value()).then(function() {
-              var toast = document.getElementById("toast");
-              if (toast) {
-                toast.classList.add("show");
-                setTimeout(function() {
-                  toast.classList.remove("show");
-                }, 1200);
+            if (window.easyMDE && typeof window.easyMDE.value === "function") {
+              const text = window.easyMDE.value();
+              console.log("Copying to clipboard:", text); // Debug
+              if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+                navigator.clipboard.writeText(text).then(function() {
+                  var toast = document.getElementById("toast");
+                  if (toast) {
+                    toast.classList.add("show");
+                    setTimeout(function() {
+                      toast.classList.remove("show");
+                    }, 1200);
+                  }
+                }).catch(function(err) {
+                  console.error("Clipboard copy failed:", err);
+                });
+              } else {
+                // Fallback for browsers/environments without Clipboard API
+                var temp = document.createElement("textarea");
+                temp.value = text;
+                document.body.appendChild(temp);
+                temp.select();
+                try {
+                  document.execCommand("copy");
+                  var toast = document.getElementById("toast");
+                  if (toast) {
+                    toast.classList.add("show");
+                    setTimeout(function() {
+                      toast.classList.remove("show");
+                    }, 1200);
+                  }
+                } catch (err) {
+                  console.error("Fallback clipboard copy failed:", err);
+                }
+                document.body.removeChild(temp);
               }
-            });
+            } else {
+              console.error("EasyMDE not ready or .value() missing");
+            }
           };
         }
       }
