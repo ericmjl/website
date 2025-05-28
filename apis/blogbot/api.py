@@ -63,7 +63,7 @@ async def generate_post(
 
     if post_type == "linkedin":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4o", pydantic_model=LinkedInPost
+            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=LinkedInPost
         )
         print("Generating LinkedIn post...")
         social_post = bot(compose_linkedin_post(body, blog_url))
@@ -71,7 +71,7 @@ async def generate_post(
         content = social_post.format_post()
     elif post_type == "twitter":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4o", pydantic_model=TwitterPost
+            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=TwitterPost
         )
         print("Generating Twitter post...")
         social_post = bot(compose_twitter_post(body, blog_url))
@@ -79,24 +79,24 @@ async def generate_post(
         content = social_post.format_post()
     elif post_type == "substack":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4o", pydantic_model=SubstackPost
+            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=SubstackPost
         )
         social_post = bot(compose_substack_post(body, blog_url))
         content = social_post.format_post()
     elif post_type == "summary":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4o", pydantic_model=Summary
+            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=Summary
         )
         social_post = bot(compose_summary(body, blog_url))
         content = social_post.content
     elif post_type == "tags":
-        bot = StructuredBot(socialbot_sysprompt(), model="gpt-4o", pydantic_model=Tags)
+        bot = StructuredBot(socialbot_sysprompt(), model="gpt-4.1", pydantic_model=Tags)
         tags = bot(compose_tags(body))
         content = "\n".join(tags.content)
     elif post_type == "banner":
         dalle_prompt_bot = StructuredBot(
             bannerbot_dalle_prompter_sysprompt(),
-            model="gpt-4o",
+            model="gpt-4.1",
             pydantic_model=DallEImagePrompt,
         )
         dalle_prompt = dalle_prompt_bot(body).content
