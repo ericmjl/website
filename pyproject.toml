@@ -71,7 +71,7 @@ numpy = "<2"
 pydantic = ">=2.8.2,<3"
 
 [tool.pixi.feature.blogbot.pypi-dependencies]
-llamabot = ">=0.10.3"
+llamabot = { version = ">=0.12.1", extras = ["all"] }
 
 [tool.pixi.feature.devtools.dependencies]
 pre-commit = "*"
