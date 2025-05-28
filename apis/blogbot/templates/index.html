@@ -48,15 +48,90 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
     <script>
-        document.body.addEventListener('htmx:beforeRequest', function(event) {
-            console.log('Request started, spinner should show');
-            document.getElementById('spinner').style.display = 'flex';
+      function initEasyMDE() {
+        var textarea = document.getElementById("markdown-editor");
+        if (!textarea) return;
+
+        // Remove previous EasyMDE instance
+        if (window.easyMDE && window.easyMDE.toTextArea) {
+          window.easyMDE.toTextArea();
+          window.easyMDE = null;
+        }
+
+        // Remove all but the last textarea#markdown-editor (if any)
+        var wrapper = textarea.closest('.editor-wrapper') || document;
+        var allTextareas = wrapper.querySelectorAll('textarea#markdown-editor');
+        for (var i = 0; i < allTextareas.length - 1; i++) {
+          allTextareas[i].remove();
+        }
+
+        // Remove any lingering EasyMDE containers
+        var oldEditors = wrapper.querySelectorAll('.EasyMDEContainer');
+        oldEditors.forEach(function(editor) {
+          editor.remove();
         });
-        document.body.addEventListener('htmx:afterRequest', function(event) {
-            console.log('Request ended, spinner should hide');
-            document.getElementById('spinner').style.display = 'none';
+
+        window.easyMDE = new EasyMDE({
+          element: textarea,
+          spellChecker: false,
+          status: false,
+          minHeight: "300px",
+          toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "preview", "guide"],
+          autoDownloadFontAwesome: true
         });
+
+        // Copy to clipboard
+        var copyBtn = document.getElementById("copy-btn");
+        if (copyBtn) {
+          copyBtn.onclick = function() {
+            navigator.clipboard.writeText(window.easyMDE.value()).then(function() {
+              var toast = document.getElementById("toast");
+              if (toast) {
+                toast.classList.add("show");
+                setTimeout(function() {
+                  toast.classList.remove("show");
+                }, 1200);
+              }
+            });
+          };
+        }
+      }
+
+      // Run on initial page load (if result is present)
+      document.addEventListener("DOMContentLoaded", function() {
+        initEasyMDE();
+      });
+
+      // Run after htmx swaps in new content
+      document.body.addEventListener("htmx:afterSwap", function(evt) {
+        if (evt.target && evt.target.id === "result") {
+          initEasyMDE();
+        }
+      });
+
+      // Cleanup before htmx swaps in new content
+      document.body.addEventListener("htmx:beforeSwap", function(evt) {
+        if (evt.target && evt.target.id === "result") {
+          // Destroy EasyMDE instance if it exists
+          if (window.easyMDE && window.easyMDE.toTextArea) {
+            window.easyMDE.toTextArea();
+            window.easyMDE = null;
+          }
+          // Remove any lingering EasyMDE containers
+          var wrapper = evt.target.querySelector('.editor-wrapper') || evt.target;
+          if (wrapper) {
+            var oldEditors = wrapper.querySelectorAll('.EasyMDEContainer');
+            oldEditors.forEach(function(editor) {
+              editor.remove();
+            });
+            // Remove all textareas with id markdown-editor
+            var allTextareas = wrapper.querySelectorAll('textarea#markdown-editor');
+            allTextareas.forEach(function(t) { t.remove(); });
+          }
+        }
+      });
     </script>
 </body>
 </html>
