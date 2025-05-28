@@ -82,7 +82,7 @@ class TwitterPost(BaseModel):
     hook: str = Field(
         ...,
         description=(
-            "A short, attention-grabbing statement or question "
+            "A short, attention-grabbing statement "
             "that covers the ideas in the blog post."
         ),
     )
@@ -90,7 +90,8 @@ class TwitterPost(BaseModel):
         ...,
         description=(
             "The body of the Twitter post. "
-            "It should be a concise summary of the blog post."
+            "It should be a concise summary of the blog post. "
+            "It should NOT have the URL of the blog post in it."
         ),
     )
     call_to_action: str = Field(
