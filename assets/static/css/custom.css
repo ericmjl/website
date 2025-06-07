@@ -69,3 +69,17 @@ body.dark-mode #citation-text span[style*="color: maroon"] {
 body.dark-mode #citation-text span[style*="color: black"] {
   color: #e8e9ed !important;
 }
+
+body.dark-mode em,
+body.dark-mode i {
+  color: var(--font-color, #e8e9ed) !important;
+  font-style: italic;
+}
+
+body.dark-mode {
+  --background-color: #222225;
+  --font-color: #e8e9ed;
+  --primary-color: #62c4ff;
+  --secondary-color: #a3abba;
+  --invert-font-color: #222225;
+}
