@@ -4,7 +4,7 @@ This script scrapes blog posts from ericmjl.github.io/blog and saves them to a C
 with options to filter by date range.
 
 Usage:
-    $ python 01-year-in-review-scrape.py \
+    $ uv run 01-year-in-review-scrape.py \
         --start-date 2023-01-01 \
         --end-date 2023-12-31 \
         --output data/2023_posts.csv
@@ -16,16 +16,16 @@ Arguments:
 
 Examples:
     # Scrape all posts from 2023
-    $ python year-in-review.py -s 2023-01-01 -e 2023-12-31
+    $ uv run year-in-review.py -s 2023-01-01 -e 2023-12-31
 
     # Scrape all posts up to a specific date
-    $ python year-in-review.py -e 2024-01-01
+    $ uv run year-in-review.py -e 2024-01-01
 
     # Scrape all posts since a specific date
-    $ python year-in-review.py -s 2023-06-01
+    $ uv run year-in-review.py -s 2023-06-01
 
     # Specify custom output path
-    $ python year-in-review.py -s 2023-01-01 -o path/to/output.csv
+    $ uv run year-in-review.py -s 2023-01-01 -o path/to/output.csv
 
 The output CSV will contain columns for:
 - title: The blog post title
