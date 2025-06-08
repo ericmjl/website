@@ -1,4 +1,5 @@
 """Scrapers for the blog bot."""
+
 import requests
 from bs4 import BeautifulSoup
 
