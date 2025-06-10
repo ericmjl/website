@@ -3,7 +3,7 @@
 # dependencies = [
 #     "altair==5.5.0",
 #     "duckdb==1.3.0",
-#     "llamabot[all]==0.12.6",
+#     "llamabot[all]==0.12.7",
 #     "marimo",
 #     "polars[pyarrow]==1.30.0",
 #     "pyprojroot==0.3.0",
