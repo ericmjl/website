@@ -49,6 +49,14 @@
     <img src="{{ img|url }}" class="banner-image" >
     {% endif %}
 
+    <!-- NOTE: I am keeping this here just for preview purposes.
+     We must rely on the webp logo for the blog post.
+     Pre-commit hooks will ensure that the png logo is converted to webp.-->
+    {% if post.attachments.get("logo.png") %}
+    {% set img = post.attachments.get("logo.png") %}
+    <img src="{{ img|url }}" class="banner-image" >
+    {% endif %}
+
     {% if post.summary %}
     <div class="blog-summary">
       <i>{{ post.summary }}</i>
@@ -197,6 +205,15 @@
         <img src="{{ img|url }}" class="banner-image" >
       </a>
       {% endif %}
+
+      <!-- NOTE: I am keeping this here just for preview purposes.
+      We must rely on the webp logo for the blog post.
+      Pre-commit hooks will ensure that the png logo is converted to webp.-->
+      {% if post.attachments.get("logo.png") %}
+      {% set img = post.attachments.get("logo.png") %}
+      <img src="{{ img|url }}" class="banner-image" >
+      {% endif %}
+
 
       <div class="blog-card-right">
         {% if post.summary %}
