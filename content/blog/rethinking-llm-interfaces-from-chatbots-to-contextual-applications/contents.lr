@@ -1,0 +1,125 @@
+title: Rethinking LLM interfaces, from chatbots to contextual applications
+---
+author: Eric J. Ma
+---
+body:
+
+Chat interfaces were a great starting point for interacting with large language models, but they're not the endgame. **My thesis is that we should build LLM applications as contextual tools embedded in structured workflows, not as open-ended chat interfaces.** This insight came from three converging threads that fundamentally changed how I think about building LLM-powered applications.
+
+The first thread came from a conversation with my colleague [Michelle Faits](https://www.linkedin.com/in/michelle-faits/), who articulated that apps powered by generative AI really need to end up looking less like chat interfaces and more like TurboTax -- where there's a well-defined process that needs to happen, and instead of users filling out forms manually, we ask an AI to help with the form-filling process.
+
+The second thread was a YouTube video titled "[AI UX Design: ChatGPT interfaces are already obsolete](https://youtu.be/mRqBjKFyfLc?si=9sRDPg-hH5iBLiFf)" by Alan Pike from Vancouver. In it, he talks about shifting from chatbot to context-native interfaces, a change that's both subtle and dramatic. It's subtle because there's little visible change, but dramatic because the way you interact with the interface changes fundamentally. You're no longer stuck with the drudge work of filling out yet another form, but are instead presented with an AI-powered interface capable of understanding what your next action is likely to be and anticipating it just in time.
+
+The third thread is Clayton Christensen's "jobs to be done" theory. What I've been noticing is that there are too many ChatGPT copycat clones, and those chat clones don't really help me accomplish the job that I'm trying to do. It takes a different type of interface to make that happen.
+
+## These threads converge on a simple truth
+
+What connects TurboTax's structured approach, Pike's context-native interfaces, and jobs-to-be-done theory is this: **the most effective LLM applications will embed AI capabilities directly into well-defined workflows rather than forcing users to articulate their needs through chat.**
+
+This means moving from "tell the AI what you want" to "let the AI assist you as you work through a process you already understand."
+
+## The TurboTax moment
+
+Michelle's insight about TurboTax really stuck with me. TurboTax works because it represents a well-defined business process with pretty routine steps that we need to walk through, but some of the steps do require judgment calls. Do you fill out this section or not? And what do you fill in? You need to determine that from context, so there's a little bit of agency for LLM bots inside there. But for the most part, it's just form filling.
+
+This is a powerful analogy for LLM apps, one that gets to the heart of any app build. The question becomes: how do you go about building a user interface that works like this? When we build chat interfaces, we put a lot of onus on the LLM to make smart decisions on behalf of us. But what if chat wasn't the primary way of interacting? What if we had well-defined business workflows supported by custom apps that just require us to fill out forms in a delightful way?
+
+## The obsolescence of chat interfaces
+
+Alan Pike's perspective really crystallized something I'd been feeling. In his talk, he showed how we're moving from text-based interfaces that are powerful but confounding to 90% of people, toward context-native interfaces that inject AI capabilities right where you need them.
+
+Think about it: we've already started seeing hints of tools pushing chat to the side. ChatGPT has Canvas mode now, where if you ask it to co-author a document, it sticks the chat up in the corner and lets you focus on the work you're doing. But this is still just the beginning.
+
+Pike showed examples of right-click contextual actions, natural language search that understands intent rather than requiring exact phrases, and date pickers where you can just say "next Thursday at 11" instead of clicking through calendar grids. These represent a fundamental shift in how we think about human-computer interaction.
+
+I thought the talk was quite good, and I'm embedding it below to share.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mRqBjKFyfLc?si=9sRDPg-hH5iBLiFf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Jobs to be done theory meets LLM apps
+
+Clayton Christensen's jobs-to-be-done framework is perfect for thinking about LLM applications. When I look at most LLM interfaces, we've become hooked on chat -- but they don't necessarily always help me accomplish the specific job I'm trying to do. Generic chat interfaces put the burden on me to figure out how to express my needs and on the LLM to figure out what I actually want. What if we could do better?
+
+I think what we're going to see is an evolution of LLM-powered apps from being text and chat driven to being deeply embedded within applications, making it possible to flow through business processes in a way that's much smoother and more delightful than what was possible before. It's not really about agentic capabilities, which are nice, but the winners will be the interfaces that inject LLMs in just the right places -- in the boring work!
+
+## Building DeckBot demonstrates this approach
+
+Let me show you what this looks like in practice. I built a Markdown slide deck generator called DeckBot, deliberately avoiding chat as the primary interface because it was too freeform and unreliable.
+
+Instead of starting with a UI, I began with the data model: defining a `Slide` as a Pydantic model with title, content, and type. I tested individual slide generation in a Marimo notebook until each component worked reliably. Then I put them together into a `SlideDeck` Pydantic model. This allowed me to
+
+The breakthrough came when I realized I could inject LLM capabilities directly into the data objects themselves. Instead of an agent orchestrating external tools, my data models gained natural language-powered methods:
+
+```python
+class SlideDeck(BaseModel):
+    slides: list[Slide]
+    talk_title: str
+
+
+    def edit(self, index: int, change: str):
+        """Edit the slide at a given index using natural language."""
+        current_slide = self.slides[index].render()
+        new_slide = slidemaker(slidemaker_edit(current_slide, change))
+        self.slides[index] = new_slide
+```
+
+This represents a fundamental shift: instead of putting all intelligence in a central agent, I distributed it into the data models themselves. Each Pydantic model knows how to manipulate itself based on natural language instructions.
+
+**DeckBot sits at step 5 of the maturity ladder I'll describe below**; it provides LLM-augmented interfaces that understand context and assist with specific tasks, but within a structured framework.
+
+## The future of LLM applications
+
+I believe we're going to see LLM applications become more like TurboTax and less like open-ended chat interfaces. These will be applications built around well-defined business processes that users can flow through smoothly, with AI providing assistance at just the right moments.
+
+There's still a place for agents, but we need to recognize that adoption follows a ladder of maturity:
+
+1. Unstructured work relying on human intuition
+2. Documented SOPs and manual processes
+3. Digital UIs guiding humans through structured processes
+4. Rule-based automation for predictable parts of workflows
+5. LLM-augmented interfaces providing contextual assistance
+6. Semi-autonomous LLM components handling defined subtasks
+7. Full agent orchestration with human oversight
+8. Truly autonomous agent systems managing entire business processes
+
+Customer support agents have emerged as one of the first places for LLM agents, and I suspect it's because customer support as a business process has more or less been well-standardized. The fact that we can "agentify" it stems from decades of process refinement. Other business domains need to undergo similar transformation before they're ready for full agent automation.
+
+At Moderna, we've embraced generative AI heavily, relying on ChatGPT and custom GPTs. But I know this cannot be the only way we interact with LLMs. There are ways to surgically inject LLMs into workflows so users can accomplish what they're trying to do in a structured fashion, but in a delightfully smooth and flowing way.
+
+The big lesson I learned building DeckBot is understanding where and when to inject LLMs very surgically into custom LLM applications. It's not about replacing human decision-making with AI decision-making; it's about augmenting human workflows with AI capabilities at precisely the right moments.
+
+## Key principles for contextual LLM applications
+
+Drawing from the TurboTax insight, Pike's context-native approach, and jobs-to-be-done theory, here are the essential principles I've learned:
+
+1. **Start with the data model, not the interface.** Get clear on what you're actually trying to accomplish and model that as structured data first. Design APIs around those data models that work through clean function calls before adding any LLM capabilities.
+2. **Inject LLMs surgically into workflows.** Identify the specific points where natural language understanding or generation adds value, rather than building everything around chat or agents.
+3. **Test with structured examples first.** Use notebooks to validate that your core functions work properly before thinking about user interfaces.
+4. **Build for the job-to-be-done.** Don't chase the latest agentic capabilities just because they're exciting. Focus on making specific workflows easier and more delightful.
+
+## The path forward
+
+Chat was the beginning of our journey with LLMs, but it is most certainly not the destination. The three threads I described, namely, Michelle's TurboTax-esque structured approach, Pike's context-native interfaces, and Christensen's jobs-to-be-done framework, all point toward the same future: **LLM applications that flow smoothly through business processes, where AI assistance appears exactly when and where it's needed.**
+
+This isn't about replacing human decision-making with AI decision-making. It's about augmenting human workflows with AI capabilities at precisely the right moments, without forcing users to translate their intentions into chat prompts or rely on agents to make all decisions for them.
+
+We're at the beginning of an incredible generation of software and products, and it's an exciting time to build not just the software but the processes around them too! The question we have now is this: how quickly we can move beyond chat alone to build contextual applications that truly help people accomplish their goals?
+---
+pub_date: 2025-06-14
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share why I believe the future of LLM applications lies beyond chat interfaces. Drawing on insights from colleagues, thought leaders, and my own experience building DeckBot, I argue that embedding AI into structured workflows—like TurboTax—creates more effective and delightful user experiences. Instead of relying on open-ended chat, we should inject LLMs at key moments within well-defined processes. Curious how this shift could transform the way we build and use AI-powered tools?
+---
+tags:
+
+llm
+ai
+workflow
+interfaces
+automation
+contextual
+ux
+apps
+business
+augmentation
