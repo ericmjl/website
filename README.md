@@ -20,3 +20,7 @@ graph TD
 Note: Use the HTML syntax above rather than Markdown code fences, as Mermaid needs the specific `class="mermaid"` attribute to work properly.
 
 For more information on Mermaid.js diagram syntax, visit the [Mermaid.js documentation](https://mermaid.js.org/syntax/flowchart.html).
+
+## Commenting System
+
+This website uses [giscus](https://giscus.app/) for comments, powered by GitHub Discussions.
