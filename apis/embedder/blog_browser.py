@@ -1,14 +1,14 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "llamabot[all]==0.12.7",
+#     "llamabot[all]==0.12.10",
 #     "marimo",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.8"
 app = marimo.App(width="medium")
 
 
@@ -82,18 +82,8 @@ def _(docs_parsed, mo):
 
 
 @app.cell
-def _(dropdown):
-    dropdown
-    return
-
-
-@app.cell
-def _(docs_parsed, dropdown, mo):
-    blog_text = None
-    if dropdown.value:
-        blog_text = [d["body"] for d in docs_parsed if d["title"] == dropdown.value][0]
-
-    mo.md(blog_text)
+def _():
+    # dropdown
     return
 
 

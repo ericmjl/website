@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#   "llamabot[all]==0.12.7",
+#   "llamabot[all]==0.12.10",
 #   "marimo",
 #   "pyprojroot",
 #   "tqdm",
@@ -32,6 +32,7 @@ docstore = LanceDBDocStore(
     table_name="ericmjl-blog-posts",
     storage_path=here() / "apis" / "embedder" / "lancedb",
 )
+docstore.reset()
 
 
 # Get all blog posts
