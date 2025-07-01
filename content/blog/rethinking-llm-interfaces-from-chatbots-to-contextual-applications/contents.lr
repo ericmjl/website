@@ -46,9 +46,9 @@ I think what we're going to see is an evolution of LLM-powered apps from being t
 
 Let me show you what this looks like in practice. I built a Markdown slide deck generator called DeckBot, deliberately avoiding chat as the primary interface because it was too freeform and unreliable.
 
-Instead of starting with a UI, I began with the data model: defining a `Slide` as a Pydantic model with title, content, and type. I tested individual slide generation in a Marimo notebook until each component worked reliably. Then I put them together into a `SlideDeck` Pydantic model. This allowed me to
+Instead of starting with a UI, I began with the data model: defining a `Slide` as a Pydantic model with title, content, and type. I tested individual slide generation in a Marimo notebook until each component worked reliably. Then I put them together into a `SlideDeck` Pydantic model. This allowed me to compose a `SlideDeck` from individually-generated `Slides`.
 
-The breakthrough came when I realized I could inject LLM capabilities directly into the data objects themselves. Instead of an agent orchestrating external tools, my data models gained natural language-powered methods:
+The next breakthrough came when I realized I could inject LLM capabilities directly into the data objects themselves. Instead of an agent orchestrating external tools, my data models gained natural language-powered methods:
 
 ```python
 class SlideDeck(BaseModel):
