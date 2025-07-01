@@ -1,0 +1,116 @@
+title: One hour and eight minutes: Building a receipt scanner with the weirdest tech stack imaginable
+---
+body:
+
+After bouncing between Cursor and GitHub Copilot for the past couple of years, I kept hearing about Claude Code. People's experiences were really piquing my curiosity, so I decided to give it a shot. What happened next completely changed how I think about rapid prototyping.
+
+I built a fully functional receipt scanning and expense tracking app in exactly one hour and eight minutes. But here's the kicker—I used a technology stack so unconventional that most developers would probably laugh at me. And it worked beautifully.
+
+Let me tell you what I learned about the immersive power of terminal-based development and why weird tech combinations might be the secret to lightning-fast tool building.
+
+## The problem I wanted to solve
+
+At work, I noticed SAP Concur can automatically extract fields from uploaded receipts. I thought, "What if I could replicate that at home?" I wanted to track my expenses without paying for QuickBooks, using Notion as my database instead.
+
+Most developers would reach for the standard stack: React frontend, PostgreSQL backend, maybe throw in some Express.js. That's the sensible approach.
+
+But I'm not building production software for thousands of users. I'm a data scientist experimenting with tools for myself. So I decided to get weird with it.
+
+## The stack that shouldn't work but does
+
+Here's what Claude Code helped me build with:
+
+- **FastAPI** for the backend (this part makes sense)
+- **HTMX** for the frontend instead of React (getting unusual)
+- **Vanilla HTML/CSS** with minimal JavaScript (now we're talking)
+- **LlamaBot** for AI interactions (I made it, so I know it works)
+- **Notion** as the database (yes, you read that right)
+
+If I were to describe this stack to a seasoned developer, they'd probably be surprised, then laugh out loud, and then go "what?" But when I described it to Claude Code and specified that I wanted everything in a single `app.py` file that I could run with `uv run app.py`, Claude Code got creative.
+
+It generated a beautiful single-file application with PEP 723 metadata at the top. The code was clean and well-structured. It took a few iterations of AI-generated code writing followed by testing, but it was always generally headed in the right direction. And this is the result:
+
+![](./screenshot.webp)
+
+## The development experience that changed everything
+
+Here's what blew my mind about using Claude Code: the immersive experience.
+
+I spent the entire development session in just two terminal tabs. One tab running Claude Code, another tab with my `uvicorn` server running with auto-reload. That's it. No switching between file explorers, no hunting through directory structures, no context switching between different applications.
+
+I was in what I can only describe as "vibe-ish coding" mode—not quite the [vibe coding that Simon Willison describes](https://simonwillison.net/2025/Mar/19/vibe-coding/), but close. I'd type a request to Claude Code, see the changes instantly in my browser, then iterate. The feedback loop was immediate and distraction-free.
+
+This terminal-focused workflow kept me in the zone in a way that traditional IDEs never have. Without all the little icons, bells, and whistles that can distract you in an IDE, I could maintain focus on the actual problem I was solving instead of fighting with tools.
+
+## What got built in 68 minutes
+
+By the time my terminal session ended, I had a fully functional application that could:
+
+- Upload single or multiple receipt images
+- Extract expense data using LlamaBot's AI capabilities
+- Allow manual editing of fields that the AI got wrong (inside Notion)
+- Handle enumerated types for expense categories
+- Automatically populate a Notion database with extracted data
+
+The AI integration was seamless. I provided my OpenAI API key, and through LlamaBot I was able to hit the OpenAI API while Claude Code handled all the integration complexity. When I needed to add file upload functionality, I pasted some Notion API documentation as context, and Claude Code implemented it correctly.
+
+The end result? I can now drag and drop receipts into a web interface, hit submit, and watch the data appear automatically in my Notion expense tracker. Exactly what I wanted.
+
+## Pushing language models to their limits
+
+Here's the thing that really fascinated me about this experiment: I deliberately chose this weird tech stack to test Claude Code's boundaries.
+
+Think about it—if I had gone with React, Node.js, and PostgreSQL, that would be easy for any language model. Those patterns show up constantly in training data.
+
+But I wanted to push to the edges. What happens when you combine technologies that people don't usually think about together? HTMX with FastAPI? Notion as a database backend? A single-file Python app doing receipt processing with AI?
+
+This is uncharted territory for most language models. There aren't thousands of tutorials showing how to integrate LlamaBot with HTMX forms, or how to structure FastAPI routes that return HTML fragments for dynamic updates.
+
+Yet Claude Code handled it beautifully. It figured out how to make these disparate pieces work together, even when the combination
+
+## Why this matters for tool building
+
+This experience reinforced something I've been thinking about lately: the best time to build custom tools is right now, and the barrier to entry has never been lower.
+
+I wrote about this recently in my post on building your own tools with AI coding assistants. If you need a tool, just build it. Don't wait for the perfect stack or the right framework. Pick technologies that let you move fast and iterate quickly.
+
+The ability to combine unusual technologies successfully opens up new possibilities. Instead of being constrained by conventional wisdom about what technologies "should" work together, you can experiment with combinations that solve your specific problem elegantly.
+
+## The immersive development advantage
+
+The most valuable lesson from this experiment wasn't about technology—it was about workflow.
+
+Claude Code's terminal-based approach created an immersive development environment that kept me focused. No file system distractions, no IDE complexity, just pure problem-solving in a clean interface.
+
+This suggests that tool choice matters more than we often acknowledge. The best coding assistant isn't necessarily the one with the most features—it's the one that keeps you in flow state while you build.
+
+## What's next
+
+I'm already planning my next experiment with Claude Code. Maybe a document processing pipeline using PyPDF2, Anthropic's API, and Airtable. Or a personal CRM built with FastAPI, HTMX, and Google Sheets as the backend.
+
+The point isn't to build production-ready applications with these stacks. It's to explore what becomes possible when you remove the friction from experimentation.
+
+In an hour and eight minutes, I went from idea to working application. That's the kind of development velocity that changes what you're willing to attempt.
+
+Sometimes the weirdest combinations turn out to be exactly what you need.
+---
+author: Eric J. Ma
+---
+pub_date: 2025-07-01
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how I built a fully functional receipt scanning and expense tracking app in just over an hour using an unconventional tech stack—FastAPI, HTMX, Notion, and my own LlamaBot AI. I describe how Claude Code enabled a focused, terminal-based workflow that kept me in the zone and made rapid prototyping possible. Curious how combining unusual tools can unlock new possibilities and boost your productivity? Read on to find out!
+---
+tags:
+
+prototyping
+ai
+claude
+terminal
+fastapi
+htmx
+notion
+llamabot
+experimentation
+expenses
