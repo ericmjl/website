@@ -83,3 +83,18 @@ body.dark-mode {
   --secondary-color: #a3abba;
   --invert-font-color: #222225;
 }
+
+.giscus {
+  padding: 2rem 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: var(--background-color, #fff);
+  box-sizing: border-box;
+}
+
+body.dark-mode .giscus {
+  background: var(--background-color, #222225);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.32);
+}
