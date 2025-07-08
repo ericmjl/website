@@ -1,0 +1,106 @@
+title: The job your docs need to do
+---
+author: Eric J. Ma
+---
+body:
+
+Two threads have been running through my mind recently, and I keep finding connections between them that I can't shake. The first is Diataxis - a structured framework for documentation that divides all docs into four distinct types: tutorials, how-to guides, reference, and explanation. The second is Clayton Christensen's jobs theory, which asks a deceptively simple question: what is the job that your customer needs to get done?
+
+Side note: I've been heavily inspired by Clayton Christensen's books recently, and have audiobooked my way through Innovator's Dilemma/Solution/DNA, as well as Competing Against Luck. All good books, 100% recommended if you're interested in understanding how innovation actually works.
+
+Here's the key insight: your documentation isn't competing with other documentation. It's competing with every other way someone could accomplish their job.
+
+## The competition you didn't know you had
+
+When someone opens your documentation, they're looking for more than information. They're trying to accomplish something specific, and they're evaluating whether your docs are the right tool for that job.
+
+This means your how-to guide competes with YouTube tutorials, Stack Overflow answers, and asking a colleague for help, while your reference docs compete with IDE intellisense, CLI help messages, and cheat sheets.
+
+| **Diataxis Doc Type** | **Jobs to be Done (JTBD)**                                   | **Alternative Product Categories That Could Be Hired**                                                 |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| How-to Guides         | "Show me how to achieve a specific outcome."                 | YouTube tutorials, Stack Overflow answers, blog walkthroughs, pair programming, live workshops         |
+| Reference             | "Give me exact technical information I can look up quickly." | API docs, cheat sheets, CLI help messages, tooltips, man pages, schema definitions, IDE intellisense   |
+| Explanation           | "Help me understand how/why it works."                       | Technical blog posts, internal brown bags, engineering talks, textbooks, whitepapers, MOOCs            |
+| Tutorials             | "Help me learn by doing, in a safe structured way."          | Interactive coding platforms (e.g. Codecademy), onboarding sessions, sandbox environments, guided labs |
+
+Once you see this competition, it reframes how you think about documentation structure.
+
+## Understanding the competition
+
+Most documentation is written from the perspective of the product being documented. It's organized around features, capabilities, and technical architecture. But when you flip the perspective to focus on jobs-to-be-done, you can structure information more effectively around what readers actually need to accomplish.
+
+## A job-focused approach in practice
+
+Let me show you what this looks like in practice. Say you're writing a how-to guide for setting up authentication in your API. The traditional approach focuses on what information to include. The job-focused approach starts with the specific outcome: "Help me get authentication working so I can move on to building my actual application."
+
+That job-focused lens shifts how you structure the guide:
+
+- You lead with the most common use case and a working example first, then dive into edge cases
+- You include troubleshooting steps for the most common failure modes
+- You provide code snippets in multiple languages because you know your readers come from different backgrounds
+- You assume they're in a hurry and want to get back to their main project
+
+Every decision gets filtered through the lens of "does this help the reader accomplish their job better?"
+
+The result? Documentation that people actually use because it's genuinely better at helping them accomplish their jobs.
+
+## How to apply this framework
+
+Start by identifying the specific job your reader is trying to accomplish. Not the general topic area, but the specific outcome they need to achieve. Then ask yourself:
+
+1. What alternatives could they hire instead of your documentation?
+2. What unique value can your documentation provide that those alternatives can't?
+3. How can you structure the information to make their job easier to accomplish?
+
+For that third question especially, consider using AI to help you think through different structural approaches. You can prompt an AI with the specific job your reader needs to accomplish and ask it to suggest multiple ways to organize the information, then choose the approach that best serves that job.
+
+Take reference documentation as an example. The job goes beyond providing comprehensive information about all API endpoints. The real job is "give me exact technical information I can look up quickly." This means your reference docs need to be faster and more precise than someone could get from reading your source code or experimenting with your API.
+
+If someone can figure out what they need faster by just trying different API calls, your reference docs aren't doing their job.
+
+## The AI documentation multiplier effect
+
+Here's where this gets really interesting. When documentation is designed around jobs-to-be-done, it creates a positive feedback loop that extends beyond the direct reader.
+
+Well-structured, job-focused documentation helps humans and also helps AI systems understand context and provide better assistance to future users. When your how-to guide is crystal clear about the specific outcome it helps achieve, an AI can better understand when to recommend that guide to someone with a similar job.
+
+The result is that good documentation becomes a multiplier. Beyond helping the direct reader, it helps AI systems help other readers accomplish similar jobs faster and more accurately.
+
+This creates a flywheel effect: better documentation helps more people accomplish their jobs, which generates more usage data and feedback, which leads to even better documentation that helps both humans and AI serve users more effectively.
+
+## Why this approach works well now
+
+We're in a period where documentation quality is becoming more important as a competitive differentiator. With AI making it easier to generate lots of documentation quickly, the bar for "good enough" documentation is rising.
+
+The documentation that will stand out understands the jobs readers are trying to accomplish and structures information to make those jobs easier to complete. This goes beyond writing better prose or having better examples (though those help). It's about fundamentally designing documentation as a product that solves real problems for real people.
+
+Most organizations still think of documentation as a necessary evil - something you have to do to check a box. But when you approach documentation as a product that people hire to get jobs done, it becomes a competitive advantage. People choose tools partly based on how easy they are to use and learn. Great job-focused documentation makes your tool easier to adopt and more likely to be successful.
+
+## Applying this perspective
+
+The next time you write documentation, start with what job your reader is trying to accomplish rather than what you want to explain.
+
+Ask yourself: if someone could accomplish this job faster or more reliably using a different approach, why would they choose your documentation instead? What unique value are you providing that they can't get elsewhere?
+
+When you can answer that question clearly, you'll write documentation that people find genuinely useful. And when people use your documentation successfully, they become more successful with your product.
+
+That's the value of thinking about documentation as a product designed around jobs-to-be-done. It creates a better experience for everyone who interacts with your work.
+---
+pub_date: 2025-07-07
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore how combining the Diataxis documentation framework with Clayton Christensen's jobs-to-be-done theory can transform the way we write docs. By focusing on the specific outcomes readers want to achieve, we can make our documentation more useful and competitive—not just against other docs, but against all the ways people solve their problems. What happens when you treat your documentation as a product designed to help users get real jobs done?
+---
+tags:
+
+documentation
+diataxis
+innovation
+tutorials
+guides
+reference
+ai
+strategy
+product
+jobs theory
