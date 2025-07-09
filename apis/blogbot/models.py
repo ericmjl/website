@@ -1,6 +1,6 @@
 """Pydantic models for each of the social media posts."""
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -9,95 +9,181 @@ class LinkedInPostSection(BaseModel):
     content: str = Field(
         ..., description=("The content of a section in the LinkedIn post")
     )
+    section_type: Optional[str] = Field(
+        None, description="Type: story, insight, lesson, example"
+    )
+
+
+class LinkedInHook(BaseModel):
+    """Implements Kallaway's 3-Step Hook Formula"""
+
+    line1: str = Field(
+        ...,
+        description=(
+            "Context-Lean Setup: Start with as little context as possible. "
+            "Jump straight into the action or core message. Avoid long-winded intros. "
+            "Should be 60 characters or less for maximum impact."
+        ),
+    )
+    line2: str = Field(
+        ...,
+        description=(
+            "Scroll-Stop Interjection: Use a bold, surprising, or emotionally charged statement "  # noqa: E501
+            "that interrupts scrolling. Could be a shocking fact, strong opinion, or unexpected insight. "  # noqa: E501
+            "Jolt the viewer out of autopilot and make them pay attention."
+        ),
+    )
+    line3: str = Field(
+        ...,
+        description=(
+            "Curiosity Gap: Create a gap between what the viewer knows and wants to know. "  # noqa: E501
+            "Tease an answer, reveal, or transformation without giving it away. "
+            "Compel the viewer to click 'see more' to satisfy their curiosity."
+        ),
+    )
+
+
+class LinkedInAuthorityElement(BaseModel):
+    """Support for authority and trust building"""
+
+    story_type: str = Field(
+        ..., description="Type: personal_story, lesson_learned, failure, success"
+    )
+    content: str = Field(..., description="The authority-building content")
+    specific_example: Optional[str] = Field(
+        None, description="Concrete example demonstrating expertise"
+    )
 
 
 class LinkedInPost(BaseModel):
-    hook: str = Field(
-        ...,
-        description=(
-            "A short, thought-provoking statement to grab attention. "
-            "If it is a question, start with 'What' or 'Why' directly, "
-            "don't do things like 'Ever wondered what...'."
-        ),
+    # Enhanced hook structure for 3-line hack
+    hook: LinkedInHook = Field(
+        ..., description="Three-line hook following the 3-Line Hack strategy"
     )
-    teaser: str = Field(
-        ...,
-        description=(
-            "A statement closer to the topic, "
-            "likely to be cut off by the default UI post fold."
-        ),
+
+    # Authority building elements
+    authority_elements: List[LinkedInAuthorityElement] = Field(
+        default_factory=list,
+        description="Personal stories, lessons, or insights that build authority and trust",  # noqa: E501
     )
+
+    # Main content with enhanced structure
     main_content: List[LinkedInPostSection] = Field(
-        ..., description=("The meat of the content, broken into digestible sections.")
+        ..., description="The meat of the content, broken into digestible sections"
     )
+
+    # Enhanced engagement strategy
     call_to_action: str = Field(
         ...,
         description=(
-            "A call to action for readers. "
-            "I usually want people to read the blog post, "
-            "leave a like, comment, and share."
+            "Call to action focused on relationship building, not just broadcasting. "
+            "I usually want people to read the blog post, leave a like, comment, and share."  # noqa: E501
         ),
     )
+
     ending_question: str = Field(
         ...,
         description=(
-            "An ending question for the post reader to engage with via comments."
+            "Specific question designed to generate thoughtful comments and discussion"
         ),
     )
+
+    # Enhanced hashtag strategy
     hashtags: List[str] = Field(
         ...,
+        max_items=5,
         description=(
-            "A list of hashtags to be included in the LinkedIn post. "
+            "List of relevant hashtags, including some outside main niche if valuable. "
             "They should always begin with '#'."
         ),
     )
 
+    # Engagement metadata
+    engagement_intent: str = Field(
+        default="relationship_building",
+        description="Primary intent: relationship_building, community_discussion, authority_demonstration",  # noqa: E501
+    )
+
     @model_validator(mode="after")
     def validate_content(self):
-        """Validate the structure and content of the LinkedIn post."""
-        # Validate hashtags
+        """Enhanced validation for LinkedIn best practices"""
+        # Existing hashtag validation
         for hashtag in self.hashtags:
             if not hashtag.startswith("#"):
                 raise ValueError(f"Hashtag '{hashtag}' must start with '#'.")
 
+        # Validate 3-line hook structure
+        if len(self.hook.line1) > 60:
+            raise ValueError("Hook line 1 should be punchy and under 60 characters")
+
+        # Ensure authority elements are specific
+        for element in self.authority_elements:
+            if (
+                element.story_type in ["lesson_learned", "failure", "success"]
+                and not element.specific_example
+            ):
+                raise ValueError(
+                    f"Authority element of type '{element.story_type}' should include specific example"  # noqa: E501
+                )
+
         return self
 
     def format_post(self) -> str:
-        """Format the LinkedIn post content."""
-        post_content = f"{self.hook}\n\n{self.teaser}\n\n"
+        """Enhanced formatting following LinkedIn best practices"""
+        # Start with 3-line hook
+        post_content = f"{self.hook.line1}\n{self.hook.line2}\n{self.hook.line3}\n\n"
+
+        # Add authority elements if present
+        for element in self.authority_elements:
+            post_content += f"{element.content}\n\n"
+            if element.specific_example:
+                post_content += f"{element.specific_example}\n\n"
+
+        # Add main content sections
         for section in self.main_content:
             post_content += f"{section.content}\n\n"
-        post_content += self.call_to_action
 
-        post_content += "\n\n" + self.ending_question
+        # Add call to action
+        post_content += f"{self.call_to_action}\n\n"
 
-        # Add hashtags to the post content, ensuring they are all lowercase
-        post_content += "\n\n" + " ".join(
-            [hashtag.lower() for hashtag in self.hashtags]
-        )
+        # Add ending question
+        post_content += f"{self.ending_question}\n\n"
+
+        # Add hashtags
+        post_content += " ".join([hashtag.lower() for hashtag in self.hashtags])
+
         return post_content
 
 
 class TwitterPost(BaseModel):
-    hook: str = Field(
+    strong_hook: str = Field(
         ...,
         description=(
-            "A short, attention-grabbing statement "
-            "that covers the ideas in the blog post."
+            "Context-Lean Setup: Start with minimal context, jump straight to the core message. "  # noqa: E501
+            "Use a bold, surprising, or emotionally charged statement that interrupts scrolling. "  # noqa: E501
+            "Create immediate curiosity gap - tease value without revealing everything. "  # noqa: E501
+            "Avoid bland intros and long-winded setups."
         ),
     )
-    body: str = Field(
+    clear_stance: str = Field(
         ...,
         description=(
-            "The body of the Twitter post. "
-            "It should be a concise summary of the blog post. "
-            "It should NOT have the URL of the blog post in it."
+            "A direct, clear stance or unique insight. Don't be afraid to be bold or controversial. "  # noqa: E501
+            "Avoid too much nuance - clarity and conviction get noticed."
         ),
     )
-    call_to_action: str = Field(
+    value_delivery: str = Field(
         ...,
         description=(
-            "A call to action for readers to read, share and re-post. "
+            "Deliver value, emotion, or entertainment. Use specific details, numbers, or examples "  # noqa: E501
+            "for credibility and impact. Should teach something, make people laugh, or evoke feeling."  # noqa: E501
+        ),
+    )
+    call_to_action: Optional[str] = Field(
+        None,
+        description=(
+            "Optional engaging call to action or thought-provoking line. "
+            "Examples: 'Agree or disagree?' 'What's your take?' or a memorable punchline. "  # noqa: E501
             "Do not include URL!"
         ),
     )
@@ -108,6 +194,16 @@ class TwitterPost(BaseModel):
     )
     url: str = Field(
         ..., description="The URL to click on for more information. Just the raw URL."
+    )
+
+    # Engagement metadata
+    tweet_intent: str = Field(
+        default="value_delivery",
+        description="Primary intent: value_delivery, emotion, entertainment, controversy",  # noqa: E501
+    )
+    authenticity_check: bool = Field(
+        default=True,
+        description="Confirms this represents genuine beliefs and authentic voice",
     )
 
     @model_validator(mode="after")
@@ -126,14 +222,36 @@ class TwitterPost(BaseModel):
         total_content = self.format_post(with_url=False)
         if len(total_content) > 280:
             errors.append("Total content must be 280 characters or less.")
-        if len(total_content) < 200:
-            errors.append("Total content must be at least 200 characters.")
+        if len(total_content) < 100:
+            errors.append("Total content must be at least 100 characters for impact.")
 
-        if self.url in self.call_to_action:
+        if self.url in self.call_to_action if self.call_to_action else "":
             errors.append("URL should not be present in the call to action.")
 
         if not self.url.startswith("http://") and not self.url.startswith("https://"):
             errors.append("URL must start with 'http://' or 'https://'.")
+
+        # Validate hook strength
+        weak_openers = [
+            "ever wondered",
+            "have you ever",
+            "i think that",
+            "maybe we should",
+        ]
+        if any(opener in self.strong_hook.lower() for opener in weak_openers):
+            errors.append(
+                "Hook should be bold and direct, avoid weak openers like 'Ever wondered...'"  # noqa: E501
+            )
+
+        # Validate stance clarity
+        if len(self.clear_stance.split()) > 30:
+            errors.append(
+                "Clear stance should be concise - under 30 words for maximum impact"
+            )
+
+        # Validate authenticity
+        if not self.authenticity_check:
+            errors.append("Tweet must represent authentic beliefs and voice")
 
         if errors:
             raise ValueError(", ".join(errors))
@@ -141,10 +259,16 @@ class TwitterPost(BaseModel):
         return self
 
     def format_post(self, with_url: bool = True) -> str:
-        """Format the Twitter post content."""
-        post_content = f"{self.hook} {self.body} {self.call_to_action}"
+        """Format the Twitter post following compelling tweet template."""
+        # Follow template: [Strong hook]. [Clear stance]. [Value delivery]. [Optional CTA]  # noqa: E501
+        post_content = f"{self.strong_hook} {self.clear_stance} {self.value_delivery}"
+
+        if self.call_to_action:
+            post_content += f" {self.call_to_action}"
+
         if with_url:
             post_content += f" {self.url}"
+
         post_content += f" {' '.join(self.hashtags)}"
 
         print(f"Post content: {post_content}")
@@ -163,46 +287,87 @@ class SubstackPost(BaseModel):
     title: str = Field(
         ...,
         description=(
-            "The title of the Substack post, which is the title of the blog post."
+            "Clear, compelling title that matches the blog post title. "
+            "Should be intriguing and give readers a reason to click."
         ),
     )
     subtitle: str = Field(
         ...,
         description=(
-            "A brief subtitle or teaser for the post. "
-            "An example that I really like is: "
-            "'Alternatively titled: <something unpretentious and fun goes here>.'"
+            "Brief subtitle that adds context or intrigue. "
+            "Examples: 'Alternatively titled: <something unpretentious and fun>', "
+            "or a hook that teases the value readers will get."
         ),
     )
-    introduction: str = Field(
-        ..., description="An introductory paragraph to hook the reader"
+    hook_introduction: str = Field(
+        ...,
+        description=(
+            "Strong opening that hooks the reader immediately. "
+            "Start with an interesting question, story, or bold statement. "
+            "Be authentic and jump straight to something engaging. "
+            "Match the tone and style of the original blog post."
+        ),
+    )
+    purpose_statement: str = Field(
+        ...,
+        description=(
+            "Clear statement of what this post is about and why it matters. "
+            "Help readers understand the central idea and what they'll gain. "
+            "Keep it focused and authentic to your voice."
+        ),
     )
     main_content: SubstackSection = Field(
         ...,
         description=(
-            "A concise summary of the blog post that gives enough detail "
-            "for people to *want* to read the actual blog post."
+            "Well-structured content that provides genuine value. "
+            "Share useful insights, personal stories, or resources. "
+            "Use logical flow with clear paragraphs. Include your thinking process and journey. "  # noqa: E501
+            "Give enough detail to be valuable while creating curiosity about the full blog post."  # noqa: E501
         ),
     )
-    conclusion: str = Field(
+    key_takeaway: str = Field(
         ...,
-        description=("A concluding paragraph summarizing key points of the blog post."),
+        description=(
+            "Clear, memorable takeaway that summarizes the core value. "
+            "What's the main point readers should remember? "
+            "Make it actionable and authentic to your perspective."
+        ),
+    )
+    engagement_question: str = Field(
+        ...,
+        description=(
+            "Thoughtful question that invites replies and discussion. "
+            "Encourage interaction by asking about readers' experiences or perspectives. "  # noqa: E501
+            "Make it specific and genuinely curious."
+        ),
     )
     call_to_action: str = Field(
         ...,
         description=(
-            "A call to action for readers, such as reading the blog post, "
-            "forwarding it on, or subscribing"
+            "Clear call to action that provides value. "
+            "Examples: read the full blog post, share with others, subscribe. "
+            "Be generous in your ask - focus on how it helps the reader."
         ),
     )
 
     signoff: str = Field(
         ...,
         description=(
-            "A signoff to end the post. Use one of "
-            "Cheers\nEric or Happy Coding\nEric, "
-            "the latter being suited to posts about coding."
+            "Authentic sign-off that matches your voice. "
+            "Use 'Cheers\nEric' or 'Happy Coding\nEric' (for coding posts). "
+            "Keep it consistent with your established voice."
         ),
+    )
+
+    # Substack best practices metadata
+    tone_authenticity: str = Field(
+        default="authentic_and_genuine",
+        description="Tone should be authentic, imperfect, and genuine - matching blog post style",  # noqa: E501
+    )
+
+    value_focus: str = Field(
+        default="generous_sharing",
+        description="Focus on giving value generously through insights, resources, or stories",  # noqa: E501
     )
 
     @model_validator(mode="after")
@@ -221,14 +386,16 @@ class SubstackPost(BaseModel):
         return self
 
     def format_post(self) -> str:
-        """Format the Substack post content."""
+        """Format the Substack post content following best practices."""
         post_content = f"# {self.title}\n\n"
         post_content += f"*{self.subtitle}*\n\n"
-        post_content += f"{self.introduction}\n\n"
+        post_content += f"{self.hook_introduction}\n\n"
+        post_content += f"{self.purpose_statement}\n\n"
 
         post_content += f"{self.main_content.content}\n\n"
 
-        post_content += f"{self.conclusion}\n\n"
+        post_content += f"{self.key_takeaway}\n\n"
+        post_content += f"{self.engagement_question}\n\n"
         post_content += f"*{self.call_to_action}*\n\n"
         post_content += f"{self.signoff}"
         return post_content

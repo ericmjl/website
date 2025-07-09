@@ -77,17 +77,24 @@ def compose_substack_post(text, url):
 
     It came from the following url: {{ url }}.
 
-    Please compose for me a Substack post
-    that encourages my readers on Substack to read the blog post I just gave you.
-    Please address my readers by opening with,
-    "Hello fellow datanistas!"
-    And then open off with a question that the post answers.
-    Ensure that there is a call to action for the reader,
-    such as forwarding the post to others they think may benefit from it.
-    Ensure that you insert the URL of the blog post in an appropriate place,
-    using Markdown syntax to link to the post.
-    Also ensure that it is written in first-person, humble, and inviting tone.
-    """
+    Please compose for me a Substack post that follows compelling Substack best practices.
+
+    **CRITICAL**: Match the tone and style of the original blog post. If the blog post is technical and direct, be technical and direct. If it's conversational and personal, be conversational and personal. Mirror the author's voice and writing style throughout.
+
+    Guidelines:
+    - Start with a clear purpose and hook - use an interesting question, story, or bold statement
+    - Be authentic and genuine - share your thinking process and journey, don't try to be perfect
+    - Structure for clarity with logical flow and clear takeaways
+    - Encourage engagement by asking thoughtful questions that invite replies
+    - Provide generous value through insights, resources, or personal stories
+    - Use first-person voice and maintain the same tone as the original blog post
+    - Address readers as "Hello fellow datanistas!" but adapt if the blog post suggests a different audience
+    - Include the blog post URL using Markdown syntax: [link text]({{ url }})
+    - End with a clear call to action that helps readers (read full post, share, subscribe)
+    - Use authentic sign-off: "Cheers, Eric" or "Happy Coding, Eric" (for coding posts)
+
+    Focus on creating a post that's clear, honest, thoughtfully structured, and written with real people in mind. Make it part of a conversation, not just a broadcast.
+    """  # noqa: E501
 
 
 @prompt(role="user")
@@ -159,3 +166,27 @@ def bannerbot_dalle_prompter_sysprompt():
 
     Do **NOT** include any text or character symbols in the image description.
     """
+
+
+@prompt(role="user")
+def compose_feedback_revision(
+    original_content, feedback_request, post_type, blog_text, blog_url
+):
+    """This is a previously generated {{ post_type }} post:
+
+    {{ original_content }}
+
+    The user has provided this feedback for improvement:
+
+    {{ feedback_request }}
+
+    Please revise the {{ post_type }} post based on the feedback while maintaining the structure and requirements.
+
+    For context, here is the original blog post:
+
+    {{ blog_text }}
+
+    Blog URL: {{ blog_url }}
+
+    Please generate a revised version that addresses the feedback while following the same JSON structure and guidelines as the original.
+    """  # noqa: E501

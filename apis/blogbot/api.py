@@ -19,6 +19,7 @@ from .models import (
 )
 from .prompts import (
     bannerbot_dalle_prompter_sysprompt,
+    compose_feedback_revision,
     compose_linkedin_post,
     compose_substack_post,
     compose_summary,
@@ -106,7 +107,13 @@ async def generate_post(
         )
 
     return templates.TemplateResponse(
-        "result.html", {"request": request, "content": content, "post_type": post_type}
+        "result.html",
+        {
+            "request": request,
+            "content": content,
+            "post_type": post_type,
+            "blog_url": blog_url,
+        },
     )
 
 
@@ -180,3 +187,67 @@ async def search(search_term: Annotated[str, Form()]):
         output += f"<li><a href='https://ericmjl.github.io/blog/{pubdate_url}/{rel_url}'>{rel_url}</a></li>"
     output += "</ul>"
     return output
+
+
+@app.post("/iterate/{post_type}", response_class=HTMLResponse)
+async def iterate_post(
+    request: Request,
+    post_type: str,
+    blog_url: Annotated[str, Form()],
+    original_content: Annotated[str, Form()],
+    feedback: Annotated[str, Form()],
+):
+    """Iterate on a social media post based on user feedback."""
+    _, body = get_post_body(blog_url)
+
+    # Get the appropriate model based on post type
+    if post_type == "linkedin":
+        model = LinkedInPost
+    elif post_type == "twitter":
+        model = TwitterPost
+    elif post_type == "substack":
+        model = SubstackPost
+    elif post_type == "summary":
+        model = Summary
+    elif post_type == "tags":
+        model = Tags
+    else:
+        return templates.TemplateResponse(
+            "result.html",
+            {
+                "request": request,
+                "content": "Invalid post type",
+                "post_type": post_type,
+                "blog_url": blog_url,
+            },
+        )
+
+    # Create bot with appropriate model
+    bot = StructuredBot(socialbot_sysprompt(), model="gpt-4.1", pydantic_model=model)
+
+    # Generate revised content
+    revised_post = bot(
+        compose_feedback_revision(
+            original_content=original_content,
+            feedback_request=feedback,
+            post_type=post_type,
+            blog_text=body,
+            blog_url=blog_url,
+        )
+    )
+
+    # Format the revised content
+    if hasattr(revised_post, "format_post"):
+        content = revised_post.format_post()
+    else:
+        content = revised_post.content
+
+    return templates.TemplateResponse(
+        "result.html",
+        {
+            "request": request,
+            "content": content,
+            "post_type": post_type,
+            "blog_url": blog_url,
+        },
+    )

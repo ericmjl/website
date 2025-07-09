@@ -46,6 +46,41 @@
     opacity: 1;
     pointer-events: auto;
   }
+  .feedback-section {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+  }
+  .feedback-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    min-height: 80px;
+  }
+  .feedback-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+  }
+  .feedback-btn:hover {
+    background: #0056b3;
+  }
+  .feedback-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+  }
 </style>
 <div class="editor-wrapper">
   <button id="copy-btn" class="copy-icon-btn" title="Copy to Clipboard">
@@ -54,3 +89,39 @@
   <textarea id="markdown-editor" rows="8">{{ content }}</textarea>
 </div>
 <div id="toast" class="toast">Copied!</div>
+
+<!-- Feedback Section -->
+<div class="feedback-section">
+  <h5>Iterate on this {{ post_type }}</h5>
+  <p style="margin-bottom: 0.5rem; color: #6c757d; font-size: 0.9rem;">Provide feedback to improve this {{ post_type }} post:</p>
+  <form id="feedback-form" hx-post="/iterate/{{ post_type }}" hx-target="#result" hx-indicator="#spinner">
+    <textarea
+      id="feedback-input"
+      name="feedback"
+      class="feedback-input"
+      placeholder="e.g., Make it more engaging, add a stronger hook, focus on specific benefits, etc."
+      required></textarea>
+    <input type="hidden" name="blog_url" value="{{ blog_url }}">
+    <input type="hidden" name="original_content" value="{{ content }}">
+    <button type="submit" class="feedback-btn" id="feedback-submit">Generate Revision</button>
+  </form>
+</div>
+
+<script>
+// Existing copy functionality
+const copyBtn = document.getElementById('copy-btn');
+const toast = document.getElementById('toast');
+const editor = document.getElementById('markdown-editor');
+
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(editor.value);
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  } catch (err) {
+    console.error('Failed to copy:', err);
+  }
+});
+
+// Feedback form functionality handled by HTMX
+</script>
