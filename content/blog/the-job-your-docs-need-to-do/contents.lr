@@ -4,6 +4,8 @@ author: Eric J. Ma
 ---
 body:
 
+# What is the job that your docs need to do?
+
 Two threads have been running through my mind recently, and I keep finding connections between them that I can't shake. The first is Diataxis - a structured framework for documentation that divides all docs into four distinct types: tutorials, how-to guides, reference, and explanation. The second is Clayton Christensen's jobs theory, which asks a deceptively simple question: what is the job that your customer needs to get done?
 
 Side note: I've been heavily inspired by Clayton Christensen's books recently, and have audiobooked my way through Innovator's Dilemma/Solution/DNA, as well as Competing Against Luck. All good books, 100% recommended if you're interested in understanding how innovation actually works.
@@ -37,7 +39,6 @@ That job-focused lens shifts how you structure the guide:
 
 - You lead with the most common use case and a working example first, then dive into edge cases
 - You include troubleshooting steps for the most common failure modes
-- You provide code snippets in multiple languages because you know your readers come from different backgrounds
 - You assume they're in a hurry and want to get back to their main project
 
 Every decision gets filtered through the lens of "does this help the reader accomplish their job better?"
@@ -58,7 +59,7 @@ Take reference documentation as an example. The job goes beyond providing compre
 
 If someone can figure out what they need faster by just trying different API calls, your reference docs aren't doing their job.
 
-## The AI documentation multiplier effect
+## How this applies to AI-assisted documentation
 
 Here's where this gets really interesting. When documentation is designed around jobs-to-be-done, it creates a positive feedback loop that extends beyond the direct reader.
 
@@ -68,14 +69,6 @@ The result is that good documentation becomes a multiplier. Beyond helping the d
 
 This creates a flywheel effect: better documentation helps more people accomplish their jobs, which generates more usage data and feedback, which leads to even better documentation that helps both humans and AI serve users more effectively.
 
-## Why this approach works well now
-
-We're in a period where documentation quality is becoming more important as a competitive differentiator. With AI making it easier to generate lots of documentation quickly, the bar for "good enough" documentation is rising.
-
-The documentation that will stand out understands the jobs readers are trying to accomplish and structures information to make those jobs easier to complete. This goes beyond writing better prose or having better examples (though those help). It's about fundamentally designing documentation as a product that solves real problems for real people.
-
-Most organizations still think of documentation as a necessary evil - something you have to do to check a box. But when you approach documentation as a product that people hire to get jobs done, it becomes a competitive advantage. People choose tools partly based on how easy they are to use and learn. Great job-focused documentation makes your tool easier to adopt and more likely to be successful.
-
 ## Applying this perspective
 
 The next time you write documentation, start with what job your reader is trying to accomplish rather than what you want to explain.
@@ -83,6 +76,8 @@ The next time you write documentation, start with what job your reader is trying
 Ask yourself: if someone could accomplish this job faster or more reliably using a different approach, why would they choose your documentation instead? What unique value are you providing that they can't get elsewhere?
 
 When you can answer that question clearly, you'll write documentation that people find genuinely useful. And when people use your documentation successfully, they become more successful with your product.
+
+This matters because documentation is ultimately about scaling our collective knowledge and decision-making capacity. But that scaling only happens when people actually use the documentation. And people only use documentation when it helps them accomplish specific jobs they need to get done.
 
 That's the value of thinking about documentation as a product designed around jobs-to-be-done. It creates a better experience for everyone who interacts with your work.
 ---
