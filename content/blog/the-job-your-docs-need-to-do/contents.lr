@@ -14,18 +14,33 @@ Here's the key insight: your documentation isn't competing with other documentat
 
 ## The competition you didn't know you had
 
-When someone opens your documentation, they're looking for more than information. They're trying to accomplish something specific, and they're evaluating whether your docs are the right tool for that job.
+When someone opens your internal documentation, they're looking for more than information. They're trying to accomplish something specific, and they're evaluating whether your docs are the right tool for that job.
 
-This means your how-to guide competes with YouTube tutorials, Stack Overflow answers, and asking a colleague for help, while your reference docs compete with IDE intellisense, CLI help messages, and cheat sheets.
+For internal company documentation—whether it's for internally built software, processes, or systems—the competition is different but equally real. Your how-to guide competes with asking a colleague, digging through Slack history, or reverse-engineering from existing code. Your reference docs compete with reading the source code directly, checking configuration files, or experimenting in a staging environment.
 
 | **Diataxis Doc Type** | **Jobs to be Done (JTBD)**                                   | **Alternative Product Categories That Could Be Hired**                                                 |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| How-to Guides         | "Show me how to achieve a specific outcome."                 | YouTube tutorials, Stack Overflow answers, blog walkthroughs, pair programming, live workshops         |
-| Reference             | "Give me exact technical information I can look up quickly." | API docs, cheat sheets, CLI help messages, tooltips, man pages, schema definitions, IDE intellisense   |
-| Explanation           | "Help me understand how/why it works."                       | Technical blog posts, internal brown bags, engineering talks, textbooks, whitepapers, MOOCs            |
-| Tutorials             | "Help me learn by doing, in a safe structured way."          | Interactive coding platforms (e.g. Codecademy), onboarding sessions, sandbox environments, guided labs |
+| How-to Guides         | "Show me how to achieve a specific outcome."                 | Asking a colleague, Slack/Teams search, reverse-engineering from existing code, trial and error in staging |
+| Reference             | "Give me exact technical information I can look up quickly." | Reading source code, checking config files, database schemas, API endpoint testing, environment variables |
+| Explanation           | "Help me understand how/why it works."                       | Architecture diagrams, code comments, git history, team knowledge sharing sessions, design documents     |
+| Tutorials             | "Help me learn by doing, in a safe structured way."          | Pair programming, shadowing a colleague, sandbox environments, local development setup walkthroughs     |
 
 Once you see this competition, it reframes how you think about documentation structure.
+
+## The opportunity hiding in plain sight
+
+Here's what's fascinating about internal documentation: the competition is actually pretty terrible. Think about it:
+
+- Asking a colleague interrupts their work and creates context switching for both of you
+- Digging through Slack history is time-consuming and often incomplete
+- Reverse-engineering from existing code is slow and error-prone
+- Trial and error in staging environments wastes time and resources
+
+This means that even moderately good internal documentation has a much lower bar to clear than external documentation. Your internal how-to guide doesn't need to compete with polished YouTube tutorials - it just needs to be better than interrupting Sarah from accounting or spending 30 minutes searching through #engineering-general.
+
+This is actually a huge opportunity. While external documentation faces fierce competition from Stack Overflow's crowdsourced answers and professionally produced tutorials, internal documentation often competes with... nothing systematic at all.
+
+The result? Even basic improvements to internal documentation can have outsized impact on team productivity. When your reference docs are faster than reading source code, people will use them. When your how-to guides are clearer than tribal knowledge, they become the default choice.
 
 ## Understanding the competition
 
@@ -33,7 +48,7 @@ Most documentation is written from the perspective of the product being document
 
 ## A job-focused approach in practice
 
-Let me show you what this looks like in practice. Say you're writing a how-to guide for setting up authentication in your API. The traditional approach focuses on what information to include. The job-focused approach starts with the specific outcome: "Help me get authentication working so I can move on to building my actual application."
+Let me show you what this looks like in practice. Say you're writing a how-to guide for deploying your company's internal microservice. The traditional approach focuses on what information to include. The job-focused approach starts with the specific outcome: "Help me get this service deployed so I can test my feature and merge my PR."
 
 That job-focused lens shifts how you structure the guide:
 
@@ -55,9 +70,9 @@ Start by identifying the specific job your reader is trying to accomplish. Not t
 
 For that third question especially, consider using AI to help you think through different structural approaches. You can prompt an AI with the specific job your reader needs to accomplish and ask it to suggest multiple ways to organize the information, then choose the approach that best serves that job.
 
-Take reference documentation as an example. The job goes beyond providing comprehensive information about all API endpoints. The real job is "give me exact technical information I can look up quickly." This means your reference docs need to be faster and more precise than someone could get from reading your source code or experimenting with your API.
+Take reference documentation as an example. The job goes beyond providing comprehensive information about all internal API endpoints or configuration options. The real job is "give me exact technical information I can look up quickly." This means your reference docs need to be faster and more precise than someone could get from reading your source code, checking configuration files, or asking in Slack.
 
-If someone can figure out what they need faster by just trying different API calls, your reference docs aren't doing their job.
+If someone can figure out what they need faster by just reading the source code or asking a colleague, your reference docs aren't doing their job.
 
 ## How this applies to AI-assisted documentation
 
@@ -71,15 +86,19 @@ This creates a flywheel effect: better documentation helps more people accomplis
 
 ## Applying this perspective
 
-The next time you write documentation, start with what job your reader is trying to accomplish rather than what you want to explain.
+The next time you write internal documentation, start with what job your reader is trying to accomplish rather than what you want to explain.
 
-Ask yourself: if someone could accomplish this job faster or more reliably using a different approach, why would they choose your documentation instead? What unique value are you providing that they can't get elsewhere?
+Ask yourself: if someone could accomplish this job faster or more reliably using a different approach, why would they choose your documentation instead? For internal docs, this question often has a surprising answer: because the alternatives are genuinely worse.
+
+This is liberating. Your internal documentation doesn't need to be perfect - it just needs to be better than the current chaos of tribal knowledge and ad-hoc problem-solving.
 
 When you can answer that question clearly, you'll write documentation that people find genuinely useful. And when people use your documentation successfully, they become more successful with your product.
 
 This matters because documentation is ultimately about scaling our collective knowledge and decision-making capacity. But that scaling only happens when people actually use the documentation. And people only use documentation when it helps them accomplish specific jobs they need to get done.
 
-That's the value of thinking about documentation as a product designed around jobs-to-be-done. It creates a better experience for everyone who interacts with your work.
+For internal documentation, this scaling opportunity is especially significant. Every time someone uses your docs instead of interrupting a colleague, you're not just solving one person's problem - you're preserving focus and momentum across your entire team.
+
+That's the value of thinking about internal documentation as a product designed around jobs-to-be-done. It creates a better experience for everyone who interacts with your work, and unlike external documentation, you don't need to beat world-class competition to succeed.
 ---
 pub_date: 2025-07-07
 ---
