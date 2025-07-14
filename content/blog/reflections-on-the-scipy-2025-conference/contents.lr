@@ -1,0 +1,151 @@
+title: Reflections on the SciPy 2025 Conference
+---
+author: Eric J. Ma
+---
+body:
+
+This year marks my 10th year of being involved with the Scientific Python Conference, and it has been an absolute blast! What started as curiosity about the intersection of science and software has grown into a decade of learning, teaching, and contributing to this incredible community.
+
+## Conference Activities Summary
+
+This year's SciPy was particularly active for me. I taught two tutorials: "Building with LLMs Made Simple" (a new one) and "Network Analysis Made Simple" (my longtime favorite). After the tutorials, I attended several inspiring talks, including an especially motivating presentation on XArray in biology that prompted me to create a Marimo notebook demonstrating XArray's applications in biological data analysis.
+
+One of my favorite conference activities this year was recording conversations with fellow attendees. In lieu of my Insta360 camera, I brought my DJI mic everywhere and captured numerous insightful discussions, creating an informal podcast collection of SciPy conversations. Finally, during the sprints, I felt more tapped out than usual but still managed to contribute to Llamabot development with others and work on the XArray biology materials I had envisioned.
+
+## Tutorials
+
+### Building with LLMs Made Simple
+
+This was my first time teaching this tutorial, and I was thrilled to use Marimo notebooks throughout the entire session. The tutorial covered three main areas: simple LLM interactions, structured generation, and RAG (Retrieval-Augmented Generation). You can find the tutorial materials at: https://github.com/ericmjl/building-with-llms-made-simple
+
+The structured generation section was particularly powerful. I emphasized that structured generation is fundamentally about automating form-filling using natural language. Having free text input and getting a filled-out Pydantic model output is incredibly valuable for productivity. One participant mentioned the concept of automating "the dangerous, the dull, and the dirty" - which perfectly captures how LLMs can handle routine tasks.
+
+For RAG, I clarified that RAG doesn't necessarily equal vector databases - it's about information retrieval through various means including keyword search. I demonstrated custom chunking strategies for standard operating procedures, showing how simple solutions (like appending source references) often work better than complex hierarchical structures.
+
+The tutorial concluded with brief demos on evaluation and agents. I shared my experience testing different models (Gemma, Llama 3, Llama 4) for docstring generation, emphasizing the importance of experimentation and model selection. For agents, I stressed starting with simpler structured generation approaches before building complex autonomous systems.
+
+Thanks to Modal's generous credit allocation from their DevRel Charles, I was able to deploy an Ollama endpoint in the cloud, making the tutorial accessible to all participants.
+
+### Network Analysis Made Simple
+
+This marked either my ninth or tenth time teaching this tutorial at SciPy - my longtime favorite. This year I made the significant transition from Jupyter to Marimo notebooks, which was an experiment that generally worked well despite some setup challenges. You can find the tutorial materials at: https://github.com/ericmjl/Network-Analysis-Made-Simple
+
+The tutorial faced some technical hurdles for installation with the Network Analysis Made Simple package being published on my own PyPI server, plus some participants weren't familiar with Marimo. Fortunately, Erik Welch from NVIDIA was present to help assist participants. By the end of the conference talk days, I was able to resolve the issue by changing the notebooks to draw from the Network Analysis Made Simple source directly instead of my own PyPI server, which solved most of the installation problems.
+
+What I loved most was the audience engagement. We didn't cover as much content as usual because participants asked so many thoughtful questions, especially during the visualization section. This interaction made the session incredibly valuable, as people were clearly learning and developing new ideas for their own work.
+
+The Marimo experiment succeeded in shifting the learning environment with minimal overhead. For future iterations, I'm considering eliminating the separate NAMS package and making the entire notebook self-contained with answers included at the bottom.
+
+### Overarching thoughts on the tutorials
+
+Both tutorials were conducted entirely within Marimo notebooks, which convinced quite a few participants to switch over to Marimo. They saw the power of fully reactive notebooks and the ability to seamlessly share analysis from one person to another - something that's much more cumbersome with traditional Jupyter notebooks.
+
+Both tutorials will also be available on YouTube! There was a technical glitch with the Building with LLMs Made Simple tutorial recording, so I'm planning to re-record the full tutorial this coming Saturday - including content we didn't get to cover during the live session. This should actually result in a better, more complete recording for the YouTube release, which I'll also release to my own channel.
+
+## Talks and Presentations
+
+I attended several inspiring talks throughout the conference. Here are short summaries of the key presentations that caught my attention:
+
+### XArray in Biology (Ian Hunt-Isaak)
+
+This talk was particularly inspiring and prompted me to create a Marimo notebook demonstrating XArray applications in biology. Ian, a biologist and microscopist from Earthmover (funded by the Chan Zuckerberg Initiative), presented a compelling case for XArray adoption in biological research.
+
+XArray excels at handling multi-dimensional biological data like time-series microscopy images, multi-channel fluorescent data, and complex experimental metadata. Its semantic indexing capabilities (e.g., `data.sel(time='30.5min', field_of_view=1, channel='GFP').max('z')`) make biological data analysis much more intuitive.
+
+Despite its benefits, XArray has seen limited adoption in biology due to awareness barriers and lack of biology-specific examples. Recent improvements like DataTree for hierarchical data structures and flexible indices for complex coordinate systems address many biological data needs. The roadmap includes developing biology-specific documentation and building a user community within the next year.
+
+### SciPy Statistical Distributions Infrastructure (Albert Steppi)
+
+Albert, one of SciPy's maintainers, presented the complete rewrite of SciPy's statistical distributions framework, primarily designed by Matt Haberland. The new infrastructure addresses significant limitations of the old system, including memory leaks, inflexible documentation, and parameter processing overhead.
+
+Key improvements include a single consistent API where distributions are classes users instantiate, better performance, arithmetic operations on distributions (shifting, scaling, transformations), and simplified custom distribution creation. Future development will focus on distribution-specific fitting methods and support for alternative array backends like PyTorch and JAX.
+
+### High-Level API Dispatching for Community Scaling (Erik Welch)
+
+This presentation explored how dispatching enables scaling of open source communities while managing contributor burden. The speaker shared implementation experiences with NetworkX (3-year evolution from pure Python to supporting faster implementations) and Scikit-Image (1-year implementation dispatching to NVIDIA QSYN).
+
+The talk emphasized community engagement importance, careful bandwidth management, and maintaining balance between users, library maintainers, and backend developers. While dispatching is "deceptively simple," it requires careful consideration of nuanced implementation choices.
+
+### Marimo: The Future of Notebooks (Akshay Agrawal)
+
+I was thrilled to see Marimo's founder Akshay give a talk about the future of notebooks. His live demo showcasing all of Marimo's capabilities was as gutsy as my own Data-Driven Pharma talk (which was also done entirely in a Marimo notebook).
+
+The fundamental change Marimo has brought to my workflow has been amazing. Not having to specify a separate manifest file for dependencies like with Jupyter notebooks was one of the big selling points for me. We had dinner together with a large group and got to discuss Marimo's future development - it was awesome to meet him in person and share thoughts on where the platform is heading.
+
+## Recording Conversations and Networking
+
+One of my favorite activities this year was bringing my DJI mic everywhere and recording conversations with fellow attendees. Over the years, I've realized how informative and valuable these SciPy conversations are, so I decided to capture them as informal podcast content.
+
+The first recording happened over breakfast with Hugo Bowne-Anderson. We were discussing everything while eating salmon frittata - we now call it "the frittata chat." Hugo loved the idea so much that he sent it to his editor, and it will appear on his podcast "Vanishing Gradients" soon.
+
+I continued this approach with Daniel Chen (my conference doppelganger - we get mistaken for each other at every conference) and Ryan Cooper. I also had an incredible hour-and-twenty-minute conversation with Zweli, covering topics from Bayes and graphs to apartheid and parenting. While I missed some talks due to these extended conversations, that's often the real purpose of conferences - engaging in dialogue we don't usually get to have.
+
+Whether I'll release these as formal podcast episodes depends partly on my energy levels and whether the participants agree, but the conversations themselves provided immense value and captured knowledge I didn't want to lose.
+
+## Nerd Sniping and Code Reviews
+
+I got thoroughly nerd-sniped by Joe Cheng, CTO of Posit, who found Llamabot and conducted an impromptu code review. We first met at the NVIDIA event while I was recording a conversation with Daniel Chen about AI education and assessment.
+
+Joe had recently decided that generative AI was a productive area for Posit and found Llamabot during his research. Standing outside the Glass Museum for half an hour, he grilled me with questions about design choices I'd never had the chance to discuss with anyone before. The nerd sniping continued over ramen takeout in the hotel lobby from Thekoi (awesome restaurant by the way!), where he asked about corners of the codebase with the thoroughness of a technical interview that I've subjected multiple people to. Talk about karma!
+
+Joe also ended up nerd sniping himself during our discussions and built something with the OpenAI real-time API that he showed me on Thursday evening. It was incredibly fun - we were on his computer together, nerding out about tweaking the real-time API settings to fit a user experience that would work with my brain, where I take a bit more time to respond and don't necessarily like the rapid-fire conversation turns.
+
+This nerd sniping cascade had a knock-on effect: it led me to implement graph-based memory for Llamabot, which then revealed that the chat memory API really wasn't optimal and needed another rewrite. There's now a 0.13 release of Llamabot planned in my head that will need to happen soon - all thanks to Joe's infectious curiosity and builder mentality!
+
+## Sprints
+
+The sprints provided a chance to contribute to open source projects, though I felt more tapped out than usual this year. Despite the fatigue, I managed to make meaningful contributions to three key areas.
+
+### Llamabot Development
+
+Joe Cheng's nerd sniping during the conference led me to spend time during the sprints implementing graph-based memory for Llamabot. The challenge was representing conversation turns as pairs of human and AI messages while inferring the most probable message that a human is responding to when creating new branches in the conversation.
+
+I successfully implemented this graph memory system, which required determining how to connect new human messages to existing assistant messages in the conversation graph. This feature allows for more sophisticated conversation tracking and branching compared to traditional linear chat histories. You can see the implementation in this pull request: https://github.com/ericmjl/llamabot/pull/226
+
+### XArray Biology Contributions
+
+Inspired by Ian's talk on XArray in biology, I worked on creating Marimo notebook examples demonstrating how XArray can be effectively used for biological data analysis. This contribution aims to bridge the gap between XArray's powerful capabilities and the biology community's needs for multi-dimensional data handling.
+
+The goal was to provide concrete examples that biologists could use as starting points for their own projects, helping to increase XArray adoption in biological research by making its benefits more tangible and accessible. You can find the completed notebook at: https://gist.github.com/ericmjl/e5b267782f9cbd27f712153deab426e1
+
+### Teen Track Talk
+
+Inessa Pawson asked if I would be willing to give a talk to the teens attending the conference. I shared stories about building your own tools and recounted experiences from my career journey. I told them how I got in through the back door and walked out through the front door of grad school, emphasizing how much you can learn along the way.
+
+Using the same approach from my Data-Driven Pharma talk, I showed them how I can build my own tools without relying on PowerPoint - by showing them live that I built my own slide deck generator. I shared how I picked up programming and made 70+ pull requests with the Matplotlib team, which was an incredible learning experience, and how the learning experience helped me later professionally at Novartis and Moderna, where being able to build tools for myself helped me be the change I wanted to see in the world. The goal was to inspire them to see that they too can build their own tools and, perhaps, be the change they wanted to see.
+
+## Conference Tidbits
+
+A few smaller moments that captured the spirit of SciPy and the power of modern notebook sharing: I helped Hugo with a quick analysis during the conference and was able to simply airdrop him a Marimo notebook with the complete analysis. The fact that I could share a fully self-contained, executable analysis so seamlessly really demonstrated how far we've come in making scientific computing more collaborative and accessible.
+
+## Conclusion
+
+Attending the SciPy conference for about a decade now has been an immense resource for my career growth. Beyond being a participant, I've also been involved as an organizer, serving on the financial aid committee for almost a decade. It's my little way of giving back to a community that has given me so much, and I'm always looking for ways to contribute even more.
+
+What makes SciPy special is its incredible community of people who are curious, nerdy, and remarkably ego-free. There's a genuine spirit of learning and teaching - many are educators at heart, eager to share knowledge and help others grow. This creates an environment where meaningful connections and learning happen naturally.
+
+I'd really recommend more people attend SciPy if their company finances allow for it. The value you get from the tutorials, talks, networking, and collaborative spirit is immense. However, I do know from helping organize the conference that this year we ran at a deficit, which isn't financially sustainable. I hope we can find more sponsors for next year to keep this amazing event accessible.
+
+If possible, I'd love to help sponsor the conference, especially the Financial Aid program. Being able to bring new people to the conference - particularly community contributors who have demonstrated need - would be amazing. I was a beneficiary of financial aid myself early in my career, and it made all the difference in my ability to participate and grow within this community.
+
+The SciPy conference continues to be a cornerstone of my professional development and a source of inspiration for pushing the boundaries of what's possible with scientific computing!
+
+---
+pub_date: 2025-07-14
+---
+summary: In this blog post, I reflect on my 10th year at the SciPy Conference, sharing highlights from teaching tutorials, attending inspiring talks, recording informal podcast conversations, and contributing to open source projects. I discuss the power of community, the evolution of scientific notebooks, and the importance of financial aid in making SciPy accessible. Curious about the behind-the-scenes moments and lessons learned from a decade at SciPy?
+---
+tags:
+
+scipy
+python
+conference
+marimo
+tutorials
+llms
+xarray
+community
+networking
+career
+---
+twitter_handle: ericmjl
