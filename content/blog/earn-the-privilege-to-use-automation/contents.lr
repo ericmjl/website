@@ -1,0 +1,107 @@
+title: Earn the privilege to use automation
+---
+body:
+
+AI in education was supposed to be transformative.
+
+We imagined students with AI tutors available 24/7, personalized learning at scale, and democratized access to high-quality education. The promise was intoxicating: every student could have their own Socrates, guiding them through complex concepts with infinite patience.
+
+Then reality hit.
+
+## When AI integration fails spectacularly
+
+Lorena Barba, a respected engineering professor at George Washington University, decided to fully embrace AI in her computational engineering course. She built a custom AI tool with her technical partners, complete with document upload capabilities, retrieval augmented generation, and safety moderation features. She gave her students what seemed like the perfect educational AI assistant.
+
+The results were devastating.
+
+Her course evaluations plummeted from 4.8/5 to 2.3/5. Students stopped attending class. They stopped doing homework with any rigor. Some copied entire assignment questions, including instructions like "your code here," and expected complete answers they could submit without understanding.
+
+The most damning feedback? Students told her: "I would have learned better if AI were not present."
+
+What went wrong? Lorena had given her students unbridled access to AI without ensuring they had the foundational skills to use it effectively. Students developed what she called an "illusion of competence"—they overestimated their knowledge because AI made everything feel easy. They missed the deep processing necessary for long-term memory formation.
+
+After 20 years of successful teaching, Lorena experienced what she called a "frustrating, humbling failure." She's now considering returning to oral examinations to preserve assessment authenticity.
+
+## The assessment validity crisis
+
+Lorena's experience reveals a fundamental problem: AI has broken traditional assessment methods. If students can get AI to do their work, how do we evaluate their actual understanding? How do we conduct meaningful assessments in both educational and workplace settings?
+
+This question hits close to home for me. As a team lead, I constantly assess whether candidates are ready for the job and whether my teammates are performing at expected levels. If I'm only looking at work outputs—the final code, the completed analysis, the polished presentation—that's an inadequate assessment method. AI has made it trivially easy to produce impressive-looking outputs while learning nothing.
+
+I need to understand *how* people think through problems, not just whether they can deliver results. This challenge sparked intense conversations with educators at SciPy 2025. Daniel Chen (University of British Columbia) and Ryan Cooper (University of Connecticut) each brought unique perspectives on adapting our assessment methods to this new reality.
+
+## Assessing the process, not just the product
+
+Daniel Chen had to fundamentally shift his approach. He moved up Bloom's taxonomy for assessment, focusing on questioning and synthesis rather than factual regurgitation. His key insight: **when students ask questions, it reveals their level of understanding**.
+
+Insightful questions indicate pursuit of mastery. Surface-level "how do I get this done" questions reveal a lack of deep engagement.
+
+Daniel proposed assessing students through their AI chat transcripts. Instead of only evaluating final products, we could examine both process and outcome. This approach reveals *how* students think through problems, potentially restoring validity to our assessments.
+
+Ryan Cooper had already started implementing this idea, collecting chat transcripts to understand student thinking patterns. He also experimented with having students generate their own exam questions—leveraging the fact that creation sits at the highest level of Bloom's taxonomy.
+
+Ryan gave students access to a curated AI system conditioned with course context, generating on-the-fly assessment questions. While innovative, he encountered challenges with rubric-based grading when AI suggested grades without clear criteria.
+
+## Why this matters in the workplace
+
+These educational assessment challenges directly mirror my daily reality as a team lead. AI assistance allows me to work solo and move incredibly fast—I love that turbocharged feeling. But this speed creates a dangerous blind spot that affects both my personal development and my team's growth.
+
+Here's my dilemma: if I don't slow down to demonstrate my thinking process, we lose opportunities to train junior team members. More concerning, if I can't see how my team members approach problems—only their final outputs—I can't effectively assess their capabilities or guide their development.
+
+When team members use GitHub Copilot or similar tools, I need visibility into their thought processes, not just their code. Are they asking insightful questions? Do they understand the trade-offs they're making? Can they spot when the AI suggests something problematic? Without access to their reasoning process, I'm essentially conducting performance reviews based on AI-assisted outputs rather than human capability.
+
+This visibility gap threatens knowledge transfer and continuity. We risk training a generation of practitioners who can orchestrate AI to produce impressive results but lack the foundational understanding to innovate when the tools fail or evolve.
+
+## Earning the privilege of automation
+
+The solution to this assessment crisis—both educational and professional—isn't to ban AI tools or ignore their impact. Instead, we need a fundamental shift in how we think about automation access.
+
+Here's the central insight that crystallized from these conversations: **people must earn the privilege to use automation**.
+
+The use of large language models for coding is automated code drafting. If you lack the skills to evaluate and verify correctness, you shouldn't use LLMs for anything important. This isn't about restricting access, but rather, it's about ensuring people develop foundational competencies first, then demonstrate those competencies before gaining access to powerful automation.
+
+The principle is straightforward: **demonstrate you can verify AI output before using AI for critical work.** This means:
+
+- Understanding underlying concepts well enough to spot errors
+- Having skills to validate AI-generated solutions
+- Developing judgment to recognize when something doesn't make sense
+- Building fortitude to dig deeper when results seem questionable
+
+I'm fine with "vibe coding" in unfamiliar languages for throwaway explorations—that's valuable for learning. But for work that matters, the ability to verify correctness is non-negotiable.
+
+## The path forward
+
+Lorena's lessons teach us that unrestricted AI access without foundational skills leads to degraded learning outcomes. We need systematic approaches to ensure people earn their automation privileges. These include:
+
+- **Moving assessments up Bloom's taxonomy** to focus on higher-order thinking skills that AI can't easily replicate
+- **Evaluating process alongside product** through chat transcript analysis and collaborative work
+- **Encouraging creation and synthesis** rather than regurgitation—have students generate exam questions, not just answer them
+- **Implementing pair programming and mentoring** that reveals thinking patterns and preserves knowledge transfer
+- **Maintaining human elements** in learning and development to counteract AI's tendency to create isolated workers
+
+The future belongs to those who can effectively collaborate with AI while maintaining the critical thinking skills to guide and verify that collaboration. But they must demonstrate mastery of fundamentals before earning that privilege.
+
+We're not trying to halt progress or ban useful tools. We're ensuring that powerful automation serves human capability rather than replacing it.
+
+*With thanks to Lorena Barba (George Washington University), Daniel Chen (University of British Columbia), Ryan Cooper (University of Connecticut), and Emily Dorne (Driven Data) for sharing their experiences and insights. Their perspectives as professional educators and industry practitioners navigating AI's impact on learning, assessment, and hiring shaped these reflections.*
+---
+author: Eric J. Ma
+---
+summary: In this blog post, I reflect on the challenges of integrating AI into education and the workplace, sharing lessons from educators who found that unrestricted AI access can undermine true learning and assessment. I discuss why it's crucial to earn the privilege to use automation by first mastering foundational skills and demonstrating the ability to verify AI outputs. How can we ensure that AI enhances, rather than replaces, our critical thinking and problem-solving abilities?
+---
+tags:
+
+education
+assessment
+automation
+ai
+learning
+workplace
+skills
+process
+outcomes
+privilege
+---
+twitter_handle: ericmjl
+---
+pub_date: 2025-07-13
