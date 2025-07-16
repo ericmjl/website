@@ -1,0 +1,254 @@
+title: How to use xarray for unified laboratory data storage
+---
+author: Eric J. Ma
+---
+body:
+
+What if your laboratory and machine learning related data could be managed within a single data structure? From raw experimental measurements to computed features to model outputs, everything coordinate-aligned and ready for analysis.
+
+I've been thinking about this problem across different experimental contexts. We generate measurement data, then computed features, then model outputs, then train/test splits. Each piece typically lives in its own file, its own format, with its own indexing scheme. The cognitive overhead of keeping track of which sample corresponds to which row in which CSV is exhausting.
+
+Let me illustrate this with a microRNA expression study as a concrete example.
+
+Here's an approach that could solve this: **store everything in a unified xarray Dataset where sample identifiers are the shared coordinate system**. Your experimental measurements, computed features, statistical estimates, and data splits all aligned by the same IDs. No more integer indices. No more file juggling. Just clean, coordinated data that scales to the cloud.
+
+## What's wrong with traditional laboratory data management?
+
+Picture this: you're three months into a microRNA expression study. You've got the following files:
+
+- expression measurements in `expression_data.csv`,
+- ML features in `sequence_features.parquet`,
+- model outputs in `model_results.h5`, and
+- train/test splits scattered across `train_indices.npy` and `test_indices.npy`.
+
+Each file has its own indexing scheme - some use row numbers, others use identifiers, and you're constantly writing index-matching code just to keep everything aligned.
+
+The cognitive overhead is brutal. Which microRNA corresponds to row 47 in the features file? Did you remember to filter out the same samples from both your training data and your metadata? When you subset your data for analysis, do all your indices still match?
+
+I've lost count of how many times I've seen analysis pipelines break because someone forgot to apply the same filtering to all their data files. It's not just inefficient - it's error-prone and exhausting.
+
+## How does xarray solve this?
+
+Xarray changes the game by making **coordinates the foundation of your data structure**. Instead of managing separate files with separate indexing schemes, you create one unified dataset where *every piece of data knows exactly which microRNA it belongs to*.
+
+The beauty lies in the coordinate system. Each data point is labeled with meaningful coordinates: not just row numbers, but actual experimental factors like microRNA ID, treatment condition, time point, and replicate. When you slice your data, everything stays aligned automatically.
+
+This is transformative! When everything shares the same coordinate system, you can slice across any dimension and everything stays connected. Want features for specific microRNAs? The model results for those same microRNAs come along automatically.
+
+## What does unified data storage look like?
+
+Let me walk you through how this works in practice. We start with a coordinate system that captures the experimental design:
+
+```
+Coordinates:
+* mirna           (150 microRNAs: hsa-miR-1, hsa-miR-2, ...)
+* treatment       (3 conditions: control, hypoxia, inflammation)
+* time_point      (5 timepoints: 2h, 6h, 12h, 24h, 48h)
+* replicate       (3 replicates: rep_1, rep_2, rep_3)
+* cell_line       (10 cell lines: cell_line_01, cell_line_02, ...)
+* experiment_date (4 dates: experiment dates)
+```
+
+Then we progressively add data that aligns with these coordinates:
+
+```python
+# Stage 1: Expression measurements
+unified_dataset = xr.Dataset({
+    'expression_level': (['mirna', 'treatment', 'time_point', 'replicate', 'cell_line'], expression_data)
+})
+
+# Stage 2: Bayesian estimation results
+unified_dataset = unified_dataset.assign({
+    'mirna_effects': (['mirna'], mirna_coefficients),
+    'mirna_effects_std': (['mirna'], mirna_coefficient_errors),
+    'treatment_effects': (['treatment'], treatment_coefficients),
+    'treatment_effects_std': (['treatment'], treatment_coefficient_errors),
+    'time_effects': (['time_point'], time_coefficients),
+    'time_effects_std': (['time_point'], time_coefficient_errors),
+    'replicate_effects': (['replicate'], replicate_coefficients),
+    'replicate_effects_std': (['replicate'], replicate_coefficient_errors),
+    'cell_line_effects': (['cell_line'], cell_line_coefficients),
+    'cell_line_effects_std': (['cell_line'], cell_line_coefficient_errors)
+})
+
+# Stage 3: ML features
+unified_dataset = unified_dataset.assign({
+    'ml_features': (['mirna', 'feature'], feature_matrix)
+}).assign_coords(feature=['nt_A', 'nt_T', 'nt_G', 'nt_C', 'length', 'gc_content'])
+
+# Stage 4: Train/test splits
+unified_dataset = unified_dataset.assign({
+    'train_mask': (['mirna', 'split_type'], train_masks),
+    'test_mask': (['mirna', 'split_type'], test_masks)
+})
+```
+
+The magic happens when you realize that **every piece of data is automatically aligned by the shared coordinate system**. Need to analyze expression patterns for microRNAs in your training set? It's just coordinate selection:
+
+```python
+# Get training mask for random 80/20 split
+train_mask = unified_dataset.train_mask.sel(split_type='random_80_20')
+
+# Get ML features for training microRNAs
+train_features = unified_dataset.ml_features.where(train_mask, drop=True)
+
+# Get expression data for the same microRNAs
+train_expression = unified_dataset.expression_level.where(train_mask, drop=True)
+```
+
+Everything stays connected automatically. No manual bookkeeping required.
+
+## How do we build this step by step?
+
+The approach is straightforward - **progressive data accumulation**. You don't need to have everything figured out upfront. Start with your core experimental data, then add layers as your analysis develops.
+
+### Stage 1: Laboratory measurements
+
+Your foundation is the experimental data with meaningful coordinates:
+
+```python
+# Expression data automatically aligned by coordinates
+expression_data = xr.DataArray(
+    measurements,
+    coords={
+        'mirna': mirna_ids,
+        'treatment': ['control', 'hypoxia', 'inflammation'],
+        'replicate': ['rep_1', 'rep_2', 'rep_3'],
+        'time_point': ['2h', '6h', '12h', '24h', '48h'],
+        'cell_line': cell_lines
+    },
+    dims=['mirna', 'treatment', 'replicate', 'time_point', 'cell_line']
+)
+```
+
+You should note here how the coordinates basically mirror the experimental design.
+
+### Stage 2: Bayesian estimation
+
+Add effect estimates that align with your experimental coordinates:
+
+```python
+# Bayesian effects model results
+unified_dataset = unified_dataset.assign({
+    'mirna_effects': (['mirna'], mirna_coefficients),
+    'mirna_effects_std': (['mirna'], mirna_coefficient_errors),
+    'treatment_effects': (['treatment'], treatment_coefficients),
+    'treatment_effects_std': (['treatment'], treatment_coefficient_errors),
+    'time_effects': (['time_point'], time_coefficients),
+    'time_effects_std': (['time_point'], time_coefficient_errors),
+    'replicate_effects': (['replicate'], replicate_coefficients),
+    'replicate_effects_std': (['replicate'], replicate_coefficient_errors),
+    'cell_line_effects': (['cell_line'], cell_line_coefficients),
+    'cell_line_effects_std': (['cell_line'], cell_line_coefficient_errors)
+})
+```
+
+The beauty is that your Bayesian effects model estimates align perfectly with your experimental design coordinates. Each experimental factor gets its own effect estimate with uncertainty, organized by the same coordinate system as your raw data.
+
+### Stage 3: ML features
+
+Features slot right into the same coordinate system:
+
+```python
+# ML features aligned by microRNA ID
+unified_dataset = unified_dataset.assign({
+    'ml_features': (['mirna', 'feature'], feature_matrix)
+}).assign_coords(feature=['nt_A', 'nt_T', 'nt_G', 'nt_C', 'length', 'gc_content'])
+```
+
+### Stage 4: Train/test splits
+
+Even data splits become part of the unified structure:
+
+```python
+# Boolean masks aligned by microRNA coordinate
+unified_dataset = unified_dataset.assign({
+    'train_mask': (['mirna', 'split_type'], train_masks),
+    'test_mask': (['mirna', 'split_type'], test_masks)
+})
+```
+
+> **Progressive build = reduced cognitive load**
+>
+> The beauty of this approach is that you can build it incrementally. Start with your core experimental data, then add statistical results, then ML features, then splits. Each stage builds on the previous coordinate system, so everything stays aligned automatically.
+
+## What are the practical benefits?
+
+### No more index juggling
+
+Remember the nightmare of keeping track of which microRNA corresponds to which row in which file? That's gone. Every piece of data knows its own coordinates.
+
+```python
+# Before: manual index matching across files
+expression_subset = expression_df.iloc[train_indices]
+features_subset = features_df.loc[mirna_ids[train_indices]]
+model_results_subset = model_df.iloc[train_indices]
+
+# After: coordinate-based selection
+train_data = unified_dataset.where(
+    unified_dataset.train_mask.sel(split_type='random_80_20'),
+    drop=True
+)
+```
+
+### Bulletproof data consistency
+
+When you slice your data, everything stays aligned automatically. No more worrying about applying the same filtering to all your files.
+
+### Cloud-native scaling
+
+Store everything in Zarr format and your unified dataset becomes cloud-native. Load it from S3, query specific slices, and everything scales seamlessly. (Note: Zarr has some limitations with certain data types like U8, but xarray supports multiple storage formats to work around these issues.)
+
+```python
+# Save entire workflow to cloud
+unified_dataset.to_zarr('s3://biodata/mirna_screen_2024.zarr')
+
+# Load and analyze anywhere
+experiment = xr.open_zarr('s3://biodata/mirna_screen_2024.zarr')
+```
+
+### Reproducible analysis pipelines
+
+Your analysis becomes more reproducible because the data structure itself enforces consistency. Share the dataset and the analysis code just works.
+
+## What tools make this possible?
+
+The tooling ecosystem has evolved dramatically in recent years. A few years ago, I would have told you to use parquet files with very unnatural tabular setups to get everything into tidy format. But **xarray is changing the game**.
+
+**Xarray** provides the coordinate system and multidimensional data structures that make this unified approach possible. It's like pandas for higher-dimensional data, but with meaningful coordinates instead of just integer indices.
+
+**Zarr** gives you cloud-native storage that preserves all your coordinate information and metadata. It supports chunking, compression, and parallel access - perfect for scaling your unified datasets.
+
+
+**Note:** The tools we've got are just getting better and better. I wouldn't have imagined that we'd be able to use xarray for this kind of unified laboratory data storage just a few years ago. The ecosystem is maturing rapidly, and these approaches are becoming more accessible every year.
+
+## What's next?
+
+If you're working with multidimensional experimental data, I'd strongly encourage you to try this unified approach. Start small - take your next experiment and see if you can structure it as a single xarray Dataset instead of multiple files.
+
+The cognitive overhead reduction is immediate. No more wondering if your indices are aligned. No more writing index-matching code. Just clean, coordinated data that scales to the cloud.
+
+Time will distill the best practices in your context, but I've found this unified approach eliminates so much friction from the experimental data lifecycle. Give it a try and see how it feels in your workflow.
+
+I cooked up this synthetic example while attending Ian Hunt-Isaak's talk ["Xarray across biology. Where are we and where are we going?"](https://cfp.scipy.org/scipy2025/talk/AARA39/) at SciPy 2025. His presentation on using xarray for biological data really crystallized how powerful this coordinate-based approach could be for the typical experimental workflow.
+---
+*Want to see the full implementation? Check out the [marimo notebook](https: //gist.github.com/ericmjl/e5b267782f9cbd27f712153deab426e1) that demonstrates this unified approach with synthetic microRNA data.*
+---
+pub_date: 2025-07-15
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how using xarray can transform laboratory and machine learning data management by unifying everything—measurements, features, model outputs, and splits—into a single, coordinate-aligned dataset. This approach eliminates the hassle of index-matching across multiple files, reduces errors, and makes your workflow more reproducible and cloud-ready. Curious how this unified structure can simplify your experimental data analysis and save you time? Read on to find out!
+---
+tags:
+
+xarray
+bioinformatics
+reproducibility
+cloud
+workflow
+alignment
+features
+laboratory
+datasets
+scaling
