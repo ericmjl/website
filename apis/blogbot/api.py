@@ -10,21 +10,21 @@ from fastapi.templating import Jinja2Templates
 from llamabot import ImageBot, StructuredBot
 
 from .models import (
+    BlueSkyPost,
     DallEImagePrompt,
     LinkedInPost,
     SubstackPost,
     Summary,
     Tags,
-    TwitterPost,
 )
 from .prompts import (
     bannerbot_dalle_prompter_sysprompt,
+    compose_bluesky_post,
     compose_feedback_revision,
     compose_linkedin_post,
     compose_substack_post,
     compose_summary,
     compose_tags,
-    compose_twitter_post,
     socialbot_sysprompt,
 )
 from .scraper import get_latest_blog_posts, get_post_body
@@ -70,12 +70,12 @@ async def generate_post(
         social_post = bot(compose_linkedin_post(body, blog_url))
         print("Post generated!")
         content = social_post.format_post()
-    elif post_type == "twitter":
+    elif post_type == "bluesky":
         bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=TwitterPost
+            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=BlueSkyPost
         )
-        print("Generating Twitter post...")
-        social_post = bot(compose_twitter_post(body, blog_url))
+        print("Generating BlueSky post...")
+        social_post = bot(compose_bluesky_post(body, blog_url))
         print("Post generated!")
         content = social_post.format_post()
     elif post_type == "substack":
@@ -203,8 +203,8 @@ async def iterate_post(
     # Get the appropriate model based on post type
     if post_type == "linkedin":
         model = LinkedInPost
-    elif post_type == "twitter":
-        model = TwitterPost
+    elif post_type == "bluesky":
+        model = BlueSkyPost
     elif post_type == "substack":
         model = SubstackPost
     elif post_type == "summary":

@@ -48,25 +48,28 @@ def compose_patreon_post(text, url):
 
 
 @prompt(role="user")
-def compose_twitter_post(text, url):
+def compose_bluesky_post(text, url):
     """This is a blog post that I just wrote:
 
         {{ text }}
 
     It came from the following url: {{ url }}.
 
-    Please compose for me a Twitter post
-    that entices my followers on Twitter to read it.
+    Please compose for me a BlueSky post
+    that entices my followers on BlueSky to read it.
     I usually like to open off with a question that the post answers.
     Ensure that there is a call to action to interact with the post after reading it,
-    such as retweeting, commenting, or sharing it with others.
-    Include hashtags inline with the Twitter post.
+    such as reposting, commenting, or sharing it with others.
+    Include hashtags inline with the BlueSky post.
     Hashtags should be all lowercase.
-    Ensure that you insert the URL of the blog post in an appropriate place,
-    using Markdown syntax to link to the post.
+    DO NOT include the URL in your response - it will be added automatically at the end.
     Also ensure that it is written in first-person, humble, and inviting tone.
     """
     return prompt
+
+
+# For backwards compatibility, keep compose_twitter_post available
+compose_twitter_post = compose_bluesky_post
 
 
 @prompt(role="user")

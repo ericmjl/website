@@ -1,4 +1,4 @@
-<h4>{{ post_type|title }} Content</h4>
+<h4>{% if post_type == 'twitter' %}BlueSky{% else %}{{ post_type|title }}{% endif %} Content</h4>
 <!-- EasyMDE Markdown Editor -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <style>
@@ -92,8 +92,8 @@
 
 <!-- Feedback Section -->
 <div class="feedback-section">
-  <h5>Iterate on this {{ post_type }}</h5>
-  <p style="margin-bottom: 0.5rem; color: #6c757d; font-size: 0.9rem;">Provide feedback to improve this {{ post_type }} post:</p>
+  <h5>Iterate on this {% if post_type == 'twitter' %}BlueSky{% else %}{{ post_type|title }}{% endif %} post</h5>
+  <p style="margin-bottom: 0.5rem; color: #6c757d; font-size: 0.9rem;">Provide feedback to improve this {% if post_type == 'twitter' %}BlueSky{% else %}{{ post_type }}{% endif %} post:</p>
   <form id="feedback-form" hx-post="/iterate/{{ post_type }}" hx-target="#result" hx-indicator="#spinner">
     <textarea
       id="feedback-input"

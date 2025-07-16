@@ -155,7 +155,7 @@ class LinkedInPost(BaseModel):
         return post_content
 
 
-class TwitterPost(BaseModel):
+class BlueSkyPost(BaseModel):
     strong_hook: str = Field(
         ...,
         description=(
@@ -190,14 +190,14 @@ class TwitterPost(BaseModel):
     hashtags: List[str] = Field(
         ...,
         max_items=2,
-        description="A list of hashtags (max 2) to be included in the Twitter post",
+        description="A list of hashtags (max 2) to be included in the BlueSky post",
     )
     url: str = Field(
         ..., description="The URL to click on for more information. Just the raw URL."
     )
 
     # Engagement metadata
-    tweet_intent: str = Field(
+    post_intent: str = Field(
         default="value_delivery",
         description="Primary intent: value_delivery, emotion, entertainment, controversy",  # noqa: E501
     )
@@ -208,20 +208,23 @@ class TwitterPost(BaseModel):
 
     @model_validator(mode="after")
     def validate_content(self):
-        """Validate the structure and content of the Twitter post."""
+        """Validate the structure and content of the BlueSky post."""
         errors = []
 
         # Validate hashtags
         if len(self.hashtags) > 2:
-            errors.append("Twitter post can have a maximum of 2 hashtags.")
+            errors.append("BlueSky post can have a maximum of 2 hashtags.")
         for hashtag in self.hashtags:
             if not hashtag.startswith("#"):
                 errors.append(f"Hashtag '{hashtag}' must start with '#.'")
 
         # Validate total length
+        # (283 chars excluding URL to account for buff.ly shortening)
         total_content = self.format_post(with_url=False)
-        if len(total_content) > 280:
-            errors.append("Total content must be 280 characters or less.")
+        if len(total_content) > 283:
+            errors.append(
+                "Total content must be 283 characters or less (excluding URL to account for buff.ly link shortening)."  # noqa: E501
+            )
         if len(total_content) < 100:
             errors.append("Total content must be at least 100 characters for impact.")
 
@@ -251,7 +254,7 @@ class TwitterPost(BaseModel):
 
         # Validate authenticity
         if not self.authenticity_check:
-            errors.append("Tweet must represent authentic beliefs and voice")
+            errors.append("Post must represent authentic beliefs and voice")
 
         if errors:
             raise ValueError(", ".join(errors))
@@ -259,7 +262,7 @@ class TwitterPost(BaseModel):
         return self
 
     def format_post(self, with_url: bool = True) -> str:
-        """Format the Twitter post following compelling tweet template."""
+        """Format the BlueSky post following compelling post template."""
         # Follow template: [Strong hook]. [Clear stance]. [Value delivery]. [Optional CTA]  # noqa: E501
         post_content = f"{self.strong_hook} {self.clear_stance} {self.value_delivery}"
 
@@ -275,6 +278,10 @@ class TwitterPost(BaseModel):
         print(f"Post content length: {len(post_content)}")
 
         return post_content
+
+
+# For backwards compatibility, keep TwitterPost available
+TwitterPost = BlueSkyPost
 
 
 class SubstackSection(BaseModel):
