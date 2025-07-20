@@ -1,7 +1,7 @@
 [project]
 name = "ericmjl-website"
 version = "0.0.1"
-requires-python = "==3.11"
+requires-python = "==3.13"
 description = "Eric Ma's Personal Website"
 dependencies = ["marimo", "click"]
 
@@ -67,8 +67,7 @@ nbconvert = "*"
 ipykernel = "*"
 jupyterlab = "*"
 tqdm = "*"
-numpy = "<2"
-pydantic = ">=2.8.2,<3"
+pydantic = "*"
 
 [tool.pixi.feature.blogbot.pypi-dependencies]
 llamabot = { version = ">=0.12.1", extras = ["all"] }
@@ -80,7 +79,7 @@ pre-commit = "*"
 lektor = "==3.4.0b4"
 
 [tool.pixi.feature.lektor.dependencies]
-python = "==3.11"
+python = "==3.13"
 mistune = "<3"
 werkzeug = "<3"
 
@@ -90,7 +89,7 @@ build = "lektor build --output-path site/"
 
 [tool.pixi.feature.blogbot.tasks]
 blogbot_old = "panel serve apis/blogbot/app.ipynb --allow-websocket-origin=0.0.0.0:5006"
-blogbot = "uvicorn apis.blogbot.api:app --reload --port 8173 --host 0.0.0.0"
+blogbot = "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 uvicorn apis.blogbot.api:app --reload --port 8173 --host 0.0.0.0"
 
 [tool.pixi.environments]
 default = ["lektor", "devtools"]
