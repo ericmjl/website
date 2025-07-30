@@ -62,7 +62,7 @@ Key improvements include a single consistent API where distributions are classes
 
 ### High-Level API Dispatching for Community Scaling (Erik Welch)
 
-This presentation explored how dispatching enables scaling of open source communities while managing contributor burden. The speaker shared implementation experiences with NetworkX (3-year evolution from pure Python to supporting faster implementations) and Scikit-Image (1-year implementation dispatching to NVIDIA QSYN).
+This presentation explored how dispatching enables scaling of open source communities while managing contributor burden. The speaker shared implementation experiences with NetworkX (3-year evolution from pure Python to supporting faster implementations) and Scikit-Image (1-year implementation dispatching to NVIDIA cuCIM).
 
 The talk emphasized community engagement importance, careful bandwidth management, and maintaining balance between users, library maintainers, and backend developers. While dispatching is "deceptively simple," it requires careful consideration of nuanced implementation choices.
 
@@ -118,7 +118,7 @@ Using the same approach from my Data-Driven Pharma talk, I showed them how I can
 
 A few smaller moments that captured the spirit of SciPy and the power of modern notebook sharing: I helped Hugo with a quick analysis during the conference and was able to simply airdrop him a Marimo notebook with the complete analysis. The fact that I could share a fully self-contained, executable analysis so seamlessly really demonstrated how far we've come in making scientific computing more collaborative and accessible.
 
-Another remarkable tidbit: I went to Chilli Thai for the sixth and seventh time in two years, which is pretty remarkable considering that I've only been at the conference for a total of 14 days. Chilli Thai really earns high ratings from me - the duck curry and the panang curry are amongst the best I've ever had.
+Another remarkable tidbit: I went to Chili Thai for the sixth and seventh time in two years, which is pretty remarkable considering that I've only been at the conference for a total of 14 days. Chili Thai really earns high ratings from me - the duck curry and the panang curry are amongst the best I've ever had.
 
 ## Conclusion
 
