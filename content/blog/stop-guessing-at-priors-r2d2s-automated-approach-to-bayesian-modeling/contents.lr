@@ -27,7 +27,7 @@ R² = W / (W + σ²)
 R²(W + σ²) = W
 R²W + R²σ² = W
 R²σ² = W - R²W = W(1 - R²)
-W = R²σ² / (1 - R²)
+W = σ² * (R² / (1 - R²))
 ```
 
 Therefore, W represents the **ratio of explained variance to residual variance** - how much variance the model explains relative to unexplained noise. This gives us:
@@ -70,6 +70,9 @@ Bringing these pieces together - the R² prior, the Dirichlet variance allocatio
 
 ```python
 with pm.Model(coords=coords) as model:
+    # Noise level (data scale)
+    sigma = pm.HalfNormal("sigma", sigma=1.0)
+
     # R² prior (intuitive model fit control)
     r_squared = pm.Beta("r_squared", alpha=a, beta=b)
 
