@@ -1,0 +1,294 @@
+title: Stop guessing at priors: R2D2's automated approach to Bayesian modeling
+---
+author: Eric J. Ma
+---
+body:
+
+When I first encountered the R2D2 (R²-induced Dirichlet Decomposition) framework (Zhang et al., 2020), I was struck by its intuitive approach to Bayesian regularization. Instead of placing priors on individual regression coefficients and hoping for the best, R2D2 lets you directly specify your beliefs about how much variance the model should explain. But what really fascinated me was how the framework elegantly extends from simple linear regression to complex multilevel models through a series of principled modifications.
+
+This post documents my journey understanding the progression from the basic R2D2 shrinkage prior to its sophisticated multilevel variant (R2D2M2), with stops along the way to explore generalized linear models. What emerged was a beautiful mathematical architecture where each extension builds naturally on the previous.
+
+## The foundation: R2D2 shrinkage prior
+
+The journey begins with the elegant insight that motivated the original R2D2 framework: why not place a prior directly on the coefficient of determination (R²) rather than fumbling with individual coefficient priors? The challenge with individual coefficient priors isn't just knowing where to center them, but defining appropriate variance parameters - it's remarkably difficult to know a priori how much variability each coefficient should have.
+
+### The core mathematical insight
+
+For any model, R² represents the proportion of output variance that can be explained:
+
+```
+R² = explained variance / total variance = W / (W + σ²)
+```
+
+Rearranging this relationship shows us what W actually represents:
+
+```
+R² = W / (W + σ²)
+R²(W + σ²) = W
+R²W + R²σ² = W
+R²σ² = W - R²W = W(1 - R²)
+W = R²σ² / (1 - R²)
+```
+
+Therefore, W represents the **ratio of explained variance to residual variance** - how much variance the model explains relative to unexplained noise. This gives us:
+
+- **W = 1**: Signal equals noise (R² = 0.5)
+- **W = 4**: Signal is 4 times stronger than noise (R² = 0.8)
+- **W = 0.25**: Noise is 4 times stronger than signal (R² = 0.2)
+
+The R2D2 framework starts by placing a Beta prior on R²:
+
+```python
+r_squared = pm.Beta("r_squared", alpha=a, beta=b)
+W = pm.Deterministic("W", r_squared / (1 - r_squared))
+```
+
+As Zhang et al. note, "the induced prior density for W = R²/(1-R²) is a Beta Prime distribution ... denoted as BP(a,b)," giving us intuitive control over model fit through the familiar Beta hyperparameters.
+
+### Allocating explained variance: the Dirichlet decomposition
+
+But here's where R2D2 gets clever. Instead of requiring the modeler to manually specify variance parameters for each predictor's prior, it uses a **Dirichlet decomposition** to automatically allocate the total explained variance W across predictors:
+
+```python
+# W is the total explained variance to allocate
+phi = pm.Dirichlet("phi", a=a_pi * np.ones(p), dims="predictors")
+lambda_j = pm.Deterministic("lambda_j", phi * W, dims="predictors")
+```
+
+This means `φⱼ × W = λⱼ` answers the question: *"What fraction of the total explained variance does predictor j get?"*
+
+**Example**: If W = 8 (explained variance is 8 times larger than residual variance) and φ = [0.5, 0.3, 0.2], then:
+- Predictor 1: λ₁ = 0.5 × 8 = 4 (gets 50% of explained variance)
+- Predictor 2: λ₂ = 0.3 × 8 = 2.4 (gets 30% of explained variance)
+- Predictor 3: λ₃ = 0.2 × 8 = 1.6 (gets 20% of explained variance)
+
+As Zhang et al. describe, this creates adaptive behavior where "the heavy tail reduces the bias in estimation of large coefficients, while the high concentration around zero shrinks the irrelevant coefficients heavily to zero, thus reducing the noise" - factors that explain a lot of the output variance get allocated more of the total explained variance (larger λⱼ values), while factors that don't explain much output variance get allocated less explained variance (smaller λⱼ values).
+
+### The R2D2 model
+
+Bringing these pieces together - the R² prior, the Dirichlet variance allocation, and the coefficient distributions - we get the R2D2 model:
+
+```python
+with pm.Model(coords=coords) as model:
+    # R² prior (intuitive model fit control)
+    r_squared = pm.Beta("r_squared", alpha=a, beta=b)
+
+    # Global signal-to-noise ratio
+    W = pm.Deterministic("W", r_squared / (1 - r_squared))
+
+    # Local variance allocation (competitive)
+    phi = pm.Dirichlet("phi", a=np.full(p, a_pi), dims="predictors")
+    lambda_j = pm.Deterministic("lambda_j", phi * W, dims="predictors")
+
+    # Coefficients with allocated variance
+    scale_j = sigma * pm.math.sqrt(lambda_j / 2)  # For Laplace priors
+    beta = pm.Laplace("beta", mu=0, b=scale_j, dims="predictors")
+
+    # Standard linear likelihood
+    mu = pm.math.dot(X, beta)
+    likelihood = pm.Normal("y", mu=mu, sigma=sigma, observed=y, dims="obs")
+```
+
+The beauty of this approach lies in the competitive nature of the Dirichlet allocation: all predictors compete for the total explained variance W. If one predictor becomes more important (higher φⱼ), others must become less important. This creates natural sparsity and prevents overfitting.
+
+## First extension: R2D2 for generalized linear models
+
+The first major challenge came when extending R2D2 to non-Gaussian outcomes. Yanchenko et al. (2021) tackled this problem by developing clever approximation methods that preserve the intuitive R² interpretation. The beautiful relationship `R² = W/(W+σ²)` that made everything work cleanly suddenly becomes complex when dealing with Poisson counts, binary outcomes, or other GLM families.
+
+### The challenge: no more simple σ²
+
+In GLMs, the "noise" isn't a simple σ² anymore. Instead, we have:
+
+- **Poisson**: Variance equals the mean (`σ²(η) = e^η`)
+- **Binomial**: Variance depends on probability (`σ²(η) = μ(η)[1-μ(η)]`)
+- **Gaussian**: Still simple (`σ²(η) = σ²`)
+
+This breaks our clean R² = W/(W+σ²) relationship because now both the signal and noise are functions of the linear predictor η.
+
+### The elegant solution: linear approximation
+
+The GLM extension uses a brilliant linear approximation approach. As Yanchenko et al. describe, "applying a first-order Taylor series approximation of μ(η) and σ²(η) around β₀" allows them to handle the GLM complexity. We approximate the complex GLM relationship around the intercept β₀:
+
+```
+R² ≈ W/(W + s²(β₀))
+```
+
+Where `s²(β₀) = σ²(β₀)/[μ'(β₀)]²` is the "effective noise" for each GLM family:
+
+- **Gaussian**: `s²(β₀) = σ²` (no change needed!)
+- **Poisson**: `s²(β₀) = e^{-β₀}` (depends on baseline rate)
+- **Logistic**: `s²(β₀) = μ(β₀)(1-μ(β₀))/[μ'(β₀)]²` (depends on baseline probability)
+
+### What this achieves
+
+**The genius**: We keep all the interpretability and mathematical structure of the linear R2D2 case, but just compute a smarter "noise" term that respects the GLM family's variance structure.
+
+```python
+with pm.Model(coords=coords) as model:
+    # Same intuitive R² prior!
+    r_squared = pm.Beta("r_squared", alpha=a, beta=b)
+
+    # GLM-specific "effective noise"
+    if family == 'poisson':
+        s_sq = pm.Deterministic("s_sq", pt.exp(-beta0))
+    elif family == 'binomial':
+        exp_beta0 = pt.exp(beta0)
+        mu_beta0 = exp_beta0 / (1 + exp_beta0)
+        mu_prime_beta0 = exp_beta0 / pt.power(1 + exp_beta0, 2)
+        s_sq = pm.Deterministic("s_sq", mu_beta0 * (1 - mu_beta0) / pt.power(mu_prime_beta0, 2))
+
+    # Same competitive allocation structure!
+    W_base = pm.Deterministic("W_base", r_squared / (1 - r_squared))
+    W = pm.Deterministic("W", W_base * s_sq)
+    phi = pm.Dirichlet("phi", a=np.full(n_components, xi0), dims="components")
+```
+
+The elegance of this approach becomes clear when we step back and see what's happening conceptually. We're essentially asking "what would σ² be if this GLM were actually a linear model?" and using that as our effective noise term. This preserves all the intuitive benefits of R2D2 while handling GLM complexity.
+
+## The great leap: R2D2M2 for multilevel models
+
+The most sophisticated extension addresses the challenge of multilevel models with multiple grouping factors - the kind of complex experimental designs common in laboratory research. Aguilar & Bürkner (2022) developed the R2D2M2 prior to handle this complexity while preserving the intuitive variance decomposition interpretation.
+
+### The multilevel challenge
+
+Consider a laboratory experiment with:
+
+- **Predictors**: Gene expression, Age, Treatment dose
+- **Grouping factors**: Mouse ID, MicroRNA ID, Stress condition
+
+Traditional approaches assign independent priors to each effect:
+
+```python
+# Traditional (problematic) approach
+beta_gene ~ Normal(0, λ_gene²)
+beta_age ~ Normal(0, λ_age²)
+mouse_effects ~ Normal(0, λ_mouse²)
+microRNA_effects ~ Normal(0, λ_microRNA²)
+stress_effects ~ Normal(0, λ_stress²)
+```
+
+**The problem**: As you add more predictors and grouping factors, the implied R² prior becomes increasingly concentrated near 1 (the maximum possible R² value). This happens because each additional effect adds its own independent variance contribution, causing the total expected explained variance to grow without bound, leading to overfitting-prone models that expect near-perfect fit a priori.
+
+### The R2D2M2 solution: type-level variance allocation
+
+The key insight from Aguilar & Bürkner is that R2D2M2 extends the Dirichlet decomposition to handle multiple **types** of effects while preserving hierarchical pooling:
+
+```python
+# Component calculation for laboratory data
+n_components = n_predictors + n_grouping_factors
+n_components = 3 + 3 = 6  # gene_expr + age + dose + mouse + microRNA + stress
+
+component_names = [
+    'population_gene_expr',    # Population-level effects
+    'population_age',
+    'population_dose',
+    'mouse_intercepts',        # Group-specific intercept types
+    'microRNA_intercepts',
+    'stress_intercepts'
+]
+```
+
+The key innovation here is subtle but powerful: instead of allocating variance to individual groups (Mouse 1, Mouse 2, etc.), we allocate variance to **types** of effects. All mice share one variance prior, all microRNAs share another, etc.
+
+### The complete R2D2M2 framework
+
+Let's see how this all comes together in practice. The R2D2M2 model combines the R² prior, the extended Dirichlet allocation, and the hierarchical variance structure:
+
+```python
+with pm.Model(coords=coords) as model:
+    # Same intuitive R² control
+    r_squared = pm.Beta("r_squared", alpha=alpha_r2, beta=beta_r2)
+    tau_squared = pm.Deterministic("tau_squared", r_squared / (1 - r_squared))
+
+    # Extended Dirichlet allocation across ALL effect types
+    phi = pm.Dirichlet("phi", a=np.full(6, concentration), dims="components")
+
+    # Population-level effects - each gets its own φ component
+    beta_gene = pm.Normal("beta_gene", mu=0,
+                         sigma=pt.sqrt(sigma_squared * phi[0] * tau_squared))
+    beta_age = pm.Normal("beta_age", mu=0,
+                        sigma=pt.sqrt(sigma_squared * phi[1] * tau_squared))
+    beta_dose = pm.Normal("beta_dose", mu=0,
+                         sigma=pt.sqrt(sigma_squared * phi[2] * tau_squared))
+
+    # Group-specific intercepts - each type gets its own φ component
+    mouse_intercepts = pm.Normal("mouse_intercepts", mu=0,
+                                sigma=pt.sqrt(sigma_squared * phi[3] * tau_squared),
+                                dims="mice")
+    microRNA_intercepts = pm.Normal("microRNA_intercepts", mu=0,
+                                   sigma=pt.sqrt(sigma_squared * phi[4] * tau_squared),
+                                   dims="microRNAs")
+    stress_intercepts = pm.Normal("stress_intercepts", mu=0,
+                                 sigma=pt.sqrt(sigma_squared * phi[5] * tau_squared),
+                                 dims="stress_conditions")
+
+    # Linear predictor combining all effects
+    eta = (beta_gene * gene_expr + beta_age * age + beta_dose * dose +
+           mouse_intercepts[mouse_ids] +
+           microRNA_intercepts[microRNA_ids] +
+           stress_intercepts[stress_conditions])
+```
+
+Now that we've seen the mathematical structure, let's understand what makes this approach so effective.
+
+### Why this works so well
+
+**Hierarchical pooling preserved**: Individual mice still borrow strength from each other because they share the same variance component. Mouse A and Mouse B both use `mouse_scale`, but have different intercept values.
+
+**Automatic factor importance**: The φ allocation tells you which experimental factors matter most. If φ = [0.15, 0.25, 0.05, 0.35, 0.15, 0.05], then mouse differences account for 35% of total explained variance - more than any single predictor!
+
+**Scalable complexity**: Works with any number of crossed or nested grouping factors without parameter explosion.
+
+## The unified architecture
+
+What strikes me most about this progression is how each extension elegantly handles new complexity:
+
+All three approaches maintain **consistent R² control**, letting you directly specify beliefs about model fit through the same intuitive Beta prior on R². The competitive variance allocation through the Dirichlet mechanism creates healthy competition between effects across all approaches, preventing any single component from dominating. This leads to highly interpretable results - every approach produces φ components that directly tell you "what percentage of explained variance does each effect contribute?"
+
+The mathematical elegance is striking: each extension modifies just what needs to change. The GLM extension changes the noise term (σ² → s²(β₀)), while the M2 extension extends the allocation to multiple effect types. Finally, all approaches provide the same practical benefits - automatic shrinkage, sparsity induction, and protection against overfitting while maintaining computational tractability.
+
+## When to use what
+
+Given these unified principles, how do you choose which approach fits your specific modeling scenario? Through this exploration, clear use cases emerged:
+
+| Approach | When to Use | Example |
+|----------|-------------|---------|
+| **R2D2 Shrinkage** | Simple linear regression with multiple predictors, no grouping | Gene expression ~ drug dose + age + weight |
+| **R2D2 GLM** | Non-Gaussian outcomes with simple structure | Bacterial counts, binary outcomes, rate data |
+| **R2D2M2** | Complex laboratory designs with multiple grouping factors (**the laboratory default**) | Laboratory experiments with mouse ID + microRNA ID + stress condition |
+
+## Looking forward
+
+R2D2 solves a common frustration in Bayesian modeling: how do you set reasonable priors on dozens of coefficients without spending hours tweaking hyperparameters? Instead of guessing at individual coefficient priors, you specify one intuitive parameter - how much of the data variation you expect your model to explain - and R2D2 automatically figures out how to distribute that explanatory power across your predictors.
+
+For laboratory researchers especially, R2D2M2 delivers actionable scientific insight. When your model tells you that "mouse differences account for 35% of explained variance while stress conditions only account for 5%," you immediately know where to focus your experimental design efforts.
+
+This practical approach - starting with an intuitive question about model fit and letting the mathematics handle the details - shows how thoughtful statistical frameworks can make sophisticated modeling more accessible to working scientists. The PyMC library has implemented a modified form of R2D2M2 as the [`R2D2M2CP` distribution](https://www.pymc.io/projects/extras/en/stable/generated/pymc_extras.distributions.R2D2M2CP.html), making these powerful priors readily available for practical use.
+
+## References
+
+**Zhang, Y. D., Naughton, B. P., Bondell, H. D., & Reich, B. J.** (2020). Bayesian Regression Using a Prior on the Model Fit: The R2-D2 Shrinkage Prior. *Journal of the American Statistical Association*, 117(538), 862-874. https://www.tandfonline.com/doi/full/10.1080/01621459.2020.1825449
+
+**Yanchenko, E., Bondell, H. D., & Reich, B. J.** (2021). The R2D2 Prior for Generalized Linear Mixed Models. *arXiv preprint arXiv:2111.10718*. https://arxiv.org/abs/2111.10718
+
+**Aguilar, J. & Bürkner, P.** (2022). Intuitive Joint Priors for Bayesian Linear Multilevel Models: The R2D2M2 prior. *arXiv preprint arXiv:2208.07132*. https://arxiv.org/abs/2208.07132
+
+---
+pub_date: 2025-08-06
+---
+twitter_handle: ericmjl
+---
+tags:
+
+bayesian
+variance
+r2d2
+dirichlet
+multilevel
+glm
+regularization
+priors
+inference
+pymc
+---
+summary: In this blog post, I share my journey exploring the R2D2 framework for Bayesian modeling, which lets you intuitively control model fit by placing a prior on R² instead of individual coefficients. I walk through its elegant extensions to generalized linear and multilevel models, showing how it automatically allocates explained variance and prevents overfitting. Curious how this approach can simplify your modeling and highlight the most important factors in your data?
