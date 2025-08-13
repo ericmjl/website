@@ -46,7 +46,7 @@ The major breakthrough came when I scrutinized the design and asked: why do we h
 
 The natural follow-up hit me: lists are just linear graphs, so why do I need two separate structures? I can just have one that defaults to a linear graph, and then use an LLM for intelligent node selection in the threaded case.
 
-So I generalized everything to use NetworkX graphs underneath, with intelligent note selection for threaded memory. This single insight simplified the entire architecture.
+So I generalized everything to use NetworkX graphs underneath, with intelligent node selection for threaded memory. This single insight simplified the entire architecture.
 
 This is exactly what I mean about earning your automation - I could inject my own opinions into the design because I understood the problem space. We were iterating on a design doc, not just generating code.
 
