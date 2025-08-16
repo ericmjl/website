@@ -35,11 +35,11 @@ Those aren't really data science roles. The scientist in data science lies in de
 
 Taking Hamel Husain and Shreya Shankar's course on LLM evaluation crystallized this for me. I'm much more convinced that the role of a data scientist is to measure, evaluate, and design metrics. It's going back to the science.
 
-Think about the parallel here. In discovery science, a data scientist works with laboratory scientists and statisticians to define what estimate we need to measure the performance of biological or chemical systems. The metrics matter because they connect to whether a drug works or a process is optimized.
+Think about the parallel here. In discovery science, a data scientist hypothesizes about relationships between molecular structure and biological activity, then works with laboratory scientists and statisticians to define what estimate we need to measure the performance of biological or chemical systems. They build machine learning models to predict those estimands from sequence and structure, test the hypotheses, and measure whether they hold. The estimands matter because they connect to whether a drug works or a process is optimized.
 
-With LLM applications automating business processes, it's analogous but the stakes are operational performance. You define evaluation metrics—the equivalent of the assays you measure in lab science. You define the equations to calculate performance, just as you define statistical estimation models for biological systems. You build automation around measurement. But now these performance metrics connect directly to whether business workflows are actually working better.
+With LLM applications automating business processes, it's analogous but the stakes are operational performance. You hypothesize that a particular LLM workflow will improve efficiency or accuracy. You define evaluation metrics—the equivalent of the assays you measure in lab science. You design experiments to test whether your hypothesis about the LLM's impact is correct. You build automation around measurement to continuously validate whether your hypotheses about improved workflows are actually playing out.
 
-In both contexts, you define and you measure. That's what a scientist does.
+In both contexts, you hypothesize, define, test, and measure. **That's what a scientist does!**
 
 In what I'd describe as a meta move, data scientists should absolutely be experimenting with LLMs to create LLM-based tooling for their own work. We're uniquely positioned to understand both the technical possibilities and the measurement challenges these systems present.
 
@@ -49,7 +49,7 @@ This role differs fundamentally from what people might think we should become. W
 
 We're scientists who define metrics, design estimates, and measure whether things work.
 
-Rather than making data scientists obsolete, LLMs are returning us to our scientific roots while giving us incredibly powerful tools to work with. We're becoming builders of measurement systems that work at the intersection of business value and statistical rigor.
+Rather than making data scientists obsolete, the era of LLMs are returning us to our scientific roots while giving us incredibly powerful tools to work with. We're becoming builders of measurement systems that work at the intersection of business value and statistical rigor.
 
 I'd strongly encourage you to try both angles: become proficient with LLM tools for your daily work, and start experimenting with building custom LLM workflows for your organization. The beauty of this approach is that you're amplifying your ability to define what matters and measure whether it's working.
 
