@@ -1,0 +1,74 @@
+title: Data scientists aren't becoming obsolete in the LLM era
+---
+author: Eric J. Ma
+---
+body:
+
+I keep hearing the same question: "Are data scientists becoming obsolete now that LLMs can code?"
+
+The anxiety is understandable. When you watch Claude or ChatGPT write Python scripts, build models, and even debug code, it's natural to wonder where that leaves us. But here's what I've found after spending months integrating LLMs into my own workflow: they're not replacing us. They're fundamentally reshaping what it means to be a data scientist.
+
+To ponder this question properly, I examine it from two angles.
+
+## How are LLMs enhancing our existing work?
+
+The first angle is using LLMs as tools for data scientists. This means finding ways to incorporate them into our day-to-day work as consumers of LLM-powered applications.
+
+I've experienced the productivity-enhancing benefits firsthand. GitHub Copilot and Cursor have dramatically accelerated my coding. Research agents like Elicit.org help me navigate literature in ways that would have taken hours before. I use transcription tools to type faster than I can touch type by hand, getting my thoughts out of my brain closer to the speed at which I'm actually thinking. I rely on AI for cleaning up messy thoughts and as a thinking tool to help me draw out what I'm really trying to articulate.
+
+Having lived with these tools for months now, I think being proficient with AI-assisted coding is table stakes.
+
+Just as spreadsheets changed what we expected from accountants, AI assistance is now a baseline expectation. But there's a crucial skill here that goes beyond just using the tools: knowing how to use AI to verify information and catch the inevitable errors these systems make.
+
+More importantly, this is just the beginning.
+
+## How are we building custom LLM solutions?
+
+The second angle is more profound: data scientists becoming part of the team that builds custom LLM agent workflows to accelerate others' work.
+
+Here's what this looks like in practice: You get hands-dirty with business workflows. You co-create with business partners to build new tools and ways of working that remove boring work from their plates. You build technical prototypes that prove out value, then partner with engineers for custom app builds where appropriate.
+
+The *scientist* skill becomes crucial here: experimentation. You're figuring out whether a thing is actually working by measuring performance of LLM-based workflows and tying it back to business value. This is fundamentally different from being an app developer, a machine learning engineer, or a business analyst doing reporting and dashboards.
+Those aren't really data science roles. The scientist in data science lies in defining metrics and estimates, then measuring them.
+
+## What does the 'scientist' in 'data scientist' mean in the LLM era?
+
+Taking Hamel Husain and Shreya Shankar's course on LLM evaluation crystallized this for me. I'm much more convinced that the role of a data scientist is to measure, evaluate, and design metrics. It's going back to the science.
+
+Think about the parallel here. In discovery science, a data scientist works with laboratory scientists and statisticians to define what estimate we need to measure the performance of biological or chemical systems. The metrics matter because they connect to whether a drug works or a process is optimized.
+
+With LLM applications automating business processes, it's analogous but the stakes are operational performance. You define evaluation metrics—the equivalent of the assays you measure in lab science. You define the equations to calculate performance, just as you define statistical estimation models for biological systems. You build automation around measurement. But now these performance metrics connect directly to whether business workflows are actually working better.
+
+In both contexts, you define and you measure. That's what a scientist does.
+
+In what I'd describe as a meta move, data scientists should absolutely be experimenting with LLMs to create LLM-based tooling for their own work. We're uniquely positioned to understand both the technical possibilities and the measurement challenges these systems present.
+
+## Why this matters more than ever
+
+This role differs fundamentally from what people might think we should become. We're not primarily app developers (that should be for software developers). We're not machine learning engineers building complex production pipelines (though we should be able to ship components that get stitched together on platforms). We're not business analysts doing reporting and dashboards.
+
+We're scientists who define metrics, design estimates, and measure whether things work.
+
+Rather than making data scientists obsolete, LLMs are returning us to our scientific roots while giving us incredibly powerful tools to work with. We're becoming builders of measurement systems that work at the intersection of business value and statistical rigor.
+
+I'd strongly encourage you to try both angles: become proficient with LLM tools for your daily work, and start experimenting with building custom LLM workflows for your organization. The beauty of this approach is that you're amplifying your ability to define what matters and measure whether it's working.
+
+---
+twitter_handle: ericmjl
+---
+pub_date: 2025-08-15
+---
+summary: In my latest post, I share how large language models are changing the data science landscape—not by replacing us, but by making us more effective and opening up new opportunities to build custom AI solutions. I discuss why our skills in measurement and evaluation are more valuable than ever. Curious how data scientists can thrive in the LLM era?
+---
+tags:
+
+productivity
+workflows
+evaluation
+metrics
+business
+science
+models
+ai
+tools
+measurement
