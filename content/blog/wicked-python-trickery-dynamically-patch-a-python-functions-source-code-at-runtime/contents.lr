@@ -94,21 +94,21 @@ Here's what `AgentBot` looked like at a high level:
 
 ```python
 class AgentBot(SimpleBot):
-	def __init__(self, model_name, tools, **kwargs):
-		...
+    def __init__(self, model_name, tools, **kwargs):
+        ...
 
-	def __call__(self, *messages, num_iterations=10):
-		for i in range(num_iterations):
-			response = ... # get response object, passing in messages
-			results = []
-			# Execute tool calls if they are present
-			if response.tool_calls:
-				for tool_call in response.tool_calls:
-					result = self.name_to_tools[tool_call.name](**json.loads(tool_call.arguments))
+    def __call__(self, *messages, num_iterations=10):
+        for i in range(num_iterations):
+            response = ... # get response object, passing in messages
+            results = []
+            # Execute tool calls if they are present
+            if response.tool_calls:
+                for tool_call in response.tool_calls:
+                    result = self.name_to_tools[tool_call.name](**json.loads(tool_call.arguments))
 
-			# continue until LLM decides we're done.
-			else:
-				# just respond to users.
+            # continue until LLM decides we're done.
+            else:
+                # just respond to users.
 ```
 
 While this worked, it wasn't great at separating concerns. I had function execution mixed in with function call determination mixed in with responding to a user.
@@ -162,7 +162,7 @@ def write_and_execute_code(globals_dict: dict):
 
         ## Code Generation Guidelines:
 
-		1. **Write self-contained Python functions** with ALL imports inside the function body
+        1. **Write self-contained Python functions** with ALL imports inside the function body
         2. **Place all imports at the beginning of the function**: import statements must be the first lines inside the function
         3. **Include all required libraries**: pandas, numpy, matplotlib, etc. - import everything the function needs
         4. **Leverage existing global variables**: Can reference variables that exist in the runtime
