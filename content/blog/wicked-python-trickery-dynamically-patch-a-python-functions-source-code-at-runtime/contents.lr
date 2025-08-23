@@ -1,0 +1,302 @@
+title: Wicked Python trickery - dynamically patch a Python function's source code at runtime
+---
+author: Eric J. Ma
+---
+body:
+
+So today, I learned a very dangerous and yet fascinating trick.
+
+It's possible to dynamically change a Python function's source code *at runtime*.
+
+What this does is open a world of possibilities in building AI bots!
+
+## How this actually works
+
+Every function has a `.__code__` attribute. For example, for this function:
+
+```python
+def something():
+    raise NotImplementedError()
+```
+
+`something.__code__` looks like this:
+
+```python
+<code object something at 0x149bdfc90, file "/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_80086/__marimo__cell_kJqw_.py", line 1>
+```
+
+If I were to execute `something()`, it would return a `NotImplementedError`.
+
+Now, let's say that, for some reason that I shall not speculate, I decided that I wanted `something()` to instead do multiplication by 2. I can create new source code:
+
+```python
+new_code = """
+def something(x: int) -> int:
+    return x * 2
+"""
+```
+
+I can do the following three magical steps to swap it in.
+
+Firstly, compile the code into bytecode:
+
+```python
+compiled = compile(new_code, "<magic>", "exec")
+```
+
+The three arguments to `compile` are:
+
+1. The code to compile (`new_code`),
+2. The filename in which the code is compiled (`<magic>`), and
+3. The mode in which compilation happens (in this case, `exec` mode).
+
+On the third point, the docstring of `compile` explains what the three modes are:
+
+> The mode must be 'exec' to compile a module, 'single' to compile a single (interactive) statement, or 'eval' to compile an expression.
+
+The `compiled` object now is a "code object":
+
+```python
+<code object <module> at 0x149bcbad0, file "<magic>", line 1>
+```
+
+I can then execute the compiled code to make it imported into a particular namespace.
+
+```python
+ns = {}
+exec(compiled, {}, ns)
+```
+
+Here, the three arguments passed to `exec` are:
+
+1. The code we want to execute (`compiled`), and in this case, by "executing" it after being compiled in `exec` mode, we are really just simulating an `import` into our namespace.
+2. The globals (`{}`), which in this case are passed in as an empty dictionary. These are the global variables that are available to the function at runtime.
+3. `ns` is the "namespace" in which we want the function to be present; namespaces in Python are just dictionary mappings from function/object name to the function/object itself.
+
+Finally, I can replace my existing function with the compiled function inserted into the `ns` namespace:
+
+```python
+something_new = ns["something"]
+print(something_new(21))  # this will print 42 to stdout!
+```
+
+But really, the real lesson here is not that one can monkeypatch over an existing Python function's source code at runtime, but that you can actually **compile the string of a Python function definition and give it access to a namespace's variables**, including that of the current global namespace.
+
+## When would you ever want to do this?
+
+At first glance, never really! This is a bit of hackery that lives on the fringes of Python-land, and is basically a party trick.
+
+But as it turns out, I *actually* had a real motivation for wanting to do this.
+
+Within [LlamaBot](https://github.com/ericmjl/llamabot), I've always had `AgentBot` as a first-pass implementation of what I think an LLM agent should look like, having studied LLM agent implementations in other libraries. However, I've never been fully satisfied with `AgentBot`'s implementation. The core issue was that it mixed too many concerns together - function execution, function call determination, and user response generation all lived in the same loop.
+
+Here's what `AgentBot` looked like at a high level:
+
+```python
+class AgentBot(SimpleBot):
+	def __init__(self, model_name, tools, **kwargs):
+		...
+
+	def __call__(self, *messages, num_iterations=10):
+		for i in range(num_iterations):
+			response = ... # get response object, passing in messages
+			results = []
+			# Execute tool calls if they are present
+			if response.tool_calls:
+				for tool_call in response.tool_calls:
+					result = self.name_to_tools[tool_call.name](**json.loads(tool_call.arguments))
+
+			# continue until LLM decides we're done.
+			else:
+				# just respond to users.
+```
+
+While this worked, it wasn't great at separating concerns. I had function execution mixed in with function call determination mixed in with responding to a user.
+
+The bigger limitation was with code execution tools. My original implementation isolated generated code in a Docker container sandbox, which was secure but meant the code couldn't access variables from my current Python runtime. This severely limited what kinds of useful tasks the bot could perform with my existing data and variables.
+
+I realized that if I could:
+1. Use an LLM to generate Python functions that referenced existing variables in my runtime,
+2. Compile those functions on-the-fly within the same Python environment, and
+3. Execute them with access to my current namespace,
+
+I could build something much more powerful. This led me to create `ToolBot` within LlamaBot.
+
+## ToolBot focuses on tool selection instead of execution
+
+`ToolBot` takes a different approach - it focuses purely on tool selection rather than execution. Here's the key structure:
+
+```python
+class ToolBot(SimpleBot):
+    def __init__(self, system_prompt, model_name, tools=None, **kwargs):
+        # Initialize with core tools like today_date and respond_to_user
+        all_tools = [today_date, respond_to_user]
+        if tools:
+            all_tools.extend(tools)
+
+        self.tools = [f.json_schema for f in all_tools]
+        self.name_to_tool_map = {f.__name__: f for f in all_tools}
+
+    def __call__(self, message):
+        # Process message and return tool calls (but don't execute them)
+        response = make_response(self, message_list, stream=stream)
+        tool_calls = extract_tool_calls(response)
+        return tool_calls  # Just return the calls, don't execute
+```
+
+The key insight: `ToolBot` just selects a tool to be executed, but does *not* execute it. Instead, it returns the tools to be called to the external environment, giving you full control over execution.
+
+## The magic happens with write_and_execute_code
+
+One of the most powerful tools that can be chosen is `write_and_execute_code`. Here's the core implementation:
+
+```python
+def write_and_execute_code(globals_dict: dict):
+    @tool
+    def write_and_execute_code_wrapper(placeholder_function: str, keyword_args: dict):
+        """Write and execute `placeholder_function` with the passed in `keyword_args`.
+
+        Use this tool for any task that requires custom Python code generation and execution.
+        This tool has access to ALL globals in the current runtime environment (variables, dataframes, functions, etc.).
+        Perfect for: data analysis, calculations, transformations, visualizations, custom algorithms.
+
+        ## Code Generation Guidelines:
+
+		1. **Write self-contained Python functions** with ALL imports inside the function body
+        2. **Place all imports at the beginning of the function**: import statements must be the first lines inside the function
+        3. **Include all required libraries**: pandas, numpy, matplotlib, etc. - import everything the function needs
+        4. **Leverage existing global variables**: Can reference variables that exist in the runtime
+        5. **Include proper error handling** and docstrings
+        6. **Provide keyword arguments** when the function requires parameters
+        7. **Make functions reusable** - they will be stored globally for future use
+        8. **ALWAYS RETURN A VALUE**: Every function must explicitly return something - never just print, display, or show results without returning them. Even for plotting functions, return the figure/axes object.
+
+        ## Function Arguments Handling:
+
+        **CRITICAL**: You MUST match the function signature with the keyword_args:
+        - **If your function takes NO parameters** (e.g., `def analyze_data():`), then pass an **empty dictionary**: `{}`
+        - **If your function takes parameters** (e.g., `def filter_data(min_age, department):`), then pass the required arguments as a dictionary: `{"min_age": 30, "department": "Engineering"}`
+        - **Never pass keyword_args that don't match the function signature** - this will cause execution errors
+
+        ## Code Structure Example:
+
+        ```python
+        # Function with NO parameters - use empty dict {}
+        def analyze_departments():
+            '''Analyze department performance.'''
+            import pandas as pd
+            import numpy as np
+            result = fake_df.groupby('department')['salary'].mean()
+            return result
+        # Function WITH parameters - pass matching keyword_args
+        def filter_employees(min_age, department):
+            '''Filter employees by criteria.'''
+            import pandas as pd
+            filtered = fake_df[(fake_df['age'] >= min_age) & (fake_df['department'] == department)]
+            return filtered
+        ```
+
+        ## Return Value Requirements:
+
+        - **Data analysis functions**: Return the computed results (numbers, DataFrames, lists, dictionaries)
+        - **Plotting functions**: Return the figure or axes object (e.g., `return fig` or `return plt.gca()`)
+        - **Filter/transformation functions**: Return the processed data
+        - **Calculation functions**: Return the calculated values
+        - **Utility functions**: Return relevant output (status, processed data, etc.)
+        - **Never return None implicitly** - always have an explicit return statement
+
+        ## Code Access Capabilities:
+
+        The generated code will have access to:
+        - All global variables and dataframes in the current session
+        - Any previously defined functions
+        - The ability to import any standard Python libraries within the function
+        - The ability to create new reusable functions that will be stored globally
+        :param placeholder_function: The function to execute (complete Python function as string).
+        :param keyword_args: The keyword arguments to pass to the function (dictionary matching function parameters).
+        :return: The result of the function execution.
+        """
+
+        # Parse the code to extract the function name
+        tree = ast.parse(placeholder_function)
+        function_name = None
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                function_name = node.name
+                break
+        # Compile and execute the function with access to globals
+        ns = globals_dict
+        compiled = compile(placeholder_function, "<llm>", "exec")
+        exec(compiled, globals_dict, ns)
+        return ns[function_name](**keyword_args)
+
+    return write_and_execute_code_wrapper
+
+```
+
+This extensive docstring gets passed as part of the JSON schema and effectively serves as instructions to the LLM on when and how to use this tool. I stripped out logging and error handling to simplify what's shown here, but the actual codebase has more robustness built in.
+
+Notice how `ToolBot`, and more specifically `write_and_execute_code`, gains explicit access to the `globals()` dictionary when a user passes it in. This approach allows us to ensure that function execution takes place within the proper namespace. If `ToolBot` chooses `write_and_execute_code`, I can control exactly where and how it executes within my Python runtime environment - and this opens up a world of possibilities!
+
+For example, inspired by [the Marimo blog](https://marimo.io/blog/marimo-chat), which wrote about generative UIs and tool calling:
+
+> marimo’s chat interface supports Generative UI - the ability to stream rich, interactive UI components directly from LLM responses. This goes beyond traditional text and markdown outputs, allowing chatbots to return dynamic elements like tables, charts, and interactive visualizations.
+
+I decided to build out a _generalized_ version of a tool that an LLM could choose to call on that would also have access to any variable present within the runtime environment... much like Marimo's AI chat has access to any variable within the environment with an `@variable_name`, now I just dump the full set of `globals()` into the LLM's context window, and that's what `write_and_execute_code` looked like.
+
+Here's an example, imagine I have two dataframes that I want an LLM to manipulate. Without `write_and_execute_code`, I'd have to write bespoke tools for the dataframe, in which I access the `df` as a "global" variable, much like the following:
+
+```python
+@lmb.tool
+def chart_data(x_encoding: str, y_encoding: str, color: str):
+    """Generate an altair chart"""
+    import altair as alt
+    return (
+        alt.Chart(df)
+        .mark_circle()
+        .encode(x=x_encoding, y=y_encoding, color=color)
+        .properties(width=500)
+    )
+```
+
+So the writing on the wall is that I'd have to write one tool for every possible operation that I'd desire, but that's a big hassle. With this `globals()`, `compile`, and `exec` trickery baked into `write_and_execute_code`, I no longer have to specify bespoke tools for the environment that I'm in!
+
+Further more, inspired by the Marimo blog post, `ToolBot` is designed to just do the tool picking, delegating the execution and return of the broader LLM-powered Python program back to the developer. In this way, I can give myself more flexibility when building entire "Agentic" programs, more so than if I were to use `AgentBot` in its current form. It allowed me to build a more powerful version of a tool-calling agent using `ToolBot` with generative UIs in a Marimo notebook. For this, it's easier to demo via a screencast instead of by me describing it in prose:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tk5wvb556f8?si=sXSRulZ2ooBplapr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Security concerns are very real with this approach
+
+Comparing this to what we had before with `write_and_execute_script`, which performed execution in a sandboxed Docker container with limited read/write capabilities, `write_and_execute_code` is *much, much less secure*.
+
+Obviously, I'm playing with fire here. A malicious LLM output could run code directly and do enormous damage to my machine and from my machine to the outside world. I have yet to implement code sanitization, but one big idea I have, which I just learned through discourse with GPT-4, is to use [Restricted Python](https://github.com/zopefoundation/RestrictedPython). I think that will be the next big upgrade after I let the current version of `write_and_execute_code` sit for a while.
+
+As such, I don't suggest that the `write_and_execute_code` pattern be used for anything really serious in its current form.
+
+## What I learned from this Python trickery
+
+This journey taught me several things. First, Python's runtime is far more malleable than I initially realized - the ability to compile strings into executable code and inject them into specific namespaces opens up incredible possibilities for dynamic programming.
+
+Second, building effective LLM agents isn't just about the AI - it's about thoughtful system design. Separating tool selection from execution (as `ToolBot` does) creates much more flexible and controllable systems than monolithic agents.
+
+Finally, this wouldn't have been possible without [autodidactic learning with LLMs](https://ericmjl.github.io/blog/2025/6/7/principles-for-using-ai-autodidactically/). I'm becoming more and more convinced that LLMs are a great tool for learning, but one must learn how to use them for learning, and one must [earn the automation](https://ericmjl.github.io/blog/2025/7/13/earn-the-privilege-to-use-automation/) as well.
+
+---
+pub_date: 2025-08-23
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how I discovered a powerful Python trick: dynamically changing a function's source code at runtime using the compile and exec functions. This technique enabled me to build more flexible AI bots, like ToolBot, that can generate and execute code with access to the current environment. While this opens up exciting possibilities for LLM-powered agents and generative UIs, it also raises serious security concerns. Curious how this hack can supercharge your AI projects—and what risks you should watch out for?
+---
+tags:
+
+python
+runtime
+llm
+security
+namespace
+compilation
+execution
+functions
+toolbot
+monkeypatching
