@@ -265,6 +265,12 @@ Further more, inspired by the Marimo blog post, `ToolBot` is designed to just do
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/tk5wvb556f8?si=sXSRulZ2ooBplapr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+And if you're curious to try running it, you can run it with the following command:
+
+```bash
+uvx marimo edit --sandbox https://raw.githubusercontent.com/ericmjl/website/refs/heads/main/content/blog/wicked-python-trickery-dynamically-patch-a-python-functions-source-code-at-runtime/agents.py
+```
+
 ## Security concerns are very real with this approach
 
 Comparing this to what we had before with `write_and_execute_script`, which performed execution in a sandboxed Docker container with limited read/write capabilities, `write_and_execute_code` is *much, much less secure*.
