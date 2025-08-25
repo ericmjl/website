@@ -1,0 +1,375 @@
+title: How to communicate with lab scientists (when you're the data person)
+---
+author: Eric J. Ma
+---
+body:
+
+Imagine this scenario: A data scientist explains a hierarchical Bayesian model for 45 minutes. Beautiful math. Elegant handling of batch effects. The lab scientists are polite but glazed over. Finally, someone interrupts: "Sorry, but should we move this compound forward or not?"
+
+The data scientist hadn't even calculated that probability.
+
+Sound familiar?
+
+If you're a statistician or data scientist in biotech, you've probably been there. You've spent hours on sophisticated analyses, crafted beautiful slides about your methods, and watched your audience's eyes glaze over while you explained mixed-effects models.
+
+Meanwhile, they just needed to know if they should spend $200K on the next experiment.
+
+Here's the thing: Lab scientists aren't struggling to understand your statistics because they're not smart enough. They're brilliant experts who've spent years mastering protein folding, cell signaling, or synthetic chemistry. They're just juggling their own complex problems and need you to translate your analysis into something they can act on.
+
+Today, I'm going to show you exactly how to do that.
+
+## Here's what we're covering:
+
+1. Your communication budget is finite — spend it wisely
+2. Know what mode they're in before you open your laptop
+3. Use the three-layer translation model
+4. Decode what they're really asking
+5. Build trust through clarity, not complexity
+6. Master the decision-first meeting structure
+7. Ask yourself what they'll ask you
+
+## 1. Your communication budget is finite — spend it wisely
+
+Every interaction has a finite "communication budget"—limited attention, time, and cognitive load. Most data scientists spend this budget like tourists with foreign currency, not realizing the exchange rate.
+
+Think about your last presentation. Where did you spend your time?
+
+🚫 **The typical (failed) allocation:**
+
+- 60% on methodology and statistical details
+- 30% on results (tables, coefficients, credible intervals)
+- 10% on "what this means" (usually rushed at the end)
+- 0% on "what you should do next"
+
+I get it. We're trained to show our work. We think rigor equals value. We assume that if we explain our methods thoroughly enough, scientists will understand what to do.
+
+But here's what actually works:
+
+✅ **The allocation that drives decisions:**
+
+- 10% on methods (just enough for credibility)
+- 20% on results (simplified, visual, contextual)
+- 40% on implications for their specific decisions
+- 30% on uncertainty and what it means for their next steps
+
+But context matters. A curious scientist with time might genuinely want 30% methods—they're building mental models for future decisions. Someone facing a go/no-go decision tomorrow? They need 70% decision implications, minimal methods.
+
+The key is asking upfront.
+
+**Try this:** At the start of your next meeting, ask: "Do you want the decision first, or would you like to understand the approach?"
+
+Their answer tells you everything about budget allocation.
+
+Here's a perfect example: A data scientist spent an entire program review meeting walking through their elegant approach to handling missing data. Really sophisticated stuff. Multiple imputation with careful consideration of the missing-at-random assumption.
+
+Twenty minutes in, the program lead interrupted: "This is interesting, but we need to decide today whether to advance this molecule. Does it meet our potency threshold or not?"
+
+They hadn't even calculated that probability. They'd spent their entire communication budget on something that wasn't even the program lead's concern that day.
+
+## 2. Know what mode they're in before you open your laptop
+
+Lab scientists operate in three distinct modes, and each requires a completely different communication approach.
+
+### Decision Mode (Most of the time)
+
+They're under time pressure for go/no-go decisions. Maybe it's a pipeline review tomorrow. Maybe they need to order materials today. Maybe the synthesis team is literally waiting for their answer.
+
+Signs you'll hear:
+
+- "What's the bottom line?"
+- "Should we proceed?"
+- "Just tell me if it worked"
+
+What they need: Probability of success and a clear recommendation. That's it.
+
+### Learning Mode (When they have bandwidth)
+
+They're genuinely curious about your methods. Maybe they're trying to understand why this analysis differs from last time. Maybe they're building intuition for future experiments.
+
+Signs you'll hear:
+
+- "How does that work?"
+- "Why did you choose that approach?"
+- "Can you explain the intuition behind this?"
+
+What they need: Mental models and intuition, not mathematical formulas.
+
+### Validation Mode (Testing if they can trust you)
+
+They're not really interested in learning—they're assessing whether they can rely on your judgment for million-dollar decisions.
+
+Signs you'll hear:
+- "What assumptions did you make?"
+- "How does this handle batch effects?"
+- "What if the data is wrong?"
+
+What they need: Confidence that you've been rigorous without the full mathematical proof.
+
+Here's the mistake most of us make:
+
+🚫 **Wrong approach:** Launch into methods explanation regardless of mode
+
+✅ **Right approach:** "Would you like the decision first, or should I walk through how I got there?"
+
+Most data scientists default to teaching mode when scientists are in decision mode. That's like giving someone a recipe when they just asked if dinner's ready.
+
+Consider this scenario: A scientist approaches a data analyst with dose-response data. The analyst starts explaining their Bayesian approach to EC50 estimation. Five minutes in, the scientist stops them: "I just need to know if this is more potent than our current lead."
+
+She was in Decision Mode. The analyst was in Teaching Mode. Complete mismatch.
+
+The better approach is to be deliberate rather than reactive. Before any meeting, clarify the goals upfront. Ask what they're trying to decide. Talk to stakeholders beforehand to understand the context. Do the pre-work rather than trying to read body language in real-time.
+
+## 3. Use the three-layer translation model
+
+You think in distributions. They think in decisions. This gap is why brilliant analyses often fail to drive action.
+
+Here's the framework that works for bridging that gap:
+
+**Layer 1: Statistical Reality (Keep this in your head)**
+
+- Full posterior distributions
+- Model assumptions
+- Fancy math
+- All the technical details you love
+
+This layer is for you. It ensures your analysis is rigorous. But it stays in your head or the appendix.
+
+**Layer 2: Scientific Meaning (The bridge)**
+
+- What the analysis means for their biological hypothesis
+- How the statistics relate to their experimental design
+- The full richness of uncertainty
+
+Here's the key: Keep the full distribution at this layer. Don't collapse to point estimates yet. You're translating statistics to science, but you're not making decisions yet.
+
+**Layer 3: Decision Layer (What they actually need)**
+
+- NOW integrate over posteriors for specific probabilities
+- "There's an 87% chance this compound beats your TPP threshold"
+- "With 90% probability, this is your best compound"
+- "You need 12 more samples to reach 95% confidence"
+
+The magic is waiting until the last possible moment to collapse distributions into decision probabilities. Why? Because different decisions need different integrations of the same posterior.
+
+Let me show you what I mean:
+
+🚫 **Wrong (Layer 1 bleeding into communication):**
+"The posterior distribution for the treatment effect has a 95% credible interval of [0.15, 0.31] with a mean of 0.23."
+
+What does a lab scientist do with this? Nothing. It's statistical reality without translation.
+
+✅ **Right (Layer 3, decision-focused):**
+"There's a 92% probability your treatment exceeds the TPP threshold. If you need 95% confidence for the program milestone, run 20 more samples. If 90% is acceptable for an early read, you can proceed now."
+
+See the difference? One is statistical reporting. The other enables a decision.
+
+The same posterior distribution might need to answer multiple questions:
+
+- "What's the probability this exceeds our TPP?" (integrate above threshold)
+- "What's the probability this is our best compound?" (compare posteriors)
+- "How many samples until 95% confidence?" (project forward)
+
+By keeping the full distribution until Layer 3, you can answer whatever decision question they actually have, not the one you assumed they had.
+
+## 4. Decode what they're really asking
+
+Scientists may ask statistics questions when they mean decision questions. Learning to translate is a superpower.
+
+Here's your decoder ring:
+
+**"Is this significant?"** They're not asking about p-values. They're asking: "Should I continue this line of research?"
+
+**"What's the confidence?"** They don't want credible intervals. They're asking: "How wrong could this decision be?"
+
+**"Did it work?"** They don't care about effect sizes. They're asking: "Is the effect large enough to matter for my application?"
+
+**"Can you check the stats?"** They don't want a methods seminar. They're asking: "I need ammunition for my go/no-go meeting tomorrow."
+
+**"How robust is this?"** They're not necessarily interested in sensitivity analyses. They're asking: "Can I trust this decision?"
+
+Every lab scientist in biotech faces the same five decisions over and over:
+
+1. **Resource allocation:** Should I invest more time/money/FTEs in this direction?
+2. **Pipeline progression:** Is this ready for the next stage?
+3. **Experimental design:** Should I modify my approach or repeat?
+4. **Program decisions:** Continue, pivot, or kill?
+5. **Platform decisions:** Is this assay/method worth scaling up?
+
+Your job isn't to answer their literal question. It's to figure out which of these five decisions they're really trying to make.
+
+🚫 **Wrong:** Answer the literal statistics question they asked
+
+✅ **Right:** Answer the decision they're trying to make
+
+**Try this:** When first asked to partner on an analysis, ask: "What decision are you trying to make with this data?"
+
+Then frame everything around that decision.
+
+Here's a common scenario: A scientist asks the data team to "check if the groups are different." The analyst could run their standard analysis and report "statistically significant difference detected." Technically correct. Completely useless.
+
+Instead, imagine asking: "What decision does this inform?"
+
+Turns out, they need to know if the new formulation is at least 20% better than the current one—otherwise, it wasn't worth the reformulation costs. The groups were statistically different, but only by 8%. The real answer was: "Don't reformulate."
+
+That's the difference between answering questions and enabling decisions.
+
+## 5. Build trust through clarity, not complexity
+
+Here's the paradox: Most data scientists think trust comes from showing their work.
+
+This is more nuanced than you might think.
+
+Over-explaining methods actually reduces trust because:
+
+- It signals insecurity about your results
+- It wastes precious communication budget
+- It feels like gatekeeping with jargon
+- It suggests you don't understand what they need
+
+What actually builds trust:
+
+- Leading with clear probabilities for their go/no-go decisions
+- Showing how probability changes with more data
+- Being precise about uncertainty without hedging
+- Speaking their language, not yours
+
+🚫 **Trust-killing:** "Well, it depends on your assumptions about the prior, and if we consider the hierarchical structure of the random effects, controlling for batch-to-batch variation, we can say that under certain conditions..."
+
+This sounds like you're not confident in your answer.
+
+✅ **Trust-building:** "There's an 89% chance this works. If you need 95% confidence before scaling up, test 3 more concentrations. Here's why I'm confident in that number: I've accounted for batch effects, and even in the worst-case scenario, you're still above 82%."
+
+Clear. Actionable. Confident.
+
+The beauty of probabilistic thinking here: "We're 78% confident" is infinitely clearer than "statistically significant." You can directly answer: "What's the probability we're making the wrong decision?"
+
+That's a question every scientist understands.
+
+**The methods appendix approach:**
+
+When you do need to establish technical credibility, try this structure:
+
+- One slide of method basics (just enough to show rigor)
+- Key assumptions in plain English (Pro tip: AI tools can help translate technical assumptions into audience-appropriate language)
+- Details available but not forced
+- For the genuinely curious: "Happy to dive into the model after we nail down your decision"
+
+Smart data scientists keep a technical appendix for every analysis. It has all the details they're proud of—the clever missing data handling, the hierarchical structure, the prior specifications.
+
+But they only show it when asked. And here's what happens: People trust them more because they respect everyone's time enough not to force it on them.
+
+## 6. Master the decision-first meeting structure
+
+Stop opening with methods. Stop it right now.
+
+Start with their decision.
+
+**The structure that works:**
+
+1. **State the decision context upfront**: "We're here to discuss [specific decision]. Here's what the data tells us."
+2. **Give the probability and recommendation immediately**: "There's an 89% probability of success. I recommend proceeding."
+3. **Show how probability changes with more data**: "With 10 more samples, we'd get to 95% confidence."
+4. **Discuss what could change your assessment**: "This assumes your batch effects stay consistent."
+5. **Offer details only if requested**: "Want me to walk through how I got there?"
+
+Let me show you the difference:
+
+🚫 **Wrong meeting flow:**
+"Thanks for coming. So I started by examining the data structure, and I noticed some heteroscedasticity in the residuals, which suggested we might need a more complex variance structure. I tried several approaches, including a Box-Cox transformation, but ultimately settled on a hierarchical model because... [20 minutes later]... so in conclusion, it might work."
+
+By the time you get to the conclusion, they've stopped listening.
+
+✅ **Right meeting flow:**
+"We're here to discuss whether to advance Compound X to synthesis. Based on your assay data, there's an 89% probability this compound exceeds your 10nM potency requirement. I recommend proceeding to synthesis scale-up. If you need 95% confidence instead of 89%, I'd recommend testing 3 more concentrations first. Want me to walk through how I got there?"
+
+Notice how the second version:
+- Answers their question immediately
+- Gives them options based on risk tolerance
+- Respects their time
+- Offers details rather than forcing them
+
+**The email version:**
+
+```text
+Subject: Compound X: 89% probability of meeting TPP
+
+Hi Sarah,
+
+**Decision:** Compound X has an 89% probability of meeting your 10nM potency requirement. Recommend proceeding to synthesis.
+
+**Key evidence:**
+- Consistent effect across all three batches
+- Dose-response curve shows clear relationship
+- Even worst-case scenario keeps you above 15nM
+
+**Next steps:** If you need >95% confidence, test 3 additional concentrations. Otherwise, proceed with synthesis.
+
+Technical details in attached appendix if interested.
+
+Best,
+[Your name]
+```
+
+That's it. Decision first. Evidence second. Details optional.
+
+## 7. Ask yourself what they'll ask you
+
+Every scientist has patterns. Learn them.
+
+Your PI always asks about sample size? Pre-calculate power.
+Your biomarker lead obsesses over false positives? Lead with specificity.
+The chemistry team cares about synthesis feasibility? Include yield probabilities.
+
+This isn't mind-reading. It's paying attention.
+
+🚫 **Reactive approach:**
+Wait for their questions, scramble for answers, promise to "get back to you on that"
+
+✅ **Proactive approach:**
+"I know you usually want to know about batch effects, so I checked—they're negligible. Here's how I verified..."
+
+**Pattern matching checklist:**
+
+- What did they ask in the last three meetings?
+- What decisions do they usually struggle with?
+- What makes them nervous about moving forward?
+- What would convince them this is real?
+- What got them in trouble before?
+
+Example: One program lead always asks: "What if we're wrong?" Every. Single. Time.
+
+The smartest analysts now anticipate this and always include: "If we're wrong about this, here's what we'd see in the next experiment. Here's our bail-out plan. Here's the cost of being wrong versus the cost of being slow."
+
+She doesn't ask anymore. She trusts that they've thought it through.
+
+Another scientist always wants to know if we have enough evidence. So the prepared analyst leads with: "There's an 85% probability that the treatment effect exceeds your minimum meaningful difference."
+
+Pre-answering questions isn't just efficient—it builds massive trust. It shows you understand their concerns and you're thinking ahead. Trust me, **this is a career hack!**
+
+## The bottom line
+
+Most data scientists in biotech spend 80% of their communication budget on methods that their collaborators—brilliant scientists juggling their own complex problems—don't have bandwidth to process.
+
+You're doing the equivalent of giving someone a recipe when they just asked if dinner's ready.
+
+The shift is simple but not easy: Stop defaulting to education mode. Start asking "What decision are you trying to make?" Then translate your sophisticated analysis into the probability they need to make that decision.
+
+This isn't about dumbing down your work. It's about translating between two expert domains—like a diplomat translating between heads of state. The lab scientists you work with have spent years mastering complex biological systems. They need translation, not education.
+
+**Your action items:**
+
+1. **When first asked for analysis:** Start with "What decision are you trying to make with this data?" Don't begin any analysis until you know.
+2. **Review your last presentation:** Calculate where you spent your communication budget. If methods took more than 20%, you're overspending.
+3. **Practice probability statements:** Instead of showing credible intervals, say "There's an X% probability that..." It's clearer and more actionable.
+4. **Build a pattern map:** Write down what each of your regular collaborators usually asks. Answer it proactively next time.
+5. **Create a technical appendix:** Put all your beautiful methods somewhere. Just don't force people to sit through it.
+
+The best data scientists aren't the ones with the fanciest methods—they're the ones whose collaborators make the best decisions.
+
+And that starts with spending your communication budget on what actually matters to the people you're trying to help.
+
+*What patterns have you noticed in your collaborations? What questions do your scientists always ask? Let me know; I'd love to hear what's working (or not working) for you!*
+---
+pub_date: 2025-08-24
+---
+twitter_handle: ericmjl
