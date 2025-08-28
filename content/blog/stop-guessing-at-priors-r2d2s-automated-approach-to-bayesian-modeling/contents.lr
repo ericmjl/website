@@ -30,20 +30,30 @@ R²σ² = W - R²W = W(1 - R²)
 W = σ² * (R² / (1 - R²))
 ```
 
-Therefore, W represents the **ratio of explained variance to residual variance** - how much variance the model explains relative to unexplained noise. This gives us:
+This reveals that W is the **total explained variance** (on the data scale), which equals the signal-to-noise ratio multiplied by the noise variance. Let's define the signal-to-noise ratio as:
 
-- **W = 1**: Signal equals noise (R² = 0.5)
-- **W = 4**: Signal is 4 times stronger than noise (R² = 0.8)
-- **W = 0.25**: Noise is 4 times stronger than signal (R² = 0.2)
+```
+τ² = R² / (1 - R²)
+```
+
+So that:
+```
+W = σ² * τ²
+```
+
+This gives us:
+- **τ² = 1**: Signal equals noise (R² = 0.5)
+- **τ² = 4**: Signal is 4 times stronger than noise (R² = 0.8)
+- **τ² = 0.25**: Noise is 4 times stronger than signal (R² = 0.2)
 
 The R2D2 framework starts by placing a Beta prior on R²:
 
 ```python
 r_squared = pm.Beta("r_squared", alpha=a, beta=b)
-W = pm.Deterministic("W", r_squared / (1 - r_squared))
+tau_squared = pm.Deterministic("tau_squared", r_squared / (1 - r_squared))
 ```
 
-As Zhang et al. note, "the induced prior density for W = R²/(1-R²) is a Beta Prime distribution ... denoted as BP(a,b)," giving us intuitive control over model fit through the familiar Beta hyperparameters.
+Zhang et al. show that when R² has a Beta(a,b) prior, the induced prior density for τ² = R²/(1-R²) follows a Beta Prime distribution BP(a,b), giving us intuitive control over model fit through the familiar Beta hyperparameters.
 
 ### Allocating explained variance: the Dirichlet decomposition
 
@@ -57,7 +67,7 @@ lambda_j = pm.Deterministic("lambda_j", phi * W, dims="predictors")
 
 This means `φⱼ × W = λⱼ` answers the question: *"What fraction of the total explained variance does predictor j get?"*
 
-**Example**: If W = 8 (explained variance is 8 times larger than residual variance) and φ = [0.5, 0.3, 0.2], then:
+**Example**: If τ² = 4 (signal is 4 times stronger than noise) and σ² = 2, then W = 8, and if φ = [0.5, 0.3, 0.2], then:
 - Predictor 1: λ₁ = 0.5 × 8 = 4 (gets 50% of explained variance)
 - Predictor 2: λ₂ = 0.3 × 8 = 2.4 (gets 30% of explained variance)
 - Predictor 3: λ₃ = 0.2 × 8 = 1.6 (gets 20% of explained variance)
@@ -76,8 +86,11 @@ with pm.Model(coords=coords) as model:
     # R² prior (intuitive model fit control)
     r_squared = pm.Beta("r_squared", alpha=a, beta=b)
 
-    # Global signal-to-noise ratio
-    W = pm.Deterministic("W", r_squared / (1 - r_squared))
+    # Signal-to-noise ratio
+    tau_squared = pm.Deterministic("tau_squared", r_squared / (1 - r_squared))
+
+    # Total explained variance
+    W = pm.Deterministic("W", sigma**2 * tau_squared)
 
     # Local variance allocation (competitive)
     phi = pm.Dirichlet("phi", a=np.full(p, a_pi), dims="predictors")
@@ -92,7 +105,7 @@ with pm.Model(coords=coords) as model:
     likelihood = pm.Normal("y", mu=mu, sigma=sigma, observed=y, dims="obs")
 ```
 
-The beauty of this approach lies in the competitive nature of the Dirichlet allocation: all predictors compete for the total explained variance W. If one predictor becomes more important (higher φⱼ), others must become less important. This creates natural sparsity and prevents overfitting.
+The beauty of this approach lies in the competitive nature of the Dirichlet allocation: all predictors compete for the total explained variance W. If one predictor becomes more important (higher φⱼ), others must become less important. This creates natural sparsity and prevents overfitting. The signal-to-noise ratio τ² provides intuitive control over model complexity, while W gives us the actual variance scale for coefficient priors.
 
 ## First extension: R2D2 for generalized linear models
 
@@ -141,12 +154,12 @@ with pm.Model(coords=coords) as model:
         s_sq = pm.Deterministic("s_sq", mu_beta0 * (1 - mu_beta0) / pt.power(mu_prime_beta0, 2))
 
     # Same competitive allocation structure!
-    W_base = pm.Deterministic("W_base", r_squared / (1 - r_squared))
-    W = pm.Deterministic("W", W_base * s_sq)
+    tau_squared = pm.Deterministic("tau_squared", r_squared / (1 - r_squared))
+    W = pm.Deterministic("W", tau_squared * s_sq)
     phi = pm.Dirichlet("phi", a=np.full(n_components, xi0), dims="components")
 ```
 
-The elegance of this approach becomes clear when we step back and see what's happening conceptually. We're essentially asking "what would σ² be if this GLM were actually a linear model?" and using that as our effective noise term. This preserves all the intuitive benefits of R2D2 while handling GLM complexity.
+The elegance of this approach becomes clear when we step back and see what's happening conceptually. We're essentially asking "what would σ² be if this GLM were actually a linear model?" and using that as our effective noise term. This preserves all the intuitive benefits of R2D2 while handling GLM complexity. The signal-to-noise ratio τ² remains the same intuitive control parameter, while W adapts to the GLM's variance structure.
 
 ## The great leap: R2D2M2 for multilevel models
 
