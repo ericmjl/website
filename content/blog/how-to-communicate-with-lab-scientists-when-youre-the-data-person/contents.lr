@@ -211,7 +211,7 @@ Here's a common scenario: A scientist asks the data team to "check if the groups
 
 Instead, imagine asking: "What decision does this inform?"
 
-Turns out, they need to know if the new formulation is at least 20% better than the current one—otherwise, it wasn't worth the reformulation costs. The groups were statistically different, but only by 8%. The real answer was: "Don't reformulate."
+Turns out, they need to know if the new formulation is at least 20% better than the current one — otherwise, it wasn't worth the reformulation costs. The groups were statistically different, but only by 8%. The real answer was: "Don't reformulate."
 
 That's the difference between answering questions and enabling decisions.
 
@@ -314,7 +314,44 @@ Best,
 
 That's it. Decision first. Evidence second. Details optional.
 
-## 7. Ask yourself what they'll ask you
+## 7. Speak their language (literally)
+
+Here's what most data scientists miss: You need to understand their domain as deeply as they do.
+
+**The measurement method matters more than your statistical method.**
+
+A scientist tells you they're using ELISA to measure protein levels. You nod and proceed with your analysis. But did you ask:
+
+- What's the detection limit?
+- How does the antibody specificity affect your readout?
+- Are there known cross-reactivities that could confound your results?
+- What's the coefficient of variation across replicates?
+
+These aren't statistical questions — they're biological questions that determine whether your analysis is even valid.
+
+**Be deeply curious about their methods.** Ask about:
+
+- The specific assay they're using and its limitations
+- How they handle sample preparation and storage
+- What controls they're running and why
+- The historical performance of this measurement in their hands
+- What could go wrong and how they'd know
+
+**Learn their terminology.** Don't just understand what they're measuring, but understand how they think about it. When they say "potency," do they mean EC50, IC50, or something else? When they talk about "efficacy," are they referring to maximal response, potency, or both?
+
+**Quick domain mastery checklist:**
+
+- What are the three most common failure modes for this assay?
+- What does "good" look like in their world?
+- What would make them suspicious of the data?
+- How do they typically handle outliers or unexpected results?
+- What's the gold standard measurement they're comparing against?
+
+Example: A data scientist was analyzing dose-response data from a cell-based assay. The scientist mentioned they were using a "luminescence readout." The data scientist asked about the detection range, learned it was 10^3 to 10^6 RLU, and immediately spotted that their highest concentration was saturating the detector. The analysis would have been meaningless without understanding that technical limitation.
+
+**The payoff:** When you speak their language, you don't just communicate better—you analyze better. You spot confounders they might miss. You suggest controls they haven't thought of. You become a true collaborator, not just a service provider.
+
+## 8. Ask yourself what they'll ask you
 
 Every scientist has patterns. Learn them.
 
