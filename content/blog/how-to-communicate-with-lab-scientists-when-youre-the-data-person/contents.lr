@@ -30,7 +30,7 @@ Today, I'm going to show you exactly how to do that.
 
 ## 1. Your communication budget is finite — spend it wisely
 
-Every interaction has a finite "communication budget"—limited attention, time, and cognitive load. Most data scientists spend this budget like tourists with foreign currency, not realizing the exchange rate.
+Every interaction has a finite "communication budget" — limited attention, time, and cognitive load. Most data scientists spend this budget like tourists with foreign currency, not realizing the exchange rate.
 
 Think about your last presentation. Where did you spend your time?
 
@@ -54,17 +54,19 @@ But here's what actually works:
 
 But context matters. A curious scientist with time might genuinely want 30% methods—they're building mental models for future decisions. Someone facing a go/no-go decision tomorrow? They need 70% decision implications, minimal methods.
 
-The key is asking upfront.
+The key is adopting BLUF (Bottom-Line Up-Front). Structure your presentation by working backwards from the decision to be made.
 
-**Try this:** At the start of your next meeting, ask: "Do you want the decision first, or would you like to understand the approach?"
+**Try this:** Start with the decision and recommendation, then work backwards to the evidence that supports it. Lead with "Based on our analysis, I recommend we proceed with Compound A because there's an 87% probability it meets our potency threshold."
 
-Their answer tells you everything about budget allocation.
+This tells them immediately what they need to know, then you can spend the remaining time explaining why.
 
-Here's a perfect example: A data scientist spent an entire program review meeting walking through their elegant approach to handling missing data. Really sophisticated stuff. Multiple imputation with careful consideration of the missing-at-random assumption.
+Here's what happens when you don't use BLUF: A data scientist spent an entire program review meeting walking through their elegant approach to handling missing data. Really sophisticated stuff. Multiple imputation with careful consideration of the missing-at-random assumption.
 
 Twenty minutes in, the program lead interrupted: "This is interesting, but we need to decide today whether to advance this molecule. Does it meet our potency threshold or not?"
 
 They hadn't even calculated that probability. They'd spent their entire communication budget on something that wasn't even the program lead's concern that day.
+
+**With BLUF, they would have started:** "Based on our analysis, I recommend we advance this molecule. There's an 82% probability it meets our potency threshold, even accounting for the missing data. Here's how I handled the missing data to arrive at this conclusion..."
 
 ## 2. Know what mode they're in before you open your laptop
 
@@ -109,7 +111,7 @@ Here's the mistake most of us make:
 
 🚫 **Wrong approach:** Launch into methods explanation regardless of mode
 
-✅ **Right approach:** "Would you like the decision first, or should I walk through how I got there?"
+✅ **Right approach:** Start with the decision and recommendation, then adapt the explanation depth based on their mode
 
 Most data scientists default to teaching mode when scientists are in decision mode. That's like giving someone a recipe when they just asked if dinner's ready.
 
