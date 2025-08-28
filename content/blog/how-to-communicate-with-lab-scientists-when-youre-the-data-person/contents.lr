@@ -54,7 +54,7 @@ But here's what actually works:
 
 But context matters. A curious scientist with time might genuinely want 30% methods—they're building mental models for future decisions. Someone facing a go/no-go decision tomorrow? They need 70% decision implications, minimal methods.
 
-The key is adopting BLUF (Bottom-Line Up-Front). Structure your presentation by working backwards from the decision to be made.
+The key is adopting [BLUF (Bottom-Line Up-Front)](https://en.wikipedia.org/wiki/BLUF_(communication)). Structure your presentation by working backwards from the decision to be made.
 
 **Try this:** Start with the decision and recommendation, then work backwards to the evidence that supports it. Lead with "Based on our analysis, I recommend we proceed with Compound A because there's an 87% probability it meets our potency threshold."
 
@@ -115,9 +115,9 @@ Here's the mistake most of us make:
 
 Most data scientists default to teaching mode when scientists are in decision mode. That's like giving someone a recipe when they just asked if dinner's ready.
 
-Consider this scenario: A scientist approaches a data analyst with dose-response data. The analyst starts explaining their Bayesian approach to EC50 estimation. Five minutes in, the scientist stops them: "I just need to know if this is more potent than our current lead."
+Consider this scenario: A scientist approaches a data scientist with dose-response data. The data scientist starts explaining their Bayesian approach to EC50 estimation. Five minutes in, the scientist stops them: "I just need to know if this is more potent than our current lead."
 
-She was in Decision Mode. The analyst was in Teaching Mode. Complete mismatch.
+She was in Decision Mode. The data scientist was in Teaching Mode. Complete mismatch.
 
 The better approach is to be deliberate rather than reactive. Before any meeting, clarify the goals upfront. Ask what they're trying to decide. Talk to stakeholders beforehand to understand the context. Do the pre-work rather than trying to read body language in real-time.
 
@@ -207,7 +207,7 @@ Your job isn't to answer their literal question. It's to figure out which of the
 
 Then frame everything around that decision.
 
-Here's a common scenario: A scientist asks the data team to "check if the groups are different." The analyst could run their standard analysis and report "statistically significant difference detected." Technically correct. Completely useless.
+Here's a common scenario: A scientist asks the data team to "check if the groups are different." The data scientist could run their standard analysis and report "statistically significant difference detected." Technically correct. Completely useless.
 
 Instead, imagine asking: "What decision does this inform?"
 
@@ -340,11 +340,11 @@ Wait for their questions, scramble for answers, promise to "get back to you on t
 
 Example: One program lead always asks: "What if we're wrong?" Every. Single. Time.
 
-The smartest analysts now anticipate this and always include: "If we're wrong about this, here's what we'd see in the next experiment. Here's our bail-out plan. Here's the cost of being wrong versus the cost of being slow."
+The smartest data scientists now anticipate this and always include: "If we're wrong about this, here's what we'd see in the next experiment. Here's our bail-out plan. Here's the cost of being wrong versus the cost of being slow."
 
 She doesn't ask anymore. She trusts that they've thought it through.
 
-Another scientist always wants to know if we have enough evidence. So the prepared analyst leads with: "There's an 85% probability that the treatment effect exceeds your minimum meaningful difference."
+Another scientist always wants to know if we have enough evidence. So the prepared data scientist leads with: "There's an 85% probability that the treatment effect exceeds your minimum meaningful difference."
 
 Pre-answering questions isn't just efficient—it builds massive trust. It shows you understand their concerns and you're thinking ahead. Trust me, **this is a career hack!**
 
