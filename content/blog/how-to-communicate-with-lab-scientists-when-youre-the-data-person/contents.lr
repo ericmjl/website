@@ -327,7 +327,7 @@ A scientist tells you they're using ELISA to measure protein levels. You nod and
 - Are there known cross-reactivities that could confound your results?
 - What's the coefficient of variation across replicates?
 
-These aren't statistical questions — they're biological questions that determine whether your analysis is even valid.
+These aren't *merely* statistical questions — they're also biological questions that determine whether your analysis is even valid.
 
 **Be deeply curious about their methods.** Ask about:
 
@@ -347,17 +347,17 @@ These aren't statistical questions — they're biological questions that determi
 - How do they typically handle outliers or unexpected results?
 - What's the gold standard measurement they're comparing against?
 
-Example: A data scientist was analyzing dose-response data from a cell-based assay. The scientist mentioned they were using a "luminescence readout." The data scientist asked about the detection range, learned it was 10^3 to 10^6 RLU, and immediately spotted that their highest concentration was saturating the detector. The analysis would have been meaningless without understanding that technical limitation.
+Example: A data scientist was analyzing dose-response data from a cell-based assay. The scientist mentioned they were using a "luminescence readout." The data scientist asked about the detection range, learned it was $10^3$ to $10^6$ RLU, and immediately spotted that their highest concentration was saturating the detector. The analysis would have been meaningless without understanding that technical limitation.
 
-**The payoff:** When you speak their language, you don't just communicate better—you analyze better. You spot confounders they might miss. You suggest controls they haven't thought of. You become a true collaborator, not just a service provider.
+**The payoff:** When you speak their language, you don't just communicate better, you also analyze better. You spot confounders they might miss. You suggest controls they haven't thought of. You become a true collaborator, not just a service provider.
 
 ## 8. Ask yourself what they'll ask you
 
 Every scientist has patterns. Learn them.
 
-Your PI always asks about sample size? Pre-calculate power.
-Your biomarker lead obsesses over false positives? Lead with specificity.
-The chemistry team cares about synthesis feasibility? Include yield probabilities.
+Your PI always asks about sample size? Pre-calculate the probability of detecting meaningful effects.
+Your biomarker lead obsesses over false positives? Lead with the posterior probability of true effects.
+The chemistry team cares about synthesis feasibility? Include yield probabilities from your Bayesian model.
 
 This isn't mind-reading. It's paying attention.
 
