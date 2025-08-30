@@ -1,4 +1,17 @@
+@font-face {
+  font-family: 'Berkeley Mono';
+  src: url('../fonts/BerkeleyMono-Regular.woff2') format('woff2');
+  font-stretch: normal;
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 /* Additional custom CSS for the website. */
+body {
+  font-family: 'Berkeley Mono', monospace;
+}
+
 .blog-summary {
   padding-top: 2em;
 }
@@ -50,11 +63,19 @@ body.dark-mode code {
   font-size: 95%;
 }
 
+/* Citation/BibTeX block styling */
+#citation-text,
+#citation-text span,
+#citation-text span[style] {
+  font-family: 'Berkeley Mono', monospace;
+}
+
 /* Dark mode overrides for citation/BibTeX block */
 body.dark-mode #citation-text,
 body.dark-mode #citation-text span,
 body.dark-mode #citation-text span[style] {
   color: #e8e9ed !important;
+  font-family: 'Berkeley Mono', monospace;
 }
 
 body.dark-mode #citation-text span[style*="color: darkblue"] {
