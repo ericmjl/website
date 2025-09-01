@@ -1,0 +1,225 @@
+title: How to use AI to accelerate your career in 2025
+---
+author: Eric J. Ma
+---
+body:
+
+Everyone knows LLMs can help with coding and drafting emails. But there are less obvious ways to hack your career with AI that can save you hours and make you more effective at work.
+
+Here are 10 strategies I've tested, with sample prompts you can steal:
+
+## Draft presentations that actually land
+
+Most people start with slides. Start with your audience instead.
+
+First, research who you're presenting to. If you know specific attendees, have ChatGPT or Claude build dossiers from their public profiles - LinkedIn, company bios, recent interviews. Then ask the LLM what these people care about most.
+
+Next, have it craft your core message and angle based on those audience insights. Finally, get it to describe in words how each slide should look before you build anything - making sure to feed in both your audience research and your refined message. This approach works because you're designing for actual humans, not abstract concepts.
+
+Pro tip: Or just skip the manual work entirely and use Gamma.ai.
+
+**Sample prompts:**
+
+> I'm presenting to `[specific people/roles]`. Here are their LinkedIn profiles: `[paste]`. What do they care about most professionally right now?
+
+> My presentation topic is `[topic]`. My audience cares about `[insights from above]`. Help me craft a compelling angle that will resonate with them.
+
+> Generate slide-by-slide instructions for a `[number]`-slide presentation on `[topic]`. My audience is `[audience description]` and they care about `[audience insights from research]`. My core message is `[refined message/angle]`. For each slide, tell me: the title (which should be the main point of that slide), what elements to include, and how to lay them out. The title style should be `[describe your preferred title style - e.g., "a clear statement that makes the key point, not just a topic heading"]`.
+
+## Research your negotiation counterparts like a detective
+
+Context is everything in negotiations. Feed your LLM everything you know about the other party - their backgrounds, the situation they're in, potential constraints they're facing.
+
+Describe your own circumstances, goals, and BATNA (Best Alternative to a Negotiated Agreement). Then iterate with the LLM on potential objections and counter-strategies.
+
+The more specific information you provide, the better it gets at uncovering blind spots you hadn't considered.
+
+**Sample prompts:**
+
+> I'm negotiating `[situation]` with `[specific people/roles]`. Here's what I know about them: `[paste background]`. Here are my goals: `[paste goals]`. My BATNA is: `[paste alternative]`. What objections might they raise?
+
+> Given this context: `[paste situation details]`, what leverage points might I have that I'm not seeing?
+
+> If I propose `[specific ask]`, how might they respond based on `[paste their constraints/motivations]`? Help me prepare counter-responses.
+
+## Transform content between formats effortlessly
+
+You wrote a technical document that needs to become a blog post. Or you have a blog post that needs to become a slide deck. Instead of starting from scratch, let the LLM remix your existing content into the right format.
+
+The key is being specific about your target audience. A technical document transformed for executives needs different language and emphasis than one transformed for peer engineers. Without clear audience context, the LLM can't make effective choices about tone, depth, and focus.
+
+This works for any content transformation - meeting notes to executive summaries, brainstorming sessions to project proposals, quarterly reviews to team updates. Just remember: same content, different audience, different approach.
+
+**Sample prompts:**
+
+> Transform this technical document into a blog post for `[specific people/roles - describe their background, interests, and level of technical knowledge]`: `[paste content]`
+
+> Turn these meeting notes into an executive summary for `[specific people/roles - include their role, priorities, and what they care about]`: `[paste notes]`
+
+> Convert this brainstorming session into a structured project proposal for `[specific people/roles - describe their concerns and what convinces them]`: `[paste ideas]`
+
+## Fill out administrative forms without the dread
+
+OKRs, performance reviews, expense reports - we all have forms that feel like bureaucratic hurdles. Here's the hack: don't write directly into the form.
+
+Instead, do a brain dump by talking through your accomplishments and goals. Transcribe this (voice memos work great), then paste the form questions plus your transcript into ChatGPT. Have it fill out the form for you, then copy-paste back.
+
+What used to take half a day now takes 30 minutes.
+
+Check out the Dia browser, which lets you insert LLM-generated text directly into web forms.
+
+**Sample prompts:**
+
+> Here are my form questions: `[paste]`. Here's my brain dump of accomplishments: `[paste transcript]`. Fill out the form professionally.
+
+> Help me write OKRs based on this verbal dump of my goals: `[paste transcript]`
+
+> Turn this expense description into proper business justification: `[paste description]`
+
+## Ghost-write in your own voice
+
+Including this blog post, I start by verbally dumping my ideas into a Markdown file in Obsidian, usually via voice transcription. Then I have Claude ghostwrite using my tone - my verbal dump contains my natural writing patterns, plus I feed it samples of my previous blog posts.
+The key is multiple editing rounds. I push hard on the LLM during edits, which is how I make the content truly mine. I don't publish anything until it's been through at least two rounds of refinement.
+
+**Sample prompts:**
+
+> Here's my verbal brain dump: `[paste]`. Here are samples of my writing style: `[paste examples]`. Ghostwrite my brain dump as a blog post in my voice.
+
+> This draft doesn't sound like me yet. Make it more `[specific style notes]`. Here's what my natural voice sounds like: `[paste examples]`
+
+> Polish this draft but keep my conversational tone and specific phrases: `[paste draft]`
+
+## Prepare manager updates that actually help your career
+
+Use the same strategy as ghostwriting, but tailor it to your manager's level and scope. You want your manager to have the details they need to advocate for you effectively.
+
+Most managers don't have time to critique your use of AI - they just need to stay informed. Keep a running log in a shared space, ideally structured like "updates, problems, questions" organized by project.
+
+As both an employee and a manager, I can tell you: teammates who spoon-feed structured weekly updates are gold. It shapes your manager's memory of your contributions and honestly makes my job as a manager easier because it lets me focus on coaching and strategic support rather than hunting for status updates.
+
+**Sample prompts:**
+
+> Turn this brain dump into a structured manager update: `[paste notes]`. Format as Updates/Problems/Questions by project.
+
+> My manager is `[specific people/roles - description of their role/priorities]`. Here's what I accomplished this week: `[paste list]`. Write an update that helps them advocate for me.
+
+> Summarize my quarterly achievements in a way that highlights impact and aligns with `[paste company priorities]`: `[paste accomplishments]`
+
+## Personalize communications with important people
+
+Use research mode to build context on VIPs you're meeting. Feed that research into your communication planning. This works because our digital footprints reveal what we care about, and LLMs are trained on massive examples of human interaction.
+
+The result: messages that land because they're tailored to what actually matters to the recipient.
+
+**Sample prompts:**
+
+> I'm reaching out to `[specific people/roles]` about `[topic]`. Here's their background: `[paste research]`. Help me craft a personalized message that will resonate.
+
+> Based on this person's recent posts/interviews: `[paste]`, what communication style and topics should I focus on?
+
+> I need to follow up on `[situation]` with `[specific people/roles who have these characteristics]`. Write a message that acknowledges `[paste their priorities/constraints]`.
+
+## Make seamless edits to any document
+
+When you have a long piece of writing (code, essays, reports), don't manually hunt for where to make changes. Just dictate your edits into an LLM chat.
+
+Add this to your system prompt: "When you make edits that I request, please make them seamless with the rest of the context."
+This prevents the LLM from injecting walls of text and instead makes surgical, contextual changes.
+
+**Sample prompts:**
+
+> In this document: `[paste]`, I need to add information about `[topic]` in the section about `[section]`. Make it seamless with the existing content.
+
+> Change the tone of this section from `[current tone]` to `[desired tone]` without changing the key points: `[paste section]`
+
+> This paragraph needs to be more concise while keeping the main message: `[paste paragraph]`
+
+## Organize your accomplishments by competency
+
+Dump all your achievements into a voice memo and have an LLM organize them by your company's competency framework. Most performance reviews follow standard patterns - leadership, technical skills, collaboration.
+
+LLMs excel at categorizing your work and suggesting which examples best demonstrate each competency. No more staring at blank forms trying to remember what you did six months ago.
+
+This is essentially automating the [brag doc that Steve Huynh recommends](https://www.youtube.com/shorts/gbkv8Asadh0) - but with AI doing the heavy lifting of organization and categorization. I've written more about [building your accomplishments record in your first 90 days](https://ericmjl.github.io/blog/2024/2/29/your-first-90-days-at-work-what-should-you-do/).
+
+**Sample prompts:**
+
+> Here are my accomplishments from this year: `[paste list]`. Organize them by these competencies: `[paste framework]`
+
+> I need examples that demonstrate leadership. Here's everything I've done: `[paste]`. Which examples best show leadership impact?
+
+> Help me identify gaps in my competency examples. Here's what I have: `[paste organized list]`. What areas need stronger examples?
+
+## Practice difficult conversations before they happen
+
+Feed in everything you know about the person you need to talk to - their communication style, recent stressors, past reactions, what motivates them. Have the LLM help you craft the right tone and timing, then practice by having it roleplay as them.
+
+Difficult conversations often fail not because of what you say, but how and when you say it. This prep work is like having a rehearsal before the real performance.
+
+[Jeremy Utley demonstrates this technique](https://www.youtube.com/watch?v=yMOmmnjy3sE) of using AI to roleplay difficult conversations before they happen.
+
+**Sample prompts:**
+
+> I need to have a difficult conversation with `[specific people/roles]` about `[topic]`. Here's their communication style: `[paste description]`. Here's the situation: `[paste context]`. Help me plan my approach.
+
+> Roleplay as `[specific people/roles with these characteristics]` while I practice this conversation about `[topic]`. Push back as they would based on `[paste their known concerns]`.
+
+> I want to ask for `[specific request]`. This person typically responds to `[paste motivation style]`. How should I frame this conversation?
+
+## Force AI to challenge your assumptions
+
+Don't just use LLMs to confirm what you already think. Actively ask them to disagree with you and surface blind spots. This is especially powerful for strategic decisions, project planning, or career moves where you might be too close to see potential problems.
+
+The key is being explicit about wanting pushback. LLMs are trained to be helpful and agreeable, so you need to specifically request criticism and alternative perspectives.
+
+**Sample prompts:**
+
+> I'm planning to `[paste decision/strategy]`. Play devil's advocate - what are the strongest arguments against this approach?
+
+> Challenge my assumptions about `[situation]`. Here's how I see it: `[paste your perspective]`. What am I missing or getting wrong?
+
+> I think `[paste opinion/plan]`. Give me three reasons why someone smart might disagree with me, and explain their reasoning.
+
+## The principles that make this work
+
+**Know your audience first.** Whether you're transforming content, crafting presentations, or writing updates for your manager, everything starts with understanding who you're communicating with. LLMs can't make effective choices about tone, depth, and focus without clear audience context.
+
+**Research beats assumptions.** Don't guess what people want or how they'll react. Feed LLMs specific information about negotiation counterparts, presentation audiences, or conversation partners. The more context you provide, the better the output.
+
+**Speak, don't type.** Voice transcription captures your natural patterns and is faster than typing. Use it for brain dumps, accomplishment reviews, and initial drafts.
+
+**Automate the tedious, elevate the strategic.** Let LLMs handle forms, formatting, and content transformation so you can focus on relationships, creative problem-solving, and high-level strategy.
+
+**Practice before it matters.** Use LLMs to rehearse difficult conversations, anticipate objections in negotiations, and stress-test your thinking before real situations.
+
+**Seek challenge, not just confirmation.** Explicitly ask LLMs to disagree with you, surface blind spots, and present counterarguments. This prevents echo chambers and sharpens your thinking.
+
+**Document everything for future you.** Keep accomplishment records, conversation insights, and successful prompts organized. Your future self will thank you during performance reviews and job transitions.
+
+The real power isn't in the AI doing your thinking for you - it's in using AI to handle the mechanics so you can focus on the strategy, relationships, and creative problem-solving that actually advance your career.
+
+## AI is a mirror
+
+As Jeremy Utley puts it: "AI is a mirror." If we want our brains to rot, we can use AI to make our brains rot. Or we can use AI to sharpen how we're thinking, be more effective and efficient at how we're working.
+
+The choice is yours. Use these techniques to elevate your career, not replace your judgment.
+
+---
+pub_date: 2025-09-01
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share 10 practical ways I've used AI and large language models to save time and boost my effectiveness at work—beyond just coding and emails. From crafting tailored presentations and prepping for negotiations to automating tedious forms and practicing tough conversations, these strategies help you focus on what really matters. Want to know how AI can help you work smarter, not harder, in 2025?
+---
+tags:
+
+productivity
+negotiation
+presentations
+llm
+automation
+communication
+competencies
+ghostwriting
+updates
+ai
