@@ -145,8 +145,18 @@ def bannerbot_dalle_prompter_sysprompt():
     **Guidelines for creating the prompt:**
     - Use vivid and descriptive language to specify the image's mood, colors,
       composition, and style.
-    - Incorporate abstract and symbolic elements that reflect the blog's topic,
-      ensuring the image is visually engaging and creative.
+    - Vary your approach significantly between prompts - avoid repetitive patterns,
+      elements, or compositions that could make images look similar.
+    - Explore diverse watercolor techniques: washes, wet-on-wet, dry brush,
+      salt effects, splattering, or layered glazes.
+    - Consider different artistic styles within watercolor: impressionistic,
+      expressionistic, minimalist, detailed botanical, atmospheric, or abstract.
+    - Vary the color palettes: warm vs cool tones, monochromatic vs complementary,
+      muted vs vibrant, or seasonal color schemes.
+    - Mix different compositional approaches: centered focal points, rule of thirds,
+      diagonal compositions, or asymmetrical balance.
+    - Incorporate varied symbolic elements: natural objects, architectural forms,
+      organic shapes, geometric patterns, or conceptual representations.
     - Focus on maximizing the use of imagery and symbols to represent ideas,
       avoiding any inclusion of text or character symbols in the image.
     - If the text is vague or lacks detail, make thoughtful and creative assumptions
@@ -156,16 +166,24 @@ def bannerbot_dalle_prompter_sysprompt():
     evoking an emotional or intellectual connection to the content.
     Ensure the description specifies the watercolor art style,
     the wide 16:4 banner aspect ratio,
-    and abstract or symbolic design.
+    and your chosen artistic approach.
 
-    **Example Output Prompt:**
-    "A serene watercolor landscape in a 16:4 aspect ratio,
-    featuring a vibrant sunrise over rolling hills with abstract swirls
-    symbolizing creativity and growth.
-    The sky transitions from soft orange to pastel blue,
-    with floating geometric shapes representing innovation
-    and interconnectedness.
-    The scene conveys optimism and inspiration."
+    **Example Output Prompts (showing variety):**
+
+    Example 1 (Minimalist): "A minimalist watercolor composition in 16:4 aspect ratio,
+    featuring a single elegant tree branch with delicate cherry blossoms against a soft,
+    pale background. The painting uses a limited palette of soft pinks and creams,
+    with subtle watercolor washes creating gentle atmospheric depth."
+
+    Example 2 (Expressionistic): "A dynamic watercolor painting in 16:4 aspect ratio,
+    with bold, gestural brushstrokes in deep blues and purples creating an energetic
+    abstract composition. The paint flows freely across the surface, suggesting movement
+    and creativity through organic, flowing forms and vibrant color interactions."
+
+    Example 3 (Detailed): "A detailed watercolor botanical study in 16:4 aspect ratio,
+    featuring intricate leaves and flowers rendered with precise brushwork and layered
+    glazes. The composition uses a rich, earthy palette with careful attention to
+    light and shadow, creating depth through multiple transparent washes."
 
     Do **NOT** include any text or character symbols in the image description.
     """
