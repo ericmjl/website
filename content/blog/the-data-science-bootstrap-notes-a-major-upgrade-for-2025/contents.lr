@@ -1,0 +1,120 @@
+title: The Data Science Bootstrap Notes: A major upgrade for 2025
+---
+author: Eric J. Ma
+---
+body:
+
+After 8 years since the first edition, I've completely overhauled *The Data Science Bootstrap Notes* to reflect the dramatic changes in the Python data science ecosystem. What started as a collection of Obsidian notes has evolved into a comprehensive, modern guide that addresses the tools and practices that actually matter in 2025.
+
+## From Obsidian notes to a proper book
+
+The most visible change is the format itself. The original version existed as a navigable knowledge base in Obsidian, mimicking [Andy Matuschak's online notes](https://notes.andymatuschak.org/About_these_notes). While that format was intellectually interesting to make, I found that after years of experimentation, simple was indeed better than cool. The new version uses MkDocs to create a clean, linear book format that's easier to navigate and more accessible to readers.
+
+But the real transformation goes far deeper than just the presentation layer.
+
+## The tooling revolution: conda → pixi + uv
+
+The biggest shift in my recommendations centers around environment management. In 2017, conda was the obvious choice for Python data science environments. Today, that's no longer the case.
+
+### Enter pixi: the environment management multi-tool
+
+I've completely replaced conda with `pixi`, a modern environment manager written in Rust that solves many of the fundamental problems that plagued the conda ecosystem. The key advantages are:
+e
+**Automatic Lock Files**: Pixi automatically generates and maintains lock files (`pixi.lock`) every time you modify your environment. This solves the critical "it works on my machine" problem that conda users faced when environments would drift over time.
+
+**Feature-Based Environments**: Instead of creating separate environments for each purpose, pixi lets you define reusable "features" that can be combined into different environments. You can have `tests`, `docs`, `notebook`, and `cuda` features that combine into purpose-built environments like `default`, `docs`, or `cuda`.
+
+**Task Automation**: Pixi enables you to replace Makefiles with tasks defined in `pyproject.toml`. Commands like `pixi run test` or `pixi run docs` standardize common operations across your team.
+
+### uv: the Python tool manager
+
+Complementing pixi is `uv`, an extremely fast Python package installer and resolver written in Rust. UV handles global tool installation by automatically creating isolated environments for each tool, giving you the convenience of global tools without the mess of a global Python installation.
+
+This means you can run tools like `llamabot` or my own `pyds-cli` without worrying about dependency conflicts. The `uvx` command even lets you run tools without installing them first.
+
+## Modern project scaffolding
+
+The new edition introduces `pyds-cli`, my opinionated tooling for data scientists that scaffolds new projects using cookiecutter and pixi. Instead of manually setting up project structures, you can now run:
+
+```bash
+pyds project init
+```
+
+This creates a complete project structure with proper environment management, testing setup, documentation configuration, and CI/CD pipelines already configured.
+
+## AI integration: beyond the hype
+
+Generative AI has fundamentally changed how I think about data science workflows. The new edition includes a comprehensive chapter on working with AI tools that goes beyond simple code generation to address:
+
+**The speed of thought**: AI tools help bridge the gap between how fast we can think and how fast we can type. There's fascinating research showing humans process information at $10^9$ bits/second but think at only 10 bits/second - AI helps bridge this massive gap.
+
+**The right kind of lazy**: I distinguish between being "Bill Gates lazy" (finding efficient ways to work) and being intellectually lazy (blindly trusting AI outputs). You must maintain intellectual responsibility.
+
+**Effective patterns**: I share specific strategies for structuring AI interactions, from starting with the big picture to rapid iteration and verification. This includes the "fat finger sketch" approach where you outline what you want before asking AI to fill in details.
+
+**Beyond code**: AI tools are particularly valuable for documentation acceleration, code review assistance, and learning new libraries or techniques.
+
+The key insight is that AI should amplify your capabilities, not replace your judgment. You need to develop a mindset that embraces these tools while maintaining intellectual rigor.
+
+## CI/CD and automation
+
+The new edition heavily emphasizes GitHub Actions for continuous integration and deployment. Instead of manual processes, you now have trigger-able bots that can:
+
+- Run tests automatically on every commit
+- Build and deploy documentation
+- Validate code quality with pre-commit hooks
+- Deploy applications to various environments
+
+This automation eliminates the drudgery that often accompanies data science projects and ensures consistency across team members. I've even applied this philosophy to the book itself; the entire publishing process is automated through GitHub Actions that build and deploy the website, while simultaneously updating the Leanpub version with every commit.
+
+## Philosophical foundations
+
+While the tools have changed dramatically, the core philosophies remain the same but are now more clearly articulated:
+
+1. **Know Your Compute Stack**: Deep understanding of your tools enables informed choices about what to automate
+2. **Single Source of Truth**: Establish clear, unambiguous sources for data, code, and configuration
+3. **Automate Relentlessly**: Invest in automation to eliminate repetitive tasks
+4. **Categorize Everything**: Organize projects using logical categories that make maintenance easier
+
+These principles now have concrete implementations through modern tooling, making them more actionable than ever.
+
+## What's been removed
+
+Not everything made the cut. I've removed outdated advice about:
+
+- Manual conda environment management (replaced with pixi automation)
+- Complex conda-specific workflows (simplified with pixi features)
+- Manual lock file generation (now automatic with pixi)
+- Manual project scaffolding (now automated with pyds-cli)
+
+## The path forward
+
+The new edition is designed to get you started quickly while building foundations that scale. It's not just a reference guide; it's a roadmap for establishing practices that grow with your ambitions. The tools and practices I recommend today are the ones I actually use in production, not just theoretical best practices.
+
+What excites me most about this upgrade is how it addresses the real pain points that data scientists face in 2025. Instead of wrestling with environment conflicts, you're now thinking about how to compose features into purpose-built environments. Instead of manually setting up projects, you're focusing on the actual analysis. Instead of fighting with dependency resolution, you're building reproducible workflows that work the same way for everyone on your team.
+
+The data science ecosystem has matured significantly since 2017, and this new edition reflects that maturity. It's about getting started the right way; establishing foundations that won't crumble as your projects grow in complexity and team size.
+
+You can read the book online at [the GitHub Pages site](https://ericmjl.github.io/data-science-bootstrap-notes/), and if you prefer a linear reading experience, there's also an [eBook version on LeanPub](https://leanpub.com/dsbootstrap/).
+
+The future of data science is automated, reproducible, and collaborative. This new edition shows you how to get there.
+
+---
+pub_date: 2025-09-02
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how I've completely revamped The Data Science Bootstrap Notes for 2025, reflecting major changes in Python tooling and best practices. I discuss moving from conda to pixi and uv, automating project setup with pyds-cli, integrating AI thoughtfully, and embracing CI/CD for reproducible workflows. I also highlight the core philosophies that guide my approach and explain what outdated advice I've removed. Curious how these changes can help you build scalable, modern data science projects?
+---
+tags:
+
+python
+pixi
+uv
+mkdocs
+automation
+ai
+scaffolding
+integration
+tooling
+workflows
