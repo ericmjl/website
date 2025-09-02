@@ -12,14 +12,14 @@ The most visible change is the format itself. The original version existed as a 
 
 But the real transformation goes far deeper than just the presentation layer.
 
-## The tooling revolution: conda → pixi + uv
+## The tooling revolution: conda + pip → pixi + uv
 
 The biggest shift in my recommendations centers around environment management. In 2017, conda was the obvious choice for Python data science environments. Today, that's no longer the case.
 
 ### Enter pixi: the environment management multi-tool
 
 I've completely replaced conda with `pixi`, a modern environment manager written in Rust that solves many of the fundamental problems that plagued the conda ecosystem. The key advantages are:
-e
+
 **Automatic Lock Files**: Pixi automatically generates and maintains lock files (`pixi.lock`) every time you modify your environment. This solves the critical "it works on my machine" problem that conda users faced when environments would drift over time.
 
 **Feature-Based Environments**: Instead of creating separate environments for each purpose, pixi lets you define reusable "features" that can be combined into different environments. You can have `tests`, `docs`, `notebook`, and `cuda` features that combine into purpose-built environments like `default`, `docs`, or `cuda`.
@@ -42,7 +42,7 @@ pyds project init
 
 This creates a complete project structure with proper environment management, testing setup, documentation configuration, and CI/CD pipelines already configured.
 
-## AI integration: beyond the hype
+## AI integration beyond the hype
 
 Generative AI has fundamentally changed how I think about data science workflows. The new edition includes a comprehensive chapter on working with AI tools that goes beyond simple code generation to address:
 
@@ -54,7 +54,7 @@ Generative AI has fundamentally changed how I think about data science workflows
 
 **Beyond code**: AI tools are particularly valuable for documentation acceleration, code review assistance, and learning new libraries or techniques.
 
-The key insight is that AI should amplify your capabilities, not replace your judgment. You need to develop a mindset that embraces these tools while maintaining intellectual rigor.
+The key insight is that AI should amplify our capabilities, not replace our judgment. We need to develop a mindset that embraces these tools while maintaining intellectual rigor.
 
 ## CI/CD and automation
 
