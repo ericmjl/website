@@ -1,0 +1,226 @@
+title: How data scientists can master life sciences and software skills for biotech using ultralearning
+---
+author: Eric J. Ma
+---
+body:
+
+After 8 years working in biotech and 6 years of graduate training before that, I've observed something about the most effective data scientists in biotech: they aren't just T- or π-shaped -- posessing breadth in skill while being deep in 1 or 2 specialties. They're continuously learning new skills to bridge their knowledge gaps.
+
+There are two common knowledge gaps that I've observed. On one side, there's the vast world of life sciences: molecular biology, cell biology, genetics, immunology, neuroscience, analytical chemistry, organic chemistry, biochemistry. On the other, there's software development, the kind of skills that let you build reliable, maintainable tools that actually work in production.
+
+The challenge is that these two domains are fundamentally different in how you learn them. And here's the thing: you can't just "take courses" in those domains and call it done. The life sciences alone are too vast. You need a strategy for continuous, rapid learning in both domains over your entire career.
+
+When I interview data scientists for biotech roles, I assess five key areas: people skills, communication skills, scientific knowledge, coding skills, and modeling skills. The two domains I'm talking about here — life sciences and software development — map directly to scientific knowledge and coding skills. These aren't just nice-to-haves; they're essential for effectiveness in biotech data science.
+
+That's where "ultralearning" comes in. It's Scott Young's framework for aggressive, self-directed learning, and I know it works because I've lived it. I started as a bench scientist but taught myself computing, software development, and machine learning over the years. Now I want to show you how data scientists in biotech can do the same—whether you're learning domain knowledge or software skills.
+
+How do you strategically build depth in both life sciences and software over time? I'm going to walk through the 9 principles of ultralearning that Scott Young outlines and show you how they map to learning both domains for biotech data science. I've reordered them in a way that builds momentum, starting with what matters most.
+
+## The 9 principles
+
+### Principle 3: Directness - learn by doing the real thing
+
+Starting with principle 3, here's what directness means: you learn most viscerally in the actual context where you'll apply the skill. And I'm putting this first because it's where most people go wrong.
+
+Most people read textbooks and take courses. This isn't bad in and of itself, but if you assume that covering the material means you have learned it, you are wrong. Without a context to apply it, the knowledge doesn't stick. You need a real project where you actually use what you're learning.
+
+If you're already working in biotech, you have a huge advantage: you already have real projects with real stakes. These projects naturally focus your learning because you have a job to be done! This is why I put directness first: it leverages the learning environment you already have.
+
+For learning life sciences, this means treating your current project as your learning laboratory. You're analyzing RNA-seq data? Learn the biology behind the genes you're seeing, then immediately apply that knowledge to interpret your results and suggest follow-up experiments. You're working with metabolomics data? Learn the metabolic pathways, then use that understanding to identify which metabolites are actually biologically meaningful versus technical artifacts. You're building models for drug discovery? Learn the specific organic chemistry that you're working with, then apply it to explain why your model predicts certain compounds will work and others won't, and use that reasoning to guide your next round of experiments.
+
+Your current project is your learning laboratory. Treat the scientific knowledge gaps you encounter as targets for deep learning.
+
+And here's something I've noticed: when you write internal documentation or reports, that's actually retrieval practice for the science you're learning. More on retrieval later, but the point is your work gives you built-in learning opportunities if you use them intentionally.
+
+The same applies to learning software. Your pipeline is getting slow? Learn performance optimization and profiling, then immediately apply those techniques to identify bottlenecks and speed up your actual pipeline. Your code is getting hard to maintain? Learn design patterns, then refactor your existing codebase using those patterns to make it more modular and testable. You need to deploy something? Learn containerization and orchestration, then use those skills to get your tool running in production and accessible to your team.
+
+Your work projects provide the constraints and requirements that make software concepts meaningful. When you document your code or write design docs, you're forced to articulate the architectural decisions you're making—and that's when you really learn them.
+
+### Principle 4: Drill - isolate and attack weak points
+
+Drilling is about identifying rate-limiting steps in your skills and practicing them specifically. Once you're doing direct practice through your projects, you'll notice where you keep getting stuck.
+
+Here, there is a meta-skill that I think is critical: self-awareness. You need to develop the ability to notice when you're missing context, without someone explicitly telling you. When you're reading a paper and realize you're lost, or when you're in a meeting and can't follow the reasoning, that's your signal. Learning to recognize these moments yourself is what makes drilling effective.
+
+For learning life sciences, drilling means identifying the specific skills that are blocking your work and practicing them repeatedly. Do you keep having to ask biologists what ChIP-seq tells you? Drill by practicing biological interpretation: take 20 different ChIP-seq results and explain what each peak means biologically—what transcription factor is binding, what genes are being regulated, and what biological process is affected. Are you on a project with immunologists but can't follow their reasoning? Drill by practicing experimental logic: read 15 immunology papers and predict what the next experiment should be based on the current results, then check your reasoning against what the authors actually did, or consult an immunologist colleague.
+
+Or perhaps consider the chemistry side of things. Are you analyzing mass spec data but you're shaky on ionization and fragmentation? Drill by working through 50 fragmentation problems: given a compound structure, predict the top 5 fragments you'd expect to see, then check your answers. Is your lack of organic chemistry preventing you from understanding drug modifications? Drill by practicing modification effects: take 30 different drug structures, make specific modifications (add methyl group, change functional group), and predict how each change would affect binding affinity, solubility, and metabolic stability.
+
+The key is identifying the real bottleneck in your knowledge and then designing a drill around that. If you have no good priors on how to do this, you should actually be asking your colleagues who have domain knowledge. They can help you pinpoint exactly what you're missing and suggest focused practice exercises.
+
+For learning software, the same principle applies. Do your pipelines keep breaking in production? Drill by practicing debugging: take your broken pipeline, run it locally with the same data that failed in production, and systematically test each step until you find the exact failure point. Are you blocked on deployment because of containerization issues? Drill this skill while debugging! Start with a minimal Dockerfile that just runs your script, then gradually add dependencies one by one until it works. Strip it back to bare minimum and rebuild it piece by piece, and your understanding will follow too.
+
+Code review keeps catching the same issues in your code? Drill on those patterns by refactoring your existing code to avoid them. Take one function at a time and rewrite it to follow the patterns your reviewers want. Do you avoid writing tests because you don't really understand testing frameworks? Start by adding a single test to your existing codebase, then gradually add more tests to the functions you use most.
+
+Identify the one software skill that's limiting your effectiveness right now, and drill it until it's not a bottleneck anymore. Maybe it's Git workflows that are slowing your team down, or packaging that's preventing tool distribution.
+
+### Principle 1: Metalearning - map the territory first
+
+Metalearning means researching how to learn something before diving in. I know it seems backwards to list this third when it's literally the first principle in Scott Young's framework, but here's why: directness and drilling are more immediately actionable. Once you're doing those, metalearning helps you be more strategic about what you're doing.
+
+For learning life sciences, this means understanding what you actually need to know for your work before diving into intensive learning. Is your team starting a new project in spatial transcriptomics? Before diving in, map out what you need: tissue biology, imaging concepts, the technology itself, analysis methods. Are you joining a drug discovery project? Identify the hierarchy of knowledge; do you need medicinal chemistry basics first, or can you start with binding assays and learn backward?
+
+Talk to the biologists or chemists you work with. Ask them what foundational concepts matter most for understanding their work. Look at the papers your team references most—what scientific knowledge do they assume? That's your map.
+
+Find the best resources for your specific need. Maybe it's that one review paper, or a specific textbook chapter, or that scientist down the hall who explains things well. Don't waste time learning areas that aren't relevant to your current work. Map what matters now.
+
+Additionally, be prepared to re-map! After working on a project for a while, you might find your initial map was wrong. That's totally OK! If you're making errors because you misunderstood what you needed to learn, that's a signal to step back and reassess. An incorrect map is worse than no map.
+
+For learning software, the same applies. Before diving into a new software skill, understand what good looks like in your specific context—biotech and scientific computing. Your team wants to adopt a new workflow system? Before learning it, map out what you need: workflow concepts, the specific tool's paradigms, container knowledge. Or can you start with examples?
+
+Look at mature tools in your space — `scikit-bio`, `scanpy`, or established pipelines like those from the ENCODE project. What patterns do they use? Are they functional-first or objects-first? And what are patterns in how they design their APIs? That's your north star. Talk to experienced engineers if you have access and ask what software skills actually matter for scientific tools.
+
+The key is understanding the learning path dependencies: do you need to understand Python packaging before you can learn about CI/CD? Or can you learn them together? Map out the shortest path to being effective, not the most comprehensive path to expertise. Focus on what will unblock your current work, not what would make you an expert in everything.
+
+### Principle 6: Feedback - get signal on your progress
+
+Feedback is getting useful information about what you're doing wrong and how to fix it. And in biotech, you have built-in feedback mechanisms if you use them intentionally.
+
+For learning life sciences, leverage the scientists you work with as your feedback mechanism. When you present results in team meetings and biologists or chemists correct your interpretation, that's high-value feedback. Pay attention!
+
+Join journal clubs if your company has them. When you misunderstand a paper, someone will point it out. If your company doesn't have journal clubs, look in your local community—Boston has several industry-focused options including [BiotechTuesday](https://biotechtuesday.com/category/geographic-region-event/boston-ma/), [MassBio events](https://massbio.microsoftcrmportals.com/event/?event=The_Science_of_Biotech_November), and [Cambridge Biotech Club](https://cambridgebiotechclub.org/) networking events that often include research discussions.
+
+When you write up results or make slides, ask a scientist to review. Where they add clarifications shows your knowledge gaps. If your predictions about experimental outcomes are wrong, that's feedback about your biological understanding. I remember being challenged by a colleague while on a call with external collaborators, and that was the best feedback I had being wrong in a "public" setting! When you explain your interpretation to a biologist and they look confused, you've either misunderstood the science or can't articulate it yet.
+
+Your work products -- analyses, reports, presentations -- are opportunities to get feedback on your scientific understanding. Don't just present results. Explain your biological reasoning and see where it's challenged.
+
+For learning software, code review is your primary feedback mechanism. Take it seriously. The comments show you what you don't yet understand.
+
+Does your code actually work at scale with real-sized data? That's feedback on your software design. When someone else tries to use your tool and files issues, those edge cases reveal gaps in your software thinking. Pair programming with more experienced engineers shows you patterns you're not seeing.
+
+When onboarding a new team member to your code takes too long, that's feedback that your architecture or documentation needs work. Production failures are harsh but clear feedback: what software concepts do you need to learn to prevent them?
+
+Ask for architectural review before building something big. Feedback up front prevents expensive mistakes.
+
+### Principle 5: Retrieval - test yourself actively
+
+Retrieval is about actively recalling information, which strengthens learning more than passive review. And I want to emphasize something specific about this for life sciences learning.
+
+The vocabulary in life sciences is vast, and the meanings of everyday words often change in scientific contexts. Think about "competent" cells, "naive" T-cells, "promiscuous" enzymes, "housekeeping" genes. Good memory for vocabulary isn't just about rote memorization; it gives you the ability to name and label entities clearly, which is foundational even when your primary goal is understanding concepts.
+
+For learning life sciences, retrieval practice happens naturally in your work if you let it. When you're preparing a presentation for your team, try to explain the biological mechanism from memory first, then check your understanding. Before looking up that pathway or reaction mechanism again, try to draw it from memory. Where you get stuck shows what you haven't really learned.
+
+In meetings when discussing results, attempt to explain the biology without your notes. This reveals what you actually know versus what you've just read. When writing internal documentation about your project, explain the scientific concepts from memory, then verify. If you're presenting at journal club, practice explaining the paper's biology without constantly referring to slides.
+
+The act of trying to recall forces your brain to strengthen those neural pathways. Passive rereading doesn't do this. Your work already gives you retrieval opportunities—presentations, documentation, discussions with scientists. Use them.
+
+For learning software, the same principle applies. When you're about to look up how to do something in code, try to write it from memory first, then look it up if needed. Before copying a design pattern from Stack Overflow, try to implement it based on what you remember, then refine.
+
+In code review or design discussions, explain your architectural decisions from memory. If you can't, you don't really understand them yet. When documenting your code, write the explanation without constantly referencing the implementation. Try to debug issues by reasoning through the system before looking at logs—this builds your mental model.
+
+And here's something important: making it easy by constantly looking things up or always relying on AI to spoonfeed you answers is a surefire way to keep knowledge shallow. The struggle of trying to remember is what creates learning.
+
+This is especially true with AI-generated documentation. You can use AI to generate documentation, but the retrieval practice happens during review. When AI writes "this function calculates the binding affinity," question it: "Does it really? What's the actual algorithm? What are the inputs and outputs?" Challenge each line the AI wrote by trying to explain it from your own understanding. If you can't explain why a particular line is there or what it does, that's your signal to dig deeper into that concept.
+
+### Principle 2: Focus - cultivate deep concentration
+
+Focus is about managing procrastination, distraction, and maintaining sustained attention. And this matters more than you might think for both domains.
+
+For learning life sciences, reading that dense Nature paper about a pathway relevant to your project requires deep, uninterrupted focus. You can't do it between Slack messages and meetings -- block time, and shut off communication channels. Understanding complex scientific concepts, such as metabolic regulation, signaling cascades, reaction mechanisms, requires holding multiple pieces in your head simultaneously. Context switching destroys this.
+
+Block time on your calendar specifically for deep scientific learning. Treat it like a critical meeting. The 15 minutes before standup isn't enough to understand that review paper you need to read. When you're learning a new biological domain for a project, protect longer blocks of focused time for it.
+
+Your brain needs sustained attention to build the mental models that make scientific knowledge useful, not just memorized.
+
+For learning software, the same applies. Understanding a complex codebase or debugging a tricky issue requires uninterrupted deep work. You can't do it effectively in fragments. Reading source code of mature projects—like `scikit-bio`, `scanpy`, or established pipelines—requires sustained attention to follow design decisions.
+
+Designing a new system architecture requires holding the entire design in your head. That's impossible with constant interruptions. Block time for focused software learning and development, not just cramming it into gaps. The cognitive load of building mental models for software systems is high. Protect that learning time.
+
+If you're learning a new framework or pattern for work, give it dedicated focus time, not scattered moments. It'll pay dividends many-fold over an entire technical career.
+
+### Principle 9: Experimentation - explore beyond the beaten path
+
+Experimentation is about trying new approaches, methods, and perspectives as you gain proficiency. This becomes more important as you build your foundation in both domains.
+
+For learning life sciences, as your foundational knowledge grows, start exploring adjacent domains that come up in your work. You're strong in genomics now? When an immunology opportunity comes up in a cross-functional meeting, that's your trigger to explore that domain.
+
+Try different ways of learning. Sometimes a textbook works, sometimes talking to the scientist at the next desk works better—especially if they're socratically coaching you. Sometimes it's working through a dataset. This reflects a key insight from ultralearning: there's no one-size-fits-all learning format. What works for learning genomics might not work for learning immunology, and what works for you might not work for your colleague. Experiment to find your optimal learning approach for each domain.
+
+Use insights from one domain to inform another. Cell signaling patterns you learned in neuroscience might help you understand what you're seeing in immunology data, since all cells have singaling pathways. As you work with both biologists and chemists, start connecting how chemical principles inform biological mechanisms. This cross-domain connection is a well-established way to improve retention and deepen understanding.
+
+Additionally, try experimenting with how you organize and retain scientific knowledge. What works for you personally? This exploration leads to developing your unique perspective, especially on how you synthesize biological and chemical knowledge differently than others.
+
+For learning software skills, as you gain proficiency, experiment with different approaches to the same problem at work. For example, have you been using conda to manage your Python environments? When you have time, try managing your environment with pixi instead to understand the tradeoffs.
+
+Try different testing strategies on real work projects to see what catches bugs most effectively for your use case. Experiment with different architectural patterns when building new tools—learn through direct comparison.
+
+As you grow, you'll develop engineering judgment: knowing when to use which approach, which rules to follow, which to break. This experimentation leads to finding your own effective patterns, not just copying what others do.
+
+### Principle 8: Intuition - develop deep understanding
+
+Intuition is about building mental models of how things actually work, not just memorizing. And this is where the real payoff comes in both domains.
+
+For learning life sciences, the drilling and retrieval practice we discussed earlier builds the mental models that become intuition. When you drill on fragmentation patterns and then retrieve that knowledge while analyzing mass spec data, you're doing more than mere memorizing: you're building understanding of how molecules break apart. When you practice explaining biological mechanisms from memory and get feedback, you develop the mechanistic reasoning that becomes intuition.
+
+This intuition lets you reason about new situations you haven't seen before. You can predict whether an experimental approach will work or identify when results don't make biological sense. The goal isn't encyclopedic knowledge, but rather to develop the ability to reason about biological and chemical systems!
+
+For learning software, the same principle applies. When you drill on design patterns by implementing them from memory, and follow it up by getting feedback through code review, you build understanding of what problems they solve and their tradeoffs. This develops the engineering judgment to know when to use which approach, which rules to follow. And once you know the rules, you know which ones can be broken :-).
+
+At the end of the day, intuition develops through the active practice of drilling and retrieval, and not through passive consumption of information. Keep that in mind!
+
+### Principle 7: Retention - don't let knowledge leak away
+
+Retention is about understanding why we forget and using strategies to remember long-term. And this matters because you're constantly encountering new concepts in both domains.
+
+For learning life sciences, you're constantly encountering new biological and chemical concepts at work. Without retention strategies, you'll keep relearning the same things. When you write internal documentation or reports, you're creating reference material for future you and your team—but only if you structure it for easy retrieval and review. Create a personal knowledge base with clear tags and cross-references so you can quickly find concepts when they come up again. I use Obsidian for my personal work knowledge base; it is centered around projects, but I also curate and link facts in there.
+
+The knowledge you use regularly will naturally stick through repeated exposure. But concepts from past projects will fade without reinforcement. Identify which scientific knowledge you need for the long-term versus what you need just for this project. For long-term retention, create Anki decks for key terminology and mechanisms that keep appearing across different projects. With Obsidian, drilling with an spaced repetition is possible with the [Spaced Repetition](https://www.stephenmwangi.com/obsidian-spaced-repetition/) plugin.
+
+Connect new concepts to existing knowledge from your work—this creates stronger memory traces. When you learn a new pathway, relate it to ones you already know. When you encounter a new protein, link it to similar ones you've worked with. Revisit foundational concepts periodically as they show up in different projects, and update your notes and records each time you work on a project.
+
+The scientific knowledge you use regularly in your work will stick. Everything else needs deliberate retention strategies.
+
+For learning software, patterns you don't use regularly will fade. Be deliberate about which ones you need to retain. Writing documentation about the systems you build serves as external memory you can reference later, but make it searchable and well-organized to facilitate retrieval later! Create code snippets and examples for patterns you want to remember, and archive them in your work knowledge vault, or share them with colleagues on shared documentation platforms like Confluence or Notion.
+
+The tools and patterns you use daily will stick naturally through repeated exposure. But specialized knowledge from past projects will fade without reinforcement. If you're not writing tests regularly in your work, you'll forget testing patterns. Find ways to practice what you need to retain: contribute to open source projects, build side projects, or create practice exercises.
+
+Connect new software concepts to existing knowledge from your work. When you learn a new framework, relate it to ones you already know. When you encounter a new design pattern, link it to similar patterns you've used. Contributing to the same codebase over time builds deep, lasting knowledge of its architecture through repeated exposure. When you learn something new for a project, consider whether it's one-time knowledge or something you'll need repeatedly. Prioritize retention for the latter.
+
+## Bringing it together
+
+These principles reinforce each other when learning both life sciences and software. But here's the key insight I want to emphasize: if you feel pressure to ultralearn both domains simultaneously, the answer is an emphatic "no".
+
+Instead, you cycle between domains based on what's blocking you. When a scientific knowledge gap prevents you from making progress, whether it's immunology, organic chemistry, or protein biochemistry, you shift into intensive life sciences learning mode using these principles. When software limitations hold you back, you focus there.
+
+Over years, this creates deep expertise in both domains. Not through divided attention, but through strategic, focused learning periods in each.
+
+Here's the cycle I've seen work: work with real problems using directness, identify gaps in whichever domain is limiting you through drilling, focus intensively on that domain, get feedback from domain experts, test yourself through writing and building using retrieval, develop intuition, retain through continued practice, then identify the next limiting domain and cycle back.
+
+At a higher level, there's an interplay between the domains that makes this work. Scientific understanding informs what software to build and what analyses matter. Software skills enable you to answer scientific questions and build tools others can use. They feed each other.
+
+This approach beats traditional "take courses in both fields" for biotech data scientists because both domains are too vast to learn all at once. Ultralearning gives you a framework for continuous, targeted learning throughout your career. Remember, your goal is not to become a PhD scientist or a senior software engineer, but to build deep enough understanding in both to be effective at the intersection.
+
+## Conclusion and next steps
+
+You don't need to apply all 9 principles to both domains at once. In fact, you shouldn't.
+
+Start with directness in whichever domain is currently limiting your effectiveness. If you can't interpret your results because you don't understand the biology or chemistry, focus there intensively for the next few months. If you can't scale your analyses or build reliable tools because of software gaps, focus there intensively.
+
+Add feedback loops from experts in that domain. Build from there using the other principles.
+
+Then, when you've made real progress, identify which domain is now the bottleneck and shift your intensive learning there.
+
+This is a career-long journey of alternating deep dives, not a sprint to learn everything at once. The most effective biotech data scientists I know are continuously learning in both domains, but wisely: one intensive focus at a time.
+
+Here's your actionable takeaway: Right now, which domain is most limiting your effectiveness? Pick one concrete gap in that domain. Spend the next month using ultralearning principles to address that specific gap. Only that one. Master it, then reassess.
+
+You can do it!
+---
+pub_date: 2025-10-01
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how effective biotech data scientists master both life sciences and software skills by applying Scott Young's ultralearning principles. Drawing from my own experience, I explain how to strategically bridge knowledge gaps, focus on real-world projects, and alternate deep dives between domains for continuous growth. Want to know which ultralearning strategies can help you level up your biotech data science career?
+---
+tags:
+
+biotech
+ultralearning
+datascience
+lifesciences
+software
+learning
+career
+skills
+modeling
+feedback
