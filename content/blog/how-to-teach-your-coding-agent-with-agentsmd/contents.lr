@@ -26,7 +26,7 @@ In Terry's case, Chuck teaches the agent by continuously updating its system pro
 
 Here's what makes this powerful: AGENTS.md gets sent with every LLM API call in Cursor, Claude Code, GitHub Copilot, and other modern coding tools. This means you can standardize on AGENTS.md, and as you progress through your project, you effectively teach the LLM what to do by instructing it to update this file with your preferences and learnings.
 
-The beauty is that these instructions persist across sessions. Your agent doesn't forget. It gets smarter as your project evolves.
+The beauty is that these instructions persist across sessions. Your agent doesn't forget; it gets smarter as your project evolves.
 
 ## Concrete tip 1: Enforce markdown standards automatically
 
