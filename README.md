@@ -24,3 +24,36 @@ For more information on Mermaid.js diagram syntax, visit the [Mermaid.js documen
 ## Commenting System
 
 This website uses [giscus](https://giscus.app/) for comments, powered by GitHub Discussions.
+
+## Templates
+
+Templates are found in the `templates/` directory and define the structure and layout of different page types:
+
+### Main Templates
+- `layout.html` - Base template with HTML structure, navigation, and dark mode toggle
+- `page.html` - Basic page template
+- `blog.html` - Blog listing page
+- `blog-post.html` - Individual blog post template
+- `project.html` - Individual project page
+- `projects.html` - Projects listing page
+- `resume.html` - Resume/CV page
+- `tag.html` - Tag page for blog post filtering
+- `all-tags.html` - All tags listing page
+
+### Template Components
+- `macros/` - Reusable template macros for common functionality:
+  - `blog.html` - Blog-related macros
+  - `pagination.html` - Pagination controls
+  - `project.html` - Project display macros
+  - `slideshow.html` - Image slideshow functionality
+- `blocks/` - Content blocks for the resume page:
+  - `book.html` - Book information display
+  - `description.html` - Description blocks
+  - `github.html` - GitHub repository information
+  - `notebooks.html` - Jupyter notebook links
+  - `resource.html` - Resource links
+  - `resume-education.html` - Education section
+  - `resume-experience.html` - Work experience section
+  - `resume-skills.html` - Skills section
+  - `slides.html` - Presentation slides
+  - `youtube.html` - YouTube video embeds
