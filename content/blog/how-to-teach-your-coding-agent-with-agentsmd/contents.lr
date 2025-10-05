@@ -1,0 +1,156 @@
+title: How to teach your coding agent with AGENTS.md
+---
+author: Eric J. Ma
+---
+body:
+
+Let me start with the most valuable thing I learned this week: if there's anything you want your LLM coding agent to remember for future sessions, just tell it to "Please update AGENTS.md with..." and then specify what you want it to remember.
+
+That's it. That's the meta-tip that changes everything.
+
+## What is AGENTS.md anyway
+
+AGENTS.md is an emerging open standard that's been adopted by over 20,000 repositories on GitHub. Think of it as a README for your AI coding agents—a predictable location where you provide context, instructions, and preferences that your agent needs to work effectively on your project.
+
+You might think of this as similar to ChatGPT's memory feature, but there's a crucial difference: AGENTS.md is explicitly curated by you. You decide exactly what the agent remembers and how it applies that knowledge. I prefer this approach because it means I have control over what the agent knows, rather than the agent autonomously deciding what to remember about me and my preferences. It's transparent, version-controlled, and intentional.
+
+The format emerged from collaborative efforts across OpenAI, Google (Jules), Cursor, Factory, and other major players in the AI development space. It's just standard Markdown, which means it's accessible, portable, and fits naturally into any project structure.
+
+While your README.md is optimized for humans—covering project introductions, contribution guidelines, and quick starts—AGENTS.md serves as machine-readable instructions for your coding agents. Setup commands, testing workflows, coding style preferences, and project-specific conventions all live here.
+
+## Training an employee, not programming a bot
+
+I was inspired by [NetworkChuck's approach to building Terry](https://youtu.be/ONgECvZNI3o), his N8n automation agent. The philosophy he uses is brilliant: you're not programming a bot, you're training an employee.
+
+In Terry's case, Chuck teaches the agent by continuously updating its system prompt with new instructions and context. The same principle applies perfectly to AGENTS.md in coding environments.
+
+Here's what makes this powerful: AGENTS.md gets sent with every LLM API call in Cursor, Claude Code, GitHub Copilot, and other modern coding tools. This means you can standardize on AGENTS.md, and as you progress through your project, you effectively teach the LLM what to do by instructing it to update this file with your preferences and learnings.
+
+The beauty is that these instructions persist across sessions. Your agent doesn't forget. It gets smarter as your project evolves.
+
+## Concrete tip 1: Enforce markdown standards automatically
+
+One of my first uses for AGENTS.md was ensuring consistent markdown formatting. I asked my coding agent to update AGENTS.md with instructions to always run markdownlint on any markdown files it creates or edits.
+
+Here's what I added to the file:
+
+```markdown
+## Markdown standards
+
+- Always run markdownlint on any markdown files created or edited
+- Install using: `npx markdownlint-cli` or `pixie global install markdownlint-cli`
+- Fix all linting issues before completing the task
+```
+
+The effect is immediate. Now, anytime my agent writes or edits a markdown file, it automatically runs markdownlint and fixes issues. I don't have to remember to ask for this. The agent just knows it's part of the workflow.
+
+## Concrete tip 2: Specify your testing style
+
+I prefer writing tests as `pytest` style functions rather than unittest-style classes. Most LLMs default to the unittest approach because it's more prevalent in their training data.
+
+So I instructed my agent to add this to AGENTS.md:
+
+```markdown
+## Testing preferences
+
+- Write all Python tests as `pytest` style functions, not unittest classes
+- Use descriptive function names starting with `test_`
+- Prefer fixtures over setup/teardown methods
+- Use assert statements directly, not self.assertEqual
+```
+
+Now when I ask for tests, I consistently get `pytest` style functions. The agent is steered toward my preferred approach without me having to specify it in every request.
+
+## Concrete tip 3: Stop writing throwaway test scripts
+
+Here's a pattern I noticed with Cursor: when the agent wants to test something, it loves to write little throwaway scripts. You know the type—`test_random_thing.py` or `quick_check.py` that do some ad hoc verification and then just sit there cluttering your project.
+
+The problem is these scripts aren't real tests—yet they're also tests. They don't run with your test suite. They don't provide ongoing regression protection. They're just... there.
+
+I taught my agent to write proper tests instead:
+
+```markdown
+## Testing approach
+
+- Never create throwaway test scripts or ad hoc verification files
+- If you need to test functionality, write a proper test in the test suite
+- All tests go in the `tests/` directory following the project structure
+- Tests should be runnable with the rest of the suite (`pixi run pytest`)
+- Even for quick verification, write it as a real test that provides ongoing value
+```
+
+Now when the agent needs to verify something works, it writes an actual test that becomes part of the project. These tests continue to provide value by catching regressions, documenting expected behavior, and running in CI.
+
+The shift is subtle but powerful: instead of creating technical debt in the form of random scripts, you're building up a proper test suite.
+
+## Concrete tip 4: Teach your agent about new tooling
+
+I recently adopted Pixi as my main package manager. The problem? Most LLMs aren't familiar with Pixi commands yet. They kept trying to run `python` directly when I only have Python available through Pixi.
+
+The solution was to teach the agent:
+
+```markdown
+## Package management
+
+- This project uses Pixi for all package management
+- Never run commands directly (python, pytest, etc.)
+- Always prefix commands with `pixi run <command>`
+- Example: `pixi run python script.py` not `python script.py`
+- Example: `pixi run pytest` not `pytest`
+```
+
+This works for any new tooling. If you've adopted `pixi` or `uv` or any other modern Python tools that aren't well-represented in LLM training data, you can explicitly teach your agent how to use them through AGENTS.md.
+
+The same principle applies to any domain-specific tools or workflows unique to your project. For example, if you're working with Marimo notebooks, which have a relatively strict syntax:
+
+```markdown
+## Marimo notebook validation
+
+- After creating or editing any Marimo notebook, always run validation
+- Command: `uvx marimo check <notebook>.py`
+- Fix any syntax errors reported before completing the task
+- Marimo notebooks require strict syntax adherence for proper execution
+```
+
+Now your agent will automatically validate Marimo notebooks and get immediate feedback on syntax errors, ensuring notebooks are written correctly the first time.
+
+## Why this matters
+
+The traditional approach to working with coding agents involves repeating yourself constantly. "Remember to use this format." "Don't forget to run this command." "We prefer this style here."
+
+AGENTS.md flips this model. Instead of being a human repeating instructions to a forgetful assistant, you're building up institutional knowledge that persists. You're training your agent to work the way you work.
+
+As one developer observed, "it's all about simple human psychology: You get immediate feedback & results: You write it once, and your AI assistant immediately becomes more useful. The feedback loop is much longer with READMEs."
+
+This is the key insight. When you write a README, you're creating documentation for a future human reader who may or may not show up. When you write AGENTS.md, you get instant gratification—your next conversation with the agent immediately reflects what you just taught it. The AI won't judge you for weird conventions or hacky workarounds. It just learns and applies what you've documented.
+
+Each time you discover a preference, a gotcha, or a best practice for your project, you can capture it in AGENTS.md. The next time your agent encounters a similar situation, it already knows what to do.
+
+This is especially powerful in larger projects or monorepos. You can have AGENTS.md files in subdirectories, and agents will use the nearest file to the code being edited—similar to how .gitignore or ESLint configs work. This lets you provide context-specific instructions for different parts of your codebase.
+
+## Getting started
+
+If you already have agent instruction files like `.cursorrules`, `CLAUDE.md`, or `.github/copilot-instructions.md`, you can simply rename them to AGENTS.md. Most modern coding agents now support this standard.
+
+Start simple. Create an AGENTS.md in your project root and add one or two critical preferences. Then, as you work with your agent, whenever you find yourself giving the same instruction twice, add it to AGENTS.md instead.
+
+The key insight is this: every time you teach your agent something, make it permanent by updating AGENTS.md. That's how you build an agent that truly understands your project.
+---
+pub_date: 2025-10-04
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how using AGENTS.md—a new open standard for AI coding agents—lets you teach your LLM assistant project-specific preferences that persist across sessions. I cover practical tips like enforcing markdown standards, specifying test styles, and introducing new tools, all by updating AGENTS.md. This approach turns your agent into a trainable teammate, not just a forgetful bot. Want to know how to make your coding agent smarter and more aligned with your workflow?
+---
+tags:
+
+llm
+agents
+coding
+automation
+markdown
+testing
+package
+memory
+workflow
+scripts
