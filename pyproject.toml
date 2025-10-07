@@ -76,12 +76,12 @@ llamabot = { version = ">=0.12.1", extras = ["all"] }
 pre-commit = "*"
 
 [tool.pixi.feature.lektor.pypi-dependencies]
-lektor = "==3.4.0b4"
+lektor = "==3.4.0b12"
 
 [tool.pixi.feature.lektor.dependencies]
 python = "==3.13"
-mistune = "<3"
-werkzeug = "<3"
+mistune = "*"
+werkzeug = "*"
 
 [tool.pixi.feature.lektor.tasks]
 website = "lektor server --port 5959 --host 0.0.0.0"
