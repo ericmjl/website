@@ -1,7 +1,7 @@
 [project]
 name = "ericmjl-website"
 version = "0.0.1"
-requires-python = "==3.13"
+requires-python = "==3.12"
 description = "Eric Ma's Personal Website"
 dependencies = ["marimo", "click"]
 
@@ -79,7 +79,7 @@ pre-commit = "*"
 lektor = "==3.4.0b12"
 
 [tool.pixi.feature.lektor.dependencies]
-python = "==3.13"
+python = "==3.12"
 mistune = "*"
 werkzeug = "*"
 

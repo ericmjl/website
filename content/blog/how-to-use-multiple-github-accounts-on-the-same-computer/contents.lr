@@ -1,0 +1,236 @@
+title: How to use multiple GitHub accounts on the same computer
+---
+author: Eric J. Ma
+---
+body:
+
+# How to use multiple GitHub accounts on the same computer
+
+I recently ran into a frustrating situation where I couldn't push to a repository even though I had the right permissions. The problem? I was trying to use two different GitHub accounts on the same computer, and Git was getting confused about which account to use.
+
+If you're in a similar situation - maybe you have a personal account and also contribute to a non-profit or open source project with a separate account - this guide will help you set everything up correctly.
+
+## The core problem
+
+Here's what was happening to me: I had switched my GitHub CLI to my other account using `gh auth switch`, but when I tried to push, Git was still authenticating with my personal account's SSH key.
+
+The issue is that `gh auth switch` only changes which account the GitHub CLI uses for API operations. It doesn't affect which SSH key Git uses for push/pull operations. Git and SSH operate independently from the `gh` tool.
+
+## What you'll need
+
+Two GitHub accounts (I'll call them `personal-account` and `volunteer-account` in this guide), terminal access, admin permissions on your repositories, and about 10-15 minutes.
+
+## Step 1: Create separate SSH keys for each account
+
+First, we need distinct SSH keys for each account. If you don't already have separate keys, create them:
+
+```bash
+# Create a key for your volunteer account
+ssh-keygen -t ed25519 -C "volunteer-email@example.com" -f ~/.ssh/id_ed25519_volunteer
+
+# Create a key for your personal account (if you don't have one)
+ssh-keygen -t ed25519 -C "personal-email@example.com" -f ~/.ssh/id_ed25519_personal
+```
+
+When prompted for a passphrase, you can either set one or leave it empty (though a passphrase is more secure).
+
+## Step 2: Add the SSH keys to your SSH agent
+
+```bash
+ssh-add ~/.ssh/id_ed25519_volunteer
+ssh-add ~/.ssh/id_ed25519_personal
+```
+
+You can verify both keys are loaded:
+```bash
+ssh-add -l
+```
+
+## Step 3: Add the public keys to GitHub
+
+For each account, you need to add its corresponding public key:
+
+```bash
+# Copy your volunteer account's public key
+cat ~/.ssh/id_ed25519_volunteer.pub
+```
+
+Then:
+1. Log into GitHub as your volunteer account
+2. Go to Settings → SSH and GPG keys → New SSH key
+3. Paste the public key there
+
+Repeat this process for your personal account with `id_ed25519_personal.pub`.
+
+## Step 4: Configure SSH to use different keys for different "hosts"
+
+Edit or create `~/.ssh/config`:
+
+```
+# Default GitHub (personal account)
+Host github.com
+  HostName github.com
+  User git
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519_personal
+
+# GitHub for volunteer account
+Host github.com-volunteer
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_volunteer
+  IdentitiesOnly yes
+```
+
+The `Host github.com-volunteer` line creates a local alias that only exists in your SSH config. When Git tries to connect to `github.com-volunteer`, SSH will actually connect to `github.com` but use the specified SSH key.
+
+The `IdentitiesOnly yes` line tells SSH to only use the key you specified and not try other keys from your SSH agent.
+
+## Step 5: Update your repository's remote URL
+
+For any repository belonging to your volunteer account, you need to update the remote URL to use the SSH alias:
+
+```bash
+# Navigate to your repo
+cd ~/path/to/nonprofit-project
+
+# Check current remote
+git remote -v
+
+# Update to use the volunteer account's SSH config
+git remote set-url origin git@github.com-volunteer:organization/nonprofit-project.git
+```
+
+Notice the change: `git@github.com-volunteer:` instead of `git@github.com:`. This is necessary because the hostname in the URL is what triggers SSH to look up the configuration in your `~/.ssh/config` file. When Git sees `github.com-volunteer`, SSH matches it to the `Host github.com-volunteer` entry and uses the correct key.
+
+## Step 6: Test the connection
+
+Before pushing, verify SSH is authenticating correctly:
+
+```bash
+ssh -T git@github.com-volunteer
+```
+
+You should see:
+```
+Hi volunteer-account! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+If it says your personal account name instead, something's wrong with your SSH config.
+
+Now try pushing:
+```bash
+git push
+```
+
+## Troubleshooting common issues
+
+### Issue 1: SSH still authenticates with the wrong account
+
+If `ssh -T git@github.com-volunteer` shows your personal account name instead of your volunteer account, the problem is usually that SSH is trying multiple keys and GitHub is accepting the first one that works.
+
+Make sure you have `IdentitiesOnly yes` in your `~/.ssh/config` for the `github.com-volunteer` host. This forces SSH to only use the specified key.
+
+### Issue 2: "Could not resolve hostname github.com-volunteer"
+
+This usually means Git has a custom SSH command configured that's bypassing your SSH config file. Check:
+
+```bash
+git config --get core.sshCommand
+```
+
+If this returns something with `-F /dev/null`, that's your problem. The `-F /dev/null` flag tells SSH to ignore all config files.
+
+Remove it:
+```bash
+git config --unset core.sshCommand
+```
+
+### Issue 3: Config changes don't seem to apply
+
+If you have conditional Git configs (using `includeIf` directives), they might be overriding your settings. Check:
+
+```bash
+git config --list --show-origin | grep sshCommand
+```
+
+This shows you exactly which config file is setting the SSH command. You may need to edit that file directly.
+
+For example, I had a `~/.gitconfig-volunteer` file that was automatically loaded for repos in certain directories, and it had a problematic `core.sshCommand` setting that needed to be fixed.
+
+### Issue 4: "Repository not found" error
+
+This means SSH is connecting and authenticating, but as the wrong account. Double-check:
+
+1. Run `ssh -T git@github.com-volunteer` and verify it shows the correct account name
+2. Verify the account has access to the repository on GitHub
+3. Check that your remote URL uses the correct alias: `git@github.com-volunteer:org/repo.git`
+
+## Optional: Set up conditional Git configs
+
+If you keep repositories for your volunteer work in a specific directory (like `~/volunteer-projects/`), you can automatically apply settings to all repos in that directory.
+
+Add this to your `~/.gitconfig`:
+
+```
+[includeIf "gitdir:~/volunteer-projects/"]
+    path = ~/.gitconfig-volunteer
+```
+
+Then create `~/.gitconfig-volunteer`:
+
+```
+[user]
+    email = volunteer-email@example.com
+
+[core]
+    sshCommand = ssh
+```
+
+This automatically sets your volunteer account's email for commits in that directory. The `sshCommand` should be set to plain `ssh` so it uses your `~/.ssh/config` properly.
+
+## How this all works together
+
+When you run `git push`:
+
+1. Git reads the remote URL: `git@github.com-volunteer:org/repo.git`
+2. Git asks SSH to connect to `github.com-volunteer`
+3. SSH looks in `~/.ssh/config` and finds the `Host github.com-volunteer` entry
+4. SSH sees it should actually connect to `github.com` but use the `id_ed25519_volunteer` key
+5. SSH connects to GitHub with the correct key
+6. GitHub authenticates you as your volunteer account
+7. Push succeeds
+
+Each repository uses the correct account automatically based on its remote URL, so you never have to manually specify which key to use.
+
+## Wrapping up
+
+Managing multiple GitHub accounts on the same computer isn't intuitive, but once you understand that Git uses SSH keys (not `gh auth` settings), the solution becomes clear. The SSH config host alias pattern is the standard way to handle this, and it works reliably once everything is configured correctly.
+
+The key points to remember:
+- SSH keys are what matter for Git operations, not `gh auth`
+- Host aliases in `~/.ssh/config` let you use different keys for different repos
+- `IdentitiesOnly yes` prevents SSH from trying multiple keys
+- Your remote URL must use the alias (e.g., `git@github.com-volunteer:`)
+
+If you run into issues, the troubleshooting section above covers the most common problems I encountered.
+---
+pub_date: 2025-10-10
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how I solved the challenge of using multiple GitHub accounts on the same computer by configuring separate SSH keys and updating SSH and Git settings. I walk through step-by-step instructions, troubleshooting tips, and ways to automate account switching for different repositories. If you've ever struggled with Git pushing to the wrong account or want a smoother workflow for personal and volunteer projects, this guide is for you. Curious how to make Git always use the right account without hassle?
+---
+tags:
+
+github
+ssh
+git
+accounts
+configuration
+authentication
+troubleshooting
+setup
+remotes
+workflow
