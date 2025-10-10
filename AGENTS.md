@@ -140,3 +140,17 @@ When generating text, avoid the following categories of wording, structures, and
 - Set appropriate category (usually "Work" for conference content)
 - Include visible: Visible for public content
 - Use descriptive directory names that match the content
+
+## Lektor .lr File Format Requirements
+
+### Field Separators
+- **CRITICAL**: Each field in .lr files must be separated by `---` on its own line
+- Format: `field_name: value` followed by `---` before the next field
+- When programmatically adding fields, always ensure proper separator formatting
+- Missing separators will cause Lektor parsing errors
+
+### Date Fields for Ordering
+- Use `pub_date` field with `type = date` in model definitions
+- Order content using `order_by = -pub_date, title` in parent model
+- Extract dates from YouTube using `uvx yt-dlp -j <url>` and parse `upload_date` field
+- Convert YYYYMMDD format to YYYY-MM-DD for Lektor compatibility

@@ -7,7 +7,7 @@ url: https://www.youtube.com/watch?v=sSIT0rJh2OM
 
 #### description ####
 
-text: A 26-minute and 31-second presentation on pyjanitor, a Python library for clean APIs for data cleaning, delivered at SciPy 2019 by Eric Ma. This talk introduces pyjanitor as a tool that provides a clean, method-chaining API for data cleaning operations in pandas, making data preprocessing more readable and maintainable. The presentation covers practical examples of using pyjanitor for various data cleaning tasks, from basic operations to complex transformations.
+text: Data cleaning doesn't have to be a nightmare. I created pyjanitor because I was tired of writing ugly, unreadable pandas code. This talk shows you how method chaining can make your data preprocessing feel like poetry instead of a chore. You'll see how a simple API change can transform your entire data science workflow.
 
 ---
 sort_key: 8
@@ -16,6 +16,8 @@ _model: project
 ---
 category: Work
 ---
-summary: A presentation on pyjanitor, a Python library for clean APIs for data cleaning, delivered at SciPy 2019.
+summary: Transforming data preprocessing from a chore into poetry with method chaining that makes your code readable and maintainable.
+---
+pub_date: 2019-07-13
 ---
 visible: Visible
