@@ -114,3 +114,29 @@ When generating text, avoid the following categories of wording, structures, and
 - Inconsistent curly vs. straight quotation marks
 - "From … to …" constructions when not a real range
 - Unnecessary Markdown or formatting in plain-text contexts
+
+## YouTube Content Management
+
+### Using yt-dlp for Content Extraction
+- **Always use `uvx yt-dlp`** to extract video metadata and content
+- Command format: `uvx yt-dlp -j "https://www.youtube.com/watch?v=VIDEO_ID"`
+- This provides accurate titles, descriptions, durations, and other metadata
+- Much more reliable than web scraping or manual entry
+
+### Content Organization Structure
+- **Talks** (shorter presentations, < 1 hour): Store in `content/talks/`
+- **Tutorials** (longer educational sessions, 2+ hours): Store in `content/teaching/`
+- Both use the `projects` model but are organized by directory structure
+- Always check for duplicates by searching existing YouTube video IDs before adding new content
+
+### Duplicate Prevention
+- Search for existing video IDs using: `grep -r "youtube\.com/watch\?v=" content/`
+- Check both video ID and full URL patterns
+- Never add duplicate content - always verify uniqueness first
+
+### Content Entry Format
+- Use accurate titles and descriptions from yt-dlp output
+- Include proper sort_key for ordering
+- Set appropriate category (usually "Work" for conference content)
+- Include visible: Visible for public content
+- Use descriptive directory names that match the content
