@@ -1,0 +1,148 @@
+title: How to Use Coding Agents Effectively
+---
+author: Eric J. Ma
+---
+body:
+
+After many months of working with AI coding assistants on real projects—not toy applications, but actual deployed systems and tools—I've learned that effective agent usage requires more than just good prompts. You need systematic workflows, external memory systems, and a willingness to let the agent fail fast so you can discover architectural boundaries.
+
+These are the patterns that make coding agents productive.
+
+## Starting Out
+
+Effective agent usage starts with establishing a disciplined workflow. This is more than just fancy prompts; we're talking about creating a repeatable process that works.
+
+**Plan first, then execute.** Break your work into planning and execution phases, just like you would if writing code yourself. Have the agent write planning documents it can follow. This separation matters because planning and execution often use different parts of the model, and sometimes "dumber" models execute plans better than expensive ones.
+
+Learn your tool's shortcuts and modes. In Cursor, for example, you can open a new agent window with Cmd+E, and use Shift+Tab to toggle to plan mode (yellow colored). These modes work different parts of the model—planning models are better at analyzing code and planning than executing, while execution models are cheaper and sometimes more reliable at following plans.
+
+In VS Code with GitHub Copilot, you can define custom modes. You can even get Agent Mode to write a Planning Mode for you as a way to bootstrap Plan Mode. This gives you specialized interfaces for different types of work.
+
+**Follow TDD religiously.** Write tests first, then implement, then test the code. When tests pass, document. This workflow becomes more important with AI assistants because they're working with small context windows compared to your entire codebase. You must have the AI write tests for everything it generates.
+
+The proper TDD flow is: tests are always written first, executed and failed (because the implementation is lacking), then implemented, and executed again—ideally succeeding on the first try. This is super important for highest effectiveness with coding agents. The AI needs the clear feedback loop of failing tests to understand what to implement. Without this discipline, you'll find yourself debugging issues that could have been caught earlier.
+
+Most of us software builders like to do the building part, not the verification part. TDD with agents lets you delegate the tedious verification work while keeping the fun building part for humans, as long as you review the tests the agent writes. This is another place where agents excel at taking over work we'd rather not do ourselves.
+
+**Scope for concentration.** Break work into chunks you can maintain concentration for during review. This takes practice getting used to an LLM's outputs, but it's important for effectiveness. Start with smaller scopes and gradually increase as you get comfortable with the agent's output patterns. The goal is to find the sweet spot where you can maintain focus while the agent does meaningful work.
+
+## Building Momentum
+
+When starting a new project, don't try to get everything right the first time. Instead, speed-run your project twice, perhaps even thrice, in quick iteration mode. Just accept and vibe-code your way to the point where it gets hard for the LLM to do what you're asking.
+
+On each speed-run, you'll likely find yourself cornered architecturally. Step back and diagnose what's going wrong. Then speed-run the process once more to see if you can corner yourself another way. On your third try, you'll have made enough mistakes to clarify the mental model of the problem.
+
+I recently built a dataset versioning package called Kirin this way. It took three iterations over about a week to get the architecture right. The first two attempts helped me understand the problem space; the third attempt succeeded because I had learned the boundaries. The UI was done twice, and only on the third try did I get it right—all within about a week. This really helps with the design process, similar to the principles in "Design of Everyday Things."
+
+## Systematic Improvement
+
+Once you have a working system, agents work well for systematic improvement tasks. The key is to ask them to prioritize rather than trying to fix everything at once.
+
+**Test coverage improvement:** Instead of asking the agent to improve coverage on every line, ask it to prioritize based on highest impact for fewest changes. Get its ranking of issues, then pick the one you understand and can review. Sometimes you might find the 2nd or 3rd highest ranked issue to be the one you understand and can review, which is super important here. Then you pick, and build a plan around it before executing.
+
+Ask the agent to give you its ranking of issues with explanations. This helps you understand not just what to fix, but why it matters and what the trade-offs are.
+
+**Refactoring:** Look across a class of files (like HTML templates) and ask the agent to identify refactoring opportunities. Again, ask it to prioritize, pick one, and record the others as GitHub issues for later. Pick two more categories and record them as GitHub issues, and tackle them later.
+
+For example, ask the agent to look across HTML Jinja templates and identify places where common HTML elements can be reused. Use the same prioritization trick: ask it to rank opportunities, pick the one you understand, and build a plan around it.
+
+**Documentation review:** Have the agent examine all docs in your repo and identify where docs document something not present in code, where there are gaps, and where docs are inaccurate. Prioritize major categories, pick one to tackle, and leave the others as GitHub issues.
+
+Ask the agent to identify three specific problems: (a) where docs document something not present in code, (b) where there are gaps (things in code not documented), and (c) where docs are inaccurate relative to what's present in the code. Again, prioritize major categories, pick one to tackle, and leave the others as GitHub issues.
+
+## Advanced Patterns
+
+Your repository's issue tracker becomes an organized external memory system. It's stateful, has conversation records, and is plain text in Markdown. Use it liberally.
+
+When you have plans you don't want to act on immediately, ask the agent to post them as GitHub issues using the `gh` CLI. This prevents losing track of ideas and creates a backlog you can return to.
+
+Use this prompt:
+
+> "ok, I would like you to put this up on github as an issue. use the gh cli to do that. check that i'm logged in as ericmjl and not on any other account."
+
+This ensures the issue gets created in the right repository with the right account.
+
+For existing issues, ask the agent to evaluate whether they're still relevant and give its reasons. Codebases evolve, and you might be able to deprecate some issues. Take the agent's reasons and do a quick dive yourself to decide whether to tackle it or not. If you decide to proceed, launch a new agent and ask it to use the content of that GitHub issue as context.
+
+Create an `AGENTS.md` file to document your architectural preferences and tool patterns. This teaches the coding agent your standards and helps it make better decisions.
+
+For example, when building Kirin, I started with HTMX+FastAPI but took three iterations to settle on "everything is an API endpoint, but CRUD endpoints must redirect to view endpoints." This also happened to be an architectural pattern that I settled on only after two iterations on the UI. Another pattern that I settled on was to build the Python API first, then reuse it behind web UI APIs, like building the backend API before the frontend. I settled on this pattern after discovering discrepancies between the UI's sluggish performance and the Python API's snappy performance.
+
+Document your favorite tools and patterns in `AGENTS.md`. You can "teach" the agent to use the `gh` CLI for GitHub operations rather than doing janky cURL commands. Use this file as a way to encode your development standards.
+
+For example, you can "teach" it to use the `gh` CLI to get issues from GitHub by literally saying "use the `gh` cli to get issue contents from this repo's issues" and it'll almost always reliably do so rather than doing janky cURL commands. This is an important part of building out your test harness and development workflow.
+
+**MCP servers for specialized knowledge:** Plug in an MCP (Model Context Protocol) server that serves up documentation about core packages or specialized ways of working specific to your organization. This gives the agent access to your internal knowledge base, coding standards, and domain-specific patterns without cluttering the main context window. The agent can then reference this specialized knowledge when making architectural decisions or implementing features.
+
+**Custom shortcuts:** Slash commands are powerful shortcuts for giving textual context to coding agents. Create them freely, delete them freely, and merge them freely. Experiment to see what works with your habits.
+
+My favorites include:
+
+- `/remember` - Get the agent to remember important information in `AGENTS.md`
+- `/branch-and-stage` - Create a new git branch and stage all changes after completing work
+
+Here's the actual slash command for `/branch-and-stage`:
+
+```markdown
+%% /branch-and-stage.md %%
+Given everything we just did, or given what you see when you run git diff, give me a new git branch and git add to stage all the changes. You do not need to give me a commit message, I have a git commit message writer.
+```
+
+And for `/remember`:
+
+```markdown
+%% /remember %%
+Remember what you just learned (or what I am about to say) by writing it into AGENTS.md.
+```
+
+You can phrase many of these tips as slash commands. The key is making repetitive tasks into simple text shortcuts.
+
+**No task is too small:** Agents work well for mundane tasks that humans find tedious. I have a slash command for markdown linting because I'm that nitpicky, but it proves the point: no task is too mundane for a coding agent, as long as it can access the output as text to verify it did the work correctly.
+
+This works so well because agents have gotten great at using command line tools, and command line outputs are exactly the kind of interface LLMs need: text. Every git command, every test run, every build process produces text that the agent can read, understand, and act upon.
+
+Use agents for CI/CD pipeline maintenance. If your CI/CD isn't conditional (running tests on PRs that only touch documentation), get the agent to make PR tests run only on relevant file changes. Make sure the changes are easily reviewable. This is an important part of building out your test harness.
+
+For example, if your CI/CD is not conditional and you run tests even on PRs that only touch documentation, get the agent to make your PR tests run only on changes to relevant files—source, config, etc., but not on docs.
+
+For large PRs, ask the agent to give you an overview of contents. Use your tool's "plan" mode to get a first-pass grasp of what's changed. This is especially useful when you have very large PRs to review—start with your tool's "plan" mode to help you get a first-pass grasp of the contents.
+
+**The meta-workflow that works best is:**
+
+1. **Plan** (write as a .md file, save in plans/ directory)
+2. **Execute** (write the code)
+3. **Write tests**
+4. **Run tests**
+5. **Re-execute as necessary until tests pass**
+6. **Audit** - check the code against the plan
+
+You don't need fancy prompts for this. Write out your high-level goals, have the tool write the plan, read the plan back to you, correct its assumptions, then proceed with steps 2-6.
+
+GIGO applies to AI coding just as much as everything else. If you're sloppy and undisciplined, you'll get predictably bad results.
+
+## Conclusion
+
+Effective agent usage isn't about finding the perfect prompt. It's about creating systematic workflows that use the agent's strengths while compensating for its weaknesses. It's about building external memory systems that persist across sessions. It's about teaching the agent your standards so it can make better decisions.
+
+The key is being willing to fail fast, learn from mistakes, and iterate quickly. The agent amplifies your development process, but only if you're disciplined about how you use it.
+
+Coding agents are becoming standard tools. The question isn't whether they'll replace developers, it's whether you'll learn to use them effectively. These patterns have changed how I approach development, and they can do the same for you.
+---
+pub_date: 2025-10-14
+---
+twitter_handle: ericmjl
+---
+tags:
+
+workflow
+tdd
+automation
+agents
+refactoring
+documentation
+planning
+memory
+iteration
+shortcuts
+---
+summary: In this blog post, I share hard-earned lessons from using AI coding agents on real projects. I discuss why effective agent use goes beyond good prompts, highlighting the importance of systematic workflows, external memory, and fast iteration. I cover practical patterns for planning, testing, refactoring, and documentation, plus tips for integrating agents into your development process. Curious how these strategies can help you get the most out of coding agents?
