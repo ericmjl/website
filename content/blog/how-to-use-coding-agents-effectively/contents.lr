@@ -39,13 +39,9 @@ flowchart TD
 Here's the systematic workflow that works best with coding agents:
 
 1. Plan first, then execute. Break your work into planning and execution phases, just like you would if writing code yourself. Have the agent write planning documents it can follow. This separation matters because planning and execution often use different parts of the model, and sometimes "dumber" models execute plans better than expensive ones.
-
 2. Write tests before implementation. This is where TDD becomes crucial with agents. Write tests first, then implement, then test the code. When tests pass, document. This workflow becomes more important with AI assistants because they're working with small context windows compared to your entire codebase. You must have the AI write tests for everything it generates.
-
 3. Implement with clear feedback loops. The proper TDD flow is: tests are always written first, executed and failed (because the implementation is lacking), then implemented, and executed again—ideally succeeding on the first try. This is super important for highest effectiveness with coding agents. The AI needs the clear feedback loop of failing tests to understand what to implement.
-
 4. Document as you go. When tests pass, document the implementation. This creates a complete record of what was built and why.
-
 5. Loop back to tests until everything is fixed. This is the critical step that many people miss. Don't stop at the first passing test—run the full test suite, check edge cases, and iterate until all tests pass consistently. The agent should keep running tests and fixing issues until the entire system is stable.
 
 Learn your tool's shortcuts and modes. In Cursor, for example, you can open a new agent window with Cmd+E, and use Shift+Tab to toggle to plan mode (yellow colored). These modes work different parts of the model—planning models are better at analyzing code and planning than executing, while execution models are cheaper and sometimes more reliable at following plans.
