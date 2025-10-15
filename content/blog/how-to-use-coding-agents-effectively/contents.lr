@@ -10,21 +10,53 @@ These are the patterns that make coding agents productive.
 
 ## Starting Out
 
-Effective agent usage starts with establishing a disciplined workflow. This is more than just fancy prompts; we're talking about creating a repeatable process that works.
+Effective agent usage starts with establishing a disciplined workflow that covers the complete development lifecycle. This isn't just about fancy prompts; we're talking about creating a repeatable process that works from start to finish.
 
-**Plan first, then execute.** Break your work into planning and execution phases, just like you would if writing code yourself. Have the agent write planning documents it can follow. This separation matters because planning and execution often use different parts of the model, and sometimes "dumber" models execute plans better than expensive ones.
+**The Complete Lifecycle**
+
+<pre class="mermaid">
+flowchart TD
+    A[Plan] --> B[Write Tests]
+    B --> C[Implement Code]
+    C --> D[Run Tests]
+    D --> E{Tests Pass?}
+    E -->|No| F[Fix Issues]
+    F --> D
+    E -->|Yes| G[Document]
+    G --> H[Run Full Test Suite]
+    H --> I{All Tests Pass?}
+    I -->|No| F
+    I -->|Yes| J[Complete]
+
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style G fill:#f1f8e9
+    style J fill:#e8f5e8
+</pre>
+
+Here's the systematic workflow that works best with coding agents:
+
+1. Plan first, then execute. Break your work into planning and execution phases, just like you would if writing code yourself. Have the agent write planning documents it can follow. This separation matters because planning and execution often use different parts of the model, and sometimes "dumber" models execute plans better than expensive ones.
+
+2. Write tests before implementation. This is where TDD becomes crucial with agents. Write tests first, then implement, then test the code. When tests pass, document. This workflow becomes more important with AI assistants because they're working with small context windows compared to your entire codebase. You must have the AI write tests for everything it generates.
+
+3. Implement with clear feedback loops. The proper TDD flow is: tests are always written first, executed and failed (because the implementation is lacking), then implemented, and executed again—ideally succeeding on the first try. This is super important for highest effectiveness with coding agents. The AI needs the clear feedback loop of failing tests to understand what to implement.
+
+4. Document as you go. When tests pass, document the implementation. This creates a complete record of what was built and why.
+
+5. Loop back to tests until everything is fixed. This is the critical step that many people miss. Don't stop at the first passing test—run the full test suite, check edge cases, and iterate until all tests pass consistently. The agent should keep running tests and fixing issues until the entire system is stable.
 
 Learn your tool's shortcuts and modes. In Cursor, for example, you can open a new agent window with Cmd+E, and use Shift+Tab to toggle to plan mode (yellow colored). These modes work different parts of the model—planning models are better at analyzing code and planning than executing, while execution models are cheaper and sometimes more reliable at following plans.
 
 In VS Code with GitHub Copilot, you can define custom modes. You can even get Agent Mode to write a Planning Mode for you as a way to bootstrap Plan Mode. This gives you specialized interfaces for different types of work.
 
-**Follow TDD religiously.** Write tests first, then implement, then test the code. When tests pass, document. This workflow becomes more important with AI assistants because they're working with small context windows compared to your entire codebase. You must have the AI write tests for everything it generates.
-
-The proper TDD flow is: tests are always written first, executed and failed (because the implementation is lacking), then implemented, and executed again—ideally succeeding on the first try. This is super important for highest effectiveness with coding agents. The AI needs the clear feedback loop of failing tests to understand what to implement. Without this discipline, you'll find yourself debugging issues that could have been caught earlier.
-
 Most of us software builders like to do the building part, not the verification part. TDD with agents lets you delegate the tedious verification work while keeping the fun building part for humans, as long as you review the tests the agent writes. This is another place where agents excel at taking over work we'd rather not do ourselves.
 
-**Scope for concentration.** Break work into chunks you can maintain concentration for during review. This takes practice getting used to an LLM's outputs, but it's important for effectiveness. Start with smaller scopes and gradually increase as you get comfortable with the agent's output patterns. The goal is to find the sweet spot where you can maintain focus while the agent does meaningful work.
+Without this discipline, you'll find yourself debugging issues that could have been caught earlier. The complete lifecycle ensures that every piece of code is tested, documented, and verified before moving on.
+
+Finally, break work into chunks you can maintain concentration for during review. This takes practice getting used to an LLM's outputs, but it's important for effectiveness. Start with smaller scopes and gradually increase as you get comfortable with the agent's output patterns. The goal is to find the sweet spot where you can maintain focus while the agent does meaningful work.
 
 ## Building Momentum
 
@@ -38,15 +70,15 @@ I recently built a dataset versioning package called Kirin this way. It took thr
 
 Once you have a working system, agents work well for systematic improvement tasks. The key is to ask them to prioritize rather than trying to fix everything at once.
 
-**Test coverage improvement:** Instead of asking the agent to improve coverage on every line, ask it to prioritize based on highest impact for fewest changes. Get its ranking of issues, then pick the one you understand and can review. Sometimes you might find the 2nd or 3rd highest ranked issue to be the one you understand and can review, which is super important here. Then you pick, and build a plan around it before executing.
+Test coverage improvement: Instead of asking the agent to improve coverage on every line, ask it to prioritize based on highest impact for fewest changes. Get its ranking of issues, then pick the one you understand and can review. Sometimes you might find the 2nd or 3rd highest ranked issue to be the one you understand and can review, which is super important here. Then you pick, and build a plan around it before executing.
 
 Ask the agent to give you its ranking of issues with explanations. This helps you understand not just what to fix, but why it matters and what the trade-offs are.
 
-**Refactoring:** Look across a class of files (like HTML templates) and ask the agent to identify refactoring opportunities. Again, ask it to prioritize, pick one, and record the others as GitHub issues for later. Pick two more categories and record them as GitHub issues, and tackle them later.
+Refactoring: Look across a class of files (like HTML templates) and ask the agent to identify refactoring opportunities. Again, ask it to prioritize, pick one, and record the others as GitHub issues for later. Pick two more categories and record them as GitHub issues, and tackle them later.
 
 For example, ask the agent to look across HTML Jinja templates and identify places where common HTML elements can be reused. Use the same prioritization trick: ask it to rank opportunities, pick the one you understand, and build a plan around it.
 
-**Documentation review:** Have the agent examine all docs in your repo and identify where docs document something not present in code, where there are gaps, and where docs are inaccurate. Prioritize major categories, pick one to tackle, and leave the others as GitHub issues.
+Documentation review: Have the agent examine all docs in your repo and identify where docs document something not present in code, where there are gaps, and where docs are inaccurate. Prioritize major categories, pick one to tackle, and leave the others as GitHub issues.
 
 Ask the agent to identify three specific problems: (a) where docs document something not present in code, (b) where there are gaps (things in code not documented), and (c) where docs are inaccurate relative to what's present in the code. Again, prioritize major categories, pick one to tackle, and leave the others as GitHub issues.
 
@@ -107,18 +139,18 @@ For example, if your CI/CD is not conditional and you run tests even on PRs that
 
 For large PRs, ask the agent to give you an overview of contents. Use your tool's "plan" mode to get a first-pass grasp of what's changed. This is especially useful when you have very large PRs to review—start with your tool's "plan" mode to help you get a first-pass grasp of the contents.
 
-**The meta-workflow that works best is:**
+The meta-workflow that works best is:
 
-1. **Plan** (write as a .md file, save in plans/ directory)
-2. **Execute** (write the code)
-3. **Write tests**
-4. **Run tests**
-5. **Re-execute as necessary until tests pass**
-6. **Audit** - check the code against the plan
+1. Plan (write as a .md file, save in plans/ directory)
+2. Execute (write the code)
+3. Write tests
+4. Run tests
+5. Re-execute as necessary until tests pass
+6. Audit - check the code against the plan
 
 You don't need fancy prompts for this. Write out your high-level goals, have the tool write the plan, read the plan back to you, correct its assumptions, then proceed with steps 2-6.
 
-GIGO applies to AI coding just as much as everything else. If you're sloppy and undisciplined, you'll get predictably bad results.
+GIGO (Garbage In, Garbage Out) applies to AI coding just as much as everything else. If you're sloppy and undisciplined, you'll get predictably bad results.
 
 ## Conclusion
 
