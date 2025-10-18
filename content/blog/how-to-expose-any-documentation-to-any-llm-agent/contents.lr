@@ -1,0 +1,156 @@
+title: How to expose any documentation to any LLM agent
+---
+author: Eric J. Ma
+---
+body:
+
+Like cars that lose value as soon as they roll off the lot, LLMs become outdated as soon as their training sets are fixed. Software documentation evolves constantly—new features, API changes, bug fixes, and best practices emerge daily. Yet AI agents are stuck with whatever knowledge was captured in their training data, creating a fundamental mismatch between what they know and what developers actually need in real-time.
+
+Building LlamaBot taught me something unexpected: the hardest part of AI-assisted development isn't writing better prompts or designing cleaner abstractions. It's equipping AI agents with up-to-date information in a stable, standardized fashion.
+
+Most developers know the frustration of context-switching between code and documentation. You're deep in a coding session, need to check how a specific function works, and suddenly you're hunting through static documentation files. AI agents face this same problem, but with an added layer of complexity—they need structured, queryable access to documentation that can be searched semantically.
+
+I discovered that web searches by coding agents were less reliable than manually adding context, but manual approaches don't scale. The solution emerged through the Model Context Protocol (MCP), a standard that enables LLMs to interact with external tools and data sources. In LlamaBot v0.13.10, I introduced a documentation MCP server that automatically equips AI agents with current information. This enables AI agents to access organizational knowledge, process documentation, and domain expertise in structured ways.
+
+## The obsolescence problem in AI-assisted development
+
+The core issue more than mere documentation access, it's about obsolescence. LLMs are trained on data that becomes outdated the moment it's fixed in their training sets. Meanwhile, software documentation evolves constantly. New features are added, APIs change, bugs are fixed, and best practices emerge. Yet AI agents remain frozen in time, working with knowledge that may be months or years out of date.
+
+Consider a typical data science workflow: you're building an AI pipeline and need to understand how LlamaBot's StructuredBot handles data validation. The AI agent might reference documentation from six months ago, missing critical updates or new features that could solve your problem more elegantly. This creates a fundamental mismatch between what the agent knows and what's actually available.
+
+The deeper problem is that AI agents need structured, queryable access to documentation that can be searched semantically and updated automatically. They need to understand not just what functions exist, but how they relate to each other, what patterns they follow, and how they fit into broader workflows. Static documentation simply cannot provide this level of contextual understanding, particularly in data science environments where teams maintain scattered knowledge across wikis, Slack threads, and onboarding documents.
+
+## Building a semantic documentation layer
+
+LlamaBot's MCP server demonstrates how to give AI agents structured access to its documentation by creating a dynamic, queryable knowledge base that agents can search semantically. The [implementation](https://github.com/ericmjl/llamabot/blob/main/llamabot/mcp_server.py) centers around a single tool:
+
+```python
+@mcp.tool()
+def docs_search(query: str, limit: int = 5) -> dict:
+    """Search through LlamaBot documentation and source code."""
+    results = docstore.retrieve(query, n_results=limit)
+    return {"query": query, "results": results}
+```
+
+This interface sits in front of a data pipeline that builds a vector database for the documentation. The server fetches the latest documentation from GitHub, extracts Python module docstrings from source code, and constructs a LanceDB vector database optimized for semantic search. The database is built during CI/CD and packaged directly with the wheel distribution, giving users instant access without setup while staying current with each release.
+
+This approach works with any AI agent system through the MCP protocol, providing a standardized way to keep AI agents current with documentation.
+
+## The architecture behind semantic documentation
+
+The MCP server combines several technologies to create a robust documentation system. FastMCP handles the protocol implementation, enabling seamless communication between AI agents and the documentation database. LanceDB powers the semantic search capabilities, leveraging LlamaBot's existing `LanceDBDocStore` class with hybrid search and reranking for optimal results.
+
+The system uses the checked-out documentation from the repository during the CI/CD build process, ensuring the packaged database contains current information. The build script first attempts to fetch docs from GitHub, but falls back to the local `docs/` directory when available, making it work seamlessly in both CI/CD and development environments. The build process runs the `scripts/build_mcp_docs.py` script during CI/CD, which creates the LanceDB database and copies it to `llamabot/data/mcp_docs/` for packaging.
+
+I believe this architecture represents a fundamental shift in how we think about documentation for AI systems. Instead of treating documentation as static reference material, we're creating dynamic, queryable knowledge bases that AI agents can interact with directly.
+
+## The core pattern to replicate
+
+The LlamaBot MCP server follows a straightforward pattern that any package or documentation source can replicate. Here's the essential blueprint:
+
+**1. Build a semantic database during CI/CD**
+
+- Extract documentation from your source (GitHub, local docs, API references)
+- Parse and chunk the content appropriately for your domain
+- Create a vector database (LanceDB, Chroma, or similar) with semantic search capabilities
+- Package the database with your distribution
+
+**2. Create an MCP server with a search tool**
+
+```python
+@mcp.tool()
+def docs_search(query: str, limit: int = 5) -> dict:
+    """Search through your documentation and source code."""
+    results = docstore.retrieve(query, n_results=limit)
+    return {"query": query, "results": results}
+```
+
+**3. Make it discoverable and configurable**
+
+- Provide a simple launch command (like `yourpackage mcp launch`)
+- Include clear setup instructions for MCP-compatible tools
+- Ensure the database updates automatically with each release
+
+**4. Design for your specific knowledge domain**
+
+- Include not just API docs, but process documentation, examples, and institutional knowledge
+- Structure the content for semantic search rather than keyword matching
+- Consider what context your users need most when working with AI agents
+
+## Seamless integration with modern development tools
+
+The MCP server works with any MCP-compatible coding environment, including Cursor, VSCode, and other modern development tools. Configuration requires a single command in your MCP settings:
+
+```bash
+uvx --with llamabot[all] llamabot mcp launch
+```
+
+Once configured, AI agents can query LlamaBot documentation using natural language queries. Ask "How do I use StructuredBot for data extraction?" and the agent receives structured results with content, relevance scores, and metadata. This contextual information enables agents to provide accurate, up-to-date assistance without manual documentation lookup.
+
+This reduces context-switching between code and documentation. AI agents can access relevant information and provide suggestions based on current code patterns and usage examples. This approach is particularly valuable for data science teams who need to maintain consistency across experiments while leveraging the latest library capabilities.
+
+## Comparing documentation approaches for AI agents
+
+There are several ways to provide documentation to AI agents, each with distinct trade-offs. Understanding these approaches helps clarify why the MCP server approach represents a significant improvement.
+
+**Native tool documentation** (like Cursor's built-in docs capabilities) offers seamless integration and can fetch docs from online sources, but you're limited to how the tool fetches those docs. It may not be able to access certain systems gated behind access controls or include custom organizational knowledge and process documentation.
+
+**Manual repository inclusion** works well for users familiar with IDEs, workspaces, and development concepts, but it requires familiarity with these practices that are unfamiliar to non-technical users or individual developers. It also doesn't scale beyond individual developers. The documentation becomes part of the context window, consuming valuable tokens and potentially overwhelming the agent with irrelevant information.
+
+**Copy-paste or file upload** (like Claude Projects) provides flexibility for non-technical users but creates maintenance overhead. You must manually update documentation when it changes, and there's no semantic search capability—agents can only work with what you explicitly provide.
+
+**Web search by agents** seems convenient but creates inefficiency in the development workflow. If the documentation is up-to-date, the LLM will find it eventually, but it requires multiple iterations of web searches to locate the right information. I discovered this firsthand when building LlamaBot—web searches by coding agents required more iterations than directly providing context, but manual approaches don't scale.
+
+The MCP server approach provides automatic updates, semantic search, system-agnostic compatibility, and organizational knowledge integration. It offers a standardized way to keep AI agents current with evolving documentation. The trade-off is initial setup complexity, but this is mitigated by the pre-built databases that ship with packages.
+
+## Beyond software documentation - surfacing any process knowledge
+
+The MCP approach extends beyond software documentation. The LlamaBot server gives an example of how organizations can surface their process documentation, institutional knowledge, and domain expertise.
+
+I believe that data science teams could transform their workflow documentation—experimental protocols, data validation procedures, model evaluation criteria, or deployment checklists—from scattered wikis, Slack threads, and buried onboarding documents into structured, queryable knowledge bases that AI agents can access and reference during development.
+
+I can see this approach scaling beyond individual libraries to entire organizational knowledge. We have all imagined AI agents that can query your team's coding standards, understand your deployment procedures, or reference your data governance policies—all without leaving their development environment. Each organization would maintain their own specialized knowledge base, creating networks of interconnected AI-accessible process documentation. How would one implement this? A documentation MCP server may be a great way to start.
+
+In my experience, the most valuable knowledge in organizations often exists in informal channels—Slack conversations, email threads, or tribal knowledge that never gets documented. I believe the MCP approach provides a framework for capturing and surfacing this knowledge in ways that AI agents can understand and reference.
+
+## The future of AI-assisted development
+
+Future iterations could include real-time updates that rebuild databases when documentation changes, cross-organizational knowledge graphs, and usage pattern analysis that learns from how teams implement processes.
+
+The goal is to make AI agents active participants in organizational processes, capable of understanding team workflows and providing context-aware recommendations.
+
+This vision requires rethinking how we structure and maintain organizational knowledge. Instead of writing documentation solely for human consumption, we need to design knowledge systems that serve both human team members and AI agents, creating a symbiotic relationship between human creativity and AI capability while preserving institutional knowledge in accessible, queryable formats.
+
+## Getting started with semantic documentation
+
+The MCP server is available in LlamaBot v0.13.10 and later. Getting started requires minimal setup:
+
+1. Install LlamaBot with MCP support: `pip install llamabot[all]`
+2. Configure your coding tool to use the MCP server
+3. Begin coding with AI agents that understand LlamaBot's capabilities
+
+The documentation database ships pre-built with the package, eliminating setup friction. The server exposes a single `docs_search` tool that agents can use to find relevant documentation and source code information, creating a seamless development experience.
+
+This approach makes documentation an integral part of the AI agent's toolkit, resulting in more capable assistants that can help developers work more effectively.
+
+The future of AI-assisted development involves better integration between AI agents and the tools they need. LlamaBot's MCP server demonstrates how this integration can work in practice.
+
+---
+pub_date: 2025-10-19
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share what I learned building LlamaBot: the real challenge in AI-assisted development is keeping AI agents up-to-date with evolving documentation. I explain how the Model Context Protocol (MCP) lets LLMs access dynamic, queryable knowledge bases, solving the obsolescence problem and enabling smarter, context-aware AI assistants. Curious how you can make your documentation instantly accessible to any AI agent?
+---
+tags:
+
+llm
+documentation
+ai
+mcp
+workflow
+context
+search
+knowledge
+development
+automation
