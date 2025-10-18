@@ -1,0 +1,175 @@
+title: A practical comparison of DSPy and LlamaBot for structured LLM applications
+---
+author: Eric J. Ma
+---
+body:
+
+When Omar Khattabe presented [DSPy 3.0](https://dspy.ai) at PyData Boston Cambridge last week, I finally had the chance to dig into a framework that's been generating significant buzz in the LLM development community. As someone who's built structured LLM applications with [LlamaBot](https://ericmjl.github.io/llamabot/), I was particularly curious about DSPy's core claim: that signatures represent the only abstraction you need for LLM-powered programs.
+
+The presentation focused on two key concepts: signatures as a new LLM abstraction and prompt optimization techniques. But what caught my attention was the practical similarity between DSPy's approach and what I've been doing with LlamaBot's StructuredBot. This led me to build a direct comparison using a real-world example from my personal expense tracking application.
+
+## The structured LLM challenge
+
+Most developers working with LLMs face the same fundamental problem: how do you reliably extract structured data from unstructured inputs? Whether you're processing receipts, parsing documents, or analyzing text, you need consistent, typed outputs that integrate cleanly with your existing systems.
+
+Traditional approaches rely heavily on natural language prompts, which are fragile, hard to maintain, and difficult to optimize. DSPy proposes a different path through its signature abstraction, claiming this eliminates the need for verbose prompt engineering.
+
+## A real-world comparison: Receipt processing
+
+To test DSPy's claims, I built a practical comparison using an expense extraction system I developed for personal use. This application processes receipts in various formats (PNG, PDF, JPG, WEBP) and automatically extracts structured expense data into Notion — essentially a lightweight alternative to enterprise expense management systems.
+
+The challenge here is typical of structured LLM applications: converting unstructured visual and textual data into consistent, typed outputs that integrate with existing workflows. Let's see how both frameworks handle this task.
+
+### LlamaBot's StructuredBot approach
+
+LlamaBot uses Pydantic models to define structured outputs, leveraging Python's type system for validation and documentation. The approach emphasizes explicit data modeling with detailed field descriptions:
+
+```python
+from pydantic import Field
+from enum import Enum
+from typing import Optional
+from pathlib import Path
+import llamabot as lmb
+
+class FlowType(str, Enum):
+    MONEY_OUT = "Money Out"
+    MONEY_IN = "Money In"
+
+class TypeEnum(str, Enum):
+    PAYMENT = "Payment"
+    INVOICE = "Invoice"
+
+class PaymentMethodEnum(str, Enum):
+    CASH = "Cash"
+    BANK_TRANSFER = "Bank Transfer"
+    CREDIT_CARD = "Credit Card"
+    CHECK = "Check"
+
+class ExpenseData(BaseModel):
+    transaction_name: str = Field(
+        description="Short, memorable description of the purchase. E.g.: 'Anker Dock', 'Coffee at Triangle Bar', 'dbrand laptop skin'"
+    )
+    date: str = Field(description="transaction date")
+    amount: float = Field(description="transaction amount")
+    category: str = Field(
+        description="Business category, e.g. Office Supplies, Travel, Meals"
+    )
+    type: TypeEnum = Field(description="Either Payment or Invoice")
+    flow: FlowType = Field(description="Either 'Money Out' or 'Money In'")
+    payment_method: PaymentMethodEnum = Field(
+        description="How the payment was made."
+    )
+    purpose: str = Field(
+        description="Brief business purpose or description of the expense."
+    )
+    reference_number: Optional[str] = Field(
+        description="Invoice/receipt number if visible"
+    )
+    person: Optional[str] = Field(
+        "Person responsible or who made the purchase if mentioned."
+    )
+
+# Usage
+bot = lmb.StructuredBot(
+    system_prompt="",
+    pydantic_model=ExpenseData,
+    model_name="ollama_chat/gemma3n:latest",
+)
+result = bot(Path("/path/to/receipt.png"))
+```
+
+### DSPy's signature approach
+
+DSPy takes a different approach with its signature abstraction, which defines both inputs and outputs in a single class. The framework emphasizes simplicity and automatic prompt optimization:
+
+```python
+import dspy
+
+class ExpenseExtraction(dspy.Signature):
+    """Extract expense information from receipt images."""
+
+    receipt_image: dspy.Image = dspy.InputField(desc="Receipt image")
+    transaction_name = dspy.OutputField(
+        desc="Short description of the purchase"
+    )
+    date = dspy.OutputField(desc="Transaction date (YYYY-MM-DD)")
+    amount = dspy.OutputField(
+        desc="Total transaction amount (number, no currency symbols)"
+    )
+    category = dspy.OutputField(
+        desc="Business category (e.g., Office Supplies, Travel, Meals)"
+    )
+    type = dspy.OutputField(
+        desc="Transaction type, either 'Payment' or 'Invoice'"
+    )
+    flow = dspy.OutputField(
+        desc="Cash flow direction, either 'Money Out' or 'Money In'"
+    )
+    payment_method = dspy.OutputField(
+        desc="How the payment was made (e.g., Cash, Bank Transfer, Credit Card, Check)"
+    )
+    purpose = dspy.OutputField(desc="Brief business purpose or description")
+    reference_number = dspy.OutputField(
+        desc="Invoice/receipt number if present", default=None
+    )
+    person = dspy.OutputField(
+        desc="Person involved, if mentioned", default=None
+    )
+
+# Usage
+lm = dspy.LM("ollama_chat/gemma3n:latest")
+dspy.configure(lm=lm)
+module = dspy.Predict(ExpenseExtraction)
+result = module(receipt_image=ctx.images[0])
+```
+
+## Comparing the approaches
+
+Both frameworks successfully extracted structured data from receipt images, but they take fundamentally different approaches to the problem.
+
+**LlamaBot's StructuredBot** leverages Python's existing type system through Pydantic models. This approach provides several advantages: automatic validation, IDE support, and integration with existing Python data processing pipelines. The explicit type definitions make the data contract clear and enforceable.
+
+**DSPy's signatures** offer a more streamlined interface that combines input and output definitions in a single class. The framework's strength lies in its automatic prompt optimization capabilities, which can improve performance over time without manual intervention.
+
+## Key differences in practice
+
+The most noticeable difference is verbosity. LlamaBot requires more explicit type definitions and imports, while DSPy's signature approach is more concise. However, this conciseness may come at the cost of some type safety and IDE support that Pydantic provides.
+
+Both frameworks use LiteLLM for model routing, making it easy to switch between different LLM providers. The model configuration syntax is identical, which suggests a common underlying architecture.
+
+## The schema-first principle
+
+Regardless of which framework you choose, structured LLM applications require careful upfront schema design. The bulk of development time goes into defining your data model, not writing prompts. This schema-first approach is what makes these frameworks powerful—they force you to think clearly about your data requirements before implementation.
+
+## Looking ahead: DSPy's broader vision
+
+DSPy's claim that signatures are the only abstraction needed for LLM applications is ambitious but not entirely accurate. The framework includes additional abstractions like modules and optimizers that handle more complex scenarios. Signatures represent the core abstraction for simple input-output transformations, but building production LLM applications often requires more sophisticated orchestration.
+
+I'm planning to explore DSPy's more advanced features as I rebuild LlamaBot's agent abstractions. The goal is to understand how to construct autonomous LLM agent frameworks rather than individual agents—a challenge that requires thinking beyond simple input-output mappings.
+
+Being unfamiliar with DSPy's documentation initially, I found it challenging to follow, but thanks to fellow PyData Boston Cambridge organizer [Nash Sabti](https://www.linkedin.com/in/nnssa/)'s guidance, I was able to make it happen and build this comparison.
+
+The structured LLM landscape is rapidly evolving, and frameworks like DSPy and LlamaBot are pushing the boundaries of what's possible. The key insight is that successful LLM applications require the same engineering discipline as traditional software: clear interfaces, robust error handling, and maintainable abstractions.
+
+---
+pub_date: 2025-10-18
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this blog post, I share my hands-on comparison of DSPy and LlamaBot for building structured LLM applications, using a real-world expense extraction example. I explore how each framework handles schema design, type safety, and prompt optimization, highlighting their strengths and trade-offs. Curious which approach might best fit your next LLM project?
+
+---
+tags:
+
+llm
+dspy
+llamabot
+python
+frameworks
+extraction
+schema
+prompting
+expenses
+automation
