@@ -1,0 +1,77 @@
+title: Exploring Skills vs MCP Servers
+---
+author: Eric J. Ma
+---
+body:
+
+I spent time digging through Anthropic's skills repository. These are my first impressions, organized for clarity and future reference.
+
+## What the Anthropic Skills repository offers
+
+- **Creative & design workflows**: `algorithmic-art` (generative art with p5.js), `canvas-design` (beautiful PNG/PDF outputs guided by design philosophies), `theme-factory` (pre-set or on-the-fly themes), and `slack-gif-creator` (animated GIFs tuned for Slack). These are turnkey “taste plus tooling” bundles that let the model produce high-quality visuals with consistent aesthetics.
+- **Document skills for real formats**: `document-skills/` cover `pptx`, `docx`, `pdf`, and `xlsx` with serious capabilities: layout/templates, tracked changes and comments, text/table extraction, merges/splits, charting, formulas, and formatting preservation. This feels like a pragmatic spec+runtime for working with binary formats—lean instructions up front, heavy lifting when needed.
+- **Development & technical utilities**: `artifacts-builder` (compose complex Claude HTML artifacts using React/Tailwind/shadcn), `webapp-testing` (Playwright-driven UI testing), and `mcp-builder` (guidance for creating high-quality MCP servers). These reduce boilerplate for the “build and test” loop.
+- **Enterprise & communication**: `brand-guidelines` (apply Anthropic’s official brand colors and typography) and `internal-comms` (status reports, newsletters, FAQs). These encode editorial and brand guardrails so outputs stay on-message.
+- **Meta skills and templates**: `skill-creator` and `template-skill` show how to structure your own skills: a folder per skill with a `SKILL.md` (YAML front matter for `name` and `description`, plus instructions/examples/guidelines), optional scripts, and assets. This is the pattern to replicate.
+
+If you want the source for these examples, it’s viewable in the repo. Start here: `https://github.com/anthropics/skills`.
+
+## How skills are loaded and used
+
+- **Minimal prompt footprint**: A skill's short description is passed up front. The larger `skill.md` is only read when the model decides it needs more detail.
+- **On-demand details**: The model can iterate (ReAct loop) to fetch instructions and then execute scripts or read additional files.
+
+This access pattern keeps the initial token budget small and defers detail until it’s actually needed.
+
+## Contrast with MCP servers
+
+- **MCP call shape**: Tool names and descriptions are typically sent on every call. That keeps tools globally discoverable but increases token overhead.
+- **Skills call shape**: A tiny descriptor up front; details fetched lazily. Lower baseline token cost.
+- **Distribution model**:
+    - MCP: Centrally hostable (e.g. web server) or vendable (e.g., a Python package). Easy to version, release, and update for many users at once.
+    - Skills: Feel local-first. You can drag-and-drop into a Claude workspace. Easy to customize, but harder to standardize and propagate updates across a team.
+
+Given current industry patterns, MCP servers are the widely accepted way to expose functionality to LLMs across tools and vendors. Skills are Anthropic-specific at the moment.
+
+## Token efficiency (and why it’s emphasized)
+
+Anthropic’s materials lean into token efficiency. The cost of LLM calls adds up, and repeatedly sending long tool descriptions can be expensive. Skills reduce baseline tokens: spend a handful of tokens to register intent, read detail only when needed, then execute. That’s the economic story.
+
+## Practical trade-offs
+
+- **Standardization vs customization**:
+    - MCP servers: Strong for shared, versioned, and centrally updated capabilities.
+    - Skills: Great for rapid, local customization without infrastructure.
+- **Discovery vs cost**:
+    - MCP: High discoverability; the model always sees the tools. Higher token floor.
+    - Skills: Low token floor; details fetched when needed. Requires the model to choose to read more.
+
+## Open questions I’m tracking
+
+- How will teams distribute and update skills at scale without a central registry or packaging story?
+- Will skills gain cross-vendor support, or remain Anthropic-only?
+- What’s the best practice to map a complex skill into smaller, composable units without losing clarity?
+
+## Early take
+
+IMO, skills are a clear attempt to lower token costs and streamline task-specific workflows with minimal upfront context. MCP servers remain the well-understood, cross-ecosystem pattern for exposing capabilities. If your goal is a shareable, versioned interface for many users, MCP is still the safer default. If you need quick, local customization inside Claude with a lean prompt footprint, skills are compelling. But this field has been evolving at breawkneck speed anyways, so expect changes.
+
+---
+pub_date: 2025-10-20
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my first impressions of Anthropic's skills repository, comparing its token-efficient, customizable approach to the more standardized MCP server model. I break down the strengths and trade-offs of each, from creative workflows to technical utilities, and raise open questions about distribution and cross-vendor support. Curious about which approach might fit your workflow best?
+---
+tags:
+
+anthropic
+skills
+token
+efficiency
+llm
+automation
+customization
+workflows
+development
+mcp
