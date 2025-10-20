@@ -111,6 +111,8 @@ I believe that data science teams could transform their workflow documentation�
 
 I can see this approach scaling beyond individual libraries to entire organizational knowledge. We have all imagined AI agents that can query your team's coding standards, understand your deployment procedures, or reference your data governance policies—all without leaving their development environment. Each organization would maintain their own specialized knowledge base, creating networks of interconnected AI-accessible process documentation. How would one implement this? A documentation MCP server may be a great way to start.
 
+This approach isn't just for software docs. Imagine surfacing your team's process knowledge, onboarding guides, or even those golden nuggets buried in Slack threads. The MCP server pattern can turn scattered, informal knowledge into a living, searchable resource for both humans and AI agents, especially if you treat your processes as versioned software to be exposed to AI agents!
+
 In my experience, the most valuable knowledge in organizations often exists in informal channels—Slack conversations, email threads, or tribal knowledge that never gets documented. I believe the MCP approach provides a framework for capturing and surfacing this knowledge in ways that AI agents can understand and reference.
 
 ## The future of AI-assisted development
