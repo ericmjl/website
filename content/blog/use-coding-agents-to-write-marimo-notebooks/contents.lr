@@ -1,0 +1,72 @@
+title: Use coding agents to write Marimo notebooks
+---
+author: Eric J. Ma
+---
+body:
+
+If you're like me, you might find coding with AI assistants somewhat addictive. And if you're like me, you might also like to write code in Marimo notebooks, the modern alternative to Jupyter that offers better reproducibility and cleaner Python development.
+
+Turns out there's a way to put these two together for automated Python development and data science workflows, creating a powerful combination for rapid prototyping and iterative coding.
+
+## Marimo's `--watch` Flag
+
+A few months ago, at SciPy 2025, my friend [Trevor Manz](https://trevorma.nz/) showed me a cool neat trick for writing Marimo notebooks. Apart from launching a Marimo notebook in [sandbox mode](https://docs.marimo.io/guides/package_management/inlining_dependencies/), you add a `--watch` flag:
+
+```bash
+uvx marimo edit --sandbox my_notebook.py --watch
+```
+
+When edits are made to the source file `notebook.py`, they will now be reflected in the browser as well. This was my reaction:
+
+![minion-what.gif](./minion-what.gif)
+
+If you ever meet Trevor in person, he can confirm that reaction of mine.
+
+## Ensure code quality with `marimo check`
+
+So now, AI coding assistants can write your Marimo notebooks for you... but it's not always going to be correct first time, right? After all, the latest features of Marimo are not going to be part of the large language model training sets.
+
+Turns out, Marimo also ships with a `check` command that you can ask coding agents to call on:
+
+```bash
+uvx marimo check my_notebook.py
+```
+
+And that will print to stdout any issues that Marimo finds that break its execution model, such as variables that are repeated variables or invalid cells.
+
+You can instruct coding agents to always run `marimo check` by adding the following prompt (or analogous) into `AGENTS.md`:
+
+```markdown
+When editing Marimo notebooks, always run `uvx marimo check` on the file and fix all issues that you find.
+```
+
+This will virtually guarantee correctly-written, AI-generated notebooks. All that's left for us as users is to check the correctness of the analysis that was done.
+
+## Real-world use
+
+Now, AI coding assistants (like Cursor, GitHub Copilot, or Claude Code) can write and edit large chunks of Marimo notebook cells for you, check what they wrote, and fix any syntactic issues that show up. And by checking that the cells are syntactically valid. Now you can speed-run those routine and yet highly mundane data manipulation code-writing activities while making yourself an espresso drink. This aligns perfectly with my philosophy on [optimizing for productivity in data science workflows](/blog/how-i-work/).
+
+I've used this mode to speed-run first versions of [probabilistic models in PyMC](/blog/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/), create explainer notebooks for hard concepts, make notebooks that process data, and many, many more things that you'd usually be able to do within a coding notebook system. The key thing that makes this work is feedback given (via the command line) that the coding agent can use for self-correction.
+
+## Advanced functionality using MCP and built-in AI features
+
+It doesn't stop there, though. There's a new `--mcp` flag that makes a notebook an MCP server that coding agents can connect to; read more about it [here](https://opensourcedev.substack.com/p/beyond-chatbots-how-i-turned-python). Marimo also has built-in AI editing capabilities itself as well. Check out the functionality [here](https://docs.marimo.io/guides/editor_features/ai_completion/#custom-copilots), as well as Vincent Warmerdam's short video on [using coding agents from *within* Marimo](https://www.youtube.com/shorts/CnHOGE46x3o). He's got my vote for best facial/eyebrow expressions from a coding YouTuber!
+---
+pub_date: 2025-10-28
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how combining AI coding assistants with Marimo notebooks can supercharge your Python development and data science workflows. I walk through handy features like the `--watch` flag for live updates, the `marimo check` command for code quality, and even advanced options like MCP and built-in AI editing. Curious how you can automate and speed up your notebook workflow while keeping your code clean?
+---
+tags:
+
+marimo
+python
+ai
+notebooks
+automation
+productivity
+workflow
+coding
+development
+data science
