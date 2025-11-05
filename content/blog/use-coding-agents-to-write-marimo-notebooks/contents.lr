@@ -51,6 +51,22 @@ I've used this mode to speed-run first versions of [probabilistic models in PyMC
 ## Advanced functionality using MCP and built-in AI features
 
 It doesn't stop there, though. There's a new `--mcp` flag that makes a notebook an MCP server that coding agents can connect to; read more about it [here](https://opensourcedev.substack.com/p/beyond-chatbots-how-i-turned-python). Marimo also has built-in AI editing capabilities itself as well. Check out the functionality [here](https://docs.marimo.io/guides/editor_features/ai_completion/#custom-copilots), as well as Vincent Warmerdam's short video on [using coding agents from *within* Marimo](https://www.youtube.com/shorts/CnHOGE46x3o). He's got my vote for best facial/eyebrow expressions from a coding YouTuber!
+
+## Addendum
+
+After sharing this post on LinkedIn, Séverin H. shared a couple of additional use cases worth highlighting:
+
+> One use case I would also recommend is getting the coding assistant to run queries for you, especially when it is to debug a existing query. You can ask [it] to check for corner cases (and especially dig into the data to understand the corner cases).
+
+> The `--watch` flag is indeed very interesting use case. Also to note they created a Claude.md to get you started that you can directly curl:
+>
+> ```bash
+> curl https://docs.marimo.io/CLAUDE.md > [your agents.md file]
+> ```
+>
+> Some more reference from their blog: https://marimo.io/blog/claude-code
+
+Thanks for the suggestions, Séverin!
 ---
 pub_date: 2025-10-28
 ---
