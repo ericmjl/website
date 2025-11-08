@@ -1,0 +1,165 @@
+title: Safe ways to let your coding agent work autonomously
+---
+author: Eric J. Ma
+---
+body:
+
+Coding agents promise to unlock significant productivity gains by working autonomously in the background—gathering context, running tests, searching documentation, and making progress on tasks without constant human intervention. The more autonomous they become, the more value they deliver. Yet this autonomy creates a fundamental tension: we need agents to act independently to realize their potential, but we must prevent them from taking irreversible actions we don't want.
+
+This tension became painfully clear when I asked Comet, an agentic browser, "how to archive repo" in the same casual way I'd ask Google. The agent interpreted this as a direct command and archived my LlamaBot repository. What I wanted was information; what I got was an unintended action with real consequences.
+
+The problem isn't unique to Comet. Any coding agent with sufficient autonomy can make destructive changes: deleting files, force-pushing to main, committing broken code, or modifying critical configurations. We need safeguards that allow agents to work freely on safe operations while blocking potentially harmful actions. The solution lies in configuring your development environment with intelligent boundaries—auto-approving read-only commands while requiring explicit approval for anything that modifies state.
+
+## Auto-approve safe command line commands
+
+The foundation of autonomous coding agent operation is allowing certain command line commands to run without manual approval. Commands like `grep`/`ripgrep`, `find`/`fd`, `pixi run pytest...`, and similar read-only or context-gathering operations enable LLM agents to autonomously understand codebases and test suites. For CLI tools that interact with external services, I also auto-approve `gh pr view`, which allows the agent to gather context from GitHub pull requests while working in the background.
+
+The critical rule: **only auto-accept commands that are non-destructive**. Never auto-approve `git commit`, `git push`, `rm`, or other filesystem, git, or state-modifying changes. This creates a safe boundary where agents can explore and learn, but cannot make irreversible changes without your explicit approval.
+
+Here's my mental model for categorizing commands:
+
+**Safe to auto-approve:**
+- Read operations: `grep`, `find`, `cat`, `head`, `tail`, `less`
+- Code analysis: `pytest` (read-only test runs), `mypy`, `ruff check` (without `--fix`)
+- Context gathering: `gh pr view`, `gh issue view`, `git log`, `git diff`, `git show`
+- Package managers (read-only): `pip list`, `npm list`, `cargo tree`
+- Documentation build: `mkdocs serve`
+
+**Never auto-approve:**
+- File system mutations: `rm`, `mv`, `cp`, `mkdir`, `touch`
+- Git writes: `git commit`, `git push`, `git reset`, `git checkout -b`
+- Package installs: `pixi add`
+
+The edge cases are where it gets interesting. I auto-approve `pytest` because test runs are read-only, but I require approval for any command that modifies files, even if it's technically reversible. The key distinction is whether a command changes state: `git status` and `git diff` are safe because they're pure reads, while `git commit` and `git push` modify repository state and require explicit approval. `git add` is a bit of a gray area, but I am ok with auto-approving it since it's technically reversible, and because coding agents are often much faster than I could be at selectively adding files to the staging area.
+
+## Enable automatic web search
+
+For Cursor and Claude Code, automatic web *search* without approval requests is another powerful capability. I have web search auto-approved on my machine, which allows agents to look up documentation, error messages, and solutions independently. This is particularly valuable when agents encounter unfamiliar error messages or need to check current API documentation that may have changed since the model's training cutoff.
+
+However, I monitor outputs for prompt poisoning, since internet-based prompt poisoning is a known attack vector for AI systems. The risk is that malicious content from web searches could influence the agent's behavior in subsequent actions. I've found this risk manageable for coding tasks, but I'm more cautious with agents that have broader system access or handle sensitive data.
+
+## Know your emergency stop shortcuts
+
+Every coding agent platform provides keyboard shortcuts to cancel actions in progress. These are essential when you notice an agent looping, going down an unproductive path, or making changes you don't want:
+
+- Cursor: `Ctrl+C`
+- VSCode + GitHub Copilot: `Cmd+Esc`
+- Claude Code: `Esc`
+
+If you're monitoring the agent's activity, these shortcuts let you intervene immediately when something goes wrong.
+
+## Correct agent behavior in real-time
+
+When you catch an agent doing something undesirable, stop it immediately, then redirect it. I instruct agents to record corrections in `AGENTS.md` and continue with the updated guidance. An example prompt:
+
+```text
+No, I don't want you to do <thing>. Instead, you should do <a different thing>. Record this in AGENTS.md, and then continue what you were doing.
+```
+
+This approach creates a persistent record of preferences that improves future agent behavior. The `AGENTS.md` file becomes a living document of your development standards and preferences, which agents can reference in future sessions. I've implemented this pattern in my [personal productivity MCP server](https://github.com/ericmjl/ericmjl-productivity-mcp), which provides a standardized way to store and retrieve these preferences across different agent platforms.
+
+## Write prescriptive prompts for complex tasks
+
+I created the personal productivity MCP server to help me take my favourite prompts from system to system. MCP (Model Context Protocol) servers provide a standardized way to expose tools and context to AI agents across different platforms. One thing I learned from my colleague Anand Murthy about how to write such prompts is to be extremely prescriptive about the actions and tools that I want the agent to use.
+
+Generic prompts like "help me debug this GitHub Actions workflow" leave too much room for interpretation. Instead, specify exact commands, tools, and steps. For example, if I'm looking to debug a GitHub Actions issue, the prompt that I have looks like this:
+
+```text
+You are helping me debug a failed GitHub Actions workflow. Follow these steps to systematically analyze and resolve the issue:
+
+1. **Extract workflow information**: Parse the provided URL to identify:
+   - Repository owner and name
+   - Workflow run ID
+   - Workflow name
+   - Branch/commit that triggered the run
+
+2. **Fetch workflow logs using GitHub CLI**:
+   - Use `gh run list` to verify the workflow run exists
+   - Use `gh run view <run-id>` to get detailed run information
+   - Use `gh run view <run-id> --log` to download and display the full logs
+   - Use `gh run view <run-id> --log-failed` to focus on failed job logs
+
+3. **Analyze the failure**:
+   - Identify which job(s) failed and at what step
+   - Look for error messages, exit codes, and stack traces
+   - Check for common issues: dependency problems, permission errors, timeout issues, resource constraints
+   - Examine the workflow configuration and environment setup
+
+4. **Provide debugging guidance**:
+   - Explain what went wrong in simple terms
+   - Suggest specific fixes or configuration changes
+   - Provide commands or code snippets to resolve the issue
+   - Recommend preventive measures to avoid similar failures
+
+5. **Context-aware solutions**:
+   - Consider the project type (Python, Node.js, etc.) and suggest appropriate fixes
+   - Check for recent changes that might have caused the failure
+   - Suggest workflow improvements or optimizations
+
+6. **Follow-up actions**:
+   - Recommend next steps for testing the fix
+   - Suggest monitoring or alerting improvements
+   - Provide guidance on preventing similar issues
+
+Workflow URL: {workflow_url}
+
+Focus on providing actionable, specific solutions rather than generic troubleshooting advice. Use the GitHub CLI commands to gather comprehensive information about the failure.
+```
+
+Notice how prescriptive this prompt is. Rather than being a generic troubleshooting guide, it's a step-by-step guide that the agent can follow, down to the level of exact CLI commands to run. Critically, those CLI commands (`gh run list`, `gh run view`) are commands that I have auto-approved in my IDE, so the agent can execute the entire workflow autonomously without interrupting me for approval at each step.
+
+The prompt was written with AI assistance, which allows me to iterate to the level of detail I want with minimal effort. I start with a rough outline, then ask the agent to make it more specific, add command examples, and refine the steps until it's actionable enough for autonomous execution.
+
+## Use plan mode for complex tasks
+
+Plan mode in Cursor and Claude significantly improves agent performance on complex tasks. Users of AI-assisted coding tools consistently report that plan mode helps agents stay on course, compared to agents working without a structured plan. This mirrors how humans perform better with explicit plans.
+
+The mechanism is straightforward: the agent first generates a detailed plan, you review and refine it, then the agent executes against that plan. This separation of planning and execution prevents the agent from going down rabbit holes or making premature implementation decisions.
+
+In my experience, agents often complete tasks in one attempt after a few iterations on a well-defined plan. The key is ensuring the plan is specific and properly scoped before execution begins. I've found that plans work best when they include:
+- Specific files and functions to modify
+- Clear acceptance criteria
+- Dependencies and ordering constraints
+- Test cases or validation steps
+
+Without this structure, agents tend to make assumptions, skip steps, or get distracted by tangential improvements.
+
+## Managing multiple background agents
+
+Multiple background agents can be powerful, but they require careful management. Unless agents are handling mundane, well-defined tasks, context switching between multiple active agents becomes challenging. At that point, you're operating at the speed of thought, which requires significant cognitive overhead.
+
+I've found that multiple agents work well when they're working on independent, well-scoped tasks. For example, one agent might be researching documentation while another refactors a specific module. But when tasks have dependencies or require coordination, a single agent with a clear plan tends to perform better than multiple agents trying to coordinate.
+
+The cognitive load turns out to be more than keeping track of what each agent is doing; we also need to ensure they don't conflict with each other. Two agents modifying the same file simultaneously, or one agent's changes breaking assumptions another agent made, creates more problems than it solves.
+
+## Additional resources
+
+Others have written extensively about effective coding agent workflows. Here's a curated collection of resources I've found valuable:
+
+- [Simon Willison's coding agent tips](https://simonwillison.net/2025/Oct/25/coding-agent-tips/)
+- [Geoffrey Litt suggests coding like a surgeon](https://www.geoffreylitt.com/2025/10/24/code-like-a-surgeon)
+- [`@omarsar0` on Twitter loves plan mode on Claude Code](https://x.com/omarsar0/status/1984641893519839271)
+- [`@mattpocockuk` has awesome tips on how to use AI for coding](https://x.com/mattpocockuk), including [this tip](https://x.com/mattpocockuk/status/1985056806893211915)
+- [Simon Willison (again!) on async code research with coding agents](https://simonwillison.net/2025/Nov/6/async-code-research/)
+
+What are your tips for safe ways to let your coding agent work autonomously? And what did you like most about this post? Let me know in the comments below!
+
+---
+twitter_handle: ericmjl
+---
+pub_date: 2025-11-08
+---
+tags:
+
+automation
+productivity
+coding
+agents
+safety
+workflow
+development
+prompting
+command line
+ai
+---
+summary: In this blog post, I share practical strategies for letting coding agents work autonomously while minimizing risks, like setting intelligent boundaries for command approvals, using plan mode, and writing prescriptive prompts. I also discuss real-world lessons learned from agent mishaps and offer tips for managing multiple agents safely. Curious about how to empower your coding agents without losing control?
