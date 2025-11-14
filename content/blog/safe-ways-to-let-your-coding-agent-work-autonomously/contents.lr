@@ -141,6 +141,7 @@ Others have written extensively about effective coding agent workflows. Here's a
 - [`@omarsar0` on Twitter loves plan mode on Claude Code](https://x.com/omarsar0/status/1984641893519839271)
 - [`@mattpocockuk` has awesome tips on how to use AI for coding](https://x.com/mattpocockuk), including [this tip](https://x.com/mattpocockuk/status/1985056806893211915)
 - [Simon Willison (again!) on async code research with coding agents](https://simonwillison.net/2025/Nov/6/async-code-research/)
+- [Sebastian Wallkötter on preventing AI spaghetti through intermediate reviews](https://www.linkedin.com/posts/sebastian-wallkoetter_my-favourite-question-to-spot-a-vibe-coder-activity-7394726959349592064--baU): The key insight is that AI coding's bottleneck is code review, not code generation. Small mistakes compound when AI re-ingests its own errors as context. The solution: implement features in small increments with intermediate reviews, fixing "5 second issues" as you go, rather than letting mistakes accumulate into spaghetti code that takes hours to untangle.
 
 What are your tips for safe ways to let your coding agent work autonomously? And what did you like most about this post? Let me know in the comments below!
 
