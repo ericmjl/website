@@ -1,0 +1,801 @@
+title: How I Replaced 307 Lines of Agent Code with 4 Lines
+---
+body:
+
+I recently discovered [PocketFlow](https://github.com/The-Pocket/PocketFlow?tab=readme-ov-file), a framework for building LLM-enabled programs created by [Zachary Huang](https://zachary62.github.io/zach_public_material/). The entire framework is tiny—only 100 lines of code. What caught my attention is that PocketFlow takes a fundamentally different approach to LLM-powered programs, including Anthropic's [workflows and agents](https://www.anthropic.com/engineering/building-effective-agents), by structuring them as graphs.
+
+As someone who used graphs in my thesis work, [taught tutorials on applied graph theory](https://ericmjl.github.io/Network-Analysis-Made-Simple/), and [builds my own agent frameworks](https://github.com/ericmjl/llamabot), my curiosity was piqued. I wanted to see two things: whether I could learn enough of the framework to build something useful, and whether LlamaBot's abstractions could complement PocketFlow's approach.
+
+To explore this, I fired up a [Marimo notebook](https://marimo.io/). (You can fire it up too by running: `uvx marimo edit --sandbox <put URL here to notebook here>`)
+
+## Understanding the Core - Nodes and Flows
+
+I started by building what I consider a "Hello World" program: a text topic extractor and question generator. This let me familiarize myself with PocketFlow's two core abstractions: `Nodes` and `Flows`.
+
+A `Node` is a unit of execution structured like this:
+
+```python
+class SummarizeFile(Node):
+    def prep(self, shared):
+	    # ...do stuff...
+        return stuff_that_gets_passed_to_exec
+
+    def exec(self, prep_res):
+        # ...do stuff...
+        return stuff_that_gets_passed_to_post
+
+    def post(self, shared, prep_res, exec_res):
+	    # ...do stuff...
+        return string_indicator_what_to_do_next
+```
+
+There's one more concept to introduce: `shared`. In PocketFlow, `shared` is like a big workspace that all `Node`s can read and write from. Think of it as a kitchen island where chefs and cooks can grab ingredients and leave finished dishes. In computing terms, it's global state that programs can access. In practice, it's simply a dictionary that lives in memory, which any node can manipulate. For example, program `memory` might be a key in there, implemented as a list.
+
+The `prep -> exec -> post` design within a node is intentional. In theory, you could do everything in one step—there are no hooks that inject stuff between, say, `prep` and `exec`. In practice, doing everything in one step muddies the program and makes it harder to reason about. I'll show you why later in this post.
+
+Here's what each step is designed to do:
+
+- **`prep`** takes stuff from the `shared` dictionary, does any preprocessing, and passes it to `exec`. This could include grabbing stuff from memory, interpolating it into a prompt, and returning it for execution with the LLM.
+
+- **`exec`** is where the bulk of heavy computation happens. We put API calls to LLM providers (Ollama, OpenAI, Anthropic, etc.) here. What gets returned is passed to the `post` method.
+
+- **`post`** handles any post-processing. It receives `shared`, `prep_res` (the result of `prep`), and `exec_res` (result of `exec`). The pattern I've settled on is archiving results in `shared`—for example, storing execution results in memory. What gets returned by `post` should be a string indicating which downstream path to follow. If nothing specific is needed, it returns `default`.
+
+A `Flow` is declared with a starting `Node` and follows the program until completion.
+
+With this abstraction, multiple LLM-powered abstractions and design patterns can be designed:
+
+![](https://github.com/the-pocket/.github/raw/main/assets/design.png)
+
+(Image from the PocketFlow official documentation.)
+
+## Example 1 - Topic Extractor and Question Generator
+
+Here's how I built the two-step/node topic extractor + question generator. First, I declared the nodes:
+
+```python
+class ExtractTopics(Node):
+    """First node: Extract key topics from input text"""
+
+    def prep(self, shared):
+        text_to_analyze = shared["txt"]
+        return text_to_analyze
+
+    def exec(self, prep_result):
+        text_to_analyze = prep_result
+        if not text_to_analyze:
+            return "No content to analyze"
+
+        prompt = f"Extract 3-5 key topics from this text. Return only the topics as a comma-separated list:\n\n{text_to_analyze}"
+        bot = lmb.SimpleBot(
+            system_prompt="You are a helpful assistant that extracts key topics.",
+            model_name="ollama_chat/qwen3:30b",
+        )
+        response = bot(prompt)
+        return response.content
+
+    def post(self, shared, prep_result, exec_res):
+        shared["topics"] = exec_res
+        return "default"
+
+class GenerateQuestions(Node):
+    """Second node: Generate questions based on topics"""
+
+    def prep(self, shared):
+        topics = shared["topics"]
+        txt = shared["txt"]
+        return topics, txt
+
+    def exec(self, prep_result):
+        topics, txt = prep_result
+
+        if not topics:
+            return "Cannot generate questions without valid topics"
+
+        prompt = f"Given these topics: {topics}\n\nand the original text: {txt}\n\nGenerate 2 interesting questions for each topic."
+        bot = lmb.SimpleBot(
+            system_prompt="You are a helpful assistant that generates thought-provoking questions.",
+            model_name="ollama_chat/qwen3:30b",
+        )
+        response = bot(prompt)
+        return response.content
+
+    def post(self, shared, prep_result, exec_res):
+        shared["questions"] = exec_res
+        # No return statement since this is a terminal node.
+```
+
+Then, I declared the graph:
+
+```python
+extract_topics = ExtractTopics()
+generate_questions = GenerateQuestions()
+
+extract_topics - "default" >> generate_questions
+```
+
+The magic happens in this line:
+
+```python
+extract_topics - "default" >> generate_questions
+```
+
+This tells the flow that once the `extract_topics` node emits `"default"`, it should proceed to the `generate_questions` node. The syntax is compact and looks exactly like an edge specification between two nodes.
+
+At this point, I deeply appreciate the clarity this approach forces upfront. When thinking about the flow as a graph, I'm forced to think about each node as a function that accepts inputs from shared state and returns a decision about what to do next. That decision can be deterministic (as above) or data-dependent (as we'll see below).
+
+Since GenAI can be viewed through the lens of automation, [we should earn the privilege to use it](https://ericmjl.github.io/blog/2025/7/13/earn-the-privilege-to-use-automation/). Automation requires a well-established process to be most effective. Framing a process in the language of graphs, inputs, and outputs—defining the process as a graph with carefully specified inputs and outputs, just like writing a computer program—is the clearest path to making automation work.
+
+Running the Flow looks like this:
+
+```python
+shared_topics = dict(txt=txt)
+
+two_node_flow = Flow(start=extract_topics)
+two_node_flow.run(shared_topics)
+```
+
+After running, we can inspect the `shared_topics` dictionary to see our results:
+
+```python
+{
+    "txt": ...,
+    "topics": ...,      # added by ExtractTopics
+    "questions": ...,   # added by GenerateQuestions
+}
+```
+
+One thing missing from PocketFlow is the ability to visualize the graph directly. Since the codebase was new to me, I sent a Cursor agent in the background to research and propose a solution. It came back with [this PR](https://github.com/ericmjl/llamabot/pull/279). Impressive!
+
+The Mermaid diagram for this workflow is:
+
+<pre class="mermaid">
+graph LR
+N1["ExtractTopics"]
+N2["GenerateQuestions"]
+N1 --> N2
+style N1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N2 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+
+</pre>
+
+## Example 2 - Building an Agent
+
+Now, what if we want to build an agent?
+
+I'm going to work backwards here. My "hello world" test for agentic systems is making them tell me today's date. This works because an LLM will always hallucinate a date on its own, and that hallucination may or may not be correct. An agent that works properly should call a tool to get the actual date. The agent's graph should look like this:
+
+<pre class="mermaid">
+graph LR
+	N1["Decide"]
+	N2["TodayDate"]
+	N3["RespondToUser"]
+	N1 -->|"today_date"| N2
+	N2 -->|"decide"| N1
+	N1 -->|"respond_to_user"| N3
+	style N1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+	style N2 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+	style N3 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+
+</pre>
+
+I consider this a "Hello World" agent because a failing agent will skip straight to `respond_to_user` when asked for today's date, without first calling `today_date` to get the actual information.
+
+To build this agent, I need three nodes:
+
+- **`Decide`**: Uses an LLM to decide which tool to call next, given the prompt
+- **`TodayDate`**: Executes without LLMs and returns today's date in the current timezone
+- **`RespondToUser`**: Responds to the user with the appropriate context
+
+Here's how I wrote them. First, the `Decide` node:
+
+```python
+from llamabot.components.tools import (
+    respond_to_user,
+    search_internet,
+    today_date,
+)
+from pydantic import BaseModel, Field
+from typing import Literal
+
+search_internet = lmb.tool(search_internet)
+
+tools = [respond_to_user, today_date]
+
+
+class ToolChoice(BaseModel):
+    content: Literal[*[tool.__name__ for tool in tools]] = Field(
+        ..., description="The name of the tool to use"
+    )
+
+
+@lmb.prompt("system")
+def decision_bot_system_prompt():
+    """Given the chat history, pick for me one or more tools to execute
+    in order to satisfy the user's query.
+
+    Give me just the tool name to pick.
+    Use the tools judiciously to help answer the user's query.
+    Query is always related to one of the tools.
+    Use respond_to_user if you have enough information to answer the original query.
+    """
+
+class Decide(Node):
+    def prep(self, shared: dict):
+        shared["memory"].append(f"Query: {shared['query']}")
+        return shared
+
+    def exec(self, prep_result):
+        bot = lmb.StructuredBot(
+            pydantic_model=ToolChoice,
+            system_prompt=decision_bot_system_prompt(),
+        )
+        print(prep_result["memory"])
+        response = bot(*prep_result["memory"])
+
+        return response.content
+
+    def post(self, shared, prep_result, exec_result):
+        shared["memory"].append(f"Chosen Tool: {exec_result}")
+        return exec_result
+```
+
+The key thing to note is that we inject the available tools into the system prompt of the tool-selecting agent.
+
+Next, the `TodayDate` node:
+
+```python
+class TodayDate(Node):
+    def prep(self, shared: dict):
+        return shared
+
+    def exec(self, prep_result):
+        return today_date()
+
+    def post(self, shared, prep_result, exec_result):
+        shared["memory"].append(f"Today's date: {exec_result}")
+        return "decide"
+```
+
+And finally, the `RespondToUser` node:
+
+```python
+class RespondToUser(Node):
+    def prep(self, shared: dict):
+        return shared
+
+    def exec(self, prep_result):
+        class Response(BaseModel):
+            content: str = Field(..., description="The response to the user.")
+
+        bot = lmb.StructuredBot(
+            "You are a helpful assistant.",
+            model_name="ollama_chat/gemma3n:latest",
+            pydantic_model=Response,
+        )
+        response = bot(*prep_result["memory"])
+        return response.content
+
+    def post(self, shared, prep_result, exec_result):
+        shared["memory"].append(exec_result)
+        return exec_result
+```
+
+Finally, we set up the graph:
+
+```python
+# Set up the graph
+today__date = TodayDate()
+respond__to__user = RespondToUser()
+decide = Decide()
+
+shared = dict()
+shared["query"] = "What is the date today?"
+shared["memory"] = []
+
+decide - "today_date" >> today__date
+today__date - "decide" >> decide
+decide - "respond_to_user" >> respond__to__user
+```
+
+I used `__` in the node names to avoid clashing with the original functions.
+
+Then we run it:
+
+```python
+flow2 = Flow(start=decide)
+flow2.run(shared)
+```
+
+Take my word for it (or check out the notebook yourself)—it reliably gives me today's date.
+
+## Example 3 - Agent with Shell Commands
+
+To push things further, I tried a tool that needs arguments. A good "hello world" for this is executing shell commands in response to questions like, "What's in this folder?"
+
+For this, I created a second version of the `Decide` node called `Decide2`, where I instantiate and execute the `ToolChoice` and tool selection `StructuredBot` within `exec`:
+
+```python
+class Decide2(Node):
+    def prep(self, shared: dict):
+        return shared
+
+    def exec(self, prep_result):
+        sysprompt = decision_bot_system_prompt()
+
+        print(sysprompt)
+
+        class ToolChoice(BaseModel):
+            content: Literal[*[tool.__name__ for tool in prep_result["tools"]]] = (
+                Field(..., description="The name of the tool to use")
+            )
+            justification: str = Field(..., description="Why this tool was chosen.")
+
+        bot = lmb.StructuredBot(
+            pydantic_model=ToolChoice,
+            system_prompt=decision_bot_system_prompt(),
+        )
+
+        if prep_result["memory"]:
+            response = bot(*prep_result["memory"])
+        else:
+            response = bot(prep_result["query"])
+
+        return response.content
+
+    def post(self, shared, prep_result, exec_result):
+        shared["memory"].append(f"Query: {shared["query"]}")
+        shared["memory"].append(f"Chosen Tool: {exec_result}")
+        return exec_result
+```
+
+I then created a `ShellCommand` node that uses the same pattern—leveraging `StructuredBot` for structured generation to constrain the LLM's output to exactly what I need:
+
+```python
+class ShellCommand(Node):
+    def prep(self, shared: dict):
+        return shared
+
+    def exec(self, prep_result):
+        class Cmd(BaseModel):
+            content: str = Field(
+                ..., description="The shell command to execute"
+            )
+
+        bot = lmb.StructuredBot(
+            system_prompt="You are an expert at writing shell commands. For the chat trace that you will be given, write a shell command that accomplishes the user's request. Only output the command, nothing else.",
+            pydantic_model=Cmd,
+            model_name="ollama_chat/gemma3n:latest",
+        )
+
+        response = bot(*prep_result["memory"])
+        print(response.content)
+        result = execute_shell_command(response.content)
+        return result
+
+    def post(self, shared, prep_result, exec_result):
+        shared["memory"].append(f"Output: {exec_result}")
+        print(shared["memory"])
+        return "decide"
+```
+
+Finally, we set up the graph:
+
+```python
+def _():
+    # Set up the graph
+    today_date = TodayDate()
+    respond_to_user = RespondToUser()
+    decide = Decide2()
+    shell_command = ShellCommand()
+
+    decide - "today_date" >> today_date
+    today_date - "decide" >> decide
+    decide - "execute_shell_command" >> shell_command
+    shell_command - "decide" >> decide
+    decide - "respond_to_user" >> respond_to_user
+
+    flow = Flow(start=decide)
+    return flow
+
+
+flow3 = _()
+```
+
+The graph would look like this:
+
+<pre class="mermaid">
+graph LR
+N1["Decide2"]
+N2["TodayDate"]
+N3["ShellCommand"]
+N4["RespondToUser"]
+N1 -->|"today_date"| N2
+N2 -->|"decide"| N1
+N1 -->|"execute_shell_command"| N3
+N3 -->|"decide"| N1
+N1 -->|"respond_to_user"| N4
+style N1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N2 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N3 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N4 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+
+</pre>
+
+I wrapped it in a `_()` function to protect the globally scoped variables in the Marimo notebook. Note that I included `today_date` as well, just to "pollute" the namespace and make it more challenging when asking shell-related questions. When we interact with the agent:
+
+```python
+shared3 = dict()
+shared3["query"] = "What in my current working directory?"
+shared3["memory"] = []
+shared3["tools"] = [respond_to_user, today_date, execute_shell_command]
+flow3.run(shared3)
+```
+
+It calls on `shell_command`, and gives me back this response:
+
+```text
+Okay, here's a list of the files and directories in your current working directory:
+
+*   **Directories:**
+    *   `__marimo__`
+    *   `.` (current directory)
+    *   `..` (parent directory)
+
+*   **Files:**
+    *   `agentbot_build.py`
+    *   `agents.py`
+    *   `chatbot_as_agent.py`
+    *   `conversation-threads.py`
+    *   `data.csv`
+    *   `ic50_data_with_confounders.csv`
+    *   `intro.py`
+    *   `lancedb_docstore.py`
+    *   `pocketflow_testdrive.py`
+    *   `react-agentbot-demo.py`
+    *   `README.md`
+    *   `toolbot_chatdata.py`
+    *   `tools.py`
+
+That's a total of 17 files and directories. Let me know if you'd like more details about any of them!
+```
+
+I was also able to ask "Hey, what files have been modified today?" and the agent successfully executed the appropriate shell command.
+
+Effectively, this pattern is nothing more than a coordinating agent/LLM delegating work to specialized tools.
+
+## Rewriting AgentBot with PocketFlow
+
+Finally, I decided to take what I'd learned and redo the `AgentBot` implementation in LlamaBot. My previous implementation (version 0.16.3) was messy—the `__call__` method alone was 307 lines with a while-loop, maximum tries, ThreadPoolExecutor for parallel tool execution, tool call caching, and extensive metadata tracking. PocketFlow had a better abstraction for the agentic loop: a `Flow` state machine following edges on a graph. I thought I could redesign `AgentBot` to take advantage of this pattern.
+
+The rewrite involved some really interesting patterns. I completely replaced the ReAct (Reasoning and Acting) loop with PocketFlow's graph-based tool orchestration. This shifts from an iterative loop-based approach to a declarative graph-based one, where tool execution flows through a directed graph rather than a sequential loop.
+
+The implementation centers on three key abstractions:
+
+**1. The `@nodeify` decorator** transforms any callable function into a PocketFlow Node. It wraps functions with PocketFlow's Node interface, implementing the required `prep`, `exec`, and `post` methods. The tricky part is that `@nodeify` needs to preserve access to the underlying function's metadata—particularly the `json_schema` attribute added by the `@tool` decorator—through attribute proxying, so ToolBot can discover and use tools even after they've been wrapped as nodes.
+
+**2. The `DecideNode`** encapsulates the decision-making logic. This node uses ToolBot internally to analyze the conversation history stored in shared state and select which tool to execute next. It expects a shared state dictionary with a `"memory"` key containing the conversation history as a list of strings. When executed, it calls ToolBot with this memory, extracts the first tool call from ToolBot's response, parses the JSON-formatted arguments, and stores them in `shared["func_call"]` for the next node. The node then returns the tool name as a routing action, which PocketFlow uses to navigate the graph.
+
+**3. Flow graph construction** happens at initialization time. AgentBot automatically wraps all provided tools (plus default tools like `today_date` and `respond_to_user`) with both `@tool` and `@nodeify` decorators, then builds bidirectional connections: from the decide node to each tool node (using the tool's function name as the action), and from each tool node back to the decide node (except for terminal tools like `respond_to_user` that have `loopback_name=None`). This creates a graph where execution can flow from decision to tool and back to decision, enabling multi-step reasoning.
+
+A few technical requirements make this work: tools need type annotations (for JSON schema generation), the shared state needs a `"memory"` list for conversation history, and tool arguments are passed through `shared["func_call"]`. The DecideNode selects one tool at a time, and tools are stateless—they get fresh arguments each call and communicate through memory.
+
+What's remarkable about this implementation is how compact it is. The `@nodeify` decorator is just 100 lines, and most of that is documentation. The core logic is elegant:
+
+```python
+def nodeify(func=None, *, loopback_name: str = "decide"):
+    def decorator(func):
+        class FuncNode(Node):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.loopback_name = loopback_name
+                self.func = func
+
+            def prep(self, shared):
+                return shared
+
+            def exec(self, prep_result):
+                func_call = prep_result.get("func_call", {})
+                return self.func(**func_call)
+
+            def post(self, shared, prep_result, exec_res):
+                shared["memory"].append(exec_res)
+                if self.loopback_name is None:
+                    return exec_res
+                return self.loopback_name
+
+            def __getattr__(self, name):
+                # Proxy to original function for json_schema access
+                if name == "func":
+                    raise AttributeError(...)
+                return getattr(self.func, name)
+
+        return FuncNode()
+
+    if func is not None:
+        return decorator(func)
+    return decorator
+```
+
+The entire AgentBot class is similarly compact—about 100 lines total. Compare this to the previous implementation where the `__call__` method alone was 307 lines, with complex while loop logic, tool call caching, parallel execution via ThreadPoolExecutor, and extensive state management:
+
+```python
+# Old implementation (v0.16.3): 307-line __call__ method
+# Plus 50-line caching wrapper, 21-line execution helper
+# Total: 378 lines of orchestration code
+
+for iteration in range(max_iterations):
+    # Call model with tools
+    response = completion(
+        model=self.model_name,
+        messages=raw_messages,
+        tools=self.tools,
+        tool_choice="auto",
+    )
+
+    tool_calls = extract_tool_calls(response)
+
+    if tool_calls:
+        # Execute tools in parallel with caching
+        with ThreadPoolExecutor() as executor:
+            futures = {
+                executor.submit(self._execute_tool_with_cache, call): call
+                for call in tool_calls
+            }
+            for future in as_completed(futures):
+                # Handle results, update messages, manage cache,
+                # track metadata, handle errors...
+                ...
+        continue
+
+    # Handle finalization, memory updates, logging, metrics...
+```
+
+The new implementation replaces all of that with a simple graph construction:
+
+```python
+# New implementation: ~100 lines total, declarative graph
+class AgentBot:
+    def __init__(self, tools, decide_node=None, model_name="gpt-4.1", ...):
+        # ... validation and setup ...
+
+        # Build PocketFlow graph: connect tools to decide node
+        for tool_node in all_tools:
+            tool_name = tool_node.func.__name__
+            self.decide_node - tool_name >> tool_node
+            if tool_node.loopback_name is not None:
+                tool_node - tool_node.loopback_name >> self.decide_node
+
+        self.flow = Flow(start=self.decide_node)
+
+    def __call__(self, query: str, ...):
+        self.shared["memory"].append(query)
+        self.flow.run(self.shared)
+        return self.shared.get("result")
+```
+
+Full implementation includes validation, tool wrapping, and state management—about 100 lines total vs 307+ for the old `__call__` method alone.
+
+### The Magic of Building an Agent in Just 4 Lines
+
+The most remarkable part of this implementation is how the entire agent graph is constructed. Look at these four lines carefully:
+
+```python
+for tool_node in all_tools:
+    self.decide_node - tool_name >> tool_node
+    if tool_node.loopback_name is not None:
+        tool_node - tool_node.loopback_name >> self.decide_node
+```
+
+**This is it.** This is the entire graph construction that turns a collection of tools into a working agent. Let me break down what's happening:
+
+1. **Line 1**: Loop through each tool
+2. **Line 2**: Connect the decide node to the tool node—when the LLM chooses this tool, execution flows to it
+3. **Line 3**: Check if this tool should loop back (terminal tools like `respond_to_user` have `loopback_name=None`)
+4. **Line 4**: Connect the tool back to the decide node—after execution, control returns to decision-making
+
+That's the entire agent architecture. Four lines. The `- "action" >>` syntax creates directed edges in the graph, and PocketFlow handles all the state management, routing, and execution orchestration. Compare this to the 307-line `__call__` method in the previous implementation (version 0.16.3) with its complex loop-based logic, thread pools, state tracking, and termination conditions.
+
+This is what I mean by "graph-based thinking" being clearer—the entire execution flow is explicit and declarative. You can see at a glance how decisions flow to tools and back to decisions, enabling multi-step reasoning.
+
+The difference is striking. The old implementation required manual loop management, explicit state tracking, parallel execution coordination, and complex termination logic. The new implementation declares the graph structure once, and PocketFlow handles all the execution details.
+
+This graph-based approach provides several advantages. The flow graph is constructed once at initialization, making the execution path explicit and visualizable—you can render the agent's decision flow as a Mermaid diagram using the visualization feature I added to LlamaBot. The separation of concerns is clearer: decision-making lives in `DecideNode`, tool execution in wrapped function nodes, and orchestration in PocketFlow's flow engine. The implementation is also more modular—you can swap out the decision node or customize tool wrapping behavior without rewriting the core agent logic. Finally, by leveraging PocketFlow's graph execution model, we gain access to its execution capabilities and potential future extensions for parallel execution or conditional routing.
+
+## Visualizing Different Agent Architectures
+
+One really cool feature I added to LlamaBot is the ability to visualize any agent's graph structure using Mermaid diagrams. The `AgentBot._display_()` method automatically renders the flow graph, making it easy to see how different tool configurations create different architectures.
+
+Here's a simple agent with just two tools:
+
+```python
+from llamabot import AgentBot
+from llamabot.components.tools import tool
+from llamabot.components.pocketflow import nodeify
+
+@nodeify(loopback_name="decide")
+@tool
+def search_web(query: str) -> str:
+    """Search the web for information."""
+    return web_search(query)
+
+agent = AgentBot(tools=[search_web])
+agent._display_()  # Renders Mermaid diagram in Marimo
+```
+
+The resulting graph shows the decision node connected to `today_date`, `search_web`, and `respond_to_user`:
+
+<pre class="mermaid">
+graph LR
+N1["DecideNode"]
+N2["today_date"]
+N3["search_web"]
+N4["respond_to_user"]
+N1 -->|"today_date"| N2
+N2 -->|"decide"| N1
+N1 -->|"search_web"| N3
+N3 -->|"decide"| N1
+N1 -->|"respond_to_user"| N4
+style N1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N2 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N3 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N4 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+</pre>
+
+Add more tools, and the graph automatically expands. Here's an agent with code execution and file operations:
+
+```python
+@nodeify(loopback_name=None)
+@tool
+def write_and_execute_script(
+    code: str,
+    dependencies_str: str = "",
+    python_version: str = ">=3.11",
+) -> Dict[str, Any]:
+    """Write and execute a Python script in a secure Docker sandbox.
+
+    :param code: The Python code to execute
+    :param dependencies_str: Comma-separated pip dependencies
+    :param python_version: Python version requirement
+    :return: Dictionary with stdout, stderr, and status
+    """
+    # Uses ScriptExecutor to run code in isolated Docker container
+    executor = ScriptExecutor()
+    result = executor.run_script(script_path, timeout=600)
+    return {
+        "stdout": result["stdout"],
+        "stderr": result["stderr"],
+        "status": result["status"],
+    }
+
+@nodeify(loopback_name="decide")
+@tool
+def read_file(filepath: str) -> str:
+    """Read and return file contents."""
+    return open(filepath).read()
+
+agent = AgentBot(tools=[search_web, write_and_execute_script, read_file])
+```
+
+The graph now shows six tool nodes all connected bidirectionally to the decision node (except terminal tools):
+
+<pre class="mermaid">
+graph LR
+N1["DecideNode"]
+N2["today_date"]
+N3["search_web"]
+N4["write_and_execute_script"]
+N5["read_file"]
+N6["respond_to_user"]
+N7["return_object_to_user"]
+N1 -->|"today_date"| N2
+N2 -->|"decide"| N1
+N1 -->|"search_web"| N3
+N3 -->|"decide"| N1
+N1 -->|"write_and_execute_script"| N4
+N4 -->|"decide"| N1
+N1 -->|"read_file"| N5
+N5 -->|"decide"| N1
+N1 -->|"respond_to_user"| N6
+N1 -->|"return_object_to_user"| N7
+style N1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N2 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N3 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N4 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N5 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N6 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N7 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+</pre>
+
+What I love about this is how the graph makes it immediately obvious what capabilities an agent has. You can see at a glance which tools are available, understand the control flow, and reason about how the agent will behave. The visualization transforms the abstract "agent with tools" into a concrete, inspectable structure.
+
+Here's a real-world example—an experiment design agent I built for critiquing statistical experiment designs:
+
+```python
+@nodeify(loopback_name="decide")
+@tool
+def critique_experiment_design(design: str) -> str:
+    """Critique an experiment design and identify potential flaws,
+    biases, or weaknesses.
+
+    :param design: Description of the proposed experiment design
+    :return: Critique with identified issues and suggestions
+    """
+    bot = lmb.SimpleBot(
+        system_prompt=experiment_design_critique_sysprompt()
+    )
+    return bot(design)
+
+agent = AgentBot(
+    tools=[critique_experiment_design, write_and_execute_code(globals())]
+)
+```
+
+This agent has a specialized domain focus. The graph shows all its capabilities, including the default tools that every `AgentBot` gets automatically:
+
+<pre class="mermaid">
+graph LR
+N1["DecideNode"]
+N2["today_date"]
+N3["critique_experiment_design"]
+N4["write_and_execute_code"]
+N5["respond_to_user"]
+N6["return_object_to_user"]
+N1 -->|"today_date"| N2
+N2 -->|"decide"| N1
+N1 -->|"critique_experiment_design"| N3
+N3 -->|"decide"| N1
+N1 -->|"write_and_execute_code"| N4
+N4 -->|"decide"| N1
+N1 -->|"respond_to_user"| N5
+N1 -->|"return_object_to_user"| N6
+style N1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N2 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N3 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N4 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N5 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+style N6 fill:#e1f5ff,stroke:#01579b,stroke-width:2px;
+</pre>
+
+Notice that `today_date`, `respond_to_user`, and `return_object_to_user` are included by default in every `AgentBot`. The graph immediately tells you this agent can critique designs, execute code to analyze data, and return Python objects directly to the user—but it's not a general-purpose assistant. It's specialized for experiment design evaluation. The visual structure encodes the agent's purpose.
+
+This is only possible because of the graph-based architecture. With the old loop-based implementation, there was no clean way to visualize the execution flow—it was hidden inside imperative control logic.
+
+## What I Learned
+
+**Externalize memory as shared state**. Memory lives in the `shared` dictionary that all nodes can access, rather than being intrinsic to each bot. We just feed memory context in each time a node executes. This has good economics—if you have prompt caching on the API provider's side, simply appending to an ever-growing memory is a great way to take advantage of pre-computed neural network outputs from previous runs. I used to think of memory as *intrinsic* to a bot, but I've changed my mind: allowing multiple bots to share access to the same memory is a useful simplification, even if it's not suitable for every circumstance.
+
+**The `prep -> exec -> post` pattern** is worth adhering to. I found myself appending to memory in `post` after doing the `exec`ution. `prep` turns out to be useful for preprocessing user inputs or manipulating memory as needed. The overall effect is that it's much easier to **unit test or set up evals** for individual nodes.
+
+**PocketFlow's graph abstraction brings clarity**. The analogy of LLM agents (`Node`s) as chefs/cooks accessing a kitchen island's worth of things (`shared`) is a powerful contrast to my previous loop-based approach in LlamaBot, where I manually tracked state, managed iterations, and coordinated tool execution. This insight is exactly why I rewrote AgentBot to use this graph-based architecture.
+
+**A wide variety of LLM-powered architectures** can be built with just `Node`s and `Flow`s. Most LLM applications I've built—whether for myself or for others—have not been "agentic" but more like "workflows." These are what some might consider boring. Yet they are high ROI precisely because they take repetitive and boring work out of our hands! PocketFlow gives us a way to express flows as graphs, effectively state machines whose actions are either fully deterministic or determined by an LLM's choice.
+
+**PocketFlow is minimalistic**, which offloads a lot of heavy lifting when working with LLMs. The flexibility is both a strength and a weakness: great for power users, but potentially intimidating for newcomers. I found it easiest to rely heavily on `StructuredBot` to output decisions made by the LLM. Structured generation is, generally speaking, the most useful abstraction in the LLM world that I keep turning back to.
+
+**The agent pattern is everywhere once you recognize it**. While writing this post, I realized that the agentic coding IDEs we've gotten used to—tools like Cursor, GitHub Copilot, and others—follow the exact same pattern I've been describing. They have a decision node that analyzes your code and context, tool nodes for reading files, searching codebases, editing code, and responding to you. The flow is the same: decide what to do, execute a tool, update context, decide again. Understanding this pattern in PocketFlow helped me see it operating in the tools I use every day. The abstraction is the mental model that makes sense of how modern AI-powered tools work.
+
+The biggest lesson? **Thinking in graphs transforms how you build LLM programs**. The shift from imperative loops to declarative graphs means you declare *what* should happen instead of specifying *how* to execute step-by-step. This brings clarity, modularity, and makes your execution flow explicit. Whether you're building simple workflows or complex agents, representing them as graphs forces you to think clearly about state, decisions, and flow. That mental model shift has changed how I approach every LLM application I build.
+---
+summary:
+
+In this blog post, I share how I discovered PocketFlow, a minimalist framework for building LLM-powered programs using graph-based flows instead of complex loops. By rethinking my approach, I replaced 307 lines of agent orchestration code with just 4 lines, making my agents more modular, clear, and easy to visualize. I walk through practical examples, show how to build and visualize agent architectures, and reflect on the benefits of graph-based thinking for LLM applications. Curious how this shift can simplify your own AI projects?
+---
+author: Eric J. Ma
+---
+pub_date: 2025-11-16
+---
+tags:
+
+llm
+graphs
+agents
+automation
+pocketflow
+llamabot
+python
+workflows
+abstractions
+state
+---
+twitter_handle: ericmjl

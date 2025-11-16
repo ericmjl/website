@@ -1,3 +1,11 @@
 <h4>Banner Image</h4>
 <img src="{{ banner_url }}" alt="Generated Banner" class="img-fluid">
 <p>Raw URL: <a href="{{ banner_url }}" target="_blank">{{ banner_url }}</a></p>
+<p>
+    <a href="/download-logo?banner_url={{ banner_url|urlencode }}&blog_url={{ blog_url|urlencode }}&save=true"
+       class="btn btn-secondary"
+       hx-get="/download-logo?banner_url={{ banner_url|urlencode }}&blog_url={{ blog_url|urlencode }}&save=true"
+       hx-target="#save-result"
+       hx-swap="innerHTML">Save Logo to Blog Post</a>
+</p>
+<div id="save-result"></div>

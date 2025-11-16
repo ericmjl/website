@@ -197,7 +197,7 @@
 
 <!-- Start reading time calculation macro -->
 {% macro render_reading_time(post) %}
-{% set post_length = post.body|striptags|wordcount %}
+{% set post_length = post.body.source|wordcount %}
 {% set time_unit = "minutes" %}
 
 {% set reading_time = post_length // 200 + 1 %}
@@ -238,7 +238,7 @@
       <div class="blog-card-right">
         {% if post.summary %}
         <span name="post_summary" id="post_summary">
-          <p class="card-text">{{ post.summary }}</p>
+          <p class="card-text">{{ post.summary.source }}</p>
         </span>
         <small>
           <a href="{{ post|url }}">Read on...</a>

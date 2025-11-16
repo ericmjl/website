@@ -1,13 +1,21 @@
 from functools import lru_cache
+from io import BytesIO
 from pathlib import Path
-from typing import Annotated
+from tempfile import NamedTemporaryFile
+from typing import Annotated, Optional
+from urllib.parse import quote
 
+import requests
 from bs4 import BeautifulSoup
-from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Form, Query, Request
+from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from llamabot import ImageBot, StructuredBot
+from loguru import logger
+from PIL import Image
+from reportlab.graphics import renderPM
+from svglib.svglib import svg2rlg
 
 from .models import (
     BlueSkyPost,
@@ -35,6 +43,316 @@ app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static"
 bannerbot = ImageBot(size="1792x1024")
 
 templates = Jinja2Templates(directory="apis/blogbot/templates")
+
+# Add urlencode filter to Jinja2
+templates.env.filters["urlencode"] = lambda u: quote(str(u), safe="")
+
+
+def get_blog_post_directory(blog_url: str) -> Optional[Path]:
+    """Extract the blog post slug from URL and find the corresponding directory.
+
+    Args:
+        blog_url: URL like https://ericmjl.github.io/blog/2025/11/16/how-i-replaced-307-lines-of-agent-code-with-4-lines/
+                  or http://localhost:5959/blog/2025/11/16/how-i-replaced-307-lines-of-agent-code-with-4-lines/
+
+    Returns:
+        Path to the blog post directory in content/blog/, or None if not found
+    """
+    try:
+        # Parse the URL to get the path
+        from urllib.parse import urlparse
+
+        parsed = urlparse(blog_url)
+        path = parsed.path.strip("/")
+
+        # Remove 'blog/' prefix if present
+        if path.startswith("blog/"):
+            path = path[5:]  # Remove "blog/"
+
+        # Split the path - format is typically YYYY/MM/DD/slug/
+        parts = [p for p in path.split("/") if p]
+
+        # The slug is the last non-empty part
+        if not parts:
+            return None
+
+        slug = parts[-1]
+
+        # Find the directory in content/blog/
+        content_blog_path = Path("content/blog")
+        blog_dir = content_blog_path / slug
+
+        if blog_dir.exists() and blog_dir.is_dir():
+            return blog_dir
+        else:
+            logger.warning(f"Blog directory not found: {blog_dir}")
+            return None
+    except Exception as e:
+        logger.error(f"Error parsing blog URL {blog_url}: {e}")
+        return None
+
+
+def update_contents_lr_field(blog_dir: Path, field_name: str, field_value: str) -> bool:
+    """Update a field in the contents.lr file.
+
+    Args:
+        blog_dir: Path to the blog post directory
+        field_name: Name of the field to update (e.g., 'summary', 'tags')
+        field_value: New value for the field
+
+    Returns:
+        True if successful, False otherwise
+    """
+    try:
+        contents_path = blog_dir / "contents.lr"
+        if not contents_path.exists():
+            logger.error(f"contents.lr not found at {contents_path}")
+            return False
+
+        # Read the file
+        content = contents_path.read_text()
+
+        import re
+
+        logger.debug(f"[UPDATE] Updating field '{field_name}' in {contents_path}")
+        logger.debug(f"[UPDATE] Received field_value length: {len(field_value)}")
+        logger.debug(f"[UPDATE] Received field_value (full): {repr(field_value)}")
+
+        # For summary, it's markdown, so we need to preserve it as-is
+        # For tags, it's a list, so we need to format it properly
+        if field_name == "tags":
+            # Tags are stored as a list, one per line
+            # Convert the value (which might be newline-separated) to the format
+            tag_lines = [
+                line.strip() for line in field_value.strip().split("\n") if line.strip()
+            ]
+            logger.debug(f"[UPDATE] Parsed tag_lines: {tag_lines}")
+            logger.debug(f"[UPDATE] Number of tags: {len(tag_lines)}")
+            field_value_formatted = "\n".join(tag_lines)
+            logger.debug(
+                f"[UPDATE] Formatted field_value: {repr(field_value_formatted)}"
+            )
+        else:
+            # For summary, keep as-is
+            field_value_formatted = field_value.strip()
+            logger.debug(
+                f"[UPDATE] Formatted field_value (summary): "
+                f"{repr(field_value_formatted[:100])}"
+            )
+
+        # Pattern to match: field_name:\n\n...\n---
+        # We need to match the field, its content (until the next ---), and replace it
+        # Handle both empty and non-empty content by matching everything until ---
+        # Use [\s\S] instead of . to match newlines even without DOTALL
+        pattern = rf"{re.escape(field_name)}:\n\n[\s\S]*?\n---"
+
+        logger.debug(f"[UPDATE] Pattern: {pattern}")
+        logger.debug("[UPDATE] Searching for pattern in content...")
+
+        # Check if pattern matches
+        matches = list(re.finditer(pattern, content))
+        logger.debug(f"[UPDATE] Found {len(matches)} matches for pattern")
+        for i, match in enumerate(matches):
+            logger.debug(f"[UPDATE] Match {i + 1}: {repr(match.group()[:100])}")
+
+        # First, remove ALL occurrences of this field to prevent duplicates
+        content_without_field = re.sub(pattern, "", content)
+        logger.debug(
+            f"[UPDATE] Content after removing field, length: "
+            f"{len(content_without_field)}"
+        )
+
+        # Clean up any double separators that might result
+        content_without_field = re.sub(r"---\n+---", "---", content_without_field)
+        # Clean up trailing newlines before separators
+        content_without_field = re.sub(r"\n+\n---", "\n---", content_without_field)
+        # Clean up leading newlines after separators
+        content_without_field = re.sub(r"---\n\n+", "---\n", content_without_field)
+
+        # Now add the field in the appropriate location
+        # Try to find where to insert it (preferably before the last ---)
+        if "---\n" in content_without_field:
+            # Insert before the last field
+            parts = content_without_field.rsplit("---\n", 1)
+            # Ensure no trailing newlines in first part
+            parts[0] = parts[0].rstrip("\n")
+            new_content = (
+                f"{parts[0]}\n---\n{field_name}:\n\n"
+                f"{field_value_formatted}\n---\n{parts[1]}"
+            )
+            logger.debug("[UPDATE] Inserted field before last separator")
+        else:
+            # No separators, append at the end
+            # Remove trailing newlines from content
+            content_without_field = content_without_field.rstrip("\n")
+            new_content = (
+                f"{content_without_field}\n---\n{field_name}:\n\n"
+                f"{field_value_formatted}\n---\n"
+            )
+            logger.debug("[UPDATE] Appended field at the end")
+
+        # Normalize trailing newlines (max 1 newline at end)
+        new_content = new_content.rstrip("\n") + "\n"
+
+        logger.debug(f"[UPDATE] New content length: {len(new_content)}")
+        logger.debug(f"[UPDATE] Writing to file: {contents_path}")
+
+        # Write back to file
+        contents_path.write_text(new_content)
+
+        # Verify what was written
+        verify_content = contents_path.read_text()
+        verify_pattern = rf"{re.escape(field_name)}:\n\n[\s\S]*?\n---"
+        verify_match = re.search(verify_pattern, verify_content)
+        if verify_match:
+            logger.debug("[UPDATE] VERIFIED: Field written successfully")
+            logger.debug(
+                f"[UPDATE] Written field content: {repr(verify_match.group()[:200])}"
+            )
+        else:
+            logger.warning("[UPDATE] Field not found after writing!")
+
+        return True
+    except Exception as e:
+        logger.error(f"Error updating contents.lr: {e}")
+        return False
+
+
+@app.get("/download-logo")
+async def download_logo(
+    banner_url: Optional[str] = Query(None),
+    blog_url: Optional[str] = Query(None),
+    save: bool = Query(
+        False,
+        description=(
+            "If True, save directly to blog post directory instead of downloading"
+        ),
+    ),
+):
+    """Download or save the logo/banner as webp format.
+
+    If banner_url is provided, downloads/saves that image.
+    Otherwise downloads the static logo.
+    If save=True and blog_url is provided, saves directly to the blog post directory.
+    """
+    if banner_url:
+        # Fetch the banner image from the URL
+        try:
+            response = requests.get(banner_url, timeout=30)
+            response.raise_for_status()
+            img = Image.open(BytesIO(response.content))
+
+            # Convert RGBA to RGB if necessary
+            # (WebP supports both, but RGB is more compatible)
+            if img.mode in ("RGBA", "LA", "P"):
+                # Create a white background for transparency
+                rgb_img = Image.new("RGB", img.size, (255, 255, 255))
+                if img.mode == "P":
+                    img = img.convert("RGBA")
+                rgb_img.paste(
+                    img, mask=img.split()[-1] if img.mode in ("RGBA", "LA") else None
+                )
+                img = rgb_img
+            elif img.mode != "RGB":
+                img = img.convert("RGB")
+
+            # Convert to WebP
+            webp_buffer = BytesIO()
+            # Ensure we're saving as WebP format
+            img.save(webp_buffer, format="WEBP", quality=95, method=6)
+            webp_data = webp_buffer.getvalue()
+
+            # Verify it's actually WebP format (WebP files start with RIFF header)
+            if not webp_data.startswith(b"RIFF") or b"WEBP" not in webp_data[:20]:
+                logger.warning(
+                    "Image may not have been converted to WebP correctly, retrying..."
+                )
+                # Try again with explicit format
+                webp_buffer = BytesIO()
+                img.save(webp_buffer, format="WEBP", quality=95)
+                webp_data = webp_buffer.getvalue()
+                # Check again
+                if not webp_data.startswith(b"RIFF") or b"WEBP" not in webp_data[:20]:
+                    logger.error("Failed to convert image to WebP format")
+                    raise ValueError("WebP conversion failed")
+
+            # If save=True and blog_url is provided, save to blog post directory
+            if save and blog_url:
+                blog_dir = get_blog_post_directory(blog_url)
+                if blog_dir:
+                    logo_path = blog_dir / "logo.webp"
+                    logo_path.write_bytes(webp_data)
+                    # Return HTML response with success message
+                    return HTMLResponse(
+                        content=f"""
+                        <div class="alert alert-success" role="alert">
+                            <h5>Logo saved successfully!</h5>
+                            <p>Saved to: <code>{logo_path}</code></p>
+                            <p>
+                                The logo has been saved as <code>logo.webp</code>
+                                in your blog post directory.
+                            </p>
+                        </div>
+                        """
+                    )
+                else:
+                    return HTMLResponse(
+                        content=f"""
+                        <div class="alert alert-danger" role="alert">
+                            <h5>Error saving logo</h5>
+                            <p>
+                                Could not find blog post directory for:
+                                <code>{blog_url}</code>
+                            </p>
+                            <p>
+                                Please check that the blog post exists in
+                                <code>content/blog/</code>
+                            </p>
+                        </div>
+                        """,
+                        status_code=404,
+                    )
+
+            # Otherwise, return as download
+            return Response(
+                content=webp_data,
+                media_type="image/webp",
+                headers={"Content-Disposition": 'attachment; filename="logo.webp"'},
+            )
+        except Exception as e:
+            logger.error(f"Error fetching banner image: {e}")
+            # Fall back to static logo
+            return await _download_static_logo()
+    else:
+        # Use static logo
+        return await _download_static_logo()
+
+
+async def _download_static_logo():
+    """Download the static logo as webp format with filename logo.png"""
+    logo_path = Path("apis/blogbot/static/img/bars.svg")
+
+    # Convert SVG to PNG using svglib and reportlab
+    drawing = svg2rlg(str(logo_path))
+    with NamedTemporaryFile(suffix=".png", delete=False) as tmp_file:
+        renderPM.drawToFile(drawing, tmp_file.name, fmt="PNG")
+        # Read the PNG file
+        with open(tmp_file.name, "rb") as f:
+            png_bytes = f.read()
+        # Clean up temp file
+        Path(tmp_file.name).unlink()
+
+    # Convert PNG to WebP
+    img = Image.open(BytesIO(png_bytes))
+    webp_buffer = BytesIO()
+    img.save(webp_buffer, format="WEBP")
+    webp_buffer.seek(0)
+
+    return Response(
+        content=webp_buffer.read(),
+        media_type="image/webp",
+        headers={"Content-Disposition": 'attachment; filename="logo.png"'},
+    )
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -66,17 +384,17 @@ async def generate_post(
         bot = StructuredBot(
             socialbot_sysprompt(), model="gpt-4.1", pydantic_model=LinkedInPost
         )
-        print("Generating LinkedIn post...")
+        logger.info("Generating LinkedIn post...")
         social_post = bot(compose_linkedin_post(body, blog_url))
-        print("Post generated!")
+        logger.info("Post generated!")
         content = social_post.format_post()
     elif post_type == "bluesky":
         bot = StructuredBot(
             socialbot_sysprompt(), model="gpt-4.1", pydantic_model=BlueSkyPost
         )
-        print("Generating BlueSky post...")
+        logger.info("Generating BlueSky post...")
         social_post = bot(compose_bluesky_post(body, blog_url))
-        print("Post generated!")
+        logger.info("Post generated!")
         content = social_post.format_post()
     elif post_type == "substack":
         bot = StructuredBot(
@@ -103,7 +421,8 @@ async def generate_post(
         dalle_prompt = dalle_prompt_bot(body).content
         banner_url = bannerbot(dalle_prompt, return_url=True)
         return templates.TemplateResponse(
-            "banner_result.html", {"request": request, "banner_url": banner_url}
+            "banner_result.html",
+            {"request": request, "banner_url": banner_url, "blog_url": blog_url},
         )
 
     return templates.TemplateResponse(
@@ -187,6 +506,59 @@ async def search(search_term: Annotated[str, Form()]):
         output += f"<li><a href='https://ericmjl.github.io/blog/{pubdate_url}/{rel_url}'>{rel_url}</a></li>"
     output += "</ul>"
     return output
+
+
+@app.post("/save-to-blog")
+async def save_to_blog(
+    blog_url: Annotated[str, Form()],
+    field_type: Annotated[str, Form()],  # 'summary' or 'tags'
+    content: Annotated[str, Form()],
+):
+    """Save summary or tags content directly to the blog post's contents.lr file."""
+    logger.debug(f"[SAVE] Received save request for {field_type}")
+    logger.debug(f"[SAVE] Blog URL: {blog_url}")
+    logger.debug(f"[SAVE] Content length: {len(content)}")
+    logger.debug(f"[SAVE] Content preview (first 200 chars): {content[:200]}")
+    logger.debug(f"[SAVE] Content (full): {repr(content)}")
+
+    blog_dir = get_blog_post_directory(blog_url)
+    if not blog_dir:
+        logger.error(f"[SAVE] Could not find blog directory for {blog_url}")
+        return HTMLResponse(
+            content=f"""
+            <div class="alert alert-danger" role="alert">
+                <h5>Error saving to blog post</h5>
+                <p>Could not find blog post directory for: <code>{blog_url}</code></p>
+            </div>
+            """,
+            status_code=404,
+        )
+
+    logger.debug(f"[SAVE] Blog directory found: {blog_dir}")
+    success = update_contents_lr_field(blog_dir, field_type, content)
+    logger.debug(f"[SAVE] Update result: {success}")
+    if success:
+        return HTMLResponse(
+            content=f"""
+            <div class="alert alert-success" role="alert">
+                <h5>Saved successfully!</h5>
+                <p>
+                    The {field_type} has been saved to
+                    <code>{blog_dir / "contents.lr"}</code>
+                </p>
+            </div>
+            """
+        )
+    else:
+        return HTMLResponse(
+            content=f"""
+            <div class="alert alert-danger" role="alert">
+                <h5>Error saving {field_type}</h5>
+                <p>Failed to update contents.lr file. Please check the server logs.</p>
+            </div>
+            """,
+            status_code=500,
+        )
 
 
 @app.post("/iterate/{post_type}", response_class=HTMLResponse)

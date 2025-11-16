@@ -154,3 +154,11 @@ When generating text, avoid the following categories of wording, structures, and
 - Order content using `order_by = -pub_date, title` in parent model
 - Extract dates from YouTube using `uvx yt-dlp -j <url>` and parse `upload_date` field
 - Convert YYYYMMDD format to YYYY-MM-DD for Lektor compatibility
+
+## Development Workflow
+
+### Running Python Commands
+- **Always use `pixi run`** to execute Python commands to ensure the correct environment from `pyproject.toml` is used
+- Example: `pixi run python script.py` instead of `python script.py`
+- This ensures all dependencies defined in pixi features (e.g., blogbot, lektor) are available
+- The project uses pixi for environment management with feature-based dependencies defined in `pyproject.toml`

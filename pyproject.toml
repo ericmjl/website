@@ -68,9 +68,20 @@ ipykernel = "*"
 jupyterlab = "*"
 tqdm = "*"
 pydantic = "*"
+cairo = "*"
+pycairo = "*"
 
 [tool.pixi.feature.blogbot.pypi-dependencies]
 llamabot = { version = ">=0.12.1", extras = ["all"] }
+fastapi = "*"
+uvicorn = "*"
+requests = "*"
+beautifulsoup4 = "*"
+python-multipart = "*"
+pillow = "*"
+svglib = "*"
+reportlab = "*"
+loguru = "*"
 
 [tool.pixi.feature.devtools.dependencies]
 pre-commit = "*"
