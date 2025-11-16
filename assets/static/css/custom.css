@@ -16,6 +16,30 @@ body {
   padding-top: 2em;
 }
 
+/* Blog card styles */
+.blog-card-container {
+  display: flex;
+}
+
+.blog-card-left {
+  flex: 1;
+}
+
+.blog-card-right {
+  flex: 3;
+  margin-top: 2em;
+}
+
+/* Add rounded corners to banner images */
+.banner-image {
+  border-radius: 8px;
+  max-width: 98%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Dark mode button overrides for pagination */
 body.dark-mode .btn,
 body.dark-mode .btn-primary,
