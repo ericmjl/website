@@ -90,22 +90,6 @@
 </div>
 <div id="toast" class="toast">Copied!</div>
 
-<!-- Save to Blog Section (for summary and tags) -->
-{% if post_type == 'summary' or post_type == 'tags' %}
-<div class="feedback-section" style="background: #e7f3ff; border-color: #b3d9ff;">
-  <h5>Save to Blog Post</h5>
-  <p style="margin-bottom: 0.5rem; color: #6c757d; font-size: 0.9rem;">Save the {{ post_type }} directly to the blog post's contents.lr file:</p>
-  <form id="save-to-blog-form" hx-post="/save-to-blog" hx-target="#save-result" hx-indicator="#save-spinner">
-    <input type="hidden" name="blog_url" value="{{ blog_url }}">
-    <input type="hidden" name="field_type" value="{{ post_type }}">
-    <input type="hidden" name="content" id="save-content-input">
-    <button type="submit" class="feedback-btn" id="save-submit" style="background: #28a745;">Save {{ post_type|title }} to Blog Post</button>
-    <span id="save-spinner" class="htmx-indicator" style="margin-left: 10px;">Saving...</span>
-  </form>
-  <div id="save-result" style="margin-top: 0.5rem;"></div>
-</div>
-{% endif %}
-
 <!-- Feedback Section -->
 <div class="feedback-section">
   <h5>Iterate on this {% if post_type == 'twitter' %}BlueSky{% else %}{{ post_type|title }}{% endif %} post</h5>
@@ -138,28 +122,6 @@ copyBtn.addEventListener('click', async () => {
     console.error('Failed to copy:', err);
   }
 });
-
-// Save to blog functionality - update hidden input with editor content before submit
-const saveForm = document.getElementById('save-to-blog-form');
-if (saveForm) {
-  const saveContentInput = document.getElementById('save-content-input');
-  saveForm.addEventListener('submit', (e) => {
-    let extractedContent = '';
-    // Get content from EasyMDE editor if available, otherwise from textarea
-    if (window.easyMDE && typeof window.easyMDE.value === 'function') {
-      extractedContent = window.easyMDE.value();
-      console.log('[JS] Extracted from EasyMDE, length:', extractedContent.length);
-      console.log('[JS] EasyMDE content:', extractedContent);
-    } else {
-      extractedContent = editor.value;
-      console.log('[JS] Extracted from textarea, length:', extractedContent.length);
-      console.log('[JS] Textarea content:', extractedContent);
-    }
-    saveContentInput.value = extractedContent;
-    console.log('[JS] Set saveContentInput.value, length:', saveContentInput.value.length);
-    console.log('[JS] Final value being sent:', saveContentInput.value);
-  });
-}
 
 // Feedback form functionality handled by HTMX
 </script>
