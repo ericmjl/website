@@ -1,0 +1,106 @@
+title: How to Reference Code Across Repositories with Coding Agents
+---
+author: Eric J. Ma
+---
+body:
+
+I used to assume that coding agents like Cursor, GitHub Copilot, and Claude Code only work within a single workspace. This mental model led me to workarounds like copying files, creating complex multi-root workspace configurations, or constantly switching between projects.
+
+But coding agents can already read and write files from anywhere on your file system, not just the current workspace. The limitation wasn't in the tools; it was in my awareness of what they can do. You don't need to add folders to workspaces, create multi-root workspaces, or jump through configuration hoops. If you know where a repository lives on your disk, you can reference it directly.
+
+## How to reference code from other repositories
+
+The key is being explicit about file paths. Modern AI coding assistants like Cursor, GitHub Copilot, and Claude Code can access your entire file system, not just the current workspace. You just need to tell them where to look.
+
+I do most of my writing in an Obsidian vault, which isn't a Git repository; it's just a folder on disk. Sometimes I need to reference code from my LlamaBot repository, or other code repositories in which I am doing development. Instead of copying files or creating complex workspace configurations, I just tell the agent to read directly from the other directory.
+
+When I need the agent to understand something from LlamaBot, I can say "read the implementation from `~/github/llamabot/llamabot/bot/simplebot.py`" and it works immediately. The key is being explicit with the path. You can also search by filename within a directory: "find the notebook named `pocketflow_testdrive.py` in `~/github/llamabot`". The agent reads the file directly from disk, no workspace configuration needed. You don't need to document paths anywhere; just reference them directly when you need them. That said, if you have commonly accessed paths, documenting them in `AGENTS.md` can be helpful for quick reference.
+
+I used this method while writing my blog post ["How I Replaced 307 Lines of Agent Code with 4 Lines"](https://ericmjl.github.io/blog/2025/11/16/how-i-replaced-307-lines-of-agent-code-with-4-lines/). I was drafting the post in my Obsidian vault, but the actual code examples lived in a Marimo notebook within the LlamaBot repository. Rather than copying code snippets or switching workspaces, I had the agent read directly from `~/github/llamabot` to pull in the exact implementation details I needed. This let me write about the code while staying in my writing environment, with the agent able to reference the actual source files to ensure accuracy.
+
+## File system access for AI coding assistants enables this
+
+Coding agents that have file system access can perform read and write operations anywhere they have permission. Tools like Cursor, GitHub Copilot, and Claude Code aren't restricted to the current workspace directory. This works because agents have access to shell tools, the most generic, text-based interface to computers. Shell commands produce text output that agents can read and understand, and they can execute commands anywhere on your system. This means:
+
+- You can reference code from any repository on your machine
+- You can pull in documentation from other projects
+- You can compare implementations across different codebases
+- You can reference configuration files from related projects
+- You can modify files across multiple repositories when needed
+
+The only requirement is that you know the path and can tell the agent where to look.
+
+## Common scenarios
+
+**Blogging:** When writing blog posts about code, reference implementation details from your repositories. The agent can read the actual code to ensure accuracy, pulling in exact examples without copying files or switching workspaces.
+
+**Architecture decisions:** Compare how similar problems are solved across different projects. The agent can read multiple implementations and help you understand trade-offs.
+
+**Code reuse:** Before copying code, have the agent check if similar functionality exists elsewhere. It can read files from other repos to find existing solutions.
+
+**Dependency understanding:** When working with a library you maintain, reference the library's source code directly. The agent can read implementation details to help you use it correctly.
+
+**Cross-repository updates:** Update related files across multiple repositories simultaneously. For example, update documentation in one repo while modifying the implementation in another, or sync configuration changes across related projects.
+
+## Step-by-step workflow for cross-repository code access
+
+The key trick is being explicit with paths or explicit instructions about how to get to files. Here's how to do it:
+
+**For repositories you already have cloned locally:**
+
+1. Reference the absolute path directly when asking the agent: "read `~/github/llamabot/src/llamabot/bot/simple.py`"
+2. Or search by filename within a directory: "find the notebook named `pocketflow_testdrive.py` in `~/github/llamabot`"
+3. The agent reads the file immediately, no workspace configuration needed
+
+**For repositories you don't have locally:**
+
+1. Tell the agent exactly how to get to the file: "clone the repo `owner/repo` into a temporary directory, then find the file at relative path `path/to/file.py`"
+2. You can also specify a specific commit, branch, or tag: "clone the repo `owner/repo` at commit `abc123` into a temporary directory, then find the file at relative path `path/to/file.py`" or "clone the repo `owner/repo` and checkout branch `feature-branch`, then find the file at relative path `path/to/file.py`"
+3. The agent executes these commands using command line tools like `gh` CLI or `git`, reads what it needs, and can clean up the temporary clone when done
+
+No workspace management. No file copying. No complex configuration. Just explicit paths or explicit instructions. The agent needs clear direction on where to find files, whether that's an absolute path on your system or step-by-step instructions to clone and navigate to a file.
+
+## Common questions and limitations
+
+**Do I need to configure workspace settings?**
+
+No. Unlike traditional IDE workspace configurations, you don't need to add folders to workspaces or create multi-root setups. Just reference paths directly when you need them.
+
+**How do I manage paths for many repositories?**
+
+You don't need to document them anywhere. Just reference paths directly when asking the agent to read files. If you find yourself referencing the same paths repeatedly, you can optionally document them in `AGENTS.md` for convenience, but it's not required. You can also use MCP server prompts like `/remember` (from my [personal productivity MCP server](https://github.com/ericmjl/ericmjl-productivity-mcp)) to automatically capture frequently-used paths. The `/remember` prompt reviews your conversation, identifies important learnings like repository paths, and adds timestamped entries to `AGENTS.md` in the appropriate section.
+
+**Can agents modify files in other repositories?**
+
+Yes, but be mindful. While agents can read and write files anywhere on your file system, it's easy to accidentally change files in other repositories. Use this capability deliberately rather than accidentally. Consider using read-only access for cross-repository references unless you specifically need to modify files.
+
+**What if I don't have the repository cloned locally?**
+
+Have the agent clone it temporarily using command line tools. The agent can use `gh` CLI or `git` commands to clone repositories into temporary directories, read what it needs, and clean up afterward.
+
+## Summary
+
+Thanks to shell tools, coding agents like Cursor, GitHub Copilot, and Claude Code aren't limited by workspace boundaries. They can access your entire file system for both reading and writing, so you can build workflows that span multiple projects without complex tooling.
+
+The simplicity is the point. You don't need special workspace configurations or multi-root setups. You just need to know where things live and tell the agent where to look. Reference paths directly, or have the agent clone repositories temporarily when needed.
+
+When you need to reference code from another repository, the agent can read it directly. Just point it to the path. This technique works with any AI coding assistant that has file system access, making it a universal solution for cross-repository code access.
+---
+pub_date: 2025-11-17
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how coding agents like Cursor, GitHub Copilot, and Claude Code can access files across your entire file system—not just your current workspace. By simply referencing explicit file paths, you can pull code, documentation, or configs from any repository without complex workspace setups or copying files. I explain practical workflows and tips for cross-repository access, making coding and writing more seamless. Curious how this can simplify your development process and boost productivity?
+---
+tags:
+
+automation
+coding
+agents
+workflows
+productivity
+ai
+filesystem
+reference
+workspaces
+shell
