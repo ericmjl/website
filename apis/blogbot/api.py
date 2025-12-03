@@ -253,6 +253,7 @@ async def generate_post(
     request: Request, post_type: str, blog_url: Annotated[str, Form()]
 ):
     _, body = get_post_body(blog_url)
+    title_variants = None  # Initialize for non-Substack posts
 
     if post_type == "linkedin":
         bot = StructuredBot(
@@ -275,7 +276,17 @@ async def generate_post(
             socialbot_sysprompt(), model="gpt-4.1", pydantic_model=SubstackPost
         )
         social_post = bot(compose_substack_post(body, blog_url))
-        content = social_post.format_post()
+        # Format content without title variants (they'll be shown separately in UI)
+        content = social_post.format_post(include_title_variants=False)
+        # Pass title variants separately for UI display
+        title_variants = [
+            {
+                "title": variant.title,
+                "variant_type": variant.variant_type,
+                "rationale": variant.rationale,
+            }
+            for variant in social_post.title_variants
+        ]
     elif post_type == "summary":
         bot = StructuredBot(
             socialbot_sysprompt(), model="gpt-4.1", pydantic_model=Summary
@@ -299,15 +310,17 @@ async def generate_post(
             {"request": request, "banner_url": banner_url, "blog_url": blog_url},
         )
 
-    return templates.TemplateResponse(
-        "result.html",
-        {
-            "request": request,
-            "content": content,
-            "post_type": post_type,
-            "blog_url": blog_url,
-        },
-    )
+    template_context = {
+        "request": request,
+        "content": content,
+        "post_type": post_type,
+        "blog_url": blog_url,
+    }
+    # Add title variants for Substack posts
+    if post_type == "substack":
+        template_context["title_variants"] = title_variants
+
+    return templates.TemplateResponse("result.html", template_context)
 
 
 # SEARCH-RELATED APIs BELOW
@@ -430,17 +443,33 @@ async def iterate_post(
     )
 
     # Format the revised content
+    title_variants = None  # Initialize for non-Substack posts
     if hasattr(revised_post, "format_post"):
-        content = revised_post.format_post()
+        if post_type == "substack":
+            # For Substack, format without title variants (they'll be shown separately)
+            content = revised_post.format_post(include_title_variants=False)
+            # Extract title variants for UI display
+            title_variants = [
+                {
+                    "title": variant.title,
+                    "variant_type": variant.variant_type,
+                    "rationale": variant.rationale,
+                }
+                for variant in revised_post.title_variants
+            ]
+        else:
+            content = revised_post.format_post()
     else:
         content = revised_post.content
 
-    return templates.TemplateResponse(
-        "result.html",
-        {
-            "request": request,
-            "content": content,
-            "post_type": post_type,
-            "blog_url": blog_url,
-        },
-    )
+    template_context = {
+        "request": request,
+        "content": content,
+        "post_type": post_type,
+        "blog_url": blog_url,
+    }
+    # Add title variants for Substack posts
+    if post_type == "substack" and title_variants:
+        template_context["title_variants"] = title_variants
+
+    return templates.TemplateResponse("result.html", template_context)

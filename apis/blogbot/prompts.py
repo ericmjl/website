@@ -84,7 +84,31 @@ def compose_substack_post(text, url):
 
     **CRITICAL**: Match the tone and style of the original blog post. If the blog post is technical and direct, be technical and direct. If it's conversational and personal, be conversational and personal. Mirror the author's voice and writing style throughout.
 
-    Guidelines:
+    **TITLE GENERATION REQUIREMENTS:**
+    You must generate:
+    1. A primary recommended title (the `title` field)
+    2. 2-4 title variants (the `title_variants` field) optimized for Substack's title testing feature
+
+    For title variants, create meaningfully different titles that test different principles:
+    - **Question-based vs Statement-based**: Test if questions create more curiosity
+    - **Emotional appeal vs Factual/direct**: Test if emotional language increases urgency
+    - **Short punchy vs Longer contextual**: Test optimal length for your audience
+    - **Curiosity gap vs Clear value**: Test if teasing works better than stating value directly
+    - **Different emotional tones**: Test urgency, excitement, exclusivity, or intellectual curiosity
+    - **Structural variations**: How-to format, numbered lists, or declarative statements
+
+    Each variant should:
+    - Be meaningfully different (not just minor word changes)
+    - Accurately represent the content (no clickbait or misleading titles)
+    - Include a clear `variant_type` describing what makes it different
+    - Include a `rationale` explaining the hypothesis being tested
+
+    Examples of good variant pairs:
+    - "What Does It Take to Build a Statistics Agent?" (question, curiosity) vs "Building a Statistics Agent: What It Takes" (statement, clear value)
+    - "The Secret to Better Data Science Workflows" (emotional, exclusivity) vs "How to Improve Your Data Science Workflow" (factual, how-to)
+    - "5 Principles for Building AI Agents" (numbered, scannable) vs "Building AI Agents That Actually Work" (benefit-focused, direct)
+
+    Guidelines for the post content:
     - Start with a clear purpose and hook - use an interesting question, story, or bold statement
     - Be authentic and genuine - share your thinking process and journey, don't try to be perfect
     - Structure for clarity with logical flow and clear takeaways

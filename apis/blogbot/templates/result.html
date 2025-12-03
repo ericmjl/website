@@ -81,6 +81,100 @@
     background: #6c757d;
     cursor: not-allowed;
   }
+  .title-variants-section {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 1.25rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+  }
+  .title-variants-header {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+  }
+  .title-variants-description {
+    margin-bottom: 1rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .title-variant-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    border-left: 3px solid #007bff;
+    transition: box-shadow 0.2s;
+    position: relative;
+  }
+  .title-variant-card:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  .title-variant-card:last-child {
+    margin-bottom: 0;
+  }
+  .title-variant-title-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .title-variant-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #212529;
+    line-height: 1.4;
+    flex: 1;
+  }
+  .title-variant-copy-btn {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .title-variant-copy-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+  }
+  .title-variant-copy-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .title-variant-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .title-variant-type {
+    color: #495057;
+  }
+  .title-variant-type-label {
+    font-weight: 600;
+    color: #6c757d;
+    margin-right: 0.25rem;
+  }
+  .title-variant-rationale {
+    color: #6c757d;
+    font-style: italic;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e9ecef;
+  }
 </style>
 <div class="editor-wrapper">
   <button id="copy-btn" class="copy-icon-btn" title="Copy to Clipboard">
@@ -89,6 +183,39 @@
   <textarea id="markdown-editor" rows="8">{{ content }}</textarea>
 </div>
 <div id="toast" class="toast">Copied!</div>
+
+<!-- Title Variants Section (Substack only) -->
+{% if post_type == 'substack' and title_variants %}
+<div class="title-variants-section">
+  <h5 class="title-variants-header">Title Variants for Testing</h5>
+  <p class="title-variants-description">
+    Use these variants in Substack's title testing feature (up to 4 variants).
+    Each tests a different principle to optimize open rates.
+  </p>
+  {% for variant in title_variants %}
+  <div class="title-variant-card">
+    <div class="title-variant-title-wrapper">
+      <div class="title-variant-title">{{ variant.title }}</div>
+      <button class="title-variant-copy-btn"
+              data-title="{{ variant.title }}"
+              title="Copy title"
+              onclick="copyTitleVariant(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24">
+          <rect width="14" height="18" x="7" y="3" stroke="#495057" stroke-width="2" rx="2"/>
+          <rect width="14" height="18" x="3" y="7" fill="#fff" stroke="#495057" stroke-width="2" rx="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="title-variant-meta">
+      <span class="title-variant-type">
+        <span class="title-variant-type-label">Type:</span>{{ variant.variant_type }}
+      </span>
+    </div>
+    <div class="title-variant-rationale">{{ variant.rationale }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
 
 <!-- Feedback Section -->
 <div class="feedback-section">
@@ -113,15 +240,42 @@ const copyBtn = document.getElementById('copy-btn');
 const toast = document.getElementById('toast');
 const editor = document.getElementById('markdown-editor');
 
-copyBtn.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(editor.value);
+if (copyBtn) {
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(editor.value);
+      showToast('Copied!');
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  });
+}
+
+// Copy title variant functionality
+function copyTitleVariant(button) {
+  const title = button.getAttribute('data-title');
+  navigator.clipboard.writeText(title).then(() => {
+    showToast('Title copied!');
+    // Visual feedback on button
+    const originalBg = button.style.background;
+    button.style.background = '#d4edda';
+    setTimeout(() => {
+      button.style.background = originalBg;
+    }, 300);
+  }).catch(err => {
+    console.error('Failed to copy title:', err);
+  });
+}
+
+// Toast notification function
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (toast) {
+    toast.textContent = message;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2000);
-  } catch (err) {
-    console.error('Failed to copy:', err);
   }
-});
+}
 
 // Feedback form functionality handled by HTMX
 </script>

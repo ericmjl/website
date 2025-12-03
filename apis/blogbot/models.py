@@ -290,12 +290,61 @@ class SubstackSection(BaseModel):
     )
 
 
+class TitleVariant(BaseModel):
+    """A title variant for Substack title testing."""
+
+    title: str = Field(
+        ...,
+        description=(
+            "The title text. Should be clear, compelling, and optimized "
+            "for open rates. Must accurately represent the content (no clickbait)."
+        ),
+    )
+    variant_type: str = Field(
+        ...,
+        description=(
+            "The type of variant and principle being tested. "
+            "Examples: 'question_based', 'statement_based', 'emotional_appeal', "
+            "'factual_direct', 'curiosity_gap', 'how_to', 'numbered_list', "
+            "'short_punchy', 'longer_contextual'. "
+            "Should describe what makes this variant different."
+        ),
+    )
+    rationale: str = Field(
+        ...,
+        description=(
+            "Brief explanation of why this variant might work well and what hypothesis "
+            "it's testing. Should reference the principle (e.g., "
+            "'Tests whether question-based titles create more curiosity' or "
+            "'Tests if emotional appeal increases urgency')."
+        ),
+    )
+
+
 class SubstackPost(BaseModel):
     title: str = Field(
         ...,
         description=(
-            "Clear, compelling title that matches the blog post title. "
-            "Should be intriguing and give readers a reason to click."
+            "Primary recommended title that matches the blog post title. "
+            "This is the main title to use, but you should also generate "
+            "title variants for testing. Should be clear, compelling, and intriguing."
+        ),
+    )
+    title_variants: List[TitleVariant] = Field(
+        ...,
+        min_items=2,
+        max_items=4,
+        description=(
+            "Alternative title variants optimized for Substack title testing. "
+            "Generate 2-4 variants that test different principles: "
+            "- Question-based vs statement-based "
+            "- Emotional appeal vs factual/direct "
+            "- Short punchy vs longer contextual "
+            "- Curiosity gap vs clear value proposition "
+            "- Different emotional tones (urgency, excitement, exclusivity) "
+            "Each variant should be meaningfully different, not just minor "
+            "word changes. All variants must accurately represent the content "
+            "(no clickbait)."
         ),
     )
     subtitle: str = Field(
@@ -392,9 +441,24 @@ class SubstackPost(BaseModel):
 
         return self
 
-    def format_post(self) -> str:
+    def format_post(self, include_title_variants: bool = True) -> str:
         """Format the Substack post content following best practices."""
         post_content = f"# {self.title}\n\n"
+
+        # Add title variants section for Substack title testing
+        if include_title_variants and self.title_variants:
+            post_content += "## Title Variants for Testing\n\n"
+            post_content += (
+                "*Use these variants in Substack's title testing feature "
+                "(up to 4 variants). Each tests a different principle to "
+                "optimize open rates.*\n\n"
+            )
+            for i, variant in enumerate(self.title_variants, 1):
+                post_content += f"**Variant {i}: {variant.title}**\n\n"
+                post_content += f"*Type: {variant.variant_type}*\n\n"
+                post_content += f"*Rationale: {variant.rationale}*\n\n"
+            post_content += "---\n\n"
+
         post_content += f"*{self.subtitle}*\n\n"
         post_content += f"{self.hook_introduction}\n\n"
         post_content += f"{self.purpose_statement}\n\n"
