@@ -1,0 +1,93 @@
+title: Productive Patterns for Agent-Assisted Programming
+---
+author: Eric J. Ma
+---
+pub_date: 2025-12-10
+---
+twitter_handle: ericmjl
+---
+body:
+
+I've been using coding agents for a while now, and I've learned a few patterns that make the experience much more productive. Here's what works for me.
+
+## Build a detailed plan with AI
+
+Before jumping into implementation, spend time building a detailed plan with your AI assistant. Iterate 2-3 times over the plan, checking every detail. You want the ability to see in your head what the code might look like—just a "fat finger sketch" of the implementation.
+
+The plan should include:
+
+- Details on implementation
+- How to test (this is the most important part)
+- Documentation plan
+
+## Do docs and tests first
+
+Humans usually adhere to test-driven development if you're a software engineer, or exploration-driven software builds if you're more of a data scientist. Because of the sequential nature of generative AI, it's advantageous to instruct AI to do the docs and tests first before the implementation. This is a complex conditional probability problem. If the tests and docs are written first, the implementation has to satisfy those constraints, which leads to better code.
+
+The test plan should include instructions on how to run tests using command line tools. Don't assume the AI knows your project's specific testing setup.
+
+## Use AGENTS.md as your repo's AI university
+
+AGENTS.md is a great place to store the specific instructions that you need for the repo. For example, AI will tend to write `python -m ...` as a shell command, but if I'm running a pixi project, it's better to always run `pixi run python ...` instead. Treat AGENTS.md as the AI's university of your particular repo; it's where you encode all the project-specific knowledge that the AI needs to work effectively.
+
+## Control the pace of the agent
+
+Know the default behavior of your agent; it may be over-eager to do lots of things. You can pace the coding agent by asking it to "slow down, walk me through the changes one at a time, starting with the most important ones first." This helps you maintain control and review changes as they happen, rather than being overwhelmed by a massive diff.
+
+## Leverage local and command line tools
+
+You can use local and command line tools to your advantage! Here are some examples:
+
+Firstly, the GitHub CLI (`gh`) can be used to:
+
+- Store plans on GitHub as issues first (a matter of taste—you can avoid cluttering up your local filesystem)
+- Pull GitHub Actions logs
+- Call out to the GitHub API for other general tasks
+
+Environment management:
+
+- `pixi run` ensures you're always running within the correct Python environment
+- `uvx marimo check` lets me check that marimo notebooks are syntactically valid
+- `uv run notebook.py` lets me run notebooks as scripts to check outputs
+- `uvx marimo export` lets me export marimo notebooks as markdown
+
+Linting and quality:
+
+- `markdownlint` runs on every edit of markdown files so you never have markdown linting issues
+- Get AI to "commit relevant files and fix issues raised by pre-commit hooks"
+
+Let agents use CLI tools and read outputs directly so that you don't have to switch between windows copying and pasting things manually.
+
+## Let agents write temporary tools
+
+Coding agents can write their own temporary tools inside `.py` files. Encourage coding agents to do that to test that what it wrote works on-the-fly. This is a great way to validate code before integrating it into your main codebase.
+
+You can even experiment with self-improving agents: if it detects you correcting its action, it should auto-update AGENTS.md with what is the correct thing to do. I haven't fully battle-tested this yet, but you can write an "AI constitution" at the top of AGENTS.md that instructs the agent to learn from corrections by *remembering them inside AGENTS.md*.
+
+## Develop your own tools
+
+Isabel Zimmerman mentioned this in her keynote talk: develop your own tools. Here are some examples of my own:
+
+- **Personal MCP productivity server**: gives me prompts that I can take from project to project, so I don't have to keep copying/pasting them
+- **Shell aliases**: `gacp` lets me run `git add . && git commit && git push`
+- **LlamaBot git hooks**: auto-writes commit messages for me
+
+These custom tools compound over time and make your workflow significantly more efficient.
+
+These patterns have made my agent-assisted programming much more productive. Treat the AI as a collaborator that needs clear instructions, proper context, and the right tools to work effectively. Start with a good plan, control the pace, and build tools that make the whole process smoother.
+
+---
+summary: In this blog post, I share the patterns that have made my experience with coding agents much more productive, from planning with AI and writing docs/tests first, to using AGENTS.md as a knowledge base and leveraging command line tools. I also discuss pacing your agent, letting it write temporary tools, and developing your own productivity boosters. Want to know how these strategies can make your agent-assisted programming smoother and more effective?
+---
+tags:
+
+productivity
+documentation
+testing
+planning
+automation
+workflow
+agents
+ai
+tools
+development
