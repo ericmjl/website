@@ -141,6 +141,13 @@ When generating text, avoid the following categories of wording, structures, and
 - Include visible: Visible for public content
 - Use descriptive directory names that match the content
 
+### Title Format for Talks and Teaching
+- **Standard format**: `<content> | <venue>` (e.g., "Bayesian Data Science by Simulation | SciPy 2020")
+- **Do NOT include "Tutorial" or "Talk" in the title** - the venue and content should be clear enough
+- Remove author names from titles (e.g., "Network Analysis Made Simple | SciPy 2022" not "Network Analysis Made Simple - Eric Ma, Mridul Seth | SciPy 2022")
+- If venue is missing, extract from YouTube video metadata (channel name, description, or upload date context)
+- Apply this format consistently to both `content/talks/` and `content/teaching/` entries
+
 ## Lektor .lr File Format Requirements
 
 ### Field Separators
