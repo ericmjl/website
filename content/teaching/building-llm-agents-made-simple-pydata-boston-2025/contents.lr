@@ -3,15 +3,23 @@ title: Building LLM Agents Made Simple | PyData Boston 2025
 body:
 
 #### youtube ####
-url: https://www.youtube.com/watch?v=WXSXOSHb0UY
+url: https://www.youtube.com/watch?v=rTKt5Wv_HTI
 #### description ####
-text: A 90-minute tutorial on building LLM agents with a focus on developing a mental framework for thinking about agents, rather than just learning specific tools. The tutorial covers structured generation using Pydantic models, demonstrates practical applications like OCR and receipt processing, and shows how to build agent workflows using tools and function calling. Everything runs in the cloud using Marimo notebooks (via molab), requiring no local installation. The tutorial emphasizes that the way you think about agents is more important than the specific tools you use, and demonstrates how to work with open-source models that can run on laptops with 16-64GB of RAM. Presented at PyData Boston 2025.
+text: Learn to build practical LLM agents using LlamaBot and Marimo notebooks. This hands-on tutorial teaches the most important lesson in agent development: start with workflows, not technology.
+
+We'll build a complete back-office automation system through three agents: a receipt processor that extracts data from PDFs, an invoice writer that generates documents, and a coordinator that orchestrates both. This demonstrates the fundamental pattern for agent systems—map your boring workflows first, build focused agents for specific tasks, then compose them so agents can use other agents as tools.
+
+By the end, you'll understand how to identify workflows worth automating, build agents with decision-making loops, compose agents into larger systems, and integrate them into your own work. You'll leave with working code and confidence to automate repetitive tasks.
+
+Prerequisites: Intermediate Python, familiarity with APIs, basic LLM understanding. Participants should have Ollama and models installed beforehand (setup instructions provided).
+
+Materials: GitHub repository with Marimo notebooks. Setup uses Pixi for dependency management.
 ---
 _model: project
 ---
 summary: Building LLM Agents Made Simple | PyData Boston 2025
 ---
-pub_date: 2025-12-09
+pub_date: 2025-12-15
 ---
 category: Work
 ---
