@@ -1,0 +1,298 @@
+title: Two years of weekly blogging and what 2025 taught me
+---
+author: Eric J. Ma
+---
+body:
+
+Last year, I challenged myself to write one blog post per week,
+and I hit 53 posts by the end of 2024.
+This year, I doubled down on that commitment
+and wrote 50 posts in 2025.
+Including this one, it's 51,
+bringing me to 104 blog posts over two years.
+
+## The year of coding agents
+
+Looking at my 2025 posts,
+one theme dominates: **coding agents**.
+I wrote extensively about how to work with AI coding assistants,
+from teaching them with AGENTS.md files
+to letting them work autonomously.
+This reflected a shift in how I work day-to-day.
+
+Some highlights from this theme:
+
+- [How to teach your coding agent with AGENTS.md](https://ericmjl.github.io/blog/2025/10/4/how-to-teach-your-coding-agent-with-agentsmd/)
+- [Safe ways to let your coding agent work autonomously](https://ericmjl.github.io/blog/2025/11/8/safe-ways-to-let-your-coding-agent-work-autonomously/)
+- [Productive Patterns for Agent-Assisted Programming](https://ericmjl.github.io/blog/2025/12/10/productive-patterns-for-agent-assisted-programming/)
+- [How I Replaced 307 Lines of Agent Code with 4 Lines](https://ericmjl.github.io/blog/2025/11/16/how-i-replaced-307-lines-of-agent-code-with-4-lines/)
+
+The shift from "AI as a tool" to "AI as a collaborator"
+captures how my practice evolved this year.
+I've gone from cautiously experimenting with Cursor
+to having established patterns for multi-repository agent workflows.
+
+## Bayesian methods and biological applications
+
+My work continued to inform my writing,
+with several posts on applying Bayesian statistics to real lab problems.
+The R2D2 prior posts were particularly satisfying to write
+because I felt equipped with new theoretical knowledge that was directly applicable,
+and I appreciated the mathematical aesthetics behind the approach:
+
+- [Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening](https://ericmjl.github.io/blog/2025/4/3/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/)
+- [Stop guessing at priors: R2D2's automated approach to Bayesian modeling](https://ericmjl.github.io/blog/2025/8/6/stop-guessing-at-priors-r2d2s-automated-approach-to-bayesian-modeling/)
+- [From data chaos to statistical clarity: A laboratory transformation story](https://ericmjl.github.io/blog/2025/4/5/from-data-chaos-to-statistical-clarity-a-laboratory-transformation-story/)
+
+I also explored the challenges of working with lab data,
+including why preclinical experiments make ML challenging
+and how to communicate effectively with lab scientists.
+
+## Tools I got excited about
+
+Every year brings new tools that change how I work.
+In 2025, two stood out.
+
+[Marimo](https://marimo.io/) is a reactive notebook tool
+that I wrote about with enthusiasm,
+and followed up with practical guidance on using coding agents to write Marimo notebooks.
+The reactive execution model aligns well with how I think about data exploration.
+
+[Modal](https://modal.com/) is cloud computing that actually feels Pythonic.
+My "Wow, Modal!" post captured the delight of finding infrastructure
+that doesn't fight against my workflow.
+
+## Data science leadership and career
+
+I continued writing about the human side of data science work,
+including standardizing ways of working, communicating with lab scientists,
+and navigating the biotech industry's ups and downs.
+The year ended with
+[The selfish reason to do your best work](https://ericmjl.github.io/blog/2025/12/17/the-selfish-reason-to-do-your-best-work/),
+which synthesized lessons from a challenging year in biotech.
+
+## Looking ahead to 2026
+
+After two years of writing almost weekly on whatever is on my mind,
+I am adjusting my goals.
+Next year, my attention shifts towards
+(a) learning the fundamentals of quantum computing through an ultralearning project,
+(b) writing more on data science leadership and career development to encourage colleagues navigating similar paths, and
+(c) building out at least 10 experimental things with AI.
+I am also dropping the goal of "one blog post per week" to four per month,
+which brings me to a goal of 48 for 2026.
+I am giving myself space to rest and strategically plan out writing going into 2026.
+
+Merry Christmas and a happy new year to all my readers!
+
+## Blog posts by theme
+
+### Biology & Chemistry
+
+- [What makes an agent? (2025-01-04)](https://ericmjl.github.io/blog/2025/1/4/what-makes-an-agent/)
+- [Why data from preclinical biotech lab experiments make machine learning challenging (2025-01-19)](https://ericmjl.github.io/blog/2025/1/19/why-data-from-preclinical-biotech-lab-experiments-make-machine-learning-challenging/)
+- [Reliable biological data requires physical quantities, not statistical artifacts (2025-02-23)](https://ericmjl.github.io/blog/2025/2/23/reliable-biological-data-requires-physical-quantities-not-statistical-artifacts/)
+- [A blueprint for data-driven molecule engineering (2025-03-06)](https://ericmjl.github.io/blog/2025/3/6/a-blueprint-for-data-driven-molecule-engineering/)
+- [Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening (2025-04-03)](https://ericmjl.github.io/blog/2025/4/3/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/)
+- [From data chaos to statistical clarity: A laboratory transformation story (2025-04-05)](https://ericmjl.github.io/blog/2025/4/5/from-data-chaos-to-statistical-clarity-a-laboratory-transformation-story/)
+- [Good practices for AI-assisted development from a live protein calculator demo (2025-04-19)](https://ericmjl.github.io/blog/2025/4/19/good-practices-for-ai-assisted-development-from-a-live-protein-calculator-demo/)
+- [Build your own tools! (2025-06-27)](https://ericmjl.github.io/blog/2025/6/27/build-your-own-tools/)
+- [Reflections on the SciPy 2025 Conference (2025-07-14)](https://ericmjl.github.io/blog/2025/7/14/reflections-on-the-scipy-2025-conference/)
+- [How to use xarray for unified laboratory data storage (2025-07-15)](https://ericmjl.github.io/blog/2025/7/15/how-to-use-xarray-for-unified-laboratory-data-storage/)
+- [How to communicate with lab scientists (when you're the data person) (2025-08-24)](https://ericmjl.github.io/blog/2025/8/24/how-to-communicate-with-lab-scientists-when-youre-the-data-person/)
+- [How data scientists can master life sciences and software skills for biotech using ultralearning (2025-10-01)](https://ericmjl.github.io/blog/2025/10/1/how-data-scientists-can-master-life-sciences-and-software-skills-for-biotech-using-ultralearning/)
+- [What does it take to build a statistics agent? (2025-12-02)](https://ericmjl.github.io/blog/2025/12/2/what-does-it-take-to-build-a-statistics-agent/)
+
+### Career Advice
+
+- [Writing at the speed of thought (2025-01-13)](https://ericmjl.github.io/blog/2025/1/13/writing-at-the-speed-of-thought/)
+- [Why you should take part in the SciPy sprints! (2025-03-17)](https://ericmjl.github.io/blog/2025/3/17/why-you-should-take-part-in-the-scipy-sprints/)
+- [Why I'm excited for SciPy 2025! (2025-05-08)](https://ericmjl.github.io/blog/2025/5/8/why-im-excited-for-scipy-2025/)
+- [Reflections on the SciPy 2025 Conference (2025-07-14)](https://ericmjl.github.io/blog/2025/7/14/reflections-on-the-scipy-2025-conference/)
+- [Data scientists aren't becoming obsolete in the LLM era (2025-08-15)](https://ericmjl.github.io/blog/2025/8/15/data-scientists-arent-becoming-obsolete-in-the-llm-era/)
+- [How to use AI to accelerate your career in 2025 (2025-09-01)](https://ericmjl.github.io/blog/2025/9/1/how-to-use-ai-to-accelerate-your-career-in-2025/)
+- [How data scientists can master life sciences and software skills for biotech using ultralearning (2025-10-01)](https://ericmjl.github.io/blog/2025/10/1/how-data-scientists-can-master-life-sciences-and-software-skills-for-biotech-using-ultralearning/)
+- [The selfish reason to do your best work (2025-12-17)](https://ericmjl.github.io/blog/2025/12/17/the-selfish-reason-to-do-your-best-work/)
+
+### Data Science Practice & Leadership
+
+- [A practical guide to securing secrets in data science projects (2025-01-10)](https://ericmjl.github.io/blog/2025/1/10/a-practical-guide-to-securing-secrets-in-data-science-projects/)
+- [Why data from preclinical biotech lab experiments make machine learning challenging (2025-01-19)](https://ericmjl.github.io/blog/2025/1/19/why-data-from-preclinical-biotech-lab-experiments-make-machine-learning-challenging/)
+- [PyData Boston/Cambridge Talk @ Moderna: What makes an agent? (2025-01-31)](https://ericmjl.github.io/blog/2025/1/31/pydata-bostoncambridge-talk-moderna-what-makes-an-agent/)
+- [Reliable biological data requires physical quantities, not statistical artifacts (2025-02-23)](https://ericmjl.github.io/blog/2025/2/23/reliable-biological-data-requires-physical-quantities-not-statistical-artifacts/)
+- [A blueprint for data-driven molecule engineering (2025-03-06)](https://ericmjl.github.io/blog/2025/3/6/a-blueprint-for-data-driven-molecule-engineering/)
+- [The art of finesse as a data scientist (2025-03-16)](https://ericmjl.github.io/blog/2025/3/16/the-art-of-finesse-as-a-data-scientist/)
+- [Why you should take part in the SciPy sprints! (2025-03-17)](https://ericmjl.github.io/blog/2025/3/17/why-you-should-take-part-in-the-scipy-sprints/)
+- [How to standardize Data Science ways of working to unlock your team's creativity (2025-04-02)](https://ericmjl.github.io/blog/2025/4/2/how-to-standardize-data-science-ways-of-working-to-unlock-your-teams-creativity/)
+- [Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening (2025-04-03)](https://ericmjl.github.io/blog/2025/4/3/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/)
+- [From data chaos to statistical clarity: A laboratory transformation story (2025-04-05)](https://ericmjl.github.io/blog/2025/4/5/from-data-chaos-to-statistical-clarity-a-laboratory-transformation-story/)
+- [Good practices for AI-assisted development from a live protein calculator demo (2025-04-19)](https://ericmjl.github.io/blog/2025/4/19/good-practices-for-ai-assisted-development-from-a-live-protein-calculator-demo/)
+- [Why I'm excited for SciPy 2025! (2025-05-08)](https://ericmjl.github.io/blog/2025/5/8/why-im-excited-for-scipy-2025/)
+- [Principles for using AI autodidactically (2025-06-07)](https://ericmjl.github.io/blog/2025/6/7/principles-for-using-ai-autodidactically/)
+- [Build your own tools! (2025-06-27)](https://ericmjl.github.io/blog/2025/6/27/build-your-own-tools/)
+- [The job your docs need to do (2025-07-07)](https://ericmjl.github.io/blog/2025/7/7/the-job-your-docs-need-to-do/)
+- [Earn the privilege to use automation (2025-07-13)](https://ericmjl.github.io/blog/2025/7/13/earn-the-privilege-to-use-automation/)
+- [Reflections on the SciPy 2025 Conference (2025-07-14)](https://ericmjl.github.io/blog/2025/7/14/reflections-on-the-scipy-2025-conference/)
+- [From nerd-sniped to shipped using AI as a thinking tool (2025-07-21)](https://ericmjl.github.io/blog/2025/7/21/from-nerd-sniped-to-shipped-using-ai-as-a-thinking-tool/)
+- [Stop guessing at priors: R2D2's automated approach to Bayesian modeling (2025-08-06)](https://ericmjl.github.io/blog/2025/8/6/stop-guessing-at-priors-r2d2s-automated-approach-to-bayesian-modeling/)
+- [Data scientists aren't becoming obsolete in the LLM era (2025-08-15)](https://ericmjl.github.io/blog/2025/8/15/data-scientists-arent-becoming-obsolete-in-the-llm-era/)
+- [How to communicate with lab scientists (when you're the data person) (2025-08-24)](https://ericmjl.github.io/blog/2025/8/24/how-to-communicate-with-lab-scientists-when-youre-the-data-person/)
+- [The Data Science Bootstrap Notes: A major upgrade for 2025 (2025-09-02)](https://ericmjl.github.io/blog/2025/9/2/the-data-science-bootstrap-notes-a-major-upgrade-for-2025/)
+- [How data scientists can master life sciences and software skills for biotech using ultralearning (2025-10-01)](https://ericmjl.github.io/blog/2025/10/1/how-data-scientists-can-master-life-sciences-and-software-skills-for-biotech-using-ultralearning/)
+- [How to expose any documentation to any LLM agent (2025-10-19)](https://ericmjl.github.io/blog/2025/10/19/how-to-expose-any-documentation-to-any-llm-agent/)
+- [What does it take to build a statistics agent? (2025-12-02)](https://ericmjl.github.io/blog/2025/12/2/what-does-it-take-to-build-a-statistics-agent/)
+- [The selfish reason to do your best work (2025-12-17)](https://ericmjl.github.io/blog/2025/12/17/the-selfish-reason-to-do-your-best-work/)
+
+### Data Science Tooling
+
+- [What makes an agent? (2025-01-04)](https://ericmjl.github.io/blog/2025/1/4/what-makes-an-agent/)
+- [A practical guide to securing secrets in data science projects (2025-01-10)](https://ericmjl.github.io/blog/2025/1/10/a-practical-guide-to-securing-secrets-in-data-science-projects/)
+- [Writing at the speed of thought (2025-01-13)](https://ericmjl.github.io/blog/2025/1/13/writing-at-the-speed-of-thought/)
+- [Why data from preclinical biotech lab experiments make machine learning challenging (2025-01-19)](https://ericmjl.github.io/blog/2025/1/19/why-data-from-preclinical-biotech-lab-experiments-make-machine-learning-challenging/)
+- [PyData Boston/Cambridge Talk @ Moderna: What makes an agent? (2025-01-31)](https://ericmjl.github.io/blog/2025/1/31/pydata-bostoncambridge-talk-moderna-what-makes-an-agent/)
+- [Lightening the LlamaBot (2025-02-07)](https://ericmjl.github.io/blog/2025/2/7/lightening-the-llamabot/)
+- [Let me ship you the Python you need (2025-02-17)](https://ericmjl.github.io/blog/2025/2/17/let-me-ship-you-the-python-you-need/)
+- [Reliable biological data requires physical quantities, not statistical artifacts (2025-02-23)](https://ericmjl.github.io/blog/2025/2/23/reliable-biological-data-requires-physical-quantities-not-statistical-artifacts/)
+- [How to fix PyPI upload errors related to license metadata (2025-03-01)](https://ericmjl.github.io/blog/2025/3/1/how-to-fix-pypi-upload-errors-related-to-license-metadata/)
+- [A blueprint for data-driven molecule engineering (2025-03-06)](https://ericmjl.github.io/blog/2025/3/6/a-blueprint-for-data-driven-molecule-engineering/)
+- [Why you should take part in the SciPy sprints! (2025-03-17)](https://ericmjl.github.io/blog/2025/3/17/why-you-should-take-part-in-the-scipy-sprints/)
+- [How to standardize Data Science ways of working to unlock your team's creativity (2025-04-02)](https://ericmjl.github.io/blog/2025/4/2/how-to-standardize-data-science-ways-of-working-to-unlock-your-teams-creativity/)
+- [Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening (2025-04-03)](https://ericmjl.github.io/blog/2025/4/3/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/)
+- [From data chaos to statistical clarity: A laboratory transformation story (2025-04-05)](https://ericmjl.github.io/blog/2025/4/5/from-data-chaos-to-statistical-clarity-a-laboratory-transformation-story/)
+- [Wow, Marimo! (2025-04-08)](https://ericmjl.github.io/blog/2025/4/8/wow-marimo/)
+- [Good practices for AI-assisted development from a live protein calculator demo (2025-04-19)](https://ericmjl.github.io/blog/2025/4/19/good-practices-for-ai-assisted-development-from-a-live-protein-calculator-demo/)
+- [Wow, Modal! (2025-04-26)](https://ericmjl.github.io/blog/2025/4/26/wow-modal/)
+- [Why I'm excited for SciPy 2025! (2025-05-08)](https://ericmjl.github.io/blog/2025/5/8/why-im-excited-for-scipy-2025/)
+- [Supercharge your coding agents with VSCode workspaces (2025-05-24)](https://ericmjl.github.io/blog/2025/5/24/supercharge-your-coding-agents-with-vscode-workspaces/)
+- [The invisible polish of automatic model routing (2025-05-25)](https://ericmjl.github.io/blog/2025/5/25/the-invisible-polish-of-automatic-model-routing/)
+- [Rethinking LLM interfaces, from chatbots to contextual applications (2025-06-14)](https://ericmjl.github.io/blog/2025/6/14/rethinking-llm-interfaces-from-chatbots-to-contextual-applications/)
+- [Build your own tools! (2025-06-27)](https://ericmjl.github.io/blog/2025/6/27/build-your-own-tools/)
+- [One hour and eight minutes: Building a receipt scanner with the weirdest tech stack imaginable (2025-07-01)](https://ericmjl.github.io/blog/2025/7/1/one-hour-and-eight-minutes-building-a-receipt-scanner-with-the-weirdest-tech-stack-imaginable/)
+- [Earn the privilege to use automation (2025-07-13)](https://ericmjl.github.io/blog/2025/7/13/earn-the-privilege-to-use-automation/)
+- [Reflections on the SciPy 2025 Conference (2025-07-14)](https://ericmjl.github.io/blog/2025/7/14/reflections-on-the-scipy-2025-conference/)
+- [How to use xarray for unified laboratory data storage (2025-07-15)](https://ericmjl.github.io/blog/2025/7/15/how-to-use-xarray-for-unified-laboratory-data-storage/)
+- [From nerd-sniped to shipped using AI as a thinking tool (2025-07-21)](https://ericmjl.github.io/blog/2025/7/21/from-nerd-sniped-to-shipped-using-ai-as-a-thinking-tool/)
+- [Stop guessing at priors: R2D2's automated approach to Bayesian modeling (2025-08-06)](https://ericmjl.github.io/blog/2025/8/6/stop-guessing-at-priors-r2d2s-automated-approach-to-bayesian-modeling/)
+- [Data scientists aren't becoming obsolete in the LLM era (2025-08-15)](https://ericmjl.github.io/blog/2025/8/15/data-scientists-arent-becoming-obsolete-in-the-llm-era/)
+- [Wicked Python trickery - dynamically patch a Python function's source code at runtime (2025-08-23)](https://ericmjl.github.io/blog/2025/8/23/wicked-python-trickery-dynamically-patch-a-python-functions-source-code-at-runtime/)
+- [The Data Science Bootstrap Notes: A major upgrade for 2025 (2025-09-02)](https://ericmjl.github.io/blog/2025/9/2/the-data-science-bootstrap-notes-a-major-upgrade-for-2025/)
+- [How to teach your coding agent with AGENTS.md (2025-10-04)](https://ericmjl.github.io/blog/2025/10/4/how-to-teach-your-coding-agent-with-agentsmd/)
+- [How to use multiple GitHub accounts on the same computer (2025-10-10)](https://ericmjl.github.io/blog/2025/10/10/how-to-use-multiple-github-accounts-on-the-same-computer/)
+- [How to Use Coding Agents Effectively (2025-10-14)](https://ericmjl.github.io/blog/2025/10/14/how-to-use-coding-agents-effectively/)
+- [A practical comparison of DSPy and LlamaBot for structured LLM applications (2025-10-18)](https://ericmjl.github.io/blog/2025/10/18/a-practical-comparison-of-dspy-and-llamabot-for-structured-llm-applications/)
+- [How to expose any documentation to any LLM agent (2025-10-19)](https://ericmjl.github.io/blog/2025/10/19/how-to-expose-any-documentation-to-any-llm-agent/)
+- [Exploring Skills vs MCP Servers (2025-10-20)](https://ericmjl.github.io/blog/2025/10/20/exploring-skills-vs-mcp-servers/)
+- [Use coding agents to write Marimo notebooks (2025-10-28)](https://ericmjl.github.io/blog/2025/10/28/use-coding-agents-to-write-marimo-notebooks/)
+- [Safe ways to let your coding agent work autonomously (2025-11-08)](https://ericmjl.github.io/blog/2025/11/8/safe-ways-to-let-your-coding-agent-work-autonomously/)
+- [How I Replaced 307 Lines of Agent Code with 4 Lines (2025-11-16)](https://ericmjl.github.io/blog/2025/11/16/how-i-replaced-307-lines-of-agent-code-with-4-lines/)
+- [How to Reference Code Across Repositories with Coding Agents (2025-11-17)](https://ericmjl.github.io/blog/2025/11/17/how-to-reference-code-across-repositories-with-coding-agents/)
+- [What does it take to build a statistics agent? (2025-12-02)](https://ericmjl.github.io/blog/2025/12/2/what-does-it-take-to-build-a-statistics-agent/)
+- [Productive Patterns for Agent-Assisted Programming (2025-12-10)](https://ericmjl.github.io/blog/2025/12/10/productive-patterns-for-agent-assisted-programming/)
+
+### LLMs
+
+- [What makes an agent? (2025-01-04)](https://ericmjl.github.io/blog/2025/1/4/what-makes-an-agent/)
+- [PyData Boston/Cambridge Talk @ Moderna: What makes an agent? (2025-01-31)](https://ericmjl.github.io/blog/2025/1/31/pydata-bostoncambridge-talk-moderna-what-makes-an-agent/)
+- [Lightening the LlamaBot (2025-02-07)](https://ericmjl.github.io/blog/2025/2/7/lightening-the-llamabot/)
+- [Wow, Marimo! (2025-04-08)](https://ericmjl.github.io/blog/2025/4/8/wow-marimo/)
+- [Wow, Modal! (2025-04-26)](https://ericmjl.github.io/blog/2025/4/26/wow-modal/)
+- [Why I'm excited for SciPy 2025! (2025-05-08)](https://ericmjl.github.io/blog/2025/5/8/why-im-excited-for-scipy-2025/)
+- [Supercharge your coding agents with VSCode workspaces (2025-05-24)](https://ericmjl.github.io/blog/2025/5/24/supercharge-your-coding-agents-with-vscode-workspaces/)
+- [The invisible polish of automatic model routing (2025-05-25)](https://ericmjl.github.io/blog/2025/5/25/the-invisible-polish-of-automatic-model-routing/)
+- [Principles for using AI autodidactically (2025-06-07)](https://ericmjl.github.io/blog/2025/6/7/principles-for-using-ai-autodidactically/)
+- [Rethinking LLM interfaces, from chatbots to contextual applications (2025-06-14)](https://ericmjl.github.io/blog/2025/6/14/rethinking-llm-interfaces-from-chatbots-to-contextual-applications/)
+- [Build your own tools! (2025-06-27)](https://ericmjl.github.io/blog/2025/6/27/build-your-own-tools/)
+- [One hour and eight minutes: Building a receipt scanner with the weirdest tech stack imaginable (2025-07-01)](https://ericmjl.github.io/blog/2025/7/1/one-hour-and-eight-minutes-building-a-receipt-scanner-with-the-weirdest-tech-stack-imaginable/)
+- [Earn the privilege to use automation (2025-07-13)](https://ericmjl.github.io/blog/2025/7/13/earn-the-privilege-to-use-automation/)
+- [Reflections on the SciPy 2025 Conference (2025-07-14)](https://ericmjl.github.io/blog/2025/7/14/reflections-on-the-scipy-2025-conference/)
+- [From nerd-sniped to shipped using AI as a thinking tool (2025-07-21)](https://ericmjl.github.io/blog/2025/7/21/from-nerd-sniped-to-shipped-using-ai-as-a-thinking-tool/)
+- [Data scientists aren't becoming obsolete in the LLM era (2025-08-15)](https://ericmjl.github.io/blog/2025/8/15/data-scientists-arent-becoming-obsolete-in-the-llm-era/)
+- [Wicked Python trickery - dynamically patch a Python function's source code at runtime (2025-08-23)](https://ericmjl.github.io/blog/2025/8/23/wicked-python-trickery-dynamically-patch-a-python-functions-source-code-at-runtime/)
+- [How to use AI to accelerate your career in 2025 (2025-09-01)](https://ericmjl.github.io/blog/2025/9/1/how-to-use-ai-to-accelerate-your-career-in-2025/)
+- [How to teach your coding agent with AGENTS.md (2025-10-04)](https://ericmjl.github.io/blog/2025/10/4/how-to-teach-your-coding-agent-with-agentsmd/)
+- [How to Use Coding Agents Effectively (2025-10-14)](https://ericmjl.github.io/blog/2025/10/14/how-to-use-coding-agents-effectively/)
+- [A practical comparison of DSPy and LlamaBot for structured LLM applications (2025-10-18)](https://ericmjl.github.io/blog/2025/10/18/a-practical-comparison-of-dspy-and-llamabot-for-structured-llm-applications/)
+- [How to expose any documentation to any LLM agent (2025-10-19)](https://ericmjl.github.io/blog/2025/10/19/how-to-expose-any-documentation-to-any-llm-agent/)
+- [Exploring Skills vs MCP Servers (2025-10-20)](https://ericmjl.github.io/blog/2025/10/20/exploring-skills-vs-mcp-servers/)
+- [Use coding agents to write Marimo notebooks (2025-10-28)](https://ericmjl.github.io/blog/2025/10/28/use-coding-agents-to-write-marimo-notebooks/)
+- [Safe ways to let your coding agent work autonomously (2025-11-08)](https://ericmjl.github.io/blog/2025/11/8/safe-ways-to-let-your-coding-agent-work-autonomously/)
+- [How I Replaced 307 Lines of Agent Code with 4 Lines (2025-11-16)](https://ericmjl.github.io/blog/2025/11/16/how-i-replaced-307-lines-of-agent-code-with-4-lines/)
+- [How to Reference Code Across Repositories with Coding Agents (2025-11-17)](https://ericmjl.github.io/blog/2025/11/17/how-to-reference-code-across-repositories-with-coding-agents/)
+- [What does it take to build a statistics agent? (2025-12-02)](https://ericmjl.github.io/blog/2025/12/2/what-does-it-take-to-build-a-statistics-agent/)
+- [Productive Patterns for Agent-Assisted Programming (2025-12-10)](https://ericmjl.github.io/blog/2025/12/10/productive-patterns-for-agent-assisted-programming/)
+
+## All blog posts
+
+| Date | Title | Categories |
+|------|-------|------------|
+| 2025-01-04 | [What makes an agent?](https://ericmjl.github.io/blog/2025/1/4/what-makes-an-agent/) | LLMs, Data Science Tooling, Biology & Chemistry |
+| 2025-01-10 | [A practical guide to securing secrets in data science projects](https://ericmjl.github.io/blog/2025/1/10/a-practical-guide-to-securing-secrets-in-data-science-projects/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2025-01-13 | [Writing at the speed of thought](https://ericmjl.github.io/blog/2025/1/13/writing-at-the-speed-of-thought/) | Data Science Tooling, Career Advice |
+| 2025-01-19 | [Why data from preclinical biotech lab experiments make machine learning challenging](https://ericmjl.github.io/blog/2025/1/19/why-data-from-preclinical-biotech-lab-experiments-make-machine-learning-challenging/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2025-01-31 | [PyData Boston/Cambridge Talk @ Moderna: What makes an agent?](https://ericmjl.github.io/blog/2025/1/31/pydata-bostoncambridge-talk-moderna-what-makes-an-agent/) | LLMs, Data Science Tooling, Data Science Practice & Leadership |
+| 2025-02-07 | [Lightening the LlamaBot](https://ericmjl.github.io/blog/2025/2/7/lightening-the-llamabot/) | LLMs, Data Science Tooling |
+| 2025-02-17 | [Let me ship you the Python you need](https://ericmjl.github.io/blog/2025/2/17/let-me-ship-you-the-python-you-need/) | Data Science Tooling |
+| 2025-02-23 | [Reliable biological data requires physical quantities, not statistical artifacts](https://ericmjl.github.io/blog/2025/2/23/reliable-biological-data-requires-physical-quantities-not-statistical-artifacts/) | Data Science Practice & Leadership, Biology & Chemistry, Data Science Tooling |
+| 2025-03-01 | [How to fix PyPI upload errors related to license metadata](https://ericmjl.github.io/blog/2025/3/1/how-to-fix-pypi-upload-errors-related-to-license-metadata/) | Data Science Tooling |
+| 2025-03-06 | [A blueprint for data-driven molecule engineering](https://ericmjl.github.io/blog/2025/3/6/a-blueprint-for-data-driven-molecule-engineering/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2025-03-16 | [The art of finesse as a data scientist](https://ericmjl.github.io/blog/2025/3/16/the-art-of-finesse-as-a-data-scientist/) | Data Science Practice & Leadership |
+| 2025-03-17 | [Why you should take part in the SciPy sprints!](https://ericmjl.github.io/blog/2025/3/17/why-you-should-take-part-in-the-scipy-sprints/) | Data Science Practice & Leadership, Data Science Tooling, Career Advice |
+| 2025-04-02 | [How to standardize Data Science ways of working to unlock your team's creativity](https://ericmjl.github.io/blog/2025/4/2/how-to-standardize-data-science-ways-of-working-to-unlock-your-teams-creativity/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2025-04-03 | [Bayesian Superiority Estimation with R2D2 Priors: A Practical Guide for Protein Screening](https://ericmjl.github.io/blog/2025/4/3/bayesian-superiority-estimation-with-r2d2-priors-a-practical-guide-for-protein-screening/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2025-04-05 | [From data chaos to statistical clarity: A laboratory transformation story](https://ericmjl.github.io/blog/2025/4/5/from-data-chaos-to-statistical-clarity-a-laboratory-transformation-story/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2025-04-08 | [Wow, Marimo!](https://ericmjl.github.io/blog/2025/4/8/wow-marimo/) | Data Science Tooling, LLMs |
+| 2025-04-19 | [Good practices for AI-assisted development from a live protein calculator demo](https://ericmjl.github.io/blog/2025/4/19/good-practices-for-ai-assisted-development-from-a-live-protein-calculator-demo/) | Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2025-04-26 | [Wow, Modal!](https://ericmjl.github.io/blog/2025/4/26/wow-modal/) | Data Science Tooling, LLMs |
+| 2025-05-08 | [Why I'm excited for SciPy 2025!](https://ericmjl.github.io/blog/2025/5/8/why-im-excited-for-scipy-2025/) | LLMs, Data Science Practice & Leadership, Data Science Tooling, Career Advice |
+| 2025-05-24 | [Supercharge your coding agents with VSCode workspaces](https://ericmjl.github.io/blog/2025/5/24/supercharge-your-coding-agents-with-vscode-workspaces/) | LLMs, Data Science Tooling |
+| 2025-05-25 | [The invisible polish of automatic model routing](https://ericmjl.github.io/blog/2025/5/25/the-invisible-polish-of-automatic-model-routing/) | LLMs, Data Science Tooling |
+| 2025-06-07 | [Principles for using AI autodidactically](https://ericmjl.github.io/blog/2025/6/7/principles-for-using-ai-autodidactically/) | LLMs, Data Science Practice & Leadership |
+| 2025-06-14 | [Rethinking LLM interfaces, from chatbots to contextual applications](https://ericmjl.github.io/blog/2025/6/14/rethinking-llm-interfaces-from-chatbots-to-contextual-applications/) | LLMs, Data Science Tooling |
+| 2025-06-27 | [Build your own tools!](https://ericmjl.github.io/blog/2025/6/27/build-your-own-tools/) | LLMs, Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry |
+| 2025-07-01 | [One hour and eight minutes: Building a receipt scanner with the weirdest tech stack imaginable](https://ericmjl.github.io/blog/2025/7/1/one-hour-and-eight-minutes-building-a-receipt-scanner-with-the-weirdest-tech-stack-imaginable/) | LLMs, Data Science Tooling |
+| 2025-07-07 | [The job your docs need to do](https://ericmjl.github.io/blog/2025/7/7/the-job-your-docs-need-to-do/) | Data Science Practice & Leadership |
+| 2025-07-13 | [Earn the privilege to use automation](https://ericmjl.github.io/blog/2025/7/13/earn-the-privilege-to-use-automation/) | LLMs, Data Science Practice & Leadership, Data Science Tooling |
+| 2025-07-14 | [Reflections on the SciPy 2025 Conference](https://ericmjl.github.io/blog/2025/7/14/reflections-on-the-scipy-2025-conference/) | LLMs, Data Science Practice & Leadership, Data Science Tooling, Biology & Chemistry, Career Advice |
+| 2025-07-15 | [How to use xarray for unified laboratory data storage](https://ericmjl.github.io/blog/2025/7/15/how-to-use-xarray-for-unified-laboratory-data-storage/) | Data Science Tooling, Biology & Chemistry |
+| 2025-07-21 | [From nerd-sniped to shipped using AI as a thinking tool](https://ericmjl.github.io/blog/2025/7/21/from-nerd-sniped-to-shipped-using-ai-as-a-thinking-tool/) | LLMs, Data Science Practice & Leadership, Data Science Tooling |
+| 2025-08-06 | [Stop guessing at priors: R2D2's automated approach to Bayesian modeling](https://ericmjl.github.io/blog/2025/8/6/stop-guessing-at-priors-r2d2s-automated-approach-to-bayesian-modeling/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2025-08-15 | [Data scientists aren't becoming obsolete in the LLM era](https://ericmjl.github.io/blog/2025/8/15/data-scientists-arent-becoming-obsolete-in-the-llm-era/) | LLMs, Data Science Practice & Leadership, Data Science Tooling, Career Advice |
+| 2025-08-23 | [Wicked Python trickery - dynamically patch a Python function's source code at runtime](https://ericmjl.github.io/blog/2025/8/23/wicked-python-trickery-dynamically-patch-a-python-functions-source-code-at-runtime/) | LLMs, Data Science Tooling |
+| 2025-08-24 | [How to communicate with lab scientists (when you're the data person)](https://ericmjl.github.io/blog/2025/8/24/how-to-communicate-with-lab-scientists-when-youre-the-data-person/) | Data Science Practice & Leadership, Biology & Chemistry |
+| 2025-09-01 | [How to use AI to accelerate your career in 2025](https://ericmjl.github.io/blog/2025/9/1/how-to-use-ai-to-accelerate-your-career-in-2025/) | LLMs, Career Advice |
+| 2025-09-02 | [The Data Science Bootstrap Notes: A major upgrade for 2025](https://ericmjl.github.io/blog/2025/9/2/the-data-science-bootstrap-notes-a-major-upgrade-for-2025/) | Data Science Practice & Leadership, Data Science Tooling |
+| 2025-10-01 | [How data scientists can master life sciences and software skills for biotech using ultralearning](https://ericmjl.github.io/blog/2025/10/1/how-data-scientists-can-master-life-sciences-and-software-skills-for-biotech-using-ultralearning/) | Data Science Practice & Leadership, Biology & Chemistry, Career Advice |
+| 2025-10-04 | [How to teach your coding agent with AGENTS.md](https://ericmjl.github.io/blog/2025/10/4/how-to-teach-your-coding-agent-with-agentsmd/) | LLMs, Data Science Tooling |
+| 2025-10-10 | [How to use multiple GitHub accounts on the same computer](https://ericmjl.github.io/blog/2025/10/10/how-to-use-multiple-github-accounts-on-the-same-computer/) | Data Science Tooling |
+| 2025-10-14 | [How to Use Coding Agents Effectively](https://ericmjl.github.io/blog/2025/10/14/how-to-use-coding-agents-effectively/) | LLMs, Data Science Tooling |
+| 2025-10-18 | [A practical comparison of DSPy and LlamaBot for structured LLM applications](https://ericmjl.github.io/blog/2025/10/18/a-practical-comparison-of-dspy-and-llamabot-for-structured-llm-applications/) | LLMs, Data Science Tooling |
+| 2025-10-19 | [How to expose any documentation to any LLM agent](https://ericmjl.github.io/blog/2025/10/19/how-to-expose-any-documentation-to-any-llm-agent/) | LLMs, Data Science Tooling, Data Science Practice & Leadership |
+| 2025-10-20 | [Exploring Skills vs MCP Servers](https://ericmjl.github.io/blog/2025/10/20/exploring-skills-vs-mcp-servers/) | LLMs, Data Science Tooling |
+| 2025-10-28 | [Use coding agents to write Marimo notebooks](https://ericmjl.github.io/blog/2025/10/28/use-coding-agents-to-write-marimo-notebooks/) | LLMs, Data Science Tooling |
+| 2025-11-08 | [Safe ways to let your coding agent work autonomously](https://ericmjl.github.io/blog/2025/11/8/safe-ways-to-let-your-coding-agent-work-autonomously/) | LLMs, Data Science Tooling |
+| 2025-11-16 | [How I Replaced 307 Lines of Agent Code with 4 Lines](https://ericmjl.github.io/blog/2025/11/16/how-i-replaced-307-lines-of-agent-code-with-4-lines/) | LLMs, Data Science Tooling |
+| 2025-11-17 | [How to Reference Code Across Repositories with Coding Agents](https://ericmjl.github.io/blog/2025/11/17/how-to-reference-code-across-repositories-with-coding-agents/) | Data Science Tooling, LLMs |
+| 2025-12-02 | [What does it take to build a statistics agent?](https://ericmjl.github.io/blog/2025/12/2/what-does-it-take-to-build-a-statistics-agent/) | LLMs, Data Science Tooling, Biology & Chemistry, Data Science Practice & Leadership |
+| 2025-12-10 | [Productive Patterns for Agent-Assisted Programming](https://ericmjl.github.io/blog/2025/12/10/productive-patterns-for-agent-assisted-programming/) | LLMs, Data Science Tooling |
+| 2025-12-17 | [The selfish reason to do your best work](https://ericmjl.github.io/blog/2025/12/17/the-selfish-reason-to-do-your-best-work/) | Career Advice, Data Science Practice & Leadership |
+
+---
+pub_date: 2025-12-25
+---
+twitter_handle: ericmjl
+---
+summary: Reflecting on my second year of weekly blogging, I published 50 posts in 2025, bringing my two-year total past 100. This year was dominated by coding agents and AI-assisted programming, with extensive writing on AGENTS.md, autonomous agents, and productive patterns for working with AI. I also explored Bayesian methods for biological applications, got excited about Marimo and Modal, and wrote about data science leadership and career development. Two years of consistent writing has reinforced that writing clarifies thinking, consistency compounds, and the best posts come from problems you're actively solving.
+---
+tags:
+
+blogging
+retrospective
+coding agents
+llms
+bayesian
+biotech
+career
+writing
+marimo
+modal
+data science
