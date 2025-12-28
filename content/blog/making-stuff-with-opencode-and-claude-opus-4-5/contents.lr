@@ -42,6 +42,8 @@ The answer surprised me. Across six repositories, I pushed over 150 commits span
 
 **A new [conda-forge package](https://github.com/conda-forge/staged-recipes/pull/31776)** for janitor-rs. The model handled the unfamiliar territory of Rust packaging and conda-forge recipe formats. I was the novice here; it was the guide. This role reversal keeps happening - when I set up PostHog analytics or migrated to GA4 on my website, the model walked me through each step, explained what I was doing and why, and waited for confirmation before proceeding. The expert-novice relationship flips depending on who knows more about the task at hand.
 
+**A [custom tmux status bar](/blog/how-i-themed-my-tmux-with-opencode-and-claude/)** with Nord colors, powerline arrows, and smooth color transitions. Pure aesthetic indulgence - the kind of project I'd never have prioritized before because the implementation cost exceeded the payoff. Now it didn't.
+
 **Smaller fixes across [llamabot](https://github.com/ericmjl/llamabot)** (better error messages) and **[my website](https://github.com/ericmjl/website)** (PostHog analytics, GA4 migration, blog posts).
 
 The variety matters. This wasn't one type of project where I got lucky. It was infrastructure, documentation, greenfield consumer apps, packaging for an ecosystem I rarely touch, and routine maintenance. The "I build" claim held up across all of them.
