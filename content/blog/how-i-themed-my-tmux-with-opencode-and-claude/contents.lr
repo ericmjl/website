@@ -1,0 +1,163 @@
+title: How I Themed My tmux with OpenCode + Claude (And When to Switch Models)
+---
+body:
+
+I had a beautiful tmux status bar on my old laptop. Nord colors, powerline arrows, clean and minimal. The kind that makes you feel like a proper terminal power user.
+
+When I got a new machine back in April, I was too lazy to set up tmux properly. The sensible thing would have been to spend five minutes copying over my old config. Instead, eight months later, I finally spent an hour pair-programming the whole thing from scratch with [OpenCode](https://github.com/sst/opencode) and Claude.
+
+Why? Honestly, I wanted to try out a new tool. The irony isn't lost on me.
+
+## The Setup
+
+OpenCode is a CLI tool that lets you interact with Claude directly from your terminal. Perfect for this kind of task: I'm already in the terminal configuring tmux, so having my AI pair programmer right there keeps the feedback loop tight. Describe what I want. See the change. Describe what's wrong, with precision. Iterate. No context switching to a browser.
+
+That tight loop is what let me stay in the creative headspace. I could say things like "I want the arrows to overlap like in this screenshot" or "the colors feel too muted, try the frost blue from Nord" without knowing the exact syntax. Claude translated my aesthetic intent into working config.
+
+The other superpower: model switching. OpenCode lets you flip between any models you have API keys for. For this session, I toggled between Claude Sonnet (fast, good for quick iterations) and Claude Opus (slower, but sharper for complex debugging). This turned out to be crucial.
+
+## Starting with Research
+
+First, I asked Sonnet to search online for tmux status bar customization. It pulled resources from the official tmux wiki and various tutorials, giving me a foundation: `status-left`, `status-right`, `window-status-format`, color options, the basics.
+
+Armed with that, we dove in.
+
+## First attempt with a custom theme
+
+Claude created a custom dark theme inspired by Catppuccin colors. Worked immediately:
+
+```bash
+set -g status-style "bg=#1e1e2e,fg=#cdd6f4"
+set -g status-left "#[fg=#89b4fa,bold] #S #[fg=#a6e3a1]@ #H"
+set -g status-right "#[fg=#f9e2af]%a %b %d #[fg=#89b4fa]%H:%M"
+```
+
+Clean. Functional. Pretty. But I wanted more: those beautiful powerline arrows flowing between segments. That's when things got interesting.
+
+## The Powerline Saga
+
+Claude suggested `powerline-go`, a Go-based powerline prompt generator. We installed it via Homebrew (not pip, since [I keep my system Python-free](https://ericmjl.github.io/blog/2024/8/16/its-time-to-try-out-pixi/)):
+
+```bash
+brew install powerline-go
+```
+
+Updated the tmux config to call powerline-go for the status bar. Reloaded. And... disaster. Instead of beautiful arrows, raw escape codes:
+
+```text
+[38;5;15m[48;5;4m ericmjl [38;5;4m[48;5;0m...
+```
+
+The terminal was spitting out ANSI codes instead of interpreting them. We tried various fixes, but powerline-go simply wasn't designed for tmux status bars; it's meant for shell prompts. Back to square one.
+
+## Trying the tmux-powerline Plugin
+
+Next attempt: the actual `tmux-powerline` plugin via TPM (Tmux Plugin Manager):
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+Added the plugin, pressed `C-b I` to install, and... the status bar exploded with information. IP addresses, weather, load averages, hostname. Way too much. I asked Claude to simplify and switch to Nord colors.
+
+We created a custom theme at `~/.config/tmux-powerline/themes/nord.sh`, updated the config, reloaded tmux. Nothing changed. The theme wasn't loading. Killed the server entirely. Restarted. Still the old crowded theme.
+
+This is where Sonnet started struggling. Same fixes over and over: reload the config, check the theme path, restart tmux. Loop after loop of suggestions that weren't working.
+
+## The model switch from Sonnet to Opus
+
+I noticed Sonnet spinning its wheels. Same suggestions, same non-results. Time to switch.
+
+The difference was immediate. Instead of repeating failed approaches, Opus stepped back and proposed something different entirely: ditch the plugin and go native. Tmux's built-in formatting is powerful enough to create powerline-style status bars without any plugins. We just needed the right Unicode characters and color transitions.
+
+This stuck with me: Sonnet is fantastic for speed and quick iterations, but when you're stuck in a loop, Opus brings the lateral thinking to break out.
+
+## Going native as the winning approach
+
+Fresh start. Clean native tmux config. The key insight was understanding how powerline arrows actually work: the arrow character's foreground color matches the background of the segment it's coming from, and its background matches what it's going into.
+
+Here's the final status-left (session name with powerline arrow):
+
+```bash
+set -g status-left "#[fg=#2e3440,bg=#5e81ac,bold]  #S #[fg=#5e81ac,bg=#2e3440]\ue0b0"
+```
+
+The window formats, with arrows on both sides so they flow into neighboring elements:
+
+```bash
+# Inactive windows
+setw -g window-status-format "#[fg=#2e3440,bg=#3b4252]\ue0b0#[fg=#d8dee9,bg=#3b4252] #I #W #[fg=#3b4252,bg=#2e3440]\ue0b0"
+
+# Active window (cyan highlight)
+setw -g window-status-current-format "#[fg=#2e3440,bg=#88c0d0]\ue0b0#[fg=#2e3440,bg=#88c0d0,bold] #I #W #[fg=#88c0d0,bg=#2e3440]\ue0b0"
+```
+
+And the right side (battery, date, time) using left-pointing arrows and a smooth Nord color gradient:
+
+```bash
+set -g status-right "#[fg=#a3be8c,bg=#2e3440]\ue0b2#[fg=#2e3440,bg=#a3be8c,bold] 󰁹 #(pmset -g batt | grep -o '[0-9]*%%' | head -1) #[fg=#5e81ac,bg=#a3be8c]\ue0b2#[fg=#d8dee9,bg=#5e81ac] %b %d #[fg=#88c0d0,bg=#5e81ac]\ue0b2#[fg=#2e3440,bg=#88c0d0,bold] %H:%M "
+```
+
+## The Final Result
+
+After all that iteration, here's what my tmux status bar looks like:
+
+<div style="background: #2e3440; font-family: 'JetBrains Mono', 'Fira Code', monospace; padding: 8px 0; display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; border-radius: 4px; overflow: hidden; min-width: 0;">
+  <div style="display: flex; flex-wrap: nowrap; align-items: center; height: 24px; flex-shrink: 0;">
+    <span style="background: #5e81ac; color: #2e3440; padding: 0 12px; font-weight: bold; height: 100%; display: flex; align-items: center; white-space: nowrap;">system-config</span>
+    <div style="width: 0; height: 0; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-left: 12px solid #5e81ac; flex-shrink: 0; position: relative; z-index: 2;"></div>
+    <span style="background: #88c0d0; color: #2e3440; padding: 0 12px; font-weight: bold; height: 100%; display: flex; align-items: center; white-space: nowrap; margin-left: -12px; padding-left: 20px;">1 opencode</span>
+    <div style="width: 0; height: 0; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-left: 12px solid #88c0d0; flex-shrink: 0;"></div>
+  </div>
+  <div style="display: flex; flex-wrap: nowrap; align-items: center; height: 24px; flex-shrink: 0;">
+    <div style="width: 0; height: 0; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-right: 12px solid #a3be8c; flex-shrink: 0;"></div>
+    <span style="background: #a3be8c; color: #2e3440; padding: 0 12px; font-weight: bold; height: 100%; display: flex; align-items: center; white-space: nowrap; padding-right: 20px;">🔋 100%</span>
+    <div style="width: 0; height: 0; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-right: 12px solid #5e81ac; flex-shrink: 0; margin-left: -12px; position: relative; z-index: 2;"></div>
+    <span style="background: #5e81ac; color: #d8dee9; padding: 0 12px; height: 100%; display: flex; align-items: center; white-space: nowrap; padding-right: 20px;">Dec 23</span>
+    <div style="width: 0; height: 0; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-right: 12px solid #88c0d0; flex-shrink: 0; margin-left: -12px; position: relative; z-index: 2;"></div>
+    <span style="background: #88c0d0; color: #2e3440; padding: 0 12px; font-weight: bold; height: 100%; display: flex; align-items: center; white-space: nowrap;">06:05</span>
+  </div>
+</div>
+
+Session name in frost blue on the left. Active window in cyan. Right side flows through battery (green), date (blue), and time (cyan). All connected by powerline arrows with smooth color transitions. *(I asked Claude to recreate the status bar in HTML so I wouldn't have to screenshot it for the blog.)*
+
+## What I Took Away
+
+There's a growing conversation about AI-assisted programming: the tight feedback loops, model selection strategies, iterative workflows. I've written about some of these patterns myself. But this session crystallized something different.
+
+I can express my creativity on a computer screen more easily than ever before.
+
+I'm not a designer. CSS is foreign to me, hex color codes don't stick in my head, and tmux's formatting syntax is arcane. But I have taste. I know what looks good. Years of admiring beautiful terminals gave me a mental mood board. What I lacked was the technical fluency to make it real.
+
+AI bridged that gap. Throughout this session I worked like a designer: describing aesthetics, pointing at visual problems, directing iteration. "The arrows should overlap." "That cyan is too bright." "Make the battery segment green." Claude handled implementation. I stayed in the creative headspace.
+
+Iteration surfaces what you actually want.
+
+This surprised me. I didn't start with a complete vision, just a vague sense of "Nord colors, powerline arrows, clean and minimal." But each rapid cycle surfaced preferences I didn't know I had. The arrows need to overlap. The active window should pop more. The right side needs a color gradient. None of these were requirements I could have articulated upfront. They emerged through seeing and reacting.
+
+Bits and bytes have never been cheaper to produce. AI can generate config files, CSS, code, whatever. But aesthetics and judgment? Those remain expensive. The scarce resource isn't the implementation anymore. It's knowing what you want and recognizing when you've found it.
+
+AI doesn't replace that judgment. It amplifies it by removing the implementation friction that used to slow the creative loop down.
+
+The whole session took about an hour, failed attempts included. Without AI pair programming, I'd probably still be reading documentation. Instead, I have a beautiful terminal, and a new appreciation for what becomes possible when the gap between creative vision and technical implementation shrinks to nearly nothing.
+---
+summary:
+
+I pair-programmed a tmux status bar theme with OpenCode and Claude, discovering along the way when to switch between Sonnet and Opus models. The real insight: AI enables creative expression by bridging the gap between aesthetic vision and technical implementation, letting me work like a designer even though I'm not one.
+---
+author: Eric J. Ma
+---
+pub_date: 2025-12-27
+---
+tags:
+
+ai
+opencode
+claude
+tmux
+terminal
+creativity
+workflow
+pair-programming
+---
+twitter_handle: ericmjl
