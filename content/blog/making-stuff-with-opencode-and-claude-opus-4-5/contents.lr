@@ -1,0 +1,92 @@
+title: Making Stuff with OpenCode and Claude Opus 4.5
+---
+body:
+
+[Tommy Tang asked me](https://www.linkedin.com/feed/update/urn:li:activity:7408389557915799552?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7408389557915799552%2C7410474533469597697%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287410474533469597697%2Curn%3Ali%3Aactivity%3A7408389557915799552%29) about my opinions on OpenCode, so here's what I've learned after spending significant time with [OpenCode](https://opencode.ai/) and Claude Opus 4.5.
+
+## I don't code anymore, I build
+
+This is the punchline, so let me start with it. I've shifted from writing code to directing its creation. The change happened gradually, then all at once. I used to think about syntax, edge cases, and implementation details. Now I think about what I want to exist, describe it clearly, and watch it materialize.
+
+[Genesis 1:3](https://www.biblegateway.com/passage/?search=Genesis%201&version=NIV) describes this pattern at a cosmic scale:
+
+> "And God said, 'Let there be light,' and there was light."
+
+Working with Claude Opus 4.5 through OpenCode feels like a microcosm of that creative act.
+
+> Eric said, "Let there be a feature," and there was the feature, in code.
+
+I'm not claiming divinity here, just noting that the creative pattern of speaking things into existence has become surprisingly literal in my daily work.
+
+## The tools: OpenCode and Claude Opus 4.5
+
+Like [Theo Brown from t3.gg](https://www.youtube.com/watch?v=4AyM_3SK31w&t=1263s), I've settled on Claude Opus 4.5 as my primary model for coding tasks. It just knows what to do. I've stopped trying to micro-manage the model's actions because it handles most tasks autonomously and correctly. When I ask for a refactor, it refactors. When I describe a feature, it implements it. The gap between intention and execution has shrunk to almost nothing.
+
+Other models require more hand-holding. Opus 4.5 seems to have internalized enough software engineering patterns that I can trust it to make reasonable architectural decisions without constant course corrections. I can literally ask it to "do the docs, keep things up-to-date, and also give me a document that has an overview of code organization and architecture." It just goes to town autonomously. No step-by-step prompting, no breaking the task into smaller pieces. I describe the outcome I want and it figures out the path.
+
+The tooling layer matters too. [OpenCode](https://opencode.ai/) orchestrates the AI coding in a way that feels natural. The tools it calls are always logical, the reasoning traces are transparent, and the execution flow makes sense. It shows a running list of modified files, giving me context about what's changing without running `git status` constantly. Context compaction lets me stay in one long-running session without hitting token limits. I've thrown out the old playbook of "switch sessions when you approach the context window." Now I only switch when I want to do something entirely different.
+
+My setup: OpenCode with auto-updating, GitHub Copilot Pro as the LLM provider (routing to Opus 4.5), running inside a [tmux](https://github.com/tmux/tmux) session for persistence. Each repo gets an AGENTS.md file where I encode my preferences and patterns - the model's training data for my specific context. Opus 4.5 actually respects what's in there, unlike some other models that seem to ignore custom instructions.
+
+## Ten days of deliberate practice
+
+I decided to pressure-test the "I build" claim over the holidays. Ten days, December 19-28, using OpenCode as my primary development interface. The goal: see how much I could actually ship.
+
+The answer surprised me. Across six repositories, I pushed over 150 commits spanning infrastructure work, documentation, greenfield apps, and maintenance. Here's what emerged:
+
+**A [ski trip coordination website](https://ericmjl.github.io/2025-12-ski-trip-website/)** (59 commits). My family was heading to New Hampshire for a week. Normally I'd have used a shared Google Doc for the itinerary. Instead, I built a full website with recipe modals, restaurant links with Apple and Google Maps integration, a photo album with lightbox navigation, automatic thumbnail generation, and a hero video background. I updated it live during the trip - adding photos, adjusting the grocery list, swapping menu items. The implementation cost would have been absurd for a week-long trip before. Now the jazz and snazz was well worth the effort - my family actually enjoyed using it.
+
+**A teaching clock app for my kids** (2 commits, but a complete app). An [analog clock trainer](https://ericmjl.github.io/teaching-clock/) plus a [jigsaw puzzle game](https://ericmjl.github.io/teaching-clock/puzzle.html) with difficulty levels and themes. Pure JavaScript and CSS - exactly the kind of project my decade-old "no JavaScript" rule would have blocked. The model wrote it; I directed.
+
+**[pyjanitor](https://github.com/pyjanitor-devs/pyjanitor) infrastructure** (40 commits). Currency symbol support for international formats. Automated patch releases on every merge. Test isolation fixes. And a major expansion of AGENTS.md into what I now think of as the repository's "agent constitution" - a document that tells AI assistants how to work within this specific codebase.
+
+**A new [conda-forge package](https://github.com/conda-forge/staged-recipes/pull/31776)** for janitor-rs. The model handled the unfamiliar territory of Rust packaging and conda-forge recipe formats. I was the novice here; it was the guide. This role reversal keeps happening - when I set up PostHog analytics or migrated to GA4 on my website, the model walked me through each step, explained what I was doing and why, and waited for confirmation before proceeding. The expert-novice relationship flips depending on who knows more about the task at hand.
+
+**Smaller fixes across [llamabot](https://github.com/ericmjl/llamabot)** (better error messages) and **[my website](https://github.com/ericmjl/website)** (PostHog analytics, GA4 migration, blog posts).
+
+The variety matters. This wasn't one type of project where I got lucky. It was infrastructure, documentation, greenfield consumer apps, packaging for an ecosystem I rarely touch, and routine maintenance. The "I build" claim held up across all of them.
+
+## How my review process changed
+
+Here's something I didn't expect: I don't scrutinize the code as tightly as I used to during active development. Instead, I read the reasoning traces first. The model's chain of thought tells me whether my codebase is heading in the right direction. If the reasoning is coherent and addresses the right concerns, the code will reflect what I want. If the reasoning seems confused or takes weird detours, something's wrong and I need to dig deeper.
+
+This inverts the traditional development loop. I used to read code to understand what the computer would do. Now I read reasoning to understand what the model understood and decided. The code review happens afterward, and it's lighter because the reasoning already told me whether we're on track.
+
+When I want to catch issues that slipped through, I start a fresh session. A new context window acts like a fresh pair of eyes - the model hasn't been primed by the conversation that led to the current implementation, so it can spot inconsistencies that were invisible during the creative flow. This parallels the old advice about stepping away from code before reviewing it, except now the "stepping away" happens by instantiating a new session rather than waiting for my own brain to reset.
+
+## Unlearning old assumptions
+
+[Boris Cherny recently had a Twitter exchange with Andrej Karpathy](https://x.com/bcherny/status/2004626064187031831) that resonated with me. Boris observed that newer coworkers and even new grads who don't make assumptions about what the model can and can't do are often able to use it most effectively. They don't carry "legacy memories formed when using old models." Every month or two, models get better, and those of us who've been using them longest have to actively unlearn outdated limitations.
+
+I've caught myself doing this repeatedly. Back in grad school around 2015, I tried building [d3.js](https://d3js.org/) visualizations and struggled to adjust to JavaScript's syntax coming from Python. I decided to focus on getting better at Python first and gave myself a "no JavaScript" rule wherever possible. That constraint made sense at the time. It makes no sense now. The model writes JavaScript just fine. My decade-old "no JavaScript" policy was a legacy memory holding me back from building things that would actually benefit from running in the browser.
+
+The mental work of re-adjusting expectations is real. I have to keep asking myself: would I have avoided this six months ago because the model couldn't handle it, or because I assumed it couldn't? The answer is increasingly the latter.
+
+There's a flip side to this unlearning, though. Working in JavaScript land forced me to learn the language of the web to achieve the same precision and fluency I have with Python. I found myself picking up patterns I'd avoided for years: the browser console for debugging, DOM element manipulation, CSS transitions I didn't know existed, the JS package ecosystem. The model writes the code, but I still need enough vocabulary to direct it well and recognize when something's off. Unlearning old constraints doesn't mean staying ignorant of new territory - it means finally having a reason to explore it.
+
+## What this means
+
+The shift from "I code" to "I build" isn't just semantic. It reflects a genuine change in what I spend my attention on. Less time on syntax and implementation details. More time on architecture, requirements, and verification. The creative work remains human. The mechanical translation has been delegated.
+
+I'm still learning how to use this effectively. But the trajectory is clear: the gap between imagining software and having software continues to shrink.
+---
+summary: In this blog post, I share how using OpenCode and Claude Opus 4.5 has transformed my approach from writing code to simply building—directing AI to create what I envision. I discuss how these tools handle everything from infrastructure to greenfield apps, and how reasoning traces have become more important than code review. I also reflect on unlearning old habits and embracing new possibilities as AI models improve. Curious how this shift could change your own workflow?
+---
+author: Eric J. Ma
+---
+pub_date: 2025-12-28
+---
+tags:
+
+ai
+opencode
+claude
+automation
+workflow
+llm
+reasoning
+development
+review
+tools
+---
+twitter_handle: ericmjl
