@@ -50,6 +50,14 @@ The answer surprised me. Across six repositories, I pushed over 150 commits span
 
 The variety matters. This wasn't one type of project where I got lucky. It was infrastructure, documentation, greenfield consumer apps, packaging for an ecosystem I rarely touch, and routine maintenance. The "I build" claim held up across all of them.
 
+## From engineer brain to product builder brain
+
+Something shifted in how I think about these projects. Previously, I'd worry about *how* a thing was built - the engineer brain obsessing over implementation details, code structure, idiomatic patterns. Now I've switched to *what* was built, *why* I want it built, and *does it get the job done* - the product builder's brain.
+
+This is especially true for the ski website and Canvas Chat, both built with web technologies (HTML, JS, CSS) that I'm not deeply familiar with. Ironically, my unfamiliarity frees me from micro-managing the implementation. I don't have strong opinions about whether the JavaScript is idiomatic because I don't know what idiomatic JavaScript looks like. I just know whether the feature works.
+
+But there's a latent risk here. The code might not follow best practices - lots of duplication, poor separation of concerns, missing edge cases. So I fall back on *principles* I picked up from years of Python: refactoring, documentation, testing. I stay at that level of nudging Opus 4.5 - "look for places to refactor," "document this module," "add tests for this functionality" - but I stay out of the nitty-gritty implementation. The principles transfer even when the language doesn't.
+
 ## How my review process changed
 
 Here's something I didn't expect: I don't scrutinize the code as tightly as I used to during active development. Instead, I read the reasoning traces first. The model's chain of thought tells me whether my codebase is heading in the right direction. If the reasoning is coherent and addresses the right concerns, the code will reflect what I want. If the reasoning seems confused or takes weird detours, something's wrong and I need to dig deeper.
