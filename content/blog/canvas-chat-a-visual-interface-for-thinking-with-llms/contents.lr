@@ -6,7 +6,7 @@ I've been mulling over this idea since last year January: A visual, nonlinear in
 
 Then came the Christmas break ultralearning exercise I documented in [my recent blog post about building with OpenCode and Claude Opus 4.5](https://ericmjl.github.io/blog/2025/12/28/you-can-just-make-stuff-with-opencode-and-claude-opus-4-5/). Pressure-testing Opus 4.5 made me realize it was finally feasible to spend a day trying to make this work. I pushed Canvas Chat from idea to working prototype in about 24 hours of actual building time, and [then another 24 hrs to get it up on Modal](https://ericmjl--canvas-chat-fastapi-app.modal.run/) and add in many, many refinements, each of which may have taken me multiple weeks. The final result is this:
 
-![Canvas Chat overview showing nodes connected in a directed graph](canvas-chat-overview.png)
+![Canvas Chat overview showing nodes connected in a directed graph](canvas-chat-overview.webp)
 
 But before I explain what I built, let me explain *why* I wanted it in the first place.
 
@@ -26,17 +26,17 @@ Canvas Chat is an infinite canvas where conversations are nodes in a directed gr
 
 **Branch from any node.** Click reply on any message, and your new message connects to that point, not the end of the conversation. The response branches off visually. Try two different prompts from the same starting point and see both branches side by side.
 
-![Branching from a node to create parallel conversation threads](branch-from-node.png)
+![Branching from a node to create parallel conversation threads](branch-from-node.webp)
 
 **Highlight and branch.** Select text within a node, and a tooltip appears. Type a follow-up question, and Canvas Chat creates a highlight node (showing the excerpt with a blockquote) plus your question, plus the LLM response. The original node stays intact. This works especially well when an LLM gives a list of ideas and you want to drill into one without losing the overview.
 
-![Tooltip appearing when text is selected within a node](highlight-and-branch-tooltip.png)
+![Tooltip appearing when text is selected within a node](highlight-and-branch-tooltip.webp)
 
-![Result of highlight and branch showing the blockquote excerpt](highlight-and-branch-result.png)
+![Result of highlight and branch showing the blockquote excerpt](highlight-and-branch-result.webp)
 
 **Multi-select for merge context.** Cmd-click multiple nodes, then type. The new message connects to all selected nodes, and the LLM sees the full ancestry of every selected node. I use this to synthesize: select two branches that went in different directions, ask "What do these approaches have in common?" The context includes everything that led to both.
 
-![Multiple nodes selected for merge context synthesis](multi-select-merge.png)
+![Multiple nodes selected for merge context synthesis](multi-select-merge.webp)
 
 ## Context flows through the graph
 
@@ -50,13 +50,13 @@ This feature came out of a specific struggling moment: evaluating many options a
 
 Select one or more nodes as context, type `/matrix <and then put additional instructions you're looking to fill out here>`. Canvas Chat parses out the list items and shows a confirmation modal where you can remove items or swap rows/columns. Click create, and a matrix node appears.
 
-![Matrix evaluation modal for configuring rows and columns](matrix-evaluation-modal.png)
+![Matrix evaluation modal for configuring rows and columns](matrix-evaluation-modal.webp)
 
 Each cell has a "+" button. Click it and the LLM fills that cell, seeing the matrix context you provided, the row item, the column item, and the full DAG history from the source nodes. "Fill All" processes every empty cell sequentially.
 
 Click any filled cell to see the full text. "Pin to Canvas" extracts that evaluation into a standalone node, which you can then branch from. Say you're comparing business ideas against criteria, one cell says "strong market fit with enterprise customers," you want to dig into that—pin and branch.
 
-![Matrix evaluation with cells filled by the LLM](matrix-evaluation-filled.png)
+![Matrix evaluation with cells filled by the LLM](matrix-evaluation-filled.webp)
 
 
 ## Web search and deep research
@@ -65,17 +65,17 @@ Canvas Chat integrates Exa's APIs for two slash commands:
 
 `/search <query>` runs a neural search and creates a Search node with the query, plus Reference nodes for each result. Click "Fetch & Summarize" on any reference to grab the full page content and summarize it.
 
-![Web search results showing reference nodes](web-search-results.png)
+![Web search results showing reference nodes](web-search-results.webp)
 
 `/research <topic>` kicks off Exa's Research API, which performs multi-step research with multiple queries. The results stream into a Research node with inline source citations.
 
-![Deep research node with inline citations](deep-research-node.png)
+![Deep research node with inline citations](deep-research-node.webp)
 
 If you have nodes selected when you run these commands, Canvas Chat uses an LLM to refine your query using the selected text as context. Highlight "CCNOT gate" and type `/search how does this work`, and it rewrites the query to "how Toffoli gate CCNOT quantum computing works" before searching.
 
 ## Local-first and multi-provider
 
-![Settings panel showing API key configuration](settings-api-keys.png)
+![Settings panel showing API key configuration](settings-api-keys.webp)
 
 All session data lives in IndexedDB. No server-side storage, no accounts. Export sessions as `.canvaschat` JSON files. API keys live in localStorage and are sent with each request.
 
