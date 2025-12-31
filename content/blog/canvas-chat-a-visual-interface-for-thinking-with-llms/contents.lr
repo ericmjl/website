@@ -1,0 +1,124 @@
+title: Canvas Chat: A Visual Interface for Thinking with LLMs
+---
+body:
+
+I've been mulling over this idea since last year January: A visual, nonlinear interface for LLM conversations—something like an infinite canvas where you could branch, merge, and see the shape of your thinking. It stayed in the "someday" pile because the implementation cost felt too high for a speculative side project; I wasn't skilled in browser technologies or anything UI-related.
+
+Then came the Christmas break ultralearning exercise I documented in [my recent blog post about building with OpenCode and Claude Opus 4.5](https://ericmjl.github.io/blog/2025/12/28/you-can-just-make-stuff-with-opencode-and-claude-opus-4-5/). Pressure-testing Opus 4.5 made me realize it was finally feasible to spend a day trying to make this work. I pushed Canvas Chat from idea to working prototype in about 24 hours of actual building time, and [then another 24 hrs to get it up on Modal](https://ericmjl--canvas-chat-fastapi-app.modal.run/) and add in many, many refinements, each of which may have taken me multiple weeks. The final result is this:
+
+![Canvas Chat overview showing nodes connected in a directed graph](canvas-chat-overview.png)
+
+But before I explain what I built, let me explain *why* I wanted it in the first place.
+
+## The job to be done
+
+Clayton Christensen's [Jobs to Be Done](https://hbr.org/2016/09/know-your-customers-jobs-to-be-done) framework asks: what job is the customer hiring this product to do? For Canvas Chat, the job isn't "chat with an LLM"—ChatGPT already does that fine. The job is: **think through a complex problem where the exploration is nonlinear.**
+
+Here's the struggling moment. You're deep in a conversation with Claude or GPT, and you want to try a different framing of your question. But if you do, you'll lose the current thread. Or an LLM gives you a list of ten ideas, one catches your eye, and you want to drill into it—but the conversation keeps scrolling and you lose the overview. Or you've been exploring a problem across three separate chat sessions and now you need to synthesize, but you can't see them together.
+
+Linear chat actively works against this kind of thinking. It forces linear structure onto nonlinear exploration. You end up managing context in your head, copy-pasting between windows, losing track of which threads went where.
+
+Canvas Chat exists to solve that. When your thinking branches in multiple directions, it keeps all the threads visible and connected so you don't lose context and can synthesize across them.
+
+## How it works
+
+Canvas Chat is an infinite canvas where conversations are nodes in a directed graph. You type a message, it appears as a node. The LLM's response appears as another node, connected by an edge. So far, standard. But then:
+
+**Branch from any node.** Click reply on any message, and your new message connects to that point, not the end of the conversation. The response branches off visually. Try two different prompts from the same starting point and see both branches side by side.
+
+![Branching from a node to create parallel conversation threads](branch-from-node.png)
+
+**Highlight and branch.** Select text within a node, and a tooltip appears. Type a follow-up question, and Canvas Chat creates a highlight node (showing the excerpt with a blockquote) plus your question, plus the LLM response. The original node stays intact. This works especially well when an LLM gives a list of ideas and you want to drill into one without losing the overview.
+
+![Tooltip appearing when text is selected within a node](highlight-and-branch-tooltip.png)
+
+![Result of highlight and branch showing the blockquote excerpt](highlight-and-branch-result.png)
+
+**Multi-select for merge context.** Cmd-click multiple nodes, then type. The new message connects to all selected nodes, and the LLM sees the full ancestry of every selected node. I use this to synthesize: select two branches that went in different directions, ask "What do these approaches have in common?" The context includes everything that led to both.
+
+![Multiple nodes selected for merge context synthesis](multi-select-merge.png)
+
+## Context flows through the graph
+
+When you send a message, Canvas Chat walks the DAG backward from your selected node(s), collecting all ancestors. It sorts them by creation time and sends them to the LLM as conversation history. If you've selected multiple nodes (a merge), the context is the union of all their ancestors, deduplicated.
+
+The practical effect: the LLM always knows how you arrived at the current question, even if the path is nonlinear. Branch from a discussion about protein folding dynamics, ask a follow-up about computational costs, and the context includes the protein folding discussion. No manual copy-paste.
+
+## Matrix evaluation
+
+This feature came out of a specific struggling moment: evaluating many options against many criteria and losing track of which combinations I'd thought through.
+
+Select one or more nodes as context, type `/matrix <and then put additional instructions you're looking to fill out here>`. Canvas Chat parses out the list items and shows a confirmation modal where you can remove items or swap rows/columns. Click create, and a matrix node appears.
+
+![Matrix evaluation modal for configuring rows and columns](matrix-evaluation-modal.png)
+
+Each cell has a "+" button. Click it and the LLM fills that cell, seeing the matrix context you provided, the row item, the column item, and the full DAG history from the source nodes. "Fill All" processes every empty cell sequentially.
+
+Click any filled cell to see the full text. "Pin to Canvas" extracts that evaluation into a standalone node, which you can then branch from. Say you're comparing business ideas against criteria, one cell says "strong market fit with enterprise customers," you want to dig into that—pin and branch.
+
+![Matrix evaluation with cells filled by the LLM](matrix-evaluation-filled.png)
+
+
+## Web search and deep research
+
+Canvas Chat integrates Exa's APIs for two slash commands:
+
+`/search <query>` runs a neural search and creates a Search node with the query, plus Reference nodes for each result. Click "Fetch & Summarize" on any reference to grab the full page content and summarize it.
+
+![Web search results showing reference nodes](web-search-results.png)
+
+`/research <topic>` kicks off Exa's Research API, which performs multi-step research with multiple queries. The results stream into a Research node with inline source citations.
+
+![Deep research node with inline citations](deep-research-node.png)
+
+If you have nodes selected when you run these commands, Canvas Chat uses an LLM to refine your query using the selected text as context. Highlight "CCNOT gate" and type `/search how does this work`, and it rewrites the query to "how Toffoli gate CCNOT quantum computing works" before searching.
+
+## Local-first and multi-provider
+
+![Settings panel showing API key configuration](settings-api-keys.png)
+
+All session data lives in IndexedDB. No server-side storage, no accounts. Export sessions as `.canvaschat` JSON files. API keys live in localStorage and are sent with each request.
+
+The server is stateless: it proxies LLM calls via LiteLLM and handles the Exa integration, but never stores conversation data. You can deploy it yourself on Modal with a single command.
+
+Canvas Chat dynamically fetches available models from each provider when you enter an API key. OpenAI, Anthropic, Google (Gemini), Groq, GitHub Models, and local Ollama instances (when running on localhost) all work. Switch models mid-conversation to compare outputs.
+
+## What building this taught me
+
+This project reinforced something I wrote about in the "I don't code anymore, I build" post: I stayed in product builder brain throughout. I didn't have strong opinions about whether the JavaScript was idiomatic because I don't know what idiomatic JavaScript looks like. I just knew whether the feature worked.
+
+When something broke, I'd describe the symptoms and let Opus 4.5 debug in as much detail as I can manage. When I wanted a new interaction pattern, I'd describe what it should feel like and watch it materialize. The creative work — deciding what nonlinear chat should *be* — remained human. The mechanical translation got delegated.
+
+Canvas Chat is the kind of project I wouldn't have attempted before because the implementation cost exceeded the payoff. Now it didn't.
+
+## Try it
+
+Canvas Chat is open source. Run it locally:
+
+```bash
+git clone https://github.com/ericmjl/canvas-chat.git
+cd canvas-chat
+pixi run dev
+```
+
+Add your API keys in settings and go. The deployed version runs on [Modal](https://ericmjl--canvas-chat-fastapi-app.modal.run/).
+
+If you try it, I want to hear what works and what doesn't! You can get in touch with me via [Shortmail](https://ericmjl--shortmail-run-app.modal.run/send/cce87ae9c1d7), or file an issue on the [Github repo](https://github.com/ericmjl/canvas-chat).
+---
+summary: I built Canvas Chat, a visual interface for nonlinear LLM conversations, over Christmas break using OpenCode and Claude Opus 4.5. The tool solves a specific job: thinking through complex problems where exploration branches in multiple directions. Features include branching conversations, highlight-and-branch, multi-select merge for synthesis, matrix evaluation, and integrated web search. It's open source and runs on Modal.
+---
+author: Eric J. Ma
+---
+pub_date: 2025-12-31
+---
+tags:
+
+ai
+llm
+opencode
+claude
+visualization
+tools
+productivity
+---
+twitter_handle: ericmjl
