@@ -8,6 +8,10 @@
 
 
 /* Additional custom CSS for the website. */
+:root {
+  --page-width: 65em;
+}
+
 body {
   font-family: 'Berkeley Mono', monospace;
 }
