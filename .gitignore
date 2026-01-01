@@ -18,3 +18,7 @@ data/
 
 # marimo-related
 __marimo__
+
+# Search index (built during CI/CD)
+assets/static/js/search-index.json
+assets/static/js/search-documents.json

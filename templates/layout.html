@@ -159,6 +159,9 @@
                         {% endif %}
                     </li>
                     {% endfor %}
+                    <li class="menu-item">
+                        <a href="#" id="search-button" title="Search (Ctrl+K)">Search</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -232,4 +235,8 @@
             }
         });
     </script>
+
+    <!-- Search functionality -->
+    <script src="https://unpkg.com/lunr/lunr.js"></script>
+    <script src="/static/js/search.js"></script>
 </body>
