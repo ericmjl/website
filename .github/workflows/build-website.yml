@@ -28,6 +28,12 @@ jobs:
         with:
           cache: true
 
+      # Fetch GitHub data for Open Source page
+      - name: Fetch GitHub data
+        run: pixi run python scripts/fetch_github_data.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build website
         run: pixi run build
 
