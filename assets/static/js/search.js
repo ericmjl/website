@@ -121,7 +121,7 @@
     /**
      * Render search results
      */
-    function renderResults(results) {
+    function renderResults(results, query) {
         if (!searchResults) return;
 
         if (results.length === 0) {
@@ -142,15 +142,19 @@
                 ? `<span class="search-result-type">${formatType(result.type)}</span>`
                 : '';
 
+            // Highlight keywords in title and summary
+            const highlightedTitle = highlightKeywords(result.title, query);
+            const highlightedSummary = highlightKeywords(truncate(result.summary, 150), query);
+
             return `
                 <a href="${result.url}" class="search-result-item">
-                    <div class="search-result-title">${escapeHtml(result.title)}</div>
+                    <div class="search-result-title">${highlightedTitle}</div>
                     <div class="search-result-meta">
                         ${typeLabel}
                         ${date}
                         ${tags}
                     </div>
-                    <div class="search-result-summary">${escapeHtml(truncate(result.summary, 150))}</div>
+                    <div class="search-result-summary">${highlightedSummary}</div>
                 </a>
             `;
         }).join('');
@@ -175,6 +179,46 @@
         if (!text) return '';
         if (text.length <= maxLength) return text;
         return text.substring(0, maxLength).trim() + '...';
+    }
+
+    /**
+     * Highlight search keywords in text
+     * Returns HTML with highlighted keywords wrapped in <mark> tags
+     */
+    function highlightKeywords(text, query) {
+        if (!text || !query) return escapeHtml(text);
+
+        // Extract individual search terms from the query
+        // Remove special characters used in lunr search syntax
+        const terms = query.trim()
+            .replace(/[+\-~^*:]/g, ' ')
+            .split(/\s+/)
+            .filter(term => term.length > 0);
+
+        if (terms.length === 0) return escapeHtml(text);
+
+        // Escape the text first
+        let highlightedText = escapeHtml(text);
+
+        // Sort terms by length (longest first) to avoid partial matches
+        terms.sort((a, b) => b.length - a.length);
+
+        // Highlight each term
+        terms.forEach(term => {
+            // Create a case-insensitive regex for the term
+            // Word boundary matching for better accuracy
+            const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
+            highlightedText = highlightedText.replace(regex, '<mark>$1</mark>');
+        });
+
+        return highlightedText;
+    }
+
+    /**
+     * Escape special regex characters
+     */
+    function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     /**
@@ -262,7 +306,7 @@
         }
 
         const results = performSearch(query);
-        renderResults(results);
+        renderResults(results, query);
     }
 
     /**

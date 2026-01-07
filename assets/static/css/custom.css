@@ -329,6 +329,20 @@ body.dark-mode .search-result-summary {
   color: #aaa;
 }
 
+/* Search keyword highlighting */
+.search-result-item mark {
+  background-color: #fff59d;
+  color: #000;
+  padding: 0.1rem 0.2rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+body.dark-mode .search-result-item mark {
+  background-color: #ffd54f;
+  color: #000;
+}
+
 .search-no-results,
 .search-hint-initial {
   padding: 2rem;
