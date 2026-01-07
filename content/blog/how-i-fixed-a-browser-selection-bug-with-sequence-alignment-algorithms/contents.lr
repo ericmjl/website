@@ -1,0 +1,243 @@
+title: How I fixed a browser selection bug with sequence alignment algorithms
+---
+author: Eric J. Ma
+---
+body:
+
+I ran into a frustrating bug this week in [canvas-chat](https://github.com/ericmjl/canvas-chat), my experimental canvas-based chat interface [I built at the end of last year](/blog/2025/12/31/canvas-chat-a-visual-interface-for-thinking-with-llms/). The bug seemed simple on the surface: when users selected text from a rendered markdown table and clicked to highlight it, the highlighting would sometimes stop partway through, or highlight the wrong characters entirely.
+
+What started as a "quick fix" turned into a journey through several failed approaches before I remembered an algorithm from my undergraduate bioinformatics days. Sometimes the best solution to a problem comes from an unexpected domain.
+
+## The problem: Browser selections are messy
+
+Canvas-chat has a feature where you can select text from an AI response, and the app creates a "highlight" node that links back to the source. When you click on the highlight, the corresponding text in the source gets wrapped in a `<mark>` tag.
+
+This worked fine for simple paragraphs. But when I tried it on tables containing KaTeX-rendered math, things went wrong:
+
+**What I expected to highlight:** <mark>66.00 (0.18±0.58)</mark>
+
+**What actually got highlighted:** <mark>66.00 ( 0.18</mark>±0.58)
+
+The highlighting was off by more than a few characters, and would stop before the end of my selection. In some cases, it would highlight completely wrong sections.
+
+## Digging into the root cause
+
+The problem came from how KaTeX renders math and how browsers handle text selection.
+
+KaTeX renders math with multiple text representations:
+
+```html
+<span class="katex">
+  <!-- MathML for accessibility/screen readers -->
+  <span class="katex-mathml">
+    <math><mn>0.13</mn><mo>±</mo></math>
+  </span>
+  <!-- Visual HTML for display -->
+  <span class="katex-html">
+    <span class="mord">0.13</span>
+    <span class="mord">±</span>
+  </span>
+</span>
+```
+
+When you select text that spans across KaTeX-rendered content, `selection.toString()` gives you something like this:
+
+```
+"66.00 (
+0.13
+±
+0.13±0.58)"
+```
+
+Notice the duplicated `0.13` and the random newlines? The browser included text from both the MathML (for accessibility) and the visual spans. Add in tabs between table cells and inconsistent spacing around operators, and you have a string that looks nothing like the clean HTML text content.
+
+## First attempt: Normalization layers
+
+My initial approach was to normalize both strings (the user's selection and the HTML text) before matching:
+
+1. Collapse all whitespace to single spaces
+2. Remove KaTeX duplication patterns (like `0.13 ± 0.13±` → `0.13±`)
+3. Normalize spacing around `±` operators
+
+Then find the match in the normalized strings, and map the positions back to the original.
+
+This is where things got complicated. I needed to track:
+- Which positions in the normalized string corresponded to which positions in the original
+- How to reverse the mapping after finding a match
+- How to handle characters that got removed entirely during normalization
+
+The code became a tangled mess of position arrays and off-by-one bugs. Here's a simplified version of what it looked like:
+
+```javascript
+// Build mapping from normalized to original positions
+const normalizedToOriginal = [];
+let inWhitespace = false;
+let leadingTrimmed = true;
+
+for (let i = 0; i < fullText.length; i++) {
+    const ch = fullText[i];
+    if (/\s/.test(ch)) {
+        if (!inWhitespace && !leadingTrimmed) {
+            normalizedToOriginal.push(i);
+        }
+        inWhitespace = true;
+    } else {
+        leadingTrimmed = false;
+        inWhitespace = false;
+        normalizedToOriginal.push(i);
+    }
+}
+
+// Then also account for math spacing normalization...
+// And KaTeX deduplication...
+// Each layer compounds the position mapping complexity
+```
+
+The position mapping kept breaking. I'd fix one case only to break another. **I was trying to maintain a bijection between two strings that had been transformed through multiple non-invertible operations.** It wasn't going to work.
+
+## The insight: This is a sequence alignment problem
+
+After banging my head against the normalization approach for a while, I took a step back. What was I actually trying to do?
+
+I had two strings:
+
+1. The user's selection (messy, with artifacts)
+2. The HTML text content (clean)
+
+I needed to find where the user's selection "matched" in the HTML text, tolerating:
+
+- Insertions (extra whitespace, duplicated characters in the selection)
+- Deletions (characters present in HTML but not in selection)
+- Mismatches (different whitespace characters)
+
+This is exactly what sequence alignment algorithms are designed for. In bioinformatics, we use these algorithms to compare DNA or protein sequences that may have evolved with insertions, deletions, and mutations. The classic algorithm for finding the best local alignment between two sequences is **Smith-Waterman**.
+
+I learned Smith-Waterman as an undergraduate, probably around 2008. I never thought I'd use it for web development.
+
+## The solution: Align the beginning and end
+
+I didn't need to align the entire selection - I just needed to find where it started and ended in the HTML text. So I:
+
+1. Take the first ~20 characters of the user's selection and align them to find the **start position**
+2. Take the last ~20 characters, reverse both strings, align to find the **end position**
+
+Here's the core alignment function:
+
+```javascript
+function alignStart(queryPrefix, target) {
+    const m = queryPrefix.length;
+    const n = target.length;
+
+    const MATCH = 2;      // Reward for matching characters
+    const MISMATCH = -1;  // Penalty for different characters
+    const GAP = -1;       // Penalty for insertions/deletions
+    const WS_MATCH = 1;   // Softer reward for whitespace matches
+
+    // Build the scoring matrix
+    const score = Array(m + 1).fill(null)
+        .map(() => Array(n + 1).fill(0));
+
+    let maxScore = 0;
+    let maxI = 0, maxJ = 0;
+
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            const qChar = queryPrefix[i - 1].toLowerCase();
+            const tChar = target[j - 1].toLowerCase();
+
+            let matchVal;
+            if (qChar === tChar) {
+                matchVal = /\s/.test(qChar) ? WS_MATCH : MATCH;
+            } else if (/\s/.test(qChar) && /\s/.test(tChar)) {
+                matchVal = WS_MATCH;  // Any whitespace matches any whitespace
+            } else {
+                matchVal = MISMATCH;
+            }
+
+            score[i][j] = Math.max(
+                0,  // Local alignment can restart anywhere
+                score[i-1][j-1] + matchVal,  // Diagonal: match/mismatch
+                score[i-1][j] + GAP,          // Up: gap in target
+                score[i][j-1] + GAP           // Left: gap in query
+            );
+
+            if (score[i][j] > maxScore) {
+                maxScore = score[i][j];
+                maxI = i;
+                maxJ = j;
+            }
+        }
+    }
+
+    // Traceback to find start position
+    // ... (walk backwards from maxI, maxJ to find where alignment began)
+}
+```
+
+The key insight is that Smith-Waterman's local alignment naturally handles all the messiness. Extra newlines in the selection? They're just gaps. Duplicated numbers? They align to the same position. Different whitespace characters? They all match each other.
+
+## The result
+
+The new approach passes all the test cases that the normalization approach failed:
+
+**Test: Simple word**
+
+- Target: `"Hello world, this is a test."`
+- Query: `"world"`
+- Result: <mark>world</mark> (positions 6-11)
+
+**Test: KaTeX duplication**
+
+- Target: `"66.00 (0.18 ± 0.18±0.58)"`
+- Query: `"66.00 (\n0.18\n±\n0.18±0.58)"`
+- Result: <mark>66.00 (0.18 ± 0.18±0.58)</mark> (positions 0-25)
+
+**Test: Cross-block selection**
+
+- Target: `"The Heading Some paragraph text here."`
+- Query: `"The Heading\n\nSome paragraph"`
+- Result: <mark>The Heading Some paragraph</mark> (positions 0-25)
+
+## The lesson: Know your algorithms
+
+I didn't invent anything new here. Smith-Waterman has been around since 1981. I just recognized that my web development problem was, at its core, a sequence alignment problem.
+
+This is why I think it's valuable to study algorithms and techniques from different domains, even if they seem unrelated to your day-to-day work. You never know when dynamic programming from bioinformatics will solve your JavaScript text highlighting bug.
+
+The normalization approach was trying to make two messy things identical before comparing them. The alignment approach embraced the messiness and asked: "Given that these are different, where do they best correspond?"
+
+That's a fundamentally different framing, and it's the framing that actually matched the problem.
+
+Interestingly, I couldn't find prior examples of using Smith-Waterman specifically for UI text highlighting or matching browser text selections to source HTML. The algorithm is well-established in bioinformatics for DNA and protein sequence alignment, and it appears in some fuzzy string matching contexts like spell-checking and record linkage. But applying it to handle the specific artifacts that browsers introduce when selecting text from rendered HTML with KaTeX, MathML, or complex table structures? That seems to be a new application. Sometimes the best solutions come from recognizing that your problem, despite appearing domain-specific, maps onto a well-solved problem from an entirely different field.
+
+One more note: I didn't write the JavaScript implementation myself. I directed Claude Opus 4.5 in [OpenCode](https://opencode.ai) to write it for me. My contribution was recognizing that this was a sequence alignment problem and describing the approach - the actual code was generated by the AI. This is becoming my preferred way to work: I provide the domain insight and algorithmic direction, and the AI handles the implementation details.
+
+## Appendix: The full solution
+
+For those curious, the complete implementation is in the [pull request](https://github.com/ericmjl/canvas-chat/pull/97). The key functions are:
+
+- `alignStart(queryPrefix, target)` - Find where the query beginning matches
+- `alignEnd(querySuffix, target)` - Find where the query end matches (by reversing and aligning)
+- `findMatchRegion(query, target)` - Combine both to get the full match region
+
+The algorithm runs in O(mn) time where m and n are the lengths of the strings being aligned. For typical text selections (tens to hundreds of characters), this is instantaneous. And unlike the normalization approach, it's robust and correct!
+
+---
+pub_date: 2026-01-06
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how a tricky text highlighting bug in my canvas-chat project led me to use a classic bioinformatics algorithm, Smith-Waterman, to solve messy browser selection issues—especially with KaTeX-rendered math. Instead of struggling with normalization, I reframed the problem as sequence alignment, which proved robust and effective. Curious how an algorithm from DNA analysis can fix web UI bugs?
+---
+tags:
+
+javascript
+bioinformatics
+katex
+canvas
+algorithms
+bugfix
+highlighting
+selection
+web development
+ui
