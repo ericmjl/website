@@ -142,9 +142,10 @@
                 ? `<span class="search-result-type">${formatType(result.type)}</span>`
                 : '';
 
-            // Highlight keywords in title and summary
+            // Highlight keywords in title and extract context from body
             const highlightedTitle = highlightKeywords(result.title, query);
-            const highlightedSummary = highlightKeywords(truncate(result.summary, 150), query);
+            const contextSnippet = extractContext(result, query);
+            const highlightedSummary = highlightKeywords(contextSnippet, query);
 
             return `
                 <a href="${result.url}" class="search-result-item">
@@ -179,6 +180,83 @@
         if (!text) return '';
         if (text.length <= maxLength) return text;
         return text.substring(0, maxLength).trim() + '...';
+    }
+
+    /**
+     * Extract context snippet around matched search terms
+     * Tries to show the part of the text where matches occur
+     */
+    function extractContext(result, query) {
+        // Extract search terms
+        const terms = query.trim()
+            .replace(/[+\-~^*:]/g, ' ')
+            .split(/\s+/)
+            .filter(term => term.length > 1)
+            .map(term => term.toLowerCase());
+
+        if (terms.length === 0) {
+            // No valid search terms, use summary or truncated body
+            return truncate(result.summary || result.body || '', 150);
+        }
+
+        const body = result.body || '';
+        const summary = result.summary || '';
+
+        // First, check if any term appears in the summary
+        const summaryLower = summary.toLowerCase();
+        const hasMatchInSummary = terms.some(term => summaryLower.includes(term));
+
+        if (hasMatchInSummary && summary.length > 0) {
+            // If summary contains matches, use it
+            return truncate(summary, 150);
+        }
+
+        // Otherwise, find the first match in body and extract context
+        const bodyLower = body.toLowerCase();
+        let earliestMatch = -1;
+        let matchedTerm = '';
+
+        for (const term of terms) {
+            const pos = bodyLower.indexOf(term);
+            if (pos !== -1 && (earliestMatch === -1 || pos < earliestMatch)) {
+                earliestMatch = pos;
+                matchedTerm = term;
+            }
+        }
+
+        if (earliestMatch === -1) {
+            // No match found in body, use summary or beginning
+            return truncate(summary || body, 150);
+        }
+
+        // Extract context around the match (about 75 chars before and after)
+        const contextRadius = 75;
+        let start = Math.max(0, earliestMatch - contextRadius);
+        let end = Math.min(body.length, earliestMatch + matchedTerm.length + contextRadius);
+
+        // Try to start at word boundary
+        if (start > 0) {
+            const spacePos = body.indexOf(' ', start);
+            if (spacePos !== -1 && spacePos < earliestMatch) {
+                start = spacePos + 1;
+            }
+        }
+
+        // Try to end at word boundary
+        if (end < body.length) {
+            const spacePos = body.lastIndexOf(' ', end);
+            if (spacePos > earliestMatch) {
+                end = spacePos;
+            }
+        }
+
+        let snippet = body.substring(start, end).trim();
+
+        // Add ellipsis if truncated
+        if (start > 0) snippet = '...' + snippet;
+        if (end < body.length) snippet = snippet + '...';
+
+        return snippet;
     }
 
     /**

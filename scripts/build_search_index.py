@@ -157,9 +157,22 @@ def get_all_pages(content_dir: Path) -> list[dict]:
         tags_raw = fields.get("tags", "")
         tags = [t.strip() for t in tags_raw.split("\n") if t.strip()]
 
-        # Get summary or description
+        # Get summary or description, fallback to first part of body
         summary = fields.get("summary", "") or fields.get("description", "")
         summary = strip_markdown(summary)
+        # If no summary, use first 150 chars of body as fallback
+        if not summary and body_text:
+            summary = body_text[:150].strip()
+            # Try to end at a sentence or word boundary
+            if len(body_text) > 150:
+                last_period = summary.rfind(". ")
+                last_space = summary.rfind(" ")
+                if last_period > 100:
+                    summary = summary[: last_period + 1]
+                elif last_space > 100:
+                    summary = summary[:last_space] + "..."
+                else:
+                    summary += "..."
 
         # Get pub_date if available
         pub_date = fields.get("pub_date", "")
@@ -198,7 +211,7 @@ def get_all_pages(content_dir: Path) -> list[dict]:
 
 def build_lunr_index(pages: list[dict], output_dir: Path) -> None:
     """Build the lunr.js index using Node.js."""
-    # Create a documents file for the browser (without full body text)
+    # Create a documents file for the browser (include body for context extraction)
     documents = []
     for page in pages:
         documents.append(
@@ -207,6 +220,7 @@ def build_lunr_index(pages: list[dict], output_dir: Path) -> None:
                 "url": page["url"],
                 "title": page["title"],
                 "summary": page["summary"],
+                "body": page["body"],  # Include body for context extraction
                 "tags": page["tags"],
                 "pub_date": page["pub_date"],
                 "type": page["type"],
