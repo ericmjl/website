@@ -202,59 +202,64 @@
         const body = result.body || '';
         const summary = result.summary || '';
 
-        // First, check if any term appears in the summary
-        const summaryLower = summary.toLowerCase();
-        const hasMatchInSummary = terms.some(term => summaryLower.includes(term));
+        // Function to find earliest match position in text
+        const findEarliestMatch = (text) => {
+            const textLower = text.toLowerCase();
+            let earliestMatch = -1;
+            let matchedTerm = '';
 
-        if (hasMatchInSummary && summary.length > 0) {
-            // If summary contains matches, use it
+            for (const term of terms) {
+                const pos = textLower.indexOf(term);
+                if (pos !== -1 && (earliestMatch === -1 || pos < earliestMatch)) {
+                    earliestMatch = pos;
+                    matchedTerm = term;
+                }
+            }
+            return { pos: earliestMatch, term: matchedTerm };
+        };
+
+        // Check if summary has matches within first 100 chars
+        const summaryMatch = findEarliestMatch(summary);
+        if (summaryMatch.pos !== -1 && summaryMatch.pos < 100 && summary.length > 0) {
+            // If summary contains matches early enough, use it
             return truncate(summary, 150);
         }
 
-        // Otherwise, find the first match in body and extract context
-        const bodyLower = body.toLowerCase();
-        let earliestMatch = -1;
-        let matchedTerm = '';
+        // Otherwise, find match in body or full summary and extract context
+        const textToSearch = body || summary;
+        const match = findEarliestMatch(textToSearch);
 
-        for (const term of terms) {
-            const pos = bodyLower.indexOf(term);
-            if (pos !== -1 && (earliestMatch === -1 || pos < earliestMatch)) {
-                earliestMatch = pos;
-                matchedTerm = term;
-            }
-        }
-
-        if (earliestMatch === -1) {
-            // No match found in body, use summary or beginning
+        if (match.pos === -1) {
+            // No match found, use summary or beginning
             return truncate(summary || body, 150);
         }
 
         // Extract context around the match (about 75 chars before and after)
         const contextRadius = 75;
-        let start = Math.max(0, earliestMatch - contextRadius);
-        let end = Math.min(body.length, earliestMatch + matchedTerm.length + contextRadius);
+        let start = Math.max(0, match.pos - contextRadius);
+        let end = Math.min(textToSearch.length, match.pos + match.term.length + contextRadius);
 
         // Try to start at word boundary
         if (start > 0) {
-            const spacePos = body.indexOf(' ', start);
-            if (spacePos !== -1 && spacePos < earliestMatch) {
+            const spacePos = textToSearch.indexOf(' ', start);
+            if (spacePos !== -1 && spacePos < match.pos) {
                 start = spacePos + 1;
             }
         }
 
         // Try to end at word boundary
-        if (end < body.length) {
-            const spacePos = body.lastIndexOf(' ', end);
-            if (spacePos > earliestMatch) {
+        if (end < textToSearch.length) {
+            const spacePos = textToSearch.lastIndexOf(' ', end);
+            if (spacePos > match.pos) {
                 end = spacePos;
             }
         }
 
-        let snippet = body.substring(start, end).trim();
+        let snippet = textToSearch.substring(start, end).trim();
 
         // Add ellipsis if truncated
         if (start > 0) snippet = '...' + snippet;
-        if (end < body.length) snippet = snippet + '...';
+        if (end < textToSearch.length) snippet = snippet + '...';
 
         return snippet;
     }
