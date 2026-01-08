@@ -193,7 +193,7 @@
         const terms = query.trim()
             .replace(/[+\-~^*:]/g, ' ')
             .split(/\s+/)
-            .filter(term => term.length > 0);
+            .filter(term => term.length > 1);  // Filter out single-letter terms to avoid markup corruption
 
         if (terms.length === 0) return escapeHtml(text);
 
