@@ -107,6 +107,64 @@
         }
     }
 
+    // Fetch live contributions directly from GitHub API
+    async function fetchLiveContributions() {
+        try {
+            const since = new Date();
+            since.setFullYear(since.getFullYear() - 1);
+            const sinceStr = since.toISOString().split('T')[0];
+
+            const query = `author:${GITHUB_USERNAME} type:pr created:>${sinceStr}`;
+            const url = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&sort=created&order=desc&per_page=100`;
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch GitHub PRs');
+            const data = await response.json();
+
+            // Filter out PRs to own repos and group by repo
+            const prsByRepo = {};
+
+            for (const item of data.items || []) {
+                const repoUrl = item.repository_url;
+                const repoName = repoUrl.split('/').slice(-2).join('/');
+
+                // Skip PRs to own repos
+                if (repoName.startsWith(`${GITHUB_USERNAME}/`)) continue;
+
+                if (!prsByRepo[repoName]) {
+                    prsByRepo[repoName] = {
+                        repo: repoName,
+                        prs: [],
+                        merged_count: 0
+                    };
+                }
+
+                const pr = {
+                    title: item.title,
+                    url: item.html_url,
+                    state: item.state,
+                    merged: item.pull_request?.merged_at ? true : false
+                };
+
+                prsByRepo[repoName].prs.push(pr);
+                if (pr.merged) {
+                    prsByRepo[repoName].merged_count++;
+                }
+            }
+
+            // Convert to array and sort by PR count
+            const contributions = Object.values(prsByRepo)
+                .sort((a, b) => b.prs.length - a.prs.length)
+                .slice(0, 15);
+
+            renderContributions(contributions);
+        } catch (error) {
+            console.error('Error fetching live contributions:', error);
+            document.getElementById('contributions-container').innerHTML =
+                '<p class="error">Failed to load live contributions. GitHub API may be rate-limited.</p>';
+        }
+    }
+
     // Fetch pre-built data for projects and contributions
     async function loadPrebuiltData() {
         try {
@@ -115,18 +173,15 @@
             const data = await response.json();
 
             renderMaintainedProjects(data.maintained_projects);
-            renderContributions(data.contributions);
 
             // Show timestamp for pre-built data
             const timestamp = new Date(data.generated_at);
             document.getElementById('data-timestamp').textContent =
-                `Project and contribution data last updated: ${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
+                `Project data last updated: ${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
         } catch (error) {
             console.error('Error loading pre-built data:', error);
             document.getElementById('projects-container').innerHTML =
                 '<p class="error">Failed to load project data. Please try refreshing the page.</p>';
-            document.getElementById('contributions-container').innerHTML =
-                '<p class="error">Failed to load contribution data. Please try refreshing the page.</p>';
         }
     }
 
@@ -263,7 +318,9 @@
     function init() {
         // Fetch live activity from GitHub API
         fetchLiveActivity();
-        // Load pre-built data for projects and contributions
+        // Fetch live contributions from GitHub API
+        fetchLiveContributions();
+        // Load pre-built data for projects
         loadPrebuiltData();
     }
 
