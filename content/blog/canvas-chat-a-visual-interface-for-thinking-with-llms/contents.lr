@@ -85,7 +85,7 @@ Canvas Chat dynamically fetches available models from each provider when you ent
 
 ## What building this taught me
 
-This project reinforced something I wrote about in the "I don't code anymore, I build" post: I stayed in product builder brain throughout. I didn't have strong opinions about whether the JavaScript was idiomatic because I don't know what idiomatic JavaScript looks like. I just knew whether the feature worked.
+This project reinforced something I wrote about in [the "I don't code anymore, I build" post](/blog/2025/12/28/you-can-just-make-stuff-with-opencode-and-claude-opus-4-5/): I stayed in product builder brain throughout. I didn't have strong opinions about whether the JavaScript was idiomatic because I don't know what idiomatic JavaScript looks like. I just knew whether the feature worked.
 
 When something broke, I'd describe the symptoms and let Opus 4.5 debug in as much detail as I can manage. When I wanted a new interaction pattern, I'd describe what it should feel like and watch it materialize. The creative work — deciding what nonlinear chat should *be* — remained human. The mechanical translation got delegated.
 
