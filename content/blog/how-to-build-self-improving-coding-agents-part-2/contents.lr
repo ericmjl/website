@@ -1,0 +1,114 @@
+title: How to build self-improving coding agents - Part 2
+---
+author: Eric J. Ma
+---
+body:
+
+In [part 1](/blog/2026/1/17/how-to-build-self-improving-coding-agents-part-1/), I focused on repo memory with `AGENTS.md`.
+
+In this post, I am switching to the other lever: skills.
+
+## Skills are prompt compression
+
+Skills are the other half of the system.
+
+When a task repeats, I do not want to keep re-explaining the workflow. I want a playbook I can invoke.
+
+### What a skill is
+
+A skill is a folder with a `SKILL.md` file.
+
+The `SKILL.md` is the prompt. The bundled scripts and assets are the tool layer.
+
+A good skill makes three things explicit:
+
+- when to use it
+- what steps to take
+- what good output looks like
+
+If you want the spec, see [Agent Skills](https://agentskills.io/home).
+
+### Examples
+
+A GitHub debugging skill is the obvious starting point. CI failures are repetitive and usually want the same sequence: identify failing jobs, pull logs, inspect diffs, reproduce locally, then patch.
+
+A second example is a release announcement skill.
+
+The motivation here was not abstract. I was spending a good half hour each release just trying to compose the announcement, and I did not want to do that anymore.
+
+The output contract was also specific. I wanted release announcements that are copy-pasteable into Microsoft Teams, with emojis, but otherwise minimal formatting because Teams formatting is inconsistent.
+
+A third example is more technical.
+
+At work I had a session with a coding agent to train an ML model inside a script. After that session, I had it write a report on what it learned and what changed. Then I turned that report writing into a skill.
+
+The report format was familiar to everyone on the team: Abstract, Introduction, Methods, Results, Discussion.
+
+The content came from real artifacts: stdout logs, metrics, code, config files, git diffs, and the agent’s own session history.
+
+A fourth example is about tacit domain expertise.
+
+A teammate of mine created a skill that encoded her implicit knowledge from years of debugging chromatography traces. The point was not that the agent suddenly became a scientist. The point was that her debugging procedure became explicit and reusable.
+
+### Skill creation and iteration
+
+I now like skills because they are easy to iterate on. I used to be more skeptical, and I still think MCP servers have a cleaner distribution story, but my opinion has shifted as I have used skills more in real workflows ([Exploring Skills vs MCP Servers](https://ericmjl.github.io/blog/2025/10/20/exploring-skills-vs-mcp-servers/)).
+
+For the release announcements, I fed my coding agent a few examples of what “good” looked like. I was using Anthropic’s [`skill-creator`](https://github.com/ericmjl/skills/blob/main/skills/skill-creator/) skill at the time, and those examples became part of the skill itself, stored as assets that the agent could reuse.
+
+This is a huge energy barrier reducer. It is much easier to iterate on a Markdown-based skill than it is to start from scratch with “write me a Python script that does X”. You can still add scripts inside a skill when you need determinism, but the interface is the Markdown.
+
+The other half is the feedback loop. When I edit the generated release announcement, I feed the revised version back to the agent and tell it to update the skill with the new example. That way the skill evolves as my taste evolves.
+
+This is also a way to share. A skill is reviewable. I can open a PR and let collaborators comment on both the output and the process that produced it.
+
+In the chromatography example, using [`skill-creator`](https://github.com/ericmjl/skills/blob/main/skills/skill-creator/) to generate the first draft mattered for another reason too. English is not my teammate’s first language. The structure makes it much easier to get from “I know what I do” to “here is the procedure an agent can follow”.
+
+### Distribution and updates
+
+This is where skills feel less mature than MCP servers.
+
+An MCP server has a clean distribution story. You can `pip install` it, configure auth once, and you get a centrally versioned bundle of prompts and tools. Updating is a normal package update.
+
+Skills still involve moving folders between machines and repos, and remembering where each harness expects skills to live.
+
+I originally ended up writing a [`skill-installer`](https://github.com/ericmjl/skills/tree/main/skills/skill-installer) skill. It is the same move as [`skill-creator`](https://github.com/ericmjl/skills/blob/main/skills/skill-creator/), but for distribution and updates.
+
+When I say “install this skill” or “update this skill from this URL”, the agent needs to ask two key questions if I have not already specified them:
+
+- is this repo-local or machine-global?
+- which harnesses should discover it?
+
+Then it does the boring part consistently.
+
+Update: it looks like [`openskills`](https://github.com/numman-ali/openskills) now solves most of what I wanted here, and it does it more deterministically. It is a CLI that installs skill folders from GitHub or local paths, tracks their sources for updates, and can target multiple install locations.
+
+OpenSkills has a "universal" mode that installs to `.agent/skills` (repo) and `~/.agent/skills` (machine).
+
+The caveat is that `.agent/skills` is not a universal discovery standard across harnesses. Some tools look in `.claude/skills`, `.github/skills`, `.opencode`, or other locations. So OpenSkills helps with deterministic installs and updates, but you still need to know what your harness will actually read.
+
+I expect this to converge soon.
+
+At this point you have both memory and playbooks. The question becomes how you decide what to invest in next.
+
+## Coming next
+
+Part 3 covers the operating model.
+
+It lays out a maturity model, a concrete bootstrap set of skills to install globally, and a decision rule for when to update `AGENTS.md` versus when to create a skill.
+
+[How to build self-improving coding agents - Part 3](/blog/2026/1/19/how-to-build-self-improving-coding-agents-part-3/)
+---
+pub_date: 2026-01-18
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I dive into the concept of 'skills' for coding agents—reusable playbooks that streamline repetitive tasks and make workflows explicit. I share real examples, from debugging to release announcements, and discuss how skills evolve through iteration and feedback. I also touch on the challenges of distributing and updating skills compared to MCP servers. Curious about how these skills can make your coding agents smarter and more efficient?
+---
+tags:
+
+agents
+ai
+skills
+mcp
+workflows

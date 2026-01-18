@@ -1,0 +1,156 @@
+title: How to build self-improving coding agents - Part 3
+---
+author: Eric J. Ma
+---
+body:
+
+In [part 1](/blog/2026/1/17/how-to-build-self-improving-coding-agents-part-1/), I covered `AGENTS.md` as repo memory.
+
+In [part 2](/blog/2026/1/18/how-to-build-self-improving-coding-agents-part-2/), I covered skills as reusable playbooks.
+
+This post is about turning those two ideas into something you can run as a practice.
+
+## The maturity model
+
+Once you have both repo memory and skills, you can think about how the practice evolves over time.
+
+### Stage 0: Ad hoc prompting
+
+You keep re-explaining the same things in chat. It works, but it does not compound.
+
+### Stage 1: Repo-local memory
+
+You add repository-specific guardrails and a code map.
+
+This is where `AGENTS.md` shines.
+
+### Stage 2: Global personal skills
+
+Once a workflow repeats across repos, you promote it into a global skill on your machine.
+
+If you want a concrete bootstrap set, here is what I would install globally:
+
+- [`skill-creator`](https://github.com/ericmjl/skills/blob/main/skills/skill-creator/): lowers the activation energy for making new skills.
+- an installer and updater for skills, for example [`openskills`](https://github.com/numman-ali/openskills): makes distribution and updates less annoying.
+- [`agents-md-improver`](https://github.com/ericmjl/skills/tree/main/skills/agents-md-improver): keeps the repo map current without you thinking about it.
+
+### Stage 3: Shared skills
+
+If a workflow repeats across a team, it belongs in a shared location with a clear install path.
+
+I do not think you should start here. Start repo-local, then promote only when you feel the pain twice.
+
+Promotion decisions come from paying attention to what the agent actually does in practice.
+
+## Watch traces, then distill constraints
+
+If you work with agents long enough, you start to notice the model’s default moves.
+
+When I see an agent repeatedly:
+
+- taking an overcomplicated path
+- missing a file I know is relevant
+- applying a global refactor when a surgical fix is needed
+
+I treat that as a signal.
+
+Then I decide what kind of fix it is.
+
+If it is a repo invariant, a navigation hint, or a local norm, it belongs in `AGENTS.md`. That is the always-on context for how work should happen in this repo.
+
+If it is a repeatable procedure with a clear output contract, it belongs in a skill.
+
+Sometimes the procedure is repo-specific. In that case I keep it as a repo-local skill. If I feel the pain twice in another repo, I promote it into a global skill.
+
+This is how you get operational learning without pretending the model is learning.
+
+Underneath, a lot of this comes down to writing instructions in a way that can be executed.
+
+## Markdown is becoming executable
+
+One reason this whole approach works is that the agent can execute what you write.
+
+When an LLM can execute tool calls, Markdown becomes an executable language.
+
+Skills fit this pattern. A `SKILL.md` is just a structured instruction sheet, but it is also runnable in the sense that the agent can turn it into searches, file reads, edits, and command execution.
+
+The other trick is that skills are loaded on demand. The agent reads a short description first, then loads the full instructions only when it needs them.
+
+You can write a precise plan in plain language, and the agent can turn it into:
+
+- searches
+- file reads
+- surgical edits
+- test runs
+
+This is not magic. It still depends on linguistic precision. But the ergonomics shift. You can describe a workflow at the level you actually think about it, then let the agent do the clerical work.
+
+This is also why I like the runbook analogy, even with the caveats.
+
+## When to update `AGENTS.md` vs create a skill
+
+Skills tell an agent how to do something.
+
+`AGENTS.md` tells an agent how this repo works, and what rules it must follow while doing anything at all.
+
+Here is how I decide.
+
+Update `AGENTS.md` when the instruction is specific to the repo:
+
+- navigation help: where things live, what files matter, what to ignore
+- local norms: build commands, test commands, environment rules, style constraints
+- guardrails: what not to do in this repo
+
+Create a skill when the workflow is reusable, or when you want a named, on-demand playbook:
+
+- a multi-step procedure you want to invoke repeatedly
+- a workflow that spans repos or products
+- a task with a strict output contract (release announcements, status updates, summaries)
+
+If I am unsure, I start repo-local. If I feel the pain twice in another repo, I promote it into a global skill.
+
+## The meta skill is metacognition
+
+The most valuable “skill”, however, is not a file format. It is the habit of watching yourself work.
+
+I try to ask: what am I doing repeatedly that should be systematized?
+
+If the answer is “I keep re-explaining how this repo is organized”, that goes into `AGENTS.md`.
+
+If the answer is “I keep asking for the same kind of summary, debug sequence, or release note format”, that becomes a skill.
+
+Once you start doing this, you build a compounding loop. The agent handles more of the repeated work, and you spend more time on judgment and design.
+
+If this all sounds like more than coding, that is because it is.
+
+## Where this seems to be going
+
+I buy Simon Willison’s framing that these tools are general agents disguised as developer tools ([Claude Cowork post](https://simonwillison.net/2026/Jan/12/claude-cowork/)).
+
+Even if you start with coding, the moment an agent can run terminal commands and manipulate files, the surface area expands to “almost anything”, as long as you know how to steer it.
+
+That matches how I use coding agents.
+
+Yes, I use it for coding work. But I also use it for other intellectual work: ghostwriting blog posts (which I scrutinize heavily, because the review process is essential for me to own the content), writing release announcements, and turning messy notes into structured drafts.
+
+I have also heard Theo Brown make a similar point when talking about Claude Cowork ([video](https://www.youtube.com/watch?v=IcQEaopx90g)). The details vary, but the pattern is the same: once you have a general agent, the label “coding tool” becomes more about marketing and UI than capability.
+
+So I am increasingly convinced that the long-term shape here is web-deployed agents with less scary branding.
+
+You will still want composable components for LLM workflows. But for day-to-day work, the most useful thing is an agent that can execute commands and apply changes, while carrying a growing set of skills and repository memory.
+
+That combination is what makes the agent feel less like a chat box and more like a teammate.
+---
+pub_date: 2026-01-19
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how to combine repo memory and reusable skills to create self-improving coding agents. I walk through a maturity model, explain when to update AGENTS.md versus creating a skill, and highlight the importance of metacognition in systematizing your workflows. I also discuss how agents are evolving beyond coding tools into general-purpose teammates. Curious how you can make your coding agents smarter and more helpful over time?
+---
+tags:
+
+agents
+ai
+workflows
+productivity
+skills

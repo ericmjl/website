@@ -1,0 +1,142 @@
+title: How to build self-improving coding agents - Part 1
+---
+author: Eric J. Ma
+---
+body:
+
+I want my coding agents to get better every week.
+
+Not in the abstract “the models are improving” sense. I mean it in the operational sense: if an agent makes a mistake, or takes a path I would not take, I want that feedback to stick. If I have to repeat the same preference every session, I am not using an agent. I am babysitting a very fast intern.
+
+The trick is that the model weights are not changing mid-week. So if you want “self-improvement”, you need to change the environment the agent works inside.
+
+I have found two levers that compound:
+
+- `AGENTS.md` as repository memory
+- skills as reusable playbooks
+
+This post is a longer “source of truth” version. My intent is to later break it into smaller blog entries, and also rework it into chapters for my data science bootstrap notes.
+
+## Where improvement comes from
+
+The UX I am after is simple: I stop repeating myself. I stop doing the same end-of-day cleanup, writing the same reminders, re-explaining where files live. The agent starts each session closer to how I want it to work.
+
+If the model weights are not changing mid-week, improvement has to come from the environment you wrap around the agent.
+
+For me that environment has two pieces:
+
+- durable repository memory (`AGENTS.md`)
+- reusable playbooks (skills)
+
+Once you have those two, you can treat “agent improvement” like runbooks plus postmortems.
+
+The analogy is imperfect, because this is not documentation for humans. The loop is the same though: write down the repeatable steps, then write down what surprised you and what you will do differently next time.
+
+The difference is that natural language can turn into tool calls. When you write things down precisely, the agent can execute them.
+
+I usually start with `AGENTS.md`, because it cuts down exploration immediately.
+
+## `AGENTS.md` as repository memory
+
+If you have not run into the `AGENTS.md` convention before, see [agents.md](https://agents.md/).
+
+To be effective, `AGENTS.md` needs to do two things for the agent.
+
+First, it needs to make the agent fast at navigating the repo so it can get to the right files with minimal wandering. A code map is a straightforward way to do that.
+
+Second, it needs to encode the local ways of working in this repo so the agent stops repeating the same mistakes. That is where corrections and norms live.
+
+This is the loop I want:
+
+- I observe a mismatch.
+- I tell the agent what must be true.
+- The agent writes the correction into `AGENTS.md` (or a repo-local skill).
+- The agent reads it next time.
+
+### Fast navigation to the right files
+
+In the ideal state, the agent gets to the right files quickly.
+
+A code map is the simplest way I know to make that happen. It does not have to be perfect. It can be slightly stale and still be useful.
+
+I have seen this pay off in a very practical way. In my `canvas-chat` codebase, having a map of the repo let the agent one-shot an obscure spot where events were emitted for node rendering. Without a map, the agent previously needed 5 to 6 `rg` searches, just to find the right neighborhood of the code.
+
+The difference is small in absolute time, something like 40 seconds versus 2 seconds. But it changes the feel of the collaboration. The agent spends less time wandering, and I spend less time steering.
+
+### Close the loop when the map is stale
+
+There is one extra move that makes this feel self-correcting: When the agent notices that the code map looks stale, it should update the code map.
+
+This is a subtle point. The map is not a static artifact. It is part of a feedback loop. When the agent’s exploration discovers a mismatch between the map and reality, that discovery should flow back into `AGENTS.md`.
+
+You can encode this as an explicit instruction inside `AGENTS.md`. You can also refresh on a schedule, like weekly, but the on-demand update is the part that makes the loop feel alive.
+
+### Corrections that become durable norms
+
+The second job of `AGENTS.md` is to hold repo-specific corrections to agents behaviour.
+
+These are the things you find yourself saying out loud.
+
+Two examples from my own work:
+
+- Run Python in the `pixi` context. Use `pixi run python ...`.
+- Do not cheat by modifying the tests to make them pass.
+
+I say the first one because the agent will often try `python -c ...` to quickly check something. In a `pixi`-managed project, that fails if you do not have a global Python.
+
+I say the second one because changing tests to make them pass destroys the point of having tests.
+
+Once these rules are written down, the agent stops making you restate them. This is the simplest way I know to reduce repeated friction.
+
+## A starter prompt for generating `AGENTS.md`
+
+I have found it useful to bootstrap `AGENTS.md` with a one-time deep dive.
+
+Here is a prompt I use as a starting point. It is intentionally repo-specific.
+
+```text
+You are a coding agent. Read through this repository and create an `AGENTS.md` file at the repo root.
+
+Requirements:
+- Include a short codebase map that helps an agent find files quickly.
+- Focus on entry points, directory roles, naming conventions, configuration wiring, and test locations.
+- Add a section called "Local norms" with repo-specific rules you infer from the code and tooling.
+- Add a section called "Self-correction" with two explicit instructions:
+  - If the code map is discovered to be stale, update it.
+  - If the user gives a correction about how work should be done in this repo, add it to "Local norms" (or another clearly labeled section) so future sessions inherit it.
+
+Process:
+- Use search and targeted file reads, do not read every file.
+- Prefer `rg` searches to find entry points and configs.
+- Prefer high-signal files: `README`, `pyproject.toml`, `package.json`, `Makefile`, `opencode.json`, `.github/workflows`, and top-level `src` or `app` directories.
+
+Output:
+- Write the final `AGENTS.md` contents in Markdown.
+- Keep it concise. Optimize for navigation and correctness.
+```
+
+If you want, you can go further and add a cadence rule like “refresh weekly”, but I would keep it lightweight. The goal is compounding value, not bureaucracy.
+
+Once `AGENTS.md` exists, skills are the second lever.
+
+## Coming next
+
+Part 2 is about skills as reusable playbooks.
+
+It covers what a skill is, several examples from coding and scientific work, and why I ended up writing a `skill-installer` skill to deal with the current distribution story.
+
+[How to build self-improving coding agents - Part 2](/blog/2026/1/18/how-to-build-self-improving-coding-agents-part-2/)
+---
+pub_date: 2026-01-17
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my approach to making coding agents truly self-improving by focusing on operational feedback, not just model updates. I explain how using an AGENTS.md file as repository memory and developing reusable skills can help agents learn from mistakes and reduce repetitive guidance. My goal is to create an environment where agents get better each week without constant babysitting. Curious how these strategies can make your coding agents more effective?
+---
+tags:
+
+agents
+ai
+workflows
+productivity
+software
