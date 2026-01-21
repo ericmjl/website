@@ -1,0 +1,159 @@
+title: The Lab Scientist's Guide to Actually Collaborating with Your Data Team
+---
+author: Eric J. Ma
+---
+body:
+
+I've been on both sides of this divide.
+
+I started as a lab scientist, pipette in hand, designing experiments and being completely baffled by statistical concepts. Then I crossed over to become a quantitative person myself. So when I tell you that most lab-data team collaborations fail before they even begin, I'm speaking from experience on both sides.
+
+Sound familiar? You've probably seen this happen in your own lab.
+
+This is the counterpart to my previous post about how data scientists should communicate with laboratory scientists. Today, we're flipping the script. If you're a lab scientist working with computational folks, this one's for you.
+
+And honestly? After years of watching these collaborations go sideways, I'm exhausted by how often the same preventable mistakes happen. So let's fix this.
+
+## This mistake kills collaboration before it starts
+
+Here's what usually happens: You're a laboratory scientist. You've got some coding skills. Maybe you've been teaching yourself Python on weekends. You identify a problem in the lab that could benefit from computational analysis, so you build something. It works! You're proud of it. Then you walk over to your data science team and say, "Hey, I built this thing. Can you put it in production for me?"
+
+Stop. Right there. That's where you lost them.
+
+Ever wonder why your data team seems less than enthusiastic about your brilliant solution?
+
+You just turned your data science team from intellectual partners into maintenance crew. You turned them from co-creators into janitors for your code. And trust me, nothing kills a data scientist's motivation faster than being handed someone else's solution to maintain—especially when they could have built something better if you'd just involved them from the start.
+
+> **Side note:** This same principle applies to any digital collaboration—whether you're working with software engineers, DevOps teams, or IT support. Don't build solutions in isolation and then ask them to "just deploy it" or "just fix this bug." Involve them from the beginning as co-creators, not cleanup crew.
+
+### What your data team won't tell you about
+
+Your data scientists and computational scientists have spent years—sometimes decades—mastering the art of using computation to solve problems. They're not just coders; they're problem solvers who happen to use code as their primary tool.
+
+When you approach them with a pre-built solution, even with the best intentions, here's what goes through their mind: "Great, another well-meaning lab scientist who thinks a weekend of Python tutorials makes them a computational expert. Now I have to either hurt their feelings by rebuilding this from scratch, or maintain their suboptimal solution forever."
+
+But here's the thing—this isn't about technical skill. You might actually have brilliant algorithmic ideas. The issue is ownership and long-term maintenance. If you're not going to maintain that solution for the next five years, handle the bug fixes at 2 AM, or update it when the underlying libraries change, then you need your computational team bought in from day one.
+
+### Here's what actually works
+
+Instead of building first and asking for help later, try this: "I've noticed we have issues with [specific problem]. I have some ideas about how computation might help, but I respect your expertise too much to pretend I'm a computational scientist. Can we co-develop something together?"
+
+That's it. That simple reframing changes everything.
+
+You're acknowledging the problem (which you understand better than anyone as the domain expert). You're bringing ideas to the table (which shows initiative and engagement). But you're also respecting their expertise and inviting them as co-creators, not relegators to production support.
+
+Form a small team—three or four people max. Define the problem together. Build the solution together. Own the outcome together.
+
+## Speaking the same language (and it's not Python)
+
+The second biggest gap I see? Laboratory scientists who don't speak the language of statistical experimental design. And I'm not talking about running a t-test in Excel. I'm talking about understanding why your beautifully executed experiment might be complete garbage from a data perspective.
+
+Here's what every lab scientist needs to understand before their next conversation with a data scientist:
+
+Think your experiment is bulletproof? Let me show you where it might be falling apart.
+
+**Batch effects are everywhere.** If you ran all your controls on Monday and all your treatments on Tuesday, congratulations—you've just confused day-of-week effects with treatment effects. Your data scientist will spend weeks trying to untangle this mess, if it's even possible.
+
+**Controls aren't optional extras.** You need signal positive controls, technical positive controls, blanks, signal negative controls, and technical negative controls. Each serves a different purpose. Skip any of them, and you've left a gaping hole in your experimental design that no amount of computational wizardry can fix.
+
+**Sample size calculations are backwards thinking.** This one might be controversial, but hear me out. Everyone asks, "How many samples do I need to see an effect?" That's the wrong question. You should be asking, "How precisely can I measure the effect with the resources I have?" In discovery work, you don't know what the effect size will be—that's why you're discovering it! Focus on measuring effects accurately, not hunting for statistical significance.
+
+## Why "AI will fix it" is a delusion
+
+Let me be crystal clear about something: AI is not a magic wand that fixes bad data. Machine learning models are just function approximators. They learn the relationship between your inputs and outputs. If your outputs are garbage because of poor experimental control, your model will faithfully learn to predict garbage.
+
+Garbage in, garbage out. This principle is as true for GPT-4 as it was for linear regression.
+
+I've seen too many lab scientists collect data from poorly controlled experiments and then hopefully ask if "maybe machine learning could find the signal in the noise?" No. It can't. It will find patterns, sure—but they'll be patterns in your batch effects, not biological reality.
+
+## Never do this: the data dump
+
+Never, ever design an experiment, collect all your data, and then dump it on your data scientist's desk asking, "Can you find something significant in this?"
+
+This is like cooking an elaborate meal without asking if anyone's allergic to the ingredients, then being surprised when half the table can't eat it.
+
+Sound like something you've done? You're not alone—but let's fix this pattern.
+
+Your quantitative team needs to be involved before you run your first sample. They need to understand:
+- What assumptions you're making about the assay
+- Where the experiment could go wrong
+- What confounders might exist
+- How the samples will be processed
+- What the positive and negative controls tell you
+- What "normal" variation looks like in your system
+
+Without this context, they're not analyzing your data—they're performing statistical theater.
+
+## What makes quantitative people fall in love
+
+You want to know the secret to making your data scientist's day? Talk about uncertainty.
+
+When you say things like, "I'm concerned about edge effects in the plate reader" or "The pH might drift over the course of the run" or "There's inherent biological variability in these cell lines that we need to account for"—that's music to a statistician's ears.
+
+Want to become their favorite collaborator? Start thinking like this.
+
+Most lab scientists present their data as gospel truth. The ones who acknowledge uncertainty, who understand that every measurement has error, who care about confidence intervals as much as point estimates? Those are the ones we love working with.
+
+## Building bridges, not walls
+
+The best lab-data team collaborations I've seen share a few characteristics:
+
+**Mutual respect for expertise.** The lab scientist doesn't pretend to be a computational expert. The data scientist doesn't pretend to understand the biological nuances. Both acknowledge what they don't know.
+
+**Early and frequent communication.** The data team is involved from experimental design, not just data analysis. The lab team explains the biological context, not just the technical protocol.
+
+**Shared ownership of outcomes.** Success is "our model" not "my experiment" or "your analysis." Failure is a learning opportunity for the team, not a blame game.
+
+**Realistic expectations.** Not every dataset will yield groundbreaking insights. Not every computational approach will work. That's science.
+
+## Moving forward together
+
+If you're a lab scientist reading this, here's your homework: Before your next experiment, grab coffee with someone from your data team. Don't talk about the specific analysis you need. Talk about the scientific question you're trying to answer. Let them into your thought process early.
+
+And if you've been learning to code? That's fantastic. Keep doing it. But use those skills to better understand what your computational colleagues do, not to replace them. The best collaborations happen when lab scientists who understand computation work with computational scientists who understand biology.
+
+Because at the end of the day, we're all trying to do the same thing: push science forward. We just happen to use different tools to get there. And when those tools work together—when pipettes and Python unite—that's when the magic happens.
+
+Trust me. I've been on both sides. The view is better when we work together.
+
+## Your next steps
+
+Ready to transform your collaboration with your data team? Here's your action plan:
+
+**This week:**
+
+- Schedule a coffee chat with someone from your data team—no agenda, just relationship building
+- Before your next experiment, send them a quick message: "I'm planning an experiment on [topic]. Mind if I run the design by you first?"
+
+**This month:**
+
+- Invite your data scientist to a lab tour. Show them your equipment, your protocols, your challenges
+- Start using phrases like "I'm concerned about..." and "What if..." when discussing your data
+- Ask them to explain their analysis approach in plain English—you'll both learn something
+
+**Going forward:**
+
+- Make your data team co-authors on your experimental design, not just your papers
+- Share your biological intuition early and often—it's more valuable than you think
+- When you learn to code, use it to better understand their world, not to replace them
+
+The best collaborations happen when lab scientists who understand computation work with computational scientists who understand biology. You've got this.
+---
+pub_date: 2025-09-28
+---
+twitter_handle: ericmjl
+---
+tags:
+
+collaboration
+communication
+teamwork
+biology
+coding
+research
+statistics
+experiments
+ownership
+uncertainty
+---
+summary: In this blog post, I share hard-earned lessons from working on both sides of the lab-data divide. I explain why so many collaborations between lab scientists and data teams fail, and offer practical advice for building real partnerships—starting with early communication, mutual respect, and shared ownership. I also highlight common pitfalls, like the "data dump" and overreliance on AI, and suggest simple steps to improve teamwork and outcomes. Want to know the secret to making your data scientist love working with you?
