@@ -1,0 +1,137 @@
+title: Model feel, fast tests, and AI coding that stays in flow
+---
+author: Eric J. Ma
+---
+body:
+
+Most of the conversation about AI coding models focuses on performance metrics. Benchmarks, evals, pass rates, latency. Useful stuff, but it misses the part that actually shapes my day-to-day: what it *feels* like to work with the model.
+
+Once you start using LLMs as coding agents, the qualitative experience becomes a throughput issue. It affects how often you intervene, how much you trust what is happening, and whether you stay in flow or spend your time cleaning up weird breakage.
+
+Two axes keep showing up for me.
+
+First is time horizon and supervision style: long-horizon autonomy versus short-horizon iteration.
+
+Second is personality and verbosity: how the model behaves when it is wrong, how much it narrates, and whether it stays constructive or spirals into apology loops.
+
+There is also a third ingredient that ends up mattering as much as the model: the agentic harness. By that I mean the tools and checks that the agent can run to verify it did not break behavior. Good harness beats model swapping more often than I expected.
+
+## Long-horizon autonomy vs short-horizon iteration
+
+I call it "Opus-feel" when a model has that "ask and it shall be given" vibe with a longer time horizon. You describe what you want, it runs for a while, and it comes back with a plausible scaffold. It is great for momentum.
+
+I call it "Sonnet-feel" when a model leans toward shorter-horizon iteration. It works better when you are walking through a real codebase step by step, keeping changes small enough that you can validate what happened, correct course, and keep going.
+
+Another way to put it is that long-horizon autonomy pushes you toward a spec-and-review loop, while short-horizon iteration pushes you toward a steer-and-verify loop. Both can be productive. They just fail differently.
+
+In a sufficiently large codebase, you cannot rely solely on long-horizon autonomy where you ask for something with a vague description and hope it lands cleanly. You are not always guaranteed something well organized, especially when the job is refactoring rather than greenfield scaffolding.
+
+A concrete example for me came from Canvas chat. At the time, everything was tied to `app.js` and `app.py`. When I wanted to refactor things into plugins, I needed to dogfood a plugin pattern in the codebase itself.
+
+Long-horizon autonomy struggled here. It could generate a plugin pattern, but it was not great at the careful, incremental work of extracting behavior out of a monolith and into a clean plugin boundary.
+
+Walking bit by bit with Sonnet or Sonnet-quality models was a very different experience. The big win was that I could study the LLM traces live (the tool calls and file edits it proposes step by step) and see where edits were being made. If I noticed a feature handler getting added to `app.js` when it clearly belonged in a plugin file, I could intervene immediately and ask, "Why is that thing over there in `app.js`? Why is it not inside the plugin file instead?" That kind of interactive, traceable work is where the short-horizon models shine.
+
+Examples from my own testing, with all the usual caveats: Opus-4.5 (Anthropic), GPT-5.2 (OpenAI), and GLM-4.7 (z.ai) have been solid for the long-horizon, get-it-moving-fast mode. Minimax M 2.1 (OpenCode Zen) feels closer to the short-horizon mode for me. Composer-1 (Cursor) also feels closer to that style. I suspect GPT-4o and GPT-5.1 (both OpenAI) might land there too, but I have not really test-driven them.
+
+The practical takeaway is that I now switch modes on purpose. When I need speed and initial momentum, I reach for long-horizon autonomy. When I need control, I choose a short-horizon model so I can babysit the work, watch the traces, and intercept it when it tries to do something clever in the wrong place.
+
+### The harness lesson (Cypress beat model hopping)
+
+One more lesson from that period: I did a bunch of model hopping, trying to find something that would fix a particular class of behavioral breakage.
+
+The most frustrating failures were not subtle logic bugs. They were basic syntax errors introduced during tool-call patching, unclosed brackets, unclosed parentheses, that kind of thing. When that happens, you do not get a slightly-wrong feature, you get a page that fails to load. Debugging it manually is fine the first time, and infuriating on the seventh.
+
+The thing that actually moved the needle was listening to my colleague Anand Murthy and instantiating Cypress tests. A simple automated page reload catches those failures immediately. It shifts the pain earlier, gives the agent a verification loop it can run on demand, and turns "agentic coding" into something I can trust.
+
+Here is the dumbest possible example, taken straight from the Cypress suite in canvas-chat. It is not fancy, and that is the point. It catches "the page does not load" failures quickly.
+
+```js
+describe('Help Modal and Auto-Layout', () => {
+    beforeEach(() => {
+        cy.clearLocalStorage();
+        cy.clearIndexedDB();
+        cy.visit('/');
+        cy.wait(1000);
+    });
+
+    it('opens and closes help modal', () => {
+        cy.get('#help-btn').click();
+        cy.get('#help-modal').should('be.visible');
+        cy.get('#help-close').click();
+        cy.get('#help-modal').should('not.be.visible');
+    });
+});
+```
+
+Beyond model choice, a great agentic harness matters. If your harness includes tests that a coding agent can run to verify no behavioral breakage, you get to move faster with more confidence, regardless of which model you are using.
+
+## Verbosity, attitude, and the cost of being wrong
+
+The other axis that became obvious once I started pressure testing models is verbosity and its associated feel.
+
+I tried Gemini 2.5, and it was a disaster for me. After experiencing the long-horizon and short-horizon styles, I did not want to use it. It made elementary mistakes, like leaving trailing dangling curly braces where they were not supposed to be. Then it would apologize profusely over and over, like a Canadian on steroids. (I'm a born and bred Canadian, I'm allowed to say that!)
+
+In contrast, Claude and Opus are consistently upbeat and positive, and the same can be said for Minimax-M.2 and GLM-4.7. That matters more than I expected. When something breaks and you are iterating quickly, a model that stays constructive keeps the whole loop feeling fun.
+
+On the other end, GPT-5.2 would just go ahead and do things without being overly effusive, then loop back to tell me what it did. That sounds fine on paper, but it left me feeling a bit clueless. I would wonder what it was doing and whether I could intercept it if it went off on the wrong tangent. I often could not, because I needed to wait until the end to learn what it decided to do.
+
+So yes, I care about correctness. But I also care about how a model behaves while it is getting to correctness. The journey matters because the journey is where you spend your time.
+
+## Enthusiasm is a feature
+
+This ties nicely to [a tweet](https://x.com/Grady_Booch/status/2013343499563999589) I saw from Grady Booch (@Grady_Booch):
+
+> "The greatest value such tools have offered me is to reduce my cognitive load and automate various tedious tasks."
+
+Here is the punchline:
+
+> "To serve as an enthusiastic and indefatigable, albeit very naive and often unreliable, pair programmer."
+
+That enthusiasm and indefatigability, compared to a grumpy human, keeps the loop moving.
+
+My frustration pair coding with Gemini was not just the mistakes, it was the *emotional texture* of the interaction. It would make mistakes and then apologize, repeatedly. After a while, you start optimizing your own behavior around the assistant's vibe, and that is not where you want your attention to go.
+
+A better pair programmer, human or AI, is relentlessly game for the next challenge. It affirms what you are trying to do, it corrects you when you are wrong, and it does not act like it is giving up. When the assistant stays constructive, the work stays fun.
+
+## The "feel" is also vendor lock-in
+
+After enough hours with a single model, you start building muscle memory for its quirks. You learn how to phrase prompts so it does the right thing. You learn which mistakes to expect. You even learn its tone. That comfort is sticky.
+
+The sticky part is the problem. Getting used to a model's ergonomics is a form of vendor lock-in, and it is something I am determined to avoid.
+
+That is one reason I have been bouncing between models (apart from me hitting limits) to feel out the ragged frontier of model behavior. It is pretty revealing. You quickly learn that "best model" is not a single number. The model you want depends on whether you are scaffolding, refactoring, debugging, or doing the last-mile polish.
+
+If you want to keep your agency while using these tools, stay fluent across multiple feels. Otherwise you end up optimizing your workflow around one model's quirks and calling it productivity.
+
+## A more pragmatic way to think about model choice
+
+What I do now is less romantic than "find the best model". I think in terms of work phases and feedback loops.
+
+If I am scaffolding, I will happily take Opus-feel: longer-horizon autonomy and a big blob of output, because the cost of being wrong is usually low.
+
+If I am refactoring or debugging, I want Sonnet-feel: short-horizon iteration and tight supervision, because the cost of being wrong is a broken app and a bunch of time lost to verification.
+
+And if I keep hitting the same dumb failures, I try to fix my harness before I try to fix my model. Add the smallest test that fails fast, make it runnable by the agent, and suddenly the whole system behaves better. Cypress reloading the page and clicking one button did more for my sanity than another week of model hopping.
+
+At a systems level, I want a workflow where models are swappable components. In practice that means traces you can read, tests you can run, and a loop that tells you quickly when the agent broke something.
+
+---
+pub_date: 2026-01-25
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share my hands-on experience using AI coding models, focusing less on benchmarks and more on the day-to-day feel—how model style, personality, and the right testing harness impact productivity and flow. I discuss the trade-offs between long-horizon autonomy and short-horizon iteration, and why a constructive, enthusiastic AI assistant matters as much as raw performance. Curious how the right mix of model and harness can transform your coding workflow?
+---
+tags:
+
+llm
+autonomy
+supervision
+personality
+verbosity
+harness
+refactoring
+workflow
+testing
+ergonomics
