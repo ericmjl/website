@@ -28,6 +28,10 @@ A good skill makes three things explicit:
 
 If you want the spec, see [Agent Skills](https://agentskills.io/home).
 
+Skills are best formed around jobs to be done: concrete, repeatable workflows rather than abstract capabilities. Think "debug a GitHub Actions failure" or "draft a release announcement," not "know about CI" or "write good prose." When the job is clear, the skill has a natural boundary and a clear trigger. When it is vague, the skill is hard to invoke and hard to improve.
+
+A wrong framing is "skills for tools." Skills get invoked in the loop of trying to accomplish a job, not in the context of trying to use a tool. The tool is a means; the job is why you reach for it. If you design a skill around a tool, you end up with something the agent has to remember to use. If you design it around a job, the agent reaches for it when the job shows up.
+
 ### Examples
 
 A GitHub debugging skill is the obvious starting point. CI failures are repetitive and usually want the same sequence: identify failing jobs, pull logs, inspect diffs, reproduce locally, then patch.
