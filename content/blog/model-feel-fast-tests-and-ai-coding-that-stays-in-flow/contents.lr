@@ -14,7 +14,7 @@ First is time horizon and supervision style: long-horizon autonomy versus short-
 
 Second is personality and verbosity: how the model behaves when it is wrong, how much it narrates, and whether it stays constructive or spirals into apology loops.
 
-There is also a third ingredient that ends up mattering as much as the model: the agentic harness. By that I mean the tools and checks that the agent can run to verify it did not break behavior. Good harness beats model swapping more often than I expected.
+There is also a third ingredient that ends up mattering as much as the model: the agentic harness. By that I mean the tools and checks that the agent can run to verify it did not break behavior, *and* whether the harness gives you streaming and visual feedback—a live trace of what the model is doing—or leaves you staring at a spinner until the answer drops. Good harness beats model swapping more often than I expected.
 
 ## Long-horizon autonomy vs short-horizon iteration
 
@@ -93,6 +93,10 @@ That enthusiasm and indefatigability, compared to a grumpy human, keeps the loop
 My frustration pair coding with Gemini was not just the mistakes, it was the *emotional texture* of the interaction. It would make mistakes and then apologize, repeatedly. After a while, you start optimizing your own behavior around the assistant's vibe, and that is not where you want your attention to go.
 
 A better pair programmer, human or AI, is relentlessly game for the next challenge. It affirms what you are trying to do, it corrects you when you are wrong, and it does not act like it is giving up. When the assistant stays constructive, the work stays fun.
+
+## Streaming and the illusion of speed (the harness + model)
+
+Raw latency is one thing. What you *see* while the model is working is another, and that is determined by the harness. In Cursor, you get a fast stream of tool calls and edits. You see the so-called thinking process. Something is clearly happening. With GLM-4.7 or Open Code in certain setups, you wait a long time with nothing streamed in—just a spinner or a blank state until the full response lands. Same model capability, same task, different harness, totally different experience. The harness that gives you a live trace makes the wait feel shorter and keeps you in the loop. The one that hides progress makes every request feel like a gamble. If you care about flow, streaming and visual feedback are not polish; they are table stakes, and they live in the harness.
 
 ## The "feel" is also vendor lock-in
 
