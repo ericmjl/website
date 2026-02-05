@@ -19,7 +19,9 @@ I ask you to make, make sure you also include the necessary dependencies.
 
 I usually like to dictate my blog post content in my most natural voice. That
 usually ends up being a little bit informal. If I ask you to edit in polish
-my work make sure to keep the natural voice of the content
+my work make sure to keep the natural voice of the content. I do not use em
+dashes (—); use commas, periods, or separate sentences instead. Study my
+recent published blog posts for sentence rhythm and flow when editing.
 
 ## Terminal.css Dark Mode Implementation Notes
 
@@ -161,6 +163,13 @@ When generating text, avoid the following categories of wording, structures, and
 - Order content using `order_by = -pub_date, title` in parent model
 - Extract dates from YouTube using `uvx yt-dlp -j <url>` and parse `upload_date` field
 - Convert YYYYMMDD format to YYYY-MM-DD for Lektor compatibility
+
+### Internal Links to Blog Posts
+- Blog post URLs are **date-based**: `/blog/YYYY/M/d/post-slug/` (no leading zeros on month or day)
+- The blog model uses `slug_format = (pub_date|dateformat('y/M/d/')) ~ this._id` (see `models/blog.ini`)
+- When linking to another blog post from within a post, use the **relative** path with that post's `pub_date` and folder name (the `_id`): `/blog/YYYY/M/d/post-slug/`
+- Example: for a post in `content/blog/exploratory-data-analysis-isnt-open-ended/` with `pub_date: 2024-01-28`, the link is `/blog/2024/1/28/exploratory-data-analysis-isnt-open-ended/`
+- To get the correct URL for a post: read its `contents.lr` for `pub_date`, use the folder name as the slug; format as YYYY/M/d (e.g. 2024-01-28 → 2024/1/28)
 
 ## Development Workflow
 
