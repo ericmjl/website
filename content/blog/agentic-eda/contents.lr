@@ -1,0 +1,104 @@
+title: How to stay in control when doing EDA with coding agents
+---
+author: Eric J. Ma
+---
+body:
+
+Speed without control is just chaos.
+
+I've seen teammates compress a week and a half of analysis work into half a day using coding agents. That's a 5-10x speedup. But here's the thing: that speed only matters if you stay in the driver's seat. Otherwise you're not doing data science, you're just generating artifacts.
+
+The real unlock isn't that agents write code fast. It's that they can be guided through a structure that keeps you in control of the analysis.
+
+## The problem isn't speed, it's agency
+
+Coding agents are eager. Give them a CSV file and they'll open it, generate a dozen plots, and dump a wall of code before you've finished describing what you're actually looking for. That feels productive. It isn't.
+
+The problem is that you've lost the thread. You didn't formulate a clear question. You didn't think through what the x-axis and y-axis should be. You're now reacting to whatever the agent produced, rather than steering toward an answer.
+
+I've developed a different approach, codified in two skills I use with my coding agents: [scientific-eda](https://github.com/ericmjl/skills/tree/main/skills/scientific-eda) for exploratory data analysis and [ml-experimentation](https://github.com/ericmjl/skills/tree/main/skills/ml-experimentation) for machine learning experiments. The pattern is the same in both: slow down first, gate on plots, and structure the session so both you and the agent can follow what happened.
+
+## Slow down first: the Socratic opening
+
+The first design principle is counterintuitive: slow down before you speed up.
+
+When you invoke the scientific-eda skill, the agent does not immediately load your data and start plotting. Instead, it asks you questions. What's the problem context? What are you hoping to learn or decide? What constraints matter?
+
+From the skill definition:
+
+> Do not open the data file and start coding or plotting. Ask for or confirm: the problem context—biological, chemical, or data-science question; what the user hopes to learn or decide; and any constraints.
+
+There's also an explicit guardrail: "ask 'why' before executing." When you request a specific plot or table, the agent briefly asks what question or decision it serves. This isn't bureaucracy. It's alignment. The agent is checking that you've thought through the request before it spends your time executing it.
+
+This Socratic opening feels slower. But it prevents the far more common waste: generating plots you didn't need, going down rabbit holes you can't explain, and ending up with a folder full of artifacts and no clear answer.
+
+## Gate everything on plots
+
+The second design principle is more specific: one plot at a time.
+
+If you can't describe what you want, the x-axis, the y-axis, and what you're looking for, you're not ready to execute. The agent waits. You think. You describe. Then the agent generates exactly what you asked for.
+
+This is a forcing function for clarity. Describing a plot precisely forces you to articulate the question you're actually asking. What's on the x-axis? What's on the y-axis? What pattern would confirm or refute your hypothesis? If you can't answer those questions, the analysis isn't ready to run.
+
+The tradeoff is worth it. You give up a bit of speed up front for precision in execution. And because the agent can generate code in seconds rather than minutes, the net result is still a massive speedup. My teammates went from 1.5-2 weeks to half a day. The precision tax is negligible compared to the execution dividend.
+
+## The session structure
+
+Here's where structure becomes a feature, not overhead.
+
+Each analysis session is a timestamped folder. The naming convention is ISO datetime plus a descriptive slug:
+
+```
+analysis/
+  2025-02-05T14-30-00-protein-binding/
+    journal.md      # append-only; shape, actions, findings
+    plots/          # WebP figures only
+    scripts/        # disposable PEP723 scripts; uv run
+```
+
+Let's walk through what each piece does.
+
+**journal.md** is the memory. Before each action, the agent reads the journal. After each action, it appends what happened. Entries get timestamped and tagged: `[SHAPE]` for data structure discoveries, `[PLOT]` for visualizations, `[FINDING]` for observations, `[NEXT]` for suggested next steps. The journal is scannable. It's also the entry point for anyone (including future you) who wants to understand what happened without reading the code.
+
+**plots/** holds all figures from the session. The skill specifies WebP format for smaller file sizes, though that's a minor detail.
+
+**scripts/** contains disposable Python scripts. Each script has PEP723 inline metadata at the top, declaring its own dependencies. You run them with `uv run script.py` from the session folder. No environment wrangling. No "which virtualenv am I in?" confusion. One script, one plot.
+
+The structure serves two purposes. First, it gives the agent a clear protocol to follow: read journal, execute, append to journal, suggest next step. Second, it leaves a trace that any human can follow. You can read the plan, then the journal, then the report, and understand the entire analysis without touching the code.
+
+## What changes in team conversations
+
+Something unexpected happened when I started using this approach with teammates.
+
+The conversations changed. We stopped asking "why did you write it that way?" and started asking "why did the agent write it that way?" The ego attached to code ownership evaporated. We could critique the work without critiquing each other.
+
+This matters more than I expected. In the pre-agent world, I'd invest 50-70% of my mental energy on implementation details: wrangling data frames, handling edge cases, debugging syntax errors. That labor created attachment. When someone questioned my code, it felt like they were questioning my thinking.
+
+Now the agent writes the code. I focus on the questions and verify the work. My teammates and I have more productive scientific conversations because we're discussing the analysis, not defending the implementation. We check the agent's work together, and if something's wrong, we just ask the agent to fix it.
+
+## Design for the human
+
+The pattern that emerged is simple: if you design for the human, the agent follows.
+
+The structure that makes your analysis traceable is the same structure that keeps the agent aligned. The journal that helps future-you understand what happened also helps the agent decide what to do next. The plot-gating that forces you to think clearly also gives the agent precise instructions to execute.
+
+You stay in control by slowing down at the decision points, describing what you want before you get it, and keeping a running record of what happened. The agent becomes a force multiplier rather than a loose cannon.
+
+The skills I've linked here are just text files. They're prompts, structured in a way that an LLM-based coding agent can follow. You can copy them, modify them, or write your own. The key insight isn't in any particular skill, it's in the design pattern: gate analysis on plots, structure sessions with journals, and make the human's job explicit before the agent's job begins.
+
+The 5-10x speedup is real. But the real win is that you get to stay the scientist.
+---
+pub_date: 2026-02-13
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how coding agents can supercharge data analysis, but only if we stay in control. By slowing down, asking the right questions, and structuring sessions with journals and plot gating, we avoid chaos and keep our scientific thinking sharp. I explain the skills and patterns that help teams focus on insights rather than just generating code. Curious how you can harness agent speed without losing your scientific edge?
+---
+tags:
+
+agents
+ai
+data science
+exploratory data analysis
+workflow
+productivity
