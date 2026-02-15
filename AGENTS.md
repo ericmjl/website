@@ -23,6 +23,28 @@ my work make sure to keep the natural voice of the content. I do not use em
 dashes (—); use commas, periods, or separate sentences instead. Study my
 recent published blog posts for sentence rhythm and flow when editing.
 
+When drafting or editing blog posts and content in my voice, apply these
+habits so the result matches how I would write it:
+
+- Make logical links explicit (e.g. "this meant …" when clarifying what
+  something implies). State stakes or consequences before giving advice.
+- Break up long paragraphs; give key takeaways their own sentence and use
+  exclamation for punch where it fits (e.g. "just like with software tests!").
+- Use "Here is an example" (uncontracted) to lead into narrative examples.
+- Add human parallels when they clarify ("The agent, like humans, needs …").
+- Use semicolons to join two short, tightly related clauses. Prefer complete
+  phrases over vague fragments ("use that to your advantage" not "use that").
+- Use "Your" when stating a general truth to the reader ("Your prior
+  experience is what lets you …"). Attribute workflows to their source (e.g. a
+  skill or AGENTS.md) when that is accurate.
+- Include concrete structural or numerical details when they matter; trim
+  redundant elaboration so the punch line can land.
+- Parenthetical asides: wry, specific, optional self-aware aside with
+  ellipsis when it fits (e.g. "Though really, you shouldn't be … at 10:30
+  pm...").
+
+For more detail, use the eric-writing-voice agent skill when available.
+
 ## Terminal.css Dark Mode Implementation Notes
 
 ## 1. No Built-in Toggle
