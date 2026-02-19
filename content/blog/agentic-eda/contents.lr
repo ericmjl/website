@@ -16,7 +16,7 @@ Coding agents are eager. Give them a CSV file and they'll open it, generate a do
 
 The problem is that you've lost the thread. You didn't formulate a clear question. You didn't think through what the x-axis and y-axis should be. You're now reacting to whatever the agent produced, rather than steering toward an answer.
 
-I've developed a different approach, codified in two skills I use with my coding agents: [scientific-eda](https://github.com/ericmjl/skills/tree/main/skills/scientific-eda) for exploratory data analysis and [ml-experimentation](https://github.com/ericmjl/skills/tree/main/skills/ml-experimentation) for machine learning experiments. The pattern is the same in both: slow down first, gate on plots, and structure the session so both you and the agent can follow what happened.
+I've developed a different approach, codified in two skills I use with my coding agents: [scientific-eda](https://github.com/ericmjl/skills/tree/main/skills/scientific-eda) for exploratory data analysis and [ml-experimentation](https://github.com/ericmjl/skills/tree/main/skills/ml-experimentation) for machine learning experiments. The pattern is the same in both: slow down first, gate on artifacts (plots, tables, etc.), and structure the session so both you and the agent can follow what happened.
 
 ## Slow down first: the Socratic opening
 
@@ -32,15 +32,17 @@ There's also an explicit guardrail: "ask 'why' before executing." When you reque
 
 This Socratic opening feels slower. But it prevents the far more common waste: generating plots you didn't need, going down rabbit holes you can't explain, and ending up with a folder full of artifacts and no clear answer.
 
-## Gate everything on plots
+## Gate everything on artifacts
 
-The second design principle is more specific: one plot at a time.
+The second design principle is more specific: one artifact at a time.
 
-If you can't describe what you want, the x-axis, the y-axis, and what you're looking for, you're not ready to execute. The agent waits. You think. You describe. Then the agent generates exactly what you asked for.
+If you can't describe what you want, you're not ready to execute. The agent waits. You think. You describe. Then the agent generates exactly what you asked for.
 
-This is a forcing function for clarity. Describing a plot precisely forces you to articulate the question you're actually asking. What's on the x-axis? What's on the y-axis? What pattern would confirm or refute your hypothesis? If you can't answer those questions, the analysis isn't ready to run.
+For a plot, this means articulating the x-axis, the y-axis, and what pattern you're looking for. What would confirm or refute your hypothesis? If you can't answer, the analysis isn't ready to run.
 
-The tradeoff is worth it. You give up a bit of speed up front for precision in execution. And because the agent can generate code in seconds rather than minutes, the net result is still a massive speedup. My teammates went from 1.5-2 weeks to half a day. The precision tax is negligible compared to the execution dividend.
+For a table, this means specifying the columns, rows, and aggregation level. What comparison are you trying to make? What decision will this table inform? A vague request like "show me the data" isn't actionable. "Show me the mean expression level by treatment group" is.
+
+This is a forcing function for clarity. Describing an artifact precisely forces you to articulate the question you're actually asking. The tradeoff is worth it. You give up a bit of speed up front for precision in execution. And because the agent can generate code in seconds rather than minutes, the net result is still a massive speedup. My teammates went from 1.5-2 weeks to half a day. The precision tax is negligible compared to the execution dividend.
 
 ## The session structure
 
@@ -80,11 +82,11 @@ Now the agent writes the code. I focus on the questions and verify the work. My 
 
 The pattern that emerged is simple: if you design for the human, the agent follows.
 
-The structure that makes your analysis traceable is the same structure that keeps the agent aligned. The journal that helps future-you understand what happened also helps the agent decide what to do next. The plot-gating that forces you to think clearly also gives the agent precise instructions to execute.
+The structure that makes your analysis traceable is the same structure that keeps the agent aligned. The journal that helps future-you understand what happened also helps the agent decide what to do next. The artifact-gating that forces you to think clearly also gives the agent precise instructions to execute.
 
 You stay in control by slowing down at the decision points, describing what you want before you get it, and keeping a running record of what happened. The agent becomes a force multiplier rather than a loose cannon.
 
-The skills I've linked here are just text files. They're prompts, structured in a way that an LLM-based coding agent can follow. You can copy them, modify them, or write your own. The key insight isn't in any particular skill, it's in the design pattern: gate analysis on plots, structure sessions with journals, and make the human's job explicit before the agent's job begins.
+The skills I've linked here are just text files. They're prompts, structured in a way that an LLM-based coding agent can follow. You can copy them, modify them, or write your own. The key insight isn't in any particular skill, it's in the design pattern: gate analysis on artifacts, structure sessions with journals, and make the human's job explicit before the agent's job begins.
 
 The 5-10x speedup is real. But the real win is that you get to stay the scientist.
 ---
@@ -92,7 +94,7 @@ pub_date: 2026-02-13
 ---
 twitter_handle: ericmjl
 ---
-summary: In this blog post, I share how coding agents can supercharge data analysis, but only if we stay in control. By slowing down, asking the right questions, and structuring sessions with journals and plot gating, we avoid chaos and keep our scientific thinking sharp. I explain the skills and patterns that help teams focus on insights rather than just generating code. Curious how you can harness agent speed without losing your scientific edge?
+summary: In this blog post, I share how coding agents can supercharge data analysis, but only if we stay in control. By slowing down, asking the right questions, and structuring sessions with journals and artifact gating, we avoid chaos and keep our scientific thinking sharp. I explain the skills and patterns that help teams focus on insights rather than just generating code. Curious how you can harness agent speed without losing your scientific edge?
 ---
 tags:
 
