@@ -34,7 +34,7 @@ Beyond meetings, I ingest PowerPoints, Word docs, PDFs, and Excel spreadsheets i
 
 For PowerPoints, I use dual parsing paths. One path extracts the XML structure directly using `python-pptx`. The second path converts each slide to an image using `libreoffice` and `PIL`, captions it with a vision-language model via APIs, and strings the captions together into a coherent narrative. Combined, I estimate that I can get a 90-95% accurate textual representation. PDFs follow a similar pattern: text extraction for normal PDFs, image captioning for scanned documents.
 
-Excel spreadsheets are read directly by the coding agent. This is powerful when I need to understand financial data without being a finance person.
+Excel spreadsheets are read directly by the coding agent using `openpyxl`, not `pandas`. The key difference matters: `pandas` assumes an established table structure, but real-world spreadsheets are messy. With `openpyxl`, the agent can read the granular cellular structure across each sheet, identifying merged cells, free text scattered in random locations, and arbitrary layouts. This structural mapping follows a progressive reveal principle: the agent first identifies the spreadsheet's architecture without necessarily reading every cell's contents, then zooms into relevant sections. This approach handles the chaos of actual spreadsheets far better than forcing everything into a tabular assumption. It's powerful when I need to understand financial data without being a finance person.
 
 ## Managing and maintaining
 
