@@ -1,0 +1,121 @@
+title: Mastering Personal Knowledge Management with Obsidian and AI
+---
+author: Eric J. Ma
+---
+body:
+
+Folks have asked me how I do personal knowledge management (PKM) at work. The question becomes more pressing when they learn how many projects and people I need to interact with on a weekly basis. At the time of writing, I manage twelve people across two teams, each handling 2-4 projects of their own. That's a lot of context to keep straight.
+
+I decided to document what I'm doing for PKM. Hopefully it serves as inspiration for you.
+
+I've written before about [why I chose Obsidian](/blog/2020/12/15/building-a-personal-knowledge-graph-on-obsidian/); this post shows how that decision evolved with AI integration over five years.
+
+## The plain text decision
+
+In 2022, I decided to make personal knowledge management a priority at work. I faced a choice: Confluence, OneNote, or a new kid on the block, Obsidian. I chose plain text and graphs. I chose Obsidian. I chose not to lock my data inside a vendor system. I chose freedom and sovereignty for my information.
+
+That decision was prescient in ways I couldn't have predicted. Most of us normies back then wouldn't have guessed that plain text would be exactly the right format for 2025 and 2026 era knowledge management. The visionaries saw it coming; I just got lucky because I loved the graph view in Obsidian and thought of it as a really cool tool. But holy smokes, has that choice paid off.
+
+Text files are as primitive as it gets: no proprietary formats, no vendor lock-in, just files that can be read on any system. When AI coding agents arrived, my vault was already in a format they could process natively. No migration needed. No conversion layer. No API integration. The simplicity I chose became an unlock I never planned for.
+
+## The core system
+
+My Obsidian vault is built around distinct note types. Monthly collections of daily bullet journals capture my day-to-day activities, one note per month with a running log of meetings and work. Meeting notes follow a structured template. People notes are dossiers for everyone I work with (to put it in CIA terms, I keep a file on everyone I interact with regularly). Project notes act as control towers, linking out to meetings, people, and status updates. A miscellaneous collection handles everything else. The structure was inspired in part by Thiago Forte's numbered folder system, though I've simplified it over time.
+
+The most important thing isn't my specific implementation. It's that I have a system at all, and it's documented in an `AGENTS.md` file so my coding agents understand it too.
+
+## Ingesting information
+
+The lifecycle of my workflow starts with ingestion. Meeting notes arrive as transcripts or AI-generated summaries. In the past, structuring these was tedious work. Now I paste them into OpenCode and my meeting notes skill handles the rest.
+
+The skill knows the template I want. It handles various input formats: AI-generated summaries, transcripts with good speaker assignments, and transcripts with poor speaker assignments. I flag the quality when I know it's bad. The skill extracts key information and formats everything consistently. For one-on-ones, it ensures notes are attached to both the meeting log and the person's individual page, so I can track the full history of our conversations.
+
+Beyond meetings, I ingest PowerPoints, Word docs, PDFs, and Excel spreadsheets into my vault as contextual information. The key insight is getting everything into plain text format. For Word documents, a Python script converts them to plain text using `python-docx`, which is then printed to the terminal or dumped to disk at `/tmp`, both of which are readable by a coding agent. Even lightly misformatted plain text contains enough information density for a coding agent to read and summarize.
+
+For PowerPoints, I use dual parsing paths. One path extracts the XML structure directly using `python-pptx`. The second path converts each slide to an image using `libreoffice` and `PIL`, captions it with a vision-language model via APIs, and strings the captions together into a coherent narrative. Combined, I estimate that I can get a 90-95% accurate textual representation. PDFs follow a similar pattern: text extraction for normal PDFs, image captioning for scanned documents.
+
+Excel spreadsheets are read directly by the coding agent using `openpyxl`, not `pandas`. The key difference matters: `pandas` assumes an established table structure, but real-world spreadsheets are messy. With `openpyxl`, the agent can read the granular cellular structure across each sheet, identifying merged cells, free text scattered in random locations, and arbitrary layouts. This structural mapping follows a progressive reveal principle: the agent first identifies the spreadsheet's architecture without necessarily reading every cell's contents, then zooms into relevant sections. This approach handles the chaos of actual spreadsheets far better than forcing everything into a tabular assumption. It's powerful when I need to understand financial data without being a finance person.
+
+## Managing and maintaining
+
+With information in the vault, the next phase is keeping it current. With twelve people across two teams, there are a lot of details I don't pick up or retain in my working memory. That's why external memory matters. Without it, things would fall through the cracks.
+
+When I hit a context block (when I look up a project or person and realize something's missing), I trigger a "sweep". My instructions to the coding agent are to update my people notes and/or project notes based on source material present in the vault. People and project notes are always derivative from sources, so any updates must include quotations from those source notes. I stay in the loop for verification. Hallucinations are rare, maybe once every four or five sweeps, and usually trace back to inaccurate transcripts rather than agent errors.
+
+This is incredibly helpful for how I interact with people. My assumption is that I'm going to be forgetful. My external memory will be approximately correct, and I have a process for keeping it refined over time. So I can rely more on the vault instead of second-guessing myself based on incomplete memory. It tempers how I think about interacting with someone, not by changing my mind about them, but by giving me confidence that I'm not missing something important.
+
+There are ethical boundaries. I don't capture personal details if people aren't comfortable with that. The dossiers are professional, not invasive.
+
+Periodically, I do retrieval practice. This is how we make information stick; read "Make It Stick" to learn more. Review looks like this: I take my people notes and project notes and ask what's missing. Is there a piece of knowledge I remember that isn't captured? If yes, I fill in the blanks. I also check whether claims are substantiated with links and quotes. This fact-checking pass keeps the vault trustworthy and protects me from remembering something erroneous. A spell-checker list handles transcription errors, and my `AGENTS.md` links to `HEARTBEAT.md` to sanitize the vault of inaccurate information.
+
+## Producing and sharing
+
+The final phase is producing outputs for others. I curate what gets published rather than exporting everything. The agent creates a publishable version based on my guidance. I haven't settled on hard rules for curation yet. I'd rather review and decide at publish time than tag things as publishable during capture. That workflow feels right to me.
+
+For Confluence, a Python script publishes markdown directly, with YAML front matter defining the space and parent page. For GitHub users, notes can become Gists via the GitHub CLI. With the appropriate skills, Markdown files transform into HTML presentations, and with web technologies, those presentations become interactive. For Jira, a colleague created a skill that writes Jira tickets. We firmly believe that humans shouldn't be filling forms out; AI should be filling forms for us.
+
+PowerPoint decks can be generated via Python scripts. Word documents come from markdown via Pandoc. The scripts run with uv, and LibreOffice handles conversions.
+
+Each script maintains its own environment using PEP 723 inline script metadata. This means dependencies are declared at the top of each script in a special comment block:
+
+```python
+# /// script
+# dependencies = ["python-docx", "python-pptx", "pandas"]
+# ///
+```
+
+When I run `uv run script.py`, uv automatically creates an isolated environment with just those dependencies, executes the script, and cleans up. No virtual environments to manage. No `requirements.txt` files scattered everywhere. No "works on my machine" problems.
+
+## The role of agent skills
+
+Agent skills effectively encode procedural knowledge into executable markdown. Over time, it compounds; on fewer and fewer occasions do I need to repeat instructions, which is incredibly liberating. The model infers which skill to use most of the time. When it doesn't, I correct it explicitly and ask the coding agent to update the skill file for the future as well.
+
+Designing a skill means thinking about the desired output and the tools needed to get there. I discover edge cases in the wild and update immediately. The earlier errors are caught, the better.
+
+## What's still friction
+
+One pain point remains. I want to ingest Office files by pasting a URL, but I still need to download a copy first, then feed that copy to the agent skill. Programmatic access to cloud documents would eliminate this step. From the user side, nothing else would change. I'd just paste the URL and go.
+
+But even with this friction, the system pays for itself. Knowledge management overhead dropped from thirty to forty percent of my time down to less than ten percent. I fix errors as I encounter them rather than scheduling dedicated maintenance. That recovered bandwidth goes toward better thinking and context gathering.
+
+## Getting started
+
+What stops people from building systems like this? I believe it is two things: imagination and technical skill. You need imagination to envision converting diverse file formats into plain text. You need technical skill to know that it's possible.
+
+The two feed each other. I experienced this with web technologies. Before I got familiar with building stuff on the web, I wondered what was even possible. Once I actually built things, I knew. Technical skill feeds your imagination, and imagination drives you to learn more technical skills.
+
+For those starting without technical skills, use AI to learn programming. Find a language with a supportive human community to verify what you learn. AI hallucinates, and you need other people around you to help apply judgment and skill to AI outputs. You also need critical thinking skills and the initiative to act on what agents produce.
+
+## Skills you can use today
+
+If you want to experiment with agent skills, here are some I've published:
+
+- [html-presentations](https://github.com/ericmjl/skills/tree/main/skills/html-presentations) - Turn markdown into gorgeous HTML slides
+- [gh-daily-timeline](https://github.com/ericmjl/skills/tree/main/skills/gh-daily-timeline) - See your GitHub activity for any given day
+- [gh-activity-summary](https://github.com/ericmjl/skills/tree/main/skills/gh-activity-summary) - Generate a plain-language summary of your GitHub work over any time period
+- [publish-to-google-docs](https://github.com/ericmjl/skills/tree/main/skills/publish-to-google-docs) - Push markdown notes to Google Docs
+
+## The bigger picture
+
+With such a system in place, repetitive, monotonous, and manual work can be offloaded to computers and AI. With a personal knowledge system, we can carry a broader scope of responsibilities and grow into new challenges for two reasons: we can externalize our memory more easily, and we can format information in ways that fit our brains.
+
+I'm not asking people to do more at the same time. I'm asking them to expand their dynamic range over time so they're not stuck doing the same old boring thing over and over. That repetitive monotonous stuff should have been given away to AI and computers a long time ago.
+
+This is useful for your career. It keeps things interesting. Every day that you make an incremental but permanent improvement compounds over time.
+
+The vignettes I've shared are not a prescription. Rather, I hope you treat them as an invitation. Plain text plus coding agents is a powerful combination. Your system will look different from mine, and that's part of the point. Experiment and explore, and find what works for you.
+---
+pub_date: 2026-03-06
+---
+twitter_handle: ericmjl
+---
+summary: I share how I use Obsidian and AI coding agents to manage personal knowledge at work. By choosing plain text, building structured note types, and encoding workflows into agent skills, I reduced knowledge management overhead from 30-40% of my time to less than 10%. The system helps me manage twelve people across two teams without losing context. This is an invitation to experiment with your own PKM system.
+---
+tags:
+
+agents
+ai
+obsidian
+knowledge management
+productivity
+workflow
