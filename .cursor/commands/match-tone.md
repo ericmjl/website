@@ -1,0 +1,1 @@
+Using the contents of my blog post, and referencing the rest of my blog's most recent posts (check the last modified date on `**/*/content.lr` files), match the tone of my blog post to the rest of my blog.
