@@ -230,7 +230,7 @@ The changes above represent my weekend exploration, but they weren't what I ulti
 
 Instead, I re-did the infrastructure changes using `pyodide-build` while respecting PyTensor's existing mamba-based workflow. The core change (making Numba optional on WebAssembly) remained, but the development environment configuration was adapted to work with what PyTensor already had in place.
 
-This is a common lesson in open-source contribution: meeting maintainers where they are matters more than introducing your preferred tooling. The weekend experiment taught me what was needed; the PR reflected what was appropriate.
+This is a common lesson in open-source contribution: meeting maintainers where they are matters more than introducing your preferred tooling. The weekend experiment taught me what was needed; the PR reflected what was appropriate. You can see the actual PR here: [pytensor #1960](https://github.com/pymc-devs/pytensor/pull/1960).
 
 ## Unfortunately (for now), NUTS is gone
 
