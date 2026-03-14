@@ -1,0 +1,269 @@
+title: My weekend experiment making PyMC installable in a WASM environment
+---
+author: Eric J. Ma
+---
+twitter_handle: ericmjl
+---
+pub_date: 2026-03-08
+---
+tags:
+
+python
+pymc
+bayesian
+webassembly
+pyodide
+---
+body:
+
+This past weekend, I found myself revisiting a blog post from PyMC Labs titled ["Running PyMC in the Browser with PyScript"](https://www.pymc-labs.com/blog-posts/pymc-in-browser). Published in 2022, it demonstrated something magical: running full Bayesian inference with PyMC entirely in the browser—no server, no installation, no data leaving your device. Users could define models, run NUTS sampling, and visualize posteriors, all client-side.
+
+I was excited to try it out. But when I attempted to run the examples, I discovered they no longer worked. The Python package ecosystem had evolved, dependencies had shifted, and the Pyodide environment had changed. What was once a breakthrough demo had quietly broken.
+
+So I did what any curious engineer would do on a weekend: I dove down the rabbit hole to figure out how to make it work again.
+
+## The core challenge: getting PyTensor to build for WebAssembly
+
+PyMC depends on PyTensor, its computational backend. PyTensor is where the heavy lifting happens: it compiles mathematical expressions into optimized code (usually C or JAX) and executes them efficiently. To run PyMC in a browser via Pyodide, I first needed to make PyTensor installable in a WebAssembly environment.
+
+This wasn't just a matter of `pip install`. PyTensor contains C and Cython extensions that must be compiled for the target platform. For WebAssembly, that means using Emscripten and the Pyodide build tooling.
+
+## The code changes: what I modified in PyTensor
+
+Working on my fork of PyTensor ([ericmjl/pytensor](https://github.com/ericmjl/pytensor)), I made targeted modifications to enable WASM builds. Here's the complete diff:
+
+### Change 1: making Numba optional on WebAssembly
+
+**File:** `pyproject.toml`
+
+```diff
+-    "numba>0.57,<1",
++    "numba>0.57,<1; platform_machine != 'wasm32' and sys_platform != 'emscripten'",
+```
+
+This single line change is the critical enabler. Numba, PyTensor's JIT compiler for numerical code, is not available in WebAssembly environments. There's no way to install it—it simply doesn't exist for this platform.
+
+The fix uses PEP 508 environment markers to make Numba a conditional dependency:
+
+- `platform_machine != 'wasm32'` excludes WASM architectures
+- `sys_platform != 'emscripten'` adds an extra safety check for Emscripten-based builds
+
+Without this change, attempting to install PyTensor in Pyodide would fail immediately with a dependency resolution error. Pyodide would try to find a Numba wheel for WASM, fail, and abort the entire installation.
+
+**The tradeoff, however, is that PyTensor loses its JIT compilation capabilities on WASM.** Operations that would be compiled to optimized native code fall back to pure Python execution. This means slower performance, and critically, PyMC's NUTS sampler won't work.
+
+### Change 2: adding Pixi development environment configuration
+
+**File:** `pyproject.toml`
+
+I added a complete Pixi workspace configuration to `pyproject.toml`. This provides a reproducible development environment and includes the tooling needed to build WASM wheels:
+
+```toml
+# -----------------------------------------------------------------------------
+# Pixi (pixi.prefix.dev): development environment from environment.yml
+# Use: pixi install && pixi run pytest   or   pixi shell
+# -----------------------------------------------------------------------------
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[tool.pixi.pypi-dependencies]
+pytensor = { path = ".", editable = true }
+types-setuptools = "*"
+build = "*"
+pyodide-build = ">=0.29.2"
+
+[tool.pixi.dependencies]
+python = ">=3.11,<3.14"
+compilers = "*"
+numpy = ">=2.0.0"
+scipy = ">=1,<2"
+filelock = ">=3.15"
+etuples = "*"
+logical-unification = "*"
+miniKanren = "*"
+cons = "*"
+pydeprecate = "*"
+numba = ">=0.57"
+coveralls = "*"
+diff-cover = "*"
+mypy = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
+pytest-benchmark = "*"
+pytest-mock = "*"
+pytest-sphinx = "*"
+sphinx = ">=5.1.0,<6"
+sphinx_rtd_theme = "*"
+pygments = "*"
+pydot = "*"
+ipython = "*"
+pymc-sphinx-theme = "*"
+sphinx-design = "*"
+myst-nb = "*"
+matplotlib = "*"
+watermark = "*"
+ruff = "*"
+pandas = "*"
+pre-commit = "*"
+packaging = "*"
+cython = "*"
+graphviz = "*"
+
+[tool.pixi.target.linux-64.dependencies]
+mkl = "*"
+mkl-service = "*"
+libblas = { version = "*", build = "*mkl" }
+
+[tool.pixi.target.win-64.dependencies]
+mkl = "*"
+mkl-service = "*"
+libblas = { version = "*", build = "*mkl" }
+
+[tool.pixi.target.osx-64.dependencies]
+libblas = { version = "*", build = "*accelerate" }
+
+[tool.pixi.target.osx-arm64.dependencies]
+libblas = { version = "*", build = "*accelerate" }
+
+[tool.pixi.tasks]
+test = "pytest"
+lint = "ruff check ."
+format = "ruff format ."
+docs = "python -m sphinx -b html ./doc ./html"
+wheel = "python -m build --wheel"
+sdist = "python -m build --sdist"
+wheel-wasm = "pyodide build"
+```
+
+Here are the key design decisions in this configuration:
+
+**Python version pinning:**
+
+```toml
+python = ">=3.11,<3.14"
+```
+
+Pyodide only supports up to Python 3.13. Without this constraint, the environment might resolve to Python 3.14+, causing the WASM build to fail with: `ValueError: Python version 3.14 is not yet supported.`
+
+**PyPI dependencies for building:**
+
+```toml
+[tool.pixi.pypi-dependencies]
+pytensor = { path = ".", editable = true }
+types-setuptools = "*"
+build = "*"
+pyodide-build = ">=0.29.2"
+```
+
+This installs PyTensor in editable mode for development, includes type stubs for mypy, and adds both `build` (standard wheel building) and `pyodide-build` (WASM wheel building).
+
+**Platform-specific BLAS:**
+
+```toml
+[tool.pixi.target.linux-64.dependencies]
+mkl = "*"
+mkl-service = "*"
+libblas = { version = "*", build = "*mkl" }
+
+[tool.pixi.target.osx-arm64.dependencies]
+libblas = { version = "*", build = "*accelerate" }
+```
+
+Different platforms use different BLAS implementations. Linux and Windows use Intel MKL, while macOS uses Apple's Accelerate framework. These ensure the correct linear algebra library is installed.
+
+**Build task:**
+
+```toml
+wheel-wasm = "pyodide build"
+```
+
+This task runs `pyodide build`, which compiles PyTensor for WebAssembly using Emscripten.
+
+### Change 3: documenting the WASM build process
+
+**File:** `doc/dev_start_guide.rst`
+
+I added documentation explaining how to build WASM wheels:
+
+```rst
+Building a WebAssembly (Pyodide) wheel
+--------------------------------------
+
+To build a wheel targeting WebAssembly for use with `Pyodide <https://pyodide.org/>`_ (e.g. for the browser or JupyterLite), use the Pyodide build tooling. This produces a wheel in ``dist/`` with a name like ``*-cpXXX-cpXXX-pyodide_*_wasm32.whl``.
+
+**One-time setup: Emscripten**
+
+1. Install `pyodide-build` (included in the Pixi dev env, or ``pip install pyodide-build>=0.29.2``).
+2. Get the Emscripten version required by your pyodide-build: ``pyodide config get emscripten_version``.
+3. Install and activate that Emscripten version using the `Emscripten SDK (emsdk) <https://emscripten.org/docs/getting_started/downloads.html>`_:
+
+   .. code-block:: bash
+
+      git clone https://github.com/emscripten-core/emsdk.git
+      cd emsdk
+      ./emsdk install <version>   # use the version from step 2
+      ./emsdk activate <version>
+      source emsdk_env.sh
+
+4. In any shell where you want to build the wasm wheel, ensure Emscripten is on ``PATH`` (e.g. run ``source /path/to/emsdk/emsdk_env.sh``).
+
+**Build the wheel**
+
+From the project root, with Emscripten activated and your dev environment active (e.g. ``pixi shell``):
+
+.. code-block:: bash
+
+   pyodide build
+
+Or with Pixi: ``pixi run wheel-wasm``.
+
+The wheel will appear in ``dist/``. PyPI does not yet accept emscripten/wasm32 wheels; host the file elsewhere (e.g. GitHub Releases) and install in Pyodide with ``micropip.install(url)``. See `Pyodide: building packages <https://pyodide.org/en/stable/development/building-packages-from-source.html>`_ for details.
+```
+
+This documentation walks through the Emscripten setup, the build command, and importantly, notes that PyPI doesn't accept WASM wheels yet—you need to distribute them via GitHub Releases or similar and install with `micropip.install(url)`.
+
+## What I actually PR'd to PyTensor
+
+The changes above represent my weekend exploration, but they weren't what I ultimately contributed back to PyTensor. The Pixi configuration, in particular, was too large of a departure from PyTensor's existing toolchain. PyTensor uses mamba (via `environment.yml`) for its development environment, and switching to Pixi would have been a significant change to impose on a project I don't maintain.
+
+Instead, I re-did the infrastructure changes using `pyodide-build` while respecting PyTensor's existing mamba-based workflow. The core change (making Numba optional on WebAssembly) remained, but the development environment configuration was adapted to work with what PyTensor already had in place.
+
+This is a common lesson in open-source contribution: meeting maintainers where they are matters more than introducing your preferred tooling. The weekend experiment taught me what was needed; the PR reflected what was appropriate.
+
+## Unfortunately (for now), NUTS is gone
+
+Unfortunately, **NUTS (No-U-Turn Sampler) doesn't work in WASM**. 😭
+
+NUTS is the crown jewel of PyMC. It's the adaptive Hamiltonian Monte Carlo sampler that makes Bayesian inference efficient and robust. The 2022 PyMC Labs demo used NUTS to sample from posteriors in real-time in the browser.
+
+But here's the thing: this isn't just about Numba being unavailable. The real issue is that none of the modern MCMC sampling backends have WASM support:
+
+- **JAX** (used by NumPyro and BlackJAX) has an open GitHub issue [#1472](https://github.com/jax-ml/jax/issues/1472) from 2019 titled "Jax for Web? (JS api or web assembly guide)" that's still open with no official WASM support
+- **nutpie** (the Rust-based NUTS implementation) doesn't have a WASM build readily available
+- The computational demands of Hamiltonian dynamics—computing gradients, simulating trajectories, adapting step sizes—require optimized backends that don't exist in WASM environments
+
+This weekend's exploration shows the path to install PyMC in WASM, but you can't use its best sampler. It's like getting a Ferrari delivered to your house, but the dealer forgot to include the keys. You can sit in it, admire the leather seats, and maybe even turn on the radio. But you're not going anywhere fast.
+
+This represents a fundamental infrastructure gap, not just a missing dependency. Getting NUTS in the browser will require either WASM ports of JAX or nutpie, or entirely new sampling backends designed for browser environments.
+
+## What does work?
+
+Despite the NUTS heartbreak, this wasn't a failed experiment:
+
+1. **PyTensor now installs in WASM environments.** This is non-trivial. PyTensor has C and Cython extensions that need to compile for WebAssembly. Getting that build pipeline working required understanding Pyodide's build system, setting up Emscripten correctly, and making Numba optional.
+2. **PyMC can technically be imported.** Once PyTensor was installable, PyMC followed. You can define models, create random variables, and work with the API. The foundation is there.
+3. **Alternative samplers might still work.** While NUTS is off the table, other samplers—like Metropolis-Hastings or Slice sampling—might be viable for small models. They're slower and less robust than NUTS, but they don't require JIT compilation. I didn't test, but I think this will hold true!
+4. **The roadmap is clearer.** If someone wants to bring full PyMC to the browser, the path forward is documented. It requires either (a) building WASM support into JAX (a massive undertaking that's been an open request since 2019), (b) creating WASM builds for nutpie, or (c) building entirely new sampling backends designed for browser environments (also non-trivial, but potentially more feasible).
+
+## A weekend well spent
+
+Did I achieve my original goal of running PyMC in the browser with NUTS sampling? No. The technical limitations of WASM environments made that impossible with the current architecture.
+
+But that's the nature of weekend experiments. You explore, you hit walls, you learn. I now understand PyTensor's dependency structure at a deeper level. I've learned how Pyodide builds work and the constraints they impose. I've identified the broader infrastructure gap (MCMC sampling backends lacking WASM support) that needs solving for true browser-based Bayesian inference.
+
+The dream of running PyMC entirely in the browser isn't dead—it's just waiting for the right infrastructure. Until JAX or nutpie (or something else) supports WASM, we'll keep pushing that car downhill.
+
+---
+summary: I spent a weekend trying to make PyMC installable in WebAssembly environments via Pyodide. The journey involved making Numba optional, setting up Pixi development environments, and documenting the WASM build process. While PyMC can now technically install in WASM, the lack of WASM support in MCMC sampling backends (JAX, nutpie) means NUTS sampling remains out of reach. This represents a fundamental infrastructure gap, not just a missing dependency. Note: the Pixi-based approach described here was my weekend exploration; the actual PR to PyTensor respected their existing mamba-based toolchain.
