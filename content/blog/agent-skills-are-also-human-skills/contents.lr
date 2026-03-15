@@ -1,0 +1,61 @@
+title: Agent skills are also human skills
+---
+author: Eric J. Ma
+---
+body:
+
+Agent skills are great, but I've been thinking about this... skills alone aren't enough.
+
+I've been thinking about this while developing and using agent skills at home and at work. There's a distinction I've started to draw between two types of skills. Tool-specific skills document how to work with a particular tool or package. Those are fine, but really, pointing an agent at `llms.txt` often works just as well. The more interesting category is workflow-specific skills, things that encode how you actually work, that string together multiple tools to **get a job done** (Christensen).
+
+Workflow-specific skills are what I want to talk about here.
+
+## A concrete example
+
+My daily sign-off skill, which I use at work, is a case in point. I use it to wrap up my day. When I sign off, I need two things: my meeting notes (which I paste into Obsidian throughout the day) and my GitHub activity (commits, PRs, comments, reviews). The skill handles the GitHub part by querying the GitHub CLI and formatting everything into my daily bullets template.
+
+But here's where it gets opinionated. My skill assumes:
+
+- You have the GitHub CLI installed
+- You do PRs as part of your work (not all technical managers do)
+- You write into a monthly file as your bullet journal, rather than having a single note per day.
+
+That last point is opinionated. I don't have a single note per day. Instead, each month contains my collection of daily bullets. The motivation here is a line from the Zen of Python -- "flat is better than nested". On March 26, I have entries for that day inside the March file, rather than have a reference form the March file to March 26. This might not reflect your own preferences; you might prefer one note per day, or use a different structure entirely. But this is what my skill expects, and it's baked into how the skill works.
+
+If you want to use my daily sign-off skill, you're not just adopting the skill. You're adopting my way of working. You're inheriting my file structure, my tool preferences, my mental model for organizing information. The skill comes with implicit assumptions about how you work, what tools you use, and what your environment looks like.
+
+## What this means
+
+I call this *procedural context*. A workflow-specific agent skill is more than documentation for the coding agent. It also implicitly encodes a person's systems and structures for working. Without documenting the procedural context, the skill can only be half-useful for another person.
+
+Someone on Twitter put it well (I wish I could remember who, so I won't take credit): with agent skills, we finally found a way to get coders to write documentation. We'll document how we work if it means we can delegate that work to some{one/thing} else!
+
+At the end of the day, agent skills are just automation and documentation. We're automating away the minutiae, and I love that. But if your skill describes a workflow, you need to document the assumptions too. What are the dependencies? What tools need to be installed? What mental structures does the person need? What does the user need to know to verify the output is correct?
+
+Without that context, you can't evaluate whether the coding agent used the skill correctly -- and verification matters! You need to know what to look for when an LLM does work on your behalf.
+
+## The takeaway
+
+Agent skills implicitly involve human skills. If that's true, then agent skills are also for humans. They're not merely instructions for an agent. They're documentation of how someone accomplishes a job, with all the prerequisites and context needed to reproduce it.
+
+So when you write a workflow skill, think about the other people who might use it. Ask the skill-creator skill to include the dependencies, explain the environment, and describe what success looks like. The skill alone isn't enough. We have to teach the next person how to use it too.
+---
+pub_date: 2026-03-14
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I reflect on the difference between tool-specific and workflow-specific agent skills, sharing how my own daily sign-off skill encodes not just automation, but my personal way of working. I argue that workflow skills come with implicit assumptions—about tools, file structures, and mental models—that need to be documented for others to benefit. Without this procedural context, skills are only half as useful. Curious how agent skills can become more human and helpful for everyone?
+---
+tags:
+
+automation
+documentation
+workflow
+context
+dependencies
+github
+obsidian
+productivity
+skills
+structure
+agents
