@@ -41,7 +41,7 @@ The natural extension here is two coins flipping, each with their own probabilit
 
 ### Entanglement
 
-Entanglement, in this framing, is when the state of one qubit cannot be described independently of the state of another. When qubits are entangled, measuring one qubit instantly affects the state of the other, no matter the distance between them. This non-local correlation is a key resource in quantum computing that has no classical analogue. For the probabilistic Bayesian, we can think of it as if there were two coins, but for which reading the result of one coin automatically results in the other coin not
+Entanglement, in this framing, is when the state of one qubit cannot be described independently of the state of another. When qubits are entangled, measuring one qubit instantly affects the state of the other, no matter the distance between them. This non-local correlation is a key resource in quantum computing that has no classical analogue. For the probabilistic Bayesian, we can think of it as if there were two coins, but for which reading the result of one coin instantly tells you what the other coin shows.
 
 I've been doing Bayesian modeling for years, and so MCMC sampling is familiar to me. The core problem, though, never changes: your model's posterior may be intractable, and so you sample. But sampling is hard! Your chains may not mix, or there may be divergences... and if part of the problem you're tackling involves combinatorial spaces, good luck with approximations...
 
