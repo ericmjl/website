@@ -24,9 +24,33 @@ That last point is opinionated. I don't have a single note per day. Instead, eac
 
 If you want to use my daily sign-off skill, you're not just adopting the skill. You're adopting my way of working. You're inheriting my file structure, my tool preferences, my mental model for organizing information. The skill comes with implicit assumptions about how you work, what tools you use, and what your environment looks like.
 
+## A second example, cutting deeper
+
+The daily sign-off is mostly about tool and structure preferences. But some skills go further — they encode a *philosophy*.
+
+My scientific EDA skill is a good example. On the surface it looks like a set of technical rules: use `uv` with PEP723 inline scripts, save plots as WebP (not PNG), organize each analysis session into a timestamped folder, keep an append-only `journal.md`. But look at what those rules actually encode:
+
+- **One step at a time, ask "why" before executing** — this isn't a technical constraint. It reflects a skepticism of agents that run ahead of the analyst. I believe good exploratory analysis is a dialogue, not a sprint.
+- **Capture the research question before touching the data** — this reflects a conviction that context shapes what you should even be looking for. Data without a question is just noise.
+- **Append-only journal** — this reflects a belief that good science is narrated, not just executed. The journal isn't a log file; it's a record of reasoning.
+- **WebP over PNG** — a small but deliberate aesthetic and practical stance on file hygiene.
+- **uv + PEP723** — a specific bet on the Python toolchain that not everyone has made.
+
+None of these are neutral defaults. Each one is a choice that reflects how I think scientific work should be done. If you use my EDA skill but don't share that underlying philosophy, you'll find yourself fighting it. The one-step-at-a-time rule will feel like friction. The journaling requirement will feel like overhead. The skill isn't broken — it's just mine.
+
+This is a different kind of assumption from the daily sign-off. There, you're inheriting my tools and file layout. Here, you're inheriting my epistemology. That's harder to see, harder to document, and harder to transfer.
+
 ## What this means
 
 I call this *procedural context*. A workflow-specific agent skill is more than documentation for the coding agent. It also implicitly encodes a person's systems and structures for working. Without documenting the procedural context, the skill can only be half-useful for another person.
+
+The two examples above hint at different layers of procedural context. There are at least three:
+
+1. **Tool dependencies** — what software needs to be installed (GitHub CLI, `uv`, etc.)
+2. **Organizational preferences** — how you structure files, folders, and notes
+3. **Epistemic preferences** — how you believe the work should actually proceed
+
+The third layer is the most invisible. It's also the most important, and the hardest to transfer. You can install a CLI tool in five minutes. Adopting someone else's philosophy of scientific analysis is a different ask entirely.
 
 Someone on Twitter put it well (I wish I could remember who, so I won't take credit): with agent skills, we finally found a way to get coders to write documentation. We'll document how we work if it means we can delegate that work to some{one/thing} else!
 
@@ -44,7 +68,7 @@ pub_date: 2026-03-14
 ---
 twitter_handle: ericmjl
 ---
-summary: In this blog post, I reflect on the difference between tool-specific and workflow-specific agent skills, sharing how my own daily sign-off skill encodes not just automation, but my personal way of working. I argue that workflow skills come with implicit assumptions—about tools, file structures, and mental models—that need to be documented for others to benefit. Without this procedural context, skills are only half as useful. Curious how agent skills can become more human and helpful for everyone?
+summary: Workflow-specific agent skills don't just automate tasks — they encode how you work, down to your tools, your file structure, and your philosophy. I explore this through two examples: a daily sign-off skill that inherits my Obsidian setup and bullet journal structure, and a scientific EDA skill that goes further, encoding a whole epistemology of how analysis should proceed. I argue there are three layers of implicit assumptions in any workflow skill — tool dependencies, organizational preferences, and epistemic preferences — and that the last one is the hardest to see and the most important to document.
 ---
 tags:
 
