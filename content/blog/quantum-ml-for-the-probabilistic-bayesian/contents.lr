@@ -1,0 +1,163 @@
+title: Quantum ML, for the Probabilistic Bayesian
+---
+author: Eric J. Ma
+---
+body:
+
+This is one that I have been wanting to write for a while. As of 2026, I started working much more closely with my teammate Alexey Galda, and part of that was private tutoring on the foundations of quantum computing. (To be able to learn from someone well-trained in a one-on-one setting is a real privilege!)
+
+Because I learn best by teaching, and because retrieval practice is the best way to make knowledge stick, I decided to write a high level blog post on quantum machine learning. I have also chosen to do it anchored on an actual paper written by Alexey and my other close colleague Mihir Metkar, in collaboration with researchers from IBM. I will readily admit that some details are still beyond my grasp. Nonetheless, the goal here is to make sure that you, the reader, have enough of a "[fat marker sketch](https://basecamp.com/shapeup/1.3-chapter-04#fat-marker-sketches)" of the problem to identify where quantum computing may be helpful.
+
+If you're ready for the ride, here we go!
+
+## Qubits
+
+### The Fundamentals
+
+Let's start with the fundamental concepts first. If you're familiar with quantum computing basics and are here for the paper overview, feel free to skip.
+
+Qubits are a the building blocks of quantum computing systems. Qubits are analogous to bits, except that they are probabilistic entities: they can represent a *superposition* of both 0s and 1s until they are measured, in which case the qubit 'collapses' to a measured state of either 0 or 1. (How superposition happens, and how qubits are represented physically on hardware, is out of scope of my current knowledge.)
+
+To make this super explicit, a single qubit represents the superposition of two states, and when measured, it collapses to read out one of the two states. A two-qubit system represents a total possible space of four states, with each qubit representing a superposition of its (0, 1), and when measured, it collapses to read out one of the four possible states. Put into tabular form below for maximum explicitness:
+
+| Number of Qubits | Total Possible States | Example States                         |
+| ---------------- | --------------------- | -------------------------------------- |
+| 1                | 2                     | 0, 1                                   |
+| 2                | 4                     | 00, 01, 10, 11                         |
+| 3                | 8                     | 000, 001, 010, 011, 100, 101, 110, 111 |
+| n                | 2^n                   | All binary combinations of length n    |
+
+If you looked *solely* at the table, you'd be tempted to say, "yeah, but von Neumann computers can do the same... what's the difference here?"
+
+The difference lies in probabilities.
+
+### Probabilistic Bits
+
+My current mental model of qubits are that they are *probabilistic* bits, and while they may be thought of as independent, they can be designed to be non-independent.
+
+A useful analogy for qubits is coin flips. Each coin is a qubit. Imagine for a moment that we are in a weightless environment and that we flip a coin. A coin that is flipping is analogous to the state of superposition -- there is a probability that it will be in either the heads or tails when measured. Measurement is me reaching my hands out and stopping the flipping mid-air, thereby revealing a heads or a tails, given the probability distribution that is associated with the coin.
+
+The natural extension here is two coins flipping, each with their own probability distribution. And three, and so on.
+
+### Entanglement
+
+Entanglement, in this framing, is when the state of one qubit cannot be described independently of the state of another. When qubits are entangled, measuring one qubit instantly affects the state of the other, no matter the distance between them. This non-local correlation is a key resource in quantum computing that has no classical analogue. For the probabilistic Bayesian, we can think of it as if there were two coins, but for which reading the result of one coin instantly tells you what the other coin shows.
+
+I've been doing Bayesian modeling for years, and so MCMC sampling is familiar to me. The core problem, though, never changes: your model's posterior may be intractable, and so you sample. But sampling is hard! Your chains may not mix, or there may be divergences... and if part of the problem you're tackling involves combinatorial spaces, good luck with approximations...
+
+Yet what if you didn't have to enumerate combinatorial spaces, but instead let the sampler be in superposition over all of it instead?
+
+That's the quantum computer's party trick. It isn't a magical exponential speed-up for everything, but can be viewed through the lens of an MCMC sampler, purpose built for the exact kind of problem we already deal with: inference over spaces too big to enumerate classically.
+
+So let me show you what this looks like in practice with one paper from my colleague, Alexey Galda and Mihir Metkar.
+
+## Applying Quantum Computing to mRNA Structure Analysis
+
+### From Qubits to Biological Problems
+
+While understanding qubits as probabilistic bits is foundational, the real power of quantum computing emerges when we map real-world problems onto quantum systems. My colleague Alexey Galda's work provides an excellent case study in this translation process.
+
+In his research on mRNA secondary structure prediction, Alexey faced a classic computational biology challenge: determining which nucleotides bond together in folded RNA molecules. A naive approach would represent each potential base pair as a qubit - assigning |1⟩ if a bond exists and |0⟩ if it doesn't. However, for an RNA sequence of length n, this would require O(n²) qubits, which quickly becomes infeasible for longer sequences.
+
+Instead, the team exploited symmetries in the problem by focusing on nucleotide quartets rather than individual base pairs. A quartet consists of four nucleotides that could potentially form two *consecutive* base pairs. It would look like this:
+
+```text
+...-T--A-...
+    |  |
+...-A--T-...
+```
+
+By defining qubits to represent the presence or absence of these quartets, they achieved a more efficient representation that respects the biological constraints of RNA folding.
+
+This quartet-based approach reduces the representation complexity while maintaining the ability to capture essential structural features. Crucially, it allows additional constraints to be naturally incorporated into the quantum formulation - such as ensuring that quartets don't conflict with each other in ways that would violate RNA's chemical properties.
+
+Think of it this way: each quartet variable in our quantum system corresponds to a specific arrangement of four nucleotides that could form two stacked base pairs. When we assign a value of 1 to a quartet variable, we're saying "yes, this particular stacking interaction happens in the RNA structure." A value of 0 means "no, this stacking doesn't occur."
+
+The beautiful part is how the constraints emerge naturally from this representation. Remember that in RNA, each nucleotide can only bond with one other partner - you can't have a nucleotide involved in two different base pairs simultaneously. In our quartet formulation, this constraint shows up as: if we select one quartet (say, positions i,j,i+1,j-1), we can't simultaneously select another quartet that shares either of those base pairs. It's like saying if you've already decided to wear your left shoe with your left sock, you can't simultaneously decide to wear your left shoe with your right sock - the left shoe is already taken.
+
+There's also a topological constraint: if two quartets would create crossing base pairs (like trying to draw two lines that intersect when they shouldn't), our formulation prevents selecting both. This automatically excludes physically impossible RNA configurations where the backbone would have to twist in unnatural ways.
+
+What's elegant about this approach is that we didn't have to manually program these biological rules into our quantum system - they emerged from how we chose to represent the problem in the first place. The quantum optimizer doesn't waste time exploring impossible structures because those configurations simply aren't representable in our variable space.
+
+Regarding scale: for an mRNA sequence of 60 nucleotides, the researchers needed up to 156 qubits to represent all the relevant quartet variables. Let me explain the math behind why this is much more efficient than it first appears.
+
+A quartet represents two consecutive base pairs: positions (i,j) and (i+1,j-1). For this to be a valid quartet in RNA, we need i < i+1 < j-1 < j, which means the distance between base pairs must be at least 3 nucleotides (j - i ≥ 3).
+
+The theoretical maximum number of quartets for a sequence of length n is: (n-3)(n-2)/2
+For n=60: (57)(58)/2 = 1,653 possible quartets
+
+However, we don't need to represent all 1,653 quartets as qubits because of biological constraints:
+
+- Both base pairs in a quartet must be biologically valid (A-U, U-A, C-G, G-C, G-U, or U-G)
+- For a random RNA sequence, the probability of a valid base pair at any position is about 3/8
+- The probability that both base pairs in a quartet are valid is approximately (3/8)² = 9/64 ≈ 14%
+- This gives us about 1,653 × 0.14 ≈ 231 quartets with two potentially valid base pairs
+
+The researchers further refined this set using:
+
+1. Sequence-specific base pair validity (not all RNAs have equal base distribution)
+2. Stacking energy considerations (only quartets with favorable interaction energies)
+3. Their reduction strategy (Appendix [-A]) which eliminated very high-energy or redundant quartets
+
+This brought the effective representation down to 133-156 qubits for 60-nucleotide sequences - a manageable number for current quantum hardware while still capturing the biologically relevant solution space.
+
+### Quantum Circuit Design and Parameter Optimization
+
+The quantum circuit designed for this problem reflects the problem's symmetries and constraints. Each gate in the circuit has associated parameters that control how qubits evolve and entangle during computation. As for exactly how, it is beyond my current knowledge, but I'm willing to black-box this for the time being.
+
+Unlike classical neural networks where we calculate gradients via backpropagation, the optimization process here works differently. An external optimizer adjusts these circuit parameters one at a time, similar to Gibbs or slice sampling methods. For each parameter setting, the quantum circuit is executed multiple times (shots) to sample from the resulting probability distribution.
+
+The quantum-enhanced program evaluates these samples for their tail-end loss function value, and adjusts parameters to improve the solution quality (push towards lower loss). We will see this in detail later when we discuss the CVaR loss function. We will see this again later  Importantly, there are no gradients computed in this process - the optimizer relies purely on function evaluations (sampling results) to guide its search through parameter space.
+
+Imagine the quantum circuit as a series of interconnected gears, where each gear represents a parameter we can tweak. In this case, our gears are parameterized rotations around the Y-axis of individual qubits, interspersed with entangling gates that create correlations between qubits. Because of these entangling gates, adjusting one gear doesn't just affect its own qubit; the change ripples through the correlated neighbors, which is what gives the circuit its expressive power.
+
+What makes this optimization approach different from backpropagation in neural networks is that we don't calculate how each parameter adjustment would affect the final outcome through calculus. Instead, we treat it more like experimenting with a physical system: we set our gears to specific positions, run the quantum circuit many times to see what output patterns emerge, then adjust our gears based on what we observe. From my gut feel, it feels more akin to tuning a radio by ear than calculating the exact capacitance needed for a particular frequency.
+
+### Probability Distributions and Sampling
+
+When we run our quantum circuit, we get a string of 0s and 1s, a bitstring where each position corresponds to one of our quartet variables. A 1 means "this quartet is present in this particular folding," and a 0 means "this quartet is absent." But if we only run the circuit once, we get just one possible folding, like taking a single photograph of a hummingbird's wings and trying to understand its flight pattern.
+
+So what we actually do is run the circuit hundreds or thousands of times with the same parameter settings, collecting a whole collection of these bitstrings. We might find that certain quartets appear as 1s in 80% of our samples, while others only show up 5% of the time. The high-probability quartets represent the core scaffolding of the RNA fold, while the low-probability ones represent more transient or less stable interactions. To get our final prediction, the sampled bitstrings are refined through a classical local search that tries flipping individual bits to further reduce the energy, and the lowest-energy bitstring is taken as the predicted structure.
+
+### The Loss Function - Conditional Value at Risk
+
+RNA molecules don't spend much time in average-energy conformations. They fold into their most stable, lowest-energy states to perform their functions, like a ball rolling down a hilly landscape to settle in the deepest valley it can find. So if we minimize the *average* energy across all sampled structures, we end up with something middling in stability rather than the biologically relevant folds we actually care about.
+
+This is where Conditional Value at Risk (CVaR) comes in. Instead of asking "what's the average energy across all samples?", CVaR asks "if we look only at the lowest 20% of energy structures we've sampled, what's their average energy?" By minimizing this tail-focused metric, the optimizer pushes the quantum system to make those exceptionally stable, low-energy structures more probable. Investors use CVaR (also called Expected Shortfall) to manage downside risk in portfolios; here, the energetic "worst case" is actually the biological best case, the most stable folds that RNA molecules actually adopt.
+
+### Hybrid Quantum-Classical Nature
+
+This approach is a hybrid quantum-classical algorithm. The quantum circuit explores an exponentially large solution space through probabilistic sampling, while a classical optimizer guides that exploration. Think of it like having a brilliant explorer (the quantum circuit) who can venture into vast, uncharted territories, but needs a skilled navigator (the classical optimizer) to decide where to send them next and make sense of what they bring back.
+
+The classical optimizer works by nudging one circuit parameter at a time, re-running the quantum circuit to collect fresh samples, evaluating them with the CVaR loss function, and deciding whether to keep the change. This resembles Gibbs sampling in statistics, where you make small adjustments to one dimension at a time and gradually work toward better solutions.
+
+The paper mentions a few specific classical techniques that make this process more robust:
+
+1. **Parameter thresholding** - Ignoring tiny adjustments that are unlikely to make meaningful differences
+2. **Gauge transformations** - Mathematical tricks to compensate for the inherent noise of current quantum hardware
+3. **Local search post-processing** - After getting promising candidates from the quantum sampler, making small classical tweaks (like flipping individual bits) to refine them further
+
+These classical techniques complement rather than replace the quantum exploration. The quantum circuit gives us access to exponentially many possibilities we could never enumerate classically, while the classical optimizer navigates this vast space efficiently.
+
+## Conclusion
+
+Many technical details here are still beyond my current grasp. But if I had to distill this paper down to one takeaway, it would be this: the quantum computer is not doing the heavy lifting alone. It is acting as a *specialized sampler* over a combinatorial space that would be intractable to enumerate classically. That sampling, on its own, is not enough. What makes it work is the *problem representation*: encoding mRNA structure as quartets, so that biological constraints fall out naturally and the search space shrinks to something a current-generation quantum device can actually handle.
+
+Neither piece works without the other. A quantum sampler pointed at a naive O(n^2) encoding would drown in qubits. A clever encoding without a way to efficiently explore the solution space would still leave you stuck with classical heuristics. The combination, smart representation plus quantum sampling plus classical post-processing, is what gives this approach its bite.
+---
+pub_date: 2026-03-26
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I break down quantum machine learning for readers with a probabilistic/Bayesian background, anchored on a real paper about mRNA secondary structure prediction by my colleagues Alexey Galda and Mihir Metkar. I cover qubits as probabilistic bits, entanglement as non-independence, and how clever problem representation (nucleotide quartets) combined with quantum sampling and classical optimization makes quantum computing practical for computational biology. Curious how a quantum computer acts as a specialized sampler for problems too large to enumerate classically?
+---
+tags:
+
+quantum-computing
+machine-learning
+bayesian
+mRNA
+computational-biology
+quantum-ml
+sampling
+optimization
