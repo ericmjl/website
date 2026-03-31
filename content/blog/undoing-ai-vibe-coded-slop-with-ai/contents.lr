@@ -1,0 +1,153 @@
+title: Undoing AI vibe-coded slop with AI
+---
+body:
+
+I want to tell you about canvas-chat, a project I built with heavy AI assistance. It's a visual, non-linear chat interface where conversations are nodes on an infinite canvas — think branching, merging, and exploring topics as a directed acyclic graph.
+
+The first commit landed on December 28, 2025. By December 30, it had sessions, matrix evaluation tables, web search, node tagging, and BM25 keyword search. The AI moved _fast_. Bugs got fixed in the next commit. Features piled in like tetris blocks stacking up.
+
+And yes, it was a mess.
+
+Here's the thing though: the mess was _recoverable_. Not because the AI got better (it didn't; not really), but because I had battle-tested convictions on how the thing _ought_ to be architected. And those convictions came from years of shipping software, watching architectures crumble, and learning what holds up.
+
+This is the story of how we went from a jumbled 8,500-line `app.js` to a clean plugin architecture — and why you need battle-tested convictions to make that happen.
+
+## The Initial State
+
+The first commit wasn't actually _bad_. The project had clean separation from day one:
+
+- `canvas.js` — SVG pan/zoom/rendering
+- `graph.js` — DAG data structure
+- `chat.js` — LLM API + SSE streaming
+- `storage.js` — IndexedDB persistence
+- `app.py` — FastAPI backend
+
+But `app.js` was already ~8,500 lines of everything else. Every slash command handler, every modal, every feature logic — all tangled together. Want to add a new feature? You'd grep around in that monolith, hope you found the right spot, and pray you didn't break anything.
+
+The AI could add features to this mess. It could add a `/matrix` command in a few prompts. It could add `/search` with Exa integration. But it couldn't see the _structure_ — the latent architecture that would make the whole thing maintainable.
+
+## The First Wave
+
+The refactoring started with the purest code — functions with no dependencies:
+
+| Date   | What Got Extracted   | Why                                                                                    |
+| ------ | -------------------- | -------------------------------------------------------------------------------------- |
+| Jan 4  | `layout.js`          | Overlap detection is pure math                                                         |
+| Jan 5  | `highlight-utils.js` | Text selection is isolated                                                             |
+| Jan 7  | Feature modules      | `flashcards.js`, `committee.js`, `matrix.js`, `factcheck.js`, `research.js`, `code.js` |
+| Jan 10 | Core infrastructure  | `undo-manager.js`, `modal-manager.js`, `slash-command-menu.js`                         |
+
+This reduced `app.js` from ~8,500 to ~5,500 lines. But these were still just _file splits_. The code worked better, but there was no _system_ binding it together.
+
+The AI did this part reasonably well — when I asked "extract this function to a separate module," it could do it. But it never suggested "we should extract this" on its own. It needed direction.
+
+## The Pivotal Moment
+
+This was the architectural leap. I asked the AI to create a plugin system, and it delivered — but only because I knew what a plugin system _should_ look like.
+
+We ended up with a **three-level plugin architecture**:
+
+**Level 1: Custom Node Types** — Node protocols define rendering via a `BaseNode` class. Each node type can override `renderContent()`, `getActions()`, `getSummaryText()`, and more. Registered in `node-registry.js`.
+
+**Level 2: Feature Plugins** — Extend a `FeaturePlugin` base class. Get `AppContext` via dependency injection (graph, canvas, chat, storage, modalManager, streamingManager). Define slash commands via `getSlashCommands()`. Lifecycle hooks: `onLoad()`, `onUnload()`.
+
+**Level 3: Extension Hooks** — Subscribe to events. `CancellableEvent` can block actions. Event names like `command:before`, `node:created`, `node:deleted`.
+
+The key files created:
+
+- `feature-plugin.js` — FeaturePlugin + AppContext
+- `feature-registry.js` — Slash command routing with priority (BUILTIN > OFFICIAL > COMMUNITY)
+- `plugin-events.js` — CanvasEvent, CancellableEvent
+- `node-registry.js` — Node type registration
+
+This is where the architecture became a real system. And it only happened because I knew what I wanted.
+
+## Backend Pluginification (Late January 2026)
+
+The same pattern reached the Python side:
+
+- `pptx_endpoints.py` — PowerPoint handling
+- `ddg_endpoints.py` — DuckDuckGo search
+- `code_handler.py` — Python code execution
+- `matrix_handler.py` — Matrix cell filling
+
+Each follows a `register_endpoints(app)` pattern, loaded dynamically via `importlib`.
+
+## The Testing Safety Net
+
+By late January, the plugin architecture was in place. Features were decoupled. The code was cleaner. And then GLM-4.5 started dropping curly braces.
+
+No, really. The AI would "fix" one thing and introduce a missing bracket somewhere else. Merge conflicts became minefields; features that worked yesterday stopped working today; not because of malice, but because the AI didn't understand the dependencies between modules. It was making elementary mistakes that a junior developer wouldn't make.
+
+On January 24, I added Cypress E2E tests. Out of spite, honestly. The first commit gave us `canvas_interactions.cy.js`, `node_selection.cy.js`, and `note_node.cy.js` - three tests that told us whether the canvas still worked.
+
+These tests caught the regressions the AI kept introducing. More importantly, they let me verify changes faster. Instead of manually testing every feature after each AI session, I could run the test suite and know whether things still worked.
+
+The plugin architecture made the code testable. The tests caught what the AI broke.
+
+## The Numbers
+
+| Phase                  | app.js size  | Modules     |
+| ---------------------- | ------------ | ----------- |
+| Initial (Dec 2025)     | ~8,500 lines | 5 files     |
+| After feature splits   | ~5,500 lines | 11 files    |
+| After infrastructure   | ~5,400 lines | 15 files    |
+| After plugin migration | ~5,400 lines | 25+ files   |
+| Today                  | ~4,700 lines | 35+ modules |
+
+## The Bigger Lesson
+
+Here's what I learned from this process:
+
+**The AI can execute architecture, but it can't design it.** It can split files when asked. It can implement a plugin system from a spec. But it won't look at a 8,500-line `app.js` and say "this should be a plugin system."
+
+That vision; that _opinion_; comes from somewhere else. It comes from:
+
+1. **Seeing architectures fail** - Knowing the pain of tangled code, merged conflicts, feature creep
+2. **Seeing architectures succeed** - Knowing what maintainable code feels like after years of shipping
+3. **Reading, studying, internalizing** - Design patterns, architectural styles, tradeoffs
+4. **Making mistakes** - Building the wrong abstraction once so you recognize it next time
+
+I didn't arrive at "we need a three-level plugin architecture" out of nowhere. It came from discussing tradeoffs with the AI; asking "what if we did it this way?" and "what are the tradeoffs of that approach?"; and applying my best judgment to the options. The AI could explain the pros and cons of different approaches, but I had to pick which tradeoffs I was willing to accept.
+
+The AI didn't teach me this. _Experience_ taught me this.
+
+## What This Means for the Future
+
+Here's where it gets interesting. Because we built this modular foundation, I can now swap out the rendering layer. The canvas is currently raw SVG — and I want to move to Svelte Flow. The plugin system I built makes this possible:
+
+- Features don't depend on `app.js` internals; they use `AppContext`
+- Canvas is isolated in `canvas.js`; swapping to Svelte Flow means replacing that layer
+- Node protocols define behavior; Svelte Flow nodes can use the same protocol pattern
+- Event system is framework-agnostic
+- Dependency injection provides graph, canvas, chat, storage; these can be re-provided to Svelte Flow components
+
+The abstraction layer we built; FeaturePlugin + AppContext + EventSystem; separates _what_ features do from _how_ they're rendered. That's what makes Svelte Flow viable as a drop-in replacement.
+
+## Closing Thoughts
+
+You can undo AI vibe-coded slop. It's possible. But it requires _you_ to have battle-tested convictions on how the thing ought to be.
+
+The AI is an incredible executor. It can refactor, extract, implement. But the vision? That stays human. And that vision comes from battle-tested experience; from having seen enough codebases to know what works and what collapses under its own weight.
+
+So if you're working with AI coding assistants: don't expect them to architect for you. Tell them what to build. Give them the structure. Then let them do the implementation.
+
+That's how you get from a jumbled mess to something you can actually maintain.
+---
+summary: I vibe-coded canvas-chat into existence in 48 hours, then spent weeks untangling the mess into a clean plugin architecture. The AI could execute my architectural vision, but it couldn't design it. This is the story of how I recovered from AI-generated slop — and why the architecture stays human.
+---
+author: Eric J. Ma
+---
+pub_date: 2026-03-29
+---
+tags:
+
+ai
+llm
+coding
+architecture
+plugins
+opencode
+tools
+---
+twitter_handle: ericmjl
