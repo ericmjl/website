@@ -93,7 +93,7 @@ No project skills found.
 Try listing global skills with -g
 ```
 
-I then installed the marimo pair skill locally within this repo:
+Though the marimo pair skill is available globally, I decided to install it locally as an override.
 
 ```bash
 marimo-pair-benchmark on  main [?] on ☁️  eric.ma@nonlinearlabs.ai
@@ -215,18 +215,17 @@ As it turns out, Opus is undisputedly the most expensive per token, but Sonnet 4
 
 I also decided to check whether the notebooks that were generated were valid notebooks or not. This is what we have:
 
-| Model | Cost | Input Tokens | Output Tokens | marimo check | Markdown cells |
-|---|---|---|---|---|---|
-| Claude Opus 4.6 | $1.62 | 76,770 | 16,575 | PASS | Yes (100%) |
-| Claude Sonnet 4.6 | $2.00 | 213,803 | 27,689 | PASS | Mostly (86%) |
-| GLM-5.1 | $0.43 | 96,639 | 7,581 | PASS | Yes (100%) |
-| Kimi K2.5 | $0.12 | 35,049 | 8,250 | FAIL | Mostly (88%) |
-| Qwen 3 Coder | $0.07 | 208,308 | 8,386 | PASS (warnings) | No (0%) |
-| MiniMax M2.7 | $0.04 | 14,419 | 4,074 | FAIL | No (0%) |
-| Gemma 4 31B | $0.03 | 170,280 | 3,986 | PASS (warnings) | No (0%) |
-| **Total** | **$4.31** | 815,268 | 76,541 | | |
+| Model | marimo check | Markdown cells |
+|---|---|---|
+| Claude Opus 4.6 | PASS | Yes (100%) |
+| Claude Sonnet 4.6 | PASS | Mostly (86%) |
+| GLM-5.1 | PASS | Yes (100%) |
+| Kimi K2.5 | FAIL | Mostly (88%) |
+| Qwen 3 Coder | PASS (warnings) | No (0%) |
+| MiniMax M2.7 | FAIL | No (0%) |
+| Gemma 4 31B | PASS (warnings) | No (0%) |
 
-Notably, Kimi K2.5 and MiniMax M2.7 failed to pass marimo checks due to re-defined variables.
+A note on the columns: "marimo check" is the result of running `uvx marimo check <notebook_name>.py`, which catches issues like redefined variables and invalid cells. Notably, Kimi K2.5 and MiniMax M2.7 failed this check due to re-defined variables. "Markdown cells" is the percentage of code cells that have a preceding markdown cell, which was something I explicitly required in the instructions.
 
 And to elaborate on the markdown cells point:
 
@@ -254,7 +253,27 @@ Digging deeper into each of the models, and whether they passed each stage gate,
 | MiniMax M2.7 | Yes | No | No |
 | Gemma 4 31B | No | No | No |
 
+To pass a stage gate, the plot (G1, G2) or markdown (G3) cell must be rendered in the notebook. Writing the code is not enough; it has to actually execute and show up.
+
 Kimi K2.5 technically did write the recommendation, but I am calling it unsuccessful because it did not render out. This stricter criteria explicitly demands that the model wiggle its way out of errors it encounters.
+
+One pattern I noticed across models is that many of them bundled imports into the same cell as code that used them. In Marimo's execution model, this is a problem: if two cells both import `pandas`, the notebook fails with a redefined variable error. Upon noticing this, I decided to explicitly quantify:
+
+| Model | Code Cells w/ Imports | Total Code Cells |
+|---|---|---|
+| Claude Opus 4.6 | 1 | 6 |
+| Claude Sonnet 4.6 | 1 | 7 |
+| GLM-5.1 | 1 | 8 |
+| Kimi K2.5 | 2 | 8 |
+| Qwen 3 Coder | 0 | 1 |
+| MiniMax M2.7 | 3 | 6 |
+| Gemma 4 31B | 0 | 1 |
+
+Every model can benefit from being steered to reduce the number of code cells with imports, which would dramatically reduce the incidence of Marimo errors from redefined symbols.
+
+## How the UpSet plots turned out
+
+As mentioned earlier, in my initial explorations I discovered that the `upsetplot` library is incompatible with Pandas 3.0, which invariably gets installed in the sandboxed environment. This made the UpSet plot task an especially interesting test of how each model handles a real-world dependency conflict. Here is how they fared.
 
 Opus, in particular, produced a beautiful UpSet plot out of raw `matplotlib`:
 
@@ -270,6 +289,8 @@ On the other hand, GLM 5.1's UpSet plot is really weird:
 
 ![GLM 5.1 UpSet plot](./glm-upset-plot.webp)
 
+## Other observations
+
 Other pointers of note: Gemma 4 and Qwen3 Coder Next produced nothing in the notebook. Both completely failed at this task. I am not sure what is doable here to salvage these models.
 
 GLM 5.1 gave very weirdly formatted markdown cells, in which `\n\n` was not rendered but preserved verbatim.
@@ -278,29 +299,23 @@ This is probably fixable by adding in additional instructions on how to write an
 
 ## Recommendations
 
-Firstly, Gemma 4 31B and Qwen 3 Coder completely failed at this task. I think it is safe to say that we can ignore these two models going forward.
+First off: Gemma 4 31B and Qwen 3 Coder completely failed at this task. I think it is safe to say we can ignore these two going forward.
 
-What's left then is a discussion between Claude Opus 4.6, Sonnet 4.6, GLM-5.1, Kimi K2.5, and MiniMax M2.7.
+That leaves Claude Opus 4.6, Sonnet 4.6, GLM-5.1, Kimi K2.5, and MiniMax M2.7. Based on the data above, here are four things I want to try. The key discipline: deploy one change at a time, re-run the benchmark, and measure. If you change four things at once and performance improves, you will never know which change mattered. Stop when the KPIs hit acceptable levels.
 
-As mentioned above, I noticed that MiniMax M2.7 completely ignored the instructions to add Markdown cells, and that it failed to get past UpSet imports being redefined. Upon studying the code that was generated, I think it can be attributed to the model not having enough explicit examples on how to write code such that imports are separated in isolated code cells. That's possibly one fix to implement here, as even Opus failed to do that on more than one occasion within its notebook, so this is an important problem to solve. Upon noticing this, I decided to explicitly quantify:
+**1. Add import isolation examples to the skill.** Every model had at least one cell that mixed imports with executable code. The fix is simple: add an explicit two-cell example to the marimo-pair skill (cell 1: imports only; cell 2: code that uses them). MiniMax had 3 cells mixing the two, which directly caused its `marimo check` failure. Give weaker models a concrete template to follow, re-run, and check whether the "code cells with imports" count drops to zero.
 
-| Model | Code Cells w/ Imports | Total Code Cells |
-|---|---|---|
-| Claude Opus 4.6 | 2 | 6 |
-| Claude Sonnet 4.6 | 2 | 7 |
-| GLM-5.1 | 2 | 8 |
-| Kimi K2.5 | 2 | 8 |
-| Qwen 3 Coder | 0 | 1 |
-| MiniMax M2.7 | 3 | 6 |
-| Gemma 4 31B | 0 | 1 |
+**2. Fix GLM-5.1's newline rendering.** GLM wrote `mo.md(r"""..text with \n\n..""")` instead of using actual newlines. One line in the skill instructions ("use actual line breaks in markdown strings, not `\n` escape sequences") should resolve this entirely. Re-run and check whether GLM's markdown cells render correctly.
 
-Seems like every model can benefit from steering the model to reduce the number of code cells with imports, and can thus dramatically reduce the incidence of Marimo errors showing up due to redefined symbols.
+**3. Help Kimi K2.5 self-correct redefined variables.** Kimi is 1/10th the cost of Opus and scored 88% on markdown coverage, making it the highest-leverage model to fix. Its failure was at error recovery, not code generation. The intervention: add `uvx marimo check` as a mandatory post-edit step in the skill. If Kimi can self-correct its redefined variables, it becomes a viable budget alternative to Opus and Sonnet. This should get even easier with [marimo PR #9056](https://github.com/marimo-team/marimo/pull/9056), which exposes cell execution errors directly through the `code_mode` API, giving agents built-in self-correction visibility without needing a separate `marimo check` step.
+
+**4. Bake a post-edit validation loop into the marimo-pair skill.** More broadly, the single most impactful change would be adding a "run it, check it, fix it" loop to the skill file itself (SKILL.md), not AGENTS.md: after writing each cell, run it; after writing the full notebook, run `marimo check`; fix any errors. This belongs in the skill because it is universal to any marimo-pair session, whereas AGENTS.md is project-specific. This would help Kimi, MiniMax, and potentially GLM all move up a tier, because their failures were in error recovery, not in code generation.
 
 ## Discussion
 
 One caveat to this analysis is that it is one-shotted with a superprompt. This is decidedly *not* how people do their data analysis work, but it is also the best guardrail against my biases in interacting ad-hoc with AI interfering with a fair comparison. (For example, I can confidently say that Opus and Sonnet were smooth as butter when I did an ad-hoc test to feel out how to work with Marimo Pair.)
 
-If Kimi K2.5 were able to resolve redefined variable issues autonomously or be steered away from doing that to begin with, I am confident it would be able to be a great open weight alternative to Opus 4.6 and Sonnet 4.6. This is especially in light of it being extremely cost-effective at performing the analysis at ~1/10th the cost of Opus 4.6. It handled the creation of markdown cells well, and though its prose was qualitatively shallower than Opus 4.6, I still think it can serve as a first pass to delivering an easily understandable artifact for others.
+If Kimi K2.5 were able to resolve redefined variable issues autonomously or be steered away from doing that to begin with, I am confident it would be able to be a great open weight alternative to Opus 4.6 and Sonnet 4.6. This is especially in light of it being extremely cost-effective at performing the analysis at ~1/10th the cost of Opus 4.6. It handled the creation of markdown cells well, failing to accomplish the task only on technicalities, and though its prose was qualitatively shallower than Opus 4.6, I still think it can serve as a first pass to delivering an easily understandable artifact for others.
 
 I did one round of measurement here. If we want to systematically improve this and turn it into long-running evals, the next step would be to identify a second task along which to generate transcript and notebook data for us to mine, and systematically measure agent KPIs for that new task as well. Over time, this builds a corpus of eval data that makes model comparison rigorous rather than anecdotal.
 
@@ -310,7 +325,7 @@ This was a pretty fun exercise in measuring and evaluating the performance of va
 
 More broadly, I think often about how experiments get designed. Not in the statistical sense, but in an informational sense. Are we playing out experiments and their possible conclusions so that they are designed to be actionable whichever way the result pans out? If not, we have work to do.
 
-Additionally, experiments involve measurement, and measurement are an integral part of being a data scientist. Hamel Husain, whose course with Shreya Shankar on LLM evals was one that influenced my thinking around the matter, notes that there will be a forceful revenge of the data scientist in an AI age. This is because the skill of experiment design and measurement were always the "science" part of "data science".
+Additionally, experiments involve measurement, and measurement are an integral part of being a data scientist. Hamel Husain, whose course with Shreya Shankar on LLM evals was one that influenced my thinking around the matter, notes that there will be a [forceful revenge of the data scientist](https://hamel.dev/blog/posts/revenge/) in an AI age. This is because the skill of experiment design and measurement were always the "science" part of "data science".
 
 Another thought also comes to mind: I have seen data scientists do experimentation without systematic measurement. I'm going to go out on a limb and say this: it's vibe experimentation, and I am using this term pejoratively. It feels good. But it is ultimately unproductive. If you do vibe experimentation, you *will* get stuck tweaking the digital equivalent of an entangled biological system, with no bearings to tell you whether your tweaks are doing any good or not! You *must* measure how good the LLM or agent is, and you *must* define key performance indicators (KPIs) for the LLM. In my case here, I defined multiple KPIs: cost, stage gated progress, adherence to code import instructions (all failed), adherence to markdown documentation instructions.
 
@@ -318,9 +333,9 @@ And to echo what I learned from the LLM Evals course, those KPIs must be _applic
 
 Now to be clear, there's no problem with initial vibe-based experimentation to feel out axes of variation and how to measure performance. I did that here, in a separate repo first, before I designed this measurement experiment. The important part is this: as soon as you have a grasp of how to measure the performance, you must systematically measure that KPI. Otherwise, you will be left groping in the dark.
 
-And Trevor, if you ever chance upon this blog post, I hope the data and methodology are helpful for you!
-
 If you're curious to see the full results, including logs, chat transcripts, and the generated notebooks, check out the [marimo-pair-benchmark repository](https://github.com/ericmjl/marimo-pair-benchmark).
+
+And Trevor, if you ever chance upon this blog post, I hope the data and methodology are helpful for you!
 ---
 pub_date: 2026-04-08
 ---
