@@ -18,7 +18,7 @@ To show an example, I hosted a quick PyPI server with Basic Auth on Modal throug
 
 ## Host Ollama with low latency
 
-One of the most exciting use cases I've found is deploying Ollama on Modal with remarkably low latency. After some experimentation with [this repository](https://github.com/ericmjl/ollama-on-modal/blob/main/endpoint_v2.py), I was able to get a super responsive setup by using a Modal volume to host the model weights.
+One of the most exciting use cases I've found is deploying Ollama on Modal with remarkably low latency. After some experimentation with [this repository](https://github.com/ericmjl/ollama-on-modal/blob/main/endpoint.py), I was able to get a super responsive setup by using a Modal volume to host the model weights.
 
 The architecture is straightforward but powerful:
 
@@ -77,7 +77,7 @@ Finally... the pricing! Every other PaaS that I've seen charges a flat fee *per 
 ## Show me the repos again
 
 - [Modal PyPI server](https://github.com/ericmjl/modal-pypi-server)
-- [Ollama on Modal](https://github.com/ericmjl/ollama-on-modal/blob/main/endpoint_v2.py)
+- [Ollama on Modal](https://github.com/ericmjl/ollama-on-modal/blob/main/endpoint.py)
 - [Serverless workstation](https://github.com/ericmjl/modal-vscode-workstation)
 ---
 pub_date: 2025-04-26
