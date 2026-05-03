@@ -193,6 +193,13 @@ When generating text, avoid the following categories of wording, structures, and
 - Example: for a post in `content/blog/exploratory-data-analysis-isnt-open-ended/` with `pub_date: 2024-01-28`, the link is `/blog/2024/1/28/exploratory-data-analysis-isnt-open-ended/`
 - To get the correct URL for a post: read its `contents.lr` for `pub_date`, use the folder name as the slug; format as YYYY/M/d (e.g. 2024-01-28 → 2024/1/28)
 
+## Blog Post Images (Raster)
+
+- Store **inline** images in the **same directory** as that post’s `contents.lr`, under `content/blog/<slug>/`.
+- For **new** figures, add **`*.webp` only** and reference them in the `body` markdown as `./meaningful-name.webp` with descriptive alt text (for example `![Capybara on a log](./capybara-spirit-animal.webp)`). Prefer kebab-case filenames that describe the content, not paste timestamps.
+- The repo uses pre-commit hook **`convert-to-webp`** from [`webp-pre-commit`](https://github.com/ericmjl/webp-pre-commit) (see `.pre-commit-config.yaml`). Treat authored markup as WebP-first so links and filenames stay consistent through commit hooks. If you start from PNG or JPEG, convert before commit (for example `cwebp -q 85 source.png -o ./meaningful-name.webp`) unless you are intentionally relying on the hook to rewrite assets and will fix up references afterward.
+- Drafts that begin in the brain42 vault (`Obsidian`) still need assets copied into this slug folder and renamed; vault-side steps are documented in `~/Documents/brain42/AGENTS.md` under blog publishing.
+
 ## Development Workflow
 
 ### Running Python Commands
