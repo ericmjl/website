@@ -59,9 +59,15 @@ def data_loading_intro(mo):
 @app.cell(hide_code=True)
 def load_schedule_data():
     import json
+    import urllib.request
 
-    with open("odsc-east-2026-schedule-sessions.json") as f:
-        data = json.load(f)
+    url = (
+        "https://raw.githubusercontent.com/ericmjl/website/main/"
+        "content/blog/odsc-east-2026-zeitgeist/"
+        "odsc-east-2026-schedule-sessions.json"
+    )
+    with urllib.request.urlopen(url) as resp:
+        data = json.loads(resp.read().decode())
     sessions = data["sessions"]
     len(sessions)
     return (sessions,)
