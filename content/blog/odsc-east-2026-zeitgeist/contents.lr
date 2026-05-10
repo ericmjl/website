@@ -1,0 +1,165 @@
+title: ODSC East 2026's Zeitgeist and Conference Report
+---
+author: Eric J. Ma
+---
+pub_date: 2026-05-10
+---
+summary: In this blog post, I share my experiment at ODSC East 2026, where I analyzed talk abstracts to uncover the conference's true zeitgeist. By categorizing sessions into five key zones—agentic AI systems, LLM engineering, data infrastructure, applied AI, and governance—I reveal how AI builder culture is evolving into systems culture. I also reflect on my own workshop experience and the shifting focus from models to repeatable systems. Curious about what trends are shaping the future of AI conferences?
+---
+tags:
+
+agentic
+conference
+llm
+data
+mlops
+applied
+governance
+workforce
+strategy
+systems
+---
+twitter_handle: ericmjl
+---
+body:
+
+This year I ran a small experiment at ODSC East 2026.
+
+As I was speaking and catching up with old friends at the conference, I could only attend a slice of sessions. So I thought, rather than try to catch every last talk, what if I could figure out what the *zeitgeist* of the conference was using just the talk abstracts? If I scraped the schedule and abstracts across talks, workshops, and keynotes, can they reveal the conference center of gravity, and hence the zeitgeist of the conference?
+
+## How I ran the experiment
+
+I used Cursor Agent on Premium for the scrape and extraction workflow.
+
+The process was straightforward:
+
+- Use `https://schedule.odsc.ai/` as the source of truth
+- Query the schedule backend session table and filter to the East 2026 event ID
+- Pull session title, abstract, day, track, format, and speaker metadata
+- Save the full result as structured JSON for analysis
+
+This pass includes 237 sessions from the live schedule backend, exported as structured JSON.
+
+## The map after reading abstracts
+
+I ran a multi-agent categorization pipeline. Four independent coding agents each read 50 full abstracts and proposed a five-category taxonomy. Then three cross-review agents read all 200 abstracts and all four proposals, identified points of agreement and disagreement, and each produced a unified taxonomy. A final arbitrator agent resolved the remaining disputes using majority vote, reading the abstracts directly for tiebreaks.
+
+Corpus snapshot:
+
+- 237 total sessions in the schedule export
+- 200 sessions with non-empty abstracts
+- 193 substantive sessions after filtering logistics and networking entries
+- 7 excluded as non-substantive (badge pickup, happy hours, morning run, career fair, networking receptions)
+
+The five categories that emerged from this process follow.
+
+## Zone 1 - Agentic AI systems (55 talks, 28% of substantive)
+
+This zone captures the shift from prompt craft to system design: agent architectures, multi-agent orchestration, tool use, MCP and A2A protocols, harness engineering, agent memory, simulation sandboxes, guardrails, and production deployment patterns for systems where AI plans, decides, and acts autonomously.
+
+Sub-zeitgeist in this zone:
+
+- Teams are wrestling with a core systems question: what architecture keeps agents reliable when they run for long periods, call many tools, and fail mid-flight?
+- The recurring design problem is orchestration and control, from runtimes to control planes to workflow verification.
+- This was the largest zone at the conference, reflecting how agentic AI has moved from demos to engineering.
+- Talks that anchor this pattern include:
+  - Architectural Patterns for Building and Governing Production-Grade Multi-Agent Systems (Dr. Ali Arsanjani, Google Cloud)
+  - Agents Don't Need Better Frameworks: They Need a New Runtime (John A. De Goes, Golem Cloud)
+  - Building Production-Ready Agentic AI - Why a Control Plane Matters (Wayne Segar, Dynatrace)
+  - Verification-Driven Agentic Workflows (Julie Yaunches, NVIDIA)
+
+If you are building agentic systems right now, treat architecture as the first design surface. Start with runtime boundaries, failure recovery, and orchestration patterns, then layer prompts into that structure.
+
+## Zone 2 - LLM and foundation model engineering (37 talks, 19%)
+
+This zone covers the model layer: training, fine-tuning, quantization, inference optimization, RAG architecture, prompt engineering, model interpretability, hallucination research, evaluation methodology, and novel computational substrates.
+
+Sub-zeitgeist in this zone:
+
+- The dominant production question is deployment economics: how do we sustain quality while meeting latency, throughput, and cost targets?
+- The technical pressure points are quantization, efficient fine-tuning, inference behavior under load, and hardware-induced variability.
+- Talks that capture this pressure include:
+  - Less Compute, More Impact: How Model Quantization Fuels the Next Wave of Agentic AI (David vonThenen, NetApp)
+  - Efficient Finetuning of Quantized LLMs (Tim Dettmers, CMU / Ai2)
+  - Fast, Cheap, and Accurate: LLM Inference in Practice (Legare Kerrison, Red Hat)
+  - Why AI Systems Behave Differently in Production: Nondeterminism, GPU Execution Drift, and Hidden Reliability Gaps (Santosh Appachu Devanira Poovaiah, NVIDIA)
+
+Use this zone as a nudge to benchmark for real operating conditions, not demo conditions. Optimize for latency, cost, and stability together, and pick model and fine-tuning strategies that survive production constraints.
+
+## Zone 3 - Data engineering and ML infrastructure (28 talks, 15%)
+
+This zone includes the substrate work that determines whether agents reason well in production: data platforms, pipelines, data quality frameworks, real-time streaming architectures, training and serving infrastructure, data modeling, and ML operational systems.
+
+Sub-zeitgeist in this zone:
+
+- The shared diagnosis is that many agent failures are context failures, data-shape failures, or lineage failures before they are model failures.
+- The leading question is how to build context substrates that preserve meaning across retrieval, reasoning, and execution paths.
+- Talks that make this explicit include:
+  - What "AI-Ready Data" Actually Means: A Framework to Trustworthy AI (Jacob Prall, Snowflake)
+  - Entity Resolved Knowledge Graphs: The Foundation for Effective GraphRAG (Clair Sullivan, Clair Sullivan & Associates)
+  - Real-Time Event-Time Consistent Analytics Pipelines using Kafka, Flink, and Apache Pinot (Deep Patel, Robinhood)
+  - Beyond the Context Window: Anchoring Agentic Reasoning with World-State and Context Graphs (Amy Hodler & David Hughes, GraphGeeks.org)
+
+For readers shipping AI systems, this is a reminder to diagnose context and data pathways before blaming the model. Invest in data contracts, context structure, and retrieval quality early, because those choices determine downstream reliability.
+
+## Zone 4 - Applied AI, domain solutions, and foundations (41 talks, 21%)
+
+This zone spans two related audiences: introductory training courses teaching core skills (Python, SQL, R, statistics, ML basics) and domain-specific AI applications in healthcare, finance, defense, biopharma, accessibility, and marketing. The common thread is that the audience is learning or applying rather than researching.
+
+Sub-zeitgeist in this zone:
+
+- The main adoption problem is role redesign: what should humans own when agents can execute large parts of the workflow?
+- The recurring organizational question is how to scale AI usage while preserving accountability in regulated and high-stakes domains.
+- Talks that carry this thread include:
+  - Ready for Primetime: Creating the AI-enabled Clinician (Ami Bhatt, MD, FDA / American College of Cardiology)
+  - Panel: Building the AI-Ready Workforce: Human-AI Collaboration in 2026 (Usama Fayyad, Sadie St Lawrence, Sheamus McGovern, Dr. William Streilein)
+  - The Expertise Upheaval: How AI Promises to Transform the Nature of Work (Matt Sigelman, Burning Glass Institute)
+  - What Does a Data Professional Do When AI Can Do the Data Work? (Shane Butler, Ontra)
+
+The move for practitioners here is to design human roles and escalation paths alongside technical architecture. Adoption succeeds when accountability, decision rights, and domain workflows are specified as clearly as APIs and evals.
+
+## Zone 5 - AI strategy, governance, and workforce (32 talks, 17%)
+
+This zone is where technical capability meets organizational uptake: enterprise AI strategy and transformation, governance frameworks, regulation and compliance, trust engineering, workforce transformation, career development, and the societal and human dimensions of AI.
+
+Sub-zeitgeist in this zone:
+
+- The central problem is assurance: how do we prove behavior quality for agentic systems that adapt and call tools dynamically?
+- The recurring question is how to convert policy and risk language into tests, guardrails, and monitoring loops that engineers can run every day.
+- Talks that anchor this zone include:
+  - Beyond Static Benchmarks: How to Test AI That Thinks, Acts, and Adapts (Yash Vijay, Snorkel AI)
+  - Lessons from Evaluating Production AI Agents for over a year (Susan Shu Chang, Elastic)
+  - The Leadership Imperative: AI Governance as Strategic Infrastructure (Shoshana Rosenberg, WSP in the U.S.)
+  - How I learned to Stop Worrying and love AI Regulation (Benjamin Batorsky, GoGuardian)
+
+A practical takeaway for teams is to translate trust goals into runnable checks. Build evaluation and guardrail loops that run continuously, and make policy language executable in your delivery workflow.
+
+## Visualizing the conference landscape
+
+To see how these categories relate to an unsupervised view of the same abstracts, I embedded all 193 substantive abstracts using `all-MiniLM-L6-v2`, clustered them with HDBSCAN, and projected the embeddings into 2D with UMAP. The [companion Marimo notebook](https://molab.marimo.io/github/ericmjl/website/blob/main/content/blog/odsc-east-2026-zeitgeist/odsc-report-notebook.py) includes an interactive scatter plot where you can toggle between the agent-based zone classification (the five categories above) and the embedding-based HDBSCAN clusters. Mouse over any point to see the talk title, speaker, track, and full abstract. You can open it directly in your browser with [molab](https://molab.marimo.io).
+
+The two views do not perfectly align, and that is instructive. Where the embedding clusters split a zone, it usually means the zone contains sub-communities with distinct vocabulary (for example, "agent architecture" talks cluster separately from "agent ops" talks within Zone 1). Where the embedding clusters merge zones, it means the abstracts share enough language that an unsupervised method cannot tell them apart.
+
+## What the center of gravity says in 2026
+
+If I compress the whole conference into one sentence, it is this: ODSC East 2026 feels like the year AI builder culture became systems culture.
+
+The numbers bear this out. Agentic AI systems accounted for 28% of substantive sessions, more than any other zone. LLM and foundation model engineering took another 19%. The event still celebrates model progress, but the practical energy sits in the joints between components: agent architecture, data infrastructure, evaluation, deployment, and decision-making structures inside organizations.
+
+I also notice a healthy coupling of technical and leadership tracks. That pairing usually shows up when teams are moving from experimentation budgets to accountability budgets.
+
+## A short list of likely macro trends
+
+- Agentic AI becomes an engineering discipline with explicit quality loops
+- RAG and context strategy remain central, but with more scrutiny on evaluation
+- MLOps and LLMOps converge into one reliability stack for mixed AI systems
+- Governance work sits closer to platform design and product strategy
+- The value of attending this conference shifts from "learn a model" to "learn a repeatable system"
+
+## My own field note from ODSC East
+
+I taught a 1 hr workshop called "How to Do Agentic Data Science" on Day 1. The abstract reflected my original plan: use Python scripts executed with `uv run`, one script per plot, and pair that with markdown journals and reports so the workflow stayed inspectable and reproducible.
+
+Then I learned about Marimo Pair about a month before the session. At that point, conscience kicked in for me. I felt a strong obligation to avoid giving folks a workflow that could feel outdated within a quarter of a calendar year. So I pivoted live and ran a coding demo with Marimo Pair because that workflow felt cleaner and tighter for the same core ideas I wanted to teach. Those ideas stayed simple: slow down, look at your data directly, gate analyses one plot at a time, and use LLMs to help with documentation while keeping human judgment in charge. Marimo made that "look at your data" step much more natural through direct dataframe display in the notebook flow.
+
+Overall, I was floored by the early response - when I ducked out briefly to grab some water, I saw a wall of people outside, and the demand hit me all at once. Others I met in the hallway and in the VIP/Speakers room gave overall positive feedback, and agreed with my own assessment that the content would be better done with a longer session, which would give me the space to be more hands-on.
