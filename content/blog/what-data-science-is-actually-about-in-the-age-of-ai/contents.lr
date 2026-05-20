@@ -1,0 +1,112 @@
+title: What data science is actually about in the age of AI
+---
+author: Eric Ma
+---
+twitter_handle: ericmjl
+---
+pub_date: 2026-05-20
+---
+summary: The core mission of data science has not changed in the age of AI: it is still measurement. Yet the industry is pushing data scientists toward full-stack development. Here is why that is a mistake, and where the real gap is.
+---
+tags:
+
+data science
+AI
+LLM
+evaluation
+measurement
+reliability
+management
+career
+---
+body:
+
+I have been thinking about what the core mission of a data scientist actually is in 2026, surrounded by AI coding assistants, LLM-powered applications, and the relentless buzz around adaptive software development. The answer keeps coming back the same: measurement.
+
+LLMs and AI coding tools are new instruments for that work, not replacements for it. And instruments do not decide what to measure. People with domain knowledge do. The principle is simple and ought to be stated plainly: measurement must be defined by the people closest to the problem.
+
+But staying close to the problem is harder than it sounds. Something is pulling data scientists away from that mission, toward a very different self-image. It worries me.
+
+## The seduction of full-stack
+
+I keep running into a narrative that data scientists should become full-stack software developers. The logic goes something like this: you can already code, and now AI makes coding even easier, so why are you not contributing to the production codebase?
+
+Managers hear that AI-assisted coding has arrived and think every data scientist on their team can now own a slice of the front-end, the back-end, the database, and the deployment pipeline. Data scientists get pulled into writing TypeScript for UI components, setting up production databases, and building integrations with other systems, because those tasks fill the week. The work that made them valuable in the first place (defining metrics, designing evaluation frameworks, rigorously measuring whether a system actually works) gets squeezed into the margins.
+
+This is not an accident or an outlier. The whole industry is zigging toward turning data scientists into app developers ([Acceldata](https://www.acceldata.io/blog/convergence-of-personas-how-ai-is-reshaping-data-management-functions), [Deloitte](https://www.deloitte.com/us/en/Industries/tmt/articles/ai-software-development-engineering-roles-being-rewritten.html), [GSDC](https://www.linkedin.com/pulse/full-stack-data-scientist-responsibilities-across-lifecycle-cry6f)). The zig is understandable: building a GenAI system has never been easier. Call an API, wire up a prompt, ship a demo. But the easy part is not where the gap is. The gap is reliability, ensuring these systems actually work in production, at scale, over time. That is the zag, and it is where data scientists create massive alpha.
+
+## Why this is a mistake
+
+The zig is tempting because building is seductive. But AI amplifies strengths and weaknesses alike, and a team of generalists building sloppily gets amplified into a production incident. Your ability to zag depends on having people trained for reliability work, and pulling them into the build instead defeats the purpose. What data scientists contribute is not a stack of engineering skills but a form of reasoning that takes years to develop, and that reasoning is exactly what GenAI systems need most.
+
+Most data scientists I know came from scientific backgrounds. Economists, biologists, chemists, sociologists. Their prior training is in hypothesis generation, experimental design, measurement, and rigorous analysis. That training is hard to replicate. It takes years to move from knowing the techniques to developing the scientific judgment needed to look at a set of results and know whether they hold up.
+
+When you pull a data scientist into full-stack software development, you are trading that hard-won scientific expertise for a second-rate software engineer. Data scientists will make immature decisions about database selection, front-end framework choices, and system architecture that an experienced software developer would avoid. The engineering suffers from inexperience, and the science suffers from neglect.
+
+The cost shows up in two ways. First, cognitive switching between measurement thinking and software engineering thinking degrades both. Building a UI component requires a very different mode of thought than designing an evaluation framework for a stochastic system. Second, the measurement work itself gets displaced entirely. The data scientist who should be spending their week figuring out whether the LLM pipeline is actually performing well is instead debugging a CSS layout.
+
+The framing I want every data scientist and their manager to internalize is a trade-off. Every hour spent maintaining databases and front-ends is an hour that cannot be spent on the measurement work the team is hired to do.
+
+## What data scientists should focus on
+
+So if full-stack development is the wrong direction, what is the right one?
+
+The clearest answer is LLM evaluation. Every company building with LLMs needs to know whether their system works. The answer requires exactly the kind of rigorous, scientifically grounded measurement that data scientists are trained to do.
+
+The process is straightforward. You need labeled data that represents what "good" looks like. You run your model against that data. You write programmatic checks to evaluate the model's outputs. You quantify metrics based on those checks. Then you iterate.
+
+The tools for doing this are immature, which is actually an opportunity. You do not need an expensive vendor evaluation platform. What you need is the ability to select and label your own data, store it in a simple database, and run checks against it. This is where data scientists can and should build utilities for their own work. I will come back to the line between building a measurement utility and practicing software engineering shortly.
+
+Building the utilities is the straightforward part. The harder challenge is the scientific logic. Deciding what to measure, debating which metric actually reflects the business problem, and figuring out whether an improvement is real or noise all require exactly the thinking trained in graduate programs. Hamel Husain makes this concrete in his post on [the revenge of the data scientist](https://hamel.dev/blog/posts/revenge/): every common eval pitfall, from generic metrics to unverified judges to bad experimental design, traces back to a missing data science fundamental.
+
+## Where tool-building ends and software engineering begins
+
+The line between building a measurement utility and practicing software engineering is the nuance that matters most, so let me be specific.
+
+Data scientists should absolutely build tools for their own measurement work. The principle is simple: build single-purpose, tightly scoped utilities with no feature creep, where you are the primary user. I have built CLI tools that do one thing and do it well, in the Unix tradition. I built them for myself first, and if someone else happens to have the exact same problem, they can use the tool as-is. That is the dogfooding principle in action.
+
+For example, if I need to do LLM evaluations, I need labeled data. Instead of waiting for a software development team to build a full-stack application for data labeling, I can quickly set up a lightweight database with a simple UI that lets collaborators label data. The whole setup is a measurement tool, not a product.
+
+The line between tool and product turns on three criteria.
+
+The first is scope. If the tool does one high-value thing really well, it belongs in the data scientist's remit to build. If it needs to evolve to handle diverse use cases, feature requests, and edge cases from dozens or hundreds of users, it has crossed into software engineering territory.
+
+The second is audience. If you are the primary user and others incidentally benefit, you are building a measurement tool. If you are building something primarily for other people to use, you are doing product development, and that belongs with the software engineering team.
+
+The third is the production boundary. It is fine for data scientists to prototype UIs to show what is possible, and to own the model and its API endpoint. It is fine to build tooling that supports data collection and measurement. But the finished product belongs with professional software engineers: the chat system integrations, the production database, the user-facing front-end, the infrastructure that other teams depend on.
+
+When you cross that line, data engineers (the people who build and maintain production data pipelines) and software engineers should own the systems. Data scientists can be team players and pitch in when needed, but maintaining those systems should never become their full-time responsibility.
+
+## Measurement done right, in practice
+
+Ownership boundaries are one kind of clarity. Another is knowing how to measure well. Let me make this concrete with two examples from different corners of data science.
+
+**Document parsing for information retrieval.** This is a problem nearly every team working with LLMs faces. You have a pile of documents and you need to extract structured information from them. The natural metrics are precision and recall. But here is the trap: if you optimize only for recall, you extract too much noise, and someone downstream has to filter garbage. If you optimize only for precision, you miss important information that actually matters for decisions downstream.
+
+Picking one metric in isolation leads to real problems. The right measurement framework has to be debated and co-defined with the people who understand what the extracted information will be used for. The data scientist brings the rigor; the domain experts bring the context. Neither can do it alone.
+
+The same pattern appears in a completely different setting. **ML models for property prediction in preclinical research.** A data science team builds a machine learning model to predict molecular properties. The model has an R-squared value and other statistical metrics. But those numbers have to translate into real decisions: which mutant should we select for the next round of engineering, which compound is worth synthesizing.
+
+The metrics that matter are co-defined between the lab team and the data science team. The lab scientists know what actually matters for their experiments, and the data scientists know how to build models and measure their performance. Together, they arrive at a measurement framework that bridges statistical performance and experimental reality.
+
+Both examples share a common pattern. The measurement framework is designed by the people closest to the problem, not imposed from above or derived from whatever metric is easiest to compute.
+
+## For managers - reframing the conversation
+
+If you manage a data science team, or if you are an executive making staffing decisions, the question is: what should you actually do with this framing? Here are four practices I want you to take away.
+
+**Reframe how you define problems.** Instead of framing work as "we are going to build a solution," frame it as "we are going to figure out how good this solution is." Measurement comes first, not after. Embed it throughout the product development lifecycle, from the earliest prototype to the shipped product. If you bolt measurement on at the end, you are flying blind during the entire build.
+
+**Start with the measurement problem, not the headcount.** Identify what specific evaluation or measurement problems you need solved, and build your team around that. The staffing follows from the measurement needs. The ideal ratio in my experience is at least three software developers for every one data scientist, though this depends heavily on the complexity of the product. When I see teams with two data scientists and one software engineer, the data scientists inevitably end up filling the engineering gap.
+
+**Go for the quick win.** Find something the team already thinks is broken by gut feel. Measure how broken it actually is. Make a change. Show that the metric improves. Do this fast, days or a couple of weeks, not months. The trap here is real: if a data scientist takes too long to surface a measurable improvement, the team loses faith in measurement work and defaults back to gut feel. Speed matters for credibility.
+
+**Prioritize based on expected ROI.** Every measurement effort is a bet. Work backward from the expected business impact. If we improve this metric by some amount, what is the expected gain? Use that calculation to decide what to measure first.
+
+## The trade-off that matters
+
+Put those four practices together and you get a picture of what the data scientist's role should look like in 2026. It is the same as it was in 2016: define the question, collect the data, build the tools you need, measure rigorously, and communicate what you found. AI coding assistants and LLMs are new tools for doing that work, not a change to the work itself.
+
+When managers pull data scientists into full-stack software development, the data scientist loses the chance to do the measurement work they are trained for, the team loses the scientific rigor that only a data scientist can provide, and the product loses because nobody is asking the fundamental question: how do we know whether this thing actually works?
+
+If I spend my time maintaining databases and front-ends, I cannot do the measurement work you hired me to do. Building is easy now. Reliability is the gap. And the people best trained to close it are the ones being pulled into CSS layouts.
