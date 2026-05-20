@@ -4,6 +4,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Annotated, Optional
 from urllib.parse import quote
+from uuid import uuid4
 
 import requests
 from bs4 import BeautifulSoup
@@ -11,12 +12,13 @@ from fastapi import FastAPI, Form, Query, Request
 from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from llamabot import ImageBot, StructuredBot
+from llamabot import StructuredBot
 from loguru import logger
 from PIL import Image
 from reportlab.graphics import renderPM
 from svglib.svglib import svg2rlg
 
+from .images import generate_banner_image_bytes
 from .models import (
     BlueSkyPost,
     DallEImagePrompt,
@@ -40,7 +42,8 @@ from .scraper import get_latest_blog_posts, get_post_body
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static")
 
-bannerbot = ImageBot(size="1792x1024")
+# In-memory cache for generated banners (GPT Image returns base64, not URLs).
+_banner_cache: dict[str, bytes] = {}
 
 templates = Jinja2Templates(directory="apis/blogbot/templates")
 
@@ -110,11 +113,17 @@ async def download_logo(
     If save=True and blog_url is provided, saves directly to the blog post directory.
     """
     if banner_url:
-        # Fetch the banner image from the URL
         try:
-            response = requests.get(banner_url, timeout=30)
-            response.raise_for_status()
-            img = Image.open(BytesIO(response.content))
+            if banner_url.startswith("/generated-banner/"):
+                banner_id = banner_url.rstrip("/").rsplit("/", 1)[-1]
+                image_bytes = _banner_cache.get(banner_id)
+                if not image_bytes:
+                    raise ValueError(f"Unknown or expired banner id: {banner_id}")
+            else:
+                response = requests.get(banner_url, timeout=30)
+                response.raise_for_status()
+                image_bytes = response.content
+            img = Image.open(BytesIO(image_bytes))
 
             # Convert RGBA to RGB if necessary
             # (WebP supports both, but RGB is more compatible)
@@ -248,6 +257,15 @@ async def update_posts(request: Request, base_url: str):
     )
 
 
+@app.get("/generated-banner/{banner_id}")
+async def get_generated_banner(banner_id: str) -> Response:
+    """Serve a generated banner from the in-memory cache."""
+    image_bytes = _banner_cache.get(banner_id)
+    if not image_bytes:
+        return Response(status_code=404, content="Banner not found or expired")
+    return Response(content=image_bytes, media_type="image/png")
+
+
 @app.post("/generate/{post_type}", response_class=HTMLResponse)
 async def generate_post(
     request: Request, post_type: str, blog_url: Annotated[str, Form()]
@@ -304,7 +322,9 @@ async def generate_post(
             pydantic_model=DallEImagePrompt,
         )
         dalle_prompt = dalle_prompt_bot(body).content
-        banner_url = bannerbot(dalle_prompt, return_url=True)
+        banner_id = uuid4().hex
+        _banner_cache[banner_id] = generate_banner_image_bytes(dalle_prompt)
+        banner_url = f"/generated-banner/{banner_id}"
         return templates.TemplateResponse(
             "banner_result.html",
             {"request": request, "banner_url": banner_url, "blog_url": blog_url},
