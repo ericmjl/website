@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["llamabot", "pydantic", "rich", "pillow", "requests"]
+# dependencies = ["llamabot", "pydantic", "rich", "pillow", "openai", "requests"]
 # ///
 """
 Generate a DALL-E banner image from a blog post slug and save as logo.webp.
@@ -13,8 +13,7 @@ import sys
 from io import BytesIO
 from pathlib import Path
 
-import requests
-from llamabot import ImageBot, StructuredBot
+from llamabot import StructuredBot
 from llamabot.prompt_manager import prompt
 from PIL import Image
 from pydantic import BaseModel, Field
@@ -33,8 +32,16 @@ def dalle_sysprompt():
     """
     **As 'Prompt Designer',**
     your role is to create highly detailed and imaginative prompts for DALL-E,
-    designed to generate banner images for blog posts in a watercolor style,
-    with a 16:4 aspect ratio.
+    designed to generate banner images for blog posts in a watercolor style.
+
+    **Text-free requirement (highest priority):** Every image prompt you write
+    must describe a completely text-free illustration. The generated image must
+    contain no readable text of any kind: no letters, words, numbers, labels,
+    captions, titles, logos with lettering, signage, UI screens, book pages,
+    charts with axis labels, watermarks, or typography. Represent ideas with
+    objects, color, and composition only—never with written language in the scene.
+    End every prompt with an explicit text-free clause, e.g. "No text, no
+    letters, no words, no labels, no typography anywhere in the image."
 
     You will be given a chunk of text or a summary that comes from the blog post.
     Your task is to translate the key concepts, ideas,
@@ -55,18 +62,21 @@ def dalle_sysprompt():
       diagonal compositions, or asymmetrical balance.
     - Incorporate varied symbolic elements: natural objects, architectural forms,
       organic shapes, geometric patterns, or conceptual representations.
-    - Focus on maximizing the use of imagery and symbols to represent ideas,
-      avoiding any inclusion of text or character symbols in the image.
+    - Focus on maximizing the use of imagery and symbols to represent ideas;
+      never describe text, lettering, or readable symbols in the scene.
+    - Fill the frame: compose edge-to-edge with a clear focal subject and
+      minimal empty margins or whitespace; do not ask for an ultra-wide or
+      letterboxed layout.
     - If the text is vague or lacks detail, make thoughtful and creative assumptions
       to create a compelling visual representation.
 
     The prompt should be suitable for a variety of blog topics,
     evoking an emotional or intellectual connection to the content.
-    Ensure the description specifies the watercolor art style,
-    the wide 16:4 banner aspect ratio,
+    Ensure the description specifies the watercolor art style
     and your chosen artistic approach.
 
-    Do **NOT** include any text or character symbols in the image description.
+    Do **NOT** mention text, lettering, labels, signs, screens, documents, or
+    typography in the image description unless you are forbidding them (always forbid).
     """
 
 
@@ -152,11 +162,9 @@ def list_blog_posts() -> list[dict]:
     return posts
 
 
-def download_and_convert_image(url: str, output_path: Path) -> None:
-    """Download image from URL, convert to WebP, and save."""
-    response = requests.get(url, timeout=30)
-    response.raise_for_status()
-    img = Image.open(BytesIO(response.content))
+def save_image_as_webp(image_bytes: bytes, output_path: Path) -> None:
+    """Convert image bytes to WebP and save."""
+    img = Image.open(BytesIO(image_bytes))
     if img.mode in ("RGBA", "LA", "P"):
         rgb_img = Image.new("RGB", img.size, (255, 255, 255))
         if img.mode == "P":
@@ -196,13 +204,16 @@ def main():
     console.print(Panel(dalle_prompt, title="DALL-E Prompt", border_style="yellow"))
     console.print("[blue]Generating banner image...[/blue]")
 
-    bannerbot = ImageBot(size="1792x1024")
-    banner_url = bannerbot(dalle_prompt, return_url=True)
+    repo_root = find_repo_root()
+    sys.path.insert(0, str(repo_root))
+    from apis.blogbot.images import generate_banner_image_bytes
 
-    console.print("[blue]Downloading and converting to WebP...[/blue]")
+    image_bytes = generate_banner_image_bytes(dalle_prompt)
+
+    console.print("[blue]Converting to WebP...[/blue]")
     blog_dir = Path(post["path"]).parent
     output_path = blog_dir / "logo.webp"
-    download_and_convert_image(banner_url, output_path)
+    save_image_as_webp(image_bytes, output_path)
 
     console.print(Panel(str(output_path), title="Saved", border_style="green"))
 
