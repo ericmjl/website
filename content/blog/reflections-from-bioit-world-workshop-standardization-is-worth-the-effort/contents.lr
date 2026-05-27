@@ -1,0 +1,123 @@
+title: Reflections from the BioIT World workshop - standardization is worth the effort
+---
+author: Eric J. Ma
+---
+body:
+
+My teammate [Jackie Valeri](https://jackievaleri.github.io/) and I recently co-taught a workshop at [BioIT World 2026](https://www.bio-itworldexpo.com/) on standardizing data science ways of working. Walking out of the room, I kept thinking about the same tension I have seen for years: most teams already feel the pain of missing standards. They have a harder time believing the effort pays off, and a harder time doing the people work required to make change stick.
+
+That tension is what this post is about. It is my reflection on what we covered, what landed, and what I wish we had emphasized more. The through-line is simple: standardization is worth the effort. The sections below walk through why, how to choose what to standardize, how to get buy-in, and how to keep standards alive as the stack changes.
+
+## Pain comes before payoff
+
+Most teams need to feel the pain before they believe the payoff. Two stories from my time at Moderna show both sides.
+
+**Vignette 1: the messy codebase.** Early in my time at Moderna, I studied older codebases that had no shared structure. No standard folder layout, no predictable onboarding command, no consistent way to find tests or documentation. I pitched [Andrew Giessel](https://www.linkedin.com/in/giessel/) that we had to standardize while the team was still small: if we kept going like this, onboarding would stay painful, and when the bus factor hit, we would feel it.
+
+**Vignette 2: the easy migrations.** Later, when we migrated from Bitbucket to GitHub, and from Conda to [Pixi](https://pixi.sh/), the logistics were surprisingly smooth. We had one pattern to upgrade, one CLI command to run, and minimal manual tweaking per project. Part of that was team size (we are roughly twenty data scientists + a few dozen more adjacent folks, not a few hundred). Part of it was the fruit of previously hiring people willing to learn the stack (more on that below). The biggest part was standardization itself: we knew exactly what we were migrating because we had standardized it in the first place.
+
+The contrast is the point. Vignette 1 is what happens without standards; vignette 2 is what opens up once you have them. The upfront cost buys confidence, predictability, and speed later.
+
+## Work backwards from what you ship
+
+Believing the payoff exists is step one. Step two is choosing which standards actually matter.
+
+At Moderna, we applied step two by naming our deliverables first:
+
+- **Compute tasks**: CLI tools we can run in the cloud with as much scalability as we can manage.
+- **Python packages**: reusable components other computational scientists can import and build on.
+
+Once we named those artifacts, the required standards became obvious. Compute tasks need Dockerfiles (containers) and CI/CD (deployment pipelines) that let us move quickly. Python packages need consistent project scaffolding, tests, and documentation.
+
+That backward reasoning is how we chose which standards to invest in. I learned that lesson the hard way in grad school, where bad software patterns cost me days of retesting on the HPC because my code was organized for batch runs, not incremental checks. I have also heard familiar horror stories from finance, where a one-month notebook prototype became an eight-month production slog after handoff to an engineering team on a different stack. I knew which pain points were real because I had felt some of them directly and heard about others often enough.
+
+Deliverables will likely differ, but the principle stays the same: name the artifact, and ask which practices remove friction on the path to shipping it.
+
+## Standardize where divergence creates friction
+
+Naming your artifacts tells you the destination. It does not tell you where to invest first. Day-to-day friction does.
+
+**Standardize the places where inconsistent approaches slow the team down.**
+
+For us, the clearest example was project template structure. We had code in Julia, R, and Python. Even within Python, different projects used different frameworks. Onboarding meant learning a new layout every time. There was no single command to get started.
+
+Once we standardized scaffolding, onboarding got faster. Jumping into a colleague's repo became predictable: I know where the docs live, where the tests live, and how to run things. That predictability compounds.
+
+That does not mean we standardize everything. Algorithm choices, analysis approaches, and visualization design stay flexible. We focus standards on interfaces and workflows, the parts that help people collaborate without constraining the science.
+
+Even with that selectivity, one pattern is reliable: if your team keeps re-explaining the same basics, that is where to start. Folder structure is a common answer. Documentation publishing is another strong first move when everyone already knows docs matter but nobody has a single place to put them.
+
+## People problems beat ROI math
+
+Knowing where to standardize is the easy part. Getting people to adopt it is harder.
+
+Adoption is a people problem, but you still have to get in the room first. That is why we spent real time in the workshop on ROI. Moderna has a strong ROI culture; working with [Dave Johnson](https://www.linkedin.com/in/dave-johnson-60a95142/) early on reinforced that return on investment matters when you pitch an initiative. We shared resources on how to calculate it, and we walked through the concept: build the case before you standardize, as the argument you bring to the table. (For a concrete example, I once worked through the math for our quarterly docathons in [Two years of docathons: Insights and lessons learned](/blog/2024/6/30/two-years-of-docathons-insights-and-lessons-learned/).) The ROI frame of mind helps with managers who think in business terms; use it to make the strongest case you can.
+
+A strong ROI case opens the door. It does not carry people through the migration. We are nerds, and we would rather debug a conda solve than navigate disagreement about tooling. Technology helps, but the people work still carries the change. Getting buy-in, training people, and holding hands through a migration is still work. At the end of the day, "hand-holding" is training, repeated until the new pattern feels normal.
+
+I learned that split the hard way when I pitched standardization to Andrew Giessel years ago. I leaned on open-source patterns I knew would be cost-effective. The tooling was only half the pitch. The other half was training people on those toolsets and building a culture that maintains them together.
+
+If you take one people tactic from this post, make it this: use ROI to open the door, then budget time for training and socialization after the demo. Adoption is a milestone, not a finish line.
+
+## Standards evolve
+
+Training gets people onto a standard. It does not freeze the standard in place. The technology landscape keeps moving, so your standards have to move with it.
+
+BioIT World gave us a live example of that drift. [Marimo](https://marimo.io/) notebooks were part of our tech demo, and the audience reacted differently to Marimo than to our CLI tooling. Marimo looked cool, sure, but the deeper reaction was: "This is mindblowing! I had no idea we could interact with notebooks this way!" It was a glimpse of something new.
+
+The excitement was real. Whether, and when, to move to Marimo notebooks is still an open decision. We are in the middle of that decision now. Jupyter notebooks served us for years. Marimo offers real advantages, especially because coding agents can work with Marimo notebooks more controllably than with classic Jupyter. I wrote more about that pattern in [Use coding agents to write Marimo notebooks](/blog/2025/10/28/use-coding-agents-to-write-marimo-notebooks/). Marimo is also Python-only today, which sits awkwardly next to our multi-language history. That tension is normal.
+
+While we decide, the playbook stays the same: demo the idea, get review from peers, socialize the benefits, then train people through the migration. We have done this before with GitHub, Pixi, and other stack changes. Standardization made each migration tractable because we only had one pattern to evolve. Pixi is one example of how we choose tools; Conda may be the right call in your environment. The principle matters more than the brand name. Stay close enough operationally that upgrades stay manageable.
+
+## AI lowers the cost
+
+As standards keep evolving, the cost of building and migrating tooling keeps dropping. That is the shift I want to name in this section.
+
+Building the CLI commands that made our GitHub and Pixi migrations tractable used to be the hard part. Today you can describe what you want to a coding agent and iterate until you have a [`pyds-cli`](https://github.com/ericmjl/pyds-cli)-style scaffold generator, a migration helper, or a project bootstrapper. The effort is lower; the ROI is higher.
+
+I was already experimenting in this direction during those migrations. My first LLM-side experiment was a git commit message writer. The one that mattered for the migrations was a CLI helper that used models to propose intelligent file merges, with a human still reviewing the result. Same shape as the tools I am describing now; the difference is how quickly you can build them.
+
+Cheaper tooling is only half the story. AI also amplifies whatever patterns already exist in your codebase. Feed it good standards, and it follows them. Leave chaos in the repo, and it reproduces chaos faster. The tools got cheaper; the human coordination problem still needs attention. Standardization pays off on both sides.
+
+## Hiring matters too
+
+That coordination problem is where hiring and culture matter. I flagged this in vignette 2, and it is worth stating plainly: easy migrations are a people win as much as a tooling win.
+
+Standardization works best when people are willing to learn new parts of the stack. Software skill levels can vary widely. The non-negotiable trait, for us, is curiosity about the tooling we use to do science. That is a form of gatekeeping, and I am fine saying so. If someone refuses to adapt when the team agrees on a shared pattern, friction returns.
+
+Hiring for learning agility is one place leaders can start, especially if they are building a team from scratch. If you already have a team in place, you cannot rehire your way out of friction; start with the software pattern that removes the most daily friction, then grow the culture from there.
+
+## What would you start with?
+
+You have seen the payoff, the decision rules, the people work, and the stack as it keeps moving. The remaining question is practical: where would you start?
+
+**What is one thing you would like to start standardizing for your team?**
+
+Pick one. Folder structure. Dependency management. CI/CD for every repo. Documentation templates. One choice, executed well, beats a grand roadmap that rarely ships.
+
+Getting started can be as small as a half-day survey of tools in your landscape, or a conversation with your manager backed by an ROI estimate. You can even ask an AI assistant to walk you through Pixi, [Cookiecutter](https://cookiecutter.readthedocs.io/en/latest/), or whatever tool you are evaluating. The specific path is yours; the important part is to start.
+
+If you want to go deeper before you pick that one thing, two resources cover adjacent ground. For delivery models, scaffolding, and implementation tactics, see my blog post, [How to Standardize Data Science Ways of Working to Unlock Your Team's Creativity](/blog/2025/4/2/how-to-standardize-data-science-ways-of-working-to-unlock-your-teams-creativity/). For machine setup, project structure, and the fundamentals underneath all of this, see my online eBook, [The Data Science Bootstrap Notes](https://ericmjl.github.io/data-science-bootstrap-notes/).
+
+## Acknowledgments
+
+This work has always been a team sport. With thanks to [Andrew Giessel](https://www.linkedin.com/in/giessel/), [Dave Johnson](https://www.linkedin.com/in/dave-johnson-60a95142/), [Adrianna Loback](https://www.linkedin.com/in/adriannaloback/), [Rebecca Vislay-Wade](https://www.linkedin.com/in/rlvislaywadephd), [Jackie Valeri](https://jackievaleri.github.io/), [Albert Lam](https://www.linkedin.com/in/albert-lam/), Anand Murthy, [Dan Luu](https://www.linkedin.com/in/dandluu/), and other colleagues who helped design, maintain, and evolve our standards over the years. Andrew and Dave gave us the freedom to build; my current manager [Wade Davis](https://www.linkedin.com/in/jwadedavis) continues to give us operational room to make it happen, and for that I am grateful!
+
+---
+pub_date: 2026-05-27
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I reflect on the BioIT World 2026 workshop Jackie Valeri and I co-taught on standardizing data science ways of working. I walk through why pain comes before payoff, how to work backwards from what you ship, where to standardize when divergence creates friction, and why people problems beat ROI math. I also cover how standards evolve, how AI lowers the cost of building tooling, and the one thing to start standardizing on your team.
+---
+tags:
+
+bio-it
+data science
+standardization
+leadership
+workshop
+marimo
+ai
+software
+change management
