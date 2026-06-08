@@ -1,0 +1,96 @@
+title: How to Multitask Better with Agent Harnesses
+---
+author: Eric J. Ma
+---
+twitter_handle: ericmjl
+---
+pub_date: 2026-06-08
+---
+summary: In this blog post, I share my three-tier framework for multitasking with agent harnesses: one focused foreground task, one or two lightly supervised background tasks, and as many automated shadow tasks as you want. I explain how each tier works, how notifications keep you in control, and why a simple priority list is still essential. I also discuss how to move tasks down the chain for more effortless productivity. Curious how this system could help you multitask better without feeling overwhelmed?
+---
+tags:
+
+productivity
+automation
+workflows
+notifications
+focus
+priorities
+agents
+multitasking
+background
+harnesses
+---
+body:
+
+In my [previous post](/blog/2026/6/4/exploring-agent-harnesses/), I compared three agent harnesses across workspaces, notifications, automations, and open-source status. Once you have picked a harness, the next question is: how do you actually use it?
+
+The framework I have landed on is three tiers: one foreground task, one or two background tasks, and however many automated tasks you want running in the shadows. Right now, as I write this post, all three tiers are active. Let me walk through what each one looks like.
+
+## The three tiers
+
+### Foreground: your intellectual work
+
+**Keep one foreground task at a time. This is your intellectual work; protect it.**
+
+Writing this blog post is my foreground task right now. I am actively reviewing the draft the agent ghostwrote for me: iterating with my agent, refining what I want to say, editing prose, and nudging the agent to further match my voice. There is a meta-layer too: I have a ghostwriter skill that teaches the agent to write like me, and as I review its output, I feed corrections back into the skill itself. The writing improves, and the skill improves, in the same loop.
+
+This is what foreground work looks like across the board: highly interactive, requiring your full attention. You are pair-coding, pair-writing, or pair-creating with the agent, steering it, reading its traces, deciding whether it is going in the right direction. When the foreground task needs you, everything else waits. Two or more foreground tasks running simultaneously is when context switching takes a real toll. I keep it to one.
+
+### Background: light supervision
+
+**One or two background tasks. Check on them when you have a gap in the foreground task.**
+
+While I write this post, I have an autolearning plugin and skill system running in the background. Useful work, but no urgent priority. I started the agent on a task before I sat down to write, and it works while I focus on prose. When I take a break, I check in, review what it did, give feedback, and go back to writing.
+
+That is the background pattern: you started the task, you trust it, and you only check when there is a natural gap. Maybe the foreground agent is thinking, or running a test suite. You switch over, do a light-touch review, and switch back. The harness handles the work; you just need to know when it is done.
+
+One or two background tasks is the sweet spot. It's tempting to add more; I know because I tried! I can handle two. On occasion I can handle three. Four will regularly push me past my limit.
+
+### Shadow automations: zero daily attention
+
+**As many as you want. They run on a schedule and enrich your context without asking anything of you.**
+
+Beyond foreground and background, there is a third tier: fully automated tasks that run on a schedule and need zero interactive supervision. I think of these as automations running in the shadow. They run in the background of the background, tending things so you do not have to.
+
+I have an automation that periodically scours my knowledge vault and links notes together that should be connected. I never do this manually; the agent handles it entirely. Another one monitors my GitHub repos for merge-able Dependabot PRs and merges them on its own. A third scans my vault every hour for files with today's date in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format and enriches them through a state machine: transcript becomes meeting note, meeting note becomes daily bullet. I used to do this manually, copying and pasting meeting notes into my knowledge base and prompting the same thing over and over. It was mostly tedious and sometimes error-prone. Once I automated it, maintaining the vault became much easier.
+
+One more: at work, an automation runs at 4:30 pm every day and gives me a summary of my GitHub activity. Commits, pull requests, reviews, issues. I get a digest without lifting a finger.
+
+You only check on these at the end of the day. Did they run? Did they do the right thing? A quick review, and you are done. This tier is where natural-language automation shines. In the [Codex](https://openai.com/codex/) app, you can describe the task, tell it when to run, and even tell it to delete itself when it is finished. Ephemeral automations are self-cleaning: once the task is done, the agent knows to delete the automation, so you never accumulate stale scheduled jobs.
+
+## You still need a priority list
+
+The three tiers tell you *how* to run tasks. They do not tell you *what* to run. For that, you need a plain priority list: a task list for the day, ordered by what matters most.
+
+Nothing fancy. I write down the things I want to get done, rank them, and that becomes the input to the three-tier system. The top item goes to foreground. The next couple go to background. Shadow automations run regardless, because they do not compete for my attention.
+
+The goal is straightforward: if you knock off your major tasks for the day, the system is working. The tiers are there to help you do that without juggling everything at once.
+
+## How notifications tie it together
+
+Notifications turn "I hope the background task is fine" into "I will know when it needs me." Without a notification system, you have to manually check tabs and windows, which is exactly the kind of anxious context switching the three-tier approach is designed to eliminate.
+
+[Codex](https://openai.com/codex/), [`cmux`](https://github.com/manaflow-ai/cmux), and [Cursor](https://www.cursor.com) all provide notification indicators -- dots, badges, rings, color changes. You glance at the sidebar and know what needs attention. The foreground task keeps running. Your focus stays intact.
+
+When a notification arrives, you decide: does this need me now, or can it wait? If it can wait, let it. The background task is lower priority by definition.
+
+## The framework in practice
+
+Right now, as I finish this post, my three tiers look like this:
+
+1. **Foreground**: writing this blog post, iterating on prose and voice with my agent.
+2. **Background**: developing my autolearning plugin and skill system, checked between writing sessions.
+3. **Shadow automations**: vault linking, Dependabot merging, daily GitHub digests, meeting note enrichment. All running on their own.
+
+The harness runs each task, tracks its state, and pings you when something needs attention. You stop keeping tabs in your head and decide only what deserves your foreground focus.
+
+## Move things down the chain
+
+The three-tier framework is not static. The real leverage comes from constantly asking: can I push this further down the chain? Can this foreground task become a background task? Can this background task become a shadow automation?
+
+The more you move tasks from foreground to background to silent automation, the more effortless your multitasking becomes. You are removing yourself from the loop on tasks that do not need you.
+
+That said, be pragmatic. Some tasks genuinely need your judgment, and over-automating creates brittle systems that break in ways you do not notice. Push things down the chain when it makes sense, not just because you can.
+
+Pick a harness. Try the three tiers for a week. See how it feels.
