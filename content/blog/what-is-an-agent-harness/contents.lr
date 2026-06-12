@@ -34,7 +34,7 @@ The hard controls here are straightforward: the agent cannot do anything beyond 
 
 ### Research agent
 
-A research agent has a different harness. Its tools include web search and document retrieval. The environment is the internet, or a curated subset of it. The tools might look similar to the coding agent's, but the action space is different because the environment is different.
+A research agent has a different harness. Its tools include web search and document retrieval. The environment is the internet, or a curated subset of it. The concept is similar to the coding agent (an agent with tools in an environment), but the action space is wildly different because the tools are different.
 
 In this example, the hard controls include being unable to execute code (by design). The soft controls may be the system prompting to prefer certain search tools, e.g. one intended for research papers instead of general internet content.
 
