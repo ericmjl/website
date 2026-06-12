@@ -8,9 +8,9 @@ My friend Sean Law asked me this question on LinkedIn recently, essentially, "Do
 
 ## Defining the harness
 
-An agent harness is everything that constrains, shapes, and thus defines what an agent can do. It has three parts: the tools you give the agent, the environment those tools run in, and the knowledge, both baked into the model and provided externally, that shapes how the agent uses those tools.
+An agent harness is everything that constrains, shapes, and thus defines what an agent can do. It has two parts: the tools you give the agent, and the environment those tools run in.
 
-Together, these three parts define the agent's **action space**. The action space is the set of all things the agent can actually accomplish. Change any one of the three parts and the action space changes.
+Together, these two parts define the agent's **action space**. The action space is the set of all things the agent can actually accomplish. Change either part and the action space changes.
 
 ## Hard controls vs. soft controls
 
@@ -28,13 +28,13 @@ Making this concrete helps. Here are three agents and their harnesses.
 
 ### Coding agent
 
-Here is (what I like to call) a "minimally complex example" harness that I can think of: a coding agent with two tools. It can write to a file, and it can execute code. The action space is small and well-defined. The environment is a sandboxed filesystem. The knowledge is whatever the model has been trained on, plus any project-specific context you feed it.
+Here is (what I like to call) a "minimally complex example" harness that I can think of: a coding agent with two tools. It can write to a file, and it can execute code. The action space is small and well-defined. The environment is a sandboxed filesystem.
 
 The hard controls here are straightforward: the agent cannot do anything beyond writing files and executing code. No network access, no browser, no ability to install new packages without your say-so. The soft controls might include prompting the agent to prefer Python over other languages, or to follow a particular testing convention.
 
 ### Research agent
 
-A research agent has a different harness. Its tools include web search and document retrieval. The environment is the internet, or a curated subset of it. The knowledge includes preferred sources: a scientific research agent might prioritize peer-reviewed journals, while a general research agent casts a wider net. The tools might look similar to the coding agent's, but the action space is different because the environment and the knowledge layer are different.
+A research agent has a different harness. Its tools include web search and document retrieval. The environment is the internet, or a curated subset of it. The tools might look similar to the coding agent's, but the action space is different because the environment is different.
 
 In this example, the hard controls include being unable to execute code (by design). The soft controls may be the system prompting to prefer certain search tools, e.g. one intended for research papers instead of general internet content.
 
@@ -56,11 +56,10 @@ Here is a summary of the three harnesses:
 |---|---|---|---|
 | **Tools** | Write file, execute code | Web search, document retrieval | Conversation (speech in, text out) |
 | **Environment** | Sandboxed filesystem | Internet or curated subset | Voicepal app |
-| **Knowledge** | Model training + project context | Model training + preferred sources | Interview prompt, role instructions |
 | **Hard controls** | No network, no browser, no package installs | No code execution | No tool use beyond conversation |
 | **Soft controls** | Prefer Python, follow testing conventions | Prefer academic search tools | Ask questions, do not give answers |
 
-The table above is the definition in compressed form. An agent harness is the combination of tools, environment, knowledge, hard controls, and soft controls that together define what an agent can and cannot do.
+The table above is the definition in compressed form. An agent harness is the combination of tools, environment, hard controls, and soft controls that together define what an agent can and cannot do.
 
 I hope this definition brings you clarity the next time someone brings up agent harnesses in conversation. And if they have a different definition, I would love to hear it; the term will only get sharper if more people take a crack at defining it.
 ---
@@ -68,7 +67,7 @@ pub_date: 2026-06-12
 ---
 twitter_handle: ericmjl
 ---
-summary: In this blog post, I explore the concept of an "agent harness" — the combination of tools, environment, and knowledge that shapes what an AI agent can and cannot do. I break down the difference between hard controls (strict limitations) and soft controls (guiding prompts), and illustrate these ideas with real-world examples. Curious how these controls impact the behavior and capabilities of different agents? Read on to find out!
+summary: In this blog post, I explore the concept of an "agent harness" — the combination of tools, environment, hard controls, and soft controls that shapes what an AI agent can and cannot do. I illustrate these ideas with three real-world examples. Curious how these controls impact the behavior and capabilities of different agents? Read on to find out!
 ---
 tags:
 
