@@ -8,9 +8,9 @@ My friend Sean Law asked me this question on LinkedIn recently, essentially, "Do
 
 ## Defining the harness
 
-An agent harness is everything that constrains, shapes, and thus defines what an agent can do. It has two parts: the tools you give the agent, and the environment those tools run in.
+An agent harness is everything that constrains, shapes, and thus defines what an agent can do. It has four components: the tools you give the agent, the environment those tools run in, the hard controls that architecturally limit what the agent can do, and the soft controls that steer its behavior through prompting.
 
-Together, these two parts define the agent's **action space**. The action space is the set of all things the agent can actually accomplish. Change either part and the action space changes.
+Together, these four components define the agent's **action space**. The action space is the set of all things the agent can actually accomplish. Change any one component and the action space changes.
 
 ## Hard controls vs. soft controls
 
