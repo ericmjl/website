@@ -59,7 +59,7 @@ Here is a summary of the three harnesses:
 | **Hard controls** | Sandboxed, no keychain access, no privilege escalation | Same as coding agent | No tool use beyond conversation |
 | **Soft controls** | Prefer Python, follow testing conventions, ask before destructive commands | Do all work inside the notebook, document findings inline | Ask questions, do not give answers |
 
-An agent harness is the combination of tools, environment, hard controls, and soft controls that together define what an agent can and cannot do.
+An agent harness is the combination of tools, environment, hard controls, and soft controls that together define what an agent can and cannot do. The data science agent shows that two harnesses can share nearly identical hard controls and still produce different behavior, because the soft controls steer the agent in a different direction. The Voicepal example shows that soft controls are persuasion, not architecture; a determined user can work around them.
 
 I hope this definition brings you clarity the next time someone brings up agent harnesses in conversation. And if they have a different definition, I would love to hear it; the term will only get sharper if more people take a crack at defining it.
 ---
