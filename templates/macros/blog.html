@@ -1,6 +1,54 @@
 {% macro render_meta_tags(post) %}
+{% set page_url = post|url(external=true) %}
+{% set description = (post.summary.source if post.summary else post.body.source)|striptags|truncate(160) %}
+{% set banner = post.attachments.get('logo.webp') or post.attachments.get('logo.png') %}
+<meta name="description" content="{{ description }}">
+{% if post.author %}
+<meta name="author" content="{{ post.author }}">
+{% endif %}
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Eric J. Ma's Personal Site">
 <meta property="og:title" content="{{ post.title }}">
-<meta property='og:url' content='http://ericmjl.github.io/blog/{{ post.path }}' />
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ page_url }}">
+{% if banner %}
+<meta property="og:image" content="{{ banner|url(external=true) }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ banner|url(external=true) }}">
+{% else %}
+<meta name="twitter:card" content="summary">
+{% endif %}
+<meta name="twitter:title" content="{{ post.title }}">
+<meta name="twitter:description" content="{{ description }}">
+{% if post.twitter_handle %}
+<meta name="twitter:creator" content="@{{ post.twitter_handle }}">
+{% endif %}
+{% if post.pub_date %}
+<meta property="article:published_time" content="{{ post.pub_date }}">
+{% endif %}
+{% for t in post.tags %}
+<meta property="article:tag" content="{{ t }}">
+{% endfor %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ post.title|string|tojson }},
+  "description": {{ description|string|tojson }},
+  "url": {{ page_url|string|tojson }},
+  {% if banner %}
+  "image": {{ (banner|url(external=true))|string|tojson }},
+  {% endif %}
+  {% if post.pub_date %}
+  "datePublished": "{{ post.pub_date }}",
+  {% endif %}
+  "author": {
+    "@type": "Person",
+    "name": {{ (post.author or "Eric J. Ma")|string|tojson }},
+    "url": "https://ericmjl.github.io/"
+  }
+}
+</script>
 {% endmacro %}
 
 {% macro render_blog_header(post, from_index=false) %}
@@ -46,7 +94,7 @@
 
     {% if post.attachments.get("logo.webp") %}
     {% set img = post.attachments.get("logo.webp") %}
-    <img src="{{ img|url }}" class="banner-image" >
+    <img src="{{ img|url }}" class="banner-image" alt="{{ post.title }}">
     {% endif %}
 
     <!-- NOTE: I am keeping this here just for preview purposes.
@@ -54,7 +102,7 @@
      Pre-commit hooks will ensure that the png logo is converted to webp.-->
     {% if post.attachments.get("logo.png") %}
     {% set img = post.attachments.get("logo.png") %}
-    <img src="{{ img|url }}" class="banner-image" >
+    <img src="{{ img|url }}" class="banner-image" alt="{{ post.title }}">
     {% endif %}
 
     {% if post.summary %}
@@ -216,7 +264,7 @@
       {% if post.attachments.get("logo.webp") %}
       {% set img = post.attachments.get("logo.webp") %}
       <a href="{{ post|url }}" style="text-decoration: none;">
-        <img src="{{ img|url }}" class="banner-image" >
+        <img src="{{ img|url }}" class="banner-image" alt="{{ post.title }}">
       </a>
       {% endif %}
 
@@ -225,7 +273,7 @@
       Pre-commit hooks will ensure that the png logo is converted to webp.-->
       {% if post.attachments.get("logo.png") %}
       {% set img = post.attachments.get("logo.png") %}
-      <img src="{{ img|url }}" class="banner-image" >
+      <img src="{{ img|url }}" class="banner-image" alt="{{ post.title }}">
       {% endif %}
 
 

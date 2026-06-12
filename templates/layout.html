@@ -1,68 +1,31 @@
 <!doctype html>
+<html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <style media="screen">
-        body {
-            padding-top: 70px;
-            padding-bottom: 70px;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        /* Dark mode styles */
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-
-        body.dark-mode .terminal {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-
-        body.dark-mode a {
-            color: #66b3ff;
-        }
-
-        body.dark-mode .terminal-menu {
-            background-color: #1a1a1a;
-        }
-
-        body.dark-mode .terminal-menu li a {
-            color: #ffffff;
-        }
-
-        body.dark-mode .terminal-menu li a:hover {
-            background-color: #333333;
-        }
-
-        /* Theme toggle button styles */
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-        }
-
-        body.dark-mode .theme-toggle {
-            background-color: #333;
-            color: #fff;
-            border-color: #666;
-        }
-
-        .container {
-            position: relative;
-        }
-    </style>
-    {% block highlighting %}
-    {% endblock %}
+    <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 
     {% block metatags %}
+    <meta name="description"
+        content="Eric J. Ma's personal site: writing on data science, machine learning, open source, and the biotech industry.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Eric J. Ma's Personal Site">
+    <meta property="og:title" content="{{ self.title() }}">
+    {% endblock %}
+
+    <link rel="canonical" href="{{ this|url(external=true) }}">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.webp">
+    <link rel="alternate" type="application/atom+xml" title="Eric J. Ma's Blog" href="/blog.xml">
+
+    <link rel="preload" href="/static/fonts/BerkeleyMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/static/css/terminal.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    {% block highlighting %}
     {% endblock %}
 
     <!-- Google Analytics 4 -->
@@ -83,57 +46,17 @@
             person_profiles: 'identified_only',
         })
     </script>
-
-    <link rel="stylesheet" href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" />
-    <link rel="stylesheet" href="/static/css/custom.css" />
-    <!-- Mathjax -->
-    <!-- <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
-        </script>
-
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script> -->
-
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
-            },
-            svg: {
-                fontCache: 'global'
-            }
-        };
-    </script>
-    <script type="text/javascript" id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-        </script>
-
-    <!-- Mermaid.js -->
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'neutral',
-            securityLevel: 'loose'
-        });
-    </script>
-    <style>
-        .mermaid {
-            background-color: white;
-            padding: 1em;
-            margin: 1em 0;
-            border-radius: 4px;
-        }
-    </style>
-
 </head>
 
-<title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
-
 <body>
+    <script>
+        // Apply the saved theme before first paint to avoid a flash of light mode.
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
     <div class="container">
-        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
         <h1 class="logo">
             <a href="/">
                 Eric J Ma's Website
@@ -142,7 +65,7 @@
         <!-- Top Navigation (local links) -->
 
         <div class="terminal-nav">
-            <nav class="terminal-menu" id="local-links">
+            <nav class="terminal-menu" id="local-links" aria-label="Main navigation">
                 <ul>
                     {% for link in bag('nav')['header'] %}
                     <li class="menu-item">
@@ -167,13 +90,13 @@
         </div>
 
         <!-- Body -->
-        <div id="body">
+        <main id="body">
             {% block body %}{% endblock %}
-        </div>
+        </main>
 
         <!-- Bottom Navigation (external links) -->
         <div class="terminal-nav">
-            <nav class="terminal-menu" id="local-links">
+            <nav class="terminal-menu" id="external-links" aria-label="External links">
                 <ul>
                     {% for link in bag('nav')['footer'] %}
                     <li class="nav-item">
@@ -221,13 +144,11 @@
             }
         }
 
-        // Check for saved theme preference
+        // Sync the toggle icon and giscus with the theme applied at first paint
         document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
             const themeToggle = document.querySelector('.theme-toggle');
 
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
                 themeToggle.textContent = '☀️';
                 setTimeout(() => setGiscusTheme('dark'), 500);
             } else {
@@ -236,7 +157,51 @@
         });
     </script>
 
+    <!-- MathJax: loaded only when the page actually contains math notation -->
+    <script>
+        (function () {
+            var content = document.getElementById('body');
+            if (!content) return;
+            // Ignore code samples, where $ signs are usually shell prompts or variables
+            var probe = content.cloneNode(true);
+            probe.querySelectorAll('pre, code, script, style').forEach(function (el) { el.remove(); });
+            var text = probe.textContent;
+            if (!/(\$\$)|(\\\()|(\\\[)|(\\begin\{)|(\$[^\s$][^$]*\$)/.test(text)) return;
+
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                svg: {
+                    fontCache: 'global'
+                }
+            };
+            var script = document.createElement('script');
+            script.id = 'MathJax-script';
+            script.async = true;
+            script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js';
+            document.head.appendChild(script);
+        })();
+    </script>
+
+    <!-- Mermaid.js: loaded only when the page contains diagrams -->
+    <script>
+        if (document.querySelector('.mermaid')) {
+            import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs').then(function (mod) {
+                var mermaid = mod.default;
+                mermaid.initialize({
+                    startOnLoad: false,
+                    theme: 'neutral',
+                    securityLevel: 'loose'
+                });
+                mermaid.run();
+            });
+        }
+    </script>
+
     <!-- Search functionality -->
-    <script src="https://unpkg.com/lunr/lunr.js"></script>
-    <script src="/static/js/search.js"></script>
+    <script src="/static/js/lunr.min.js" defer></script>
+    <script src="/static/js/search.js" defer></script>
 </body>
+
+</html>

@@ -115,7 +115,7 @@ def get_all_pages(content_dir: Path) -> list[dict]:
     pages = []
 
     # Directories to skip (non-content directories)
-    skip_dirs = {"blog-tags", ".lektor"}
+    skip_dirs = {"blog-tags", ".lektor", "sitemap.xml"}
 
     # Find all contents.lr files recursively
     for contents_file in content_dir.rglob("contents.lr"):
