@@ -26,19 +26,19 @@ The distinction matters because soft controls are easier to set up but easier to
 
 Making this concrete helps. Here are three harnesses and how they differ.
 
-### Coding agent
+### Coding agent harness
 
-Here is (what I like to call) a "minimally complex example" harness that I can think of: a coding agent with two tools. It can write to a file, and it can execute code. The action space is small and well-defined. The environment is a sandboxed filesystem.
+Modern coding agents like Cursor and OpenCode give you a pretty full toolkit: file read and write, bash execution, code execution, and web search. The environment is your local filesystem (usually sandboxed). The action space is broad; these agents can research, write, and run code all in one session.
 
-The hard controls here are straightforward: the agent cannot do anything beyond writing files and executing code. No network access, no browser, no ability to install new packages without your say-so. The soft controls might include prompting the agent to prefer Python over other languages, or to follow a particular testing convention.
+The hard controls are architectural: the agent runs in a sandbox, cannot access your keychain or password manager, and has no ability to escalate privileges. The soft controls are your instructions: prefer Python, follow the testing conventions in this repo, ask before running destructive commands.
 
-### Research agent
+### Data science agent harness
 
-A research agent has a different harness. Its tools include web search and document retrieval. The environment is the internet, or a curated subset of it. The concept is similar to the coding agent (an agent with tools in an environment), but the action space is wildly different because the tools are different.
+A data science agent extends the coding agent harness. It has the same tools (bash, code execution, file read/write, web search) but adds marimo notebooks to the environment. The agent works inside a running notebook kernel, editing cells, executing code, and documenting findings inline.
 
-In this example, the hard controls include being unable to execute code (by design). The soft controls may be the system prompting to prefer certain search tools, e.g. one intended for research papers instead of general internet content.
+The hard controls are nearly identical to a regular coding agent: sandboxed execution, no access to production credentials. The soft controls are where the difference shows up. My instructions to the agent include doing code execution, editing, and documentation all inside the notebook rather than in separate files. The agent could work in standalone `.py` files (it has the tools), but I steer it toward the notebook because that is where the analysis lives.
 
-### Voice agent (Voicepal)
+### Voicepal interview harness
 
 Here is an example that makes the soft control boundary tangible. I use an interview agent inside Voicepal. It is prompted to ask me questions and not give me answers. When it asks me something and I reply, "I don't know man, you tell me," it says, "I'd love to, but my role is to ask you questions and not give you answers."
 
@@ -52,12 +52,12 @@ There is a pattern across all three examples that took me a while to appreciate:
 
 Here is a summary of the three harnesses:
 
-| | Coding agent | Research agent | Voicepal interview agent |
+| | Coding agent | Data science agent | Voicepal interview agent |
 |---|---|---|---|
-| **Tools** | Write file, execute code | Web search, document retrieval | Conversation (speech in, text out) |
-| **Environment** | Sandboxed filesystem | Internet or curated subset | Voicepal app |
-| **Hard controls** | No network, no browser, no package installs | No code execution | No tool use beyond conversation |
-| **Soft controls** | Prefer Python, follow testing conventions | Prefer academic search tools | Ask questions, do not give answers |
+| **Tools** | File read/write, bash, code execution, web search | File read/write, bash, code execution, web search, marimo kernel | Conversation (speech in, text out) |
+| **Environment** | Sandboxed filesystem | Sandboxed filesystem + notebook kernel | Voicepal app |
+| **Hard controls** | Sandboxed, no keychain access, no privilege escalation | Same as coding agent | No tool use beyond conversation |
+| **Soft controls** | Prefer Python, follow testing conventions, ask before destructive commands | Do all work inside the notebook, document findings inline | Ask questions, do not give answers |
 
 The table above is the definition in compressed form. An agent harness is the combination of tools, environment, hard controls, and soft controls that together define what an agent can and cannot do.
 
