@@ -1,0 +1,85 @@
+title: What is an agent harness?
+---
+author: Eric J. Ma
+---
+body:
+
+My friend Sean Law asked me this question on LinkedIn recently, essentially, "Do you have a definition of the term agent harness?" I looked around and realized that nobody really has one. [Simon Willison](https://simonwillison.net/2025/Sep/18/agents/) writes extensively about agents and defines the agent itself ("tools in a loop to achieve a goal") but leaves the harness unspecified. [Andrej Karpathy](https://twitter.com/karpathy/status/2024987174077432126) calls "Claws" a new layer on top of agents and describes what they do without defining what they are. [Anthropic's guide](https://www.anthropic.com/engineering/building-effective-agents) to building effective agents is really a guide to harness engineering, but they never use the word. The term is doing a lot of quiet work across the ecosystem. Time to make that work explicit; here is my attempt at doing so.
+
+## Defining the harness
+
+An agent harness is everything that constrains, shapes, and thus defines what an agent can do. It has four components: the tools you give the agent, the environment those tools run in, the hard controls that architecturally limit what the agent can do, and the soft controls that steer its behavior through prompting.
+
+Together, these four components define the agent's **action space**. The action space is the set of all things the agent can actually accomplish. Change any one component and the action space changes.
+
+## Hard controls vs. soft controls
+
+Not all constraints work the same way.
+
+**Hard controls** are technological constraints on an agent's action space. The agent *literally cannot do the thing*. If you do not give a coding agent network access, it cannot phone home. If you do not give a voice agent the ability to speak, it can only respond in text. Hard controls are architectural: they are built into what the agent physically or technologically can and cannot do.
+
+**Soft controls** are the prompted nudges. You write instructions telling the agent to prefer certain behaviors, avoid certain patterns, or follow certain procedures. The agent can still deviate. Soft controls steer; they do not bind.
+
+In practice, those instructions usually live in one of two places. An `AGENTS.md` file is always-on context: repo norms and preferences that ride along with every request. An agent skill file is the on-demand kind: a procedural workflow the agent pulls in only when the task at hand matches it. Both are soft controls; the difference is whether they apply all the time or just when triggered.
+
+The distinction matters because soft controls are easier to set up but easier to bypass. (More on that later in my voice agent example.) Hard controls require more engineering effort but are more reliable.
+
+## Three harness examples
+
+Making this concrete helps. Here are three harnesses and how they differ.
+
+### Coding agent harness
+
+Modern coding agents like Cursor and OpenCode give you a pretty full toolkit: file read and write, bash execution, code execution, and web search. The environment is your local filesystem (usually sandboxed). The action space is broad; these agents can research, write, and run code all in one session.
+
+The hard controls are architectural: the agent runs in a sandbox, cannot access your keychain or password manager, and has no ability to escalate privileges. The soft controls are your instructions: prefer Python, follow the testing conventions in this repo, ask before running destructive commands.
+
+### Data science agent harness
+
+A data science agent extends the coding agent harness. It has the same tools (bash, code execution, file read/write, web search) but adds marimo notebooks to the environment. The agent works inside a running notebook kernel, editing cells, executing code, and documenting findings inline.
+
+The hard controls are nearly identical to a regular coding agent: sandboxed execution, no access to production credentials. The soft controls are where the difference shows up. My instructions to the agent include doing code execution, editing, and documentation all inside the notebook rather than in separate files. The agent could work in standalone `.py` files (it has the tools), but I steer it toward the notebook because that is where the analysis lives.
+
+### Voicepal interview harness
+
+Here is an example that makes the soft control boundary tangible. I use an interview agent inside Voicepal. It is prompted to ask me questions and not give me answers. When it asks me something and I reply, "I don't know man, you tell me," it says, "I'd love to, but my role is to ask you questions and not give you answers."
+
+That sounds like a hard control, but it is not. I can get around it. I say, "How about you tell me one option and ask me what I think about it?" And it says, "Fair," and then gives me the option. The soft control bent without breaking. I respected the spirit of the constraint (it still asked me a question), but I nudged the agent to give me an answer inside that frame.
+
+That is the nature of soft controls. They are persuasive, not binding. A determined user can work around them while staying within the letter of the prompt. Hard controls do not have this property. If you do not give the agent a tool, no amount of clever prompting will conjure it.
+
+## Bringing it together
+
+There is a pattern across all three examples that took me a while to appreciate: the harness is defined by what you include *and* what you exclude. Every tool you withhold is as much a design decision as every tool you provide.
+
+Here is a summary of the three harnesses:
+
+| | Coding agent | Data science agent | Voicepal interview agent |
+|---|---|---|---|
+| **Tools** | File read/write, bash, code execution, web search | File read/write, bash, code execution, web search, marimo kernel | Conversation (speech in, text out) |
+| **Environment** | Sandboxed filesystem | Sandboxed filesystem + notebook kernel | Voicepal app |
+| **Hard controls** | Sandboxed, no keychain access, no privilege escalation | Same as coding agent | No tool use beyond conversation |
+| **Soft controls** | Prefer Python, follow testing conventions, ask before destructive commands | Do all work inside the notebook, document findings inline | Ask questions, do not give answers |
+
+An agent harness is the combination of tools, environment, hard controls, and soft controls that together define what an agent can and cannot do. The data science agent shows that two harnesses can share nearly identical hard controls and still produce different behavior, because the soft controls steer the agent in a different direction. The Voicepal example shows that soft controls are persuasion, not architecture; a determined user can work around them.
+
+I hope this definition brings you clarity the next time someone brings up agent harnesses in conversation. And if they have a different definition, I would love to hear it; the term will only get sharper if more people take a crack at defining it.
+---
+pub_date: 2026-06-12
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I explore the concept of an "agent harness", the combination of tools, environment, hard controls, and soft controls that shapes what an AI agent can and cannot do. I illustrate these ideas with three real-world examples. Curious how these controls impact the behavior and capabilities of different agents? Read on to find out!
+---
+tags:
+
+agents
+harness
+controls
+tools
+environment
+knowledge
+constraints
+design
+prompting
+action
