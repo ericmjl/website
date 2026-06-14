@@ -155,16 +155,17 @@ pub_date: 2026-06-13
 ---
 twitter_handle: ericmjl
 ---
-summary: I built three voice-first AI apps (a D&D-style game, a gym coach, and voice for Canvas Chat) and converged on a pattern: voice plus tools on a web interface equals something genuinely powerful. The lessons span documentation-driven development (models hallucinate voice API details), API-first architecture (endpoints as tool calls), transcripts with timestamps (voice is invisible without them), and centralizing all voice operations into a single component with a clean contract. The hardest-won lesson: never block the voice agent. Use descriptive tool responses instead of hard guards, or your coach goes silent.
+summary: In this blog post, I share the key lessons I learned building voice-first AI apps, where voice is the main way users interact. From the importance of documentation and API-first design to the necessity of transcripts and centralized voice operations, I cover what works, what doesn't, and how to debug the invisible. The magic of voice-controlled UIs is real, but so are the engineering challenges. Curious about the pitfalls and breakthroughs of building with voice as the primary interface? Read on to find out more.
 ---
 tags:
 
 voice
 ai
-gemini
-realtime-api
-tools
+api
 debugging
+transcripts
+web
+ux
+tools
+logging
 architecture
-agents
-typescript
