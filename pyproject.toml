@@ -67,12 +67,15 @@ nbconvert = "*"
 ipykernel = "*"
 jupyterlab = "*"
 tqdm = "*"
-pydantic = "*"
+pydantic = ">=2.10.0"
+jinja2 = ">=3.1.6"
+httpx = ">=0.28.0"
 cairo = "*"
 pycairo = "*"
 
 [tool.pixi.feature.blogbot.pypi-dependencies]
 llamabot = { version = ">=0.12.1", extras = ["all"] }
+litellm = ">=1.89.0"
 fastapi = "*"
 uvicorn = "*"
 requests = "*"
