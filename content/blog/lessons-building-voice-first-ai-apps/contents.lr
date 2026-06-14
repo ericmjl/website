@@ -1,0 +1,170 @@
+title: Lessons building voice-first AI apps
+---
+author: Eric J. Ma
+---
+body:
+
+Voice-first AI means voice is the primary way you interact with the model. You talk, it talks back, it calls tools, things change on screen. In some of my projects, voice is the *only* way you interact with the model. There is no text box.
+
+That distinction changes everything about how you build, and I learned it through three projects. Yarnsmith is a voice-first game where an AI game master narrates a D&D-style adventure with an educational twist, aimed at parents who want to teach their kids good civic values. Gym Coach is a voice-powered workout companion that talks you through exercises and logs your sets. And I added voice to [Canvas Chat](https://github.com/ericmjl/canvas-chat), my visual interface for LLM conversations. Each project surprised me, and the lessons converged on a single pattern: voice plus tools on a web interface equals something genuinely powerful.
+
+I'm still mapping the edges of this pattern. But I've learned enough to share what works, what doesn't, and where the debugging traps are.
+
+## Docs and reference examples are non-negotiable
+
+It's tempting to vibe-code a voice app. Spin up the real-time API, talk to the model, assume it works. It rarely does.
+
+Voice AI is so new that the leading coding models often lack current information about the APIs. Real-time audio streaming, function calling over WebSocket, session management, these are all recent enough that models trained a few months ago will hallucinate the details. They invent parameters that don't exist, use outdated SDK methods, or confidently describe behavior that changed three versions ago.
+
+The pattern that worked for me is this: get the official documentation, build one working reference example, and point the coding agent at both. Yarnsmith was my first working reference. Once I had a single end-to-end example where the voice pipeline actually functioned, that was enough for Gym Coach and Canvas Chat.
+
+One working reference does magical wonders; the agents stop guessing and start following.
+
+## Build APIs first, then layer on tool calls
+
+When I first explored voice as an input modality, it was interesting but limited. The breakthrough for me came when I structured the application around tool calls, like I had seen it in the Claude app with web search as a tool. I started with the [Vercel AI SDK](https://ai-sdk.dev/) for these TypeScript projects, then switched to the [Gemini SDK](https://github.com/googleapis/js-genai) when I needed voice-specific features. The architectural pattern stayed the same either way.
+
+Here is the pattern to follow: Expose all the functionality of your app through API endpoints. Then register those endpoints as tools the voice agent can call. The agent speaks, decides to take an action, calls the tool, and the action happens on the web interface.
+
+An API gives you flexibility that direct integration never will. You can have the agent call endpoints through tool calls during a voice session. You can also simulate the same interaction manually with `curl` to debug individual problems. You can write tests against the same endpoints. The API is the contract, and everything else builds on top of it.
+
+It's the same layered pattern you see everywhere in software:
+
+- A Python library gives you programmatic access
+- A CLI wraps the library for command-line use
+- An agent wraps the CLI for tool-call use
+
+Same idea here. You build the API first, then layer on tool calls for the voice agent. The API comes first because it is the thing you can test independently. The tool-call wrapper comes second because it is the thing the agent uses at runtime.
+
+## Transcripts are your lifeline
+
+When you build a text-based agent, everything is visible. The user types something, the agent responds, you can read the full conversation. When you build a voice agent, most of the interaction is invisible. Audio goes in, audio comes out, and if something goes wrong, you have nothing to look at.
+
+This is where debugging hell starts.
+
+The fix is simple but essential: always have a transcript. Every spoken word from the user, every response from the agent, every tool call and its result, all of it should appear as text on the web interface in real time.
+
+Without a transcript, you are flying blind. You will hear the agent say something unexpected and have no idea what chain of tool calls led to that response. With a transcript, you can trace the exact sequence of events.
+
+Also, bonus tip: get the agent to give you a `Copy` button so that you can copy/paste as much contextual information over to the coding agent's context later!
+
+## Log every tool call with timestamps
+
+A transcript of spoken words is the minimum. Voice agents introduce a problem that text agents don't have: latency.
+
+Audio processing, network round trips, model inference, tool execution. Each step adds delay. When the agent takes three seconds to respond, you need to know where those three seconds went. Was it the speech-to-text? The model thinking? A slow API endpoint?
+
+Every entry in your transcript needs a timestamp. Not just the spoken words, but every tool call: when it was initiated, when it completed, what arguments were passed, what was returned. The tool call order matters too, because voice agents can trigger cascading sequences of calls that interact in unexpected ways.
+
+I guarantee you'll hit latency problems with voice agents. When you do, the timing information in your transcript is the only way to diagnose where the delay lives.
+
+This principle applies to text agents as well. But it is even more critical for voice because the user is waiting in real time. A three-second delay in a text chat is tolerable. In a voice conversation, it feels broken.
+
+## Centralize voice operations into one component
+
+Good logging tells you what went wrong. Clean architecture determines whether you can fix it. Here is a lesson I learned the hard way with Gym Coach.
+
+The symptom was specific and maddening. The user would say "sounds good," and the coach would call `save_plan` to create a workout. Then silence. The coach stopped talking. The transcript showed the tool call completed, but the voice agent never generated its next response. Gemini was waiting for a `FunctionResponse` that never came.
+
+Debugging this was hell because voice handling was scattered across four components. `GeminiLiveClient` managed the WebSocket connection. `TurnLifecycle` tracked phantom turns. `ToolCallGatekeeper` enforced behavioral rules. The session page held its own callback configuration and workout state. Each component had its own assumptions about what should happen next, and tracing where the response got swallowed took hours. The root cause turned out to be the guards themselves. I had built behavioral guards to prevent bad behavior: premature logging, exercise mismatches, duplicate plans. When a guard fired, it blocked the tool call and discarded the response. But Gemini was waiting for that response. No response meant no next turn. No next turn meant silence.
+
+Even with logging in place, I would fix one guard in one file and then hit a related bug in another because the same logic was duplicated elsewhere. The architecture was fighting me.
+
+The fix was architectural, and it happened incrementally. After each debugging session, I asked my coding agent to use the `improve-codebase-architecture` skill to find the top recommendation for preventing the class of bug I had just fixed. Instead of a full review process, I said "take your top recommendation and implement it." One recommendation per session. Ship it. Move on. I would strongly encourage this practice for any voice-first project. Each round surfaced a concrete structural fix, like extracting scattered coordination logic into one class, or moving guards from the transport layer to the domain layer. One recommendation at a time kept the changes small enough to verify.
+
+Over multiple iterations, all voice operations collapsed into a single component, the `GeminiLiveClient`. Its contract is clean: it takes a config and a set of event callbacks. One callback, `onFunctionCall`, returns a string that becomes the `FunctionResponse` sent back to Gemini. The `TurnLifecycle` module was deleted entirely. Behavioral guards were stripped out. What remained were data-integrity guards only: dedup duplicate tool calls by ID, rate-limit to one per turn, prevent double-saved plans.
+
+The key change replaced blocking with description. When a guard fires now, it still sends a `FunctionResponse`, but the response says "blocked: plan already saved" instead of going silent. Gemini reads that and self-corrects on its next turn. The coach never stops talking.
+
+The skeleton of the centralized client looks roughly like this:
+
+```typescript
+interface VoiceClientEvents {
+  onAudioData: (audio: Uint8Array) => void;
+  onTextResponse: (text: string) => void;
+  onInputTranscription: (text: string) => void;
+  // Returns a descriptive string that becomes the FunctionResponse.
+  // Example: "blocked: plan already saved", "Set logged. Acknowledge briefly."
+  onFunctionCall: (name: string, args: Record<string, unknown>) => string | void;
+  onTurnComplete: () => void;
+}
+
+class VoiceClient {
+  private session: Session | null = null;
+  private seenToolCallIds = new Set<string>();
+  private pendingResponses: { id: string; response: string }[] = [];
+
+  constructor(
+    private config: VoiceConfig,
+    private events: Partial<VoiceClientEvents>,
+  ) {}
+
+  async connect() {
+    // Open the realtime session and register a single message handler
+  }
+
+  private handleMessage(msg: ServerMessage) {
+    if (msg.toolCall) {
+      for (const fc of msg.toolCall.functionCalls) {
+        if (this.seenToolCallIds.has(fc.id)) continue;
+        this.seenToolCallIds.add(fc.id);
+
+        const result = this.events.onFunctionCall?.(fc.name, fc.args);
+        this.pendingResponses.push({ id: fc.id, response: result ?? "ok" });
+      }
+    }
+
+    if (msg.audio) this.events.onAudioData?.(msg.audio);
+    if (msg.text) this.events.onTextResponse?.(msg.text);
+
+    // ALWAYS flush tool responses. Blocking the FunctionResponse
+    // means Gemini hangs silently, waiting for a reply that never comes.
+    if (msg.turnComplete) {
+      for (const { id, response } of this.pendingResponses) {
+        this.session?.sendToolResponse({ functionResponses: [{ id, response }] });
+      }
+      this.pendingResponses = [];
+      this.seenToolCallIds.clear();
+      this.events.onTurnComplete?.();
+    }
+  }
+}
+```
+
+The entire contract is one class with one event interface. The domain layer talks to the voice agent through a single callback that returns a string. Tool responses always flush. The only guards that remain prevent duplicate data writes, like logging the same set twice or saving the same plan twice. They never block the voice agent from speaking.
+
+The results were qualitatively dramatic. Undesirable behaviors that had been recurring were eliminated in the next iteration. Multiple bugs I could foresee were never introduced. New bugs showed up, of course, but the trajectory was a series of step-function improvements, each one making the whole system more debuggable.
+
+## Voice-controlled UI is magical
+
+I want to end on the part that made all of this worth building.
+
+There is something viscerally magical about speaking to your computer and watching it respond. You say "log my set" and the UI updates. You say "show me the next exercise" and the screen changes. It is Geordie La Forge on the Enterprise going "Computer, do something" and watching it happen.
+
+That experience is genuinely joyful for the user. And it relies on a design principle that is easy to miss: the action needs to be visceral and exposed. When the agent takes a tool call, the user should see the result on screen immediately. The visual context should change in response to the voice command.
+
+This is where good UI and UX design principles earn their keep. The web interface doubles as the visual feedback layer that makes voice interaction feel real. Every tool call should produce a visible change. Every state transition should be immediate. The user needs to feel that their voice caused something to happen.
+
+## What I'm still figuring out
+
+The pattern I've converged on, voice plus tools on a web interface, feels powerful but immature. The engineering practices I described above are the scaffolding that makes it reliable enough to ship. Documentation-driven development keeps the models honest. API-first architecture keeps the system testable. Transcripts with timestamps keep the debugging tractable. Centralized voice operations keep the codebase maintainable.
+
+I'm not yet 100% sure where voice-first AI is heading. But the building experience has been the most fun I've had with software in a while. When you speak to a computer and it responds, when you watch the interface change because you asked it to, you feel like you're living in the future. The trick is making sure that future also has good logging.
+---
+pub_date: 2026-06-13
+---
+twitter_handle: ericmjl
+---
+summary: I built three voice-first AI apps (a D&D-style game, a gym coach, and voice for Canvas Chat) and converged on a pattern: voice plus tools on a web interface equals something genuinely powerful. The lessons span documentation-driven development (models hallucinate voice API details), API-first architecture (endpoints as tool calls), transcripts with timestamps (voice is invisible without them), and centralizing all voice operations into a single component with a clean contract. The hardest-won lesson: never block the voice agent. Use descriptive tool responses instead of hard guards, or your coach goes silent.
+---
+tags:
+
+voice
+ai
+gemini
+realtime-api
+tools
+debugging
+architecture
+agents
+typescript
