@@ -18,6 +18,7 @@ from PIL import Image
 from reportlab.graphics import renderPM
 from svglib.svglib import svg2rlg
 
+from .glm import generate_structured
 from .images import generate_banner_image_bytes
 from .models import (
     BlueSkyPost,
@@ -35,7 +36,6 @@ from .prompts import (
     compose_substack_post,
     compose_summary,
     compose_tags,
-    socialbot_sysprompt,
 )
 from .scraper import get_latest_blog_posts, get_post_body
 
@@ -274,26 +274,23 @@ async def generate_post(
     title_variants = None  # Initialize for non-Substack posts
 
     if post_type == "linkedin":
-        bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=LinkedInPost
-        )
         logger.info("Generating LinkedIn post...")
-        social_post = bot(compose_linkedin_post(body, blog_url))
+        social_post = generate_structured(
+            compose_linkedin_post(body, blog_url).content, LinkedInPost
+        )
         logger.info("Post generated!")
         content = social_post.format_post()
     elif post_type == "bluesky":
-        bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=BlueSkyPost
-        )
         logger.info("Generating BlueSky post...")
-        social_post = bot(compose_bluesky_post(body, blog_url))
+        social_post = generate_structured(
+            compose_bluesky_post(body, blog_url).content, BlueSkyPost
+        )
         logger.info("Post generated!")
         content = social_post.format_post()
     elif post_type == "substack":
-        bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=SubstackPost
+        social_post = generate_structured(
+            compose_substack_post(body, blog_url).content, SubstackPost
         )
-        social_post = bot(compose_substack_post(body, blog_url))
         # Format content without title variants (they'll be shown separately in UI)
         content = social_post.format_post(include_title_variants=False)
         # Pass title variants separately for UI display
@@ -306,14 +303,12 @@ async def generate_post(
             for variant in social_post.title_variants
         ]
     elif post_type == "summary":
-        bot = StructuredBot(
-            socialbot_sysprompt(), model="gpt-4.1", pydantic_model=Summary
+        social_post = generate_structured(
+            compose_summary(body, blog_url).content, Summary
         )
-        social_post = bot(compose_summary(body, blog_url))
         content = social_post.content
     elif post_type == "tags":
-        bot = StructuredBot(socialbot_sysprompt(), model="gpt-4.1", pydantic_model=Tags)
-        tags = bot(compose_tags(body))
+        tags = generate_structured(compose_tags(body).content, Tags)
         content = "\n".join(tags.content)
     elif post_type == "banner":
         dalle_prompt_bot = StructuredBot(
@@ -448,18 +443,16 @@ async def iterate_post(
             },
         )
 
-    # Create bot with appropriate model
-    bot = StructuredBot(socialbot_sysprompt(), model="gpt-4.1", pydantic_model=model)
-
-    # Generate revised content
-    revised_post = bot(
+    # Generate revised content via GLM
+    revised_post = generate_structured(
         compose_feedback_revision(
             original_content=original_content,
             feedback_request=feedback,
             post_type=post_type,
             blog_text=body,
             blog_url=blog_url,
-        )
+        ).content,
+        model,
     )
 
     # Format the revised content
