@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "buffer": {
+      "type": "remote",
+      "url": "https://mcp.buffer.com/mcp",
+      "oauth": false,
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer {env:BUFFER_API_KEY}"
+      },
+      "timeout": 10000
+    }
+  }
+}
