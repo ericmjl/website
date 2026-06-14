@@ -6,6 +6,8 @@ node_modules
 .env
 # pixi environments
 .pixi
+# uv lockfile (this repo is managed by pixi, not uv; uv.lock is spuriously generated)
+uv.lock
 *.egg-info
 .lektor/buildstate
 
