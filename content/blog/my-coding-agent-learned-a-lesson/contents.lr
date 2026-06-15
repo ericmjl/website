@@ -176,7 +176,7 @@ The Hermes agent had it. Now OpenCode does too.
 
 I hope autolearn brings you the same quiet compounding it has brought me: an agent that remembers your corrections, respects your preferences, and gets a little sharper every time you sit down to work.
 ---
-summary: I built an OpenCode plugin called autolearn that watches coding sessions, spawns review agents, and extracts lessons automatically. After ten days of dogfooding across 20+ projects, it has logged 922 observations, spawned 200+ reviews, and tracked 48 recurring patterns with reinforcement counts. This post covers the motivation (agents that forget), the design (markdown data store, subprocess reviews, skill symlinks), the dogfooding numbers, and the moment I knew it worked: the system patched a skill file on its own after observing me hit a Convex CLI limitation.
+summary: In this blog post, I share how my coding agent learned from my mistakes and automatically patched its own skills using a new OpenCode plugin I built called opencode-autolearn. Over ten days, it observed my coding sessions, extracted lessons, and updated its memory and skills without any manual intervention. I explain the architecture, design decisions, and real-world impact, including how it fixed a tricky Convex migration bug on its own. Curious how an agent can truly learn from your workflow and get better every session? Read on to find out!
 ---
 author: Eric J. Ma
 ---
@@ -184,11 +184,15 @@ pub_date: 2026-06-15
 ---
 tags:
 
+automation
+react
+productivity
 ai
-agents
-opencode
-self-improvement
-skills
-open-source
+memory
+learning
+coding
+open source
+state
+tools
 ---
 twitter_handle: ericmjl
