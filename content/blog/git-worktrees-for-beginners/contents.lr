@@ -1,0 +1,152 @@
+title: Git worktrees for beginners
+---
+author: Eric J. Ma
+---
+body:
+
+You are deep in a feature branch. Files are half-edited, tests are mid-run, your terminal is a graveyard of useful state. Then a teammate pings you: "can you review this PR?" Or a bug on `main` needs fixing right now.
+
+Your options feel lousy. You can stash your work and pray you remember the path back. You can commit a half-finished change just to park it. Or you can clone the repo into a second folder and juggle two copies of the history.
+
+There is a fourth option, and it is the one I reach for every time: `git worktree`.
+
+## What a worktree feels like as a beginner
+
+Strip away the internals for a second. A git worktree shows up as a **new folder on disk that contains a full copy of your repo's files**, checked out on whatever branch you ask for, placed anywhere you want on your computer.
+
+That is the whole experience. You run one command, you `cd` into a new directory, and you have a clean working tree ready to go. When you are done, you remove it, and the folder disappears.
+
+Here is the basic loop:
+
+```bash
+# create a new folder ../hotfix with the repo checked out on a new branch "hotfix"
+git worktree add ../hotfix
+
+# go work there
+cd ../hotfix
+# ...edit, commit, push...
+
+# when you are done, clean it up
+cd -
+git worktree remove ../hotfix
+```
+
+`git worktree remove` deletes the folder and deregisters it from git. That is cleanup. If you ever do it by hand (`rm -rf ../hotfix`), git leaves a stale registration behind, and `git worktree prune` sweeps that up.
+
+You can have several worktrees at once. `git worktree list` shows you every one:
+
+```bash
+git worktree list
+```
+
+Each entry is a folder on disk, a branch, and a commit. Treat them like separate workspaces that happen to share one brain.
+
+## So how is this different from cloning into a second folder?
+
+This is the question I get every time. If I just need a second copy of the repo, why run `git clone` into another folder?
+
+You can, and people do. But a clone and a worktree are doing fundamentally different things under the hood, and the difference shows up the moment you start working.
+
+**A clone is a second, independent repository.** `git clone` copies the entire `.git` database, history and all, into a brand new repository. The two clones know about each other only as remotes. To share work between them you fetch and push, the same as you would with a colleague's machine. Branches you create in one clone are invisible to the other until you sync them.
+
+**A worktree is a second door into the same repository.** It adds a working directory, but the history, the commits, the branches, and the tags all live in one shared `.git`. Make a commit in any worktree and it is instantly visible in all the others, because they are reading from the same database. There is nothing to sync.
+
+Here is how that plays out side by side:
+
+| | `git clone` into a new folder | `git worktree add` |
+|---|---|---|
+| Storage | Copies the full `.git` history again | Adds only the working files; shares the `.git` database |
+| Branches | Each clone keeps its own copy; must fetch/push to sync | All branches shared instantly across worktrees |
+| New branches | Invisible elsewhere until pushed | Visible everywhere immediately |
+| Same branch twice | Allowed (independent checkouts) | Blocked; a branch lives in one worktree at a time |
+| Network | Needed to sync between copies | Never needed (storage is shared locally) |
+
+That last row is the one I feel most. With clones, every "let me grab that branch" is a fetch. With worktrees, the branch is already there because it was never anywhere else.
+
+## The one rule that trips people up
+
+Git enforces a single constraint, and it is worth knowing up front: **a branch can be checked out in only one worktree at a time.**
+
+If you are on `feature-x` in your main folder, git will refuse to also check out `feature-x` in a worktree. That refusal protects you from two working directories racing on the same branch's index. If you need a second working tree for similar work, make a new branch for it:
+
+```bash
+git worktree add -b feature-x-take2 ../take2
+```
+
+This is the tradeoff worktrees make. Clones give you total independence at the cost of duplication and syncing. Worktrees give you zero duplication and zero syncing at the cost of that one-branch-one-worktree rule. For the "park my work and go look at something else" use case, the rule stays out of your way.
+
+## Are the worktrees linked on disk?
+
+Yes, and that is the whole trick. The linkage is real and literal.
+
+A normal repository has a `.git` directory that holds everything: the object database (every commit, tree, and blob), the refs (branches and tags), the configuration, the logs. One repository, one `.git`.
+
+A linked worktree has a `.git` **file** instead of a `.git` directory. That file is one line long:
+
+```text
+gitdir: /Users/you/myproject/.git/worktrees/hotfix
+```
+
+That path points back into the main repository's `.git` directory, into a small admin folder that holds only the per-worktree state: the worktree's own `HEAD`, its own `index`, a few logs. The heavy lifting, the object database and the refs, is shared from the main repo.
+
+You can see it for yourself:
+
+```bash
+cat ../hotfix/.git
+# gitdir: /Users/you/myproject/.git/worktrees/hotfix
+
+ls /Users/you/myproject/.git/worktrees/
+# hotfix
+```
+
+That is the linkage. Every worktree points into the same `.git` directory, which is why a commit made in one shows up immediately in the rest. They are separate folders on disk with separate working files, but they read and write to one shared repository. One brain, many desks.
+
+## When I actually reach for worktrees
+
+A few patterns where worktrees have earned their keep for me:
+
+- **Quick reviews and hotfixes.** I am on a feature branch and someone needs me on `main`. I `git worktree add` a throwaway folder, do the review or the fix, push, and remove it. My feature branch never moves.
+- **Running two versions side by side.** I keep one worktree on the released version and one on `main`, so I can reproduce a bug against both without juggling stashes.
+- **Long-running branches with context I want to keep.** Some experiments take days and accumulate useful terminal state. A worktree lets me park them in their own folder and pop back in without disturbing my main flow.
+- **Handing a whole task to a coding agent.** A worktree is just a folder, which means I can hand a coding agent the full lifecycle in one instruction: "do this work in a worktree, open a PR, and remove the worktree when you're done." The agent gets its own clean workspace, my main folder sits untouched while it churns, and once the PR is open the throwaway folder disappears on its own. The ease of this is the part I want to flag: the whole loop is small enough that delegating it in plain English feels natural. I am writing this very post that way.
+
+The shared storage means I can have five of these open and still pay only for the working files, five times over, instead of five copies of the entire history.
+
+## A note on cleanup
+
+`git worktree remove <path>` is the polite way out. It deletes the folder and tells git to forget about it. If the worktree has uncommitted changes, git will refuse unless you pass `--force`, which is a nice safety net.
+
+If you ever delete a worktree folder by hand, the registration lingers until you run `git worktree prune`. I treat `prune` as the "tidy up" command and run it now and then after a week of creating and discarding worktrees.
+
+## Give it a try
+
+The next time you are tempted to stash or clone just to look at another branch, try this instead:
+
+```bash
+git worktree add ../scratchpad
+cd ../scratchpad
+```
+
+Work there. Commit there. When you are done, come back and `git worktree remove ../scratchpad`. Your main folder stays exactly as you left it, the throwaway folder is gone, and you never duplicated a single commit to get there.
+
+One brain, many desks. That is all a worktree is.
+---
+pub_date: 2026-06-15
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I share how git worktrees have become my go-to solution for juggling multiple branches without the hassle of stashing, committing unfinished work, or cloning repos. I explain what worktrees are, how they differ from clones, and why they're perfect for quick reviews, hotfixes, and parallel development. I also cover common pitfalls and cleanup tips. Curious how worktrees can simplify your workflow and keep your projects organized? Read on to find out!
+---
+tags:
+
+git
+worktree
+branches
+workflow
+productivity
+hotfix
+review
+cloning
+cleanup
+tips
+---
