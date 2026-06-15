@@ -1,0 +1,80 @@
+title: Agents amplify expertise
+---
+author: Eric J. Ma
+---
+body:
+
+I gave a talk last week where I built a Bayesian hierarchical model of protein melting points live, in front of an audience, in about twenty minutes. A coding agent wrote most of the code. I narrated, took questions while the model sampled, and we landed on a posterior over the melting temperature of a yeast protein.
+
+The setup was the message. I hate making slides, and I hate pushing them through legal review even more, so I skipped both. I opened a `marimo` notebook on port 2720, pointed Cursor's agent at it, and started talking to my data the way I actually do at work.
+
+Halfway through, something I already believed got sharper. The agent was fast. Genuinely fast. But it was fast *for me* in a way it would have been merely noisy for someone who lacked the context. Every minute I saved, I saved because of judgment I'd built over years. The agent amplified that judgment.
+
+Here is what convinced me.
+
+## Every prompt hid a decision
+
+People treat prompting like a discrete skill, a thing you can grind at in isolation. Read the prompts I gave the agent during the demo and you'll see the real substrate. Each one handed over a decision a scientist had to make first.
+
+To pick a protein, I had to know that a melting curve only means something when the signal has real dynamic range, it has to actually fall as the protein denatures. So I told the agent:
+
+> Find me a protein with a very good dynamic range between the upper and lower bound signal. If the thing doesn't melt over temperature, or is very labile and melts straight away, that's not something I want to start with.
+
+That is a Bayesian's judgment wearing a prompt's clothes. The agent searched the dataframe. I made the call about what counts as a fittable curve.
+
+To fit the curve, I told it the four-parameter logistic's upper and lower bounds had to land at exactly `1.0` and `0.0`. That is domain knowledge, full stop. In plenty of assays the plateaus are sloppy and you let the data find them. In this meltome assay the fold change is normalized, so the bounds are fixed. Only someone who has stared at this assay would know that.
+
+The hierarchical model at the end carried the same fingerprint. I told the agent to put the population prior on the melting temperature and let the slope be whatever. That choice encodes a scientific belief: proteins in the same organism share a distribution of stability, while their transition steepness stays idiosyncratic. You earn that belief by fitting a lot of curves and watching what breaks.
+
+Strip the expertise out and the prompts collapse. A novice asks the agent to "analyze the protein data" and gets back a plausible, confident, wrong answer.
+
+## I caught what the agent missed
+
+The cleanest moment came early. The agent loaded the parquet and showed me the dataframe. I looked at the columns and noticed the temperature was missing, the one column a meltome analysis needs to exist. I'd prepped that file from a JSON that morning and dropped it on the floor.
+
+The agent was perfectly happy. It had data, it had columns, it would have charged ahead and fit curves to nothing. I had to send it hunting through the original paper's methods section for the actual temperatures.
+
+That is the whole game. The agent has blind spots. Left alone, it charges right past them. The person who has run the assay feels the missing column immediately. And the faster the agent moves, the more you need exactly that feeling, because the agent accelerates regardless of whether it is right.
+
+## Know your vibe zone
+
+Here is the rule I keep coming back to. **Go fast inside your zone of expertise; slow way down outside it.** In other words, know your **vibe zone**, the place where your judgment is reliable enough that you can let the agent run and trust your gut-check on the output.
+
+The four-parameter logistic lives in my vibe zone. I have fit a lot of them. I can glance at a `PyMC` model, see a thousand tuning samples and `target_accept=0.95`, and know it is behaving. I let the agent write it and skimmed the result.
+
+Analytical chemistry sits on the other side. I lack proper training in it. Hand me an LC-MS dataset with the same agent and I slow to a crawl, one plot at a time, five minutes of thinking before each request, because a sane result and a broken one look the same to me at a glance.
+
+The agent widens this difference. Inside my vibe zone it turns ten hours into one. Outside it, it turns confusion into confident confusion, faster. The leverage scales with how much you already know.
+
+## Trust scales with your ability to verify
+
+Mid-demo I said something that made the room laugh, and I meant it: I'm going to trust what the agent says. You shouldn't.
+
+I could trust it because I could check it. I know what a posterior over a melting temperature should look like. I know what a forest plot rank-ordered by probability of superiority does when the data is good, and what it does when the curve is junk. Trust is a dial you set with your ability to verify. Experts turn it up. Beginners keep it low and check everything, which is exhausting, which is why beginners move slowly even with a fast agent.
+
+## The gap widens
+
+The appealing story about coding agents is that they democratize the craft, that now anyone can build a Bayesian model. The lived reality runs the other way. The agent hands a loaded instrument to whoever is holding it. In expert hands it is a microscope. In novice hands it is a confocal microscope pointed at the wrong slide, producing beautiful, expensive, wrong images.
+
+If you have spent a decade learning your domain, this is excellent news. Your investment compounds now instead of depreciating. The boring middle of data science, the boilerplate and plotting and fiddly dataframe wrangling, burns away, and what remains is the part that was always worth something: deciding what to measure, what to believe, and what to distrust.
+
+The agent made my years matter more. If you want more leverage from tools like these, the highest-return thing you can do is still, somewhat against the spirit of the age, to become an expert in something real.
+---
+pub_date: 2026-06-14
+---
+twitter_handle: ericmjl
+---
+summary: I built a Bayesian hierarchical model of protein melting points live, in front of an audience, with a coding agent writing most of the code. The demo convinced me of something counterintuitive: the agent amplified my expertise instead of flattening it. Curious why your years of domain knowledge matter more, not less, with AI in the loop? Read on to find out!
+---
+tags:
+
+agents
+expertise
+data-science
+agentic-data-science
+bayesian
+coding-agents
+judgment
+pymc
+marimo
+llm
