@@ -120,7 +120,7 @@ The persistent memory (`memory.md`) has six entries covering: blog post URL veri
 
 The feedback loop for autolearn looks like this:
 
-```mermaid
+<pre class="mermaid">
 graph TD
     A[OpenCode session] -->|every 5 turns / idle / exit| B[autolearn.js plugin]
     B -->|spawn detached subprocess| C[autolearn-reviewer agent]
@@ -130,7 +130,7 @@ graph TD
     D -->|nothing worth recording| G[exit quietly]
     E -->|loaded into| A
     F -->|symlinked into ~/.agents/skills/| A
-```
+</pre>
 
 The core loop works: watch, review, learn, persist, discover. The system improves the agent's behavior without touching model weights.
 
