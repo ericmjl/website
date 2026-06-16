@@ -8,13 +8,13 @@ You are deep in a feature branch. Files are half-edited, tests are mid-run, your
 
 Your options feel lousy. You can stash your work and pray you remember the path back. You can commit a half-finished change just to park it. Or you can clone the repo into a second folder and juggle two copies of the history.
 
-There is a fourth option, and it is the one I reach for every time: `git worktree`.
+There is a fourth option, and it is the one I now reach for every time: `git worktree`.
 
 ## What a worktree feels like as a beginner
 
-Strip away the internals for a second. A git worktree shows up as a **new folder on disk that contains a full copy of your repo's files**, checked out on whatever branch you ask for, placed anywhere you want on your computer.
+Let's strip away the internals for a second. What is a git worktree? A git worktree shows up as a **new folder on disk that contains a full copy of your repo's files**, checked out on whatever branch you ask for, placed anywhere you want on your computer.
 
-That is the whole experience. You run one command, you `cd` into a new directory, and you have a clean working tree ready to go. When you are done, you remove it, and the folder disappears.
+That is the essential experience of git worktrees. You run one command, you `cd` into a new directory, and you have a clean working tree ready to go. When you are done, you remove it, and the folder disappears.
 
 Here is the basic loop:
 
