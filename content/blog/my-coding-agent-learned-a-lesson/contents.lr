@@ -44,7 +44,17 @@ The architecture is deliberately split: a thin JavaScript plugin that only count
 
 ## Design decisions
 
-Three decisions shaped everything else.
+Four decisions shaped everything else.
+
+### The trigger needs no human
+
+The review fires on its own. By default, every five assistant turns, or when the session goes idle, or when you close the terminal. You never type a command or decide when to review. The loop does not wait for you.
+
+This is the decision I care about most. Other tools use human-triggered commands like `/dream` for their reflection step, and those work, until they do not. You remember to invoke them for a week. Then you get busy, you forget, and the learning stops. The trigger is the first thing to go when you have real work to do.
+
+Making it automatic costs almost nothing. A handful of background subprocesses you never see. What you buy with that is a system that learns from every session, not just the ones where you remembered to pull the lever.
+
+The trigger itself is just an OpenCode plugin. It hooks into OpenCode's event system, counts turns, and fires reviews. No fork, no separate daemon, no modified binary. You install the plugin and your existing OpenCode setup gains the feedback loop.
 
 ### Markdown is the data store
 
