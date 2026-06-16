@@ -33,11 +33,8 @@ So I asked OpenCode to build it.
 `opencode-autolearn` is an OpenCode plugin that does four things:
 
 1. **Monitors conversations.** A JavaScript plugin hooks into OpenCode's event system. It counts turns, buffers messages (with secret redaction), and watches for idle periods and session exits.
-
 2. **Spawns review agents.** Every five assistant turns, or when the session goes idle, or when you close the terminal, the plugin spawns a detached subprocess that runs a review agent. The review agent receives the buffered conversation and an instruction sheet.
-
 3. **Extracts lessons.** The review agent reads the conversation looking for corrections ("don't do X"), preferences ("I prefer Y"), workarounds that worked, and recurring patterns. For each one it finds, it takes action.
-
 4. **Writes to durable stores.** The review agent uses a Python CLI to update three things: a persistent memory file (loaded into every future session), a user profile (communication and workflow preferences), and skills (created or patched based on observed patterns).
 
 The architecture is deliberately split: a thin JavaScript plugin that only counts and buffers, and a Python CLI that does the data management. The plugin never blocks the main session. Reviews run in a detached subprocess that the plugin fires and forgets. If the review fails, the conversation is saved to a fallback file for debugging. The main session never knows the difference.
