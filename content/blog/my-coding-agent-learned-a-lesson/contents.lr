@@ -2,15 +2,15 @@ title: My coding agent learned a lesson and patched its own skill
 ---
 body:
 
-I was debugging a transcript duplication bug in my voice coaching app. The coach's responses were being saved twice to the database, one turn apart. I traced it to a React 18 batching issue in the flush logic, refactored the state management into a hook, wrote a one-shot backfill to clean up the historical data, and committed everything.
+I was debugging a transcript duplication bug in my voice-first gym coaching app. The coach's responses were being saved twice to the database, one turn apart. I traced it to a React 18 batching issue in the flush logic, refactored the state management into a hook, wrote a one-shot backfill to clean up the historical data, and committed everything.
 
-Then I closed my laptop and went to get coffee.
+then I went to get a coffee.
 
 When I came back, the skill file for Convex migrations had a new entry. The `convex-migration-helper` skill, installed in my repo a week ago and untouched since, now contained a six-line callout explaining that `internalMutation` functions cannot be invoked from the Convex CLI. The code example had been corrected from `internalMutation` to `mutation`. A reference file deep in the skill's `references/` directory had been updated with the same fix.
 
-Nobody told it to do that. My coding agent watched me hit the `internalMutation` wall during the backfill, and a background review process extracted the lesson and patched the skill on its own.
+Nobody told it to do that. In another session, my coding agent, GLM-5.2 on OpenCode, hit the `internalMutation` wall during the backfill and solved the problem on its own; a background review process then extracted the lesson and patched the skill.
 
-Today I am releasing `opencode-autolearn`, the plugin that made that possible. It is open source, it runs on your machine, and after ten days of dogfooding across twenty-plus projects, it has logged 922 observations, spawned over 200 review sessions, and tracked 48 recurring patterns with reinforcement counts. My coding agent gets better every session, and I am doing nothing extra to make that happen.
+Today I am releasing `opencode-autolearn`, the plugin that made that possible. It is open source, it runs on your machine, and after ten days of dogfooding across twenty-plus projects, it has logged 922 observations, spawned over 200 review sessions, and tracked 48 recurring patterns with reinforcement counts. My coding agent gets better every session, and I do _nothing_ extra to make that happen.
 
 ## Agents that forget
 
@@ -22,7 +22,7 @@ The question that would not leave me alone: what if the agent could watch its ow
 
 ## The inspiration from Hermes
 
-A friend showed me a coding agent called Hermes. Hermes had a property I found fascinating: it got better at working with you over time. The model weights were the same. But Hermes maintained a persistent memory of corrections, preferences, and workarounds, and it updated that memory as you worked.
+A colleague, Edward Miracco, told me about a coding agent called Hermes. Hermes had a property I found fascinating: it got better at working with you over time. The model weights were the same. But Hermes maintained a persistent memory of corrections, preferences, and workarounds, and it updated that memory as you worked.
 
 I wanted that for OpenCode, the coding agent I use daily. OpenCode has a plugin system, a skill discovery mechanism, and a session model that captures full conversation histories. All the raw materials were there. The missing piece was the feedback loop: something that watched the conversation, decided what was worth learning, and wrote the lessons down.
 
