@@ -14,7 +14,7 @@ Today I am releasing `opencode-autolearn`, the plugin that made that possible. I
 
 ## Agents that forget
 
-I wrote about [building self-improving coding agents](https://ericmjl.github.io/blog/2026/1/17/building-self-improving-coding-agents/) back in January. The core observation was simple: AI coding agents repeat the same mistakes across sessions because they have no mechanism to learn from corrections. Every session starts from scratch. You re-state the same preferences. You re-correct the same behaviors. You are babysitting a very fast intern.
+I wrote about [building self-improving coding agents](/blog/2026/1/17/how-to-build-self-improving-coding-agents-part-1/) back in January. The core observation was simple: AI coding agents repeat the same mistakes across sessions because they have no mechanism to learn from corrections. Every session starts from scratch. You re-state the same preferences. You re-correct the same behaviors. You are babysitting a very fast intern.
 
 The post identified two levers: `AGENTS.md` as repository memory, and skills as reusable playbooks. Both work. I use them every day. But the loop was still manual. I had to notice the pattern, decide what to do with it, and write the correction myself. I was doing the learning, then handing the agent the results.
 
