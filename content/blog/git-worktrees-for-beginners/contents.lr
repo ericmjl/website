@@ -45,11 +45,11 @@ Each entry is a folder on disk, a branch, and a commit. Treat them like separate
 
 That's a great question! If I just need a second copy of the repo, why run `git clone` into another folder?
 
-You can, and people do. But a clone and a worktree are doing fundamentally different things under the hood, and the difference shows up the moment you start working.
+You can, and people do. I have one colleague at work who has the software developer's equivalent of `Untitled12.ipynb` for multiple repos. But a clone and a worktree are doing fundamentally different things under the hood, and the difference shows up the moment you start working.
 
 **A clone is a second, independent repository.** `git clone` copies the entire `.git` database, history and all, into a brand new repository. The two clones know about each other only as remotes. To share work between them you fetch and push, the same as you would with a colleague's machine. Branches you create in one clone are invisible to the other until you sync them.
 
-**A worktree is a second door into the same repository.** It adds a working directory, but the history, the commits, the branches, and the tags all live in one shared `.git`. Make a commit in any worktree and it is instantly visible in all the others, because they are reading from the same database. There is nothing to sync.
+**A worktree is a second door into the same repository.** It adds a working directory, but the history, the commits, the branches, and the tags all live in one shared `.git`. Make a commit in any worktree and it is instantly visible in all the others, because they are reading from the same underlying git database. There is nothing to sync.
 
 Here is how that plays out side by side:
 
@@ -73,11 +73,11 @@ If you are on `feature-x` in your main folder, git will refuse to also check out
 git worktree add -b feature-x-take2 ../take2
 ```
 
-This is the tradeoff worktrees make. Clones give you total independence at the cost of duplication and syncing. Worktrees give you zero duplication and zero syncing at the cost of that one-branch-one-worktree rule. For the "park my work and go look at something else" use case, the rule stays out of your way.
+This is the tradeoff worktrees make. Clones give you total independence at the cost of duplication and syncing. Worktrees give you zero duplication and zero syncing at the cost of that one-branch-one-worktree rule. This is basically perfect for the "park my work and go look at something else" use case.
 
 ## Are the worktrees linked on disk?
 
-Yes, and that is the whole trick. The linkage is real and literal.
+Yes, and that is the essence of how git worktrees work.
 
 A normal repository has a `.git` directory that holds everything: the object database (every commit, tree, and blob), the refs (branches and tags), the configuration, the logs. One repository, one `.git`.
 
