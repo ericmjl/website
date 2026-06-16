@@ -103,11 +103,11 @@ That is the linkage. Every worktree points into the same `.git` directory, which
 
 ## When I actually reach for worktrees
 
-A few patterns where worktrees have earned their keep for me:
+A few patterns where worktrees have earned their keep for me. Each one is a plain-English ask you can hand to a coding agent:
 
-- **Quick reviews and hotfixes.** I am on a feature branch and someone needs me on `main`. I `git worktree add` a throwaway folder, do the review or the fix, push, and remove it. My feature branch never moves.
-- **Running two versions side by side.** I keep one worktree on the released version and one on `main`, so I can reproduce a bug against both without juggling stashes.
-- **Long-running branches with context I want to keep.** Some experiments take days and accumulate useful terminal state. A worktree lets me park them in their own folder and pop back in without disturbing my main flow.
+- **Quick reviews and hotfixes.** I am on a feature branch and someone needs me on `main`. I `git worktree add` a throwaway folder, do the review or the fix, push, and remove it. My feature branch never moves. The ask: "Help me review `<PR URL>` in a new worktree."
+- **Running two versions side by side.** I keep one worktree on the released version and one on `main`, so I can reproduce a bug against both without juggling stashes. The ask: "Check out the v1.2 release tag in a worktree so I can compare it against main."
+- **Long-running branches with context I want to keep.** Some experiments take days and accumulate useful terminal state. A worktree lets me park them in their own folder and pop back in without disturbing my main flow. The ask: "Create a worktree for this experiment so I can leave its state alone."
 - **Handing a whole task to a coding agent.** A worktree is just a folder, which means I can hand a coding agent the full lifecycle in one instruction: "do this work in a worktree, open a PR, and remove the worktree when you're done." The agent gets its own clean workspace, my main folder sits untouched while it churns, and once the PR is open the throwaway folder disappears on its own. The ease of this is the part I want to flag: the whole loop is small enough that delegating it in plain English feels natural. I am writing this very post that way.
 
 The shared storage means I can have five of these open and still pay only for the working files, five times over, instead of five copies of the entire history.
@@ -126,6 +126,10 @@ The next time you are tempted to stash or clone just to look at another branch, 
 git worktree add ../scratchpad
 cd ../scratchpad
 ```
+
+Or alternatively, ask an agent to work in a worktree for you:
+
+> "Set up a worktree on a new branch and make the changes there."
 
 Work there. Commit there. When you are done, come back and `git worktree remove ../scratchpad`. Your main folder stays exactly as you left it, the throwaway folder is gone, and you never duplicated a single commit to get there.
 
