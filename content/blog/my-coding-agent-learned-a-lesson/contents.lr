@@ -6,11 +6,11 @@ I was debugging a transcript duplication bug in my voice-first gym coaching app.
 
 then I went to get a coffee.
 
-When I came back, the skill file for Convex migrations had a new entry. The `convex-migration-helper` skill, installed in my repo a week ago and untouched since, now contained a six-line callout explaining that `internalMutation` functions cannot be invoked from the Convex CLI. The code example had been corrected from `internalMutation` to `mutation`. A reference file deep in the skill's `references/` directory had been updated with the same fix.
+When I came back, the skill file for [Convex](https://www.convex.dev/) migrations had a new entry. The `convex-migration-helper` skill, installed in my repo a week ago and untouched since, now contained a six-line callout explaining that `internalMutation` functions cannot be invoked from the Convex CLI. The code example had been corrected from `internalMutation` to `mutation`. A reference file deep in the skill's `references/` directory had been updated with the same fix.
 
 Nobody told it to do that. In another session, my coding agent, GLM-5.2 on OpenCode, hit the `internalMutation` wall during the backfill and solved the problem on its own; a background review process then extracted the lesson and patched the skill.
 
-Today I am releasing `opencode-autolearn`, the plugin that made that possible. It is open source, it runs on your machine, and after ten days of dogfooding across twenty-plus projects, it has logged 922 observations, spawned over 200 review sessions, and tracked 48 recurring patterns with reinforcement counts. My coding agent gets better every session, and I do _nothing_ extra to make that happen.
+Today I am releasing [`opencode-autolearn`](https://github.com/ericmjl/opencode-autolearn), the plugin that made that possible. It is open source, it runs on your machine, and after ten days of dogfooding across twenty-plus projects, it has logged 922 observations, spawned over 200 review sessions, and tracked 48 recurring patterns with reinforcement counts. My coding agent gets better every session, and I do _nothing_ extra to make that happen.
 
 ## Agents that forget
 
@@ -22,9 +22,9 @@ The question that would not leave me alone: what if the agent could watch its ow
 
 ## The inspiration from Hermes
 
-A colleague, Edward Miracco, told me about a coding agent called Hermes. Hermes had a property I found fascinating: it got better at working with you over time. The model weights were the same. But Hermes maintained a persistent memory of corrections, preferences, and workarounds, and it updated that memory as you worked.
+A colleague, Edward Miracco, told me about a coding agent called [Hermes](https://hermes-agent.nousresearch.com/). Hermes had a property I found fascinating: it got better at working with you over time. The model weights were the same. But Hermes maintained a persistent memory of corrections, preferences, and workarounds, and it updated that memory as you worked.
 
-I wanted that for OpenCode, the coding agent I use daily. OpenCode has a plugin system, a skill discovery mechanism, and a session model that captures full conversation histories. All the raw materials were there. The missing piece was the feedback loop: something that watched the conversation, decided what was worth learning, and wrote the lessons down.
+I wanted that for [OpenCode](https://opencode.ai), the coding agent I use daily. OpenCode has a plugin system, a skill discovery mechanism, and a session model that captures full conversation histories. All the raw materials were there. The missing piece was the feedback loop: something that watched the conversation, decided what was worth learning, and wrote the lessons down.
 
 So I asked OpenCode to build it.
 
@@ -50,7 +50,7 @@ Three decisions shaped everything else.
 
 Memory lives in `~/.autolearn/memory.md`. User preferences live in `~/.autolearn/user-profile.md`. Skills live in `~/.autolearn/skills/{name}/SKILL.md`. All plain text. All human-readable. All directly loadable as OpenCode instructions.
 
-I considered SQLite. It would be more queryable. But the agent needs to read these files as context, and OpenCode loads instruction files as plain markdown. A database would add a conversion layer between storage and context. Markdown files serve double duty: they are both the storage and the context injection. No conversion needed.
+I considered [SQLite](https://www.sqlite.org/). It would be more queryable. But the agent needs to read these files as context, and OpenCode loads instruction files as plain markdown. A database would add a conversion layer between storage and context. Markdown files serve double duty: they are both the storage and the context injection. No conversion needed.
 
 The agent reads the same file the user can open in a text editor. If I want to see what my agent has learned, I `cat ~/.autolearn/memory.md`. If I want to correct a lesson that is wrong, I edit the file. The next session picks up the change.
 
@@ -126,9 +126,9 @@ The reinforcement tracking is where the compounding shows up. The most-reinforce
 The review agent created four skills from scratch and patched one existing skill in a local repo. The created skills include:
 
 - A `blogbot` skill for generating social media posts from blog content. The review agent created it after watching me manually draft posts, then patched it with a URL verification step after observing me checking URLs by hand.
-- An `evergreen-note-quality` skill for my Obsidian vault, created after watching me audit note quality across multiple sessions. 128 lines of quality checklists covering atomicity, title-as-API, concept-orientation, and duplicate detection.
-- A `remotion-best-practices` skill, created from scratch after I worked through Remotion version-specific issues. 116 lines covering package structure, animations, fonts, and rendering.
-- A `marimo-notebook-patterns` skill, created after I hit repeated pitfalls editing marimo notebooks. Covers import patterns, cell parameter requirements, and button API signatures.
+- An `evergreen-note-quality` skill for my [Obsidian](https://obsidian.md) vault, created after watching me audit note quality across multiple sessions. 128 lines of quality checklists covering atomicity, title-as-API, concept-orientation, and duplicate detection.
+- A `remotion-best-practices` skill, created from scratch after I worked through [Remotion](https://www.remotion.dev/) version-specific issues. 116 lines covering package structure, animations, fonts, and rendering.
+- A `marimo-notebook-patterns` skill, created after I hit repeated pitfalls editing [marimo](https://marimo.io) notebooks. Covers import patterns, cell parameter requirements, and button API signatures.
 
 The local repo skill patch is the Convex CLI story I described above: the `convex-migration-helper` in the gym-coach repo, patched with the `internalMutation` lesson.
 
