@@ -16,7 +16,7 @@ Here is what convinced me.
 
 People treat prompting like a discrete skill, a thing you can grind at in isolation. Read the prompts I gave the agent during the demo and you'll see the real substrate. Each one handed over a decision a scientist had to make first.
 
-To pick a protein, I had to know that a melting curve only means something when the signal has real dynamic range, it has to actually fall as the protein denatures. So I told the agent:
+To pick a protein, I had to know that a melting curve only means something when the signal has real dynamic range; it has to actually fall as the protein denatures. So I told the agent:
 
 > Find me a protein with a very good dynamic range between the upper and lower bound signal. If the thing doesn't melt over temperature, or is very labile and melts straight away, that's not something I want to start with.
 
@@ -60,21 +60,21 @@ If you have spent a decade learning your domain, this is excellent news. Your in
 
 The agent made my years matter more. If you want more leverage from tools like these, the highest-return thing you can do is still, somewhat against the spirit of the age, to become an expert in something real.
 ---
-pub_date: 2026-06-14
+pub_date: 2026-06-17
 ---
 twitter_handle: ericmjl
 ---
-summary: I built a Bayesian hierarchical model of protein melting points live, in front of an audience, with a coding agent writing most of the code. The demo convinced me of something counterintuitive: the agent amplified my expertise instead of flattening it. Curious why your years of domain knowledge matter more, not less, with AI in the loop? Read on to find out!
+summary: In this blog post, I share my experience using a coding agent to build a Bayesian model live, highlighting how agents can dramatically speed up work, but only when paired with real expertise. I found that every prompt I gave was rooted in years of judgment, and the agent amplified my strengths while exposing its own blind spots. Ultimately, the more you know, the more leverage these tools provide. Curious how agents can make your expertise even more valuable, and where they might trip you up? Read on to find out.
 ---
 tags:
 
-agents
-expertise
-data-science
-agentic-data-science
 bayesian
-coding-agents
+modeling
+automation
+expertise
 judgment
-pymc
-marimo
-llm
+agents
+notebooks
+protein
+science
+learning
