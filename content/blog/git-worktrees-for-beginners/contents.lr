@@ -43,7 +43,7 @@ Each entry is a folder on disk, a branch, and a commit. Treat them like separate
 
 ## So how is this different from cloning into a second folder?
 
-This is the question I get every time. If I just need a second copy of the repo, why run `git clone` into another folder?
+That's a great question! If I just need a second copy of the repo, why run `git clone` into another folder?
 
 You can, and people do. But a clone and a worktree are doing fundamentally different things under the hood, and the difference shows up the moment you start working.
 
