@@ -4,9 +4,9 @@ author: Eric J. Ma
 ---
 body:
 
-I gave a talk last week where I built a Bayesian hierarchical model of protein melting points live, in front of an audience, in about twenty minutes. A coding agent wrote most of the code. I narrated, took questions while the model sampled, and we landed on a posterior over the melting temperature of a yeast protein.
+I gave a talk on 10 June at Data-Driven Pharma (East) 2026 where I built a Bayesian hierarchical model of protein melting points live, in front of an audience, in 27 minutes (including live questions). A coding agent, Cursor, wrote most of the code in a marimo notebook, paired using Marimo pair. I narrated, took questions while the model sampled, and we landed on a posterior over the melting temperature of a yeast protein.
 
-The setup was the message. I hate making slides, and I hate pushing them through legal review even more, so I skipped both. I opened a `marimo` notebook on port 2720, pointed Cursor's agent at it, and started talking to my data the way I actually do at work.
+The setup -- featuring Cursor and Marimo -- was the message. I really hate making slides, so I decided a live demo was the best thing to do. I opened a `marimo` notebook on port 2720, pointed Cursor's agent at it, and started talking to my data the way I actually do at work.
 
 Halfway through, something I already believed got sharper. The agent was fast. Genuinely fast. But it was fast *for me* in a way it would have been merely noisy for someone who lacked the context. Every minute I saved, I saved because of judgment I'd built over years. The agent amplified that judgment.
 
@@ -22,7 +22,7 @@ To pick a protein, I had to know that a melting curve only means something when 
 
 That is a Bayesian's judgment wearing a prompt's clothes. The agent searched the dataframe. I made the call about what counts as a fittable curve.
 
-To fit the curve, I told it the four-parameter logistic's upper and lower bounds had to land at exactly `1.0` and `0.0`. That is domain knowledge, full stop. In plenty of assays the plateaus are sloppy and you let the data find them. In this meltome assay the fold change is normalized, so the bounds are fixed. Only someone who has stared at this assay would know that.
+To fit the curve, I told it the four-parameter logistic's upper and lower bounds had to land at exactly `1.0` and `0.0`. That is dataset-specific domain knowledge, available to me only because I know something about how that data was generated. In plenty of assays the plateaus are sloppy and you let the data find them. In this meltome assay the fold change is normalized, so the bounds are fixed. Only someone who has stared at this assay would know that.
 
 The hierarchical model at the end carried the same fingerprint. I told the agent to put the population prior on the melting temperature and let the slope be whatever. That choice encodes a scientific belief: proteins in the same organism share a distribution of stability, while their transition steepness stays idiosyncratic. You earn that belief by fitting a lot of curves and watching what breaks.
 
@@ -54,11 +54,11 @@ I could trust it because I could check it. I know what a posterior over a meltin
 
 ## The gap widens
 
-The appealing story about coding agents is that they democratize the craft, that now anyone can build a Bayesian model. The lived reality runs the other way. The agent hands a loaded instrument to whoever is holding it. In expert hands it is a microscope. In novice hands it is a confocal microscope pointed at the wrong slide, producing beautiful, expensive, wrong images.
+The appealing story about coding agents is that they democratize the craft, that now anyone can build a Bayesian model. My spicy take is that the lived reality runs the other way. The agent hands a loaded instrument to whoever is holding it. In expert hands it is a microscope. In novice hands it is a confocal microscope pointed at the wrong slide, producing beautiful, expensive, wrong images.
 
 If you have spent a decade learning your domain, this is excellent news. Your investment compounds now instead of depreciating. The boring middle of data science, the boilerplate and plotting and fiddly dataframe wrangling, burns away, and what remains is the part that was always worth something: deciding what to measure, what to believe, and what to distrust.
 
-The agent made my years matter more. If you want more leverage from tools like these, the highest-return thing you can do is still, somewhat against the spirit of the age, to become an expert in something real.
+The agent made my years matter more. It also raises questions on how to bring people up to speed in the same domain. And yet, if you want more leverage from tools like these, the highest-return thing you can do is still, somewhat against the spirit of the age, to become an expert in something real.
 ---
 pub_date: 2026-06-17
 ---
