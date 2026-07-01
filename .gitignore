@@ -30,3 +30,7 @@ assets/static/data/github-data.json
 
 # Remotion video project (lives in a separate repo, ignored here)
 remotion-videos/
+
+# App dev artifacts (e.g. apps/bots/video-editor/)
+*.log
+!pnpm-debug.log*
