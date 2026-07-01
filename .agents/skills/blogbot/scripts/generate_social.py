@@ -398,11 +398,21 @@ def generate_structured(
     and the result is validated against ``model_cls``, retrying on failure.
     """
     api_key = os.environ.get("ZAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("ZAI_API_KEY is not set. Add it to .env or the environment.")
-
-    model = os.environ.get("BLOGBOT_MODEL", "anthropic/glm-5.2")
     api_base = os.environ.get("BLOGBOT_API_BASE", "https://api.z.ai/api/anthropic")
+    model = os.environ.get("BLOGBOT_MODEL", "anthropic/glm-5.2")
+
+    # Fallback to oMLX if Z.ai is unavailable
+    fallback_api_key = os.environ.get("BLOGBOT_API_KEY")
+    if not fallback_api_key:
+        omlx_config = Path.home() / ".omlx" / "settings.json"
+        if omlx_config.exists():
+            import json
+
+            with open(omlx_config) as f:
+                cfg = json.load(f)
+            fallback_api_key = cfg.get("auth", {}).get("api_key", "")
+    fallback_api_base = "http://localhost:8426/v1"
+    fallback_model = "openai/Qwen3.6-35B-A3B-8bit"
 
     schema = json.dumps(model_cls.model_json_schema(), ensure_ascii=False)
     system_text = (
@@ -417,14 +427,47 @@ def generate_structured(
 
     last_error: Exception | None = None
     for _ in range(num_attempts):
-        response = completion(
-            model=model,
-            api_base=api_base,
-            api_key=api_key,
-            messages=messages,
-            drop_params=True,
-            temperature=0,
-        )
+        try:
+            response = completion(
+                model=model,
+                api_base=api_base,
+                api_key=api_key,
+                messages=messages,
+                drop_params=True,
+                temperature=0,
+            )
+        except Exception as err:
+            # Fallback to oMLX on Z.ai failure
+            try:
+                response = completion(
+                    model=fallback_model,
+                    api_base=fallback_api_base,
+                    api_key=fallback_api_key,
+                    messages=messages,
+                    drop_params=True,
+                    temperature=0,
+                )
+            except Exception as fallback_err:
+                last_error = fallback_err
+                messages.append(
+                    {
+                        "role": "assistant",
+                        "content": f"Both Z.ai and oMLX failed: {fallback_err}",
+                    }
+                )
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": (
+                            f"That did not parse / validate: {err}. "
+                            "Return ONLY the corrected raw JSON object."
+                        ),
+                    }
+                )
+                continue
+            break
+        else:
+            break
         content = response.choices[0].message.content or ""
         try:
             return model_cls.model_validate(_extract_json(content))

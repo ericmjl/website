@@ -9,6 +9,8 @@ Usage:
     uv run linkedin_post.py <blog_slug>
 """
 
+import json
+import os
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -18,6 +20,21 @@ from llamabot.prompt_manager import prompt
 from pydantic import BaseModel, Field, model_validator
 from rich.console import Console
 from rich.panel import Panel
+
+# Default to oMLX local server if OPENAI_API_BASE not set
+if "OPENAI_API_BASE" not in os.environ:
+    os.environ["OPENAI_API_BASE"] = "http://localhost:8426/v1"
+
+
+def _get_omlx_api_key() -> str:
+    """Read oMLX API key from its settings file."""
+    omlx_config = Path.home() / ".omlx" / "settings.json"
+    if omlx_config.exists():
+        with open(omlx_config) as f:
+            cfg = json.load(f)
+        return cfg.get("auth", {}).get("api_key", "")
+    return ""
+
 
 console = Console()
 
@@ -201,8 +218,37 @@ def main():
 
     console.print(f"[blue]Title:[/blue] {post['title']}")
     console.print("[blue]Generating LinkedIn post...[/blue]")
-    bot = StructuredBot(sysprompt(), model="gpt-4.1", pydantic_model=LinkedInPost)
-    social_post = bot(compose_post(post["body"], post["title"]))
+    # Try GLM-5.2 first (Z.ai), fall back to oMLX Qwen 3.6
+    try:
+        bot = StructuredBot(
+            sysprompt(), model="anthropic/glm-5.2", pydantic_model=LinkedInPost
+        )
+        social_post = bot(compose_post(post["body"], post["title"]))
+    except Exception:
+        console.print(
+            "[yellow]GLM-5.2 unavailable, falling back to oMLX Qwen 3.6...[/yellow]"
+        )
+        omlx_key = _get_omlx_api_key()
+        saved_key = os.environ.get("OPENAI_API_KEY")
+        saved_base = os.environ.get("OPENAI_API_BASE")
+        os.environ["OPENAI_API_KEY"] = omlx_key
+        os.environ["OPENAI_API_BASE"] = "http://localhost:8426/v1"
+        try:
+            bot = StructuredBot(
+                sysprompt(),
+                model="openai/Qwen3.6-35B-A3B-8bit",
+                pydantic_model=LinkedInPost,
+            )
+            social_post = bot(compose_post(post["body"], post["title"]))
+        finally:
+            if saved_key is not None:
+                os.environ["OPENAI_API_KEY"] = saved_key
+            elif "OPENAI_API_KEY" in os.environ:
+                del os.environ["OPENAI_API_KEY"]
+            if saved_base is not None:
+                os.environ["OPENAI_API_BASE"] = saved_base
+            elif "OPENAI_API_BASE" in os.environ:
+                del os.environ["OPENAI_API_BASE"]
     content = social_post.format_post()
 
     console.print(Panel(content, title="LinkedIn Post", border_style="green"))
