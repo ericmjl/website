@@ -228,7 +228,8 @@
       class="feedback-input"
       placeholder="e.g., Make it more engaging, add a stronger hook, focus on specific benefits, etc."
       required></textarea>
-    <input type="hidden" name="blog_url" value="{{ blog_url }}">
+    <input type="hidden" name="base_url" value="{{ base_url }}">
+    <input type="hidden" name="blog_path" value="{{ blog_path }}">
     <input type="hidden" name="original_content" value="{{ content }}">
     <button type="submit" class="feedback-btn" id="feedback-submit">Generate Revision</button>
   </form>

@@ -37,7 +37,7 @@ from .prompts import (
     compose_summary,
     compose_tags,
 )
-from .scraper import get_latest_blog_posts, get_post_body
+from .scraper import build_blog_url, get_latest_blog_posts, get_post_body
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="apis/blogbot/static"), name="static")
@@ -268,8 +268,16 @@ async def get_generated_banner(banner_id: str) -> Response:
 
 @app.post("/generate/{post_type}", response_class=HTMLResponse)
 async def generate_post(
-    request: Request, post_type: str, blog_url: Annotated[str, Form()]
+    request: Request,
+    post_type: str,
+    blog_path: Annotated[str, Form()],
+    base_url: Annotated[str, Form()],
 ):
+    # Construct the canonical URL from the *selected* base_url + the stable
+    # relative path. This is the single source of truth for the URL embedded in
+    # generated posts, so the output honors the user's base_url choice even if
+    # the post-list htmx swap was stale or racy.
+    blog_url = build_blog_url(base_url, blog_path)
     _, body = get_post_body(blog_url)
     title_variants = None  # Initialize for non-Substack posts
 
@@ -330,6 +338,8 @@ async def generate_post(
         "content": content,
         "post_type": post_type,
         "blog_url": blog_url,
+        "base_url": base_url,
+        "blog_path": blog_path,
     }
     # Add title variants for Substack posts
     if post_type == "substack":
@@ -414,11 +424,13 @@ async def search(search_term: Annotated[str, Form()]):
 async def iterate_post(
     request: Request,
     post_type: str,
-    blog_url: Annotated[str, Form()],
+    blog_path: Annotated[str, Form()],
+    base_url: Annotated[str, Form()],
     original_content: Annotated[str, Form()],
     feedback: Annotated[str, Form()],
 ):
     """Iterate on a social media post based on user feedback."""
+    blog_url = build_blog_url(base_url, blog_path)
     _, body = get_post_body(blog_url)
 
     # Get the appropriate model based on post type
@@ -440,6 +452,8 @@ async def iterate_post(
                 "content": "Invalid post type",
                 "post_type": post_type,
                 "blog_url": blog_url,
+                "base_url": base_url,
+                "blog_path": blog_path,
             },
         )
 
@@ -480,6 +494,8 @@ async def iterate_post(
         "content": content,
         "post_type": post_type,
         "blog_url": blog_url,
+        "base_url": base_url,
+        "blog_path": blog_path,
     }
     # Add title variants for Substack posts
     if post_type == "substack" and title_variants:

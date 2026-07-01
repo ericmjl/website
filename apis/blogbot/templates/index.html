@@ -23,19 +23,19 @@
                 </div>
                 <div id="blog_post_container" class="mb-3">
                     <label for="blog_post" class="form-label">Blog Post</label>
-                    <select id="blog_post" name="blog_url" class="form-select">
+                    <select id="blog_post" name="blog_path" class="form-select">
                         {% include "post_select.html" %}
                     </select>
                 </div>
                 <div class="mb-3">
-                    <button class="btn btn-primary" hx-post="/generate/linkedin" hx-target="#result" hx-include="#blog_post" hx-indicator="#spinner">LinkedIn</button>
-                    <button class="btn btn-primary" hx-post="/generate/bluesky" hx-target="#result" hx-include="#blog_post" hx-indicator="#spinner">BlueSky</button>
-                    <button class="btn btn-primary" hx-post="/generate/substack" hx-target="#result" hx-include="#blog_post" hx-indicator="#spinner">Substack</button>
+                    <button class="btn btn-primary" hx-post="/generate/linkedin" hx-target="#result" hx-include="#blog_post,#base_url" hx-indicator="#spinner">LinkedIn</button>
+                    <button class="btn btn-primary" hx-post="/generate/bluesky" hx-target="#result" hx-include="#blog_post,#base_url" hx-indicator="#spinner">BlueSky</button>
+                    <button class="btn btn-primary" hx-post="/generate/substack" hx-target="#result" hx-include="#blog_post,#base_url" hx-indicator="#spinner">Substack</button>
                 </div>
                 <div class="mb-3">
-                    <button class="btn btn-primary" hx-post="/generate/summary" hx-target="#result" hx-include="#blog_post" hx-indicator="#spinner">Summary</button>
-                    <button class="btn btn-primary" hx-post="/generate/tags" hx-target="#result" hx-include="#blog_post" hx-indicator="#spinner">Tags</button>
-                    <button class="btn btn-primary" hx-post="/generate/banner" hx-target="#result" hx-include="#blog_post" hx-indicator="#spinner">Banner</button>
+                    <button class="btn btn-primary" hx-post="/generate/summary" hx-target="#result" hx-include="#blog_post,#base_url" hx-indicator="#spinner">Summary</button>
+                    <button class="btn btn-primary" hx-post="/generate/tags" hx-target="#result" hx-include="#blog_post,#base_url" hx-indicator="#spinner">Tags</button>
+                    <button class="btn btn-primary" hx-post="/generate/banner" hx-target="#result" hx-include="#blog_post,#base_url" hx-indicator="#spinner">Banner</button>
                 </div>
                 <div id="spinner" class="htmx-indicator">
                     <div class="spinner"></div>

@@ -1,5 +1,5 @@
 <label for="blog_post" class="form-label">Blog Post</label>
-<select id="blog_post" name="blog_url" class="form-select">
+<select id="blog_post" name="blog_path" class="form-select">
     {% for url, title in latest_posts.items() %}
         <option value="{{ url }}">{{ title }}</option>
     {% endfor %}
