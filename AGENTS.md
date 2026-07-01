@@ -193,6 +193,18 @@ When generating text, avoid the following categories of wording, structures, and
 - Example: for a post in `content/blog/exploratory-data-analysis-isnt-open-ended/` with `pub_date: 2024-01-28`, the link is `/blog/2024/1/28/exploratory-data-analysis-isnt-open-ended/`
 - To get the correct URL for a post: read its `contents.lr` for `pub_date`, use the folder name as the slug; format as YYYY/M/d (e.g. 2024-01-28 → 2024/1/28)
 
+### PR Titles for Blog Posts
+
+- PR titles for blog post drafts **must include the publication date** in
+  `[YYYY-MM-DD]` format at the end of the title.
+- Format: `<type>(blog): <Title> [YYYY-MM-DD]` (e.g.
+  `blog: add Git worktrees for beginners [2026-06-15]`).
+- Read the `pub_date` field from the post's `contents.lr` to fill this in.
+- If the `pub_date` changes (rescheduling), the PR title **must be updated**
+  to match the new date. Use `gh pr edit <number> --title "..."`.
+- This lets you identify which posts are scheduled for which day at a glance
+  from the PR list.
+
 ## Blog Post Images (Raster)
 
 - Store **inline** images in the **same directory** as that post’s `contents.lr`, under `content/blog/<slug>/`.
