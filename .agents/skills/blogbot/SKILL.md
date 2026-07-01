@@ -22,7 +22,7 @@ uv run .agents/skills/blogbot/scripts/linkedin_post.py <blog_slug>
 uv run .agents/skills/blogbot/scripts/bluesky_post.py <blog_slug>
 ```
 
-**Substack Post** - Generates a Substack post with title variants for A/B testing:
+**Substack Post** - Generates a Substack post (single title, no A/B variants):
 ```bash
 uv run .agents/skills/blogbot/scripts/substack_post.py <blog_slug>
 ```
