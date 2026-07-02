@@ -1,0 +1,193 @@
+title: Ollama, vLLM, and SGLang on Modal
+---
+author: Eric J. Ma
+---
+body:
+
+I had Qwen3.6 running on Ollama, hosted on Modal, and it worked. The model answered questions, the endpoint stayed up, and I wired it into my tools. Then I tried to use it for real work, and the cold starts drove me up the wall.
+
+Every time the container scaled to zero and I sent a fresh request, I waited. A minute, sometimes two, watching the spinner. The model was right there in the volume. The GPU was right there, billed by the second. And I was staring at a loading bar because Ollama had to boot its server, open the weight files, and load 17 GB of GGUF into VRAM before it could generate a single token.
+
+I wanted to know: would a different inference engine fix this? I had heard that vLLM, paired with Modal's GPU snapshots, could restore a warm model from a memory snapshot in seconds instead of reloading from disk. So I ran the experiment. Same model, same GPU, same 4-bit quantization level, same hourly cost. The only variable was the engine.
+
+The result surprised me. vLLM won on cold starts. It won on everything.
+
+## The setup, held constant
+
+To make this a fair fight, I held everything constant except the engine.
+
+The model is Qwen3.6-27B, a 27-billion-parameter dense model with a hybrid architecture (Gated DeltaNet layers mixed with standard attention). Both deployments serve the same model at 4-bit precision:
+
+- **Ollama**: `qwen3.6:27b` in GGUF format, Q4_K_M quantization, 17 GB on disk
+- **vLLM**: `cyankiwi/Qwen3.6-27B-AWQ-INT4` in safetensors, AWQ INT4 quantization, 19 GB on disk
+
+Both run on a single Nvidia L40S with 48 GB of VRAM. At Modal's pricing, that is $0.000542 per second, or about $1.95 per hour, for either deployment. Same GPU, same rate.
+
+Both expose an OpenAI-compatible `/v1/chat/completions` endpoint. I wrote one benchmark script that hits both URLs with the same prompt, the same `max_tokens`, the same sampling parameters, and measures time to first token, decode throughput, and total latency. Identical workload, identical hardware, different engine.
+
+## Warm performance, where vLLM pulls ahead
+
+Let us start with the easy case: the container is already running, the model is in VRAM, and I send a request. This is steady-state throughput, the number that matters for sustained use.
+
+I ran each engine six times, generating 300 tokens, and recorded every data point. The results were remarkably consistent for vLLM and surprisingly variable for Ollama.
+
+| Metric | Ollama (Q4_K_M) | vLLM (AWQ-INT4) | Difference |
+|--------|:---:|:---:|:---:|
+| Time to first token | 0.85 ± 0.43s | 0.32 ± 0.04s | 62% lower, 11x less variance |
+| Tokens per second | 24.3 ± 2.1 | 39.4 ± 0.0 | 62% faster, rock-steady |
+| Total for 300 tokens | 11.4 ± 0.7s | 7.9 ± 0.0s | 31% faster |
+
+![Benchmark results: six runs per engine, showing TTFT, throughput, and total latency. Individual data points plotted with median bars.](./benchmark-results.webp)
+
+vLLM generates 60% more tokens per second than Ollama on the same GPU. That is a large gap for the same model at the same precision on the same hardware. But the more striking difference is the variance. vLLM's throughput is rock-steady: 39.4 tokens per second on every single run, with a standard deviation of essentially zero. Ollama bounces between 22 and 27 tokens per second run to run. Its time to first token swings from half a second to 1.6 seconds. vLLM always answers in about a third of a second.
+
+For interactive use, where you feel every hiccup, that consistency matters as much as the raw speed.
+
+The reason comes down to CUDA graphs. vLLM, when allowed to capture CUDA graphs during startup, batches kernel launches and eliminates Python-level overhead between decode steps. Ollama's llama.cpp backend is well-optimized, but it does not use CUDA graph capture. For this hybrid DeltaNet architecture, where every decode step runs a mix of Triton linear-attention kernels and standard attention kernels, the graph capture matters even more. Each step touches many small kernels, and launching them individually adds up.
+
+I learned this the hard way. My first vLLM deploy used `--enforce-eager`, which disables CUDA graphs. vLLM ran at 12 tokens per second. Slower than Ollama. I removed the flag, vLLM captured its graphs during warmup, and throughput jumped to 44. That one flag was the difference between "why did I bother" and "this is clearly better."
+
+## Cold starts, the whole reason I started
+
+Now the interesting part. A warm container is easy. The question I actually cared about was: how long do I wait when the container has scaled to zero and I send the first request?
+
+Ollama has no snapshot mechanism that works reliably on Modal. I tried Modal's memory snapshots with Ollama early on, and the restored container could not find its model. Ollama runs as a Go server that spawns separate runner subprocesses to hold the GPU context, and those subprocesses do not survive a memory snapshot. The restored server wakes up, tries to talk to a runner that no longer exists, and fails. So every Ollama cold start is a full reload: boot the server, open the GGUF files from the volume, stream 17 GB into VRAM, run a warmup generation.
+
+vLLM is a different story. It runs as a single Python process, and Modal's GPU snapshot can capture its full state: the loaded weights, the compiled CUDA graphs, the KV cache memory pool, even the JIT-compiled Triton kernels. On cold start, Modal restores the snapshot and vLLM picks up where it left off.
+
+The cold-start numbers, measured as time from request to first token with the container scaled to zero:
+
+| Engine | Cold-start time to first token |
+|--------|:---:|
+| Ollama (full reload) | 78s |
+| vLLM (GPU snapshot restore) | 57s |
+
+vLLM cold starts 27% faster. The 57 seconds is dominated by Modal restoring 19 GB of GPU memory state from the snapshot. That is a bulk memory copy, bounded by hardware bandwidth, and it is still faster than Ollama reading 17 GB from a network filesystem and initializing from scratch.
+
+I dug into whether 57 seconds could be pushed lower. The honest answer: probably not by much, for a model this size on Modal.
+
+Modal's documentation is explicit about the limitation. Snapshots help you skip work that is not bottlenecked by storage bandwidth, like library initialization and JIT compilation. But they do not speed up moving weight bytes. At Modal's typical volume bandwidth of one to two GB per second, 19 GB of weights alone takes 10 to 15 seconds before any GPU state restore. Published benchmarks from other developers confirm this floor: a 27B model on an A100 with snapshots and sleep mode gets about 70 seconds cold start. Our 57 seconds on an L40S is actually better than that reference point.
+
+The only way to get sub-10 second cold starts is to keep a container permanently warm with `min_containers=1`. That trades cost (you pay for idle GPU time) for latency. For bursty workloads where you want scale-to-zero, the snapshot restore time is the price of admission.
+
+Getting the snapshot to work took three rounds of debugging, and each round taught me something specific.
+
+## Three bugs between me and a working snapshot
+
+The snapshot did not work on the first try. Or the second. Each failure was a distinct problem with a distinct fix, and I think they are worth walking through because they say something general about deploying inference engines on serverless GPU infrastructure.
+
+### Out of memory during profiling
+
+My first vLLM deploy crashed with a CUDA out-of-memory error. The model loaded fine, but when vLLM tried to profile available memory for the KV cache, it ran out. The GPU showed 42 GB in use with only 2 GB free, on a 48 GB card, before a single token of KV cache was allocated.
+
+Two things were eating memory. First, I had set `--max-num-batched-tokens 131072`, which means vLLM's profiling forward pass runs a dummy batch of 131,072 tokens through the model. For a 27-billion-parameter model, the activation tensors for a batch that size are enormous. Second, vLLM was loading the vision encoder (Qwen3.6 is a multimodal model), which I did not need for text-only inference.
+
+The fix was `--language-model-only` to skip the vision encoder, and reducing `--max-num-batched-tokens` to 8192. The model's hybrid architecture helps here: only 16 of the 64 layers use full attention with growing KV cache. The other 48 layers are linear-attention layers with constant memory state. So even with a smaller batched-tokens budget, the effective context capacity is large. After the fix, vLLM reported 21.85 GiB of available KV cache, enough for 332,000 tokens.
+
+### Enforce-eager, the throughput killer
+
+The existing vLLM deployment I was adapting from used `--enforce-eager`, a flag that disables `torch.compile` and CUDA graph capture. It makes startup faster and uses less memory, which is why it is common in quick-start examples. But it wrecks decode throughput.
+
+With `--enforce-eager`: 12 tokens per second. Without it: 44 tokens per second. Nearly four times faster. The CUDA graph capture happens during the snapshot build, so it costs nothing at cold-start time. The snapshot preserves the captured graphs. Every restored container inherits them for free.
+
+If you are deploying vLLM on Modal with snapshots, remove `--enforce-eager`. Let the graphs compile during the snapshot build and ride them forever.
+
+### The torch compile cache that broke the snapshot restore
+
+The snapshot was building successfully, but the restore kept failing with a cryptic error: `vfs.CompleteRestore() failed: failed to complete restore for filesystem type "9p": failed to walk "torch_compile_cache/torch_aot_compile/..."`. Modal's snapshot restore was trying to walk a file on the vLLM cache volume that did not exist in the restored state.
+
+The problem was a mismatch between the memory snapshot and the volume. The memory snapshot captured the vLLM process with references to torch compile cache files on the `vllm-cache` volume. On restore, Modal re-mounted the volume from its latest committed state, and the cache files the process expected were gone. The 9P filesystem walk failed, the restore aborted, and Modal fell back to a full container init. Cold start was 106 seconds instead of 57.
+
+The fix was to remove the `vllm-cache` volume entirely and redirect `TORCHINDUCTOR_CACHE_DIR` to `/tmp`. The compiled artifacts live in the process memory, captured by the snapshot. The on-disk cache is only for persistence across cold starts, and with snapshots, you do not need that persistence. The snapshot is the persistence. After removing the volume, cold start dropped to 57 seconds.
+
+I should note one thing I discovered later: the reason the vLLM sleep endpoint returned a 404 in my first attempt was that I had dropped the `VLLM_SERVER_DEV_MODE=1` environment variable when adapting the deployment from an existing repo. That variable exposes the `/sleep` and `/wake_up` HTTP endpoints. With it set, the proper sleep-then-snapshot pattern (offload weights to CPU before snapshotting, then reload on wake) would work, making snapshots more reliable. For this model size, it would not dramatically change the cold-start number, which is bounded by weight-restore bandwidth. But for correctness and smaller models, it matters.
+
+## What I actually configured
+
+The working vLLM deployment is a single file, `vllm_endpoint.py`, in my `ollama-on-modal` repo. The core of it is straightforward.
+
+The vLLM serve command:
+
+```python
+cmd = [
+    "vllm", "serve", MODEL_NAME,
+    "--served-model-name", "qwen3.6-27b",
+    "--host", "0.0.0.0",
+    "--port", str(VLLM_PORT),
+    "--tensor-parallel-size", "1",
+    "--enable-sleep-mode",
+    "--max-num-seqs", "8",
+    "--max-model-len", "32768",
+    "--max-num-batched-tokens", "8192",
+    "--gpu-memory-utilization", "0.90",
+    "--dtype", "auto",
+    "--reasoning-parser", "qwen3",
+    "--language-model-only",
+]
+```
+
+And the Modal class decorator that makes the snapshot work:
+
+```python
+@app.cls(
+    image=vllm_image,
+    gpu="L40S",
+    scaledown_window=120,
+    timeout=20 * MINUTES,
+    volumes={"/root/.cache/huggingface": hf_cache_vol},
+    enable_memory_snapshot=True,
+    experimental_options={"enable_gpu_snapshot": True},
+)
+```
+
+The `enable_memory_snapshot` plus `enable_gpu_snapshot` pair is what lets Modal capture and restore the full GPU state. The snap hook starts vLLM, runs three warmup requests to trigger CUDA graph capture and Triton kernel JIT compilation, then Modal snapshots the warm process. On restore, a separate hook confirms the server is responding. No weight reloading, no graph recompilation.
+
+The `scaledown_window` is set to 120 seconds. After two minutes of inactivity, the container scales to zero. The next request triggers a snapshot restore, which takes about 57 seconds. For my usage pattern, that is the right tradeoff between cost (no idle GPU billing) and latency (under a minute to first token from cold).
+
+## Wiring it into the tools I actually use
+
+Once vLLM was deployed and benchmarked, I pointed two things at it.
+
+My opencode configuration got a new provider entry pointing at the vLLM endpoint's `/v1` base URL. I select `vllm-qwen36/qwen3.6-27b` and get 44 tokens per second instead of 28.
+
+The deep research agent tutorial I am building with [Ben Batorsky](https://www.linkedin.com/in/benbatorsky) for SciPy 2026 also switched over. The tutorial uses llamabot, which wraps litellm, and the config is just three environment variables:
+
+```shell
+LLM_MODEL=openai/qwen3.6-27b
+TUTORIAL_LLM_BASE_URL=https://ericmjl--qwen36-vllm-service-vllmserver-serve.modal.run/v1
+TUTORIAL_LLM_API_KEY=vllm-no-auth
+```
+
+One snag: llamabot's `StructuredBot` does a client-side capability check and rejects model names it does not recognize, even when the server supports structured output fine. The fix was three lines in the tutorial's `llm.py` that call `litellm.register_model` to tell litellm the custom model supports `response_schema`. After that, both `SimpleBot` and `StructuredBot` work against the vLLM endpoint.
+
+## What I would do differently
+
+If I were starting from scratch, I would skip the Ollama-on-Modal step entirely. Ollama is wonderful for local, single-user inference on a laptop. Its one-command `ollama run` experience is unmatched for development and quick experiments. But for a serverless GPU deployment where cold starts matter, vLLM's snapshot compatibility is the deciding factor. Ollama's subprocess architecture fights the snapshot mechanism. vLLM's single-process design cooperates with it.
+
+The one thing Ollama has going for it in this comparison is simplicity. The deployment is fewer lines of code, the GGUF model format is one file, and the API is clean. If cold starts do not matter for your use case (say, you keep the container warm with a ping), Ollama is perfectly fine and easier to operate.
+
+But if you are paying for GPU by the second and you want the container to scale to zero between requests, the snapshot restore is the feature that makes that practical. And right now, only vLLM plays nice with it.
+
+I did not test SGLang in this round. I scaffolded a separate `sglang-on-modal` repo and deployed it, but SGLang's current release hits a dtype compatibility error with Qwen3.6's hybrid DeltaNet architecture. The model loads and CUDA graphs capture successfully, but inference crashes with a BFloat16 versus Float16 mismatch in the linear attention layers. vLLM 0.23.0 handles this architecture correctly. The SGLang repo is ready for when they ship a fix.
+
+For now, vLLM with CUDA graphs and GPU snapshots gives me 39 tokens per second warm and 57 seconds to first token cold, on a $1.95-per-hour L40S, and that is the deployment I am keeping.
+---
+pub_date: 2026-07-01
+---
+twitter_handle: ericmjl
+---
+summary: In this blog post, I compare Ollama, vLLM, and SGLang for serving Qwen3.6 on Modal's serverless GPUs. I benchmark warm throughput and cold-start time, then dig into the three bugs that stood between me and a working GPU snapshot for vLLM. vLLM won on everything: 39 tokens per second warm and 57 seconds to first token cold, versus Ollama's 24 tokens per second and 78-second cold starts. SGLang hit a dtype bug and could not run yet. Curious which inference engine to pick for serverless GPU serving?
+---
+tags:
+
+modal
+vllm
+ollama
+sglang
+gpu
+inference
+serverless
+llm
+benchmark
+cold-start
+---
