@@ -176,18 +176,18 @@ pub_date: 2026-07-01
 ---
 twitter_handle: ericmjl
 ---
-summary: In this blog post, I compare Ollama, vLLM, and SGLang for serving Qwen3.6 on Modal's serverless GPUs. I benchmark warm throughput and cold-start time, then dig into the three bugs that stood between me and a working GPU snapshot for vLLM. vLLM won on everything: 39 tokens per second warm and 57 seconds to first token cold, versus Ollama's 24 tokens per second and 78-second cold starts. SGLang hit a dtype bug and could not run yet. Curious which inference engine to pick for serverless GPU serving?
+summary: In this blog post, I share my experiments running Qwen3.6 on Modal with Ollama, vLLM, and SGLang. Frustrated by agonizing cold starts, I benchmarked the engines on identical hardware. Spoiler: vLLM blew Ollama out of the water. By leveraging Modal's GPU snapshots, vLLM not only generated 60% more tokens per second but also restored from a cold start significantly faster. I walk through the exact configuration, three stubborn bugs I had to fix to get snapshots working, and why vLLM's single-process design is the secret. SGLang hit a dtype bug and could not run yet. Have you ever fought with serverless GPU cold starts?
 ---
 tags:
 
-modal
 vllm
 ollama
-sglang
-gpu
+modal
+benchmarking
+deployment
 inference
-serverless
-llm
-benchmark
-cold-start
+snapshots
+latency
+performance
+qwen3.6
 ---
