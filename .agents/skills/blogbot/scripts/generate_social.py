@@ -22,14 +22,13 @@ Configuration (read from .env or the environment):
 """
 
 import json
-import os
 import re
 import sys
 from pathlib import Path
 from typing import List, Optional
 
+from _glm import generate_structured
 from dotenv import load_dotenv
-from litellm import completion
 from llamabot.prompt_manager import prompt
 from pydantic import BaseModel, Field, model_validator
 
@@ -80,10 +79,16 @@ def compose_bluesky_post(text, url):
     I usually like to open off with a question that the post answers.
     Ensure that there is a call to action to interact with the post after reading it,
     such as reposting, commenting, or sharing it with others.
-    Include hashtags inline with the BlueSky post.
-    Hashtags should be all lowercase.
+    Choose up to 2 lowercase hashtags and place them in the 'hashtags' field.
+    Do NOT also write hashtags inline in the body; they are appended
+    automatically from the field.
     DO NOT include the URL in your response - it will be added automatically at the end.
     Also ensure that it is written in first-person, humble, and inviting tone.
+
+    HARD LENGTH BUDGET: the JOINED text of strong_hook + clear_stance +
+    value_delivery + call_to_action + hashtags (everything EXCEPT the url)
+    must total 280 characters or fewer, spaces included. This is a hard cap.
+    If your draft is longer, cut words until it fits; aim for ~250.
     """
 
 
@@ -293,9 +298,14 @@ class BlueSkyPost(BaseModel):
         return self
 
     def format_post(self, with_url: bool = True) -> str:
-        post_content = f"{self.strong_hook} {self.clear_stance} {self.value_delivery}"
+        parts = [
+            _strip_inline_hashtags(self.strong_hook),
+            _strip_inline_hashtags(self.clear_stance),
+            _strip_inline_hashtags(self.value_delivery),
+        ]
         if self.call_to_action:
-            post_content += f" {self.call_to_action}"
+            parts.append(_strip_inline_hashtags(self.call_to_action))
+        post_content = " ".join(p for p in parts if p)
         if with_url:
             post_content += f" {self.url}"
         post_content += f" {' '.join(self.hashtags)}"
@@ -366,126 +376,48 @@ def build_public_url(pub_date: str, slug: str) -> str:
     return f"https://ericmjl.github.io/blog/{y}/{m.lstrip('0')}/{d.lstrip('0')}/{slug}/"
 
 
-# ---------------------------------------------------------------------------
-# GLM-backed structured generation (calls litellm directly)
-# ---------------------------------------------------------------------------
+# Stops before trailing sentence punctuation so "URL." keeps its period.
+_BLOG_URL_RE = re.compile(r"https?://\S*github\.io/\S*?(?=[\s.,;:!?)\]\}]|$)")
 
 
-_FENCE_RE = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL)
+def enforce_blog_url(text: str, canonical_url: str) -> str:
+    """Guarantee the LinkedIn body carries the canonical blog URL.
 
-
-def _extract_json(text: str) -> dict:
-    """Pull a JSON object out of a model response, tolerating code fences."""
-    match = _FENCE_RE.search(text)
-    candidate = match.group(1) if match else text
-    start, end = candidate.find("{"), candidate.rfind("}")
-    if start != -1 and end != -1 and end > start:
-        candidate = candidate[start : end + 1]
-    return json.loads(candidate)
-
-
-def generate_structured(
-    user_prompt: str,
-    model_cls: type[BaseModel],
-    *,
-    num_attempts: int = 8,
-) -> BaseModel:
-    """Generate a pydantic-validated object from GLM via litellm.
-
-    The JSON schema is injected as plain text in the prompt (no
-    response_format / tool use, which the Z.ai coding-plan endpoint does not
-    handle for these custom models). Code fences are stripped from the reply
-    and the result is validated against ``model_cls``, retrying on failure.
+    GLM sometimes transcribes the URL with a typo (e.g. ericmzl vs ericmjl).
+    This guard normalizes any blog (github.io) URL the model wrote to the
+    canonical one IN PLACE (preserving surrounding prose), and appends the
+    canonical URL if the model omitted it. Non-github.io URLs (e.g. a
+    collaborator's LinkedIn) are left intact. Prompts are suggestions; this is
+    the guarantee.
     """
-    api_key = os.environ.get("ZAI_API_KEY")
-    api_base = os.environ.get("BLOGBOT_API_BASE", "https://api.z.ai/api/anthropic")
-    model = os.environ.get("BLOGBOT_MODEL", "anthropic/glm-5.2")
+    normalized = _BLOG_URL_RE.sub(canonical_url, text)
+    if canonical_url not in normalized:
+        normalized = f"{normalized.rstrip()}\n\n{canonical_url}"
+    return normalized
 
-    # Fallback to oMLX if Z.ai is unavailable
-    fallback_api_key = os.environ.get("BLOGBOT_API_KEY")
-    if not fallback_api_key:
-        omlx_config = Path.home() / ".omlx" / "settings.json"
-        if omlx_config.exists():
-            import json
 
-            with open(omlx_config) as f:
-                cfg = json.load(f)
-            fallback_api_key = cfg.get("auth", {}).get("api_key", "")
-    fallback_api_base = "http://localhost:8426/v1"
-    fallback_model = "openai/Qwen3.6-35B-A3B-8bit"
+_HASHTAG_RE = re.compile(r"#[A-Za-z0-9_]+")
 
-    schema = json.dumps(model_cls.model_json_schema(), ensure_ascii=False)
-    system_text = (
-        f"{socialbot_sysprompt().content}\n\n"
-        "Return ONLY a raw JSON object (no markdown, no code fences, no prose) "
-        f"matching this JSON schema:\n{schema}"
-    )
-    messages = [
-        {"role": "system", "content": system_text},
-        {"role": "user", "content": user_prompt},
-    ]
 
-    last_error: Exception | None = None
-    for _ in range(num_attempts):
-        try:
-            response = completion(
-                model=model,
-                api_base=api_base,
-                api_key=api_key,
-                messages=messages,
-                drop_params=True,
-                temperature=0,
-            )
-        except Exception as err:
-            # Fallback to oMLX on Z.ai failure
-            try:
-                response = completion(
-                    model=fallback_model,
-                    api_base=fallback_api_base,
-                    api_key=fallback_api_key,
-                    messages=messages,
-                    drop_params=True,
-                    temperature=0,
-                )
-            except Exception as fallback_err:
-                last_error = fallback_err
-                messages.append(
-                    {
-                        "role": "assistant",
-                        "content": f"Both Z.ai and oMLX failed: {fallback_err}",
-                    }
-                )
-                messages.append(
-                    {
-                        "role": "user",
-                        "content": (
-                            f"That did not parse / validate: {err}. "
-                            "Return ONLY the corrected raw JSON object."
-                        ),
-                    }
-                )
-                continue
-            break
-        else:
-            break
-        content = response.choices[0].message.content or ""
-        try:
-            return model_cls.model_validate(_extract_json(content))
-        except Exception as err:
-            last_error = err
-            messages.append({"role": "assistant", "content": content})
-            messages.append(
-                {
-                    "role": "user",
-                    "content": (
-                        f"That did not parse / validate: {err}. "
-                        "Return ONLY the corrected raw JSON object."
-                    ),
-                }
-            )
-    raise RuntimeError(
-        f"Failed to produce a valid {model_cls.__name__} after {num_attempts} attempts: {last_error}"
-    )
+def _strip_inline_hashtags(s: str) -> str:
+    """Remove inline #hashtags from a BlueSky body field so they don't
+    duplicate the `hashtags` field that format_post appends. The BlueSky
+    prompt used to ask for inline hashtags while the schema also appended
+    them, producing '#llm #mlops ... #llm #mlops'. Collapses leftover
+    double spaces and returns '' if the field was only hashtags."""
+    cleaned = _HASHTAG_RE.sub("", s)
+    cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+    return cleaned
+
+
+# ---------------------------------------------------------------------------
+# GLM-backed structured generation: delegated to the shared _glm helper
+# (scripts/_glm.py). The previous inline generate_structured had a control-flow
+# bug (unconditional `break` at the try/else and after the oMLX fallback exited
+# the loop BEFORE the validate/return lines, so the success path was unreachable
+# and the function always raised RuntimeError). _glm.generate_structured fixes
+# the flow and is shared with summary.py / tags.py.
+# ---------------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------------
@@ -509,12 +441,16 @@ def main():
     body = post["body"]
 
     linkedin_post = generate_structured(
-        compose_linkedin_post(body, url).content, LinkedInPost
+        compose_linkedin_post(body, url).content,
+        LinkedInPost,
+        socialbot_sysprompt().content,
     )
-    linkedin_text = linkedin_post.format_post()
+    linkedin_text = enforce_blog_url(linkedin_post.format_post(), url)
 
     bluesky_post = generate_structured(
-        compose_bluesky_post(body, url).content, BlueSkyPost
+        compose_bluesky_post(body, url).content,
+        BlueSkyPost,
+        socialbot_sysprompt().content,
     )
     bluesky_text = bluesky_post.format_post()
 

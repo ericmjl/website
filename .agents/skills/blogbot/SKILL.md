@@ -34,6 +34,20 @@ uv run .agents/skills/blogbot/scripts/substack_post.py <blog_slug>
 uv run .agents/skills/blogbot/scripts/summary.py <blog_slug>
 ```
 
+> **Scrub the output before writing it into `contents.lr`.** `summary.py`'s
+> prompt historically mandated a `[URL]` placeholder and a "read on"
+> enticement (both now removed from the script). If you ever regenerate a
+> summary and see either, strip them:
+> - **No `[URL]` placeholder** — the `contents.lr` `summary:` field is the
+>   post's own meta-description (shown on the blog index / for SEO), so it
+>   is self-contained with no link to insert.
+> - **No "Read on!" / "Read on to find out!" / "read more" tail** — the HTML
+>   template (`templates/macros/blog.html`, lines ~238/244) already renders
+>   a `Read on...` / `(read more)` link immediately after the summary. Any
+>   such tail duplicates it. End the summary at the question instead.
+>
+> This mirrors the em-dash scrubbing rule (see AGENTS.md: no em dashes).
+
 **Tags** - Generates 10 tags (max 2 words each, 7+ one-word tags):
 ```bash
 uv run .agents/skills/blogbot/scripts/tags.py <blog_slug>
