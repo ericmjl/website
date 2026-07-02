@@ -46,7 +46,8 @@ function discoverCompositions(): Composition[] {
 // Extracts STEP_BOUNDARIES from the .tsx source using regex
 function parseStepBoundaries(compositionId: string): any[] {
   // Try to find the video source file
-  const PascalName = compositionId.charAt(0).toUpperCase() + compositionId.slice(1);
+  // Convert kebab-case to PascalCase: "agents-amplify" -> "AgentsAmplify"
+  const PascalName = compositionId.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("");
   const sourcePath = join(REMOTION_DIR, "src", `${PascalName}Video.tsx`);
   if (!existsSync(sourcePath)) return [];
 
@@ -105,7 +106,7 @@ app.post("/api/fix", (req, res) => {
   if (!compositionId || !feedback) return res.status(400).json({ error: "Missing compositionId or feedback" });
 
   const jobId = `fix-${Date.now()}`;
-  const PascalName = compositionId.charAt(0).toUpperCase() + compositionId.slice(1);
+  const PascalName = compositionId.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("");
   const job: FixJob = { id: jobId, status: "running", log: "", compositionId };
   jobs.set(jobId, job);
 
