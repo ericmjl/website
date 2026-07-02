@@ -1,23 +1,37 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["llamabot", "pydantic", "rich"]
+# dependencies = ["llamabot", "litellm", "pydantic", "python-dotenv", "rich"]
 # ///
+# ruff: noqa: E501
 """
-Generate a summary from a blog post slug.
+Generate a summary from a blog post slug, routed through Z.ai's GLM-5.2
+(the same model used by generate_social.py), with an oMLX fallback.
+
+llamabot's StructuredBot is not used because it rejects glm-5.2; instead this
+calls litellm.completion() directly via the shared _glm helper.
 
 Usage:
     uv run summary.py <blog_slug>
+
+Configuration (read from .env or the environment):
+    ZAI_API_KEY       (required for GLM) your Z.ai API key (coding plan)
+    BLOGBOT_MODEL     (optional) litellm model string, defaults to anthropic/glm-5.2
+    BLOGBOT_API_BASE  (optional) defaults to https://api.z.ai/api/anthropic
+                      (the Anthropic-compatible coding-plan endpoint)
+    BLOGBOT_API_KEY   (optional) oMLX fallback key; else read from ~/.omlx/settings.json
 """
 
 import sys
 from pathlib import Path
 
-from llamabot import StructuredBot
+from _glm import generate_structured
+from dotenv import load_dotenv
 from llamabot.prompt_manager import prompt
 from pydantic import BaseModel, Field
 from rich.console import Console
 from rich.panel import Panel
 
+load_dotenv()
 console = Console()
 
 
@@ -27,15 +41,20 @@ class Summary(BaseModel):
 
 @prompt(role="system")
 def sysprompt():
-    """You are an expert blogger and social media manager.
+    """You are an expert blogger.
 
-    You are given a blog post for which to write a social media post.
+    You are given a blog post for which to write its summary field
+    (the meta-description shown on the blog index and used for SEO).
 
     Notes:
 
     - First person, humble, and inviting.
     - Keep it short and concise.
-    - Include a placeholder [URL] where the blog post URL should go.
+    - Do NOT include a [URL] placeholder: this summary lives on the post
+      itself, so there is no link to insert.
+    - Do NOT end with "Read on!" / "read more" / similar: the HTML template
+      (templates/macros/blog.html) already appends a "Read on..." link after
+      the summary, so those would be duplicated. End at the question instead.
     """
 
 
@@ -48,7 +67,9 @@ def compose_post(text, title):
     I need a summary of the post in 100 words or less.
     Write in first person.
     Start with, "In this blog post".
-    End with a question that entices the reader to read on.
+    End with an engaging question. Do NOT append "Read on!" / "read more"
+    or similar; the HTML template already renders the read-on link after
+    the summary, so it would be duplicated.
     """
 
 
@@ -154,10 +175,13 @@ def main():
 
     console.print(f"[blue]Title:[/blue] {post['title']}")
     console.print("[blue]Generating summary...[/blue]")
-    bot = StructuredBot(sysprompt(), model="gpt-4.1", pydantic_model=Summary)
-    social_post = bot(compose_post(post["body"], post["title"]))
+    summary = generate_structured(
+        compose_post(post["body"], post["title"]).content,
+        Summary,
+        sysprompt().content,
+    )
 
-    console.print(Panel(social_post.content, title="Summary", border_style="green"))
+    console.print(Panel(summary.content, title="Summary", border_style="green"))
 
 
 if __name__ == "__main__":

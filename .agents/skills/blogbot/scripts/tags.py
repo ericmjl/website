@@ -1,23 +1,37 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["llamabot", "pydantic", "rich"]
+# dependencies = ["llamabot", "litellm", "pydantic", "python-dotenv", "rich"]
 # ///
+# ruff: noqa: E501
 """
-Generate tags from a blog post slug.
+Generate tags from a blog post slug, routed through Z.ai's GLM-5.2
+(the same model used by generate_social.py / summary.py), with an oMLX fallback.
+
+llamabot's StructuredBot is not used because it rejects glm-5.2; instead this
+calls litellm.completion() directly via the shared _glm helper.
 
 Usage:
     uv run tags.py <blog_slug>
+
+Configuration (read from .env or the environment):
+    ZAI_API_KEY       (required for GLM) your Z.ai API key (coding plan)
+    BLOGBOT_MODEL     (optional) litellm model string, defaults to anthropic/glm-5.2
+    BLOGBOT_API_BASE  (optional) defaults to https://api.z.ai/api/anthropic
+                      (the Anthropic-compatible coding-plan endpoint)
+    BLOGBOT_API_KEY   (optional) oMLX fallback key; else read from ~/.omlx/settings.json
 """
 
 import sys
 from pathlib import Path
 
-from llamabot import StructuredBot
+from _glm import generate_structured
+from dotenv import load_dotenv
 from llamabot.prompt_manager import prompt
 from pydantic import BaseModel, Field, model_validator
 from rich.console import Console
 from rich.panel import Panel
 
+load_dotenv()
 console = Console()
 
 
@@ -173,8 +187,9 @@ def main():
 
     console.print(f"[blue]Title:[/blue] {post['title']}")
     console.print("[blue]Generating tags...[/blue]")
-    bot = StructuredBot(sysprompt(), model="gpt-4.1", pydantic_model=Tags)
-    tags = bot(compose_post(post["body"]))
+    tags = generate_structured(
+        compose_post(post["body"]).content, Tags, sysprompt().content
+    )
     content = "\n".join(tags.content)
 
     console.print(Panel(content, title="Tags", border_style="green"))
