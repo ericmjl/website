@@ -381,11 +381,11 @@ function Transcript({ words, currentIdx, onSeek }: {
   if (current.text) sentences.push(current);
 
   return (
-    <div ref={containerRef} style={{ lineHeight: 1.8, fontSize: 12 }}>
+    <div ref={containerRef} style={{ lineHeight: 1.6, fontSize: 13 }}>
       {sentences.map((s, si) => {
         const isActive = s.wordIndices.includes(currentIdx);
         return (
-          <span
+          <div
             key={si}
             onClick={() => onSeek(s.start)}
             style={{
@@ -393,12 +393,13 @@ function Transcript({ words, currentIdx, onSeek }: {
               color: isActive ? COLORS.primary : COLORS.textDim,
               background: isActive ? "rgba(98, 196, 255, 0.1)" : "transparent",
               borderRadius: 3,
-              padding: "1px 2px",
+              padding: "3px 6px",
+              marginBottom: 4,
             }}
             ref={isActive ? currentRef : undefined}
           >
-            {s.text.trim()}{" "}
-          </span>
+            {s.text.trim()}
+          </div>
         );
       })}
     </div>
