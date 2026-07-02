@@ -10,7 +10,7 @@ When I came back, the skill file for [Convex](https://www.convex.dev/) migration
 
 Nobody told it to do that. In another session, my coding agent, GLM-5.2 on OpenCode, hit the `internalMutation` wall during the backfill and solved the problem on its own; a background review process then extracted the lesson and patched the skill.
 
-Today I am releasing [`opencode-autolearn`](https://github.com/ericmjl/opencode-autolearn), the plugin that made that possible. It is open source, it runs on your machine, and after ten days of dogfooding across twenty-plus projects, it has logged 922 observations, spawned over 200 review sessions, and tracked 48 recurring patterns with reinforcement counts. My coding agent gets better every session, and I do _nothing_ extra to make that happen.
+[`opencode-autolearn`](https://github.com/ericmjl/opencode-autolearn) is the plugin that made that possible. It is open source and runs on your machine. I shipped the first version a few weeks back, and it has been compounding ever since. As I write this, across twenty-plus projects it has logged over a thousand observations, spawned nearly three thousand review sessions, and grown a store of fifty-plus skills. My coding agent gets better every session, and I do _nothing_ extra to make that happen.
 
 ## Agents that forget
 
@@ -35,7 +35,7 @@ So I asked OpenCode to build it.
 1. **Monitors conversations.** A JavaScript plugin hooks into OpenCode's event system. It counts turns, buffers messages (with secret redaction), and watches for idle periods and session exits.
 2. **Spawns review agents.** Every five assistant turns, or when the session goes idle, or when you close the terminal, the plugin spawns a detached subprocess that runs a review agent. The review agent receives the buffered conversation and an instruction sheet.
 3. **Extracts lessons.** The review agent reads the conversation looking for corrections ("don't do X"), preferences ("I prefer Y"), workarounds that worked, and recurring patterns. For each one it finds, it takes action.
-4. **Writes to durable stores.** The review agent uses a Python CLI to update three things: a persistent memory file (loaded into every future session), a user profile (communication and workflow preferences), and skills (created or patched based on observed patterns).
+4. **Writes to durable stores.** The review agent uses a Python CLI to update three things: a persistent memory store (loaded into every future session), a user profile (communication and workflow preferences), and skills (created or patched based on observed patterns).
 
 The architecture is deliberately split: a thin JavaScript plugin that only counts and buffers, and a Python CLI that does the data management. The plugin never blocks the main session. Reviews run in a detached subprocess that the plugin fires and forgets. If the review fails, the conversation is saved to a fallback file for debugging. The main session never knows the difference.
 
@@ -53,13 +53,17 @@ Making it automatic costs almost nothing. A handful of background subprocesses y
 
 The trigger itself is just an OpenCode plugin. It hooks into OpenCode's event system, counts turns, and fires reviews. No fork, no separate daemon, no modified binary. You install the plugin and your existing OpenCode setup gains the feedback loop.
 
-### Markdown is the data store
+### A registry behind the markdown
 
-Memory lives in `~/.autolearn/memory.md`. User preferences live in `~/.autolearn/user-profile.md`. Skills live in `~/.autolearn/skills/{name}/SKILL.md`. All plain text. All human-readable. All directly loadable as OpenCode instructions.
+I started with a single markdown file. Memory lived in `~/.autolearn/memory.md`. User preferences lived in `~/.autolearn/user-profile.md`. Skills lived in `~/.autolearn/skills/{name}/SKILL.md`. All plain text, all human-readable, all directly loadable as OpenCode instructions.
 
-I considered [SQLite](https://www.sqlite.org/). It would be more queryable. But the agent needs to read these files as context, and OpenCode loads instruction files as plain markdown. A database would add a conversion layer between storage and context. Markdown files serve double duty: they are both the storage and the context injection. No conversion needed.
+I picked markdown deliberately. I considered [SQLite](https://www.sqlite.org/); it would be more queryable. But the agent reads these files as context, and OpenCode loads instruction files as plain markdown. Markdown served double duty: it was both the storage and the context injection. If I wanted to see what my agent had learned, I `cat` the file. If I wanted to correct a lesson, I edited it.
 
-The agent reads the same file the user can open in a text editor. If I want to see what my agent has learned, I `cat ~/.autolearn/memory.md`. If I want to correct a lesson that is wrong, I edit the file. The next session picks up the change.
+That worked, until the file filled up. A single markdown file has a size ceiling. When memory hit a few thousand characters, the oldest entries got silently evicted to fit, and I lost lessons I wanted to keep. Reinforcement was append-only: see the same correction three times, get three duplicate entries.
+
+So the store moved behind the markdown. Today the durable store is a JSONL registry, `memories.jsonl`, with one observation per line and no size cap. The markdown file, `memory.context.md`, is now a _view_, regenerated from the registry on every session start and after every review. Storage and context are separate concerns. The registry can hold thousands of entries; the composed view surfaces the most relevant ones within a soft character budget. Reinforcement counters live in the registry itself, so a repeated correction bumps a counter instead of duplicating a line.
+
+The agent still reads markdown. I still open a file to see what it learned. The difference is that the file I read is now generated from something more durable underneath it.
 
 ### Reviews run as subprocesses
 
@@ -69,7 +73,7 @@ The subprocess approach has three benefits. First, failures are isolated: a cras
 
 ### Skills are symlinked for auto-discovery
 
-OpenCode discovers skills in `~/.agents/skills/`. When the review agent creates a new skill in `~/.autolearn/skills/`, the CLI symlinks it into `~/.agents/skills/` so OpenCode picks it up automatically. No restart needed, no configuration change.
+OpenCode discovers skills in `~/.agents/skills/`. When the review agent creates a new skill in `~/.autolearn/personas/default/skills/`, the CLI symlinks it into `~/.agents/skills/` so OpenCode picks it up automatically. No restart needed, no configuration change.
 
 This means the loop is: review agent observes a pattern, creates a skill, and the very next session can load that skill if the pattern recurs. The feedback loop closes itself.
 
@@ -81,7 +85,7 @@ Then came a series of refinements, each driven by a real problem I hit while dog
 
 - **Exit-triggered reviews.** The first version only spawned reviews at turn thresholds. I kept losing the last few turns of a session because I would close the terminal before the threshold fired. So I added `beforeExit` and signal handlers (`SIGINT`, `SIGTERM`) to dispatch a final review on shutdown.
 
-- **EARS specifications.** After the initial build, I had my OpenCode agent write five LLDs and eight EARS specifications for the shipped features. This was partly discipline and partly debugging: the EARS specs allowed me to trace each requirement to actual code paths, and the process surfaced edge cases I had missed. I asked the agent to also add `@spec` annotations in the plugin source linking each code block to its EARS requirement ID.
+- **EARS specifications.** After the initial build, I had my OpenCode agent write LLDs and EARS specifications for the shipped features. This was partly discipline and partly debugging: the EARS specs allowed me to trace each requirement to actual code paths, and the process surfaced edge cases I had missed. I asked the agent to also add `@spec` annotations in the plugin source linking each code block to its EARS requirement ID.
 
 - **Skill symlinks.** The initial version created skills in `~/.autolearn/skills/` but did not symlink them into `~/.agents/skills/`. Skills existed but OpenCode could not discover them. The symlink step closed that gap.
 
@@ -90,6 +94,16 @@ Then came a series of refinements, each driven by a real problem I hit while dog
 - **Full-text search.** The review agent needs to answer "has this pattern come up before?" I built an FTS5 index over OpenCode's session database so the review agent can search past conversations before concluding "nothing to record." This catches recurring corrections that were never promoted to memory.
 
 - **The review-runner wrapper.** Reviews were leaving behind orphaned sessions in OpenCode's session list. I wrote a shell script wrapper that runs the review, captures the session ID from the JSON output, and deletes the session afterward. The plugin calls the wrapper instead of `opencode run` directly.
+
+- **Behavioral escalation.** Memory and skills capture in-session lessons, but some corrections recur across every project and belong in the repo's `AGENTS.md`, where every agent run reads them. I added a second CLI, `improve.py`, that records behavioral rules and counts how often each one recurs. When a rule crosses a threshold, `improve.py escalate --apply` writes it into the appropriate `AGENTS.md`. The review agent calls `improve.py observe ...` as part of every review, so cross-project patterns graduate from session memory into durable repo instructions on their own.
+
+- **Cross-machine sync.** Everything lived on one machine. Switch laptops, lose the learned memory. I built an E2E-encrypted sync layer: a master password derives a key with PBKDF2-SHA256, the key lives in the OS keychain, and the server only ever sees ciphertext. The plugin auto-syncs on session start and after each review. Two backends implement the same REST API, a self-hosted Fastify server and Convex HTTP Actions, so you can run it yourself or use a hosted one.
+
+- **Multi-persona stores.** Work lessons and personal lessons should not collide. I split the store into personas, isolated directories with their own memory, skills, and sync keys. The installer migrates the existing flat layout automatically, so upgrading was invisible.
+
+- **The memory registry.** The single `memory.md` worked until it filled up and started evicting old entries to fit a size cap. I moved the durable store to a JSONL registry and turned the markdown into a composed view, regenerated on session start. This migration is also where I learned a general lesson the hard way: when you move a system to a new data store, audit every reader of the old one. The autolearn reviewer itself was still warning about "silent 3000-char eviction" long after the cap was gone, because its instruction prose was a stale reader of the old behavior. (That lesson is now in the memory store, funnily enough.)
+
+- **Curator on a schedule.** Skills accumulate. Fifty narrow skills are harder to navigate than ten well-named ones. The curator consolidates overlapping skills into broader umbrellas, archives stale ones, and escalates high-reinforcement lessons toward `AGENTS.md`. I wired it to the opencode scheduler so it runs weekly without me thinking about it.
 
 ## The moment I knew it worked
 
@@ -112,34 +126,32 @@ That was the moment I stopped wondering whether the system worked.
 
 ## Dogfooding by the numbers
 
-I have been running `opencode-autolearn` on my machine for about ten days. Here is what the system has done in that time, without me lifting a finger:
+I have been running `opencode-autolearn` on my machine for a few weeks now. Here is what the system has done in that time, without me lifting a finger:
 
 | Metric | Count |
 |---|---|
-| Days running | 10 |
-| Observations logged | 922 |
-| Review sessions spawned | 200+ |
+| Observations logged | ~1000 (the log keeps only the most recent thousand) |
+| Review sessions spawned | ~3000 |
 | Projects covered | 20+ |
-| Persistent memory entries | 9 |
-| User profile preferences captured | 7 |
-| Reinforced patterns tracked | 48 |
+| Memory entries (registry) | ~100 |
+| User profile preferences | 11 |
+| Skills created | 50+ |
 
-Those 200+ reviews ran across projects including my gym-coach voice app, my Brain42 knowledge tools, my network analysis teaching materials, my blogbot automation, canvas-chat, and several others. The system watched every session, decided what was worth remembering, and wrote it down.
+Those reviews ran across projects including my gym-coach voice app, my Brain42 knowledge tools, my network analysis teaching materials, my blogbot automation, canvas-chat, and several others. The system watched every session, decided what was worth remembering, and wrote it down.
 
-The reinforcement tracking is where the compounding shows up. The most-reinforced lesson, at 9 hits, is a SaaS multi-tenant safety rule: verify before configuring any SaaS service. I hit that pattern across multiple projects and sessions, and each time the review agent bumped the counter instead of adding a duplicate entry. The agent now treats that rule as high-priority context because the reinforcement count tells it this one matters.
+The reinforcement tracking is where the compounding shows up. The most-reinforced lesson is a SaaS multi-tenant safety rule: verify before configuring any SaaS service. I hit that pattern across multiple projects and sessions, and each time the review agent bumped the counter instead of adding a duplicate entry. The agent treats that rule as high-priority context because the reinforcement count tells it this one matters.
 
 ## What the agent has learned
 
-The review agent created four skills from scratch and patched one existing skill in a local repo. The created skills include:
+The review agent has created over fifty skills from scratch and patched several existing ones in local repos. Here are a few representative examples:
 
 - A `blogbot` skill for generating social media posts from blog content. The review agent created it after watching me manually draft posts, then patched it with a URL verification step after observing me checking URLs by hand.
-- An `evergreen-note-quality` skill for my [Obsidian](https://obsidian.md) vault, created after watching me audit note quality across multiple sessions. 128 lines of quality checklists covering atomicity, title-as-API, concept-orientation, and duplicate detection.
-- A `remotion-best-practices` skill, created from scratch after I worked through [Remotion](https://www.remotion.dev/) version-specific issues. 116 lines covering package structure, animations, fonts, and rendering.
-- A `marimo-notebook-patterns` skill, created after I hit repeated pitfalls editing [marimo](https://marimo.io) notebooks. Covers import patterns, cell parameter requirements, and button API signatures.
+- An `evergreen-note-quality` skill for my [Obsidian](https://obsidian.md) vault, created after watching me audit note quality across multiple sessions.
+- Bug-pattern skills named after the exact pitfall: `react-setstate-in-effect` (don't call `setState` unconditionally inside `useEffect`), `optional-chaining-root-guard` (optional chaining hides a null root), `unicode-safe-filename-ops` (normalize before saving a user-titled file), `ssrf-guard-node` (validate a URL before a server fetches it). Each one came from a real bug I hit, in a real session, that the review agent watched me fix.
 
 The local repo skill patch is the Convex CLI story I described above: the `convex-migration-helper` in the gym-coach repo, patched with the `internalMutation` lesson.
 
-The persistent memory (`memory.md`) has nine entries. Each came from a real mistake. Each has prevented the same mistake in subsequent sessions. The user profile has captured seven preferences about how I like to work: I prefer warm, personal blog conclusions. I expect agents to proactively load writing skills when editing prose. I want autonomous execution without confirmation prompts. I demand quantified evidence in architecture analysis. The agent read these from my conversations and wrote them down. Now every session starts with this context loaded.
+The persistent memory store holds around a hundred entries. Each came from a real mistake. Each has prevented the same mistake in subsequent sessions. The user profile has captured how I like to work: I prefer warm, personal blog conclusions. I expect agents to proactively load writing skills when editing prose. I want autonomous execution without confirmation prompts. I demand quantified evidence in architecture analysis. The agent read these from my conversations and wrote them down. Now every session starts with this context loaded.
 
 The feedback loop for autolearn looks like this:
 
@@ -148,10 +160,10 @@ graph TD
     A[OpenCode session] -->|every 5 turns / idle / exit| B[autolearn.js plugin]
     B -->|spawn detached subprocess| C[autolearn-reviewer agent]
     C -->|reads conversation| D{Learning opportunity?}
-    D -->|correction / preference| E[update memory.md]
+    D -->|correction / preference| E[memories.jsonl registry]
     D -->|recurring pattern| F[create or patch skill]
     D -->|nothing worth recording| G[exit quietly]
-    E -->|loaded into| A
+    E -->|composed into memory.context.md, loaded into| A
     F -->|symlinked into ~/.agents/skills/| A
 </pre>
 
@@ -165,15 +177,15 @@ If you use OpenCode and want to try it:
 curl -fsSL https://raw.githubusercontent.com/ericmjl/opencode-autolearn/main/install.sh | bash
 ```
 
-The plugin activates on your next session. You will not notice it running. But after a few sessions, check `~/.autolearn/memory.md`. Your agent has been taking notes.
+The plugin activates on your next session. You will not notice it running. But after a few sessions, check `~/.autolearn/personas/default/memory.context.md`. Your agent has been taking notes.
 
-The full source is on GitHub: [ericmjl/opencode-autolearn](https://github.com/ericmjl/opencode-autolearn). The design docs include five LLDs, eight EARS specifications, and a high-level design with full traceability. The README has the complete CLI reference and configuration options.
+The full source is on GitHub: [ericmjl/opencode-autolearn](https://github.com/ericmjl/opencode-autolearn). The design docs include eight LLDs, eleven EARS specifications, and a high-level design that marks every feature shipped, partial, or planned. The README has the complete CLI reference, the sync setup, and the configuration options.
 
 ## What comes next
 
-The planned work is about portability. Right now, everything lives on one machine. If I switch laptops, I lose the learned memory and skills. The design docs include specs for E2E-encrypted sync (zero-knowledge server, AES-256-GCM, client-side key derivation) and multi-persona knowledge stores (isolated directories for work, personal, and OSS contexts). Those are designed but not yet built.
+The portability problem is solved. Sync, encryption, and multi-persona stores shipped. The curator runs on a weekly schedule. The memory store grew up too: every entry now carries a retention score and a tier (hot, warm, cold), and the composed view ranks entries by relevance against a soft character budget before it regenerates on each session start. Lessons I keep hitting stay hot; one-off corrections I never repeat fade toward evictable.
 
-I also want to add a curator that runs on a schedule, consolidating narrow skills into broader umbrellas, archiving stale ones, and escalating high-reinforcement lessons to `AGENTS.md` when they hit a threshold. The curator skill exists and the CLI commands are there. What is missing is the scheduling integration and the first real run.
+What is genuinely left is calibration, and the one detector that has never run. The retention curve needs real-world tuning; the half-life parameters are fresh guesses, and I want to watch which entries fade too fast or linger too long. The recurring-preference detector, a shift detector that notices when a preference is rising (worth recording) versus settling into habit (learned, stop surfacing), is wired but has never taken a real pass.
 
 I keep thinking about the moment I saw the patched `convex-migration-helper` skill. I had not told anyone to fix it. I had not filed an issue or written a TODO. The conversation where I hit the `internalMutation` wall was over. I had moved on. But the system was still watching, and it decided that the workaround I found was worth remembering.
 
@@ -183,7 +195,7 @@ The Hermes agent had it. Now OpenCode does too.
 
 I hope autolearn brings you the same quiet compounding it has brought me: an agent that remembers your corrections, respects your preferences, and gets a little sharper every time you sit down to work.
 ---
-summary: In this blog post, I share how my coding agent learned from my mistakes and automatically patched its own skills using a new OpenCode plugin I built called opencode-autolearn. Over ten days, it observed my coding sessions, extracted lessons, and updated its memory and skills without any manual intervention. I explain the architecture, design decisions, and real-world impact, including how it fixed a tricky Convex migration bug on its own. Curious how an agent can truly learn from your workflow and get better every session? Read on to find out!
+summary: My coding agent now patches its own skills after watching me work, using an OpenCode plugin I built called opencode-autolearn. Over a few weeks of dogfooding it observed my sessions, extracted lessons, and updated its memory and skills with no manual intervention. I cover the architecture, the design decisions, and the real-world impact, including a Convex migration bug it fixed on its own and how the memory now syncs across machines. Curious how an agent can learn from your workflow and sharpen every session?
 ---
 author: Eric J. Ma
 ---
