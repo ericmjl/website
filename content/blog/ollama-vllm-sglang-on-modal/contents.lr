@@ -37,7 +37,23 @@ I ran each engine six times, generating 300 tokens, and recorded every data poin
 | Tokens per second | 24.3 ± 2.1 | 39.4 ± 0.0 | 62% faster, rock-steady |
 | Total for 300 tokens | 11.4 ± 0.7s | 7.9 ± 0.0s | 31% faster |
 
-![Benchmark results: six runs per engine, showing TTFT, throughput, and total latency. Individual data points plotted with median bars.](./benchmark-results.webp)
+<figure id="benchmark-fig" style="margin:1.6em 0 0.4em"><div id="benchmark-chart" style="width:100%;max-width:960px;"></div><figcaption style="font-size:0.9em;text-align:center;opacity:0.75">Points: individual runs (6 per engine). Bars: median. <a href="./benchmark-data.json">Raw data (JSON)</a>.</figcaption></figure>
+<script>
+(function(){
+var ENGINES=[{"name":"Ollama","color":"#E07A5F","x0":1,"data":{"ttft":[1.634,0.5513,0.4853,0.6736,0.6853,1.0419],"tps":[27.1716,25.6511,23.3585,22.4884,21.8061,25.1284],"total":[11.0556,10.5314,11.4449,12.0573,12.4251,11.2296]}},{"name":"vLLM","color":"#3B82F6","x0":2,"data":{"ttft":[0.3202,0.275,0.3823,0.3333,0.2996,0.2962],"tps":[39.4235,39.4225,39.4618,39.4316,39.4211,39.3659],"total":[7.9299,7.8849,7.9846,7.9414,7.9098,7.917]}}];
+var METRICS=[{"key":"ttft","yrange":[0,1.8],"yticks":[0,0.5,1.0,1.5],"title":"Time to first token (s)"},{"key":"tps","yrange":[20,42],"yticks":[20,25,30,35,40],"title":"Throughput (tokens/s)"},{"key":"total","yrange":[0,14],"yticks":[0,4,8,12],"title":"Total generation time (s)"}];
+var XREF=["x","x2","x3"], YREF=["y","y2","y3"];
+var JITTER=[-0.16,-0.10,-0.04,0.04,0.10,0.16];
+function med(a){var b=a.slice().sort(function(x,y){return x-y});var n=b.length;return n%2?(b[(n-1)/2]):(b[n/2-1]+b[n/2])/2;}
+function traces(){var t=[];METRICS.forEach(function(m,mi){ENGINES.forEach(function(e){var xs=JITTER.map(function(j){return e.x0+j});var ys=e.data[m.key];t.push({x:xs,y:ys,type:"scatter",mode:"markers",xaxis:XREF[mi],yaxis:YREF[mi],name:e.name,legendgroup:e.name,showlegend:mi===0,marker:{color:e.color,size:9,opacity:0.8,line:{width:0}},hovertemplate:"%{y:.2f}<extra>"+e.name+"</extra>"});var md=med(ys);t.push({x:[e.x0-0.2,e.x0+0.2],y:[md,md],type:"scatter",mode:"lines",xaxis:XREF[mi],yaxis:YREF[mi],legendgroup:e.name,showlegend:false,line:{color:e.color,width:5},hoverinfo:"skip"});});});return t;}
+function layout(){var dark=document.body.classList.contains("dark-mode");var ax=dark?"#c9ced6":"#3a4252";var gr=dark?"#39404d":"#e4e8ee";var lay={font:{family:"system-ui,-apple-system,Segoe UI,Roboto,sans-serif",color:ax,size:12},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",margin:{l:50,r:14,t:40,b:54},grid:{rows:1,columns:3,horizontalspacing:0.07,pattern:"independent"},showlegend:true,legend:{orientation:"h",y:-0.12,x:0.5,xanchor:"center",font:{size:11}},title:{text:"Ollama vs vLLM on Modal: Qwen3.6-27B, single L40S, 6 runs each",font:{size:14}}};METRICS.forEach(function(m,i){var xs=i===0?"xaxis":("xaxis"+(i+1));var ys=i===0?"yaxis":("yaxis"+(i+1));lay[xs]={range:[0.5,2.5],tickvals:[1,2],ticktext:["Ollama","vLLM"],color:ax,tickfont:{size:11},gridcolor:"rgba(0,0,0,0)",linecolor:ax,zeroline:false};lay[ys]={range:m.yrange,title:{text:m.title,font:{size:11}},color:ax,tickfont:{size:10},gridcolor:gr,linecolor:ax,zeroline:false};});return lay;}
+var div=document.getElementById("benchmark-chart");
+function render(){Plotly.newPlot(div,traces(),layout(),{responsive:true,displayModeBar:false});}
+function boot(){if(window.Plotly){render();}else{var s=document.createElement("script");s.src="https://cdn.plot.ly/plotly-2.35.2.min.js";s.onload=render;document.head.appendChild(s);}}
+if(document.readyState!=="loading"){boot();}else{document.addEventListener("DOMContentLoaded",boot);}
+new MutationObserver(function(){if(window.Plotly){render();}}).observe(document.body,{attributes:true,attributeFilter:["class"]});
+})();
+</script>
 
 vLLM generates 60% more tokens per second than Ollama on the same GPU. That is a large gap for the same model at the same precision on the same hardware. But the more striking difference is the variance. vLLM's throughput is rock-steady: 39.4 tokens per second on every single run, with a standard deviation of essentially zero. Ollama bounces between 22 and 27 tokens per second run to run. Its time to first token swings from half a second to 1.6 seconds. vLLM always answers in about a third of a second.
 
