@@ -21,7 +21,7 @@ The model is Qwen3.6-27B, a 27-billion-parameter dense model with a hybrid archi
 - **Ollama**: `qwen3.6:27b` in GGUF format, Q4_K_M quantization, 17 GB on disk
 - **vLLM**: `cyankiwi/Qwen3.6-27B-AWQ-INT4` in safetensors, AWQ INT4 quantization, 19 GB on disk
 
-Both run on a single Nvidia L40S with 48 GB of VRAM. At Modal's pricing, that is $0.000542 per second, or about $1.95 per hour, for either deployment. Same GPU, same rate.
+Both run on a single Nvidia L40S with 48 GB of VRAM. At Modal's pricing, that is \$0.000542 per second, or about \$1.95 per hour, for either deployment. Same GPU, same rate.
 
 Both expose an OpenAI-compatible `/v1/chat/completions` endpoint. I wrote one benchmark script that hits both URLs with the same prompt, the same `max_tokens`, the same sampling parameters, and measures time to first token, decode throughput, and total latency. Identical workload, identical hardware, different engine.
 
@@ -170,7 +170,7 @@ But if you are paying for GPU by the second and you want the container to scale 
 
 I did not test SGLang in this round. I scaffolded a separate `sglang-on-modal` repo and deployed it, but SGLang's current release hits a dtype compatibility error with Qwen3.6's hybrid DeltaNet architecture. The model loads and CUDA graphs capture successfully, but inference crashes with a BFloat16 versus Float16 mismatch in the linear attention layers. vLLM 0.23.0 handles this architecture correctly. The SGLang repo is ready for when they ship a fix.
 
-For now, vLLM with CUDA graphs and GPU snapshots gives me 39 tokens per second warm and 57 seconds to first token cold, on a $1.95-per-hour L40S, and that is the deployment I am keeping.
+For now, vLLM with CUDA graphs and GPU snapshots gives me 39 tokens per second warm and 57 seconds to first token cold, on a \$1.95-per-hour L40S, and that is the deployment I am keeping.
 ---
 pub_date: 2026-07-01
 ---
@@ -190,4 +190,3 @@ snapshots
 latency
 performance
 qwen3.6
----
