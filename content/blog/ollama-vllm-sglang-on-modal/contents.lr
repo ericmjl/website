@@ -4,7 +4,7 @@ author: Eric J. Ma
 ---
 body:
 
-I had Qwen3.6 running on Ollama, hosted on Modal, and it worked. The model answered questions, the endpoint stayed up, and I wired it into my tools. Then I tried to use it for real work, and the cold starts drove me up the wall.
+I had Qwen3.6 running on Ollama, hosted on Modal, and it worked. The model answered questions, the endpoint stayed up, and I wired it into my tools. I had a specific reason for running it: I am co-teaching a deep research agent tutorial at SciPy 2026, and I wanted every attendee to have a fast LLM endpoint for the hands-on sessions, including those who do not have access to a paid LLM provider. Then I tried to use it for real work, and the cold starts drove me up the wall.
 
 Every time the container scaled to zero and I sent a fresh request, I waited. A minute, sometimes two, watching the spinner. The model was right there in the volume. The GPU was right there, billed by the second. And I was staring at a loading bar because Ollama had to boot its server, open the weight files, and load 17 GB of GGUF into VRAM before it could generate a single token.
 
@@ -154,9 +154,11 @@ The deep research agent tutorial I am building with [Ben Batorsky](https://www.l
 
 ```shell
 LLM_MODEL=openai/qwen3.6-27b
-TUTORIAL_LLM_BASE_URL=https://ericmjl--qwen36-vllm-service-vllmserver-serve.modal.run/v1
+TUTORIAL_LLM_BASE_URL=https://<your-modal-deployment>.modal.run/v1
 TUTORIAL_LLM_API_KEY=vllm-no-auth
 ```
+
+Rather than hand out a live endpoint, the deployments behind these numbers are open source: [ollama-on-modal](https://github.com/ericmjl/ollama-on-modal), [vllm-on-modal](https://github.com/ericmjl/vllm-on-modal), and [sglang-on-modal](https://github.com/ericmjl/sglang-on-modal) each stand one inference engine up on Modal, so you can deploy your own.
 
 One snag: llamabot's `StructuredBot` does a client-side capability check and rejects model names it does not recognize, even when the server supports structured output fine. The fix was three lines in the tutorial's `llm.py` that call `litellm.register_model` to tell litellm the custom model supports `response_schema`. After that, both `SimpleBot` and `StructuredBot` work against the vLLM endpoint.
 
@@ -168,7 +170,7 @@ The one thing Ollama has going for it in this comparison is simplicity. The depl
 
 But if you are paying for GPU by the second and you want the container to scale to zero between requests, the snapshot restore is the feature that makes that practical. And right now, only vLLM plays nice with it.
 
-I did not test SGLang in this round. I scaffolded a separate `sglang-on-modal` repo and deployed it, but SGLang's current release hits a dtype compatibility error with Qwen3.6's hybrid DeltaNet architecture. The model loads and CUDA graphs capture successfully, but inference crashes with a BFloat16 versus Float16 mismatch in the linear attention layers. vLLM 0.23.0 handles this architecture correctly. The SGLang repo is ready for when they ship a fix.
+I did not test SGLang in this round. I scaffolded a separate [sglang-on-modal](https://github.com/ericmjl/sglang-on-modal) repo and deployed it, but SGLang's current release hits a dtype compatibility error with Qwen3.6's hybrid DeltaNet architecture. The model loads and CUDA graphs capture successfully, but inference crashes with a BFloat16 versus Float16 mismatch in the linear attention layers. vLLM 0.23.0 handles this architecture correctly. The SGLang repo is ready for when they ship a fix. Future work: once SGLang supports this architecture, benchmark how it handles Qwen3.6-27B against vLLM on the same GPU and snapshot setup.
 
 For now, vLLM with CUDA graphs and GPU snapshots gives me 39 tokens per second warm and 57 seconds to first token cold, on a \$1.95-per-hour L40S, and that is the deployment I am keeping.
 ---
