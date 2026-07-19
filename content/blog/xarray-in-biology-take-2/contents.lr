@@ -158,14 +158,17 @@ pub_date: 2026-07-19
 ---
 twitter_handle: ericmjl
 ---
-summary: A year after arguing that laboratory data should live in a single xarray Dataset, I wrote an xarray-linked-data skill that turned the hunch into a tested pattern. The thesis has sharpened on every axis: DataTree replaces Dataset so heterogeneous assays keep their natural grids; custom indexes like DimensionInterval link concentration to time so selection just works in either direction; and Bayesian estimates live next to the raw measurements they were derived from, in the same file. The end goal is leverage, not replacement: one data scientist curating many campaigns, with the agent doing the per-campaign assembly and the data scientist catching the warts.
+summary: In this blog post, I share how my idea of using xarray for unified lab data evolved into an agent skill for Ian Hunt-Isaak's repo. I explain why xr.DataTree is the key to storing multi-assay data on incompatible grids in a single file, how custom indexes let you query experiments by their actual physical logic, and why Bayesian estimates belong right next to raw data. Ultimately, I argue this pattern scales a single data scientist's judgment across many campaigns. If you are juggling multi-assay biological data, what are your biggest coordinate-matching headaches?
 ---
 tags:
 
 xarray
-bioinformatics
-data engineering
-bayesian
-reproducibility
 datatree
-scientific python
+python
+bioinformatics
+datascience
+ai agents
+bayesian
+curation
+data packaging
+lab data
