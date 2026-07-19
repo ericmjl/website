@@ -53,6 +53,13 @@ uv run .agents/skills/blogbot/scripts/summary.py <blog_slug>
 uv run .agents/skills/blogbot/scripts/tags.py <blog_slug>
 ```
 
+> **Verify tags for typos before writing them into `contents.lr`.** LLMs
+> produce typos in short structured outputs like tags — duplicated letters
+> (e.g. "aiaagents" instead of "ai agents"), missing spaces, or malformed
+> compound words. Read every generated tag, confirm it is a real word or
+> phrase, and fix or drop any typo before persisting. This is the tag-form
+> sibling of the summary scrubbing rule above.
+
 **Banner** - Generates a DALL-E banner image and saves it as `logo.webp` in the blog post directory:
 ```bash
 uv run .agents/skills/blogbot/scripts/banner.py <blog_slug>
