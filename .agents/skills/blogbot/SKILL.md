@@ -179,6 +179,55 @@ Gotcha: do NOT trust a reference schedule blindly. If the user says 'follow the 
 
 - Default cadence: ONE post per week per channel, spread evenly across the publishing window. When scheduling a batch of blog posts to LinkedIn/Bluesky, do NOT stack two posts on the same date even if the queue allows it. Stagger them weekly (e.g. week 1, week 2, week 3...). Before finishing a scheduling batch, verify each channel has no same-day duplicates. Keep LinkedIn and Bluesky in sync (same post on the same week) unless told otherwise.
 
+## Post-Merge GitHub Pages Rebuild Delay
+
+After a blog post PR is merged, the public URL
+(`https://ericmjl.github.io/blog/YYYY/M/d/slug/`) returns **404 for 1-5
+minutes** while GitHub Pages rebuilds the site. The URL-verification
+pre-check (confirm HTTP 200 against the LIVE deployed site before
+scheduling) WILL fail during this window.
+
+This is a **recurring, expected** state — not an error. Do not treat the
+404 as a broken URL or a reason to abort scheduling.
+
+**Workflow when the URL is 404 immediately after merge:**
+
+1. Generate the social copy FIRST (linkedin_post.py, bluesky_post.py).
+   These scripts read the local `contents.lr` and do NOT need the live
+   URL. This uses the wait productively.
+2. Determine the target scheduling date (next free weekly slot — see
+   Scheduling Cadence) by calling `list_posts` on the target channels.
+3. Re-check the URL with a curl/HTTP probe every ~60 seconds. GitHub
+   Pages typically finishes within 2-3 minutes of the merge.
+4. Once the URL returns HTTP 200, proceed to `create_post` on each
+   channel with the verified URL.
+
+**Do NOT:**
+- Queue a post whose URL has not been verified as HTTP 200 against the
+  live site (the hard rule still holds — wait it out).
+- Abort the whole scheduling task because the URL is 404 for the first
+  minute — the site just hasn't rebuilt yet.
+- Burn turns re-checking in a tight loop; generate copy and find the
+  target date in parallel, then re-check at ~60s intervals.
+
+## Em-Dash Rule Extends to All Generated Content
+
+AGENTS.md states: "I do not use em dashes (—); use commas, periods, or
+separate sentences instead." This is Eric's voice rule and applies to
+**ALL generated content**, not just blog post bodies and summaries:
+
+- LinkedIn posts (linkedin_post.py output)
+- BlueSky posts (bluesky_post.py output)
+- Substack posts (substack_post.py output)
+- Summaries (summary.py output — already documented above)
+
+LLMs frequently emit em dashes (U+2014) in social copy even when the
+prompt says not to. After generating ANY social copy, scan the output
+for em dashes (—, \u2014) and replace each with a comma, period, colon,
+or separate sentence before scheduling or showing it for approval. Treat
+em-dash scrubbing as a mandatory post-generation step for every blogbot
+text output, alongside URL-verification and tag-typo-checking.
+
 ## Publishing to Substack via Browser
 
 Substack is NOT a Buffer channel, so publishing a Substack post is a
