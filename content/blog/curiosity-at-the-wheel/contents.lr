@@ -4,29 +4,29 @@ author: Eric J. Ma
 ---
 body:
 
-I took part in Round 2 of the [alphaXiv x marimo competition](https://marimo.io/pages/events/notebook-competition-2). The task: pick a recent ML paper, build a marimo notebook that teaches it, and submit a five-minute walkthrough. I had two papers I wanted to tackle, BitNet's 1.58-bit weights and JiT's "predict the clean image, not the noise," and a tool I've been enjoying: pair-programming marimo notebooks with a coding agent.
+I took part in Round 2 of the [alphaXiv x marimo competition](https://marimo.io/pages/events/notebook-competition-2). The task was to pick a recent ML paper, build a marimo notebook that teaches it, and submit a five-minute walkthrough. I had two papers I wanted to tackle, BitNet's 1.58-bit weights and JiT's "predict the clean image, not the noise," and a tool I've been enjoying: pair-programming marimo notebooks with a coding agent.
 
 The real surprise was how much *of the paper* I learned by the end of the sprint. I came out the other side understanding both papers more viscerally than if I'd read them quietly for a week. The mechanism was the artifact we were building together. The notebook gave me something to poke at, and poking taught me what reading alone couldn't.
 
-## Some things take time. Onboarding doesn't have to.
+## Judgment is the slow part
 
-Judgment takes years. The feel for when a result is wrong, the instinct for which experiment to run next, the sense that a curve looks fishy before you can articulate why. Those compound slowly, and no agent hands them to you. I wrote about this recently, and I still believe it.
+Judgment takes years. It's the feel for when a result is wrong, the instinct for which experiment to run next, and the sense that a curve looks fishy before you can articulate why. Those instincts compound slowly, and no agent hands them to you. I [wrote about this recently](/blog/2026/6/17/agents-amplify-expertise-and-ignorance/), and I still believe it.
 
-But there's a separate thing: *onboarding* onto the basic vocabulary and mental models of a new paper. Wrestling with what "straight-through estimator" actually means in your hands. Building a picture of why predicting the clean image might be *easier* than predicting the noise, when the established literature screams the opposite. That part has always been slow for me, because it's a wrestling match with jargon. I read a sentence, hit a term, go look it up, lose the thread, reread, repeat.
+But there's a separate thing: *onboarding* onto the basic vocabulary and mental models of a new paper. Things like wrestling with what "straight-through estimator" actually means in your hands, or making sense of why predicting the clean image might be *easier* than predicting the noise, when the established literature screams the opposite. That part has always been slow for me, because it's a wrestling match with jargon. I read a sentence, hit a term, go look it up, lose the thread, reread, repeat.
 
 The onboarding can go faster, even if the judgment can't.
 
-## Aesthetics are pedagogy
+## Aesthetics do pedagogical work
 
-Before I started building, I had the agent study the three winning notebooks from round 1. Partly this was competitive intelligence, a clear bar for what good looked like. But a separate surprise: I genuinely enjoyed reading them. The best ones opened with an HTML hero banner carrying the paper title and a one-line thesis. They paired that with interactive widgets where you dragged a slider and watched a distribution react, which made the concepts tactile. The ones I liked most were game-like: you'd try to find a hidden structure, and being wrong was part of the play rather than a verdict. And they closed with a summary callout that re-stated the conclusions cleanly.
+Before I started building, I had the agent study the three winning notebooks from round 1. Partly this was competitive intelligence, to obtain a clear bar for what good looked like. But there was a separate surprise: I genuinely enjoyed reading them! The best ones opened with an HTML hero banner carrying the paper title and a one-line thesis. They paired that with interactive widgets where you dragged a slider and watched a distribution react, which made the concepts tactile. Some of them were also game-like. You'd try to find a hidden structure, and being wrong was part of the play rather than a verdict. And they closed with a summary callout that re-stated the conclusions cleanly.
 
-These choices do real work. The hero banner gives you a mental anchor before the math lands. The interactive widgets force you to make a prediction and watch it confirmed or contradicted, which is the loop that locks concepts in. The game-like elements give you a safe space to be wrong, and playful wrongness is where the learning lives; if being wrong costs nothing, you try more things, and trying more things is what teaches you. The summary element aids repetition, which is how concepts compound.
+What makes these notebooks teach is the loop they put you in: predict, then see whether you were right. The interactive widgets drive that loop. Everything else exists to support it: a hero banner gives you a mental anchor before the math lands, and game-like elements turn being wrong into play, which is where the learning actually lives. When being wrong costs nothing, you try more things, and trying more things is what teaches you.
 
 ## Pair-programming the paper, not just the code
 
-I fired up a marimo notebook on a molab sandbox with an NVIDIA RTX PRO 6000 Blackwell, and pair-programmed with GLM-5.2 through opencode. I had the paper. I had questions. The agent had patience, code, and a willingness to render my questions into something I could see.
+I fired up a [marimo](https://marimo.io) notebook on a [molab](https://molab.marimo.io) sandbox with an NVIDIA RTX PRO 6000 Blackwell, and pair-programmed with [GLM-5.2](https://z.ai) through [opencode](https://opencode.ai). I had the paper and the questions, but I didn't have the patience or tenacity to push through the initial energy barrier on my own. The agent had both, in infinite measure.
 
-The shape of the work looked like this. I'd ask a question, sometimes framed as "explain this to me like I'm five." The agent would answer in plain words, and then, crucially, it would *build something* that let me feel the answer. A weight heatmap showing 32-bit floats crushed into three colors. A slider that let me drag precision and watch accuracy react. A live training race on the GPU between binary, ternary, and full precision models. A manifold game where I dragged noisy points and watched what "predict clean" versus "predict noise" actually did to the targets.
+The shape of the work looked like this. I'd ask a question, sometimes framed as "explain this to me like I'm five." The agent would answer in plain words, and then build something that let me *feel* the answer. For BitNet, that meant a weight heatmap crushing 32-bit floats into three colors, a slider that let me drag the precision and watch accuracy react, and a live training race on the GPU between binary, ternary, and full-precision models. For JiT, it meant a manifold game where I dragged noisy points and watched what "predict clean" versus "predict noise" actually did to the targets.
 
 Here's the thing about ELI5 as an operating mode. When I asked for it, I stopped wrestling with jargon and started wrestling with concepts, analogies, and ideas. That's the match I actually wanted. The jargon-wrestling was always fake difficulty, syntax I had to look up before I could even formulate the real question. ELI5 crushed the syntax barrier and put me in front of the idea immediately.
 
@@ -36,7 +36,7 @@ The clearest example came halfway through the BitNet notebook. My mental model o
 
 I told the agent to demonstrate it on a real pretrained GPT-2. The perplexity went from 51 to 33,000. The output collapsed to "present present present present."
 
-That's not what the paper claims. BitNet models are *born ternary*. They're trained from scratch with the straight-through estimator, which lets gradients flow through the rounding step during training. Retrofitting ternary onto a model that spent its whole pretraining life tuning exact magnitudes breaks the calibration of every layer at once. The agent showed me, by running the experiment I asked for and getting a result that contradicted my hunch.
+But that's not what the paper claims! BitNet models are *born ternary*. They're trained from scratch with the straight-through estimator, which lets gradients flow through the rounding step during training. Retrofitting ternary onto a model that spent its whole pretraining life tuning exact magnitudes breaks the calibration of every layer at once. The agent showed me, by running the experiment I asked for and getting a result that contradicted my hunch.
 
 So I asked the obvious follow-up: "If we can't retrofit, what's the fix?" That curiosity became the notebook's novel extension. Fine-tune the retrofitted model with the same straight-through estimator, on a small AI-domain corpus, and see what happens. Across three model families (distilgpt2, Qwen2.5-0.5B, Pythia-410m), perplexity recovered by about two orders of magnitude. The retrofitted text went from repetition to real on-topic English about artificial intelligence. The mechanism that makes BitNet trainable from scratch is also the mechanism that partially rescues a retrofitted model. That extension exists because I was wrong about the abstract first. The agent's experiment surfaced the contradiction; reading alone, I could have stayed wrong indefinitely.
 
@@ -46,7 +46,7 @@ The second paper, JiT, had its own version of this. The paper's title is "Back t
 
 The competition required a five-minute walkthrough video, and that constraint turned out to be its own learning tool. Five minutes forces you to decide what actually matters. Combine that with ELI5 and you get a forcing function: explain the paper simply, in spoken English, in five minutes, to a viewer who hasn't read it. If you can't, you don't understand it yet.
 
-The agent drafted a script structured as a guided tour through the cells. I sent it to reviewers and they tore it apart. Repetitive, shallow, vague.
+The agent drafted a script structured as a guided tour through the cells. I sent it to a panel of other subagent reviewers and they tore it apart. Repetitive, shallow, vague.
 
 That review was a gift. Rewriting the script with the agent's help forced me to decide, in plain spoken English, what each section actually taught and why it mattered. Every time I hit a sentence I couldn't say cleanly, that was a gap in my own understanding. Vague claims like "it works well" had to survive a real question like "compared to what, at what scale?" Oversells had to be walked back to what the data actually supported. Limitations I'd been quietly hoping no one would ask about had to be named out loud, because a judge absolutely would.
 
@@ -56,9 +56,9 @@ Using the agent to help me communicate clearly made the script much better, and 
 
 This is the part I want to be careful about, because it's easy to misread. The agent did a lot of the typing. It wrote the training loops, built the custom anywidgets, ran the parameter sweeps, refactored the underscore-prefixed names I hate. If you'd watched the session from the outside, you'd have seen the agent producing most of the code.
 
-But *I was driving*. Every prompt I sent encoded a decision. To pick BitNet, I had to know which paper had an idea clean enough to teach in a notebook. To ask "what's the fix?" I had to recognize that a collapsed retrofit was a problem worth solving. To push back on blurry generations and demand the agent "figure out how to solve the image blur problem on a loop until you are sure you have solved it," I had to know that the blur was a real problem and not just how diffusion looks. To catch that the script oversold the recovery, I had to have a feel for what honest claim the data would support.
+But *I was driving*. Every prompt I sent encoded a decision. The agent could type, but it couldn't make the judgment calls. Recognizing that the collapsed retrofit was a problem worth solving was mine, and so was seeing that JiT's blurry generations were a real flaw to fix, not just how diffusion looks (hence my prompt: "figure out how to solve the image blur problem on a loop until you are sure you have solved it"). And catching that the script oversold the recovery took a feel for what honest claim the data would support, which is the kind of judgment that takes years.
 
-The agent's speed amplified my judgment, exactly [the way I wrote about before](/blog/2026/6/17/agents-amplify-expertise-and-ignorance/). It compressed the onboarding loop, from a week of reading and rereading into an evening of asking and building and poking. The agent made the years matter more, faster.
+The agent's speed amplified my judgment, exactly [the way I wrote about before](/blog/2026/6/17/agents-amplify-expertise-and-ignorance/). It compressed the onboarding loop, from a week of reading and rereading into an evening of asking and building and poking. The years I'd spent building judgment finally had leverage.
 
 ## Your curiosity sets the direction
 
@@ -70,7 +70,7 @@ pub_date: 2026-07-21
 ---
 twitter_handle: ericmjl
 ---
-summary: Pair-programming with a coding agent in a marimo notebook competition transformed how I learn ML papers. By building interactive artifacts instead of just reading, I grasped concepts like BitNet's ternary weights viscerally. The agent handled the typing, but my curiosity stayed in the driver's seat. What could you learn if jargon stopped getting in the way?
+summary: Pair-programming with a coding agent in a marimo notebook competition gave me new ideas for using AI to help me learn ML papers. By building interactive artifacts instead of just reading, I grasped concepts like BitNet's ternary weights viscerally. The agent handled the typing, but my curiosity stayed in the driver's seat. What could you learn if jargon stopped getting in the way?
 ---
 tags:
 
