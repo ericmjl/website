@@ -212,6 +212,18 @@ When generating text, avoid the following categories of wording, structures, and
 - The repo uses pre-commit hook **`convert-to-webp`** from [`webp-pre-commit`](https://github.com/ericmjl/webp-pre-commit) (see `.pre-commit-config.yaml`). Treat authored markup as WebP-first so links and filenames stay consistent through commit hooks. If you start from PNG or JPEG, convert before commit (for example `cwebp -q 85 source.png -o ./meaningful-name.webp`) unless you are intentionally relying on the hook to rewrite assets and will fix up references afterward.
 - Drafts that begin in the brain42 vault (`Obsidian`) still need assets copied into this slug folder and renamed; vault-side steps are documented in `~/Documents/brain42/AGENTS.md` under blog publishing.
 
+## Video Editor
+
+The custom video editor lives at `website/video-editor/` (NOT under
+`apps/bots/` — it was moved up on 2026-07-02). Start it with `npm run dev`
+from that directory; it runs on `http://localhost:4096/`. It auto-discovers
+rendered Remotion videos from `remotion-videos/out/<base>-video.mp4`
+(matched against `remotion-videos/public/<base>-narration/words.json`).
+The `-video` suffix in the mp4 filename is REQUIRED for discovery. When you
+finish rendering a video, ensure the output is named `<base>-video.mp4` so
+it appears in the editor's dropdown automatically. The editor provides
+word-level caption overlays and step-boundary markers for precise review.
+
 ## Development Workflow
 
 ### Running Python Commands

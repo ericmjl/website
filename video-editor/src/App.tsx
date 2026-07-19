@@ -35,6 +35,11 @@ export default function App() {
   const [wsLog, setWsLog] = useState<string[]>([]);
   const [fixing, setFixing] = useState(false);
   const [videoKey, setVideoKey] = useState(0);
+  const [tab, setTab] = useState<"transcript" | "script">("transcript");
+  const [scriptText, setScriptText] = useState("");
+  const [scriptDirty, setScriptDirty] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
+  const [lintIssues, setLintIssues] = useState<{line: number; rule: string; description: string; detail?: string}[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
@@ -57,10 +62,13 @@ export default function App() {
       fetch(`/api/words/${selected}`).then(r => r.json()),
       fetch(`/api/captions/${selected}`).then(r => r.json()),
       fetch(`/api/boundaries/${selected}`).then(r => r.json()),
-    ]).then(([w, c, b]) => {
+      fetch(`/api/script/${selected}`).then(r => r.ok ? r.text() : "").catch(() => ""),
+    ]).then(([w, c, b, s]) => {
       setWords(w);
       setCaptions(c);
       setBoundaries(b);
+      setScriptText(s);
+      setScriptDirty(false);
     });
   }, [selected]);
 
@@ -78,12 +86,28 @@ export default function App() {
       if (data.type === "log") {
         setWsLog(prev => [...prev, data.text]);
       } else if (data.type === "done") {
-        setFixing(false);
-        setWsLog(prev => [...prev, `\n=== Agent ${data.status} ===\n`]);
+        const isRegen = data.jobId?.startsWith("regen-");
+        if (isRegen) {
+          setRegenerating(false);
+          setWsLog(prev => [...prev, `\n=== Regeneration ${data.status} ===\n`]);
+        } else {
+          setFixing(false);
+          setWsLog(prev => [...prev, `\n=== Agent ${data.status} ===\n`]);
+        }
         if (data.status === "done") {
-          // Reload video by changing key
-          setTimeout(() => {
+          // Reload video + words by changing key
+          setTimeout(async () => {
             setVideoKey(k => k + 1);
+            // Reload words + script after regeneration
+            if (isRegen && selected) {
+              const [w, s] = await Promise.all([
+                fetch(`/api/words/${selected}`).then(r => r.json()),
+                fetch(`/api/script/${selected}`).then(r => r.ok ? r.text() : ""),
+              ]);
+              setWords(w);
+              setScriptText(s);
+              setScriptDirty(false);
+            }
             setWsLog(prev => [...prev, "Video reloaded.\n"]);
           }, 1000);
         }
@@ -109,6 +133,20 @@ export default function App() {
     }
   };
 
+  // Debounced lint on script text change
+  useEffect(() => {
+    if (!scriptText) { setLintIssues([]); return; }
+    const timer = setTimeout(() => {
+      fetch("/api/lint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: scriptText }),
+      }).then(r => r.json()).then(data => setLintIssues(data.issues || []))
+        .catch(() => {});
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [scriptText]);
+
   // Submit fix to agent
   const submitFix = (feedback: string) => {
     if (!selected || !feedback.trim()) return;
@@ -118,6 +156,21 @@ export default function App() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ compositionId: selected, feedback }),
+    }).then(r => r.json()).then(data => {
+      setWsLog(prev => [...prev, `Job ${data.jobId} started...\n`]);
+    });
+  };
+
+  // Regenerate narration from edited script
+  const regenerate = () => {
+    if (!selected || !scriptText.trim() || regenerating) return;
+    setRegenerating(true);
+    setWsLog([`Regenerating narration for ${selected}...\n`]);
+    setAgentOpen(true);
+    fetch(`/api/regenerate/${selected}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ script: scriptText }),
     }).then(r => r.json()).then(data => {
       setWsLog(prev => [...prev, `Job ${data.jobId} started...\n`]);
     });
@@ -200,10 +253,40 @@ export default function App() {
             </span>
           )}
         </div>
-        {/* Transcript content */}
-        <div style={{ flex: 1, overflow: "auto", padding: "16px 20px" }}>
-          <Transcript words={words} currentIdx={currentWordIdx} onSeek={seekTo} />
+        {/* Tab bar */}
+        <div style={{ display: "flex", borderBottom: `1px solid ${COLORS.cardBorder}` }}>
+          {(["transcript", "script"] as const).map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              style={{
+                flex: 1, padding: "6px 12px", fontFamily: "inherit", fontSize: 11,
+                fontWeight: 700, textTransform: "uppercase", letterSpacing: 1,
+                background: tab === t ? COLORS.card : "transparent",
+                color: tab === t ? COLORS.primary : COLORS.textFaint,
+                border: "none", borderBottom: tab === t ? `2px solid ${COLORS.primary}` : "2px solid transparent",
+                cursor: "pointer",
+              }}
+            >
+              {t === "transcript" ? "Transcript" : `Script${scriptDirty ? " *" : ""}`}
+            </button>
+          ))}
         </div>
+        {/* Content */}
+        {tab === "transcript" ? (
+          <div style={{ flex: 1, overflow: "auto", padding: "16px 20px" }}>
+            <Transcript words={words} currentIdx={currentWordIdx} onSeek={seekTo} />
+          </div>
+        ) : (
+          <ScriptEditor
+            script={scriptText}
+            onChange={(v) => { setScriptText(v); setScriptDirty(true); }}
+            onRegenerate={regenerate}
+            regenerating={regenerating || fixing}
+            dirty={scriptDirty}
+            lintIssues={lintIssues}
+          />
+        )}
       </div>
 
       {/* Divider */}
@@ -344,7 +427,7 @@ function StepTimeline({ boundaries, duration, currentTime, onSeek }: {
   );
 }
 
-// --- Transcript component ---
+// --- Transcript component (word-level click-to-scrub) ---
 function Transcript({ words, currentIdx, onSeek }: {
   words: Word[];
   currentIdx: number;
@@ -366,41 +449,120 @@ function Transcript({ words, currentIdx, onSeek }: {
     }
   }, [currentIdx]);
 
-  // Group words into sentences (split on period)
-  const sentences: { text: string; start: number; wordIndices: number[] }[] = [];
-  let current: { text: string; start: number; wordIndices: number[] } = { text: "", start: 0, wordIndices: [] };
-  words.forEach((w, i) => {
-    if (current.text === "") current.start = w.start;
-    current.text += w.word + " ";
-    current.wordIndices.push(i);
-    if (w.word.endsWith(".") || w.word.endsWith("?") || w.word.endsWith("!")) {
-      sentences.push(current);
-      current = { text: "", start: 0, wordIndices: [] };
-    }
-  });
-  if (current.text) sentences.push(current);
-
   return (
-    <div ref={containerRef} style={{ lineHeight: 1.8, fontSize: 12 }}>
-      {sentences.map((s, si) => {
-        const isActive = s.wordIndices.includes(currentIdx);
+    <div ref={containerRef} style={{ lineHeight: 2.0, fontSize: 13 }}>
+      {words.map((w, i) => {
+        const isActive = i === currentIdx;
+        // Check if this word starts a new sentence (prev word ended with . ! ?)
+        const prevWord = i > 0 ? words[i - 1].word : "";
+        const startsSentence = i === 0 || /[.!?]$/.test(prevWord);
         return (
-          <span
-            key={si}
-            onClick={() => onSeek(s.start)}
-            style={{
-              cursor: "pointer",
-              color: isActive ? COLORS.primary : COLORS.textDim,
-              background: isActive ? "rgba(98, 196, 255, 0.1)" : "transparent",
-              borderRadius: 3,
-              padding: "1px 2px",
-            }}
-            ref={isActive ? currentRef : undefined}
-          >
-            {s.text.trim()}{" "}
+          <span key={i}>
+            {startsSentence && i > 0 && <br />}
+            <span
+              onClick={() => onSeek(w.start)}
+              ref={isActive ? currentRef : undefined}
+              style={{
+                cursor: "pointer",
+                color: isActive ? COLORS.primary : COLORS.textDim,
+                background: isActive ? "rgba(98, 196, 255, 0.12)" : "transparent",
+                borderRadius: 3,
+                padding: "1px 2px",
+                transition: "color 0.1s",
+              }}
+              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = COLORS.text; }}
+              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = COLORS.textDim; }}
+            >
+              {w.word}
+            </span>{" "}
           </span>
         );
       })}
+    </div>
+  );
+}
+
+// --- Script Editor component ---
+function ScriptEditor({ script, onChange, onRegenerate, regenerating, dirty, lintIssues }: {
+  script: string;
+  onChange: (v: string) => void;
+  onRegenerate: () => void;
+  regenerating: boolean;
+  dirty: boolean;
+  lintIssues: {line: number; rule: string; description: string; detail?: string}[];
+}) {
+  const [showLint, setShowLint] = useState(false);
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+      <textarea
+        value={script}
+        onChange={e => onChange(e.target.value)}
+        spellCheck={false}
+        placeholder="Narration script..."
+        style={{
+          flex: 1, background: COLORS.card, color: COLORS.text,
+          border: "none", borderTop: `1px solid ${COLORS.cardBorder}`,
+          padding: "12px 16px", fontFamily: "'SF Mono', 'Berkeley Mono', monospace",
+          fontSize: 12, lineHeight: 1.7, resize: "none", outline: "none",
+          whiteSpace: "pre-wrap", wordBreak: "break-word",
+        }}
+      />
+      {/* Lint issues panel */}
+      {showLint && lintIssues.length > 0 && (
+        <div style={{
+          maxHeight: 140, overflow: "auto", padding: "6px 12px",
+          borderTop: `1px solid ${COLORS.cardBorder}`, background: COLORS.bgAlt,
+          fontSize: 10, lineHeight: 1.6, fontFamily: "'SF Mono', monospace",
+        }}>
+          {lintIssues.map((iss, i) => (
+            <div key={i} style={{ color: COLORS.warn }}>
+              <span style={{ color: COLORS.danger, fontWeight: 700 }}>L{iss.line}</span>
+              {" "}
+              <span style={{ color: COLORS.textFaint }}>{iss.rule}</span>
+              {" "}
+              <span style={{ color: COLORS.textDim }}>{iss.detail || iss.description}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{
+        padding: "8px 12px", borderTop: `1px solid ${COLORS.cardBorder}`,
+        display: "flex", alignItems: "center", gap: 8,
+        background: COLORS.bgAlt,
+      }}>
+        {/* Lint badge */}
+        <button
+          onClick={() => setShowLint(s => !s)}
+          style={{
+            ...btnStyle,
+            background: lintIssues.length === 0 ? "rgba(127,217,98,0.15)" : "rgba(255,107,107,0.15)",
+            color: lintIssues.length === 0 ? COLORS.success : COLORS.danger,
+            border: `1px solid ${lintIssues.length === 0 ? COLORS.success : COLORS.danger}`,
+            cursor: "pointer", padding: "3px 8px",
+          }}
+        >
+          {lintIssues.length === 0 ? "\u2713 lint" : `${lintIssues.length} lint`}
+        </button>
+        <span style={{ fontSize: 10, color: COLORS.textFaint, flex: 1 }}>
+          {regenerating ? "Regenerating... (TTS + render, ~10 min)" :
+           dirty ? "Unsaved changes. Regenerate to apply." :
+           "Edit text, then regenerate to rebuild narration + video."}
+        </span>
+        <button
+          onClick={onRegenerate}
+          disabled={regenerating || !script.trim()}
+          style={{
+            ...btnStyle,
+            background: regenerating ? COLORS.cardBorder : dirty ? COLORS.warn : COLORS.primary,
+            color: regenerating ? COLORS.textFaint : COLORS.bg,
+            cursor: regenerating ? "not-allowed" : "pointer",
+            padding: "6px 16px", fontSize: 11, fontWeight: 700,
+            opacity: regenerating ? 0.6 : 1,
+          }}
+        >
+          {regenerating ? "Working..." : "Save & Regenerate"}
+        </button>
+      </div>
     </div>
   );
 }
