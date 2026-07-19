@@ -1,0 +1,92 @@
+title: Choose your own AI policy
+---
+author: Eric J. Ma
+---
+pub_date: 2026-07-20
+---
+twitter_handle: ericmjl
+---
+body:
+
+I just got back from SciPy 2026, my eleventh year at the conference. The loudest thread across the week was AI in open source, and what maintainers are supposed to do about it.
+
+The thread surfaced in a Scientific Python community session, run as a Birds of a Feather (BoF). Stefan van der Walt walked us through the project's work: the specification process (SPECS, the Python-community analog of PEPs and NEPs), four developer summits, shared tools like [RepoReview](https://repo-review.readthedocs.io/) and [`spin`](https://github.com/scientific-python/spin), and [MyST](https://mystmd.org/) as the documentation engine behind the next [Jupyter Book](https://jupyterbook.org/). Then the floor opened for Q&A.
+
+Someone raised a worry I haven't been able to shake. As Claude and its cousins make it cheap to spin up a working tool, maintainers build bespoke utilities for themselves and stop contributing back. The room offered an analogy: if everyone builds their own vehicle, the roads stop working. Someone is driving a tank, someone else is on a bicycle, and the shared infrastructure collapses. The cheap-prototype problem makes it worse. The version a person publishes is often the version that only works for them, which pushes the next person to build their own thing too.
+
+That conversation rolled straight into a pull request I reviewed that same week.
+
+## Two flavors of AI in open source
+
+Henry Schreiner opened [PR #821 on scientific-python/cookie](https://github.com/scientific-python/cookie/pull/821) to add an AI page to the cookie project, the Scientific Python community's recommended project template. (Henry started the draft by pointing Claude Opus at the issue and reworking the output by hand, which is exactly the meta-lesson of the page itself.) The page opens with a distinction I believe is useful here:
+
+- A developer driving an interactive AI harness with a capable model, reading the output, and taking responsibility for the result.
+- Low-cost models running unattended in automated systems that mass-produce pull requests.
+
+The first is a power tool. The second is slop. Most maintainer frustration about AI contributions comes from the second case, and most of the value comes from the first. Conflating them produces bad policy.
+
+I see this conflation constantly. A contributor opens a pull request with a generic "I improved the code" message, the diff is a wall of token churn, and when you ask a question the answer comes back in the same flat model-voice. That is slop with a human attached. The human is the relay, not the author. Reviewing it takes longer than writing the change myself would have.
+
+The first flavor is what I want more of. A contributor who uses an agent to actually engage with my project, reads the result, and can defend every line, is using a tool. I want to encourage them.
+
+## Write your stance down
+
+The heart of Henry's PR is `AI_POLICY.md`, a project-level file that tells contributors what you expect. The PR sketches three tiers you can adapt.
+
+**All in.** AI-assisted contributions are welcome on the same footing as any other, as long as they meet your quality bar and are disclosed.
+
+**Moderate.** AI assistance is fine, but the contributor has to show real human involvement and prior buy-in before opening the PR.
+
+**Minimal.** AI-generated PRs are discouraged or restricted. Use this if you have limited review capacity.
+
+Which one fits depends on the project. The point, however, is that you should pick one. A contributor reading your `AI_POLICY.md` should know what to expect before they open a PR, and a maintainer closing a PR should be able to point at the policy rather than re-litigate it every time.
+
+The cookie PR leaves the policy out of the template by default. Each project selects and modifies their own. I think that's right. A project with one overworked maintainer is in a different situation from a project with twenty regular contributors, and the policy should reflect that. The maintainer reserves the right to take whatever action fits the project; nobody is paying for this work, which means no contributor is owed a review.
+
+## Engage with the human, not the bot
+
+My favorite passage in the policy is tucked inside a callout:
+
+> If you maintain a project: try to engage with the human. If they are willing to interact (and not just type "address the review" into their harness), treat them like a human, even if you also see the AI working on their behalf. They also may use AI to address a language barrier.
+
+The failure mode of AI-assisted contributions is the human tagging out. A contributor pastes review comments into their harness, pastes the harness's reply back into the PR, and walks away. The maintainer is now arguing with a bot. That's draining, and it's disrespectful of volunteer time.
+
+The policy handles this directly. **Keep human review human-to-human.** If an AI is responding on your behalf, say so, with a disclaimer line at the top of the comment. You're accountable for every change you submit. Don't make a maintainer talk to an AI without knowing it.
+
+Disclosure norms pay off here too. The PR recommends the Linux kernel's `Assisted-by: <harness>:<model>` trailer for commits. A convention I first saw Daniel Chen use is the `:robot: _AI text below_ :robot:` line for any AI-generated prose in a PR or comment. Knowing which model was used lets a reviewer run a different model family to cross-check the work (the PR calls this the "rubber-duck" technique). It also just respects the maintainer. Hiding your process when you contribute to open source is a small lie, repeated.
+
+## Context is the bottleneck
+
+The fragmentation worry from the community session and the slop worry from the cookie PR share a root. The cost of producing code dropped faster than the cost of producing context. When anyone can ship a working prototype in an afternoon, the scarce thing is the understanding of what the code should do, why it should do it, and how it fits with what already exists.
+
+This shows up in every issue triage. The issue that says "the build is broken" with no logs, no repro, no environment info. The PR that addresses a problem the contributor never confirmed anyone had. The agent-generated patch that is locally correct and globally wrong because nobody told it about the other module that depends on the current behavior.
+
+What helps is documentation, especially documentation written for an agent to read. The cookie PR includes a section on `AGENTS.md`, the cross-harness standard file that captures how your repository works: preferred command runners, architecture notes, conventions, traps. A good `AGENTS.md` makes the AI far more effective, because the AI stops guessing. The same instinct applies to issues. Write down what you tried, what you expected, what you saw, what you want. The agent working from a thorough issue is a different animal from the agent working from a one-liner. The flipside is that agents are good at producing it. A minimal reproducible example is tedious for a human to build; for an agent that can spin up the environment, run the code, and iterate until the bug fires deterministically, it's a short task. Your `AI_POLICY.md` can ask for exactly this: if a contributor wants to file an AI-assisted issue, have them use their agent to produce a self-contained repro first. The maintainer gets something they can run, and the contributor finds out whether the bug is real before anyone else spends time on it.
+
+Later in Q&A, someone who works with NASA data raised the same point from their own side: they had started asking whether to write their documentation for a chatbot instead of a human. They had started shipping documentation as markdown alongside the rendered HTML, because the markdown is what the chatbot consumes. The rendered page is for a human; the source is for the agent. The lesson generalizes. If you want agents to do good work on your project, give them something to read.
+
+## Be courageous
+
+Now, for my final recommendation.
+
+If you maintain an open source project, pick an AI policy. Any of the three tiers. Write it down, commit it, link to it from your contributing guide, and enforce it. The action that fits your project is the correct action. A solo maintainer with no review capacity is within their rights to say "no unsolicited AI PRs, full stop." A healthy project with twenty contributors and review bandwidth can be all-in, and benefit from it. Both are legitimate. What's undesirable is having no policy, drifting, and burning out.
+
+The action that fits *you* is also legitimate. If engaging with AI-assisted contributors drains you, you can require prior buy-in, or close the PR, or step back from the project for a week. Some projects rely solely on volunteer work. Protecting your capacity is part of the job.
+
+And when a contributor shows up willing to engage, even when their harness did most of the typing, treat them like a human. Read their PR, ask your questions, and teach them the parts they don't know yet. That is how open source onboards people. Thomas Caswell onboarded me to Matplotlib a decade ago by walking me through seventy pull requests over two months. The first four were painful for him. He did it anyway, and I'm still here. That people connection is invaluable.
+
+The cost of writing code dropped this year. The value of a maintainer who knows their project, writes down their stance, and engages with the humans who show up rose, because [agents amplify whoever brings the judgment](/blog/2026/6/17/agents-amplify-expertise-and-ignorance/). That's the work. Go do it, and don't apologize for the policy you choose.
+---
+summary:
+
+In this blog post, I digest a Scientific Python community session at SciPy 2026 and a pull request I reviewed on scientific-python/cookie that adds an AI policy page. I argue every open source maintainer should pick an AI stance, write it down, and enforce it on their own terms, with no apology. What does your project's AI policy look like? Read on to find out.
+---
+tags:
+
+open-source
+ai
+agents
+policy
+community
+scipy
+maintainers
