@@ -95,6 +95,38 @@ script one after the other, not in a parallel batch. If one fails due to
 a race, simply re-run it sequentially after the others complete (the
 retry succeeds because there is no longer contention).
 
+## Audit Before Queueing (decide what to schedule next)
+
+Before generating or queueing NEW social posts, FIRST audit Buffer's current
+state to ground the decision in what is already scheduled/sent. This is a
+PRE-scheduling AUDIT and is distinct from the POST-scheduling VERIFICATION
+below (which checks for collisions AFTER a batch is queued).
+
+- Pre-audit answers: "What gaps exist? What should I queue next?"
+- Post-verify answers: "Did I schedule correctly? Any same-day collisions?"
+
+Workflow (observed 2026-07-19: "query buffer for what latest social media
+posts we have made. I want to know what we need to queue up"):
+
+1. `list_channels` for the organization to get channel IDs (LinkedIn,
+   BlueSky, etc.).
+2. `list_posts` on each channel with a date filter covering recent sent +
+   upcoming scheduled posts (e.g. last 30 days through next 30 days).
+3. Map the results to the blog cadence: which weeks already have a post,
+   which are free, and which blog slugs have NO social promo yet.
+4. PROPOSE what to queue next based on the gaps. Do not blindly generate
+   posts for the most recent blog slug without confirming it is not already
+   scheduled.
+
+This is the data-driven entry point to the scheduling workflow. The
+one-post-per-week cadence and cross-channel sync rules (below) then govern
+HOW the proposed posts are dated, not WHETHER to propose them.
+
+Connects to: pub_date is coupled to the post URL via Lektor slug_format,
+and already-scheduled Buffer posts embed that URL, so the audit also
+surfaces any post whose pub_date has since moved and whose Buffer links
+would now be stale.
+
 ## One-Click Scheduling to Buffer
 
 The **buffer** MCP server (configured in `opencode.json`) connects opencode to
@@ -178,6 +210,8 @@ Gotcha: do NOT trust a reference schedule blindly. If the user says 'follow the 
 ## Scheduling Cadence
 
 - Default cadence: ONE post per week per channel, spread evenly across the publishing window. When scheduling a batch of blog posts to LinkedIn/Bluesky, do NOT stack two posts on the same date even if the queue allows it. Stagger them weekly (e.g. week 1, week 2, week 3...). Before finishing a scheduling batch, verify each channel has no same-day duplicates. Keep LinkedIn and Bluesky in sync (same post on the same week) unless told otherwise.
+
+- **Use `addToQueue`, NOT `customScheduled`, for blog post scheduling.** The channel's queue already has the correct time slots configured (e.g. 7 AM). `addToQueue` places the post in the next available weekly slot automatically. Do NOT hardcode a `dueAt` time. Do NOT use `customScheduled` unless the user EXPLICITLY asks for a specific time ("post at 3 PM", "schedule for Tuesday morning"). Observed 2026-07-19: the agent hardcoded `dueAt: 11:00 AM EDT` via `customScheduled` instead of using `addToQueue`, which placed posts at 11 AM instead of the queue's 7 AM slot. The user had to manually fix the times. The root cause: the agent saw inconsistent times in the existing schedule (one `addToQueue` post at 7 AM, one `customScheduled` post at 11 AM) and "picked a consistent time" instead of trusting the queue. Trust the queue. Pass `mode: "addToQueue"` + `schedulingType: "automatic"` with no `dueAt`.
 
 ## Post-Merge GitHub Pages Rebuild Delay
 
