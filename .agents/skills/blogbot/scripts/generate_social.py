@@ -51,6 +51,17 @@ def socialbot_sysprompt():
     - First person, humble, and inviting.
     - Keep it short and concise.
     - Always include the URL of the blog post in the social media post.
+    - The #1 purpose of this post is to get the reader to CLICK THROUGH to the
+      blog post. Every line should pull them toward the click.
+    - Open with the reader's PAIN, not with "I wrote about..." or "In this
+      post, I..." Make them feel "this is about ME."
+    - Sell the OUTCOME (what changes for the reader), not the MECHANISM (what
+      technique you used). Translate every technical term into a reader-felt
+      benefit. "Your pipeline handles messy data without you touching it"
+      beats "Student-t likelihood."
+    - Use ONE rhetorical question placed right after the concrete proof to
+      make the reader self-insert: "How would you feel about [new way]
+      instead of [old pain]?" Keep it to one sentence.
     """
 
 
@@ -76,7 +87,10 @@ def compose_bluesky_post(text, url):
 
     Please compose for me a BlueSky post
     that entices my followers on BlueSky to read it.
-    I usually like to open off with a question that the post answers.
+    Open with the reader's pain or a stark benefit claim, not with "I wrote about..."
+    Sell the outcome, not the mechanism (no jargon).
+    Place ONE rhetorical question right after the concrete proof:
+    "How would you feel about [new way] instead of [old pain]?"
     Ensure that there is a call to action to interact with the post after reading it,
     such as reposting, commenting, or sharing it with others.
     Choose up to 2 lowercase hashtags and place them in the 'hashtags' field.
@@ -111,7 +125,9 @@ class LinkedInHook(BaseModel):
         ...,
         description=(
             "Context-Lean Setup: Start with as little context as possible. "
-            "Jump straight into the action or core message. Avoid long-winded intros. "
+            "Jump straight into the reader's pain or a stark benefit claim. "
+            "Do NOT open with 'I wrote about...' or 'In this post...' "
+            "Make them feel 'this is about ME.' "
             "Should be 60 characters or less for maximum impact."
         ),
     )
@@ -119,7 +135,8 @@ class LinkedInHook(BaseModel):
         ...,
         description=(
             "Scroll-Stop Interjection: Use a bold, surprising, or emotionally charged statement "
-            "that interrupts scrolling. Could be a shocking fact, strong opinion, or unexpected insight. "
+            "that interrupts scrolling. Name what hurts or what's at stake for the reader. "
+            "Could be a shocking fact, strong opinion, or unexpected insight. "
             "Jolt the viewer out of autopilot and make them pay attention."
         ),
     )
@@ -157,8 +174,11 @@ class LinkedInPost(BaseModel):
     call_to_action: str = Field(
         ...,
         description=(
-            "Call to action focused on relationship building, not just broadcasting. "
-            "I usually want people to read the blog post, leave a like, comment, and share."
+            "Call to action that proposes a plausible next step for the reader. "
+            "Match the ask to what they can actually do: for lab scientists, "
+            "'send this to your biostatistics core' or 'raise it at your next methods meeting' "
+            "is more plausible than 'code it yourself.' "
+            "Always include the blog post URL."
         ),
     )
     ending_question: str = Field(
@@ -213,7 +233,8 @@ class BlueSkyPost(BaseModel):
     strong_hook: str = Field(
         ...,
         description=(
-            "Context-Lean Setup: Start with minimal context, jump straight to the core message. "
+            "Context-Lean Setup: Open with the reader's PAIN or a stark benefit claim, "
+            "not with 'I wrote about...' Make them feel 'this is about ME.' "
             "Use a bold, surprising, or emotionally charged statement that interrupts scrolling. "
             "Create immediate curiosity gap - tease value without revealing everything. "
             "Avoid bland intros and long-winded setups."
@@ -229,8 +250,10 @@ class BlueSkyPost(BaseModel):
     value_delivery: str = Field(
         ...,
         description=(
-            "Deliver value, emotion, or entertainment. Use specific details, numbers, or examples "
-            "for credibility and impact. Should teach something, make people laugh, or evoke feeling."
+            "Deliver value by selling the OUTCOME (what changes for the reader), "
+            "not the mechanism (what technique you used). Translate technical terms "
+            "into reader-felt benefits. Use specific numbers for credibility. "
+            "Should teach something or evoke feeling."
         ),
     )
     call_to_action: Optional[str] = Field(
