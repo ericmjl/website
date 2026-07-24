@@ -209,7 +209,7 @@ This isn't just my opinion. Karch demonstrated in a paper literally titled "Outl
 
 ## Down-weight, don't delete
 
-Here's where Bayesian modeling changes the game. Instead of fitting a curve and deciding afterward which points to throw away, you choose a likelihood (the part of your model that scores how well the data fits) that handles outliers from the start.
+Here's where Bayesian modeling changes the game. Instead of fitting a curve and deciding afterward which points to throw away, **you choose a likelihood** (the part of your model that scores how well the data fits) **that handles outliers from the start**.
 
 The normal distribution, the bell curve you know, has thin tails. Probability drops off fast as you move away from the center. A single point sitting far from the curve becomes astronomically unlikely under a normal likelihood, and the only way the model can reduce that penalty is to drag the entire fit toward the outlier. One bad point yanks your curve.
 
