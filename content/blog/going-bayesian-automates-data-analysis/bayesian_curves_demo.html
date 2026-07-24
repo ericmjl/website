@@ -6,7 +6,7 @@
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fafafa; color: #222; }
+body { font-family: monospace; background: #fff; color: #333; }
 #chart { width: 100%; }
 </style>
 </head>
@@ -83,22 +83,22 @@ var buttons = nuValues.map(function(nv) {
 
 var layout = {
   margin: { t: 60, b: 50, l: 60, r: 30 },
-  xaxis: { title: "log10(dilution)", range: [0.5, 8.5], gridcolor: "#eee" },
-  yaxis: { title: "% neutralization", range: [-5, 105], gridcolor: "#eee" },
-  plot_bgcolor: "#fff", paper_bgcolor: "#fafafa",
+  xaxis: { title: "log10(dilution)", range: [0.5, 8.5], gridcolor: "#eee", zerolinecolor: "#eee", linecolor: "#ddd" },
+  yaxis: { title: "% neutralization", range: [-5, 105], gridcolor: "#eee", zerolinecolor: "#eee", linecolor: "#ddd" },
+  plot_bgcolor: "white", paper_bgcolor: "white",
   showlegend: true,
-  legend: { x: 0.02, y: 0.98, bgcolor: "rgba(255,255,255,0.8)", font: { size: 11 } },
-  font: { size: 12 },
+  legend: { x: 0.02, y: 0.98, bgcolor: "rgba(255,255,255,0.9)", bordercolor: "#ddd", borderwidth: 1, font: { size: 11, family: "monospace", color: "#333" } },
+  font: { size: 12, family: "monospace", color: "#333" },
   updatemenus: [{
     x: 0.5, y: 1.12, xanchor: "center", yanchor: "top",
     direction: "left", type: "buttons", buttons: buttons,
-    bgcolor: "#fff", bordercolor: "#ddd", font: { size: 12 }
+    bgcolor: "white", bordercolor: "#ddd", activecolor: "#0066cc", font: { size: 12, family: "monospace", color: "#333" }
   }],
   annotations: [
-    { x: DATA.normal.ec50_median, y: 102, text: "Normal ID50", showarrow: false, font: { size: 9, color: "#2196F3" } },
-    { x: DATA.student_t["1"].ec50_median, y: -3, text: "Student-t ID50", showarrow: false, font: { size: 9, color: "#e85d3a" } }
+    { x: DATA.normal.ec50_median, y: 102, text: "Normal ID50", showarrow: false, font: { size: 9, color: "#0066cc", family: "monospace" } },
+    { x: DATA.student_t["1"].ec50_median, y: -3, text: "Student-t ID50", showarrow: false, font: { size: 9, color: "#e85d3a", family: "monospace" } }
   ],
-  title: { text: "Bayesian 4PL: Normal vs Student-t posterior", font: { size: 14 } }
+  title: { text: "Bayesian 4PL: Normal vs Student-t posterior", font: { size: 14, family: "monospace", color: "#333" } }
 };
 
 Plotly.newPlot("chart", allTraces, layout, { responsive: true, displayModeBar: false });
