@@ -10,25 +10,9 @@ A warning before we start, and a promise. The worry I'm surveying has a name now
 
 ## Before you read
 
-These aren't graded. Answer them honestly, in your head, and notice your assumptions. The survey revisits every one.
+These aren't graded, and the cards won't tell you if you're right. Pick your honest answer for each, notice your assumptions, then read on. The survey revisits every one.
 
-1. With agents writing much of our code, what's the main thing a human reviewer still adds?
-   - a) Catching the bugs the agent missed
-   - b) Holding the shared mental model that lets the team keep evolving the system
-   - c) Enforcing style and conventions
-   - d) Speeding up the merge
-
-2. You skim a clean-looking agent diff, CI is green, and you approve. What's actually happening?
-   - a) Efficient delegation
-   - b) You're banking cognitive debt
-   - c) Standard senior practice
-   - d) Risk-free, because the agent verified it
-
-3. An AI review tool that only returns "approve" or "request changes" is missing:
-   - a) Nothing; that's the whole job
-   - b) Speed
-   - c) A way to build your own understanding of the change
-   - d) Better accuracy
+<iframe src="before-you-read.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Hold your answers. Let's see where the field has landed.
 
@@ -106,7 +90,7 @@ Read down the table and you can see the conversation's shape: a diagnosis (under
 
 ## Check your understanding
 
-Here's the quiz. Five questions, instant feedback, and a live score. This is the speed-regulator technique from the last section, turned back on the post itself.
+Here's the quiz. Five cards, instant feedback, and a live score. This is the speed-regulator technique from the last section, turned back on the post itself.
 
 <iframe src="check-understanding.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
