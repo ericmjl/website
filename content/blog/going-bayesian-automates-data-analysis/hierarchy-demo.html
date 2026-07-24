@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: monospace; background: #fff; color: #333; display: flex; justify-content: center; }
+.app { width: 100%; max-width: 620px; }
+.header { padding: 10px 16px; text-align: center; }
+.header h3 { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 4px; }
+.header p { font-size: 11px; color: #999; }
+.toggle-bar { display: flex; padding: 6px 16px; gap: 8px; justify-content: center; }
+.toggle-btn { padding: 6px 16px; border-radius: 8px; border: 1px solid #ddd; background: #fff; color: #666; font-family: monospace; font-size: 12px; cursor: pointer; }
+.toggle-btn.active { background: #0066cc; color: #fff; border-color: #0066cc; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #eee; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+.cell { background: #fff; padding: 6px; position: relative; }
+.cell-label { font-size: 10px; color: #999; margin-bottom: 2px; }
+.cell.warn .cell-label { color: #e85d3a; font-weight: 700; }
+svg { display: block; width: 100%; height: 130px; }
+.footer { padding: 8px 16px; font-size: 11px; color: #999; text-align: center; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="app">
+<div class="header">
+<h3>Partial pooling: curve 3 had a bad day</h3>
+<p>Toggle between independent and hierarchical fits. Curve 3 has only 4 noisy data points.</p>
+</div>
+<div class="toggle-bar">
+<button class="toggle-btn active" id="btn-indep">Independent fits</button>
+<button class="toggle-btn" id="btn-hier">Hierarchical (partial pooling)</button>
+</div>
+<div class="grid" id="grid"></div>
+<div class="footer" id="caption">Each curve fit on its own. Curve 3 is a mess.</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var SVG_NS='http://www.w3.org/2000/svg';
+
+function f4pl(x,p){var e=(p[2]-x)*p[3];if(e>100)e=100;if(e<-100)e=-100;return p[0]+(p[1]-p[0])/(1+Math.pow(10,e));}
+function fit4pl(fxs,fys){
+  var best=[5,90,4,1.5],bestSSR=Infinity;
+  for(var b=0;b<=15;b+=2)for(var t=80;t<=100;t+=2)for(var ec=2;ec<=7;ec+=0.2)for(var h=0.3;h<=4;h+=0.2){
+    var ssr=0;for(var i=0;i<fxs.length;i++){var r=fys[i]-f4pl(fxs[i],[b,t,ec,h]);ssr+=r*r;}
+    if(ssr<bestSSR){bestSSR=ssr;best=[b,t,ec,h];}
+  }
+  return best;
+}
+
+// Shared population params (slight variation per curve)
+var popParams=[7,88,4.2,1.8];
+var rng=function(s){var x=Math.sin(s*9999)*10000;return x-Math.floor(x);};
+
+var curves=[];
+var xs8=[1,2,3,4,5,6,7,8];
+for(var i=0;i<6;i++){
+  var p=[
+    popParams[0]+(rng(i+1)-0.5)*4,
+    popParams[1]+(rng(i+10)-0.5)*6,
+    popParams[2]+(rng(i+20)-0.5)*1.0,
+    popParams[3]+(rng(i+30)-0.5)*0.6
+  ];
+  if(i===2){
+    // Curve 3: sparse (4 points) + noisy
+    var xs3=[2,3,5,7];
+    var ys3=xs3.map(function(x,j){return f4pl(x,p)+(rng(i*8+j)-0.5)*18;});
+    curves.push({xs:xs3,ys:ys3,params:p,isWarn:true});
+  }else{
+    var ys=xs8.map(function(x,j){return f4pl(x,p)+(rng(i*8+j)-0.5)*4;});
+    curves.push({xs:xs,ys:ys,params:p,isWarn:false});
+  }
+}
+
+// Independent fits
+for(var k=0;k<6;k++){curves[k].indepFit=fit4pl(curves[k].xs,curves[k].ys);}
+
+// Population mean (average of all 6 independent fits, but curve 3 pulls it — so use only clean curves)
+var popMean=[0,0,0,0]; var cleanCount=0;
+for(var c=0;c<6;c++){
+  if(!curves[c].isWarn){
+    for(var j=0;j<4;j++)popMean[j]+=curves[c].indepFit[j];
+    cleanCount++;
+  }
+}
+for(var j2=0;j2<4;j2++)popMean[j2]/=cleanCount;
+
+// Hierarchical fit for curve 3: shrink toward population mean
+// Weight: how much to trust the independent fit vs population
+// With only 4 noisy points, trust population more
+var shrinkWeight=0.65; // 0 = pure independent, 1 = pure population
+var hierFit3=[];
+for(var j3=0;j3<4;j3++){
+  hierFit3.push(curves[2].indepFit[j3]*(1-shrinkWeight)+popMean[j3]*shrinkWeight);
+}
+curves[2].hierFit=hierFit3;
+// Other curves barely change (they have enough data)
+for(var c2=0;c2<6;c2++){
+  if(c2!==2){
+    var sw=0.1; // minimal shrinkage for well-sampled curves
+    var hf=[];
+    for(var j4=0;j4<4;j4++)hf.push(curves[c2].indepFit[j4]*(1-sw)+popMean[j4]*sw);
+    curves[c2].hierFit=hf;
+  }
+}
+
+var xMin=0.5,xMax=8.5,yMin=-5,yMax=105;
+var xGrid=[];for(var gx=xMin;gx<=xMax;gx+=0.15)xGrid.push(gx);
+
+function el(tag,attrs){var e=document.createElementNS(SVG_NS,tag);for(var k in attrs){if(attrs.hasOwnProperty(k))e.setAttribute(k,attrs[k]);}return e;}
+
+function drawCell(svg,c,idx,mode){
+  var W=280,H=130,M={top:6,right:8,bottom:18,left:22};
+  var PW=W-M.left-M.right,PH=H-M.top-M.bottom;
+  function sx(x){return M.left+(x-xMin)/(xMax-xMin)*PW;}
+  function sy(y){return M.top+(1-(y-yMin)/(yMax-yMin))*PH;}
+
+  svg.innerHTML='';
+  // grid
+  svg.appendChild(el('rect',{x:M.left,y:M.top,width:PW,height:PH,fill:'#fff',stroke:'#eee'}));
+  for(var y=0;y<=100;y+=25)svg.appendChild(el('line',{x1:M.left,y1:sy(y),x2:M.left+PW,y2:sy(y),stroke:'#f5f5f5'}));
+
+  // population reference (faint dashed) on warn curve
+  if(c.isWarn){
+    var refPts=[];
+    for(var i=0;i<xGrid.length;i++){
+      var ry=Math.max(yMin,Math.min(yMax,f4pl(xGrid[i],popMean)));
+      refPts.push(sx(xGrid[i]).toFixed(1)+','+sy(ry).toFixed(1));
+    }
+    svg.appendChild(el('path',{d:'M'+refPts.join(' L'),fill:'none',stroke:'#ccc','stroke-width':1.5,'stroke-dasharray':'3,3'}));
+  }
+
+  // fitted curve
+  var fit = mode==='hier'?c.hierFit:c.indepFit;
+  var fitColor = c.isWarn ? '#e85d3a' : '#0066cc';
+  var pts=[];
+  for(var i2=0;i2<xGrid.length;i2++){
+    var fy=Math.max(yMin,Math.min(yMax,f4pl(xGrid[i2],fit)));
+    pts.push(sx(xGrid[i2]).toFixed(1)+','+sy(fy).toFixed(1));
+  }
+  svg.appendChild(el('path',{d:'M'+pts.join(' L'),fill:'none',stroke:fitColor,'stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round'}));
+
+  // data points
+  for(var d=0;d<c.xs.length;d++){
+    svg.appendChild(el('circle',{cx:sx(c.xs[d]),cy:sy(c.ys[d]),r:3,fill:c.isWarn?'#e85d3a':'#0066cc',stroke:'#fff','stroke-width':1}));
+  }
+
+  // x labels
+  for(var xa=2;xa<=8;xa+=2){var t=el('text',{x:sx(xa),y:H-4,'text-anchor':'middle','font-size':7,fill:'#aaa'});t.textContent=xa;svg.appendChild(t);}
+  // y label
+  var yl=el('text',{x:4,y:sy(50),'text-anchor':'middle','font-size':7,fill:'#aaa',transform:'rotate(-90, 4, '+sy(50)+')'});yl.textContent='%';svg.appendChild(yl);
+}
+
+// Build grid
+var grid=document.getElementById('grid');
+var sels=[];
+for(var i3=0;i3<6;i3++){
+  var cell=document.createElement('div');
+  cell.className='cell'+(curves[i3].isWarn?' warn':'');
+  var label=document.createElement('div');
+  label.className='cell-label';
+  label.textContent='Curve '+(i3+1)+(curves[i3].isWarn?' (4 points, noisy)':'');
+  cell.appendChild(label);
+  var sv=document.createElementNS(SVG_NS,'svg');
+  sv.setAttribute('viewBox','0 0 280 130');
+  cell.appendChild(sv);
+  grid.appendChild(cell);
+  sels.push(sv);
+}
+
+var currentMode='indep';
+function renderAll(mode){
+  for(var i4=0;i4<6;i4++)drawCell(sels[i4],curves[i4],i4,mode);
+  document.getElementById('caption').textContent = mode==='hier'
+    ? 'Curve 3 borrowed strength from its neighbors. The population distribution regularized the fit.'
+    : 'Each curve fit on its own. Curve 3 is a mess.';
+}
+
+renderAll('indep');
+
+document.getElementById('btn-indep').addEventListener('click',function(){
+  if(currentMode==='indep')return;currentMode='indep';
+  document.getElementById('btn-indep').className='toggle-btn active';
+  document.getElementById('btn-hier').className='toggle-btn';
+  renderAll('indep');
+});
+document.getElementById('btn-hier').addEventListener('click',function(){
+  if(currentMode==='hier')return;currentMode='hier';
+  document.getElementById('btn-indep').className='toggle-btn';
+  document.getElementById('btn-hier').className='toggle-btn active';
+  renderAll('hier');
+});
+})();
+</script>
+</body>
+</html>
