@@ -71,9 +71,10 @@ var bLit = document.getElementById('b-lit');
 var vRaw = document.getElementById('v-raw');
 var vLit = document.getElementById('v-lit');
 function fit(){
-  var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
   var fe = window.frameElement;
-  if (fe) fe.style.height = h + 'px';
+  if (!fe) return;
+  fe.style.height = '0px';
+  fe.style.height = document.body.scrollHeight + 'px';
 }
 function show(which){
   var raw = (which === 'raw');
