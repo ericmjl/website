@@ -1,0 +1,38 @@
+.agents/skills/blogbot/SKILL.md
+  s_891b3d9440c58e::t_79d4e055d8047e 388-448
+  s_9544af6044cc21::t_199849294cb438 318-321
+  s_2f61243b41cd13::t_eaa5f46d4dfa31 216-219
+  s_9544af6044cc21::t_5332a125a63adf 269-305,307-309
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e48d61ea53e1fe12fea22cec88d31e0fbf2f874c",
+  "prompts": {},
+  "sessions": {
+    "s_2f61243b41cd13": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_069b419ecffe3SgxZW4ZyMV5LJ",
+        "model": "glm-5.2"
+      },
+      "human_author": "Eric Ma <ericmajinglong@gmail.com>"
+    },
+    "s_891b3d9440c58e": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_069bc0a9cffe5eip3ehvPQpkY5",
+        "model": "glm-5.2"
+      },
+      "human_author": "Eric Ma <ericmajinglong@gmail.com>"
+    },
+    "s_9544af6044cc21": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_06a453b62ffeJo5XHmpYWLc0JY",
+        "model": "glm-5.2"
+      },
+      "human_author": "Eric Ma <ericmajinglong@gmail.com>"
+    }
+  }
+}
