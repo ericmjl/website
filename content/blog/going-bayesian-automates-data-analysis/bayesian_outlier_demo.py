@@ -1,6 +1,6 @@
 import marimo
 
-# ruff: noqa: E501, E741, F821, F841
+# ruff: noqa: E501, E702, F401, F841
 
 # /// script
 # requires-python = ">=3.11"
@@ -8,17 +8,16 @@ import marimo
 #     "numpy>=2.0",
 #     "scipy>=1.14",
 #     "matplotlib>=3.9",
-#     "emcee>=3.1",
-#     "pymc>=5.0; sys_platform != 'emscripten'",
-#     "arviz>=0.20; sys_platform != 'emscripten'",
+#     "pymc>=5.0",
+#     "arviz>=0.20",
 # ]
 # ///
 
-__generated_with = "0.13.0"
+__generated_with = "0.23.15"
 app = marimo.App(width="medium")
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     import marimo as mo
 
@@ -26,27 +25,25 @@ def _():
 
 
 @app.cell
-def _():
-    mo.md(
-        r"""
-        # Bayesian outlier handling: Normal vs Student-t likelihood
+def _(mo):
+    mo.md(r"""
+    # Bayesian outlier handling: Normal vs Student-t likelihood
 
-        Two 4PL dose-response models are fit to the same data with MCMC:
+    Two 4PL dose-response models are fit to the same data with MCMC:
 
-        1. **Normal likelihood** (thin tails): one outlier drags the curve
-        2. **Student-t likelihood** (heavy tails, adjustable nu): the outlier is down-weighted
+    1. **Normal likelihood** (thin tails): one outlier drags the curve
+    2. **Student-t likelihood** (heavy tails, adjustable nu): the outlier is down-weighted
 
-        Drag the **nu** slider. At low nu the Student-t band ignores the
-        outlier. At high nu it behaves like the Normal band.
+    Drag the **nu** slider. At low nu the Student-t band ignores the
+    outlier. At high nu it behaves like the Normal band.
 
-        Shaded regions are 94% posterior credible intervals.
-        Locally this uses PyMC/NUTS; in the browser (WASM) it uses emcee.
-        """
-    )
+    Shaded regions are 94% posterior credible intervals.
+    Locally this uses PyMC/NUTS; in the browser (WASM) it uses emcee.
+    """)
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     import sys
 
@@ -65,21 +62,16 @@ def _():
 
     import matplotlib.pyplot as plt
 
-    return HAS_PYMC, IS_WASM, az, gammaln, np, plt, pm
+    return gammaln, np, plt, pm
 
 
-@app.cell
-def _(IS_WASM, mo):
-    if IS_WASM:
-        import micropip
-
-        await micropip.install("emcee")
-    import emcee
-
-    return (emcee,)
+@app.cell(hide_code=True)
+def _():
+    pass
+    return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(np):
     def f4pl(x, bottom, top, log_ec50, hill):
         """4-parameter logistic dose-response curve."""
@@ -88,7 +80,7 @@ def _(np):
     return (f4pl,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(gammaln, np):
     def log_prior(params):
         """Weakly informative priors for 4PL + log(sigma)."""
@@ -125,26 +117,16 @@ def _(gammaln, np):
         )
         return np.sum(per_obs)
 
-    return log_lik_normal, log_lik_studentt, log_prior
+    return
 
 
-@app.cell
-def _(emcee, np):
-    def sample_emcee(log_post_fn, init, n_walkers=32, n_steps=2000, burn=500, seed=42):
-        """Affine-invariant ensemble sampler (emcee)."""
-        ndim = len(init)
-        rng = np.random.default_rng(seed)
-        p0 = np.array(init) + rng.normal(
-            0, [0.5, 0.5, 0.05, 0.05, 0.05], (n_walkers, ndim)
-        )
-        sampler = emcee.EnsembleSampler(n_walkers, ndim, log_post_fn)
-        sampler.run_mcmc(p0, n_steps, progress=False)
-        return sampler.get_chain(discard=burn, flat=True)
-
-    return (sample_emcee,)
+@app.cell(hide_code=True)
+def _():
+    pass
+    return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(f4pl, np):
     x_clean = np.array([1, 2, 3, 4, 5, 6, 7, 8], dtype=float)
     rng = np.random.default_rng(42)
@@ -170,85 +152,67 @@ def _(mo):
     return (nu_slider,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
-    mo.md("## Fit both models")
+    mo.md("""
+    ## Fit both models
+    """)
     return
 
 
-@app.cell
-def _(
-    HAS_PYMC,
-    IS_WASM,
-    log_lik_normal,
-    log_lik_studentt,
-    log_prior,
-    np,
-    nu_slider,
-    pm,
-    sample_emcee,
-    x_all,
-    y_all,
-):
-    _nu_val = float(nu_slider.value)
-    _init = np.array([5, 95, 4.5, 1.5, np.log(5)])
+@app.cell(hide_code=True)
+def _(mo, np, nu_slider, pm, x_all, y_all):
+    nu_val = float(nu_slider.value)
 
-    # --- Normal likelihood ---
-    if HAS_PYMC and not IS_WASM:
-        with pm.Model() as normal_model:
-            b = pm.Normal("bottom", 0, 20)
-            t = pm.Normal("top", 100, 20)
-            ec = pm.Normal("log_ec50", 4.5, 3)
-            h = pm.HalfNormal("hill", 3)
-            mu_n = b + (t - b) / (1 + 10 ** ((ec - x_all) * h))
-            s = pm.HalfNormal("sigma", 10)
-            pm.Normal("y", mu=mu_n, sigma=s, observed=y_all)
-            normal_trace = pm.sample(1000, tune=1000, chains=2, progressbar=False)
-        normal_samples = np.column_stack(
-            [
-                normal_trace.posterior[k].values.flatten()
-                for k in ["bottom", "top", "log_ec50", "hill", "sigma"]
-            ]
-        )
-        normal_samples[:, 4] = np.log(normal_samples[:, 4])
-    else:
-        normal_samples = sample_emcee(
-            lambda p: log_prior(p) + log_lik_normal(p, x_all, y_all), _init
-        )
+    with pm.Model() as normal_model:
+        b = pm.Normal("bottom", 0, 20)
+        t = pm.Normal("top", 100, 20)
+        ec = pm.Normal("log_ec50", 4.5, 3)
+        h = pm.HalfNormal("hill", 3)
+        mu_n = b + (t - b) / (1 + 10 ** ((ec - x_all) * h))
+        s = pm.HalfNormal("sigma", 10)
+        pm.Normal("y", mu=mu_n, sigma=s, observed=y_all)
+        normal_trace = pm.sample(1000, tune=1000, chains=4, progressbar=False)
 
-    # --- Student-t likelihood ---
-    if HAS_PYMC and not IS_WASM:
-        with pm.Model() as student_t_model:
-            b2 = pm.Normal("bottom", 0, 20)
-            t2 = pm.Normal("top", 100, 20)
-            ec2 = pm.Normal("log_ec50", 4.5, 3)
-            h2 = pm.HalfNormal("hill", 3)
-            mu_s = b2 + (t2 - b2) / (1 + 10 ** ((ec2 - x_all) * h2))
-            s2 = pm.HalfNormal("sigma", 10)
-            pm.StudentT("y", nu=_nu_val, mu=mu_s, sigma=s2, observed=y_all)
-            student_t_trace = pm.sample(1000, tune=1000, chains=2, progressbar=False)
-        student_t_samples = np.column_stack(
-            [
-                student_t_trace.posterior[k].values.flatten()
-                for k in ["bottom", "top", "log_ec50", "hill", "sigma"]
-            ]
-        )
-        student_t_samples[:, 4] = np.log(student_t_samples[:, 4])
-    else:
-        student_t_samples = sample_emcee(
-            lambda p: log_prior(p) + log_lik_studentt(p, x_all, y_all, _nu_val),
-            _init,
-        )
+    normal_samples = np.column_stack(
+        [
+            normal_trace.posterior[k].values.flatten()
+            for k in ["bottom", "top", "log_ec50", "hill", "sigma"]
+        ]
+    )
+    normal_samples[:, 4] = np.log(normal_samples[:, 4])
+
+    with pm.Model() as student_t_model:
+        b2 = pm.Normal("bottom", 0, 20)
+        t2 = pm.Normal("top", 100, 20)
+        ec2 = pm.Normal("log_ec50", 4.5, 3)
+        h2 = pm.HalfNormal("hill", 3)
+        mu_s = b2 + (t2 - b2) / (1 + 10 ** ((ec2 - x_all) * h2))
+        s2 = pm.HalfNormal("sigma", 10)
+        pm.StudentT("y", nu=nu_val, mu=mu_s, sigma=s2, observed=y_all)
+        student_t_trace = pm.sample(1000, tune=1000, chains=4, progressbar=False)
+
+    student_t_samples = np.column_stack(
+        [
+            student_t_trace.posterior[k].values.flatten()
+            for k in ["bottom", "top", "log_ec50", "hill", "sigma"]
+        ]
+    )
+    student_t_samples[:, 4] = np.log(student_t_samples[:, 4])
+
+    mo.md(f"Fitted with **PyMC/NUTS**, nu = {nu_val}")
     return normal_samples, student_t_samples
 
 
 @app.cell
 def _(mo):
-    mo.md("## Comparison with posterior credible bands")
+    mo.md("""
+    ## Comparison with posterior credible bands
+    """)
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     f4pl,
     normal_samples,
@@ -308,25 +272,22 @@ def _(
     ax.set_ylim(-5, 105)
     ax.legend(loc="upper left", fontsize=9)
     ax.set_title("Bayesian 4PL: Normal vs Student-t posterior")
-    plt.tight_layout()
-    plt
+    # plt.tight_layout()
     return
 
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""
-        **Low nu (1-3):** The Student-t band barely shifts toward the
-        outlier. Heavy tails say "rare but possible," so the fit ignores it.
+    mo.md(r"""
+    **Low nu (1-3):** The Student-t band barely shifts toward the
+    outlier. Heavy tails say "rare but possible," so the fit ignores it.
 
-        **High nu (15-30):** The Student-t band converges toward the Normal
-        band. The tails have thinned, and the outlier pulls the curve.
+    **High nu (15-30):** The Student-t band converges toward the Normal
+    band. The tails have thinned, and the outlier pulls the curve.
 
-        This is the whole argument: with the right likelihood, the model
-        handles outliers automatically. No manual exclusion needed.
-        """
-    )
+    This is the whole argument: with the right likelihood, the model
+    handles outliers automatically. No manual exclusion needed.
+    """)
     return
 
 
