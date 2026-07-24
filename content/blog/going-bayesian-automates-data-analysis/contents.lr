@@ -1,0 +1,91 @@
+title: Going Bayesian automates your manual data analysis
+---
+author: Eric J. Ma
+---
+twitter_handle: ericmjl
+---
+pub_date: 2026-07-23
+---
+tags:
+
+bayesian
+data science
+statistics
+automation
+---
+body:
+
+When people list the benefits of Bayesian modeling, they mention richer uncertainty estimates, the ability to encode prior knowledge, and posterior distributions instead of single numbers. All true, and all worth the switch on their own.
+
+But there's a benefit almost nobody talks about. Going Bayesian automates away the manual data analysis you'd otherwise do by hand. And once you experience it, you wonder how you ever worked any other way.
+
+Let me show you what I mean.
+
+## The manual outlier dance
+
+Picture a neutralization assay lab. Each 96-well plate holds five neutralization curves. An eighteen-plate experiment generates ninety curves in a single run, and your group is already eyeing robotics and 384-well formats to multiply throughput further.
+
+I've seen workflows where a single study generates anywhere from 125 to 375 curves. Each one gets inspected by hand.
+
+For every curve, there's usually a point or two that looks off. The standard workflow goes like this: copy raw data from the instrument output, paste it into Excel to line up sample names with plate positions, then copy again into GraphPad Prism to plot and fit the curve. Spot a deviating point, hit a shortcut key to mark it as an outlier, exclude it, refit. Then look again. Maybe another point looks suspicious now. Repeat. And pray you didn't misalign a paste somewhere along the way.
+
+For one curve, this takes a few minutes. For hundreds of curves, it eats entire afternoons. Every copy and paste between Excel and Prism is a chance to swap a row, lose a sample, or introduce a silent error that nobody catches until the QC review. Multiply by the number of studies per month, and you have a chronic bottleneck staffed by highly trained people doing repetitive, error-prone clicking.
+
+Are you really going to hire more research assistants to click through curves? That approach collapses under its own weight.
+
+Now, a quick but important distinction. There are two completely different reasons to exclude a data point.
+
+The first is a documented physical cause. You saw a bubble in the well. The pipette tip fell off. The reagent looked cloudy. These are data integrity issues, and you can justify removing them before you look at any numbers; in fact, you *should* document these in your lab records.
+
+The second reason is that **a point is statistically inconvenient**. It sits too far from the curve and inflates your error. That second reason is the one I want to talk about, because it's both common and statistically broken.
+
+## Why manual exclusion is flawed
+
+Excluding a point because it's statistically inconvenient has two deep problems.
+
+The first is reproducibility. What's your rule for calling something an outlier? Two standard deviations from the fit? Three? The classic tools, like Grubbs' test or the ROUT method that Prism builds in, hand you a threshold. But where did that threshold come from? It's a cutoff someone picked, not a principle someone derived. Two analysts staring at the same curve flag different points, because the decision rests on an arbitrary line in the sand. You're eyeballing with extra steps.
+
+The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. But dose-response data violate this assumption doubly. The raw points along a neutralization curve don't come from a single normal distribution at all; they follow a sigmoidal shape. You'd have to apply Grubbs' to residuals after fitting, but those residuals are often heteroscedastic (more variance at certain concentrations than others), which breaks the test's assumptions even further. With only five to eight dilutions per curve, the test has almost no power to distinguish a genuine outlier from noise. So you find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
+
+This isn't just my opinion. Karch demonstrated in a paper literally titled "Outliers May Not Be Automatically Removed" that automatic removal invalidates confidence intervals and biases your estimates ([Karch, 2021](https://pubmed.ncbi.nlm.nih.gov/37104797/)). The APA Publication Manual itself states plainly that omitting troublesome observations to present a more convincing story **is prohibited** (APA, 2020). And the FDA's [Bioanalytical Method Validation guidance](https://www.fda.gov/media/70858/download) is even more direct: repeat analysis is acceptable only for **assignable causes** such as equipment failure, sample processing errors, or poor chromatography. "It looked like an outlier" is conspicuously absent from that list.
+
+## Down-weight, don't delete
+
+Here's where Bayesian modeling changes the game. Instead of fitting a curve and deciding afterward which points to throw away, you choose a likelihood (the part of your model that scores how well the data fits) that handles outliers from the start.
+
+The normal distribution, the bell curve you know, has thin tails. Probability drops off fast as you move away from the center. A single point sitting far from the curve becomes astronomically unlikely under a normal likelihood, and the only way the model can reduce that penalty is to drag the entire fit toward the outlier. One bad point yanks your curve.
+
+The Student-t distribution fixes this. It looks like a normal bell curve, but with heavier tails. More probability spills into the extremes. So when a point sits way off the curve, the likelihood essentially shrugs and says, "that's rare, but not impossible," and the fit barely moves. The further the point drifts from the trend, the less pull it exerts. Its influence fades gradually rather than being a binary in-or-out decision.
+
+Here is the elegant part. The Student-t has a parameter called the degrees of freedom that controls how heavy the tails are. You can put a prior (your belief about the parameter before seeing data) on it and let the data tell you how much outlier tolerance each dataset needs. The model learns its own robustness.
+
+And critically, the point is never deleted. It still contributes to the fit, just with proportionally less weight. Your data stays intact.
+
+<iframe src="bayesian_curves_demo.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
+
+The blue curve is the Normal likelihood fit; the orange dashed curve is the Student-t fit. Shaded bands are 94% credible intervals from 4,000 posterior draws (PyMC/NUTS, 4 chains). Click the nu buttons at the top to see how the Student-t curve responds. At nu=1, it ignores the outlier entirely. At nu=30, it behaves like the Normal curve.
+
+## Hierarchy handles the weird curves
+
+Heavy tails solve the point-level problem. But some curves are weird all on their own. Maybe one neutralization curve came out noisy across every well, or the shape is off in a way that suggests a systematic issue for that row.
+
+This is where hierarchical modeling earns its keep. Instead of fitting each curve in isolation, a hierarchical model fits all of them together. Each curve borrows strength from the others through a shared population distribution. A noisy curve with a couple of strange wells gets gently pulled toward the behavior of its neighbors. Statisticians call this partial pooling.
+
+The philosophy mirrors the heavy tails, just one level up. Heavy tails down-weight weird points. Hierarchy regularizes weird curves. Same idea, two scales.
+
+## This is what automation looks like
+
+Here's where everything converges. Once you write down your hierarchical model with a heavy-tailed likelihood, you fit it to all eighteen plates at once. The sampler runs. Heavy tails handle the outlier points. Hierarchy handles the outlier curves. The whole thing runs without a single human judgment call.
+
+I built a prototype of exactly this for a neutralization assay workflow. It fit thirty-six plates' worth of curves in under four minutes on a laptop. Try doing that by hand.
+
+No shortcut keys. No research assistants clicking through Prism. No two-analysts-flag-different-points problem. The model handles the data analysis decisions you used to make by hand, and it makes them in a principled, reproducible, mathematically grounded way.
+
+This is the hidden benefit of going Bayesian. People talk about richer uncertainty, prior knowledge, posterior distributions. All genuine advantages. But the automation of manual data analysis is the one that compounds as your experiments scale. Every new plate, every new study, every new operator, the model just handles it. You get your afternoons back, and your results become reproducible by construction.
+
+And because you're fitting a hierarchical model, the same framework opens doors you didn't have before. Track which operator ran each plate, and the model decomposes variance across operators. Does the operator matter more than the antigen? You can ask that question directly and get a probability distribution for the answer. The model that handles your outliers also gives you batch-aware analysis for free.
+
+Going Bayesian isn't just about better statistics. It's about building a data analysis pipeline that scales without breaking, handles messy data without manual intervention, and gives you answers you can trust as your experiments grow. The math does the work so your team can focus on the science.
+
+---
+summary: Bayesian modeling with heavy-tailed likelihoods and hierarchical structure automates away the manual outlier dance. That's a hidden benefit of going Bayesian that nobody talks about.
