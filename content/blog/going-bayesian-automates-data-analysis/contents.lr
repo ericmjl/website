@@ -47,7 +47,11 @@ Excluding a point because it's statistically inconvenient has two deep problems.
 
 The first is reproducibility. What's your rule for calling something an outlier? Two standard deviations from the fit? Three? The classic tools, like Grubbs' test or the ROUT method that Prism builds in, hand you a threshold. But where did that threshold come from? It's a cutoff someone picked, not a principle someone derived. Two analysts staring at the same curve flag different points, because the decision rests on an arbitrary line in the sand. You're eyeballing with extra steps.
 
+Here is the same curve, reviewed by two different analysts. One keeps the glaring outlier at dilution 5 (100% when the plateau sits at ~85%). The other removes it. Toggle between them and watch the ID50 shift.
+
 <iframe src="two-analysts.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+Same data, same software, different ID50. Which analyst is right? Both think they are, and without a principled criterion, neither can prove the other wrong.
 
 The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. But dose-response data violate this assumption doubly. The raw points along a neutralization curve don't come from a single normal distribution at all; they follow a sigmoidal shape. You'd have to apply Grubbs' to residuals after fitting, but those residuals are often heteroscedastic (more variance at certain concentrations than others), which breaks the test's assumptions even further. With only five to eight dilutions per curve, the test has almost no power to distinguish a genuine outlier from noise. So you find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
 
