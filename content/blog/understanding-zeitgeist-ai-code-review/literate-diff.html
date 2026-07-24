@@ -13,7 +13,7 @@ body { font-family: monospace; background: #fff; color: #333; display: flex; jus
 .tog button { padding: 7px 12px; border: none; background: #fff; color: #666; font-family: monospace; font-size: 12px; cursor: pointer; }
 .tog button + button { border-left: 1px solid #ddd; }
 .tog button.on { background: #0066cc; color: #fff; }
-.stage { padding: 14px 16px; min-height: 330px; }
+.stage { padding: 14px 16px; }
 .view { display: none; }
 .view.show { display: block; }
 /* raw view */
@@ -70,15 +70,22 @@ var bRaw = document.getElementById('b-raw');
 var bLit = document.getElementById('b-lit');
 var vRaw = document.getElementById('v-raw');
 var vLit = document.getElementById('v-lit');
+function fit(){
+  var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  var fe = window.frameElement;
+  if (fe) fe.style.height = h + 'px';
+}
 function show(which){
   var raw = (which === 'raw');
   bRaw.className = raw ? 'on' : '';
   bLit.className = raw ? '' : 'on';
   vRaw.className = 'view raw' + (raw ? ' show' : '');
   vLit.className = 'view lit' + (raw ? '' : ' show');
+  fit();
 }
 bRaw.addEventListener('click', function(){ show('raw'); });
 bLit.addEventListener('click', function(){ show('lit'); });
+fit();
 })();
 </script>
 </body>
