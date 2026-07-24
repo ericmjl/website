@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: monospace; background: #fff; color: #333; display: flex; justify-content: center; }
+.quiz { width: 100%; max-width: 640px; background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+.q-head { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 16px 10px; border-bottom: 1px solid #eee; }
+.q-head h2 { font-size: 15px; font-weight: 700; color: #333; letter-spacing: 0.2px; }
+.q-score { font-size: 13px; color: #666; white-space: nowrap; }
+.q-score b { color: #0066cc; font-size: 15px; }
+.q-status { padding: 0 16px; font-size: 12px; color: #999; font-style: italic; min-height: 18px; line-height: 18px; }
+.q-card { padding: 12px 16px; border-top: 1px solid #eee; }
+.q-card:first-of-type { border-top: none; }
+.q-q { font-size: 13px; line-height: 1.5; color: #333; margin-bottom: 8px; }
+.q-q .q-num { color: #0066cc; font-weight: 700; margin-right: 6px; }
+.q-opts { display: flex; flex-direction: column; gap: 6px; }
+.q-opt { display: block; width: 100%; text-align: left; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; background: #fff; color: #444; font-family: monospace; font-size: 12.5px; line-height: 1.4; cursor: pointer; transition: border-color .12s, background .12s; }
+.q-opt:hover:not(:disabled) { border-color: #0066cc; }
+.q-opt:disabled { cursor: default; }
+.q-opt .q-key { color: #999; margin-right: 8px; font-weight: 700; }
+.q-opt.correct { background: #e7f6ee; border-color: #1a9e5b; color: #166e3f; }
+.q-opt.correct .q-key { color: #1a9e5b; }
+.q-opt.wrong { background: #fdecea; border-color: #e85d3a; color: #a83a1f; }
+.q-opt.wrong .q-key { color: #e85d3a; }
+.q-opt.reveal { background: #e7f6ee; border-color: #1a9e5b; color: #166e3f; }
+.q-opt.reveal .q-key { color: #1a9e5b; }
+.q-fb { font-size: 12px; line-height: 1.45; color: #555; padding: 8px 10px 0; min-height: 38px; }
+.q-fb .tag { font-weight: 700; margin-right: 4px; }
+.q-fb .tag.ok { color: #1a9e5b; }
+.q-fb .tag.no { color: #e85d3a; }
+.q-foot { padding: 12px 16px 14px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; }
+.q-reset { padding: 7px 14px; border-radius: 6px; border: 1px solid #ddd; background: #fff; color: #666; font-family: monospace; font-size: 12px; cursor: pointer; }
+.q-reset:hover { border-color: #0066cc; color: #0066cc; }
+</style>
+</head>
+<body>
+<div class="quiz">
+  <div class="q-head">
+    <h2>Check your understanding</h2>
+    <div class="q-score">Score: <b id="score">0</b> / 5</div>
+  </div>
+  <div class="q-status" id="status">Answer all five. The gaps are where cognitive debt hides.</div>
+  <div id="cards"></div>
+  <div class="q-foot">
+    <button class="q-reset" id="reset">Reset</button>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+var DATA = [
+  {
+    q: "Geoffrey Litt argues the real reason to understand agent-written code is to ___, rather than to verify it.",
+    opts: [
+      "reduce token cost",
+      "participate in the creative evolution of the system",
+      "satisfy compliance",
+      "train the agent"
+    ],
+    correct: 1,
+    why: "Litt's reframe is \"understand to participate.\" The mental model you carry is what lets you come up with the next change."
+  },
+  {
+    q: "\"Cognitive debt\" (Storey, drawing on Naur) differs from technical debt because it lives ___.",
+    opts: [
+      "in the CI pipeline",
+      "in the dependency tree",
+      "in developers' minds",
+      "in the test suite"
+    ],
+    correct: 2,
+    why: "Technical debt lives in the code; cognitive debt lives in the minds of the developers who have lost the theory of the system."
+  },
+  {
+    q: "Tim Schipper's test for whether you actually reviewed an AI PR: if you couldn't have ___ and can't fully ___, you witnessed it, not reviewed it.",
+    opts: [
+      "written it; explain it",
+      "merged it; revert it",
+      "reviewed it faster; ship it",
+      "tested it; deploy it"
+    ],
+    correct: 0,
+    why: "Approve a PR you couldn't have written and can't fully explain, and you witnessed it. An AI PR has no smell, so the polish hides the gap."
+  },
+  {
+    q: "Which is NOT one of the three understanding techniques in Litt's talk?",
+    opts: [
+      "Explanations",
+      "Micro-worlds",
+      "Shared spaces",
+      "Automated test generation"
+    ],
+    correct: 3,
+    why: "Litt's three are Explanations (which include the quiz), Micro-worlds, and Shared spaces. Automated test generation never appears."
+  },
+  {
+    q: "In Litt's framing, an AI tool that builds you a micro-world to explore the change is a ___, while one that just returns a verdict is a ___.",
+    opts: [
+      "copilot; HUD",
+      "HUD; copilot"
+    ],
+    correct: 1,
+    why: "A micro-world is a HUD, a new sense layered into your view. A verdict-machine is a copilot, an assistant you talk to."
+  }
+];
+var KEYS = ["a","b","c","d"];
+var container = document.getElementById('cards');
+var scoreEl = document.getElementById('score');
+var statusEl = document.getElementById('status');
+var answered = [];
+var score = 0;
+
+function build(){
+  container.innerHTML = '';
+  answered = DATA.map(function(){return false;});
+  score = 0;
+  scoreEl.textContent = '0';
+  statusEl.textContent = 'Answer all five. The gaps are where cognitive debt hides.';
+  statusEl.style.color = '#999';
+  DATA.forEach(function(item, qi){
+    var card = document.createElement('div');
+    card.className = 'q-card';
+    var q = document.createElement('div');
+    q.className = 'q-q';
+    q.innerHTML = '<span class="q-num">Q' + (qi+1) + '.</span>' + item.q;
+    card.appendChild(q);
+    var opts = document.createElement('div');
+    opts.className = 'q-opts';
+    item.opts.forEach(function(text, oi){
+      var btn = document.createElement('button');
+      btn.className = 'q-opt';
+      btn.type = 'button';
+      btn.innerHTML = '<span class="q-key">' + KEYS[oi] + ')</span>' + text;
+      btn.addEventListener('click', function(){ answer(qi, oi); });
+      opts.appendChild(btn);
+    });
+    card.appendChild(opts);
+    var fb = document.createElement('div');
+    fb.className = 'q-fb';
+    fb.id = 'fb-' + qi;
+    card.appendChild(fb);
+    container.appendChild(card);
+  });
+}
+
+function answer(qi, oi){
+  if (answered[qi]) return;
+  answered[qi] = true;
+  var item = DATA[qi];
+  var card = container.children[qi];
+  var btns = card.querySelectorAll('.q-opt');
+  for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
+  var fb = document.getElementById('fb-' + qi);
+  if (oi === item.correct) {
+    score++;
+    scoreEl.textContent = score;
+    btns[oi].classList.add('correct');
+    fb.innerHTML = '<span class="tag ok">Correct.</span>' + item.why;
+  } else {
+    btns[oi].classList.add('wrong');
+    btns[item.correct].classList.add('reveal');
+    fb.innerHTML = '<span class="tag no">Not quite.</span>' + item.why;
+  }
+  if (answered.every(function(x){return x;})) finalize();
+}
+
+function finalize(){
+  var msg, col;
+  if (score === 5) { msg = '5 / 5. You are holding the theory. Now go build a HUD for your next review.'; col = '#1a9e5b'; }
+  else if (score >= 3) { msg = score + ' / 5. Solid. Re-read the sections behind the ones you missed; that is where the debt accrues.'; col = '#0066cc'; }
+  else { msg = score + ' / 5. Worth a re-read. The gaps above are exactly where cognitive debt hides.'; col = '#e85d3a'; }
+  statusEl.textContent = msg;
+  statusEl.style.color = col;
+}
+
+document.getElementById('reset').addEventListener('click', build);
+build();
+})();
+</script>
+</body>
+</html>
