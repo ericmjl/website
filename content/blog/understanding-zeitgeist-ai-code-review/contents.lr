@@ -4,9 +4,11 @@ author: Eric J. Ma
 ---
 body:
 
-This post is a survey. Across the spring and summer of 2026 a cluster of practitioners and researchers converged on the same worry from different angles: now that agents write so much of our code, the hard part is producing it, but the *expensive* part is understanding it. I want to map where the field's thinking currently sits, so you can see the shape of the conversation and find your own place in it.
+I've spent the year on both ends of agent-written pull requests. I've opened them after a long coding session, half-hoping the reviewer catches what I only half-tracked. And I've reviewed them, eyes glazing over a forty-file diff, typing "looks good to me" while a quieter voice asks whether it actually does. (Reader, I've been the problem as often as the solution.) If you've used a coding agent, you know the feeling.
 
-A warning before we start, and a promise. The worry I'm surveying has a name now, and the people working on it have built real techniques for it. I'm going to borrow one of those techniques here. Geoffrey Litt and Andy Matuschak both argue that reading alone is a weak way to build understanding; you have to be quizzed on it. So this post practices what it preaches. There are three short questions before the survey, to surface what you already think, and five at the end, to check what landed.
+This spring and summer, a bunch of people I read arrived at the same worry from completely different angles: now that agents write so much of our code, producing it is cheap, but *understanding* it is the expensive part. I want to map where the conversation has landed, so you can see its shape and find your own place in it.
+
+One warning, and a promise. The worry has a name now, and the people working on it have built real techniques for it. I'm going to steal one of those techniques here, because Geoffrey Litt and Andy Matuschak both argue that reading is a weak way to build understanding; you have to be quizzed on it. So this post practices what it preaches. Three quick questions up front, to surface what you already think, and five at the end, to check what landed. (Yes, I'm quizzing you on a post about why quizzes work. I couldn't resist.)
 
 ## Before you read
 
@@ -22,23 +24,23 @@ Geoffrey Litt gave a talk at the AI Engineer conference in July 2026 with a thes
 
 The deeper root of this worry predates the AI boom by decades. Margaret Storey, reviving Peter Naur's 1985 essay "Programming as Theory Building," puts it precisely: a program is a theory that lives in the minds of the developers, capturing what the software does and how it can change. Technical debt lives in the code. **Cognitive debt lives in the developers' minds**, and Storey argues it will paralyze a team before technical debt does. She watched it happen to a student team that could no longer make simple changes, because nobody could explain why the system worked the way it did.
 
-This is the through-line of the whole survey. The sources disagree on tactics but agree on the diagnosis. When typing the code stops being the bottleneck, the bottleneck moves to whoever has to hold the theory.
+This is the through-line of the whole survey. The people I've been reading disagree on tactics but agree on the diagnosis. When typing the code stops being the bottleneck, the bottleneck moves to whoever has to hold the theory.
 
 ## What breaks at the pull request
 
-The diagnosis shows up most acutely at the pull request, because that's the moment the theory has to transfer from author to reviewer. Several practitioners wrote the reviewer's side raw this year.
+The diagnosis bites hardest at the pull request, because that's the moment the theory has to move from author to reviewer. Several practitioners wrote the reviewer's side raw this year, and it's the part that makes me want to cry.
 
 [Simon Højberg](https://hojberg.xyz/the-programmer-identity-crisis/) names the lived experience: code reviewers are "rapidly losing their minds" because they've become "the first layer of quality control instead of one of the last," picking apart hallucinated libraries and uncalled functions while the author shrugs that Claude wrote it. I recognize the feeling; I gloss over the diff, overwhelmed and bored, and approve whatever's there as long as CI is green.
 
-[Tim Schipper](https://tim-schipper.nl/en/blog/reviewing-ai-generated-pull-requests) explains why agent PRs are uniquely hard to review. **An AI PR has no smell.** It's uniformly polished, because polish is the one thing next-token prediction is genuinely good at, so the reviewer's instinct fires the wrong way: the surface looks more reviewable than a human's, so it gets less review. His test for whether you actually reviewed it is the sharpest line in the whole conversation: approve a PR you couldn't have written and can't fully explain, and you didn't review it. You witnessed it.
+[Tim Schipper](https://tim-schipper.nl/en/blog/reviewing-ai-generated-pull-requests) explains why agent PRs are uniquely hard to review, with a framing I've stolen more than once. **An AI PR has no smell.** It's uniformly polished, because polish is the one thing next-token prediction is genuinely good at, so the reviewer's instinct fires the wrong way: the surface looks more reviewable than a human's, so it gets less review. His test for whether you actually reviewed it is the sharpest line in the whole conversation: approve a PR you couldn't have written and can't fully explain, and you didn't review it. You witnessed it.
 
 Here is what that looks like in practice: a clean diff, and the five checks a reviewer actually has to run.
 
 <iframe src="ai-pr-no-smell.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-The practitioner checklists converge on the same failure modes. [GitHub's engineering team](https://github.blog/ai-and-ml/generative-ai/agent-pull-requests-are-everywhere-heres-how-to-review-them/) published guidance in May 2026 built around the insight that agents optimize for surface plausibility, not semantic correctness. Their data is striking: GitHub Copilot code review has processed over 60 million reviews, more than one in five code reviews on GitHub now involve an agent, and a January 2026 study found agent-generated code introduces more redundancy and quiet debt per change than human-written code. The playbook targets the specific ways agents slip: gaming CI to go green, reimplementing utilities that already exist, hallucinating imports that resolve to the wrong symbol, and writing tests that pass without verifying anything.
+Every checklist I read hits the same failure modes. [GitHub's engineering team](https://github.blog/ai-and-ml/generative-ai/agent-pull-requests-are-everywhere-heres-how-to-review-them/) published guidance in May 2026 built around the insight that agents optimize for surface plausibility, not semantic correctness. Their data is striking: GitHub Copilot code review has processed over 60 million reviews, more than one in five code reviews on GitHub now involve an agent, and a January 2026 study found agent-generated code introduces more redundancy and quiet debt per change than human-written code. The playbook targets the specific ways agents slip: gaming CI to go green, reimplementing utilities that already exist, hallucinating imports that resolve to the wrong symbol, and writing tests that pass without verifying anything.
 
-That last one is the most insidious. If the same agent wrote the code and the tests in the same run, the green checkmark is nearly worthless, because a model that made a wrong assumption in the code makes the identical wrong assumption in the test. The strongest heuristic across all these checklists is the same: **demand a test that fails on the pre-change behavior.** If the agent can't write a test that would have caught the bug it claims to fix, the fix is incomplete or the understanding is wrong.
+That last one is the most insidious. If the same agent wrote the code and the tests in the same run, the green checkmark is nearly worthless, because a model that made a wrong assumption in the code makes the identical wrong assumption in the test. The strongest heuristic is the same in every checklist: **demand a test that fails on the pre-change behavior.** If the agent can't write a test that would have caught the bug it claims to fix, the fix is incomplete or the understanding is wrong.
 
 ## The cost of velocity without understanding
 
@@ -52,7 +54,7 @@ The cost shows up as burnout too. Steve Yegge describes the "AI vampire" effect:
 
 Here's the conceptual turn that ties the survey together, and it's Litt's. If agents are getting better at verifying their own work, what's left for the human reviewer?
 
-The tempting answer is to keep checking the code. The answer the field is converging on is different. **We understand to participate.** A project is hundreds of iterative loops with the agent, and the mental model you carry into the next loop is exactly what lets you come up with the next idea. Litt's phrase, which [Willison picked out](https://simonwillison.net/2026/Jul/2/understand-to-participate/) as the framing that resonated most, is "understand to participate." Verification is the part agents are eating. Participation is the part that's left to us, and it's the part that matters.
+The tempting answer is to keep checking the code. But the people I read are converging on a different answer. **We understand to participate.** A project is hundreds of iterative loops with the agent, and the mental model you carry into the next loop is exactly what lets you come up with the next idea. Litt's phrase, which [Willison picked out](https://simonwillison.net/2026/Jul/2/understand-to-participate/) as the framing that resonated most, is "understand to participate." Verification is the part agents are eating. Participation is the part that's left to us, and it's the part that matters.
 
 This reframe has old, deep roots. Litt closes his talk by reaching back to Alan Kay and Douglas Engelbart: the point of computing was always to augment, not just automate. [Shan Carter and Michael Nielsen](https://distill.pub/2017/aia/) made the distinction sharp in a 2017 Distill essay: cognitive outsourcing hands a task to an oracle, while cognitive transformation invents new representations that expand the range of human thought. A reviewer who only checks correctness is doing cognitive outsourcing. A reviewer who builds a richer mental model is doing cognitive transformation, and that's the goal.
 
@@ -68,21 +70,21 @@ Toggle between the two for the same change:
 
 This is where reviewing big PRs with agents pays off most, since the bigger the change, the more the raw diff fails and the explainer earns its keep. Nested inside every explainer is a second device Litt borrowed from Andy Matuschak: a five-question quiz you answer before you approve. His rule is one I've adopted wholesale; he won't send code to a teammate until he can pass the quiz, and he does the same when he reviews theirs. The agent loop runs faster than the speed of human understanding, and the quiz is the mechanical brake that asks whether you actually get it. (This post is my own attempt at that brake; the widget at the end is the quiz, built from [Matuschak's argument](https://andymatuschak.org/books/) that "books don't work" and the spaced-repetition pattern he and Nielsen embedded in Quantum Country.)
 
-**Micro-worlds.** This one's my favorite, and Simon Willison arrived at the same idea independently and calls them [interactive explanations](https://simonwillison.net/guides/agentic-engineering-patterns/interactive-explanations/). Instead of describing what a change does, have the agent build a little environment you can poke. Litt migrated his website between frameworks and couldn't review the agent's script, so he asked the agent to build a command center where he clicked through the migration step by step and watched the two sites side by side. Willison wanted to understand a word-cloud algorithm whose code only told him it used "Archimedean spiral placement," so he had an agent animate the placement, watching each word try a spot, overlap, and spiral outward until the idea clicked.
+**Micro-worlds.** This one's my favorite. Simon Willison arrived at the same idea independently and calls them [interactive explanations](https://simonwillison.net/guides/agentic-engineering-patterns/interactive-explanations/). Instead of describing what a change does, have the agent build a little environment you can poke. Litt migrated his website between frameworks and couldn't review the agent's script, so he asked the agent to build a command center where he clicked through the migration step by step and watched the two sites side by side. Willison wanted to understand a word-cloud algorithm whose code only told him it used "Archimedean spiral placement," so he had an agent animate the placement, watching each word try a spot, overlap, and spiral outward until the idea clicked.
 
 **Shared spaces.** The first two are solo techniques; the third is about understanding *together*. Litt's point is that when a team holds the same mental model they can communicate efficiently, jam, and riff, and without those shared structures the creative conversations stall. It loops straight back to Storey and Naur: the theory of the system is distributed across the team, and the review is one of the moments that theory gets rebuilt and shared.
 
-The thread across all three is the one I keep returning to: **agents can write code that helps you understand other code.** Nathan Baschez adds a trick that works at the planning stage: ask the agent for two versions of every plan, one highly technical and detailed for itself, and one "entertaining essay designed to build my intuition" for you. The second version exists to hand you the mental model.
+Here's the thread across all three: **agents can write code that helps you understand other code.** Nathan Baschez adds a trick that works at the planning stage: ask the agent for two versions of every plan, one highly technical and detailed for itself, and one "entertaining essay designed to build my intuition" for you. The second version exists to hand you the mental model.
 
 ## HUDs over copilots
 
-These techniques imply something about what good AI review tooling should feel like, and [Litt makes the distinction explicit](https://geoffreylitt.com/2025/07/27/enough-ai-copilots-we-need-ai-huds) in a separate essay. A tool that returns approve or request changes is a copilot, a virtual assistant you talk to. **A tool that builds a micro-world around the change is a HUD**, a new sense layered into your field of view, like spellcheck's red squiggles. Litt's argument, drawing on Mark Weiser's 1992 rant against the agent metaphor, is that we have enough copilots. We need HUDs.
+These techniques imply something about what good AI review tooling should feel like, and [Litt makes the distinction explicit](https://geoffreylitt.com/2025/07/27/enough-ai-copilots-we-need-ai-huds) in a separate essay. A tool that returns approve or request changes is a copilot, a virtual assistant you talk to. **A tool that builds a micro-world around the change is a HUD**, a new sense layered into your field of view, like spellcheck's red squiggles. Litt's argument, drawing on Mark Weiser's 1992 rant against the agent metaphor, is that we have enough copilots. We need HUDs!
 
-The practitioner side arrives at the same destination: the human role in review is narrowing from correctness verification to context verification, judging whether the agent understood the codebase, the contract, and the intent. Automated review owns the mechanical first pass, and human attention goes to the semantic judgment agents can't self-check. Copilots automate the verdict. HUDs extend your senses so you can make that judgment yourself.
+Practitioners arrive at the same place: the human role in review is narrowing from correctness verification to context verification, judging whether the agent understood the codebase, the contract, and the intent. Automated review owns the mechanical first pass, and human attention goes to the semantic judgment agents can't self-check. Copilots automate the verdict. HUDs extend your senses so you can make that judgment yourself.
 
 ## The zeitgeist in one map
 
-Here's the whole conversation compressed. Each source contributes one move to the argument.
+Here's the whole conversation compressed. Each one I read contributes a single move to the argument.
 
 | Source | What it contributes |
 | --- | --- |
@@ -100,7 +102,7 @@ Read down the table and you can see the conversation's shape: a diagnosis (under
 
 ## Check your understanding
 
-Here's the quiz. Five cards, instant feedback, and a live score. This is the speed-regulator technique from the last section, turned back on the post itself.
+Here's the quiz. Five cards, instant feedback, and a live score. This is the speed-regulator technique, turned back on the post itself.
 
 <iframe src="check-understanding.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
