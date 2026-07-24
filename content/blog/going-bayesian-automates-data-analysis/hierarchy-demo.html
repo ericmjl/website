@@ -117,7 +117,7 @@ function drawCell(svg,c,idx,mode){
   function sx(x){return M.left+(x-xMin)/(xMax-xMin)*PW;}
   function sy(y){return M.top+(1-(y-yMin)/(yMax-yMin))*PH;}
 
-  svg.innerHTML='';
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
   // grid
   svg.appendChild(el('rect',{x:M.left,y:M.top,width:PW,height:PH,fill:'#fff',stroke:'#eee'}));
   for(var y=0;y<=100;y+=25)svg.appendChild(el('line',{x1:M.left,y1:sy(y),x2:M.left+PW,y2:sy(y),stroke:'#f5f5f5'}));
@@ -165,6 +165,9 @@ for(var i3=0;i3<6;i3++){
   cell.appendChild(label);
   var sv=document.createElementNS(SVG_NS,'svg');
   sv.setAttribute('viewBox','0 0 280 130');
+  sv.setAttribute('preserveAspectRatio','xMidYMid meet');
+  sv.setAttribute('width','100%');
+  sv.setAttribute('height','130');
   cell.appendChild(sv);
   grid.appendChild(cell);
   sels.push(sv);
