@@ -29,8 +29,8 @@ svg { display: block; width: 100%; height: 100%; }
 <body>
 <div class="app">
 <div class="ta-bar">
-  <button class="ta-btn active" id="ta-btn-a"><b>Analyst A</b><small>Excludes 1 point (dilution 5)</small></button>
-  <button class="ta-btn" id="ta-btn-b"><b>Analyst B</b><small>Excludes 2 points (dilutions 4 &amp; 5)</small></button>
+  <button class="ta-btn active" id="ta-btn-a"><b>Analyst A</b><small>Keeps all 8 points (including the 100% outlier)</small></button>
+  <button class="ta-btn" id="ta-btn-b"><b>Analyst B</b><small>Excludes the 100% outlier at dilution 5</small></button>
 </div>
 <div class="ta-chart"><svg id="ta-plot" viewBox="0 0 600 280"></svg></div>
 <div class="ta-result">
@@ -47,19 +47,20 @@ var SVG_NS='http://www.w3.org/2000/svg';
 var svg=document.getElementById('ta-plot');
 var W=600,H=280,M={top:12,right:18,bottom:32,left:42};
 var PW=W-M.left-M.right,PH=H-M.top-M.bottom;
-var xMin=0.5,xMax=8.5,yMin=-5,yMax=135;
+var xMin=0.5,xMax=8.5,yMin=-5,yMax=110;
 function sx(x){return M.left+(x-xMin)/(xMax-xMin)*PW;}
 function sy(y){return M.top+(1-(y-yMin)/(yMax-yMin))*PH;}
 function f4pl(x,p){var e=(p[2]-x)*p[3];if(e>100)e=100;if(e<-100)e=-100;return p[0]+(p[1]-p[0])/(1+Math.pow(10,e));}
 function el(t,a){var e=document.createElementNS(SVG_NS,t);for(var k in a){if(a.hasOwnProperty(k))e.setAttribute(k,a[k]);}return e;}
-var trueParams=[5,95,4.5,1.5];
+// Curve 11 shape (ec50~3.77, hill~2.48), top lowered to ~85, one outlier at 100
+var trueParams=[8,85,3.77,2.48];
 var xs=[1,2,3,4,5,6,7,8];
-var ys=xs.map(function(x,i){return f4pl(x,trueParams)+[1.2,-0.8,2.1,-1.5,0.9,-2.3,1.1,-0.6][i];});
-ys[4]+=45; ys[3]+=15;
+var ys=xs.map(function(x,i){return f4pl(x,trueParams)+[0.5,-0.8,1.0,-1.2,0.0,0.7,-0.5,0.3][i];});
+ys[4]=100; // dilution 5: glaring outlier at 100% vs ~85% plateau
 
 function fit4pl(fxs,fys){
-  var best=[5,95,4.5,1.5],bestSSR=Infinity;
-  for(var b=0;b<=20;b+=2)for(var t=85;t<=100;t+=2)for(var ec=2;ec<=7;ec+=0.2)for(var h=0.3;h<=4;h+=0.2){
+  var best=[8,85,3.77,2.48],bestSSR=Infinity;
+  for(var b=0;b<=20;b+=2)for(var t=80;t<=105;t+=2)for(var ec=2;ec<=7;ec+=0.2)for(var h=0.3;h<=4;h+=0.2){
     var ssr=0;for(var i=0;i<fxs.length;i++){var r=fys[i]-f4pl(fxs[i],[b,t,ec,h]);ssr+=r*r;}
     if(ssr<bestSSR){bestSSR=ssr;best=[b,t,ec,h];}
   }
@@ -71,8 +72,8 @@ function fitExcluding(exSet){
   return fit4pl(fx,fy);
 }
 
-var analystA={excluded:[4],color:'#2196F3',label:'Analyst A'};
-var analystB={excluded:[3,4],color:'#e85d3a',label:'Analyst B'};
+var analystA={excluded:[],color:'#0066cc',label:'Analyst A'};
+var analystB={excluded:[4],color:'#e85d3a',label:'Analyst B'};
 analystA.fit=fitExcluding(analystA.excluded);
 analystB.fit=fitExcluding(analystB.excluded);
 document.getElementById('ta-id50-a').textContent=analystA.fit[2].toFixed(2);
