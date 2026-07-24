@@ -9,9 +9,13 @@ pub_date: 2026-07-23
 tags:
 
 bayesian
-data science
-statistics
+outliers
 automation
+hierarchy
+statistics
+reproducibility
+dose response
+data analysis
 ---
 body:
 
@@ -110,4 +114,4 @@ If this resonates, find a statistician or data scientist who works with Bayesian
 Going Bayesian isn't just about better statistics. It's about building a data analysis pipeline that scales without breaking, handles messy data without manual intervention, and gives you answers you can trust as your experiments grow. The math does the work so your team can focus on the science.
 
 ---
-summary: Bayesian modeling with heavy-tailed likelihoods and hierarchical structure automates away the manual outlier dance. That's a hidden benefit of going Bayesian that nobody talks about.
+summary: Bayesian modeling with heavy-tailed likelihoods and hierarchical structure automates away manual data analysis tasks like hand-flagging outliers. By using Student-t likelihoods and partial pooling, your pipeline handles messy data points and weird curves in a principled, reproducible way. No clicking through software required. What could your team do with all those afternoons back?
