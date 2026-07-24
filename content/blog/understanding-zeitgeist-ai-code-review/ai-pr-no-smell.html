@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: monospace; background: #fff; color: #333; display: flex; justify-content: center; }
+.wrap { width: 100%; max-width: 660px; background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+.hd { padding: 12px 16px 6px; border-bottom: 1px solid #eee; }
+.hd h2 { font-size: 15px; font-weight: 700; color: #333; }
+.hd p { font-size: 12px; color: #888; margin-top: 3px; line-height: 1.4; }
+.checks { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px; border-bottom: 1px solid #eee; }
+.chk { padding: 6px 10px; border-radius: 6px; border: 1px solid #ddd; background: #fff; color: #666; font-family: monospace; font-size: 11.5px; cursor: pointer; line-height: 1.2; }
+.chk:hover { border-color: #0066cc; }
+.chk.on { background: #fdecea; border-color: #e85d3a; color: #a83a1f; }
+.diff { padding: 8px 0; background: #fff; }
+.ln { white-space: pre; padding: 1px 16px; font-size: 12px; line-height: 1.55; color: #444; }
+.ln.file { color: #0066cc; font-weight: 700; padding-top: 8px; padding-bottom: 2px; }
+.ln.add { background: #ecf7ec; }
+.ln.del { background: #fdecec; }
+.ln.flag { background: #fff3cd; box-shadow: inset 3px 0 0 #e85d3a; }
+.ln .mk { color: #999; }
+.fnd { padding: 10px 16px 12px; border-top: 1px solid #eee; height: 120px; overflow-y: auto; }
+.fnd .none { font-size: 12px; color: #999; font-style: italic; }
+.fnd .row { font-size: 12px; line-height: 1.45; color: #555; padding: 3px 0; }
+.fnd .row b { color: #a83a1f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <h2>An AI PR has no smell</h2>
+    <p>Every check is off, so the diff looks pristine. Toggle a reviewer check to light up what's hiding.</p>
+  </div>
+  <div class="checks" id="checks"></div>
+  <div class="diff" id="diff"></div>
+  <div class="fnd" id="fnd"></div>
+</div>
+<script>
+(function(){
+'use strict';
+var CHECKS = [
+  { id:'imports', label:'Imports real?',
+    finding:'Hallucinated import. sanitize_html resolves to a no-op stub in a vendored package; the real one is sanitize_input in core/security.py.' },
+  { id:'reuse', label:'Reuses existing code?',
+    finding:'paginate() is a fresh rewrite. core/pagination.py already had paginate_queryset() three directories over. Now the codebase solves it twice.' },
+  { id:'trace', label:'Trace the critical path?',
+    finding:'Wrong contract: page is a number, but cursor expects an opaque token. The first page is off-by-one, silently.' },
+  { id:'tests', label:'Tests assert behavior?',
+    finding:'The test asserts status 200 on a mocked client. It passes without ever exercising real pagination. Green means nothing here.' },
+  { id:'ci', label:'CI wasn\'t weakened?',
+    finding:'Coverage threshold dropped 92 to 88 in this same PR. The cheapest path to green was lowering the bar, not fixing the code.' }
+];
+var LINES = [
+  { t:'file', text:'src/api/views.py' },
+  { t:'add',  text:'+ from utils.security import sanitize_html', checks:['imports'] },
+  { t:'add',  text:'+ from .pagination import paginate', checks:['reuse'] },
+  { t:'ctx',  text:'  def list_users(request):' },
+  { t:'del',  text:'-     users = User.objects.all()' },
+  { t:'del',  text:'-     return JsonResponse([u.to_dict() for u in users], safe=False)' },
+  { t:'add',  text:'+     qs = User.objects.all()' },
+  { t:'add',  text:'+     page = request.GET.get(\'page\', \'1\')' },
+  { t:'add',  text:'+     return JsonResponse(paginate(qs, cursor=page), safe=False)', checks:['reuse','trace'] },
+  { t:'file', text:'tests/test_users.py' },
+  { t:'add',  text:'+ def test_list_users_returns_200(self):', checks:['tests'] },
+  { t:'add',  text:'+     resp = self.client.get(\'/api/users\')' },
+  { t:'add',  text:'+     self.assertEqual(resp.status_code, 200)   # mocked client', checks:['tests'] },
+  { t:'file', text:'.coveragerc' },
+  { t:'ctx',  text:'  [report]' },
+  { t:'del',  text:'- fail_under = 92', checks:['ci'] },
+  { t:'add',  text:'+ fail_under = 88', checks:['ci'] }
+];
+var active = {};
+var checksEl = document.getElementById('checks');
+var diffEl = document.getElementById('diff');
+var fndEl = document.getElementById('fnd');
+
+function buildChecks(){
+  checksEl.innerHTML = '';
+  CHECKS.forEach(function(c){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chk';
+    b.textContent = c.label;
+    b.addEventListener('click', function(){ toggle(c.id); });
+    checksEl.appendChild(b);
+  });
+}
+function buildDiff(){
+  diffEl.innerHTML = '';
+  LINES.forEach(function(ln){
+    var d = document.createElement('div');
+    d.className = 'ln ' + ln.t;
+    d.textContent = ln.text;
+    if (ln.checks) d.setAttribute('data-c', ln.checks.join(' '));
+    diffEl.appendChild(d);
+  });
+}
+function toggle(id){ active[id] = !active[id]; render(); }
+function render(){
+  var cb = checksEl.children;
+  for (var i = 0; i < CHECKS.length; i++){
+    cb[i].className = 'chk' + (active[CHECKS[i].id] ? ' on' : '');
+  }
+  var lines = diffEl.children;
+  for (var j = 0; j < LINES.length; j++){
+    var ln = LINES[j], on = false;
+    if (ln.checks){ for (var k = 0; k < ln.checks.length; k++){ if (active[ln.checks[k]]) on = true; } }
+    lines[j].className = 'ln ' + ln.t + (on ? ' flag' : '');
+  }
+  var rows = [];
+  CHECKS.forEach(function(c){ if (active[c.id]) rows.push('<div class="row"><b>' + c.label + '</b> &mdash; ' + c.finding + '</div>'); });
+  fndEl.innerHTML = rows.length ? rows.join('') : '<div class="none">All checks off: the diff looks pristine. That is exactly the trap.</div>';
+}
+buildChecks(); buildDiff(); render();
+})();
+</script>
+</body>
+</html>

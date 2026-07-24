@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: monospace; background: #fff; color: #333; display: flex; justify-content: center; }
+.wrap { width: 100%; max-width: 660px; background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+.hd { padding: 12px 16px 0; }
+.hd h2 { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px; }
+.tog { display: inline-flex; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
+.tog button { padding: 7px 12px; border: none; background: #fff; color: #666; font-family: monospace; font-size: 12px; cursor: pointer; }
+.tog button + button { border-left: 1px solid #ddd; }
+.tog button.on { background: #0066cc; color: #fff; }
+.stage { padding: 14px 16px; min-height: 330px; }
+.view { display: none; }
+.view.show { display: block; }
+/* raw view */
+.raw .file { display: flex; justify-content: space-between; padding: 7px 10px; margin-bottom: 4px; background: #fff; border: 1px solid #eee; border-radius: 5px; font-size: 12px; }
+.raw .file .nm { color: #333; }
+.raw .file .stat { color: #999; }
+.raw .file .stat .a { color: #1a9e5b; }
+.raw .file .stat .d { color: #e85d3a; }
+.raw .cap { font-size: 11px; color: #aaa; font-style: italic; margin-top: 10px; }
+/* literate view */
+.lit h3 { font-size: 12px; color: #0066cc; margin: 10px 0 3px; letter-spacing: .3px; }
+.lit h3:first-child { margin-top: 0; }
+.lit p { font-size: 12.5px; line-height: 1.5; color: #444; }
+.lit .code { white-space: pre; background: #fff; border: 1px solid #eee; border-radius: 5px; padding: 7px 10px; font-size: 11.5px; line-height: 1.5; color: #444; margin: 4px 0; }
+.lit .note { font-size: 11.5px; color: #a83a1f; background: #fdecea; border: 1px solid #f3c8bd; border-radius: 5px; padding: 6px 10px; margin-top: 4px; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <h2>Same change, two presentations</h2>
+    <div class="tog">
+      <button id="b-raw" class="on">Raw diff</button>
+      <button id="b-lit">Literate explainer</button>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="view raw show" id="v-raw">
+      <div class="file"><span class="nm">.coveragerc</span><span class="stat"><span class="a">+1</span> <span class="d">-1</span></span></div>
+      <div class="file"><span class="nm">src/api/pagination.py</span><span class="stat"><span class="a">+24</span> <span class="d">-0</span></span></div>
+      <div class="file"><span class="nm">src/api/views.py</span><span class="stat"><span class="a">+5</span> <span class="d">-2</span></span></div>
+      <div class="file"><span class="nm">tests/test_users.py</span><span class="stat"><span class="a">+8</span> <span class="d">-0</span></span></div>
+      <div class="cap">Four files, alphabetical. No order, no story, no why. This is what the reviewer usually meets first.</div>
+    </div>
+    <div class="view lit" id="v-lit">
+      <h3>Background</h3>
+      <p>The users endpoint returns every user in one response. It sailed through review at 200 users; at 20,000 it started timing out.</p>
+      <h3>Goal</h3>
+      <p>Add cursor pagination so the endpoint streams results in pages instead of dumping the whole table.</p>
+      <h3>The intuition</h3>
+      <p>A cursor is an opaque bookmark into the result set. The client hands back the cursor it received to fetch the next page, so the server never re-scans from the start.</p>
+      <h3>The change, in order</h3>
+      <div class="code">def list_users(request):
+    qs = User.objects.all()
+    return JsonResponse(paginate(qs, cursor=request.GET.get('page')), safe=False)</div>
+      <div class="note">Worth a flag: paginate() is a new helper, but core/pagination.py already has paginate_queryset(). The raw dump buries this; the explainer surfaces it.</div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+var bRaw = document.getElementById('b-raw');
+var bLit = document.getElementById('b-lit');
+var vRaw = document.getElementById('v-raw');
+var vLit = document.getElementById('v-lit');
+function show(which){
+  var raw = (which === 'raw');
+  bRaw.className = raw ? 'on' : '';
+  bLit.className = raw ? '' : 'on';
+  vRaw.className = 'view raw' + (raw ? ' show' : '');
+  vLit.className = 'view lit' + (raw ? '' : ' show');
+}
+bRaw.addEventListener('click', function(){ show('raw'); });
+bLit.addEventListener('click', function(){ show('lit'); });
+})();
+</script>
+</body>
+</html>
