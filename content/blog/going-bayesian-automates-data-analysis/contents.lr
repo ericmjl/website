@@ -215,7 +215,7 @@ The normal distribution, the bell curve you know, has thin tails. Probability dr
 
 The Student-t distribution fixes this. It looks like a normal bell curve, but with heavier tails. More probability spills into the extremes. So when a point sits way off the curve, the likelihood essentially shrugs and says, "that's rare, but not impossible," and the fit barely moves. The further the point drifts from the trend, the less pull it exerts. Its influence fades gradually rather than being a binary in-or-out decision.
 
-Here is the elegant part. The Student-t has a parameter called the degrees of freedom that controls how heavy the tails are. You can put a prior (your belief about the parameter before seeing data) on it and let the data tell you how much outlier tolerance each dataset needs. The model learns its own robustness.
+Here is the elegant part. The Student-t has a parameter called the degrees of freedom (nu) that controls how heavy the tails are. At nu=1, you get the canonical Student-t distribution with the heaviest tails; outliers barely register. As nu increases, the tails thin out, and the distribution converges toward the Normal. At nu=30 or above, they are nearly indistinguishable. You can put a prior (your belief about the parameter before seeing data) on nu and let the data tell you how much outlier tolerance each dataset needs. The model learns its own robustness.
 
 And critically, the point is never deleted. It still contributes to the fit, just with proportionally less weight. Your data stays intact.
 
@@ -223,9 +223,9 @@ Enough theory. Let me show you what this actually looks like on a dose-response 
 
 <iframe src="bayesian_curves_demo.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
 
-The blue curve is the Normal likelihood fit; the orange dashed curve is the Student-t. Shaded bands are 94% credible intervals from 4,000 posterior draws (PyMC/NUTS, 4 chains). Click the nu buttons to switch between degrees of freedom.
+The blue curve is the Normal likelihood fit; the orange dashed curve is the Student-t. Shaded bands are 94% credible intervals from 4,000 posterior draws (PyMC/NUTS, 4 chains). The buttons go from nu=1 (the Student-t at its heaviest-tailed, most forgiving of outliers) to nu=30 (nearly indistinguishable from the Normal, least forgiving).
 
-Here is what to watch for. At nu=1, the orange band barely moves toward the outlier; the heavy tails absorb it. At nu=30, the orange and blue curves nearly overlap; the Student-t has thinned into a Normal. The interesting territory is nu=3 to nu=5, where the model starts caring about the outlier but doesn't let it dominate. That is the sweet spot for most assay data.
+Here is what to watch for. At nu=1, the orange band ignores the outlier completely; the heavy tails say "rare but possible." At nu=30, the orange and blue curves nearly overlap; the distribution has thinned into a Normal, and the outlier drags the fit just like the blue curve does. The interesting territory is nu=3 to nu=5, where the model starts caring about the outlier but doesn't let it dominate. That is the sweet spot for most assay data.
 
 But this demo handles one weird point on one curve. What happens when an entire curve is the outlier?
 
