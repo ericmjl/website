@@ -70,7 +70,7 @@ for(var i=0;i<6;i++){
     curves.push({xs:xs3,ys:ys3,params:p,isWarn:true});
   }else{
     var ys=xs8.map(function(x,j){return f4pl(x,p)+(rng(i*8+j)-0.5)*4;});
-    curves.push({xs:xs,ys:ys,params:p,isWarn:false});
+    curves.push({xs:xs8.slice(),ys:ys,params:p,isWarn:false});
   }
 }
 
