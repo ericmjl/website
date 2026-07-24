@@ -27,7 +27,7 @@ Let me show you what I mean.
 
 ## The manual outlier dance
 
-Picture a neutralization assay lab. Each 96-well plate holds five neutralization curves. An eighteen-plate experiment generates ninety curves in a single run, and your group is already eyeing robotics and 384-well formats to multiply throughput further.
+Picture a dose-response assay lab. Each 96-well plate holds five dose-response curves. An eighteen-plate experiment generates ninety curves in a single run, and your group is already eyeing robotics and 384-well formats to multiply throughput further.
 
 I've seen workflows where a single study generates anywhere from 125 to 375 curves. Each one gets inspected by hand.
 
@@ -57,7 +57,7 @@ Here is curve 11 from the demo above, reviewed by two different analysts. Diluti
 
 Same data, same software, different ID50. The point at dilution 4 sits right at the inflection of the curve, so keeping or removing it swings the estimate of where the curve crosses 50%. Which analyst is right? Both think they are, and without a principled criterion, neither can prove the other wrong.
 
-The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. But dose-response data violate this assumption doubly. The raw points along a neutralization curve don't come from a single normal distribution at all; they follow a sigmoidal shape. You'd have to apply Grubbs' to residuals after fitting, but those residuals are often heteroscedastic (more variance at certain concentrations than others), which breaks the test's assumptions even further. With only five to eight dilutions per curve, the test has almost no power to distinguish a genuine outlier from noise. So you find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
+The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. But dose-response data violate this assumption doubly. The raw points along a dose-response curve don't come from a single normal distribution at all; they follow a sigmoidal shape. You'd have to apply Grubbs' to residuals after fitting, but those residuals are often heteroscedastic (more variance at certain concentrations than others), which breaks the test's assumptions even further. With only five to eight dilutions per curve, the test has almost no power to distinguish a genuine outlier from noise. So you find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
 
 This isn't just my opinion. Karch demonstrated in a paper literally titled "Outliers May Not Be Automatically Removed" that automatic removal invalidates confidence intervals and biases your estimates ([Karch, 2023](https://pubmed.ncbi.nlm.nih.gov/37104797/)). The APA Publication Manual itself states plainly that omitting troublesome observations to present a more convincing story **is prohibited** (APA, 2020). And the FDA's [Bioanalytical Method Validation guidance](https://www.fda.gov/media/70858/download) is even more direct: repeat analysis is acceptable only for **assignable causes** such as equipment failure, sample processing errors, or poor chromatography. "It looked like an outlier" is conspicuously absent from that list.
 
@@ -85,7 +85,7 @@ But this demo handles one weird point on one curve. What happens when an entire 
 
 ## Hierarchy handles the weird curves
 
-Heavy tails solve the point-level problem. But some curves are weird all on their own. Maybe one neutralization curve came out noisy across every well, or the shape is off in a way that suggests a systematic issue for that row.
+Heavy tails solve the point-level problem. But some curves are weird all on their own. Maybe one dose-response curve came out noisy across every well, or the shape is off in a way that suggests a systematic issue for that row.
 
 This is where hierarchical modeling earns its keep. Instead of fitting each curve in isolation, a hierarchical model fits all of them together. Each curve borrows strength from the others through a shared population distribution. A noisy curve with a couple of strange wells gets gently pulled toward the behavior of its neighbors. Statisticians call this partial pooling.
 
@@ -99,7 +99,7 @@ Six curves from the same experiment. Five came out clean; curve 3 had a bad day 
 
 Here's where everything converges. Once you write down your hierarchical model with a heavy-tailed likelihood, you fit it to all eighteen plates at once. The sampler runs. Heavy tails handle the outlier points. Hierarchy handles the outlier curves. The whole thing runs without a single human judgment call.
 
-I built a prototype of exactly this for a neutralization assay workflow.
+I built a prototype of exactly this for a dose-response assay workflow.
 
 Thirty-six plates. Four minutes. On a laptop.
 

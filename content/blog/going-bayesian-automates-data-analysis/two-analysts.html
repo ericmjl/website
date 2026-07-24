@@ -52,7 +52,7 @@ function sx(x){return M.left+(x-xMin)/(xMax-xMin)*PW;}
 function sy(y){return M.top+(1-(y-yMin)/(yMax-yMin))*PH;}
 function f4pl(x,p){var e=(p[2]-x)*p[3];if(e>100)e=100;if(e<-100)e=-100;return p[0]+(p[1]-p[0])/(1+Math.pow(10,e));}
 function el(t,a){var e=document.createElementNS(SVG_NS,t);for(var k in a){if(a.hasOwnProperty(k))e.setAttribute(k,a[k]);}return e;}
-// Exact same curve 11 data as the Neutralization Curve Analysis demo above.
+// Exact same curve 11 data as the Dose-Response Curve Analysis demo above.
 // Dilution 4 = 100% (glaring outlier at the inflection point, true curve expects ~73%).
 var xs=[1,2,3,4,5,6,7,8];
 var ys=[6.9, 7.9, 10.5, 100, 89.5, 91.0, 90.5, 90.8];
@@ -96,7 +96,7 @@ function buildStatic(){
   for(var xa=1;xa<=8;xa++){var t=el('text',{x:sx(xa),y:M.top+PH+16,'text-anchor':'middle','font-size':10,fill:'#aaa'});t.textContent=xa;svg.appendChild(t);}
   for(var ya=0;ya<=100;ya+=20){var t2=el('text',{x:M.left-6,y:sy(ya)+3,'text-anchor':'end','font-size':10,fill:'#aaa'});t2.textContent=ya;svg.appendChild(t2);}
   var xl=el('text',{x:M.left+PW/2,y:H-4,'text-anchor':'middle','font-size':11,fill:'#999'});xl.textContent='log10(dilution)';svg.appendChild(xl);
-  var yl=el('text',{x:12,y:M.top+PH/2,'text-anchor':'middle','font-size':11,fill:'#999',transform:'rotate(-90, 12, '+(M.top+PH/2)+')'});yl.textContent='% neutralization';svg.appendChild(yl);
+  var yl=el('text',{x:12,y:M.top+PH/2,'text-anchor':'middle','font-size':11,fill:'#999',transform:'rotate(-90, 12, '+(M.top+PH/2)+')'});yl.textContent='% response';svg.appendChild(yl);
 }
 
 function render(analyst){
