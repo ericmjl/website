@@ -15,9 +15,9 @@ automation
 ---
 body:
 
-When people list the benefits of Bayesian modeling, they mention richer uncertainty estimates, the ability to encode prior knowledge, and posterior distributions instead of single numbers. All true, and all worth the switch on their own.
+If you've ever spent an afternoon clicking through dose-response curves, flagging outliers by hand, there's a way to make the model do that automatically.
 
-But there's a benefit almost nobody talks about. Going Bayesian automates away the manual data analysis you'd otherwise do by hand. And once you experience it, you wonder how you ever worked any other way.
+People usually talk about Bayesian modeling in terms of richer uncertainty estimates, prior knowledge, and posterior distributions. All true, and all worth the switch on their own. But there's a benefit almost nobody talks about. Going Bayesian automates away the manual data analysis you'd otherwise do by hand. And once you experience it, you wonder how you ever worked any other way.
 
 Let me show you what I mean.
 
@@ -95,13 +95,17 @@ Six curves from the same experiment. Five came out clean; curve 3 had a bad day 
 
 Here's where everything converges. Once you write down your hierarchical model with a heavy-tailed likelihood, you fit it to all eighteen plates at once. The sampler runs. Heavy tails handle the outlier points. Hierarchy handles the outlier curves. The whole thing runs without a single human judgment call.
 
-I built a prototype of exactly this for a neutralization assay workflow. It fit thirty-six plates' worth of curves in under four minutes on a laptop. Try doing that by hand.
+I built a prototype of exactly this for a neutralization assay workflow.
+
+Thirty-six plates. Four minutes. On a laptop.
+
+How would you feel about that instead of spending your afternoon doing it by hand?
 
 No shortcut keys. No research assistants clicking through Prism. No two-analysts-flag-different-points problem. The model handles the data analysis decisions you used to make by hand, and it makes them in a principled, reproducible, mathematically grounded way.
 
 This is the hidden benefit of going Bayesian. People talk about richer uncertainty, prior knowledge, posterior distributions. All genuine advantages. But the automation of manual data analysis is the one that compounds as your experiments scale. Every new plate, every new study, every new operator, the model just handles it. You get your afternoons back, and your results become reproducible by construction.
 
-And because you're fitting a hierarchical model, the same framework opens doors you didn't have before. Track which operator ran each plate, and the model decomposes variance across operators. Does the operator matter more than the antigen? You can ask that question directly and get a probability distribution for the answer. The model that handles your outliers also gives you batch-aware analysis for free.
+If this resonates, find a statistician or data scientist who works with Bayesian tools. Show them your curve-fitting workflow and ask: "Can we use a hierarchical model with a Student-t likelihood for this?" If they know Bayesian modeling, they'll know exactly what you mean.
 
 Going Bayesian isn't just about better statistics. It's about building a data analysis pipeline that scales without breaking, handles messy data without manual intervention, and gives you answers you can trust as your experiments grow. The math does the work so your team can focus on the science.
 
