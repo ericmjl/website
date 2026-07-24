@@ -85,7 +85,7 @@ Heavy tails solve the point-level problem. But some curves are weird all on thei
 
 This is where hierarchical modeling earns its keep. Instead of fitting each curve in isolation, a hierarchical model fits all of them together. Each curve borrows strength from the others through a shared population distribution. A noisy curve with a couple of strange wells gets gently pulled toward the behavior of its neighbors. Statisticians call this partial pooling.
 
-The philosophy mirrors the heavy tails, just one level up. Heavy tails down-weight weird points. Hierarchy regularizes weird curves. Same idea, two scales.
+The philosophy mirrors the heavy tails, just one level up. Heavy tails down-weight weird points. Hierarchy regularizes weird curves. It's the same idea, merely applied at different scales.
 
 <iframe src="hierarchy-demo.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
