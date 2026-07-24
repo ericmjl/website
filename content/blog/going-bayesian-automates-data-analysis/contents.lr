@@ -27,7 +27,7 @@ Let me show you what I mean.
 
 ## The manual outlier dance
 
-Picture a dose-response assay lab. Each 96-well plate holds five dose-response curves. An eighteen-plate experiment generates ninety curves in a single run, and your group is already eyeing robotics and 384-well formats to multiply throughput further.
+Picture a cell viability assay lab. Each 96-well plate holds five dose-response curves. An eighteen-plate experiment generates ninety curves in a single run, and your group is already eyeing robotics and 384-well formats to multiply throughput further.
 
 I've seen workflows where a single study generates anywhere from 125 to 375 curves. Each one gets inspected by hand.
 
@@ -99,7 +99,7 @@ Six curves from the same experiment. Five came out clean; curve 3 had a bad day 
 
 Here's where everything converges. Once you write down your hierarchical model with a heavy-tailed likelihood, you fit it to all eighteen plates at once. The sampler runs. Heavy tails handle the outlier points. Hierarchy handles the outlier curves. The whole thing runs without a single human judgment call.
 
-I built a prototype of exactly this for a dose-response assay workflow.
+I built a prototype of exactly this for a cell viability assay workflow.
 
 Thirty-six plates. Four minutes. On a laptop.
 

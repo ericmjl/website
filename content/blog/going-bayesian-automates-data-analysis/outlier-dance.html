@@ -216,7 +216,7 @@ svg { display: block; width: 100%; height: 100%; }
     for (var xa = 1; xa <= 8; xa++) { var t = el('text', { x: sx(xa), y: M.top + PH + 16, 'text-anchor': 'middle', 'font-size': 10, fill: '#aaa' }); t.textContent = xa; svg.appendChild(t); }
     for (var ya = 0; ya <= 100; ya += 20) { var t2 = el('text', { x: M.left - 6, y: sy(ya) + 3, 'text-anchor': 'end', 'font-size': 10, fill: '#aaa' }); t2.textContent = ya; svg.appendChild(t2); }
     var xl = el('text', { x: M.left + PW / 2, y: H - 4, 'text-anchor': 'middle', 'font-size': 11, fill: '#999' }); xl.textContent = 'log10(dilution)'; svg.appendChild(xl);
-    var yl = el('text', { x: 12, y: M.top + PH / 2, 'text-anchor': 'middle', 'font-size': 11, fill: '#999', transform: 'rotate(-90, 12, ' + (M.top + PH / 2) + ')' }); yl.textContent = '% response'; svg.appendChild(yl);
+    var yl = el('text', { x: 12, y: M.top + PH / 2, 'text-anchor': 'middle', 'font-size': 11, fill: '#999', transform: 'rotate(-90, 12, ' + (M.top + PH / 2) + ')' }); yl.textContent = '% viability'; svg.appendChild(yl);
 
     curvePath = el('path', { d: '', fill: 'none', stroke: '#555', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
     svg.appendChild(curvePath);

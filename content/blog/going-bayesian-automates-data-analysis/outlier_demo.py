@@ -93,7 +93,7 @@ def _(plt, x_all, x_clean, x_outlier, y_all, y_clean, y_outlier):
     ax.scatter(x_clean, y_clean, c="#2196F3", s=60, zorder=5, label="Clean data")
     ax.scatter(x_outlier, y_outlier, c="#e85d3a", s=80, zorder=5, label="Outlier")
     ax.set_xlabel("log10(dilution)")
-    ax.set_ylabel("% response")
+    ax.set_ylabel("% viability")
     ax.set_ylim(-5, 105)
     ax.legend(loc="upper left")
     ax.set_title("Dose-response data with outlier")
@@ -236,7 +236,7 @@ def _(
     )
 
     ax.set_xlabel("log10(dilution)")
-    ax.set_ylabel("% response")
+    ax.set_ylabel("% viability")
     ax.set_ylim(-5, 105)
     ax.legend(loc="upper left")
     ax.set_title(f"Normal vs Student-t (nu={float(nu_slider.value)}) fitted curves")

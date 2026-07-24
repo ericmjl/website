@@ -268,7 +268,7 @@ def _(
     )
 
     ax.set_xlabel("log10(dilution)")
-    ax.set_ylabel("% response")
+    ax.set_ylabel("% viability")
     ax.set_ylim(-5, 105)
     ax.legend(loc="upper left", fontsize=9)
     ax.set_title("Bayesian 4PL: Normal vs Student-t posterior")
