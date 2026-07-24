@@ -9,7 +9,7 @@ battle-tested prompts/models as the apis/blogbot FastAPI app, but routed
 through Z.ai's GLM models instead of OpenAI.
 
 Outputs a single JSON object on stdout:
-    {"slug", "title", "url", "linkedin", "bluesky"}
+    {"slug", "title", "url", "linkedin", "bluesky", "substack"}
 
 Usage:
     uv run generate_social.py <blog_slug>
@@ -103,6 +103,36 @@ def compose_bluesky_post(text, url):
     value_delivery + call_to_action + hashtags (everything EXCEPT the url)
     must total 280 characters or fewer, spaces included. This is a hard cap.
     If your draft is longer, cut words until it fits; aim for ~250.
+    """
+
+
+@prompt(role="user")
+def compose_substack_post(text, title, url):
+    """This is a blog post titled "{{ title }}":
+
+        {{ text }}
+
+    It came from the following url: {{ url }}.
+
+    Please compose a Substack newsletter post that condenses the blog post
+    for my email subscribers. The #1 purpose is to get them to click through
+    to the full post.
+
+    Structure:
+    - Open with the reader's PAIN: what problem are they living with right now?
+      Do NOT open with "I wrote about..." or "In this post..."
+    - Deliver the key benefit with ONE concrete proof point (a number, a result,
+      a before/after contrast).
+    - Place ONE rhetorical question right after the proof: "How would you feel
+      about [new way] instead of [old pain]?" Keep it to one sentence.
+    - Close by pointing readers to "this post" (write it literally as the
+      phrase "this post") for the full details — the hyperlink will be added
+      automatically.
+    - Sell the OUTCOME (what changes for the reader), not the MECHANISM.
+      Translate every technical term into a reader-felt benefit.
+    - Write in first person, conversational, like writing to a colleague.
+    - 300-500 words.
+    - End with a themed sign-off (e.g. "Happy modeling, Eric").
     """
 
 
@@ -335,8 +365,47 @@ class BlueSkyPost(BaseModel):
         return post_content
 
 
-# ---------------------------------------------------------------------------
-# Local blog post reading + URL building
+class SubstackPost(BaseModel):
+    subtitle: str = Field(
+        ...,
+        description=(
+            "A punchy subtitle that complements the blog title. "
+            "Hint at the benefit or create a curiosity gap. "
+            "Should make the reader want to open the email."
+        ),
+    )
+    greeting: str = Field(
+        default="Hello fellow datanistas,",
+        description="The standard greeting. Usually 'Hello fellow datanistas,'",
+    )
+    body: str = Field(
+        ...,
+        description=(
+            "The Substack body (300-500 words). A condensed, click-worthy version "
+            "of the blog post. Open with the reader's PAIN (what problem are they "
+            "living with?). Deliver the key benefit with ONE concrete proof point "
+            "(a number, a result). Place ONE rhetorical question right after the "
+            "proof: 'How would you feel about [new way] instead of [old pain]?' "
+            "Close by pointing readers to 'this post' for the full details. "
+            "Sell the OUTCOME, not the mechanism. Translate jargon into "
+            "reader-felt benefits. First person, conversational, like writing "
+            "to a colleague."
+        ),
+    )
+    signoff: str = Field(
+        ...,
+        description=(
+            "Themed sign-off. Default: 'Happy coding, Eric'. "
+            "Vary based on topic (e.g. 'Happy modeling, Eric')."
+        ),
+    )
+
+    def format_post(self, url: str) -> str:
+        """Format the full Substack post, wrapping 'this post' in a hyperlink."""
+        body = self.body.replace("this post", f"[this post]({url})")
+        return f"{self.greeting}\n\n{body}\n\n{self.signoff}"
+
+
 # ---------------------------------------------------------------------------
 
 
@@ -477,6 +546,13 @@ def main():
     )
     bluesky_text = bluesky_post.format_post()
 
+    substack_post = generate_structured(
+        compose_substack_post(body, post["title"], url).content,
+        SubstackPost,
+        socialbot_sysprompt().content,
+    )
+    substack_text = substack_post.format_post(url)
+
     print(
         json.dumps(
             {
@@ -485,6 +561,7 @@ def main():
                 "url": url,
                 "linkedin": linkedin_text,
                 "bluesky": bluesky_text,
+                "substack": substack_text,
             }
         )
     )
