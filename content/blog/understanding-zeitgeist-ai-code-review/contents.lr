@@ -118,12 +118,17 @@ twitter_handle: ericmjl
 ---
 summary:
 
-Agents write code fast now, and the bottleneck has moved to whoever has to understand it. This survey maps where practitioners and researchers converged in 2026, from cognitive debt to literate explainers and micro-worlds, with pre-read and post-read quizzes to test your own understanding. Where does your review practice sit in the conversation?
+I map a growing consensus: now that AI agents write so much of our code, producing it is cheap, but *understanding* it is the real bottleneck. I share my own struggles reviewing forty-file diffs and explore how cognitive debt quietly accrues when we approve polished PRs we can't actually explain. Drawing from thinkers like Geoffrey Litt and Simon Willison, I highlight practical techniques to fight back, like literate diffs, interactive micro-worlds, and quizzes. (I even quiz you on this very post!) How are you keeping your mental model alive when your agent types faster than you can think?
 ---
 tags:
 
 ai
 agents
-code-review
-cognitive-debt
+code review
+cognitive debt
+software engineering
+llms
+pull requests
+understanding
 learning
+micro-worlds
