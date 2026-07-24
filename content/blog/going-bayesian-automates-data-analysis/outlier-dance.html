@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1a1a2e; color: #eee; display: flex; justify-content: center;
+}
+.app {
+  width: 100%; max-width: 620px; background: #2d2d44; border-radius: 10px;
+  overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.titlebar {
+  background: #3d3d5c; padding: 8px 14px; display: flex; align-items: center; gap: 8px;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.r { background: #ff5f57; } .dot.y { background: #ffbd2e; } .dot.g { background: #28ca42; }
+.titlebar span { margin-left: 8px; font-size: 12px; color: #999; }
+.counters {
+  display: flex; justify-content: space-between; padding: 10px 16px;
+  background: #252540; font-size: 13px;
+}
+.counter-val { font-weight: 700; color: #62c4ff; }
+.timer-val { font-weight: 700; color: #ffbd2e; }
+.statusbar {
+  padding: 6px 16px; background: #1e1e36; font-size: 12px; color: #888;
+  font-family: 'SF Mono', Menlo, monospace; min-height: 22px;
+}
+.statusbar .flash { color: #ff5f57; }
+.chart-area {
+  background: #fafafa; position: relative; height: 280px;
+}
+svg { display: block; width: 100%; height: 100%; }
+.cursor {
+  position: absolute; width: 16px; height: 16px; pointer-events: none;
+  transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+.cursor svg { width: 100%; height: 100%; }
+.fastfwd {
+  position: absolute; inset: 0; background: rgba(45,45,68,0.92);
+  display: none; align-items: center; justify-content: center; flex-direction: column;
+  gap: 12px; z-index: 20;
+}
+.fastfwd .big {
+  font-size: 28px; font-weight: 800; color: #62c4ff;
+}
+.fastfwd .sub { font-size: 14px; color: #aaa; }
+.punchline {
+  position: absolute; inset: 0; background: rgba(45,45,68,0.96);
+  display: none; align-items: center; justify-content: center; flex-direction: column;
+  gap: 10px; padding: 30px; text-align: center; z-index: 30;
+}
+.punchline .big {
+  font-size: 22px; font-weight: 700; color: #fff; line-height: 1.4;
+}
+.punchline .sub { font-size: 14px; color: #888; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="titlebar">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <span>GraphPad Prism — Neutralization Curves.xlsx</span>
+  </div>
+  <div class="counters">
+    <div>Curve <span class="counter-val" id="curve-num">1</span> / 90</div>
+    <div>Elapsed <span class="timer-val" id="timer">0:00</span></div>
+  </div>
+  <div class="statusbar" id="status">Loading data...</div>
+  <div class="chart-area" id="chart-area">
+    <svg id="plot" viewBox="0 0 600 280"></svg>
+    <div class="cursor" id="cursor" style="left: 0; top: 0;">
+      <svg viewBox="0 0 16 16"><path d="M2 2 L2 12 L5 9 L7 14 L9 13 L7 8 L11 8 Z" fill="#222" stroke="#fff" stroke-width="0.5"/></svg>
+    </div>
+    <div class="fastfwd" id="fastfwd">
+      <div class="big" id="ff-num">Curve 6 / 90</div>
+      <div class="sub">Excluding points... Refitting... Copying to Excel...</div>
+    </div>
+    <div class="punchline" id="punchline">
+      <div class="big">90 curves reviewed.<br>That was one plate of eighteen.<br>And tomorrow you do it again.</div>
+      <div class="sub">Or you could let the model handle it.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  var svg = document.getElementById('plot');
+  var cursor = document.getElementById('cursor');
+  var curveNum = document.getElementById('curve-num');
+  var timerEl = document.getElementById('timer');
+  var statusEl = document.getElementById('status');
+  var fastfwd = document.getElementById('fastfwd');
+  var ffNum = document.getElementById('ff-num');
+  var punchline = document.getElementById('punchline');
+  var chartArea = document.getElementById('chart-area');
+
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  var W = 600, H = 280;
+  var M = { top: 15, right: 15, bottom: 30, left: 40 };
+  var PW = W - M.left - M.right, PH = H - M.top - M.bottom;
+  var xMin = 0.5, xMax = 8.5, yMin = 0, yMax = 105;
+
+  function sx(x) { return M.left + (x - xMin) / (xMax - xMin) * PW; }
+  function sy(y) { return M.top + (1 - (y - yMin) / (yMax - yMin)) * PH; }
+
+  function f4pl(x, b, t, ec, h) {
+    var e = (ec - x) * h; if (e > 100) e = 100; if (e < -100) e = -100;
+    return b + (t - b) / (1 + Math.pow(10, e));
+  }
+
+  function el(tag, attrs) {
+    var e = document.createElementNS(SVG_NS, tag);
+    for (var k in attrs) { if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]); }
+    return e;
+  }
+
+  // Generate N slightly different curve datasets
+  function makeCurves(n) {
+    var curves = [];
+    var rng = function(s) { var x = Math.sin(s * 9999) * 10000; return x - Math.floor(x); };
+    for (var i = 0; i < n; i++) {
+      var params = [
+        3 + rng(i+1) * 8,
+        88 + rng(i+50) * 12,
+        3.5 + rng(i+100) * 2,
+        1.0 + rng(i+200) * 1.2
+      ];
+      var xs = [1,2,3,4,5,6,7,8];
+      var ys = xs.map(function(x, j) {
+        return f4pl(x, params[0], params[1], params[2], params[3]) + (rng(i*8+j) - 0.5) * 6;
+      });
+      var outIdx = Math.floor(rng(i+300) * 8);
+      ys[outIdx] += 40 + rng(i+400) * 30;
+      curves.push({ xs: xs, ys: ys, outIdx: outIdx, params: params });
+    }
+    return curves;
+  }
+
+  var data = makeCurves(90);
+  var xGrid = [];
+  for (var gx = xMin; gx <= xMax; gx += 0.1) xGrid.push(gx);
+
+  // Fit 4PL via Nelder-Mead (simplified — good enough for visual)
+  function fit4pl(xs, ys) {
+    var best = [Math.min.apply(null, ys), Math.max.apply(null, ys), 4.5, 1.0];
+    var bestSSR = Infinity;
+    // Coarse grid search
+    for (var ec = 2; ec <= 7; ec += 0.5) {
+      for (var h = 0.5; h <= 3; h += 0.5) {
+        var b = Math.min.apply(null, ys), t = Math.max.apply(null, ys);
+        var ssr = 0;
+        for (var i = 0; i < xs.length; i++) {
+          var r = ys[i] - f4pl(xs[i], b, t, ec, h); ssr += r * r;
+        }
+        if (ssr < bestSSR) { bestSSR = ssr; best = [b, t, ec, h]; }
+      }
+    }
+    return best;
+  }
+
+  function fitExcluding(xs, ys, exIdx) {
+    var fx = [], fy = [];
+    for (var i = 0; i < xs.length; i++) { if (i !== exIdx) { fx.push(xs[i]); fy.push(ys[i]); } }
+    return fit4pl(fx, fy);
+  }
+
+  function clearPlot() { svg.innerHTML = ''; }
+
+  function drawAxes() {
+    svg.appendChild(el('rect', { x: M.left, y: M.top, width: PW, height: PH, fill: '#fff', stroke: '#ddd' }));
+    for (var x = 1; x <= 8; x++)
+      svg.appendChild(el('line', { x1: sx(x), y1: M.top, x2: sx(x), y2: M.top + PH, stroke: '#f0f0f0' }));
+    for (var y = 0; y <= 100; y += 20)
+      svg.appendChild(el('line', { x1: M.left, y1: sy(y), x2: M.left + PW, y2: sy(y), stroke: '#f0f0f0' }));
+  }
+
+  function pathFromParams(p) {
+    var pts = [];
+    for (var i = 0; i < xGrid.length; i++) {
+      var y = Math.max(yMin, Math.min(yMax, f4pl(xGrid[i], p)));
+      pts.push(sx(xGrid[i]).toFixed(1) + ',' + sy(y).toFixed(1));
+    }
+    return 'M' + pts.join(' L');
+  }
+
+  var curvePath, points = [], excludedMark;
+
+  function drawCurve(d, params, excluded) {
+    clearPlot();
+    drawAxes();
+
+    curvePath = el('path', { d: pathFromParams(params), fill: 'none', stroke: '#555', 'stroke-width': 2 });
+    svg.appendChild(curvePath);
+
+    for (var i = 0; i < d.xs.length; i++) {
+      var isEx = (excluded && i === d.outIdx);
+      var c = el('circle', {
+        cx: sx(d.xs[i]), cy: sy(d.ys[i]), r: isEx ? 6 : 4,
+        fill: isEx ? '#ccc' : '#2196F3', stroke: '#fff', 'stroke-width': 1
+      });
+      if (isEx) {
+        c.setAttribute('stroke', '#ff5f57'); c.setAttribute('stroke-width', 2);
+      }
+      points.push(c);
+      svg.appendChild(c);
+    }
+  }
+
+  function moveCursorToSVG(x, y) {
+    var rect = chartArea.getBoundingClientRect();
+    var scaleX = rect.width / W;
+    var scaleY = rect.height / H;
+    cursor.style.left = (sx(x) * scaleX - 4) + 'px';
+    cursor.style.top = (sy(y) * scaleY - 12) + 'px';
+  }
+
+  function setStatus(text, flash) {
+    statusEl.innerHTML = flash ? '<span class="flash">' + text + '</span>' : text;
+  }
+
+  function setCounter(n) { curveNum.textContent = n; }
+
+  var startTime = 0;
+  function updateTimer(elapsedMin) {
+    var m = Math.floor(elapsedMin);
+    var s = Math.floor((elapsedMin - m) * 60);
+    timerEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+  async function playOneCurve(idx) {
+    var d = data[idx];
+    var fullParams = fit4pl(d.xs, d.ys);
+
+    // Phase 1: draw curve
+    setStatus('Reviewing curve ' + (idx + 1) + '...');
+    drawCurve(d, fullParams, false);
+    await sleep(400);
+
+    // Phase 2: cursor moves to outlier
+    setStatus('Scanning for outliers...');
+    moveCursorToSVG(d.xs[d.outIdx], d.ys[d.outIdx]);
+    await sleep(600);
+
+    // Phase 3: detect outlier
+    setStatus('Outlier detected at dilution ' + d.xs[d.outIdx] + '!', true);
+    await sleep(500);
+
+    // Phase 4: exclude
+    setStatus('Excluding point...');
+    var refitParams = fitExcluding(d.xs, d.ys, d.outIdx);
+    drawCurve(d, refitParams, true);
+    await sleep(300);
+
+    // Phase 5: refit
+    setStatus('Refitting curve...');
+    await sleep(400);
+
+    // Phase 6: done
+    setStatus('Curve ' + (idx + 1) + ' complete');
+    await sleep(200);
+  }
+
+  async function play() {
+    while (true) {
+      punchline.style.display = 'none';
+      fastfwd.style.display = 'none';
+
+      // Phase 1: Excel copy/paste
+      setCounter(1); updateTimer(0);
+      setStatus('Copying data from Excel...');
+      await sleep(700);
+      setStatus('Pasting into Prism...');
+      await sleep(500);
+
+      // Phase 2: 5 detailed curves
+      var elapsed = 0;
+      for (var i = 0; i < 5; i++) {
+        setCounter(i + 1);
+        elapsed += 1.5 + (i * 0.3);
+        updateTimer(elapsed);
+        await playOneCurve(i);
+      }
+
+      // Phase 3: fast-forward
+      setStatus('Continuing review...');
+      fastfwd.style.display = 'flex';
+      var ffCurve = 6;
+      var ffTimer = elapsed;
+      for (var j = 6; j <= 90; j += Math.floor(Math.random() * 5 + 3)) {
+        ffNum.textContent = 'Curve ' + j + ' / 90';
+        ffTimer = j * 1.8;
+        updateTimer(ffTimer);
+        await sleep(120);
+      }
+      ffNum.textContent = 'Curve 90 / 90';
+      updateTimer(162);
+      await sleep(500);
+
+      // Phase 4: punchline
+      fastfwd.style.display = 'none';
+      punchline.style.display = 'flex';
+      setStatus('Done.');
+      await sleep(4000);
+    }
+  }
+
+  // Auto-play when scrolled into view
+  var started = false;
+  var observer = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting && !started) {
+      started = true;
+      play();
+    }
+  }, { threshold: 0.3 });
+  observer.observe(chartArea);
+})();
+</script>
+</body>
+</html>
