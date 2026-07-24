@@ -68,11 +68,13 @@ svg { display: block; width: 100%; height: 100%; }
   <div class="toolbar">
     <div class="status-msg" id="status">Curve 1 loaded.</div>
     <div class="counter">Curve <span id="curve-num">1</span> / 90</div>
-    <button class="btn btn-primary" id="next-btn">Next curve →</button>
+    <button class="btn" id="prev-btn">← Prev</button>
+    <button class="btn btn-primary" id="next-btn">Next →</button>
   </div>
   <div class="meta">
+    <div>Time elapsed: <b id="timer">0:00</b></div>
     <div>Total exclusion decisions: <b id="total-decisions">0</b></div>
-    <div>Curves where you excluded at least 1 point: <b id="curves-touched">0</b></div>
+    <div>Curves touched: <b id="curves-touched">0</b></div>
   </div>
 </div>
 
@@ -146,6 +148,21 @@ svg { display: block; width: 100%; height: 100%; }
   var totalDecisions = 0;
   var curvesTouched = 0;
   var curveHadExclusion = false;
+  var timerStart = null, timerInterval = null;
+  var timerEl = document.getElementById('timer');
+  var prevBtn = document.getElementById('prev-btn');
+
+  function startTimer() {
+    if (timerStart) return;
+    timerStart = Date.now();
+    timerInterval = setInterval(function() {
+      var sec = Math.floor((Date.now() - timerStart) / 1000);
+      var m = Math.floor(sec / 60), s = sec % 60;
+      timerEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    }, 1000);
+  }
+  function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+  function getElapsed() { return timerStart ? Math.floor((Date.now() - timerStart) / 1000) : 0; }
 
   function fit4pl(fxs, fys) {
     var best = [5, 95, 4.5, 1.5], bestSSR = Infinity;
@@ -223,6 +240,7 @@ svg { display: block; width: 100%; height: 100%; }
   }
 
   function togglePoint(d, idx) {
+    startTimer();
     excluded[idx] = !excluded[idx];
     totalDecisions++;
     if (!curveHadExclusion) { curveHadExclusion = true; curvesTouched++; }
@@ -272,31 +290,50 @@ svg { display: block; width: 100%; height: 100%; }
   }
 
   function showPunchline() {
-    var reviewed = curveIdx + 1;
+    stopTimer();
+    var reviewed = curveIdx + 1; var sec = getElapsed(); var m = Math.floor(sec / 60), s = sec % 60;
+    var timeStr = m + ':' + (s < 10 ? '0' : '') + s;
     overlay.style.display = 'flex';
     if (reviewed >= 90) {
-      overlayBig.innerHTML = '90 curves reviewed.<br>That was one plate of eighteen.<br>And tomorrow you do it again.';
-      overlaySub.textContent = totalDecisions + ' manual exclusion decisions made. Or you could let the model handle it.';
+      overlayBig.innerHTML = '90 curves reviewed in ' + timeStr + '.<br>That was one plate of eighteen.<br>And tomorrow you do it again.';
+      overlaySub.textContent = totalDecisions + ' manual exclusion decisions. Or you could let the model handle it.';
     } else {
-      overlayBig.innerHTML = 'You made it to curve ' + reviewed + ' of 90.<br>That\'s ' + totalDecisions + ' judgment calls so far.<br>In a real experiment, you\'d have 18 plates of these.';
+      overlayBig.innerHTML = 'You made it to curve ' + reviewed + ' of 90 in ' + timeStr + '.<br>That\'s ' + totalDecisions + ' judgment calls so far.<br>In a real experiment, you\'d have 18 plates of these.';
       overlaySub.textContent = 'Give up? Or let the model handle it automatically?';
     }
   }
 
+  function updateNavButtons() {
+    prevBtn.disabled = (curveIdx === 0);
+    prevBtn.style.opacity = (curveIdx === 0) ? '0.4' : '1';
+  }
+
   document.getElementById('next-btn').addEventListener('click', function() {
+    startTimer();
     if (curveIdx >= 89) { showPunchline(); return; }
     curveIdx++;
     loadCurve(curveIdx);
+    updateNavButtons();
+  });
+
+  prevBtn.addEventListener('click', function() {
+    if (curveIdx <= 0) return;
+    curveIdx--;
+    loadCurve(curveIdx);
+    updateNavButtons();
   });
 
   document.getElementById('overlay-btn').addEventListener('click', function() {
     overlay.style.display = 'none';
     curveIdx = 0; totalDecisions = 0; curvesTouched = 0;
+    timerStart = null; stopTimer(); timerEl.textContent = '0:00';
     totalDecEl.textContent = '0'; curvesTouchedEl.textContent = '0';
     loadCurve(0);
+    updateNavButtons();
   });
 
   loadCurve(0);
+  updateNavButtons();
 })();
 </script>
 </body>

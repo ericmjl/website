@@ -31,7 +31,7 @@ For every curve, there's usually a point or two that looks off. The standard wor
 
 For one curve, it'll be seconds, but multiply this over dozens of plates and you have an unbounded amount of time spent clicking on a UI (if one's lucky) or switching between two applications, Excel and GraphPad Prism (if one is unlucky).
 
-<iframe src="outlier-dance.html" width="100%" height="380" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
+<iframe src="outlier-dance.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Are you really going to hire more research assistants to click through curves? That approach collapses under its own weight.
 
@@ -47,7 +47,7 @@ Excluding a point because it's statistically inconvenient has two deep problems.
 
 The first is reproducibility. What's your rule for calling something an outlier? Two standard deviations from the fit? Three? The classic tools, like Grubbs' test or the ROUT method that Prism builds in, hand you a threshold. But where did that threshold come from? It's a cutoff someone picked, not a principle someone derived. Two analysts staring at the same curve flag different points, because the decision rests on an arbitrary line in the sand. You're eyeballing with extra steps.
 
-<iframe src="two-analysts.html" width="100%" height="420" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
+<iframe src="two-analysts.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. But dose-response data violate this assumption doubly. The raw points along a neutralization curve don't come from a single normal distribution at all; they follow a sigmoidal shape. You'd have to apply Grubbs' to residuals after fitting, but those residuals are often heteroscedastic (more variance at certain concentrations than others), which breaks the test's assumptions even further. With only five to eight dilutions per curve, the test has almost no power to distinguish a genuine outlier from noise. So you find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
 
@@ -67,7 +67,7 @@ And critically, the point is never deleted. It still contributes to the fit, jus
 
 Enough theory. Let me show you what this actually looks like on a dose-response curve with a real outlier.
 
-<iframe src="bayesian_curves_demo.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
+<iframe src="bayesian_curves_demo.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 The blue curve is the Normal likelihood fit; the orange dashed curve is the Student-t. Dotted vertical lines mark each model's ID50 estimate. Shaded bands are 94% credible intervals from 4,000 posterior draws (PyMC/NUTS, 4 chains). The buttons go from nu=1 (the Student-t at its heaviest-tailed, most forgiving of outliers) to nu=30 (nearly indistinguishable from the Normal, least forgiving).
 
