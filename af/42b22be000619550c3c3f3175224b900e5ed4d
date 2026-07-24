@@ -1,0 +1,33 @@
+content/blog/understanding-zeitgeist-ai-code-review/contents.lr
+  s_9544af6044cc21::t_4228a17501e93e 49,51-53
+  s_9544af6044cc21::t_e5bffc01db47dd 55
+  s_9544af6044cc21::t_ccbe1634638067 59
+  s_2a5ccf3ea4cfda::t_cd999ad733cacf 54
+content/blog/understanding-zeitgeist-ai-code-review/literate-diff.html
+  s_9544af6044cc21::t_1675a82ed7a24a 16
+  s_9544af6044cc21::t_5b155dd061cd9d 73-77,84,88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "af42b22be000619550c3c3f3175224b900e5ed4d",
+  "prompts": {},
+  "sessions": {
+    "s_2a5ccf3ea4cfda": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_069e8aa4affeS5L86Avdml140E",
+        "model": "glm-5.2"
+      },
+      "human_author": "Eric Ma <ericmajinglong@gmail.com>"
+    },
+    "s_9544af6044cc21": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_06a453b62ffeJo5XHmpYWLc0JY",
+        "model": "glm-5.2"
+      },
+      "human_author": "Eric Ma <ericmajinglong@gmail.com>"
+    }
+  }
+}
