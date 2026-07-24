@@ -104,19 +104,21 @@ svg { display: block; width: 100%; height: 100%; }
   var excluded = xs.map(function() { return false; });
   var toggleCount = 0;
 
-  // Grid-search 4PL fitter
+  // Grid-search 4PL fitter — searches all 4 parameters
   function fit4pl(fxs, fys) {
-    var best = [0, 100, 4.5, 1.0];
+    var best = [5, 95, 4.5, 1.5];
     var bestSSR = Infinity;
-    var b0 = Math.min.apply(null, fys);
-    var t0 = Math.max.apply(null, fys);
-    for (var ec = 2; ec <= 7; ec += 0.2) {
-      for (var h = 0.3; h <= 4; h += 0.2) {
-        var ssr = 0;
-        for (var i = 0; i < fxs.length; i++) {
-          var r = fys[i] - f4pl(fxs[i], [b0, t0, ec, h]); ssr += r * r;
+    for (var b = 0; b <= 20; b += 2) {
+      for (var t = 85; t <= 100; t += 2) {
+        for (var ec = 2; ec <= 7; ec += 0.2) {
+          for (var h = 0.3; h <= 4; h += 0.2) {
+            var ssr = 0;
+            for (var i = 0; i < fxs.length; i++) {
+              var r = fys[i] - f4pl(fxs[i], [b, t, ec, h]); ssr += r * r;
+            }
+            if (ssr < bestSSR) { bestSSR = ssr; best = [b, t, ec, h]; }
+          }
         }
-        if (ssr < bestSSR) { bestSSR = ssr; best = [b0, t0, ec, h]; }
       }
     }
     return best;
