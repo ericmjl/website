@@ -82,7 +82,7 @@ var buttons = nuValues.map(function(nv) {
 });
 
 var layout = {
-  margin: { t: 90, b: 50, l: 60, r: 30 },
+  margin: { t: 55, b: 50, l: 60, r: 30 },
   xaxis: { title: "log10(dilution)", range: [0.5, 8.5], gridcolor: "#eee", zerolinecolor: "#eee", linecolor: "#ddd" },
   yaxis: { title: "% neutralization", range: [-5, 105], gridcolor: "#eee", zerolinecolor: "#eee", linecolor: "#ddd" },
   plot_bgcolor: "white", paper_bgcolor: "white",
@@ -90,15 +90,14 @@ var layout = {
   legend: { x: 0.02, y: 0.98, bgcolor: "rgba(255,255,255,0.9)", bordercolor: "#ddd", borderwidth: 1, font: { size: 11, family: "monospace", color: "#333" } },
   font: { size: 12, family: "monospace", color: "#333" },
   updatemenus: [{
-    x: 0.5, y: 1.05, xanchor: "center", yanchor: "bottom",
+    x: 0.5, y: 1.0, xanchor: "center", yanchor: "top",
     direction: "left", type: "buttons", buttons: buttons,
     bgcolor: "white", bordercolor: "#ddd", activecolor: "#0066cc", font: { size: 12, family: "monospace", color: "#333" }
   }],
   annotations: [
     { x: DATA.normal.ec50_median, y: 102, text: "Normal ID50", showarrow: false, font: { size: 9, color: "#0066cc", family: "monospace" } },
     { x: DATA.student_t["1"].ec50_median, y: -3, text: "Student-t ID50", showarrow: false, font: { size: 9, color: "#e85d3a", family: "monospace" } }
-  ],
-  title: { text: "Bayesian 4PL: Normal vs Student-t posterior", font: { size: 14, family: "monospace", color: "#333" } }
+  ]
 };
 
 Plotly.newPlot("chart", allTraces, layout, { responsive: true, displayModeBar: false });
