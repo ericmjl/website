@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #fafafa;
+    color: #222;
+    padding: 16px;
+  }
+  .demo-container { max-width: 580px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 8px; }
+  .header h3 { font-size: 15px; font-weight: 600; color: #333; }
+  .header p { font-size: 12px; color: #888; margin-top: 2px; }
+  #plot-wrapper {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  svg { display: block; width: 100%; height: auto; cursor: default; }
+  .outlier-point { cursor: grab; }
+  .outlier-point:active { cursor: grabbing; }
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 13px;
+    color: #555;
+  }
+  .controls input[type="range"] { width: 140px; }
+  .controls .nu-value { font-weight: 600; color: #333; min-width: 28px; }
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 6px 0;
+    font-size: 12px;
+    color: #666;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 24px; height: 3px; border-radius: 2px; }
+  .weight-display {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+  }
+  .weight-bar-container {
+    width: 200px;
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    margin: 4px auto 0;
+    overflow: hidden;
+  }
+  .weight-bar {
+    height: 100%;
+    background: #e85d3a;
+    border-radius: 3px;
+    transition: width 0.1s ease;
+  }
+</style>
+</head>
+<body>
+<div class="demo-container">
+  <div class="header">
+    <h3>Normal vs Student-t: Drag the outlier</h3>
+    <p>Drag the red point. Watch how each likelihood responds.</p>
+  </div>
+  <div id="plot-wrapper">
+    <svg id="plot" viewBox="0 0 580 380"></svg>
+  </div>
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: #2196F3;"></div>
+      <span>Normal (thin tails)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: #e85d3a; border-bottom: 2px dashed #e85d3a;"></div>
+      <span>Student-t (heavy tails)</span>
+    </div>
+  </div>
+  <div class="controls">
+    <label>Degrees of freedom (nu):</label>
+    <input type="range" id="nu-slider" min="1" max="30" step="0.5" value="3">
+    <span class="nu-value" id="nu-display">3</span>
+  </div>
+  <div class="weight-display">
+    Outlier weight: <span id="weight-text">1.00</span>
+    <div class="weight-bar-container">
+      <div class="weight-bar" id="weight-bar" style="width: 100%;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('plot');
+
+  // Plot dimensions
+  const W = 580, H = 380;
+  const M = { top: 20, right: 20, bottom: 40, left: 50 };
+  const PW = W - M.left - M.right;
+  const PH = H - M.top - M.bottom;
+
+  // Data space
+  const xMin = 0, xMax = 10, yMin = 0, yMax = 100;
+
+  function sx(x) { return M.left + (x - xMin) / (xMax - xMin) * PW; }
+  function sy(y) { return M.top + (1 - (y - yMin) / (yMax - yMin)) * PH; }
+  function unsx(px) { return xMin + (px - M.left) / PW * (xMax - xMin); }
+  function unsy(py) { return yMin + (1 - (py - M.top) / PH) * (yMax - yMin); }
+
+  // Generate clean data points (linear trend with small noise)
+  const xs = [1, 2, 3, 4, 5, 6, 7, 8];
+  const ys = xs.map(x => 15 + 7.5 * x + (Math.sin(x * 2.3) * 1.5));
+
+  // Outlier point (starts near the trend, draggable)
+  let outlier = { x: 5, y: 90 };
+
+  let nu = 3;
+
+  // OLS regression
+  function ols(px, py) {
+    const n = px.length;
+    const mx = px.reduce((a, b) => a + b, 0) / n;
+    const my = py.reduce((a, b) => a + b, 0) / n;
+    let sxy = 0, sxx = 0;
+    for (let i = 0; i < n; i++) {
+      sxy += (px[i] - mx) * (py[i] - my);
+      sxx += (px[i] - mx) ** 2;
+    }
+    const slope = sxy / sxx;
+    const intercept = my - slope * mx;
+    return { slope, intercept };
+  }
+
+  // IRLS with Student-t weights
+  function irlsStudentT(px, py, dof) {
+    let w = px.map(() => 1);
+    let result = ols(px, py);
+
+    for (let iter = 0; iter < 20; iter++) {
+      // Compute residuals
+      const residuals = py.map((y, i) => y - (result.slope * px[i] + result.intercept));
+
+      // Robust scale estimate (MAD)
+      const sortedRes = [...residuals].map(Math.abs).sort((a, b) => a - b);
+      const median = sortedRes[Math.floor(sortedRes.length / 2)];
+      const scale = Math.max(1.4826 * median, 0.001);
+
+      // Student-t weights
+      const newW = residuals.map(r => {
+        const u = r / scale;
+        return (dof + 1) / (dof + u * u);
+      });
+
+      // Check convergence
+      let maxChange = 0;
+      for (let i = 0; i < w.length; i++) {
+        maxChange = Math.max(maxChange, Math.abs(newW[i] - w[i]));
+      }
+      w = newW;
+
+      // Weighted least squares
+      const sw = w.reduce((a, b) => a + b, 0);
+      const mx = px.reduce((a, b, i) => a + b * w[i], 0) / sw;
+      const my = py.reduce((a, b, i) => a + b * w[i], 0) / sw;
+      let sxy = 0, sxx = 0;
+      for (let i = 0; i < n; i++) {
+        sxy += w[i] * (px[i] - mx) * (py[i] - my);
+        sxx += w[i] * (px[i] - mx) ** 2;
+      }
+      const n = px.length;
+      result = { slope: sxy / sxx, intercept: my - (sxy / sxx) * mx };
+
+      if (maxChange < 1e-6) break;
+    }
+
+    result.weights = w;
+    return result;
+  }
+
+  // SVG helpers
+  function el(tag, attrs) {
+    const e = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    return e;
+  }
+
+  function drawGrid() {
+    // Background
+    svg.appendChild(el('rect', { x: M.left, y: M.top, width: PW, height: PH, fill: '#fcfcfc', stroke: '#e8e8e8', 'stroke-width': 1 }));
+
+    // Grid lines
+    for (let x = 0; x <= 10; x += 2) {
+      svg.appendChild(el('line', { x1: sx(x), y1: M.top, x2: sx(x), y2: M.top + PH, stroke: '#f0f0f0', 'stroke-width': 1 }));
+    }
+    for (let y = 0; y <= 100; y += 20) {
+      svg.appendChild(el('line', { x1: M.left, y1: sy(y), x2: M.left + PW, y2: sy(y), stroke: '#f0f0f0', 'stroke-width': 1 }));
+    }
+
+    // Axis labels
+    for (let x = 0; x <= 10; x += 2) {
+      const t = el('text', { x: sx(x), y: M.top + PH + 16, 'text-anchor': 'middle', 'font-size': 10, fill: '#aaa' });
+      t.textContent = x;
+      svg.appendChild(t);
+    }
+    for (let y = 0; y <= 100; y += 20) {
+      const t = el('text', { x: M.left - 8, y: sy(y) + 3, 'text-anchor': 'end', 'font-size': 10, fill: '#aaa' });
+      t.textContent = y;
+      svg.appendChild(t);
+    }
+
+    // Axis titles
+    const xLabel = el('text', { x: M.left + PW / 2, y: H - 5, 'text-anchor': 'middle', 'font-size': 11, fill: '#999' });
+    xLabel.textContent = 'Concentration';
+    svg.appendChild(xLabel);
+
+    const yLabel = el('text', { x: 14, y: M.top + PH / 2, 'text-anchor': 'middle', 'font-size': 11, fill: '#999', transform: 'rotate(-90, 14, ' + (M.top + PH / 2) + ')' });
+    yLabel.textContent = 'Response';
+    svg.appendChild(yLabel);
+  }
+
+  function drawLine(slope, intercept, color, dashed) {
+    const y1 = slope * xMin + intercept;
+    const y2 = slope * xMax + intercept;
+    const attrs = {
+      x1: sx(xMin), y1: sy(Math.max(yMin, Math.min(yMax, y1))),
+      x2: sx(xMax), y2: sy(Math.max(yMin, Math.min(yMax, y2))),
+      stroke: color, 'stroke-width': 2.5
+    };
+    if (dashed) attrs['stroke-dasharray'] = '8,4';
+    svg.appendChild(el('line', attrs));
+  }
+
+  function drawPoint(x, y, r, fill, stroke, opacity, className) {
+    const attrs = {
+      cx: sx(x), cy: sy(y), r: r, fill: fill
+    };
+    if (stroke) { attrs.stroke = stroke; attrs['stroke-width'] = 2; }
+    if (opacity !== undefined) attrs.opacity = opacity;
+    if (className) attrs.class = className;
+    svg.appendChild(el('circle', attrs));
+  }
+
+  function render() {
+    svg.innerHTML = '';
+    drawGrid();
+
+    const allX = [...xs, outlier.x];
+    const allY = [...ys, outlier.y];
+
+    // OLS (Normal likelihood)
+    const olsResult = ols(allX, allY);
+
+    // IRLS Student-t
+    const robustResult = irlsStudentT(allX, allY, nu);
+    const outlierWeight = robustResult.weights[robustResult.weights.length - 1];
+
+    // Draw lines
+    drawLine(olsResult.slope, olsResult.intercept, '#2196F3', false);
+    drawLine(robustResult.slope, robustResult.intercept, '#e85d3a', true);
+
+    // Draw data points
+    for (let i = 0; i < xs.length; i++) {
+      drawPoint(xs[i], ys[i], 5, '#2196F3', '#fff');
+    }
+
+    // Draw outlier point (larger, red, draggable)
+    const outlierCircle = el('circle', {
+      cx: sx(outlier.x), cy: sy(outlier.y), r: 8,
+      fill: '#e85d3a', stroke: '#fff', 'stroke-width': 2,
+      class: 'outlier-point'
+    });
+    svg.appendChild(outlierCircle);
+
+    // Pulsing ring around outlier
+    const ring = el('circle', {
+      cx: sx(outlier.x), cy: sy(outlier.y), r: 12,
+      fill: 'none', stroke: '#e85d3a', 'stroke-width': 1.5, opacity: 0.3
+    });
+    svg.appendChild(ring);
+
+    // Update weight display
+    document.getElementById('weight-text').textContent = outlierWeight.toFixed(2);
+    document.getElementById('weight-bar').style.width = (outlierWeight * 100) + '%';
+
+    // Drag handling
+    let dragging = false;
+    outlierCircle.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      outlierCircle.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    outlierCircle.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+      const ctm = svg.getScreenCTM();
+      if (!ctm) return;
+      const svgP = pt.matrixTransform(ctm.inverse());
+      const nx = unsx(svgP.x);
+      const ny = unsy(svgP.y);
+      outlier.x = Math.max(xMin + 0.5, Math.min(xMax - 0.5, nx));
+      outlier.y = Math.max(yMin + 2, Math.min(yMax - 2, ny));
+      render();
+    });
+    outlierCircle.addEventListener('pointerup', (e) => {
+      dragging = false;
+      outlierCircle.releasePointerCapture(e.pointerId);
+    });
+    outlierCircle.addEventListener('pointercancel', () => { dragging = false; });
+  }
+
+  // Nu slider
+  const nuSlider = document.getElementById('nu-slider');
+  const nuDisplay = document.getElementById('nu-display');
+  nuSlider.addEventListener('input', (e) => {
+    nu = parseFloat(e.target.value);
+    nuDisplay.textContent = nu;
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

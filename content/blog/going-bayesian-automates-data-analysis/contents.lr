@@ -33,7 +33,11 @@ For one curve, this takes a few minutes. For hundreds of curves, it eats entire 
 
 Are you really going to hire more research assistants to click through curves? That approach collapses under its own weight.
 
-Now, a quick but important distinction. There are two completely different reasons to exclude a data point. The first is a documented physical cause. You saw a bubble in the well. The pipette tip fell off. The reagent looked cloudy. These are data integrity issues, and you can justify removing them before you look at any numbers; in fact, you *should* document these in your lab records. The second reason is that a point is statistically inconvenient. It sits too far from the curve and inflates your error. That second reason is the one I want to talk about, because it's both common and statistically broken.
+Now, a quick but important distinction. There are two completely different reasons to exclude a data point.
+
+The first is a documented physical cause. You saw a bubble in the well. The pipette tip fell off. The reagent looked cloudy. These are data integrity issues, and you can justify removing them before you look at any numbers; in fact, you *should* document these in your lab records.
+
+The second reason is that **a point is statistically inconvenient**. It sits too far from the curve and inflates your error. That second reason is the one I want to talk about, because it's both common and statistically broken.
 
 ## Why manual exclusion is flawed
 
@@ -41,9 +45,9 @@ Excluding a point because it's statistically inconvenient has two deep problems.
 
 The first is reproducibility. What's your rule for calling something an outlier? Two standard deviations from the fit? Three? The classic tools, like Grubbs' test or the ROUT method that Prism builds in, hand you a threshold. But where did that threshold come from? It's a cutoff someone picked, not a principle someone derived. Two analysts staring at the same curve flag different points, because the decision rests on an arbitrary line in the sand. You're eyeballing with extra steps.
 
-The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. You find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
+The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. But dose-response data violate this assumption doubly. The raw points along a neutralization curve don't come from a single normal distribution at all; they follow a sigmoidal shape. You'd have to apply Grubbs' to residuals after fitting, but those residuals are often heteroscedastic (more variance at certain concentrations than others), which breaks the test's assumptions even further. With only five to eight dilutions per curve, the test has almost no power to distinguish a genuine outlier from noise. So you find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
 
-This isn't just my opinion. Karch demonstrated in a paper literally titled "Outliers May Not Be Automatically Removed" that automatic removal invalidates confidence intervals and biases your estimates ([Karch, 2021](https://doi.org/10.1177/2515245920976609)). And the APA Publication Manual itself states plainly that omitting troublesome observations to present a more convincing story **is prohibited** (APA, 2020).
+This isn't just my opinion. Karch demonstrated in a paper literally titled "Outliers May Not Be Automatically Removed" that automatic removal invalidates confidence intervals and biases your estimates ([Karch, 2021](https://pubmed.ncbi.nlm.nih.gov/37104797/)). The APA Publication Manual itself states plainly that omitting troublesome observations to present a more convincing story **is prohibited** (APA, 2020). And the FDA's [Bioanalytical Method Validation guidance](https://www.fda.gov/media/70858/download) is even more direct: repeat analysis is acceptable only for **assignable causes** such as equipment failure, sample processing errors, or poor chromatography. "It looked like an outlier" is conspicuously absent from that list.
 
 ## Down-weight, don't delete
 
@@ -56,6 +60,10 @@ The Student-t distribution fixes this. It looks like a normal bell curve, but wi
 Here is the elegant part. The Student-t has a parameter called the degrees of freedom that controls how heavy the tails are. You can put a prior (your belief about the parameter before seeing data) on it and let the data tell you how much outlier tolerance each dataset needs. The model learns its own robustness.
 
 And critically, the point is never deleted. It still contributes to the fit, just with proportionally less weight. Your data stays intact.
+
+<iframe src="outlier-demo.html" width="100%" height="520" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
+
+Drag the red point and watch how the two lines respond. The blue line (Normal likelihood) chases the outlier. The orange line (Student-t) barely budges.
 
 ## Hierarchy handles the weird curves
 
