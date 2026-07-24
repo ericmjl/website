@@ -11,7 +11,7 @@
     color: #222;
     padding: 16px;
   }
-  .demo-container { max-width: 580px; margin: 0 auto; }
+  .demo-container { max-width: 620px; margin: 0 auto; }
   .header { text-align: center; margin-bottom: 8px; }
   .header h3 { font-size: 15px; font-weight: 600; color: #333; }
   .header p { font-size: 12px; color: #888; margin-top: 2px; }
@@ -72,20 +72,20 @@
 <body>
 <div class="demo-container">
   <div class="header">
-    <h3>Normal vs Student-t: Drag the outlier</h3>
-    <p>Drag the red point. Watch how each likelihood responds.</p>
+    <h3>Normal vs Student-t: 4PL dose-response outlier</h3>
+    <p>Drag the red point. Watch how each likelihood changes the curve.</p>
   </div>
   <div id="plot-wrapper">
-    <svg id="plot" viewBox="0 0 580 380"></svg>
+    <svg id="plot" viewBox="0 0 620 400"></svg>
   </div>
   <div class="legend">
     <div class="legend-item">
       <div class="legend-swatch" style="background: #2196F3;"></div>
-      <span>Normal (thin tails)</span>
+      <span>Normal likelihood (thin tails)</span>
     </div>
     <div class="legend-item">
       <div class="legend-swatch" style="background: #e85d3a;"></div>
-      <span>Student-t (heavy tails)</span>
+      <span>Student-t likelihood (heavy tails)</span>
     </div>
   </div>
   <div class="controls">
@@ -108,103 +108,204 @@
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var svg = document.getElementById('plot');
 
-  // Plot dimensions
-  var W = 580, H = 380;
-  var M = { top: 20, right: 20, bottom: 40, left: 50 };
+  var W = 620, H = 400;
+  var M = { top: 20, right: 25, bottom: 45, left: 55 };
   var PW = W - M.left - M.right;
   var PH = H - M.top - M.bottom;
 
-  // Data space
-  var xMin = 0, xMax = 10, yMin = 0, yMax = 100;
+  var xMin = 0.5, xMax = 8.5, yMin = 0, yMax = 105;
 
   function sx(x) { return M.left + (x - xMin) / (xMax - xMin) * PW; }
   function sy(y) { return M.top + (1 - (y - yMin) / (yMax - yMin)) * PH; }
   function unsx(px) { return xMin + (px - M.left) / PW * (xMax - xMin); }
   function unsy(py) { return yMin + (1 - (py - M.top) / PH) * (yMax - yMin); }
 
-  // Generate clean data points (linear trend with small noise)
-  var xs = [1, 2, 3, 4, 5, 6, 7, 8];
-  var ys = xs.map(function(x) { return 15 + 7.5 * x + Math.sin(x * 2.3) * 1.5; });
-  var nData = xs.length;
-
-  // Outlier point (starts elevated, draggable)
-  var outlier = { x: 5, y: 90 };
-
-  var nu = 3;
-
-  // OLS regression
-  function ols(px, py) {
-    var n = px.length;
-    var mx = 0, my = 0;
-    for (var i = 0; i < n; i++) { mx += px[i]; my += py[i]; }
-    mx /= n; my /= n;
-    var sxy = 0, sxx = 0;
-    for (var j = 0; j < n; j++) {
-      sxy += (px[j] - mx) * (py[j] - my);
-      sxx += (px[j] - mx) * (px[j] - mx);
-    }
-    var slope = sxy / sxx;
-    return { slope: slope, intercept: my - slope * mx };
+  // --- 4PL model ---
+  // y = bottom + (top - bottom) / (1 + 10^((logEC50 - x) * hillSlope))
+  function f4PL(x, p) {
+    return p[0] + (p[1] - p[0]) / (1 + Math.pow(10, (p[2] - x) * p[3]));
   }
 
-  // IRLS with Student-t weights
-  function irlsStudentT(px, py, dof) {
-    var n = px.length;
-    var result = ols(px, py);
-    var w = [];
-    for (var i = 0; i < n; i++) w.push(1);
+  // Evaluate 4PL on a grid of x values for drawing smooth curves
+  var curveXs = [];
+  for (var cx = xMin; cx <= xMax; cx += 0.05) curveXs.push(cx);
 
-    for (var iter = 0; iter < 20; iter++) {
-      // Compute residuals
+  // --- Levenberg-Marquardt for 4PL ---
+  function fit4PL(xs, ys, weights) {
+    // Good initial guesses from data range
+    var yMinVal = Math.min.apply(null, ys);
+    var yMaxVal = Math.max.apply(null, ys);
+    var params = [yMinVal * 0.9, yMaxVal * 1.1, 4.5, 1.0];
+    var lambda = 0.01;
+    var n = xs.length;
+
+    var w = weights || [];
+    if (w.length === 0) { for (var wi = 0; wi < n; wi++) w.push(1); }
+
+    var prevSSE = -1;
+
+    for (var iter = 0; iter < 100; iter++) {
+      // Compute weighted residuals and Jacobian (finite diff)
       var residuals = [];
-      for (var ri = 0; ri < n; ri++) {
-        residuals.push(py[ri] - (result.slope * px[ri] + result.intercept));
+      var jac = []; // flattened n*4
+
+      for (var i = 0; i < n; i++) {
+        var pred = f4PL(xs[i], params);
+        residuals.push(ys[i] - pred);
       }
 
-      // Robust scale estimate (MAD)
+      var eps = 1e-6;
+      for (var i2 = 0; i2 < n; i2++) {
+        var predBase = f4PL(xs[i2], params);
+        for (var j = 0; j < 4; j++) {
+          var pPlus = params.slice();
+          pPlus[j] += eps;
+          var predPlus = f4PL(xs[i2], pPlus);
+          jac[i2 * 4 + j] = (predPlus - predBase) / eps;
+        }
+      }
+
+      // Build JtWJ (4x4) and JtWr (4x1)
+      var JtWJ = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+      var JtWr = [0, 0, 0, 0];
+
+      for (var i3 = 0; i3 < n; i3++) {
+        var wi3 = w[i3];
+        for (var a = 0; a < 4; a++) {
+          JtWr[a] += jac[i3 * 4 + a] * wi3 * residuals[i3];
+          for (var b = 0; b < 4; b++) {
+            JtWJ[a * 4 + b] += jac[i3 * 4 + a] * wi3 * jac[i3 * 4 + b];
+          }
+        }
+      }
+
+      // Add LM damping
+      var damped = JtWJ.slice();
+      for (var d = 0; d < 4; d++) damped[d * 4 + d] += lambda;
+
+      // Solve 4x4 system via Gaussian elimination
+      var delta = solve4x4(damped, JtWr);
+      if (!delta) { lambda *= 10; if (lambda > 1e8) break; continue; }
+
+      // Try new params
+      var newParams = [];
+      for (var p = 0; p < 4; p++) newParams.push(params[p] + delta[p]);
+
+      // Compute weighted SSE for new and old
+      var newSSE = 0, oldSSE = 0;
+      for (var i4 = 0; i4 < n; i4++) {
+        var rNew = ys[i4] - f4PL(xs[i4], newParams);
+        var rOld = ys[i4] - f4PL(xs[i4], params);
+        newSSE += w[i4] * rNew * rNew;
+        oldSSE += w[i4] * rOld * rOld;
+      }
+
+      if (newSSE < oldSSE) {
+        params = newParams;
+        lambda = Math.max(lambda * 0.5, 1e-12);
+      } else {
+        lambda *= 2;
+      }
+
+      if (prevSSE >= 0 && Math.abs(prevSSE - newSSE) < 1e-10) break;
+      prevSSE = newSSE;
+      if (lambda > 1e10) break;
+    }
+
+    return params;
+  }
+
+  // 4x4 linear solver (Gaussian elimination with partial pivoting)
+  function solve4x4(A, b) {
+    // A is row-major 4x4 (array of 16), b is array of 4
+    // Returns array of 4, or null if singular
+    var aug = [];
+    for (var r = 0; r < 4; r++) aug.push([A[r*4],A[r*4+1],A[r*4+2],A[r*4+3], b[r]]);
+
+    for (var col = 0; col < 4; col++) {
+      // Pivot
+      var maxRow = col;
+      for (var r2 = col + 1; r2 < 4; r2++) {
+        if (Math.abs(aug[r2][col]) > Math.abs(aug[maxRow][col])) maxRow = r2;
+      }
+      var tmp = aug[col]; aug[col] = aug[maxRow]; aug[maxRow] = tmp;
+      if (Math.abs(aug[col][col]) < 1e-14) return null;
+
+      // Eliminate
+      for (var r3 = col + 1; r3 < 4; r3++) {
+        var factor = aug[r3][col] / aug[col][col];
+        for (var c = col; c <= 4; c++) {
+          aug[r3][c] -= factor * aug[col][c];
+        }
+      }
+    }
+
+    // Back-substitute
+    var x = [0, 0, 0, 0];
+    for (var r4 = 3; r4 >= 0; r4--) {
+      var sum = aug[r4][4];
+      for (var c2 = r4 + 1; c2 < 4; c2++) sum -= aug[r4][c2] * x[c2];
+      x[r4] = sum / aug[r4][r4];
+    }
+    return x;
+  }
+
+  // --- IRLS with Student-t weights ---
+  function irlsStudentT4PL(xs, ys, dof) {
+    var n = xs.length;
+
+    // Initial unweighted fit
+    var params = fit4PL(xs, ys, []);
+
+    for (var iter = 0; iter < 15; iter++) {
+      var residuals = [];
+      for (var i = 0; i < n; i++) residuals.push(ys[i] - f4PL(xs[i], params));
+
       var absRes = residuals.map(Math.abs).sort(function(a, b) { return a - b; });
       var median = absRes[Math.floor(absRes.length / 2)];
       var scale = Math.max(1.4826 * median, 0.001);
 
-      // Student-t weights
-      var newW = [];
-      for (var wi = 0; wi < n; wi++) {
-        var u = residuals[wi] / scale;
-        newW.push((dof + 1) / (dof + u * u));
+      var weights = [];
+      for (var i2 = 0; i2 < n; i2++) {
+        var u = residuals[i2] / scale;
+        weights.push((dof + 1) / (dof + u * u));
       }
 
-      // Check convergence
+      var newParams = fit4PL(xs, ys, weights);
+
+      // Check convergence by parameter change
       var maxChange = 0;
-      for (var ci = 0; ci < n; ci++) {
-        maxChange = Math.max(maxChange, Math.abs(newW[ci] - w[ci]));
-      }
-      w = newW;
-
-      // Weighted least squares
-      var sw = 0, wmx = 0, wmy = 0;
-      for (var k = 0; k < n; k++) {
-        sw += w[k];
-        wmx += px[k] * w[k];
-        wmy += py[k] * w[k];
-      }
-      wmx /= sw; wmy /= sw;
-
-      var wsxy = 0, wsxx = 0;
-      for (var m = 0; m < n; m++) {
-        wsxy += w[m] * (px[m] - wmx) * (py[m] - wmy);
-        wsxx += w[m] * (px[m] - wmx) * (px[m] - wmx);
-      }
-      var newSlope = wsxy / wsxx;
-      result = { slope: newSlope, intercept: wmy - newSlope * wmx };
-
-      if (maxChange < 1e-6) break;
+      for (var p = 0; p < 4; p++) maxChange = Math.max(maxChange, Math.abs(newParams[p] - params[p]));
+      params = newParams;
+      if (maxChange < 1e-8) break;
     }
 
-    result.weights = w;
-    return result;
+    // Final weights for reporting
+    var finalRes = [];
+    for (var i3 = 0; i3 < n; i3++) finalRes.push(ys[i3] - f4PL(xs[i3], params));
+    var absRes2 = finalRes.map(Math.abs).sort(function(a, b) { return a - b; });
+    var med2 = absRes2[Math.floor(absRes2.length / 2)];
+    var sc2 = Math.max(1.4826 * med2, 0.001);
+    var fw = [];
+    for (var i4 = 0; i4 < n; i4++) {
+      var u2 = finalRes[i4] / sc2;
+      fw.push((dof + 1) / (dof + u2 * u2));
+    }
+
+    return { params: params, weights: fw };
   }
 
-  // SVG helper
+  // --- Generate data ---
+  var trueParams = [5, 95, 4.5, 1.5]; // bottom, top, logEC50, hillSlope
+  var dataXs = [1, 2, 3, 4, 5, 6, 7, 8];
+  var dataYs = dataXs.map(function(x) {
+    return f4PL(x, trueParams) + (Math.sin(x * 3.1) * 1.2);
+  });
+
+  var outlier = { x: 4, y: 80 };
+  var nu = 3;
+
+  // --- SVG helpers ---
   function el(tag, attrs) {
     var e = document.createElementNS(SVG_NS, tag);
     for (var key in attrs) {
@@ -213,16 +314,13 @@
     return e;
   }
 
-  // --- Build static elements once ---
   function buildStatic() {
-    // Background
     svg.appendChild(el('rect', {
       x: M.left, y: M.top, width: PW, height: PH,
       fill: '#fcfcfc', stroke: '#e8e8e8', 'stroke-width': 1
     }));
 
-    // Grid lines
-    for (var x = 0; x <= 10; x += 2) {
+    for (var x = 1; x <= 8; x++) {
       svg.appendChild(el('line', {
         x1: sx(x), y1: M.top, x2: sx(x), y2: M.top + PH,
         stroke: '#f0f0f0', 'stroke-width': 1
@@ -235,8 +333,7 @@
       }));
     }
 
-    // Axis labels
-    for (var xa = 0; xa <= 10; xa += 2) {
+    for (var xa = 1; xa <= 8; xa++) {
       var xt = el('text', {
         x: sx(xa), y: M.top + PH + 16,
         'text-anchor': 'middle', 'font-size': 10, fill: '#aaa'
@@ -253,12 +350,11 @@
       svg.appendChild(yt);
     }
 
-    // Axis titles
     var xLabel = el('text', {
-      x: M.left + PW / 2, y: H - 5,
+      x: M.left + PW / 2, y: H - 8,
       'text-anchor': 'middle', 'font-size': 11, fill: '#999'
     });
-    xLabel.textContent = 'Concentration';
+    xLabel.textContent = 'log₁₀(dilution)';
     svg.appendChild(xLabel);
 
     var yLabel = el('text', {
@@ -266,48 +362,48 @@
       'text-anchor': 'middle', 'font-size': 11, fill: '#999',
       transform: 'rotate(-90, 14, ' + (M.top + PH / 2) + ')'
     });
-    yLabel.textContent = 'Response';
+    yLabel.textContent = '% neutralization';
     svg.appendChild(yLabel);
   }
 
-  // --- Create dynamic elements (persist across updates) ---
-  var normalLine, robustLine;
+  // Dynamic elements
+  var normalPath, robustPath;
   var dataCircles = [];
   var outlierCircle, outlierRing;
 
   function buildDynamic() {
-    // Normal line (blue solid)
-    normalLine = el('line', {
-      x1: 0, y1: 0, x2: 0, y2: 0,
-      stroke: '#2196F3', 'stroke-width': 2.5
+    // Normal fit path (blue)
+    normalPath = el('path', {
+      d: '', fill: 'none', stroke: '#2196F3', 'stroke-width': 2.5,
+      'stroke-linecap': 'round', 'stroke-linejoin': 'round'
     });
-    svg.appendChild(normalLine);
+    svg.appendChild(normalPath);
 
-    // Robust line (orange dashed)
-    robustLine = el('line', {
-      x1: 0, y1: 0, x2: 0, y2: 0,
-      stroke: '#e85d3a', 'stroke-width': 2.5, 'stroke-dasharray': '8,4'
+    // Robust fit path (orange dashed)
+    robustPath = el('path', {
+      d: '', fill: 'none', stroke: '#e85d3a', 'stroke-width': 2.5,
+      'stroke-dasharray': '7,4', 'stroke-linecap': 'round', 'stroke-linejoin': 'round'
     });
-    svg.appendChild(robustLine);
+    svg.appendChild(robustPath);
 
-    // Data points (blue)
-    for (var i = 0; i < nData; i++) {
+    // Data points
+    for (var i = 0; i < dataXs.length; i++) {
       var c = el('circle', {
-        cx: sx(xs[i]), cy: sy(ys[i]), r: 5,
+        cx: sx(dataXs[i]), cy: sy(dataYs[i]), r: 5,
         fill: '#2196F3', stroke: '#fff', 'stroke-width': 2
       });
       dataCircles.push(c);
       svg.appendChild(c);
     }
 
-    // Outlier pulsing ring
+    // Outlier ring
     outlierRing = el('circle', {
       cx: sx(outlier.x), cy: sy(outlier.y), r: 12,
       fill: 'none', stroke: '#e85d3a', 'stroke-width': 1.5, opacity: 0.3
     });
     svg.appendChild(outlierRing);
 
-    // Outlier point (red, draggable)
+    // Outlier point
     outlierCircle = el('circle', {
       cx: sx(outlier.x), cy: sy(outlier.y), r: 8,
       fill: '#e85d3a', stroke: '#fff', 'stroke-width': 2,
@@ -316,33 +412,32 @@
     svg.appendChild(outlierCircle);
   }
 
-  // --- Update function (moves elements, no DOM destruction) ---
+  function pathFromParams(params) {
+    var pts = [];
+    for (var i = 0; i < curveXs.length; i++) {
+      var x = curveXs[i];
+      var y = f4PL(x, params);
+      y = Math.max(yMin, Math.min(yMax, y));
+      pts.push(sx(x).toFixed(1) + ',' + sy(y).toFixed(1));
+    }
+    return 'M' + pts.join(' L');
+  }
+
   function update() {
-    var allX = xs.concat([outlier.x]);
-    var allY = ys.concat([outlier.y]);
+    var allX = dataXs.concat([outlier.x]);
+    var allY = dataYs.concat([outlier.y]);
+    var nData = dataXs.length;
 
-    // OLS (Normal likelihood)
-    var olsResult = ols(allX, allY);
+    // Normal (OLS) fit
+    var normalParams = fit4PL(allX, allY, []);
 
-    // IRLS Student-t
-    var robustResult = irlsStudentT(allX, allY, nu);
-    var outlierWeight = robustResult.weights[nData]; // last point is the outlier
+    // Student-t IRLS fit
+    var robustResult = irlsStudentT4PL(allX, allY, nu);
+    var outlierWeight = robustResult.weights[nData];
 
-    // Update Normal line
-    var ny1 = olsResult.slope * xMin + olsResult.intercept;
-    var ny2 = olsResult.slope * xMax + olsResult.intercept;
-    normalLine.setAttribute('x1', sx(xMin));
-    normalLine.setAttribute('y1', sy(Math.max(yMin, Math.min(yMax, ny1))));
-    normalLine.setAttribute('x2', sx(xMax));
-    normalLine.setAttribute('y2', sy(Math.max(yMin, Math.min(yMax, ny2))));
-
-    // Update Robust line
-    var ry1 = robustResult.slope * xMin + robustResult.intercept;
-    var ry2 = robustResult.slope * xMax + robustResult.intercept;
-    robustLine.setAttribute('x1', sx(xMin));
-    robustLine.setAttribute('y1', sy(Math.max(yMin, Math.min(yMax, ry1))));
-    robustLine.setAttribute('x2', sx(xMax));
-    robustLine.setAttribute('y2', sy(Math.max(yMin, Math.min(yMax, ry2))));
+    // Update curve paths
+    normalPath.setAttribute('d', pathFromParams(normalParams));
+    robustPath.setAttribute('d', pathFromParams(robustResult.params));
 
     // Update outlier position
     outlierCircle.setAttribute('cx', sx(outlier.x));
@@ -350,17 +445,17 @@
     outlierRing.setAttribute('cx', sx(outlier.x));
     outlierRing.setAttribute('cy', sy(outlier.y));
 
-    // Update weight display
+    // Weight display
     document.getElementById('weight-text').textContent = outlierWeight.toFixed(2);
     document.getElementById('weight-bar').style.width = (outlierWeight * 100) + '%';
   }
 
-  // --- Initialize ---
+  // --- Init ---
   buildStatic();
   buildDynamic();
   update();
 
-  // --- Drag handling on the outlier point ---
+  // --- Drag handling ---
   var dragging = false;
 
   function getSVGPoint(clientX, clientY) {
@@ -393,11 +488,9 @@
     try { outlierCircle.releasePointerCapture(e.pointerId); } catch(err) {}
   });
 
-  outlierCircle.addEventListener('pointercancel', function() {
-    dragging = false;
-  });
+  outlierCircle.addEventListener('pointercancel', function() { dragging = false; });
 
-  // --- Nu slider ---
+  // --- Slider ---
   var nuSlider = document.getElementById('nu-slider');
   var nuDisplay = document.getElementById('nu-display');
   nuSlider.addEventListener('input', function(e) {
