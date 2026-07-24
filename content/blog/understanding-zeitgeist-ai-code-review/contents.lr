@@ -46,13 +46,17 @@ That last one is the most insidious. If the same agent wrote the code and the te
 
 Why does this bite? Because agents let us ship changes that we'd normally have deliberated over for weeks in a matter of hours, and the mismatch between output speed and comprehension speed is where the debt compounds.
 
-Mario Zechner, who built the Pi agent framework, put it bluntly in a post [Simon Willison](https://simonwillison.net/2026/Mar/25/thoughts-on-slowing-the-fuck-down/) amplified: with an orchestrated army of agents there's no human bottleneck, so the "tiny little harmless booboos suddenly compound at a rate that's unsustainable. You have zero fucking idea what's going on because you delegated all your agency to your agents. You let them run free, and they are merchants of complexity." Willison's own takeaway is that cognitive debt is real, and that we now need a new balance of speed against mental thoroughness, since typing the code is no longer anywhere close to the bottleneck on writing software.
+Mario Zechner, who built the Pi agent framework, put it bluntly in a post [Simon Willison](https://simonwillison.net/2026/Mar/25/thoughts-on-slowing-the-fuck-down/) amplified. With an orchestrated army of agents there's no human bottleneck, and the mistakes compound faster than any one person would let them:
 
-The cost shows up as burnout too. Steve Yegge describes the "AI vampire" effect: agents automate the easy work and leave you with all the difficult decisions, which is exhausting in a way raw output isn't, and he finds four hours of agent work a day a more realistic pace than eight. A Berkeley Haas study in HBR found AI intensifies work rather than reducing it, creating continual attention-switching and a sense of always juggling. Velocity without understanding produces brittle code, and it produces tired people.
+> These tiny little harmless booboos suddenly compound at a rate that's unsustainable. You have zero fucking idea what's going on because you delegated all your agency to your agents. You let them run free, and they are merchants of complexity.
+
+Willison's own takeaway is that cognitive debt is real, and that we now need a new balance of speed against mental thoroughness, since typing the code is no longer anywhere close to the bottleneck on writing software.
+
+The cost shows up as burnout too. Steve Yegge describes the "AI vampire" effect: agents automate the easy work and leave you with all the difficult decisions, which is exhausting in a way raw output isn't, and he finds four hours of agent work a day a more realistic pace than eight. [A Berkeley Haas study in HBR](https://hbr.org/2026/02/ai-doesnt-reduce-work-it-intensifies-it) found AI intensifies work rather than reducing it, creating continual attention-switching and a sense of always juggling. Velocity without understanding produces brittle code, and it produces tired people.
 
 ## Understand to participate
 
-Here's the conceptual turn that ties the survey together, and it's Litt's. If agents are getting better at verifying their own work, what's left for the human reviewer?
+Litt flips the question here. If agents are getting better at verifying their own work, what's left for the human reviewer?
 
 The tempting answer is to keep checking the code. But the people I read are converging on a different answer. **We understand to participate.** A project is hundreds of iterative loops with the agent, and the mental model you carry into the next loop is exactly what lets you come up with the next idea. Litt's phrase, which [Willison picked out](https://simonwillison.net/2026/Jul/2/understand-to-participate/) as the framing that resonated most, is "understand to participate." Verification is the part agents are eating. Participation is the part that's left to us, and it's the part that matters.
 
