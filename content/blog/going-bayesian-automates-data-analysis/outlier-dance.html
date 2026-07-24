@@ -6,48 +6,46 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #1a1a2e; color: #eee; display: flex; justify-content: center;
+  font-family: monospace; background: #fff; color: #333; display: flex; justify-content: center;
 }
 .app {
-  width: 100%; max-width: 620px; background: #2d2d44; border-radius: 10px;
-  overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  width: 100%; max-width: 620px; background: #fafafa; border-radius: 8px;
+  overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #ddd;
 }
-.titlebar { background: #3d3d5c; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
-.dot { width: 12px; height: 12px; border-radius: 50%; }
-.dot.r { background: #ff5f57; } .dot.y { background: #ffbd2e; } .dot.g { background: #28ca42; }
-.titlebar span { margin-left: 8px; font-size: 12px; color: #999; }
-.instructions { padding: 10px 16px; background: #252540; font-size: 12px; color: #aaa; }
-.instructions b { color: #62c4ff; }
-.chart-area { background: #fafafa; position: relative; height: 300px; }
+.titlebar { background: #fafafa; padding: 10px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #eee; }
+.dot { display: none; }
+.titlebar span { margin-left: 0; font-size: 13px; color: #666; }
+.instructions { padding: 10px 16px; background: #fafafa; font-size: 12px; color: #666; }
+.instructions b { color: #0066cc; }
+.chart-area { background: #fff; position: relative; height: 300px; }
 svg { display: block; width: 100%; height: 100%; }
 .data-pt { cursor: pointer; transition: r 0.15s; }
 .data-pt:hover { r: 7; }
 .excluded-pt { cursor: pointer; }
 .toolbar {
-  padding: 8px 16px; background: #1e1e36; display: flex; justify-content: space-between;
-  align-items: center; font-size: 12px; gap: 10px;
+  padding: 8px 16px; background: #fafafa; display: flex; justify-content: space-between;
+  align-items: center; font-size: 12px; gap: 10px; border-top: 1px solid #eee;
 }
-.status-msg { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; min-height: 16px; flex: 1; color: #888; }
-.status-msg.flash { color: #62c4ff; }
-.status-msg.warn { color: #ffbd2e; }
-.counter { font-weight: 700; color: #62c4ff; white-space: nowrap; }
+.status-msg { font-family: monospace; font-size: 11px; min-height: 16px; flex: 1; color: #999; }
+.status-msg.flash { color: #0066cc; }
+.status-msg.warn { color: #e85d3a; }
+.counter { font-weight: 700; color: #0066cc; white-space: nowrap; }
 .btn {
-  background: #3d3d5c; color: #ccc; border: 1px solid #555; border-radius: 4px;
-  padding: 5px 14px; font-size: 12px; cursor: pointer; white-space: nowrap;
+  background: #fff; color: #666; border: 1px solid #ddd; border-radius: 8px;
+  padding: 5px 14px; font-family: monospace; font-size: 12px; cursor: pointer; white-space: nowrap;
 }
-.btn:hover { background: #4d4d6c; }
-.btn-primary { background: #2196F3; color: #fff; border-color: #2196F3; }
-.btn-primary:hover { background: #1976D2; }
-.meta { padding: 6px 16px; background: #252540; font-size: 11px; color: #666; display: flex; justify-content: space-between; }
-.meta b { color: #ffbd2e; }
+.btn:hover { border-color: #0066cc; color: #0066cc; }
+.btn-primary { background: #0066cc; color: #fff; border-color: #0066cc; }
+.btn-primary:hover { background: #005bb5; border-color: #005bb5; color: #fff; }
+.meta { padding: 6px 16px; background: #fafafa; font-size: 11px; color: #999; display: flex; justify-content: space-between; border-top: 1px solid #eee; }
+.meta b { color: #e85d3a; }
 .overlay {
-  position: absolute; inset: 0; background: rgba(45,45,68,0.96);
+  position: absolute; inset: 0; background: rgba(255,255,255,0.96);
   display: none; align-items: center; justify-content: center; flex-direction: column;
   gap: 12px; padding: 30px; text-align: center; z-index: 30;
 }
-.overlay .big { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.4; }
-.overlay .sub { font-size: 14px; color: #888; }
+.overlay .big { font-size: 18px; font-weight: 700; color: #333; line-height: 1.4; }
+.overlay .sub { font-size: 13px; color: #666; }
 </style>
 </head>
 <body>
