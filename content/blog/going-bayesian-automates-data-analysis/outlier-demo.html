@@ -5,68 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #fafafa;
-    color: #222;
-    padding: 16px;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fafafa; color: #222; padding: 16px; }
   .demo-container { max-width: 620px; margin: 0 auto; }
   .header { text-align: center; margin-bottom: 8px; }
   .header h3 { font-size: 15px; font-weight: 600; color: #333; }
   .header p { font-size: 12px; color: #888; margin-top: 2px; }
-  #plot-wrapper {
-    position: relative;
-    width: 100%;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-  }
+  #plot-wrapper { position: relative; width: 100%; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; }
   svg { display: block; width: 100%; height: auto; }
   .outlier-point { cursor: grab; }
   .outlier-point:active { cursor: grabbing; }
-  .controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 10px 0;
-    font-size: 13px;
-    color: #555;
-  }
+  .controls { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px 0; font-size: 13px; color: #555; }
   .controls input[type="range"] { width: 140px; cursor: pointer; }
   .controls .nu-value { font-weight: 600; color: #333; min-width: 28px; }
-  .legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 6px 0;
-    font-size: 12px;
-    color: #666;
-  }
+  .legend { display: flex; justify-content: center; gap: 20px; padding: 6px 0; font-size: 12px; color: #666; }
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-swatch { width: 24px; height: 3px; border-radius: 2px; }
-  .weight-display {
-    text-align: center;
-    font-size: 12px;
-    color: #888;
-    margin-top: 4px;
-  }
-  .weight-bar-container {
-    width: 200px;
-    height: 6px;
-    background: #eee;
-    border-radius: 3px;
-    margin: 4px auto 0;
-    overflow: hidden;
-  }
-  .weight-bar {
-    height: 100%;
-    background: #e85d3a;
-    border-radius: 3px;
-    transition: width 0.1s ease;
-  }
+  .weight-display { text-align: center; font-size: 12px; color: #888; margin-top: 4px; }
+  .weight-bar-container { width: 200px; height: 6px; background: #eee; border-radius: 3px; margin: 4px auto 0; overflow: hidden; }
+  .weight-bar { height: 100%; background: #e85d3a; border-radius: 3px; transition: width 0.1s ease; }
 </style>
 </head>
 <body>
@@ -75,18 +31,10 @@
     <h3>Normal vs Student-t: 4PL dose-response outlier</h3>
     <p>Drag the red point. Watch how each likelihood changes the curve.</p>
   </div>
-  <div id="plot-wrapper">
-    <svg id="plot" viewBox="0 0 620 400"></svg>
-  </div>
+  <div id="plot-wrapper"><svg id="plot" viewBox="0 0 620 400"></svg></div>
   <div class="legend">
-    <div class="legend-item">
-      <div class="legend-swatch" style="background: #2196F3;"></div>
-      <span>Normal likelihood (thin tails)</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-swatch" style="background: #e85d3a;"></div>
-      <span>Student-t likelihood (heavy tails)</span>
-    </div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #2196F3;"></div><span>Normal likelihood (thin tails)</span></div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #e85d3a;"></div><span>Student-t likelihood (heavy tails)</span></div>
   </div>
   <div class="controls">
     <label>Degrees of freedom (nu):</label>
@@ -95,24 +43,18 @@
   </div>
   <div class="weight-display">
     Outlier weight: <span id="weight-text">1.00</span>
-    <div class="weight-bar-container">
-      <div class="weight-bar" id="weight-bar" style="width: 100%;"></div>
-    </div>
+    <div class="weight-bar-container"><div class="weight-bar" id="weight-bar" style="width: 100%;"></div></div>
   </div>
 </div>
 
 <script>
 (function() {
   'use strict';
-
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var svg = document.getElementById('plot');
-
   var W = 620, H = 400;
   var M = { top: 20, right: 25, bottom: 45, left: 55 };
-  var PW = W - M.left - M.right;
-  var PH = H - M.top - M.bottom;
-
+  var PW = W - M.left - M.right, PH = H - M.top - M.bottom;
   var xMin = 0.5, xMax = 8.5, yMin = 0, yMax = 105;
 
   function sx(x) { return M.left + (x - xMin) / (xMax - xMin) * PW; }
@@ -120,305 +62,157 @@
   function unsx(px) { return xMin + (px - M.left) / PW * (xMax - xMin); }
   function unsy(py) { return yMin + (1 - (py - M.top) / PH) * (yMax - yMin); }
 
-  // --- 4PL model ---
-  // y = bottom + (top - bottom) / (1 + 10^((logEC50 - x) * hillSlope))
-  function f4PL(x, p) {
-    return p[0] + (p[1] - p[0]) / (1 + Math.pow(10, (p[2] - x) * p[3]));
+  // 4PL: y = bottom + (top-bottom) / (1 + 10^((ec50-x)*hill))
+  function f4pl(x, p) {
+    var exponent = (p[2] - x) * p[3];
+    if (exponent > 100) exponent = 100;
+    if (exponent < -100) exponent = -100;
+    return p[0] + (p[1] - p[0]) / (1 + Math.pow(10, exponent));
   }
 
-  // Evaluate 4PL on a grid of x values for drawing smooth curves
-  var curveXs = [];
-  for (var cx = xMin; cx <= xMax; cx += 0.05) curveXs.push(cx);
+  // Weighted SSR objective
+  function wSSR(p, xs, ys, w) {
+    var ssr = 0;
+    for (var i = 0; i < xs.length; i++) {
+      var r = ys[i] - f4pl(xs[i], p);
+      ssr += w[i] * r * r;
+    }
+    return ssr;
+  }
 
-  // --- Levenberg-Marquardt for 4PL ---
-  function fit4PL(xs, ys, weights) {
-    // Good initial guesses from data range
-    var yMinVal = Math.min.apply(null, ys);
-    var yMaxVal = Math.max.apply(null, ys);
-    var params = [yMinVal * 0.9, yMaxVal * 1.1, 4.5, 1.0];
-    var lambda = 0.01;
-    var n = xs.length;
-
-    var w = weights || [];
-    if (w.length === 0) { for (var wi = 0; wi < n; wi++) w.push(1); }
-
-    var prevSSE = -1;
-
-    for (var iter = 0; iter < 100; iter++) {
-      // Compute weighted residuals and Jacobian (finite diff)
-      var residuals = [];
-      var jac = []; // flattened n*4
-
-      for (var i = 0; i < n; i++) {
-        var pred = f4PL(xs[i], params);
-        residuals.push(ys[i] - pred);
-      }
-
-      var eps = 1e-6;
-      for (var i2 = 0; i2 < n; i2++) {
-        var predBase = f4PL(xs[i2], params);
-        for (var j = 0; j < 4; j++) {
-          var pPlus = params.slice();
-          pPlus[j] += eps;
-          var predPlus = f4PL(xs[i2], pPlus);
-          jac[i2 * 4 + j] = (predPlus - predBase) / eps;
-        }
-      }
-
-      // Build JtWJ (4x4) and JtWr (4x1)
-      var JtWJ = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
-      var JtWr = [0, 0, 0, 0];
-
-      for (var i3 = 0; i3 < n; i3++) {
-        var wi3 = w[i3];
-        for (var a = 0; a < 4; a++) {
-          JtWr[a] += jac[i3 * 4 + a] * wi3 * residuals[i3];
-          for (var b = 0; b < 4; b++) {
-            JtWJ[a * 4 + b] += jac[i3 * 4 + a] * wi3 * jac[i3 * 4 + b];
+  // Nelder-Mead simplex optimization (derivative-free)
+  function nelderMead(f, init, maxIter) {
+    var n = init.length;
+    var alpha = 1, gamma = 2, rho = 0.5, sigma = 0.5;
+    // Build initial simplex
+    var s = [init.slice()];
+    for (var i = 0; i < n; i++) {
+      var p = init.slice();
+      p[i] = p[i] * 1.1 + 0.001;
+      s.push(p);
+    }
+    var fv = s.map(f);
+    for (var iter = 0; iter < maxIter; iter++) {
+      // Sort by function value
+      var idx = fv.map(function(v, i) { return i; }).sort(function(a, b) { return fv[a] - fv[b]; });
+      var simplex = idx.map(function(i) { return s[i]; });
+      var fs = idx.map(function(i) { return fv[i]; });
+      s = simplex; fv = fs;
+      // Convergence check
+      if (Math.abs(fv[0] - fv[n]) < 1e-12) break;
+      // Centroid (exclude worst)
+      var c = new Array(n).fill(0);
+      for (var j = 0; j < n; j++) for (var k = 0; k < n; k++) c[k] += s[j][k];
+      for (var k2 = 0; k2 < n; k2++) c[k2] /= n;
+      // Reflect
+      var r = c.map(function(v, j) { return v + alpha * (v - s[n][j]); });
+      var fr = f(r);
+      if (fr >= fv[0] && fr < fv[n - 1]) {
+        s[n] = r; fv[n] = fr;
+      } else if (fr < fv[0]) {
+        // Expand
+        var e = c.map(function(v, j) { return v + gamma * (v - s[n][j]); });
+        var fe = f(e);
+        if (fe < fr) { s[n] = e; fv[n] = fe; } else { s[n] = r; fv[n] = fr; }
+      } else {
+        // Contract
+        var co = c.map(function(v, j) { return v + rho * (v - s[n][j]); });
+        var fco = f(co);
+        if (fco < fv[n]) { s[n] = co; fv[n] = fco; }
+        else {
+          // Shrink toward best
+          for (var i2 = 1; i2 <= n; i2++) {
+            s[i2] = s[0].map(function(v, j) { return v + sigma * (s[i2][j] - v); });
+            fv[i2] = f(s[i2]);
           }
         }
       }
-
-      // Add LM damping
-      var damped = JtWJ.slice();
-      for (var d = 0; d < 4; d++) damped[d * 4 + d] += lambda;
-
-      // Solve 4x4 system via Gaussian elimination
-      var delta = solve4x4(damped, JtWr);
-      if (!delta) { lambda *= 10; if (lambda > 1e8) break; continue; }
-
-      // Try new params
-      var newParams = [];
-      for (var p = 0; p < 4; p++) newParams.push(params[p] + delta[p]);
-
-      // Compute weighted SSE for new and old
-      var newSSE = 0, oldSSE = 0;
-      for (var i4 = 0; i4 < n; i4++) {
-        var rNew = ys[i4] - f4PL(xs[i4], newParams);
-        var rOld = ys[i4] - f4PL(xs[i4], params);
-        newSSE += w[i4] * rNew * rNew;
-        oldSSE += w[i4] * rOld * rOld;
-      }
-
-      if (newSSE < oldSSE) {
-        params = newParams;
-        lambda = Math.max(lambda * 0.5, 1e-12);
-      } else {
-        lambda *= 2;
-      }
-
-      if (prevSSE >= 0 && Math.abs(prevSSE - newSSE) < 1e-10) break;
-      prevSSE = newSSE;
-      if (lambda > 1e10) break;
     }
-
-    return params;
+    return s[0];
   }
 
-  // 4x4 linear solver (Gaussian elimination with partial pivoting)
-  function solve4x4(A, b) {
-    // A is row-major 4x4 (array of 16), b is array of 4
-    // Returns array of 4, or null if singular
-    var aug = [];
-    for (var r = 0; r < 4; r++) aug.push([A[r*4],A[r*4+1],A[r*4+2],A[r*4+3], b[r]]);
-
-    for (var col = 0; col < 4; col++) {
-      // Pivot
-      var maxRow = col;
-      for (var r2 = col + 1; r2 < 4; r2++) {
-        if (Math.abs(aug[r2][col]) > Math.abs(aug[maxRow][col])) maxRow = r2;
-      }
-      var tmp = aug[col]; aug[col] = aug[maxRow]; aug[maxRow] = tmp;
-      if (Math.abs(aug[col][col]) < 1e-14) return null;
-
-      // Eliminate
-      for (var r3 = col + 1; r3 < 4; r3++) {
-        var factor = aug[r3][col] / aug[col][col];
-        for (var c = col; c <= 4; c++) {
-          aug[r3][c] -= factor * aug[col][c];
-        }
-      }
-    }
-
-    // Back-substitute
-    var x = [0, 0, 0, 0];
-    for (var r4 = 3; r4 >= 0; r4--) {
-      var sum = aug[r4][4];
-      for (var c2 = r4 + 1; c2 < 4; c2++) sum -= aug[r4][c2] * x[c2];
-      x[r4] = sum / aug[r4][r4];
-    }
-    return x;
+  // IRLS with Student-t weights, using Nelder-Mead for each weighted fit
+  function fit4pl(xs, ys, weights) {
+    var w = weights || ys.map(function() { return 1; });
+    var init = [
+      Math.min.apply(null, ys) * 0.9,
+      Math.max.apply(null, ys) * 1.1,
+      4.5, 1.0
+    ];
+    return nelderMead(function(p) { return wSSR(p, xs, ys, w); }, init, 400);
   }
 
-  // --- IRLS with Student-t weights ---
-  function irlsStudentT4PL(xs, ys, dof) {
+  function irlsStudentT(xs, ys, nu) {
     var n = xs.length;
-
     // Initial unweighted fit
-    var params = fit4PL(xs, ys, []);
-
-    for (var iter = 0; iter < 15; iter++) {
-      var residuals = [];
-      for (var i = 0; i < n; i++) residuals.push(ys[i] - f4PL(xs[i], params));
-
-      var absRes = residuals.map(Math.abs).sort(function(a, b) { return a - b; });
-      var median = absRes[Math.floor(absRes.length / 2)];
-      var scale = Math.max(1.4826 * median, 0.001);
-
-      var weights = [];
-      for (var i2 = 0; i2 < n; i2++) {
-        var u = residuals[i2] / scale;
-        weights.push((dof + 1) / (dof + u * u));
-      }
-
-      var newParams = fit4PL(xs, ys, weights);
-
-      // Check convergence by parameter change
-      var maxChange = 0;
-      for (var p = 0; p < 4; p++) maxChange = Math.max(maxChange, Math.abs(newParams[p] - params[p]));
-      params = newParams;
-      if (maxChange < 1e-8) break;
+    var params = fit4pl(xs, ys);
+    var weights = ys.map(function() { return 1; });
+    for (var iter = 0; iter < 10; iter++) {
+      // Residuals
+      var res = ys.map(function(y, i) { return y - f4pl(xs[i], params); });
+      // MAD scale
+      var absRes = res.map(Math.abs).sort(function(a, b) { return a - b; });
+      var med = absRes[Math.floor(absRes.length / 2)];
+      var scale = Math.max(1.4826 * med, 0.01);
+      // Student-t weights
+      var newW = res.map(function(r) {
+        var u = r / scale;
+        return (nu + 1) / (nu + u * u);
+      });
+      // Check convergence
+      var maxCh = 0;
+      for (var i = 0; i < n; i++) maxCh = Math.max(maxCh, Math.abs(newW[i] - weights[i]));
+      weights = newW;
+      params = fit4pl(xs, ys, weights);
+      if (maxCh < 1e-6) break;
     }
-
-    // Final weights for reporting
-    var finalRes = [];
-    for (var i3 = 0; i3 < n; i3++) finalRes.push(ys[i3] - f4PL(xs[i3], params));
-    var absRes2 = finalRes.map(Math.abs).sort(function(a, b) { return a - b; });
-    var med2 = absRes2[Math.floor(absRes2.length / 2)];
-    var sc2 = Math.max(1.4826 * med2, 0.001);
-    var fw = [];
-    for (var i4 = 0; i4 < n; i4++) {
-      var u2 = finalRes[i4] / sc2;
-      fw.push((dof + 1) / (dof + u2 * u2));
-    }
-
-    return { params: params, weights: fw };
+    return { params: params, weights: weights };
   }
 
-  // --- Generate data ---
-  var trueParams = [5, 95, 4.5, 1.5]; // bottom, top, logEC50, hillSlope
+  // Data
   var dataXs = [1, 2, 3, 4, 5, 6, 7, 8];
-  var dataYs = dataXs.map(function(x) {
-    return f4PL(x, trueParams) + (Math.sin(x * 3.1) * 1.2);
-  });
-
+  var trueP = [5, 95, 4.5, 1.5];
+  var dataYs = dataXs.map(function(x) { return f4pl(x, trueP) + Math.sin(x * 3.1) * 1.2; });
   var outlier = { x: 4, y: 80 };
   var nu = 3;
+  var curveXs = [];
+  for (var cx = xMin; cx <= xMax; cx += 0.05) curveXs.push(cx);
 
-  // --- SVG helpers ---
   function el(tag, attrs) {
     var e = document.createElementNS(SVG_NS, tag);
-    for (var key in attrs) {
-      if (attrs.hasOwnProperty(key)) e.setAttribute(key, attrs[key]);
-    }
+    for (var key in attrs) { if (attrs.hasOwnProperty(key)) e.setAttribute(key, attrs[key]); }
     return e;
   }
 
   function buildStatic() {
-    svg.appendChild(el('rect', {
-      x: M.left, y: M.top, width: PW, height: PH,
-      fill: '#fcfcfc', stroke: '#e8e8e8', 'stroke-width': 1
-    }));
-
-    for (var x = 1; x <= 8; x++) {
-      svg.appendChild(el('line', {
-        x1: sx(x), y1: M.top, x2: sx(x), y2: M.top + PH,
-        stroke: '#f0f0f0', 'stroke-width': 1
-      }));
-    }
-    for (var y = 0; y <= 100; y += 20) {
-      svg.appendChild(el('line', {
-        x1: M.left, y1: sy(y), x2: M.left + PW, y2: sy(y),
-        stroke: '#f0f0f0', 'stroke-width': 1
-      }));
-    }
-
-    for (var xa = 1; xa <= 8; xa++) {
-      var xt = el('text', {
-        x: sx(xa), y: M.top + PH + 16,
-        'text-anchor': 'middle', 'font-size': 10, fill: '#aaa'
-      });
-      xt.textContent = xa;
-      svg.appendChild(xt);
-    }
-    for (var ya = 0; ya <= 100; ya += 20) {
-      var yt = el('text', {
-        x: M.left - 8, y: sy(ya) + 3,
-        'text-anchor': 'end', 'font-size': 10, fill: '#aaa'
-      });
-      yt.textContent = ya;
-      svg.appendChild(yt);
-    }
-
-    var xLabel = el('text', {
-      x: M.left + PW / 2, y: H - 8,
-      'text-anchor': 'middle', 'font-size': 11, fill: '#999'
-    });
-    xLabel.textContent = 'log₁₀(dilution)';
-    svg.appendChild(xLabel);
-
-    var yLabel = el('text', {
-      x: 14, y: M.top + PH / 2,
-      'text-anchor': 'middle', 'font-size': 11, fill: '#999',
-      transform: 'rotate(-90, 14, ' + (M.top + PH / 2) + ')'
-    });
-    yLabel.textContent = '% neutralization';
-    svg.appendChild(yLabel);
+    svg.appendChild(el('rect', { x: M.left, y: M.top, width: PW, height: PH, fill: '#fcfcfc', stroke: '#e8e8e8', 'stroke-width': 1 }));
+    for (var x = 1; x <= 8; x++) svg.appendChild(el('line', { x1: sx(x), y1: M.top, x2: sx(x), y2: M.top + PH, stroke: '#f0f0f0', 'stroke-width': 1 }));
+    for (var y = 0; y <= 100; y += 20) svg.appendChild(el('line', { x1: M.left, y1: sy(y), x2: M.left + PW, y2: sy(y), stroke: '#f0f0f0', 'stroke-width': 1 }));
+    for (var xa = 1; xa <= 8; xa++) { var t = el('text', { x: sx(xa), y: M.top + PH + 16, 'text-anchor': 'middle', 'font-size': 10, fill: '#aaa' }); t.textContent = xa; svg.appendChild(t); }
+    for (var ya = 0; ya <= 100; ya += 20) { var t2 = el('text', { x: M.left - 8, y: sy(ya) + 3, 'text-anchor': 'end', 'font-size': 10, fill: '#aaa' }); t2.textContent = ya; svg.appendChild(t2); }
+    var xl = el('text', { x: M.left + PW / 2, y: H - 8, 'text-anchor': 'middle', 'font-size': 11, fill: '#999' }); xl.textContent = 'log10(dilution)'; svg.appendChild(xl);
+    var yl = el('text', { x: 14, y: M.top + PH / 2, 'text-anchor': 'middle', 'font-size': 11, fill: '#999', transform: 'rotate(-90, 14, ' + (M.top + PH / 2) + ')' }); yl.textContent = '% neutralization'; svg.appendChild(yl);
   }
 
-  // Dynamic elements
-  var normalPath, robustPath;
-  var dataCircles = [];
-  var outlierCircle, outlierRing;
-
+  var normalPath, robustPath, outlierCircle, outlierRing;
   function buildDynamic() {
-    // Normal fit path (blue)
-    normalPath = el('path', {
-      d: '', fill: 'none', stroke: '#2196F3', 'stroke-width': 2.5,
-      'stroke-linecap': 'round', 'stroke-linejoin': 'round'
-    });
+    normalPath = el('path', { d: '', fill: 'none', stroke: '#2196F3', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
     svg.appendChild(normalPath);
-
-    // Robust fit path (orange dashed)
-    robustPath = el('path', {
-      d: '', fill: 'none', stroke: '#e85d3a', 'stroke-width': 2.5,
-      'stroke-dasharray': '7,4', 'stroke-linecap': 'round', 'stroke-linejoin': 'round'
-    });
+    robustPath = el('path', { d: '', fill: 'none', stroke: '#e85d3a', 'stroke-width': 2.5, 'stroke-dasharray': '7,4', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
     svg.appendChild(robustPath);
-
-    // Data points
-    for (var i = 0; i < dataXs.length; i++) {
-      var c = el('circle', {
-        cx: sx(dataXs[i]), cy: sy(dataYs[i]), r: 5,
-        fill: '#2196F3', stroke: '#fff', 'stroke-width': 2
-      });
-      dataCircles.push(c);
-      svg.appendChild(c);
-    }
-
-    // Outlier ring
-    outlierRing = el('circle', {
-      cx: sx(outlier.x), cy: sy(outlier.y), r: 12,
-      fill: 'none', stroke: '#e85d3a', 'stroke-width': 1.5, opacity: 0.3
-    });
+    for (var i = 0; i < dataXs.length; i++) svg.appendChild(el('circle', { cx: sx(dataXs[i]), cy: sy(dataYs[i]), r: 5, fill: '#2196F3', stroke: '#fff', 'stroke-width': 2 }));
+    outlierRing = el('circle', { cx: sx(outlier.x), cy: sy(outlier.y), r: 12, fill: 'none', stroke: '#e85d3a', 'stroke-width': 1.5, opacity: 0.3 });
     svg.appendChild(outlierRing);
-
-    // Outlier point
-    outlierCircle = el('circle', {
-      cx: sx(outlier.x), cy: sy(outlier.y), r: 8,
-      fill: '#e85d3a', stroke: '#fff', 'stroke-width': 2,
-      class: 'outlier-point'
-    });
+    outlierCircle = el('circle', { cx: sx(outlier.x), cy: sy(outlier.y), r: 8, fill: '#e85d3a', stroke: '#fff', 'stroke-width': 2, class: 'outlier-point' });
     svg.appendChild(outlierCircle);
   }
 
-  function pathFromParams(params) {
+  function pathFromParams(p) {
     var pts = [];
     for (var i = 0; i < curveXs.length; i++) {
-      var x = curveXs[i];
-      var y = f4PL(x, params);
+      var y = f4pl(curveXs[i], p);
       y = Math.max(yMin, Math.min(yMax, y));
-      pts.push(sx(x).toFixed(1) + ',' + sy(y).toFixed(1));
+      pts.push(sx(curveXs[i]).toFixed(1) + ',' + sy(y).toFixed(1));
     }
     return 'M' + pts.join(' L');
   }
@@ -426,78 +220,42 @@
   function update() {
     var allX = dataXs.concat([outlier.x]);
     var allY = dataYs.concat([outlier.y]);
-    var nData = dataXs.length;
-
-    // Normal (OLS) fit
-    var normalParams = fit4PL(allX, allY, []);
-
-    // Student-t IRLS fit
-    var robustResult = irlsStudentT4PL(allX, allY, nu);
-    var outlierWeight = robustResult.weights[nData];
-
-    // Update curve paths
+    var nD = dataXs.length;
+    var normalParams = fit4pl(allX, allY);
+    var robustResult = irlsStudentT(allX, allY, nu);
+    var ow = robustResult.weights[nD];
     normalPath.setAttribute('d', pathFromParams(normalParams));
     robustPath.setAttribute('d', pathFromParams(robustResult.params));
-
-    // Update outlier position
     outlierCircle.setAttribute('cx', sx(outlier.x));
     outlierCircle.setAttribute('cy', sy(outlier.y));
     outlierRing.setAttribute('cx', sx(outlier.x));
     outlierRing.setAttribute('cy', sy(outlier.y));
-
-    // Weight display
-    document.getElementById('weight-text').textContent = outlierWeight.toFixed(2);
-    document.getElementById('weight-bar').style.width = (outlierWeight * 100) + '%';
+    document.getElementById('weight-text').textContent = ow.toFixed(3);
+    document.getElementById('weight-bar').style.width = (ow * 100) + '%';
   }
 
-  // --- Init ---
-  buildStatic();
-  buildDynamic();
-  update();
+  buildStatic(); buildDynamic(); update();
 
-  // --- Drag handling ---
   var dragging = false;
-
-  function getSVGPoint(clientX, clientY) {
-    var pt = svg.createSVGPoint();
-    pt.x = clientX;
-    pt.y = clientY;
-    var ctm = svg.getScreenCTM();
-    if (!ctm) return null;
+  function getSVGPoint(cx, cy) {
+    var pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy;
+    var ctm = svg.getScreenCTM(); if (!ctm) return null;
     return pt.matrixTransform(ctm.inverse());
   }
-
-  outlierCircle.addEventListener('pointerdown', function(e) {
-    dragging = true;
-    try { outlierCircle.setPointerCapture(e.pointerId); } catch(err) {}
-    e.preventDefault();
-  });
-
+  outlierCircle.addEventListener('pointerdown', function(e) { dragging = true; try { outlierCircle.setPointerCapture(e.pointerId); } catch(err) {} e.preventDefault(); });
   outlierCircle.addEventListener('pointermove', function(e) {
     if (!dragging) return;
-    var p = getSVGPoint(e.clientX, e.clientY);
-    if (!p) return;
+    var p = getSVGPoint(e.clientX, e.clientY); if (!p) return;
     outlier.x = Math.max(xMin + 0.5, Math.min(xMax - 0.5, unsx(p.x)));
     outlier.y = Math.max(yMin + 2, Math.min(yMax - 2, unsy(p.y)));
-    update();
-    e.preventDefault();
+    update(); e.preventDefault();
   });
-
-  outlierCircle.addEventListener('pointerup', function(e) {
-    dragging = false;
-    try { outlierCircle.releasePointerCapture(e.pointerId); } catch(err) {}
-  });
-
+  outlierCircle.addEventListener('pointerup', function(e) { dragging = false; try { outlierCircle.releasePointerCapture(e.pointerId); } catch(err) {} });
   outlierCircle.addEventListener('pointercancel', function() { dragging = false; });
 
-  // --- Slider ---
   var nuSlider = document.getElementById('nu-slider');
   var nuDisplay = document.getElementById('nu-display');
-  nuSlider.addEventListener('input', function(e) {
-    nu = parseFloat(e.target.value);
-    nuDisplay.textContent = nu;
-    update();
-  });
+  nuSlider.addEventListener('input', function(e) { nu = parseFloat(e.target.value); nuDisplay.textContent = nu; update(); });
 })();
 </script>
 </body>
