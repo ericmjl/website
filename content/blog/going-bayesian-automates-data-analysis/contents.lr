@@ -203,6 +203,115 @@ Excluding a point because it's statistically inconvenient has two deep problems.
 
 The first is reproducibility. What's your rule for calling something an outlier? Two standard deviations from the fit? Three? The classic tools, like Grubbs' test or the ROUT method that Prism builds in, hand you a threshold. But where did that threshold come from? It's a cutoff someone picked, not a principle someone derived. Two analysts staring at the same curve flag different points, because the decision rests on an arbitrary line in the sand. You're eyeballing with extra steps.
 
+<div id="ta">
+<style>
+#ta * { margin: 0; padding: 0; box-sizing: border-box; }
+#ta { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #2d2d44; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-width: 620px; }
+#ta .ta-bar { display: flex; padding: 8px 12px; gap: 8px; background: #252540; }
+#ta .ta-btn { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #3d3d5c; color: #aaa; font-size: 13px; cursor: pointer; text-align: left; }
+#ta .ta-btn b { display: block; font-size: 14px; margin-bottom: 2px; }
+#ta .ta-btn small { font-size: 11px; color: #777; }
+#ta .ta-btn.active { background: #2196F3; border-color: #2196F3; color: #fff; }
+#ta .ta-btn.active small { color: #bbdefb; }
+#ta .ta-chart { background: #fafafa; height: 280px; }
+#ta svg { display: block; width: 100%; height: 100%; }
+#ta .ta-result { display: flex; padding: 10px 16px; background: #1e1e36; gap: 20px; align-items: center; justify-content: center; }
+#ta .ta-id50 { font-size: 13px; color: #888; }
+#ta .ta-id50 b { font-size: 18px; }
+#ta .ta-id50.a b { color: #2196F3; }
+#ta .ta-id50.b b { color: #e85d3a; }
+#ta .ta-vs { color: #555; font-size: 12px; }
+#ta .ta-note { padding: 6px 16px 10px; background: #1e1e36; text-align: center; font-size: 12px; color: #777; font-style: italic; }
+</style>
+<div class="ta-bar">
+  <button class="ta-btn active" id="ta-btn-a"><b>Analyst A</b><small>Excludes 1 point (dilution 5)</small></button>
+  <button class="ta-btn" id="ta-btn-b"><b>Analyst B</b><small>Excludes 2 points (dilutions 4 &amp; 5)</small></button>
+</div>
+<div class="ta-chart"><svg id="ta-plot" viewBox="0 0 600 280"></svg></div>
+<div class="ta-result">
+  <div class="ta-id50 a">Analyst A ID50: <b id="ta-id50-a">4.50</b></div>
+  <div class="ta-vs">vs</div>
+  <div class="ta-id50 b">Analyst B ID50: <b id="ta-id50-b">4.20</b></div>
+</div>
+<div class="ta-note" id="ta-note">Same data. Same software. Different answers. Which analyst is right?</div>
+</div>
+<script>
+(function(){
+'use strict';
+var SVG_NS='http://www.w3.org/2000/svg';
+var svg=document.getElementById('ta-plot');
+var W=600,H=280,M={top:12,right:18,bottom:32,left:42};
+var PW=W-M.left-M.right,PH=H-M.top-M.bottom;
+var xMin=0.5,xMax=8.5,yMin=-5,yMax=105;
+function sx(x){return M.left+(x-xMin)/(xMax-xMin)*PW;}
+function sy(y){return M.top+(1-(y-yMin)/(yMax-yMin))*PH;}
+function f4pl(x,p){var e=(p[2]-x)*p[3];if(e>100)e=100;if(e<-100)e=-100;return p[0]+(p[1]-p[0])/(1+Math.pow(10,e));}
+function el(t,a){var e=document.createElementNS(SVG_NS,t);for(var k in a){if(a.hasOwnProperty(k))e.setAttribute(k,a[k]);}return e;}
+var trueParams=[5,95,4.5,1.5];
+var xs=[1,2,3,4,5,6,7,8];
+var ys=xs.map(function(x,i){return f4pl(x,trueParams)+[1.2,-0.8,2.1,-1.5,0.9,-2.3,1.1,-0.6][i];});
+ys[4]+=45; ys[3]+=8;
+function fit4pl(fxs,fys){var best=[5,95,4.5,1.5],bestSSR=Infinity;for(var b=0;b<=20;b+=2)for(var t=85;t<=100;t+=2)for(var ec=2;ec<=7;ec+=0.2)for(var h=0.3;h<=4;h+=0.2){var ssr=0;for(var i=0;i<fxs.length;i++){var r=fys[i]-f4pl(fxs[i],[b,t,ec,h]);ssr+=r*r;}if(ssr<bestSSR){bestSSR=ssr;best=[b,t,ec,h];}}return best;}
+function fitExcluding(exSet){var fx=[],fy=[];for(var i=0;i<xs.length;i++){if(exSet.indexOf(i)<0){fx.push(xs[i]);fy.push(ys[i]);}}return fit4pl(fx,fy);}
+var analystA={excluded:[4],color:'#2196F3'};
+var analystB={excluded:[3,4],color:'#e85d3a'};
+analystA.fit=fitExcluding(analystA.excluded);
+analystB.fit=fitExcluding(analystB.excluded);
+document.getElementById('ta-id50-a').textContent=analystA.fit[2].toFixed(2);
+document.getElementById('ta-id50-b').textContent=analystB.fit[2].toFixed(2);
+var xGrid=[];for(var gx=xMin;gx<=xMax;gx+=0.1)xGrid.push(gx);
+function pathFromParams(p){var pts=[];for(var i=0;i<xGrid.length;i++){var y=Math.max(yMin,Math.min(yMax,f4pl(xGrid[i],p)));pts.push(sx(xGrid[i]).toFixed(1)+','+sy(y).toFixed(1));}return 'M'+pts.join(' L');}
+function buildStatic(){
+svg.innerHTML='';
+svg.appendChild(el('rect',{x:M.left,y:M.top,width:PW,height:PH,fill:'#fff',stroke:'#ddd'}));
+for(var x=1;x<=8;x++)svg.appendChild(el('line',{x1:sx(x),y1:M.top,x2:sx(x),y2:M.top+PH,stroke:'#f0f0f0'}));
+for(var y=0;y<=100;y+=20)svg.appendChild(el('line',{x1:M.left,y1:sy(y),x2:M.left+PW,y2:sy(y),stroke:'#f0f0f0'}));
+for(var xa=1;xa<=8;xa++){var t=el('text',{x:sx(xa),y:M.top+PH+16,'text-anchor':'middle','font-size':10,fill:'#aaa'});t.textContent=xa;svg.appendChild(t);}
+for(var ya=0;ya<=100;ya+=20){var t2=el('text',{x:M.left-6,y:sy(ya)+3,'text-anchor':'end','font-size':10,fill:'#aaa'});t2.textContent=ya;svg.appendChild(t2);}
+var xl=el('text',{x:M.left+PW/2,y:H-4,'text-anchor':'middle','font-size':11,fill:'#999'});xl.textContent='log10(dilution)';svg.appendChild(xl);
+var yl=el('text',{x:12,y:M.top+PH/2,'text-anchor':'middle','font-size':11,fill:'#999',transform:'rotate(-90, 12, '+(M.top+PH/2)+')'});yl.textContent='% neutralization';svg.appendChild(yl);
+}
+var curvePath,id50Line,id50Label;
+function render(analyst){
+buildStatic();
+curvePath=el('path',{d:pathFromParams(analyst.fit),fill:'none',stroke:analyst.color,'stroke-width':2.5,'stroke-linecap':'round','stroke-linejoin':'round'});
+svg.appendChild(curvePath);
+var ec=analyst.fit[2];
+id50Line=el('line',{x1:sx(ec),y1:M.top,x2:sx(ec),y2:M.top+PH,stroke:analyst.color,'stroke-width':1.5,'stroke-dasharray':'4,3',opacity:0.6});
+svg.appendChild(id50Line);
+id50Label=el('text',{x:sx(ec)+4,y:M.top+12,'font-size':9,fill:analyst.color});
+id50Label.textContent='ID50='+ec.toFixed(2);
+svg.appendChild(id50Label);
+for(var i=0;i<xs.length;i++){
+var isEx=analyst.excluded.indexOf(i)>=0;
+if(isEx){
+var c=el('circle',{cx:sx(xs[i]),cy:sy(ys[i]),r:5,fill:'#ccc',stroke:analyst.color,'stroke-width':2});
+svg.appendChild(c);
+svg.appendChild(el('line',{x1:sx(xs[i])-6,y1:sy(ys[i])-6,x2:sx(xs[i])+6,y2:sy(ys[i])+6,stroke:'#ff5f57','stroke-width':2}));
+svg.appendChild(el('line',{x1:sx(xs[i])+6,y1:sy(ys[i])-6,x2:sx(xs[i])-6,y2:sy(ys[i])+6,stroke:'#ff5f57','stroke-width':2}));
+}else{
+var p=el('circle',{cx:sx(xs[i]),cy:sy(ys[i]),r:4,fill:'#2196F3',stroke:'#fff','stroke-width':1.5});
+svg.appendChild(p);
+}
+}
+}
+var current='a';
+render(analystA);
+document.getElementById('ta-btn-a').addEventListener('click',function(){
+if(current==='a')return;current='a';
+document.getElementById('ta-btn-a').className='ta-btn active';
+document.getElementById('ta-btn-b').className='ta-btn';
+render(analystA);
+});
+document.getElementById('ta-btn-b').addEventListener('click',function(){
+if(current==='b')return;current='b';
+document.getElementById('ta-btn-a').className='ta-btn';
+document.getElementById('ta-btn-b').className='ta-btn active';
+render(analystB);
+});
+})();
+</script>
+
 The second problem is subtler, and it's the one that actually corrupts your results. When you run a test like Grubbs', the test assumes your data come from a clean normal distribution with at most one contaminating point. But dose-response data violate this assumption doubly. The raw points along a neutralization curve don't come from a single normal distribution at all; they follow a sigmoidal shape. You'd have to apply Grubbs' to residuals after fitting, but those residuals are often heteroscedastic (more variance at certain concentrations than others), which breaks the test's assumptions even further. With only five to eight dilutions per curve, the test has almost no power to distinguish a genuine outlier from noise. So you find the outlier, remove it, then refit your curve as if that contamination never existed. Your uncertainty estimates now lie to you. They don't account for the decision you already made. You've baked the removal into your results without propagating the uncertainty that choice introduced.
 
 This isn't just my opinion. Karch demonstrated in a paper literally titled "Outliers May Not Be Automatically Removed" that automatic removal invalidates confidence intervals and biases your estimates ([Karch, 2023](https://pubmed.ncbi.nlm.nih.gov/37104797/)). The APA Publication Manual itself states plainly that omitting troublesome observations to present a more convincing story **is prohibited** (APA, 2020). And the FDA's [Bioanalytical Method Validation guidance](https://www.fda.gov/media/70858/download) is even more direct: repeat analysis is acceptable only for **assignable causes** such as equipment failure, sample processing errors, or poor chromatography. "It looked like an outlier" is conspicuously absent from that list.
