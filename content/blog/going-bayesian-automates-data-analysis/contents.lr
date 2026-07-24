@@ -87,6 +87,10 @@ This is where hierarchical modeling earns its keep. Instead of fitting each curv
 
 The philosophy mirrors the heavy tails, just one level up. Heavy tails down-weight weird points. Hierarchy regularizes weird curves. Same idea, two scales.
 
+<iframe src="hierarchy-demo.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+Six curves from the same experiment. Five came out clean; curve 3 had a bad day with only four readable wells and high noise. Toggle between independent fits (curve 3 flails) and hierarchical fits (curve 3 borrows strength from the population and snaps into shape). The faint dashed line on curve 3 shows where the population says it should sit.
+
 ## This is what automation looks like
 
 Here's where everything converges. Once you write down your hierarchical model with a heavy-tailed likelihood, you fit it to all eighteen plates at once. The sampler runs. Heavy tails handle the outlier points. Hierarchy handles the outlier curves. The whole thing runs without a single human judgment call.
