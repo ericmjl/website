@@ -213,6 +213,10 @@ Gotcha: do NOT trust a reference schedule blindly. If the user says 'follow the 
 
 - **Use `addToQueue`, NOT `customScheduled`, for blog post scheduling.** The channel's queue already has the correct time slots configured (e.g. 7 AM). `addToQueue` places the post in the next available weekly slot automatically. Do NOT hardcode a `dueAt` time. Do NOT use `customScheduled` unless the user EXPLICITLY asks for a specific time ("post at 3 PM", "schedule for Tuesday morning"). Observed 2026-07-19: the agent hardcoded `dueAt: 11:00 AM EDT` via `customScheduled` instead of using `addToQueue`, which placed posts at 11 AM instead of the queue's 7 AM slot. The user had to manually fix the times. The root cause: the agent saw inconsistent times in the existing schedule (one `addToQueue` post at 7 AM, one `customScheduled` post at 11 AM) and "picked a consistent time" instead of trusting the queue. Trust the queue. Pass `mode: "addToQueue"` + `schedulingType: "automatic"` with no `dueAt`.
 
+- **Timezone disambiguation — do NOT confuse 11:00 UTC with 11:00 AM EDT.** The weekly queue slot is 7:00 AM EDT, which equals `11:00:00Z` in UTC. Existing posts that show `customScheduled` at `T11:00:00.000Z` are at the CORRECT 7 AM EDT slot; the "11" there is UTC, not local. The historical bug (2026-07-19) used `11:00 AM EDT` in LOCAL time (= `15:00Z`), which is 4 hours wrong. When you see `T11:00:00.000Z` in the existing schedule, that is the queue working as intended; do not "fix" it. (Confirmed 2026-07-24: `addToQueue` + `schedulingType: automatic` placed a post at `2026-08-27T11:00:00.000Z` = 7 AM EDT, matching the existing cadence.)
+
+- **The `create_post` response's `dueAt` IS the authoritative scheduled time.** The mandatory post-schedule `list_posts` verification (see Cross-Channel Scheduling Sync above) is for catching CROSS-CHANNEL COLLISIONS (two slugs on the same date, or one slug on different dates across channels), NOT for re-confirming a `dueAt` value that `create_post` already returned. Do not waste a `list_posts` call merely to re-read a timestamp you already have from the creation response.
+
 ## Post-Merge GitHub Pages Rebuild Delay
 
 After a blog post PR is merged, the public URL
@@ -262,13 +266,47 @@ or separate sentence before scheduling or showing it for approval. Treat
 em-dash scrubbing as a mandatory post-generation step for every blogbot
 text output, alongside URL-verification and tag-typo-checking.
 
-## Publishing to Substack via Browser
+## Publishing to Substack
 
-Substack is NOT a Buffer channel, so publishing a Substack post is a
-browser-automation task (use the agent-browser skill), not a buffer create_post
-call. The blogbot `substack_post.py` script only GENERATES the copy; it does
-not publish. The conversation agent (glm-5.2) is the PREFERRED path for
-writing Substack post bodies; the script is a fallback tool.
+Substack is NOT a Buffer channel. The blogbot `substack_post.py` script only
+GENERATES the copy; it does not publish. The conversation agent (glm-5.2) is
+the PREFERRED path for writing Substack post bodies; the script is a fallback.
+
+Publication: `dspn.substack.com` (confirmed). The user PUBLISHES BY HAND. The
+agent's job is to put a ready-to-paste, fully-formatted body on the clipboard
+and open the dashboard; the agent does NOT drive the Substack editor unless the
+user explicitly asks. Stated 2026-07-24: "pbcopy for me please that's all I
+need... just pbcopy and open dspn.substack.com's dashboard."
+
+### PREFERRED WORKFLOW: compose -> pbcopy HTML -> open dashboard
+
+The body MUST go on the clipboard as the **HTML flavor** (not plain text), so
+the banner `<img>` and the "this post" hyperlink survive the paste into
+Substack's ProseMirror editor. `pbcopy` alone only sets plain text, so use
+osascript's HTML clipboard class:
+
+```bash
+# 1. write the composed body HTML to /tmp/substack_body.html, then:
+osascript <<'APPLESCRIPT'
+set the clipboard to (read POSIX file "/tmp/substack_body.html" as «class HTML»)
+APPLESCRIPT
+osascript -e 'clipboard info'   # verify it lists «class HTML», <N>
+open https://dspn.substack.com/   # user's default browser (already logged in)
+```
+
+Compose the body HTML in this EXACT order (skipping the banner or greeting is a
+recurring error the user flags every time):
+
+a. Banner `<img src="https://ericmjl.github.io/blog/YYYY/M/d/slug/logo.webp">`
+   at the TOP, before any text. ALWAYS included, never optional.
+b. Greeting line on its own: "Hello fellow datanistas,"
+c. The teaser body, where "this post" is hyperlinked to the blog post public
+   URL (https://ericmjl.github.io/blog/YYYY/M/d/slug/, no leading zeros).
+d. Sign-off: "Happy coding,<br/>Eric" (or a short theme variant).
+
+Then hand the user the Title and Subtitle as plain text for the separate
+fields; they paste the clipboard into the body and save/publish by hand. The
+banner URL is the LIVE logo.webp, so the post must be merged + URL-200 first.
 
 SUBSTACK POST TYPES — know the difference:
 - "notes" = short-form (tweet-like, shown in the Substack feed). The "New post"
@@ -276,6 +314,10 @@ SUBSTACK POST TYPES — know the difference:
   This is a trap: clicking "New post" drops you into a note dialog when you
   want a full article.
 - "posts" = long-form articles (what substack_post.py generates).
+
+### FALLBACK: drive the editor via CDP (only if the user asks the agent to fill the editor)
+
+Requires a debug Chrome (`--remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug-profile`, log into Substack ONCE in that profile) and the agent-browser skill. Prefer the pbcopy workflow above unless explicitly asked to drive the editor.
 
 DIRECT URL FOR THE LONG-FORM EDITOR:
 Navigate directly to `https://{publication}.substack.com/publish/post` instead
@@ -342,6 +384,67 @@ inserted text landed in the body via the snapshot before relying on it.
 Banner image: the toolbar image tool opens a file dialog (no insert-by-URL),
 so for a URL-based banner (logo.webp) insert an `<img>` tag through the same
 insertHTML path at the top of the body instead.
+
+## Model Configuration (GLM-5.2 and oMLX Fallback)
+
+blogbot scripts use two different code paths for LLM generation. Understanding
+which path each script uses is critical for debugging model failures.
+
+### Path 1: `_glm.py` (CORRECT — used by tags.py, summary.py, generate_social.py)
+
+- Calls `litellm.completion()` directly against Z.ai's Anthropic-compatible
+  coding-plan endpoint.
+- Primary: `anthropic/glm-5.2` via `https://api.z.ai/api/anthropic`, key from
+  `ZAI_API_KEY` env var.
+- Fallback: `openai/Qwen3.36-35B-A3B-8bit` via `http://localhost:8426/v1`
+  (local oMLX server), key from `BLOGBOT_API_KEY` or `~/.omlx/settings.json`.
+- Has a retry-with-feedback loop (8 attempts).
+- Bypasses StructuredBot's capability guard by injecting the JSON schema as
+  plain text in the prompt and parsing/revalidating the model's reply.
+
+### Path 2: `llamabot.StructuredBot` (BUGGY — used by linkedin_post.py, bluesky_post.py)
+
+- Uses `StructuredBot(model="anthropic/glm-5.2", pydantic_model=...)` as the
+  primary model.
+- **KNOWN BUG:** StructuredBot rejects glm-5.2 via a client-side capability
+  guard (litellm's `supports_response_schema()` returns False for model names
+  not in its hardcoded known-model database). The primary path ALWAYS fails,
+  so the script prints "GLM-5.2 unavailable, falling back to oMLX Qwen 3.6..."
+  and tries the fallback.
+- Fallback: `StructuredBot(model="openai/Qwen3.36-35B-A3B-8bit")` via
+  `OPENAI_API_BASE=http://localhost:8426/v1`. This requires the local oMLX
+  server running.
+- **Net effect:** linkedin_post.py and bluesky_post.py are ALWAYS dependent on
+  the local oMLX server. If localhost:8426 is not running, they crash with
+  "Connection refused".
+- **FIX (pending):** migrate these two scripts to use `_glm.py`'s
+  `generate_structured()` instead of llamabot StructuredBot, just as
+  tags.py/summary.py/generate_social.py already do.
+
+### Environment Variables
+
+- `ZAI_API_KEY`: API key for the primary GLM-5.2 endpoint (Z.ai
+  Anthropic-compatible). Required for Path 1 scripts.
+- `BLOGBOT_API_BASE`: Override the primary endpoint (default:
+  `https://api.z.ai/api/anthropic`).
+- `BLOGBOT_MODEL`: Override the primary model (default: `anthropic/glm-5.2`).
+- `BLOGBOT_API_KEY`: API key for the oMLX fallback. Falls back to reading
+  `~/.omlx/settings.json` if unset.
+
+### Troubleshooting: "GLM-5.2 unavailable" then "Connection refused"
+
+If linkedin_post.py or bluesky_post.py print "GLM-5.2 unavailable, falling
+back to oMLX Qwen 3.6" and then fail with "Connection refused" to
+localhost:8426:
+
+1. The oMLX server at localhost:8426 is not running. Start it, OR
+2. These scripts have a known bug (Path 2 above): they use StructuredBot which
+   always rejects glm-5.2, making the oMLX fallback mandatory. The oMLX server
+   is a local service that may not always be running — this is not a reliable
+   dependency.
+3. A Z.ai coding-plan key only works via the Anthropic-compatible endpoint
+   (`https://api.z.ai/api/anthropic`); the zai/ PaaS endpoint
+   (`api.z.ai/api/paas/v4`) returns "insufficient balance".
 
 ## Script Structure
 
