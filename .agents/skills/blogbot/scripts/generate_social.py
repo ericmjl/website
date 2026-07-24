@@ -400,10 +400,10 @@ class SubstackPost(BaseModel):
         ),
     )
 
-    def format_post(self, url: str) -> str:
+    def format_post(self, title: str, url: str) -> str:
         """Format the full Substack post, wrapping 'this post' in a hyperlink."""
         body = self.body.replace("this post", f"[this post]({url})")
-        return f"{self.greeting}\n\n{body}\n\n{self.signoff}"
+        return f"# {title}\n\n## {self.subtitle}\n\n{self.greeting}\n\n{body}\n\n{self.signoff}"
 
 
 # ---------------------------------------------------------------------------
@@ -551,7 +551,7 @@ def main():
         SubstackPost,
         socialbot_sysprompt().content,
     )
-    substack_text = substack_post.format_post(url)
+    substack_text = substack_post.format_post(post["title"], url)
 
     print(
         json.dumps(
