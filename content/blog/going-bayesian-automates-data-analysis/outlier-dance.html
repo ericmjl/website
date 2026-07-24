@@ -64,7 +64,7 @@ svg { display: block; width: 100%; height: 100%; }
 <div class="app">
   <div class="titlebar">
     <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-    <span>GraphPad Prism — Neutralization Curves.xlsx</span>
+    <span>Neutralization Curve Analysis</span>
   </div>
   <div class="counters">
     <div>Curve <span class="counter-val" id="curve-num">1</span> / 90</div>
@@ -136,8 +136,14 @@ svg { display: block; width: 100%; height: 100%; }
         return f4pl(x, params[0], params[1], params[2], params[3]) + (rng(i*8+j) - 0.5) * 6;
       });
       var outIdx = Math.floor(rng(i+300) * 8);
-      ys[outIdx] += 40 + rng(i+400) * 30;
-      curves.push({ xs: xs, ys: ys, outIdx: outIdx, params: params });
+      // Curve 4: operator error — they exclude a valid midpoint, not a real outlier
+      if (i === 3) {
+        outIdx = 3; // dilution 4, near EC50 — legitimate point with normal noise
+        // Don't add outlier displacement; the point is fine
+      } else {
+        ys[outIdx] += 40 + rng(i+400) * 30;
+      }
+      curves.push({ xs: xs, ys: ys, outIdx: outIdx, params: params, isError: i === 3 });
     }
     return curves;
   }
@@ -249,21 +255,28 @@ svg { display: block; width: 100%; height: 100%; }
     moveCursorToSVG(d.xs[d.outIdx], d.ys[d.outIdx]);
     await sleep(600);
 
-    // Phase 3: detect outlier
-    setStatus('Outlier detected at dilution ' + d.xs[d.outIdx] + '!', true);
-    await sleep(500);
+    if (d.isError) {
+      // Phase 3a: operator mistakenly flags a valid midpoint
+      setStatus('This point at dilution ' + d.xs[d.outIdx] + ' looks off...', true);
+      await sleep(700);
+      setStatus('Excluding point...');
+      var refitParams = fitExcluding(d.xs, d.ys, d.outIdx);
+      drawCurve(d, refitParams, true);
+      await sleep(400);
+      setStatus('OPERATOR ERROR: excluded a valid midpoint. Another analyst would have kept it.', true);
+      await sleep(1200);
+    } else {
+      // Phase 3b: normal outlier detection
+      setStatus('Outlier detected at dilution ' + d.xs[d.outIdx] + '!', true);
+      await sleep(500);
+      setStatus('Excluding point...');
+      var refitParams2 = fitExcluding(d.xs, d.ys, d.outIdx);
+      drawCurve(d, refitParams2, true);
+      await sleep(300);
+      setStatus('Refitting curve...');
+      await sleep(400);
+    }
 
-    // Phase 4: exclude
-    setStatus('Excluding point...');
-    var refitParams = fitExcluding(d.xs, d.ys, d.outIdx);
-    drawCurve(d, refitParams, true);
-    await sleep(300);
-
-    // Phase 5: refit
-    setStatus('Refitting curve...');
-    await sleep(400);
-
-    // Phase 6: done
     setStatus('Curve ' + (idx + 1) + ' complete');
     await sleep(200);
   }
