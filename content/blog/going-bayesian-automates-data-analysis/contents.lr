@@ -27,9 +27,9 @@ Picture a neutralization assay lab. Each 96-well plate holds five neutralization
 
 I've seen workflows where a single study generates anywhere from 125 to 375 curves. Each one gets inspected by hand.
 
-For every curve, there's usually a point or two that looks off. The standard workflow in GraphPad Prism goes like this: plot the curve, spot a deviating point, hit a shortcut key to mark it as an outlier, exclude it, refit. Then look again. Maybe another point looks suspicious now. Repeat.
+For every curve, there's usually a point or two that looks off. The standard workflow goes like this: copy raw data from the instrument output, paste it into Excel to line up sample names with plate positions, then copy again into GraphPad Prism to plot and fit the curve. Spot a deviating point, hit a shortcut key to mark it as an outlier, exclude it, refit. Then look again. Maybe another point looks suspicious now. Repeat. And pray you didn't misalign a paste somewhere along the way.
 
-For one curve, this takes a few minutes. For hundreds of curves, it eats entire afternoons. Multiply by the number of studies per month, and you have a chronic bottleneck staffed by highly trained people doing repetitive clicking.
+For one curve, this takes a few minutes. For hundreds of curves, it eats entire afternoons. Every copy and paste between Excel and Prism is a chance to swap a row, lose a sample, or introduce a silent error that nobody catches until the QC review. Multiply by the number of studies per month, and you have a chronic bottleneck staffed by highly trained people doing repetitive, error-prone clicking.
 
 Are you really going to hire more research assistants to click through curves? That approach collapses under its own weight.
 
