@@ -223,9 +223,9 @@ Enough theory. Let me show you what this actually looks like on a dose-response 
 
 <iframe src="bayesian_curves_demo.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 6px;"></iframe>
 
-The blue curve is the Normal likelihood fit; the orange dashed curve is the Student-t. Shaded bands are 94% credible intervals from 4,000 posterior draws (PyMC/NUTS, 4 chains). The buttons go from nu=1 (the Student-t at its heaviest-tailed, most forgiving of outliers) to nu=30 (nearly indistinguishable from the Normal, least forgiving).
+The blue curve is the Normal likelihood fit; the orange dashed curve is the Student-t. Dotted vertical lines mark each model's ID50 estimate. Shaded bands are 94% credible intervals from 4,000 posterior draws (PyMC/NUTS, 4 chains). The buttons go from nu=1 (the Student-t at its heaviest-tailed, most forgiving of outliers) to nu=30 (nearly indistinguishable from the Normal, least forgiving).
 
-Here is what to watch for. At nu=1, the orange band ignores the outlier completely; the heavy tails say "rare but possible." At nu=30, the orange and blue curves nearly overlap; the distribution has thinned into a Normal, and the outlier drags the fit just like the blue curve does. The interesting territory is nu=3 to nu=5, where the model starts caring about the outlier but doesn't let it dominate. That is the sweet spot for most assay data.
+Here is what to watch for. At nu=1, the outlier is absorbed by the heavy tails; the orange curve and its ID50 stay put, right where they belong. At nu=30, the orange and blue curves nearly overlap; the distribution has thinned into a Normal, and the outlier drags the ID50 leftward just like the blue curve does. The interesting territory is nu=3 to nu=5, where the model starts caring about the outlier but doesn't let it dominate. That is the sweet spot for most assay data.
 
 But this demo handles one weird point on one curve. What happens when an entire curve is the outlier?
 
