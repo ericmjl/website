@@ -89,7 +89,7 @@ The philosophy mirrors the heavy tails, just one level up. Heavy tails down-weig
 
 <iframe src="hierarchy-demo.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-Six curves from the same experiment. Five came out clean; curve 3 had a bad day with only three readable wells and heavy noise. Toggle between independent fits (curve 3 flails) and hierarchical fits (curve 3 borrows strength from the population and snaps into shape). The faint dashed line on curve 3 shows where the population says it should sit.
+Six curves from the same experiment. Five came out clean; curve 3 had a bad day with noisy wells. Toggle between independent fits (curve 3 flails) and hierarchical fits (curve 3 borrows strength from the population and snaps into shape). The faint dashed line on curve 3 shows where the population says it should sit.
 
 ## This is what automation looks like
 
