@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before you read</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: monospace; background: #fff; padding: 16px; color: #333; }
+.card {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 18px;
+}
+.header { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+.title { font-size: 15px; font-weight: 700; color: #333; }
+.meta { font-size: 12px; color: #888; margin-top: 3px; }
+.status { font-size: 12px; color: #666; margin-bottom: 12px; min-height: 16px; }
+.prompt { font-size: 14px; line-height: 1.5; color: #333; margin-bottom: 12px; font-weight: 600; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #444;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.option:hover { background: #f4f7fb; }
+.option.selected {
+  border: 2px solid #0066cc;
+  background: #eaf3ff;
+  padding: 9px 11px;
+  color: #0066cc;
+  font-weight: 600;
+}
+.option.dim { opacity: 0.55; cursor: default; }
+.stamp {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 10px;
+  background: #e7f6ee;
+  color: #1a9e5b;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.closing {
+  color: #1a9e5b;
+  font-size: 14px;
+  line-height: 1.55;
+  padding: 10px 0;
+  font-weight: 600;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+.btn {
+  font-family: monospace;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+}
+.btn:hover:not(:disabled) { border-color: #0066cc; color: #0066cc; }
+.btn:disabled { color: #aaa; border-color: #eee; cursor: not-allowed; }
+.btn-primary { background: #0066cc; color: #fff; border-color: #0066cc; }
+.btn-primary:disabled { background: #eee; color: #aaa; border-color: #eee; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #ddd; border: 1px solid #ccc; }
+.dot.filled { background: #0066cc; border-color: #0066cc; }
+.reset-row { display: flex; justify-content: flex-end; margin-top: 10px; }
+.reset {
+  font-family: monospace;
+  font-size: 12px;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.reset:hover { color: #444; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="title" id="title">Before you read</div>
+    <div class="meta" id="meta">3 questions · not graded · no right answers revealed</div>
+  </div>
+  <div class="status" id="status"></div>
+  <div id="stage"></div>
+  <div class="footer">
+    <button class="btn" id="back">Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn btn-primary" id="next">Next</button>
+  </div>
+  <div class="reset-row">
+    <button class="reset" id="reset">Reset</button>
+  </div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var questions = [
+    { prompt: "When you ask an AI to explain a concept, who ends up doing most of the thinking?",
+      options: ["The AI, mostly", "Me, mostly", "It depends on how I phrase the prompt", "I had not thought about it"] },
+    { prompt: "If AI makes you twice as fast at your homework, what decides whether you actually learn the material?",
+      options: ["How smart the model is", "How I spend the time the AI freed up", "How much I produce", "How clever my prompts are"] },
+    { prompt: "Across dozens of studies on learning with AI, what is the single biggest predictor of how much it helps a learner?",
+      options: ["The model's intelligence", "The learner's existing study habits", "The price of the tool", "The subject being studied"] }
+  ];
+
+  var state = { current: 0, picks: [null,null,null], answers: [null,null,null], view: 'question' };
+  var busy = false;
+
+  var stage = document.getElementById('stage'), statusEl = document.getElementById('status');
+  var metaEl = document.getElementById('meta'), dotsEl = document.getElementById('dots');
+  var backBtn = document.getElementById('back'), nextBtn = document.getElementById('next');
+  var resetBtn = document.getElementById('reset');
+
+  function fit(){
+    try {
+      var f = window.frameElement;
+      f.style.height = '0px';
+      f.style.height = document.body.scrollHeight + 'px';
+    } catch(e) {}
+  }
+
+  function renderDots(){
+    var html = '';
+    for (var i = 0; i < 3; i++) html += '<div class="dot' + (state.answers[i] !== null ? ' filled' : '') + '"></div>';
+    dotsEl.innerHTML = html;
+  }
+
+  function renderQuestion(){
+    var i = state.current;
+    var q = questions[i];
+    metaEl.textContent = 'Question ' + (i + 1) + ' of 3 · not graded';
+    var committed = state.answers[i] !== null;
+    statusEl.textContent = committed ? 'Got it. That is your prior.' : 'Pick the one that fits you best.';
+
+    var html = '';
+    html += '<div class="prompt">' + q.prompt + '</div>';
+    html += '<div class="options">';
+    for (var j = 0; j < q.options.length; j++){
+      var sel = (committed && state.answers[i] === j) || (!committed && state.picks[i] === j);
+      var cls = 'option' + (committed ? ' dim' : '') + (sel ? ' selected' : '');
+      html += '<div class="' + cls + '" data-idx="' + j + '">' + q.options[j] + '</div>';
+    }
+    html += '</div>';
+    if (committed){
+      html += '<div class="stamp">Your pick: ' + q.options[state.answers[i]] + '</div>';
+    }
+    stage.innerHTML = html;
+
+    var nodes = stage.querySelectorAll('.option');
+    nodes.forEach(function(node){
+      node.addEventListener('click', function(){
+        if (busy || state.answers[state.current] !== null) return;
+        state.picks[state.current] = parseInt(node.getAttribute('data-idx'), 10);
+        render();
+      });
+    });
+
+    backBtn.disabled = (i === 0);
+    nextBtn.disabled = busy || !(committed || state.picks[i] !== null);
+    nextBtn.textContent = (i === 2) ? 'Done' : 'Next';
+  }
+
+  function renderDone(){
+    metaEl.textContent = 'Survey complete · not graded';
+    statusEl.textContent = '';
+    stage.innerHTML = '<div class="closing">Hold those answers. The survey revisits each one. Scroll on.</div>';
+    backBtn.disabled = false;
+    nextBtn.disabled = true;
+    nextBtn.textContent = 'Done';
+  }
+
+  function render(){
+    if (state.view === 'done') renderDone();
+    else renderQuestion();
+    renderDots();
+    fit();
+  }
+
+  function advance(){
+    if (state.current < 2){
+      state.current++;
+    } else {
+      state.view = 'done';
+    }
+    busy = false;
+    render();
+  }
+
+  nextBtn.addEventListener('click', function(){
+    if (busy) return;
+    var i = state.current;
+    if (state.answers[i] === null){
+      if (state.picks[i] === null) return;
+      state.answers[i] = state.picks[i];
+      busy = true;
+      render();
+      setTimeout(advance, 650);
+    } else {
+      advance();
+    }
+  });
+
+  backBtn.addEventListener('click', function(){
+    if (busy) return;
+    if (state.view === 'done'){
+      state.view = 'question';
+      state.current = 2;
+      render();
+      return;
+    }
+    if (state.current > 0){
+      state.current--;
+      render();
+    }
+  });
+
+  resetBtn.addEventListener('click', function(){
+    if (busy) return;
+    state.current = 0;
+    state.picks = [null, null, null];
+    state.answers = [null, null, null];
+    state.view = 'question';
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

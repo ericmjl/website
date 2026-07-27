@@ -1,0 +1,151 @@
+title: How AI turbocharges your learning
+---
+author: Eric J. Ma
+---
+body:
+
+I've used AI to study twice this year, and the two experiences couldn't have been more different. In March, facing a deadline, I pasted a paper into a chatbot and asked it to summarize. It produced a clean summary. I read it. I nodded. Two days later I couldn't recall the paper's central claim. In June, facing a different paper, I opened the same model and typed, "Here is what I think this paper argues. Tell me where I'm wrong." The model pushed back. I defended. It found a hole. I patched it. Two weeks later I could still reconstruct the argument from memory.
+
+Same tool. Same model. Opposite outcomes. The difference, I've come to believe, is the whole conversation.
+
+This post is a survey of the research and the practice on learning with AI. I spent the summer reading the studies and the first-person accounts, and what I want to do here is map where the field has landed. The shape of the map is one finding, repeated in every paper and every story: AI doesn't help or harm learning on its own. **It amplifies whatever cognitive habits you bring to it.** Bring good study habits and the tool multiplies them. Bring passivity and it multiplies that too.
+
+The techniques that actually work aren't new. Retrieval practice, spaced repetition, elaboration, the Socratic method, these are decades-old learning science. What's new is that AI can finally run all of them for one learner at a time, at a scale no human tutor can match.
+
+I'm going to quiz you on this. Three questions up front, to surface what you already think, and five at the end to check what landed. (Yes, I'm quizzing you on a post about why quizzes work. I couldn't resist.)
+
+## Before you read
+
+Before you read on, I'd like to invite you to try these three, even if you're just guessing. Recalling first is what makes the rest of the post stick. Then keep reading. By the end, you'll know which of your answers the evidence supports.
+
+<iframe src="before-you-read.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+Hold your answers. Let's see where the field has landed.
+
+## The central distinction: amplifier or substitute
+
+The cleanest version of the thesis comes from a 2025 study out of Turkey, run by [Bastani and colleagues](https://hamsabastani.github.io/education_llm.pdf) and published in PNAS. They split roughly a thousand students learning math into two groups. Both groups used GPT-4. Same model. Same content. Same kids. The only thing that changed was the prompt.
+
+The first group got plain ChatGPT. They asked it questions, it answered, they copied. On the final exam they scored 17 percent worse than students who studied without any AI at all. The second group got a hinted, grounded tutor: the model was instructed to withhold answers, ask leading questions, and only reveal solutions after the student attempted the problem. During practice they performed 127 percent better than the no-AI control. The exam harm vanished.
+
+The authors call this the Dual-Mechanism Model. Generative AI can amplify cognition, when the interaction is structured to make the learner do the thinking. It can substitute for cognition, when the learner hands the thinking over. **The same tool, used two ways, produces opposite results, and the difference is always whether the AI does the thinking or you do.**
+
+Here's an example of that distinction. A student two weeks before her organic chemistry final types, "Explain SN1 and SN2 reactions to me." The model produces a beautiful explanation. She reads it, feels that she understands the material, but actually doesn't. The problem? Familiarity is not the same as understanding, and similarly, recognition is not retrieval. Two weeks later, walking into the exam, she can't tell the two mechanisms apart under pressure.
+
+The same student, with the same model, types instead: "Here is what I think distinguishes SN1 from SN2. SN1 has a carbocation intermediate and unimolecular rate-determining step. SN2 is a concerted backside attack. What am I missing?" Now she is retrieving. The model can correct her, surface the edge cases she didn't mention (solvent effects, stereochemistry, rearrangements), and quiz her on them. She's doing the thinking, and the model is the infinitely patient examiner. That's the whole game in one prompt swap!
+
+To see if you got the idea, try the little quiz below. Decide for each whether the learner is amplifying their thinking or substituting for it.
+
+<iframe src="prompt-inspector.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+If you noticed the pattern, there's really only one question that matters: who's generating the thinking, and thus the words? Every study and every story below comes back to that.
+
+## What the evidence actually says
+
+But that's one study. The harder question is whether the whole literature agrees, and on that we finally have meta-analyses. Four large reviews, published in 2025 and 2026, together covering well over a hundred studies and tens of thousands of learners.
+
+Across [36 controlled studies and 7,229 participants](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1758670/full), On average, AI helps learning. The effect size is g = 0.499, which sounds modest until you realize most education interventions hover near zero. This is medium-to-large.
+
+But the average is hiding the interesting part. When the researchers dug into what predicted the biggest gains, one variable dwarfed everything else: how the AI was used. Collaborative, structured, Socratic use hit g = 1.026. Traditional, unguided use limped to g = 0.470. **The teaching method wrapped around the AI is what produces that 2x gap.**
+
+A [second meta-analysis](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1863931/full), this one covering 89 studies, found that 40.4 percent of AI deployments helped and 23.6 percent hurt, with the rest mixed. The leading risk factor, named in 33.7 percent of studies, was over-reliance. And the most damning number in the whole review: 55.1 percent of studies used no specified pedagogical strategy at all. Much of what gets reported as "AI harms learning" is really "unstructured AI use harms learning."
+
+To help you see the pattern for yourself, I collated the studies into the map below. Click any one for the design, the sample, and the effect size. Here's what to observe: scaffold the AI and the effects are large; leave it unguided and they flip.
+
+<iframe src="evidence-map.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+Two studies in that map are worth slowing down for. One shows what a good scaffold buys you; the other shows what happens when you don't use one. At the strong end, a [World Bank trial in Nigeria](https://documents1.worldbank.org/curated/en/099548105192529324/pdf/IDU-c09f40d8-9ff8-42dc-b315-591157499be7.pdf) gave roughly 800 students free Microsoft Copilot alongside a six-week afterschool program, with tutors grounding the AI in the curriculum. The result was a 0.31 standard deviation gain, which the authors translate into roughly 1.5 to 2 years of business-as-usual schooling in Nigeria compressed into six weeks.
+
+At the other end, the [MIT EEG study](https://arxiv.org/abs/2506.08872) gave students ChatGPT with no scaffold, no tutor, no curriculum. 83 percent couldn't correctly quote their own essay afterward, and brain connectivity was the weakest of any group in the study.
+
+## The cost of cognitive surrender
+
+There's a name for what happens when you lean on the model a little too hard. Ethan Mollick calls it cognitive surrender. You stop thinking, the model drives, and because words are still hitting the page you feel productive. (You did produce a document, so the feeling isn't entirely lying to you.) The learning, though, left the room.
+
+The MIT study is the one everybody reaches for when they want to say AI rots your brain. I sat with it for an afternoon, and my honest read is that the headline is stronger than the evidence. The brain-connectivity finding? Eighteen people in the final session. The "growing dependence" signal? Could just be practice. But the quote-your-own-essay finding is rock solid: 83 percent of ChatGPT users couldn't accurately reproduce the essay they'd just written. You outsource the writing, you don't even encode it. Hold on to that number.
+
+There is a longer history here. In 2011, [Sparrow and colleagues at Harvard](https://doi.org/10.1126/science.1207745) found that people who expect to be able to look something up later remember it less well, a finding they called the Google effect. ChatGPT is Google with better prose. The cognitive offloading is the same, only smoother, which makes it more dangerous because it doesn't feel like offloading. It feels like thinking.
+
+A [2026 systematic review of 44 studies on cognitive offloading](https://doi.org/10.17605/osf.io/xk7ta) names the mechanism precisely. Offloading lower-order work frees capacity, but the benefit only converts into deeper learning under two conditions: the learner must reallocate the freed capacity to harder reasoning, and the learner must have enough metacognitive awareness to notice that the capacity was freed in the first place. **Without those two conditions, AI is a crutch. With them, it is a lever.**
+
+## The mechanics: retrieval, spacing, and desirable difficulty
+
+Three principles make AI tutoring work: retrieval practice, spacing, and the testing effect. None are new; all are decades old. What's new is that AI can finally run them for every learner at once.
+
+The first principle, retrieval practice, has some of the strongest evidence in all of learning science. [Roediger and Karpicke](https://doi.org/10.1111/j.1467-9280.2006.01693.x) ran the classic 2006 experiment: students who took a brief test after reading recalled far more later than students who reread, even though the rereaders felt more confident. That finding replicates everywhere, from word lists to medical school curricula. Looking away and recalling produces retention. Rereading produces familiarity.
+
+The second principle, spacing, is counterintuitive: letting a memory almost fade before you review it makes it stronger, not weaker. Ebbinghaus mapped the forgetting curve back in 1885, and the shape is steep. Memory drops fast after a study session. But if you reactivate the memory just before it would have slipped away, the effort of retrieving it builds a far stronger trace than rereading at full strength. That effort is what psychologists call desirable difficulty.
+
+The third principle is the testing effect, and it's what happens when retrieval practice compounds. Each additional retrieval, especially under slight variations of the question, builds the memory further, in a way a single exposure never could. Every medical school Anki deck runs on this principle.
+
+Here is the forgetting curve, made interactive. Pick a study strategy and watch what happens to retention over the next two weeks.
+
+<iframe src="forgetting-curve.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+The [UniDistance study](https://doi.org/10.48550/arxiv.2309.13060) is the cleanest field test of all three principles at once. Researchers gave 51 students a semester-long AI tutor (the MAGMA Learning app) that used a neural network to model each student's grasp of every concept, then served questions at each student's moment of near-forgetting, and visualized mastery as a 3D "learnet" whose brightness tracked grasp. Spacing, retrieval, and personalization, all automated.
+
+The students gained up to 15 percentile points over the semester, and the model's predicted grasp correlated with actual exam grade at r = 0.81. The boring learning science works! AI can finally run all of it for each learner at once.
+
+## The prompt swap and its cousins
+
+Up to this point, the focus has been on what apps and tutors do for you. Let's flip it: what can you do for yourself, with whatever model you're already using? Pick ChatGPT, Claude, or Gemini; it doesn't matter. How you talk to the model is what counts, and that skill outlasts any specific app.
+
+Start with the prompt swap. It's the single highest-leverage move I know. Take any prompt where you'd have typed "explain X to me" and rewrite it as "here is what I think X is, am I missing anything?" You've just flipped the model from answer machine to coach, and forced yourself to retrieve instead of recognize.
+
+You can push this further with a Socratic prompt. Tell the model: "Don't give me the answer. Ask me questions, one at a time, that lead me to discover it." The Socratic method is centuries old, but AI can finally run it for free for anyone with a phone. A [2025 Nature Human Behaviour paper](https://arxiv.org/pdf/2508.05116) found that this approach won by asking better questions, which activated what the authors call epistemic agency: the learner's ownership of their own reasoning.
+
+Here's another one. Flip the roles: ask the model to be the student, not the teacher. "I'm going to teach you X as if you're a beginner. Stop me whenever I say something unclear or wrong." You can't teach what you don't own, and the model is a tireless beginner who won't let you wave your hands.
+
+The ACTOR framework, from Sandeep Swadia, systematizes this for reading. Aim (state in one sentence why you are reading this). Compress (name the trunk of the idea tree before the leaves). Test (read to reject, not to agree; ask the model to challenge your interpretation and find the hidden assumption). Own (restate in your own words; connect to a real meeting, mistake, or person; teach it). Run (convert the idea into one decision, one rule, one checklist, one experiment). A book should interrupt your behavior, not just your beliefs.
+
+These four moves are the toolkit. Next, let's see what happens when real people put them to work.
+
+## In practice: stories from people who did it
+
+[Tomerl1](https://dev.to/tomerl1/i-know-rust-1jpi) set out to learn Rust in eighteen days by building a game, with Claude as a mentor and a hard rule: zero AI-written production code. He could paste code into the model, but he couldn't paste the model's code into his project. His summary, half a year later: "Any bug I fixed by pasting into Claude and pasting the answer back came back as a different bug a week later. The fixes that stuck were the ones I understood."
+
+Next is [Katy Saintin](https://medium.com/@katy.saintin/how-i-got-ai-certified-using-an-ai-that-had-no-teaching-degree-0da2a3575d43), an industrial software engineer who ran a two-window experiment. She opened Claude twice, side by side: one mentor, one shortcut. Only the mentor window taught her anything. But what stuck with me was her observation about her colleagues. In her world (SCADA, EPICS, TANGO control systems), junior engineers stay quiet because asking feels embarrassing. "The AI never laughed at a beginner question. Never rolled its eyes. Never made curiosity feel expensive." The real disruption might be simpler than we think: for the first time, millions of people feel safe enough to ask questions.
+
+AI removes the friction of making practice exams, but you still have to take them. That's the insight [Jordan Pierce](https://medium.com/@JordanJPiece/how-to-use-ai-to-ace-your-exams-aa6141fdf9da) took from scoring 96 on a finance exam whose average was 74, then 100 out of 100 twice. He had the model write neighbor-confusion distractors (wrong answers that look right), match the question length, build novel scenarios, and repeat any error until he'd fixed it three times in a row. The AI was a test-writing assistant. He was the one taking the tests.
+
+## The meta-skill
+
+What's the single biggest predictor of how much AI helps you learn? It's you.
+
+A [2025 meta-analysis in Educational Psychology Review](https://www.mdpi.com/2079-3200/13/12/160), covering 29 experiments, found that the single largest moderator was the learner's prior self-regulation. High self-regulated learners gained g = 0.863; low self-regulated learners gained g = 0.284. What I want you to notice is the size of that gap. It's larger than the average effect of AI itself.
+
+AI amplifies what you bring. If you already know how to study, it supercharges your study. If you don't, it mostly supercharges your ability to produce documents that look like studying.
+
+Bloom's lower levels (remember, understand, apply) are commoditized. The model does them faster than you. Value has moved up to analyze, evaluate, create. **The differentiator is what you do on top of having the information.** The meta-skill that compounds is driving higher-order questioning and judgment.
+
+<iframe src="blooms-taxonomy.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+So what's the counter to "brain rot"? Self-directed learning. The people who thrive with AI are the ones who drive the questioning the model won't generate on its own, check the output against their own understanding, and treat the model as a coach rather than an oracle. It's a habit of mind, not a feature you can toggle.
+
+## Check your understanding
+
+Those three questions I invited you to try at the top? You now have the evidence to answer every one. Here's a five-question quiz to check what stuck.
+
+<iframe src="check-understanding.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+Here's my parting advice: take the prompt swap. Next time you open a model to learn, tell it what you think and ask where you're wrong. The model won't be any different. You will.
+
+---
+pub_date: 2026-07-27
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this post, I share what I learned from a summer spent reading the research on learning with AI. The biggest takeaway? AI doesn't help or harm learning on its own; it simply amplifies the cognitive habits you bring to it. If you passively ask it for answers, it breeds over-reliance. But if you use it to retrieve, defend, and test your own thinking, it becomes an infinitely patient tutor. I map the evidence, share practical prompt swaps, and even quiz you along the way. So I'm curious: the next time you open a chatbot, who will be doing the thinking?
+---
+tags:
+
+learning
+ai
+survey
+retrieval practice
+spaced repetition
+socratic method
+metacognition
+bloom's taxonomy

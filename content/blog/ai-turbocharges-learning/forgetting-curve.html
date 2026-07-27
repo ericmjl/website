@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The forgetting curve, three ways</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: monospace; background:#fff; padding:16px; color:#333; font-size:13px; line-height:1.45; }
+  .card { background:#fafafa; border:1px solid #ddd; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); max-width:640px; margin:0 auto; padding:18px; }
+  .header { margin-bottom:14px; }
+  .title { font-size:15px; font-weight:bold; color:#333; }
+  .meta { font-size:11px; color:#888; margin-top:3px; }
+  .controls { display:flex; gap:8px; margin-bottom:14px; }
+  .btn { flex:1; font-family:monospace; font-size:12px; padding:8px 6px; border:1px solid #ccc; border-radius:6px; background:#fff; color:#666; cursor:pointer; transition:background .15s, color .15s, border-color .15s; }
+  .btn:hover { border-color:#999; }
+  .btn.active { color:#fff; border-color:transparent; font-weight:bold; }
+  #chart { width:100%; height:auto; display:block; }
+  .explain { font-size:12.5px; line-height:1.5; color:#444; margin-top:14px; padding:11px 12px; background:#fff; border:1px solid #eee; border-left:4px solid #ccc; border-radius:4px; }
+  .foot { font-size:11px; color:#999; font-style:italic; margin-top:10px; line-height:1.4; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="title">The forgetting curve, three ways</div>
+      <div class="meta">day 0 = study session &middot; day 14 = exam</div>
+    </div>
+    <div class="controls">
+      <button class="btn" data-id="cram">Cram once</button>
+      <button class="btn" data-id="reread">Reread daily</button>
+      <button class="btn active" data-id="spaced">Spaced retrieval</button>
+    </div>
+    <div id="chart"></div>
+    <div class="explain" id="explain"></div>
+    <div class="foot">Curves are illustrative, modeled on Ebbinghaus (1885) and Roediger &amp; Karpicke (2006). Exact numbers vary by material and learner.</div>
+  </div>
+<script>
+(function(){
+  'use strict';
+
+  var PL = 48, PR = 588, PT = 14, PB = 178;
+  var PW = PR - PL, PH = PB - PT;
+  var XMAX = 14;
+
+  function xpix(d){ return PL + (d / XMAX) * PW; }
+  function ypix(p){
+    var v = p; if (v < 0) v = 0; if (v > 100) v = 100;
+    return PB - (v / 100) * PH;
+  }
+
+  function cramVal(t){ return 100 * Math.exp(-0.35 * t); }
+
+  function rereadVal(t){
+    var base = 100 * Math.exp(-0.30 * t);
+    var bump = 0;
+    var lastN = Math.min(Math.floor(t + 1e-9), 13);
+    for (var n = 1; n <= lastN; n++){
+      bump += 6 * Math.exp(-0.25 * (t - n));
+    }
+    var v = base + bump; if (v > 100) v = 100; return v;
+  }
+
+  function spacedPts(){
+    var segs = [
+      { start:0,  end:1,  k:0.35    },
+      { start:1,  end:3,  k:0.245   },
+      { start:3,  end:7,  k:0.1715  },
+      { start:7,  end:11, k:0.12005 },
+      { start:11, end:14, k:0.084035}
+    ];
+    var pts = [];
+    for (var s = 0; s < segs.length; s++){
+      var seg = segs[s];
+      for (var d = seg.start; d <= seg.end + 1e-9; d += 0.25){
+        pts.push([d, 100 * Math.exp(-seg.k * (d - seg.start))]);
+      }
+    }
+    return pts;
+  }
+
+  function sample(fn){
+    var pts = [];
+    for (var d = 0; d <= 14 + 1e-9; d += 0.25){ pts.push([d, fn(d)]); }
+    return pts;
+  }
+
+  function toPath(pts){
+    var s = '';
+    for (var i = 0; i < pts.length; i++){
+      var x = xpix(pts[i][0]), y = ypix(pts[i][1]);
+      s += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+    }
+    return s;
+  }
+
+  function buildSVG(strat){
+    var o = [];
+    o.push('<svg id="chart-svg" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">');
+    var yticks = [0, 25, 50, 75, 100];
+    for (var i = 0; i < yticks.length; i++){
+      var yt = yticks[i], yy = ypix(yt);
+      o.push('<line x1="' + PL + '" y1="' + yy.toFixed(1) + '" x2="' + PR + '" y2="' + yy.toFixed(1) + '" stroke="#eee" stroke-width="1"/>');
+      o.push('<text x="' + (PL - 6) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="#999" font-family="monospace">' + yt + '</text>');
+    }
+    var xticks = [0, 2, 4, 7, 10, 14];
+    for (var j = 0; j < xticks.length; j++){
+      var xt = xticks[j], xx = xpix(xt);
+      o.push('<line x1="' + xx.toFixed(1) + '" y1="' + PB + '" x2="' + xx.toFixed(1) + '" y2="' + (PB + 4) + '" stroke="#bbb" stroke-width="1"/>');
+      o.push('<text x="' + xx.toFixed(1) + '" y="' + (PB + 16) + '" text-anchor="middle" font-size="10" fill="#999" font-family="monospace">' + xt + '</text>');
+    }
+    o.push('<line x1="' + PL + '" y1="' + PT + '" x2="' + PL + '" y2="' + PB + '" stroke="#bbb" stroke-width="1"/>');
+    o.push('<line x1="' + PL + '" y1="' + PB + '" x2="' + PR + '" y2="' + PB + '" stroke="#bbb" stroke-width="1"/>');
+    var y50 = ypix(50);
+    o.push('<line x1="' + PL + '" y1="' + y50.toFixed(1) + '" x2="' + PR + '" y2="' + y50.toFixed(1) + '" stroke="#c77d00" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>');
+    o.push('<text x="' + (PR - 2) + '" y="' + (y50 - 4).toFixed(1) + '" text-anchor="end" font-size="9" fill="#c77d00" font-family="monospace">passing threshold</text>');
+    o.push('<text x="' + ((PL + PR) / 2).toFixed(1) + '" y="' + (PB + 30) + '" text-anchor="middle" font-size="10" fill="#777" font-family="monospace">days since first study</text>');
+    o.push('<text transform="translate(' + (PL - 34) + ',' + ((PT + PB) / 2).toFixed(1) + ') rotate(-90)" text-anchor="middle" font-size="10" fill="#777" font-family="monospace">% recallable</text>');
+    o.push('<path d="' + toPath(strat.pts()) + '" fill="none" stroke="' + strat.color + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>');
+    var mk = strat.markers();
+    for (var m = 0; m < mk.length; m++){
+      var cx = xpix(mk[m][0]).toFixed(1), cy = ypix(mk[m][1]).toFixed(1);
+      if (mk[m][2] === 'filled'){
+        o.push('<circle cx="' + cx + '" cy="' + cy + '" r="3.5" fill="' + strat.color + '" stroke="#fff" stroke-width="1"/>');
+      } else {
+        o.push('<circle cx="' + cx + '" cy="' + cy + '" r="3" fill="#fff" stroke="' + strat.color + '" stroke-width="1.5"/>');
+      }
+    }
+    o.push('</svg>');
+    return o.join('');
+  }
+
+  var STRATS = {
+    cram: {
+      color:'#e85d3a',
+      pts: function(){ return sample(cramVal); },
+      markers: function(){ return []; },
+      explain:"You studied once. Memory decays along the Ebbinghaus curve. By day 14 you retain roughly 1% of what you 'learned'. Familiarity feels like mastery in the moment; the exam disagrees."
+    },
+    reread: {
+      color:'#c77d00',
+      pts: function(){ return sample(rereadVal); },
+      markers: function(){
+        var mk = [];
+        for (var n = 1; n <= 13; n++){ mk.push([n, rereadVal(n), 'open']); }
+        return mk;
+      },
+      explain:"Rereading feels productive and gives small bumps each day, but the underlying decay continues. By day 14 you retain roughly 22%. You will recognize the material on the page, but you will not be able to produce it under pressure."
+    },
+    spaced: {
+      color:'#1a9e5b',
+      pts: spacedPts,
+      markers: function(){
+        return [[1,100,'filled'],[3,100,'filled'],[7,100,'filled'],[11,100,'filled']];
+      },
+      explain:"Each retrieval session (filled dots) resets the curve near 100% AND flattens the subsequent decay (the curve gets shallower each time). By day 14 you retain roughly 75-80%. The effort of retrieving is the desirable difficulty that builds durable memory."
+    }
+  };
+
+  var chartEl = document.getElementById('chart');
+  var explainEl = document.getElementById('explain');
+  var buttons = document.querySelectorAll('.btn');
+
+  function render(id){
+    var s = STRATS[id];
+    chartEl.innerHTML = buildSVG(s);
+    explainEl.textContent = s.explain;
+    explainEl.style.borderLeftColor = s.color;
+    for (var i = 0; i < buttons.length; i++){
+      var b = buttons[i];
+      var on = b.getAttribute('data-id') === id;
+      b.className = on ? 'btn active' : 'btn';
+      if (on){ b.style.background = s.color; b.style.borderColor = s.color; }
+      else { b.style.background = ''; b.style.borderColor = ''; }
+    }
+    fit();
+  }
+
+  function fit(){
+    try {
+      var f = window.frameElement;
+      f.style.height = '0px';
+      f.style.height = document.body.scrollHeight + 'px';
+    } catch(e) {}
+  }
+
+  for (var i = 0; i < buttons.length; i++){
+    buttons[i].addEventListener('click', function(){
+      render(this.getAttribute('data-id'));
+    });
+  }
+
+  render('spaced');
+})();
+</script>
+</body>
+</html>

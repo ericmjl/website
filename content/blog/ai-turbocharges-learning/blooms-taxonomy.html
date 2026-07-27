@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloom's taxonomy, post-AI</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:monospace; background:#fff; padding:16px; color:#333; font-size:13px; line-height:1.45; }
+.card { background:#fafafa; border:1px solid #ddd; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); max-width:640px; margin:0 auto; padding:18px; }
+.header { margin-bottom:12px; }
+.title { font-size:15px; font-weight:bold; color:#0066cc; }
+.meta { font-size:11.5px; color:#888; margin-top:3px; }
+.toggle { display:flex; gap:8px; margin-bottom:14px; }
+.btn { font-family:monospace; font-size:11.5px; padding:5px 10px; border:1px solid #ddd; border-radius:5px; background:#fff; color:#666; cursor:pointer; }
+.btn.active { background:#0066cc; color:#fff; border-color:#0066cc; }
+.pyramid { display:flex; flex-direction:column; align-items:center; gap:5px; }
+.bar { padding:8px 12px; border-radius:5px; cursor:pointer; text-align:center; border:1px solid transparent; transition:transform 0.08s ease; }
+.bar:hover { transform:translateX(2px); }
+.bar.sel { border-color:#0066cc; box-shadow:0 0 0 2px rgba(0,102,204,0.15); }
+.bar-name { font-size:12.5px; font-weight:bold; }
+.bar-def { font-size:10.5px; margin-top:2px; opacity:0.9; }
+.bar-tag { font-size:9.5px; margin-top:4px; text-transform:uppercase; letter-spacing:0.4px; opacity:0.85; }
+.bar-pre { background:#eaf3ff; color:#0066cc; }
+.bar-high { background:#e7f6ee; color:#1a9e5b; }
+.bar-low { background:#e8e8e8; color:#888; }
+.divider { display:flex; align-items:center; width:100%; margin:6px 0; }
+.divider:before, .divider:after { content:''; flex:1; border-top:1px dashed #aaa; }
+.divider span { padding:0 8px; font-size:10px; color:#888; white-space:nowrap; font-style:italic; }
+.detail { display:none; margin-top:14px; padding:12px 13px; background:#fff; border:1px solid #e5e5e5; border-radius:6px; font-size:11.5px; color:#444; }
+.detail.open { display:block; }
+.d-name { font-size:13px; font-weight:bold; color:#333; }
+.d-def { margin-top:5px; color:#444; }
+.d-status { margin-top:6px; font-weight:bold; }
+.d-status.high { color:#1a9e5b; }
+.d-status.low { color:#888; }
+.d-example { background:#f0f0f0; border-left:3px solid #0066cc; padding:7px 10px; font-size:11px; color:#444; margin-top:8px; }
+.d-example .lbl { color:#888; }
+.footer { margin-top:14px; font-size:10.5px; color:#aaa; font-style:italic; line-height:1.4; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="title">Bloom's taxonomy, post-AI</div>
+    <div class="meta" id="meta">click any level to expand</div>
+  </div>
+  <div class="toggle">
+    <button class="btn" id="btn-pre">Pre-AI world</button>
+    <button class="btn active" id="btn-post">Post-AI world</button>
+  </div>
+  <div class="pyramid" id="pyramid"></div>
+  <div class="detail" id="detail"></div>
+  <div class="footer">Bloom's taxonomy (Anderson &amp; Krathwohl, 2001 revision). The line between commoditized and valuable is the AI inflection point.</div>
+</div>
+<script>
+(function(){
+  'use strict';
+
+  var levels = [
+    { name:'Create',     width:30,  tier:'high',
+      def:'Produce new or original work.',
+      status:'Still valuable. The model generates, but taste and originality are yours.',
+      example:'Design a new experiment that tests this hypothesis.' },
+    { name:'Evaluate',   width:44,  tier:'high',
+      def:'Justify a stand or decision with evidence.',
+      status:'Still valuable. You bring the judgment the model can\'t.',
+      example:'Should we adopt this technology? Defend your answer.' },
+    { name:'Analyze',    width:58,  tier:'high',
+      def:'Draw connections among ideas, break down structures.',
+      status:'Still valuable. You judge which connections matter.',
+      example:'Compare these two studies and tell me which methodology is more rigorous.' },
+    { name:'Apply',      width:72,  tier:'low',
+      def:'Use information in new situations.',
+      status:'Commoditized. The model applies frameworks to new problems.',
+      example:'Apply the SWOT framework to this company.' },
+    { name:'Understand', width:86,  tier:'low',
+      def:'Explain ideas or concepts in your own words.',
+      status:'Commoditized. The model explains clearly, at any level.',
+      example:'Explain photosynthesis like I\'m five.' },
+    { name:'Remember',   width:100, tier:'low',
+      def:'Recall facts, terms, and basic concepts.',
+      status:'Commoditized. The model recalls faster than you can.',
+      example:'What year did the French Revolution start?' }
+  ];
+
+  var mode = 'post';
+  var selected = null;
+
+  var pyramid = document.getElementById('pyramid');
+  var detail = document.getElementById('detail');
+  var meta = document.getElementById('meta');
+
+  function tagFor(tier){
+    if(mode !== 'post') return '';
+    return tier === 'high' ? 'Value lives here' : 'Commoditized by AI';
+  }
+
+  function render(){
+    pyramid.innerHTML = '';
+    levels.forEach(function(lv, i){
+      var bar = document.createElement('div');
+      var cls = mode === 'pre' ? 'bar-pre' : (lv.tier === 'high' ? 'bar-high' : 'bar-low');
+      if(selected === i) cls += ' sel';
+      bar.className = 'bar ' + cls;
+      bar.style.width = lv.width + '%';
+      var tag = tagFor(lv.tier);
+      bar.innerHTML =
+        '<div class="bar-name">' + lv.name + '</div>' +
+        '<div class="bar-def">' + lv.def + '</div>' +
+        (tag ? '<div class="bar-tag">' + tag + '</div>' : '');
+      bar.setAttribute('data-i', i);
+      pyramid.appendChild(bar);
+
+      if(i === 2 && mode === 'post'){
+        var div = document.createElement('div');
+        div.className = 'divider';
+        div.innerHTML = '<span>The line AI crossed</span>';
+        pyramid.appendChild(div);
+      }
+    });
+  }
+
+  function renderDetail(){
+    if(selected === null){
+      detail.classList.remove('open');
+      detail.innerHTML = '';
+      return;
+    }
+    var lv = levels[selected];
+    var statusCls = (mode === 'pre') ? '' : (lv.tier === 'high' ? 'high' : 'low');
+    detail.innerHTML =
+      '<div class="d-name">' + lv.name + '</div>' +
+      '<div class="d-def">' + lv.def + '</div>' +
+      '<div class="d-status ' + statusCls + '">' + lv.status + '</div>' +
+      '<div class="d-example"><span class="lbl">prompt &raquo;</span> ' + lv.example + '</div>';
+    detail.classList.add('open');
+  }
+
+  pyramid.addEventListener('click', function(e){
+    var bar = e.target.closest('.bar');
+    if(!bar) return;
+    var i = parseInt(bar.getAttribute('data-i'), 10);
+    selected = (selected === i) ? null : i;
+    render();
+    renderDetail();
+    fit();
+  });
+
+  var btnPre = document.getElementById('btn-pre');
+  var btnPost = document.getElementById('btn-post');
+
+  btnPre.addEventListener('click', function(){
+    mode = 'pre';
+    btnPre.classList.add('active');
+    btnPost.classList.remove('active');
+    meta.textContent = 'click any level to expand';
+    render();
+    renderDetail();
+    fit();
+  });
+
+  btnPost.addEventListener('click', function(){
+    mode = 'post';
+    btnPost.classList.add('active');
+    btnPre.classList.remove('active');
+    meta.textContent = 'click any level to expand';
+    render();
+    renderDetail();
+    fit();
+  });
+
+  function fit(){
+    try {
+      var f = window.frameElement;
+      f.style.height = '0px';
+      f.style.height = document.body.scrollHeight + 'px';
+    } catch(e){}
+  }
+
+  render();
+  fit();
+})();
+</script>
+</body>
+</html>

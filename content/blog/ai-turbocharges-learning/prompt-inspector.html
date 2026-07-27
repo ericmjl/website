@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt inspector</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: #fff; padding: 16px; color: #333; }
+    .card {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+    .title { font-size: 15px; font-weight: bold; color: #333; }
+    .meta { font-size: 12px; color: #666; }
+    .status { font-size: 12px; color: #888; margin-bottom: 14px; min-height: 16px; }
+    .stage { min-height: 220px; }
+    .quote {
+      background: #f4f4f4;
+      border-left: 3px solid #0066cc;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #444;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 14px;
+    }
+    .quote .tag { display: block; font-size: 11px; color: #888; margin-bottom: 4px; }
+    .buttons { display: flex; gap: 10px; margin-bottom: 14px; }
+    .btn {
+      flex: 1;
+      padding: 10px 8px;
+      font-family: monospace;
+      font-size: 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #fff;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+    }
+    .btn-amp { border: 1px solid #1a9e5b; color: #1a9e5b; }
+    .btn-sub { border: 1px solid #e85d3a; color: #e85d3a; }
+    .btn-amp:hover, .btn-sub:hover { background: #fafafa; }
+    .btn-amp.picked { background: #1a9e5b; color: #fff; }
+    .btn-sub.picked { background: #e85d3a; color: #fff; }
+    .btn.muted { opacity: 0.45; cursor: default; }
+    .btn[disabled] { cursor: default; }
+    .verdict {
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.55;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .verdict .label { font-weight: bold; display: block; margin-bottom: 4px; font-size: 13px; }
+    .verdict.correct { background: #e7f6ee; border: 1px solid #1a9e5b; color: #1a9e5b; display: block; }
+    .verdict.wrong { background: #fdecea; border: 1px solid #e85d3a; color: #e85d3a; display: block; }
+    .verdict .body { color: #444; font-size: 12px; line-height: 1.5; margin-top: 4px; }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #eee;
+      padding-top: 12px;
+    }
+    .nav-btn {
+      padding: 6px 14px;
+      font-family: monospace;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #0066cc;
+      color: #fff;
+      border: none;
+    }
+    .nav-btn[disabled] { background: #aaa; cursor: default; }
+    .nav-btn.ghost { background: #fff; color: #888; border: 1px solid #ccc; }
+    .nav-btn.ghost[disabled] { background: #fff; color: #aaa; border-color: #eee; }
+    .dots { display: flex; gap: 8px; }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ddd;
+      display: inline-block;
+    }
+    .dot.right { background: #1a9e5b; }
+    .dot.wrong { background: #c77d00; }
+    .reset-wrap { display: flex; justify-content: flex-end; margin-top: 12px; }
+    .reset {
+      font-family: monospace;
+      font-size: 11px;
+      color: #888;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .results { display: none; }
+    .results .score {
+      font-size: 14px;
+      font-weight: bold;
+      color: #0066cc;
+      margin-bottom: 8px;
+    }
+    .results .band {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #444;
+      background: #f4f4f4;
+      border-left: 3px solid #0066cc;
+      padding: 10px 12px;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 12px;
+    }
+    .results .breakdown { font-size: 12px; color: #666; margin-bottom: 12px; line-height: 1.5; }
+    .results .breakdown span { display: inline-block; margin-right: 10px; }
+    .results .breakdown .ok { color: #1a9e5b; }
+    .results .breakdown .no { color: #e85d3a; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <span class="title">Prompt inspector</span>
+      <span class="meta">Score: <span id="score">0</span> / 5</span>
+    </div>
+    <div class="status" id="status">Classify each prompt. Who is doing the thinking?</div>
+
+    <div class="stage" id="stage">
+      <div class="quote" id="quote"><span class="tag">Prompt</span><span id="quote-text"></span></div>
+      <div class="buttons">
+        <button class="btn btn-amp" id="btn-amp" type="button">Amplifier</button>
+        <button class="btn btn-sub" id="btn-sub" type="button">Substitute</button>
+      </div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+
+    <div class="results" id="results">
+      <div class="score" id="final-score"></div>
+      <div class="band" id="band"></div>
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+
+    <div class="footer">
+      <button class="nav-btn ghost" id="back" type="button" disabled>Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="nav-btn" id="next" type="button" disabled>Next</button>
+    </div>
+    <div class="reset-wrap">
+      <button class="reset" id="reset" type="button">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var QUESTIONS = [
+        {
+          prompt: "Explain the causes of the French Revolution to me.",
+          correct: "sub",
+          explanation: "You asked the model to recognize and produce. You did no retrieval of your own. Two days later you will recognize the explanation when you read it again, but you will not be able to produce it from memory."
+        },
+        {
+          prompt: "Here is my summary of today's lecture. Find three things I got wrong.",
+          correct: "amp",
+          explanation: "You generated the summary first. The model is correcting your retrieval, not replacing it. This is the central move: you do the thinking, the model surfaces the gaps."
+        },
+        {
+          prompt: "Write me a study schedule for my exam next week.",
+          correct: "sub",
+          explanation: "You offloaded the planning. The schedule may be fine, but the metacognitive work of deciding what you know and what you do not, which is where the learning lives, happened in the model, not in you."
+        },
+        {
+          prompt: "Quiz me on the Krebs cycle. Do not tell me the answer until I attempt it.",
+          correct: "amp",
+          explanation: "Textbook Socratic move. You are forcing retrieval and giving the model a coaching role instead of an answer-machine role. This is exactly what the Bastani Turkey study found erased the exam harm."
+        },
+        {
+          prompt: "Generate an essay outline on Hamlet's madness.",
+          correct: "sub",
+          explanation: "You offloaded the structure, which is where the argumentative thinking happens. A better move: draft your own outline first, then ask the model to challenge its weakest links."
+        }
+      ];
+
+      var BANDS = [
+        { max: 5, text: "You have the whole survey in one move. The signal is always: who is generating the words?" },
+        { max: 4, text: "Solid. The pattern is: amplification runs through the learner's retrieval, not the model's recognition." },
+        { max: 2, text: "Read on. The next sections walk through exactly why these distinctions matter, with the evidence." }
+      ];
+
+      var state = {
+        idx: 0,
+        answers: [null, null, null, null, null]
+      };
+
+      var els = {
+        status: document.getElementById('status'),
+        score: document.getElementById('score'),
+        stage: document.getElementById('stage'),
+        quoteText: document.getElementById('quote-text'),
+        btnAmp: document.getElementById('btn-amp'),
+        btnSub: document.getElementById('btn-sub'),
+        verdict: document.getElementById('verdict'),
+        results: document.getElementById('results'),
+        finalScore: document.getElementById('final-score'),
+        band: document.getElementById('band'),
+        breakdown: document.getElementById('breakdown'),
+        back: document.getElementById('back'),
+        next: document.getElementById('next'),
+        dots: document.getElementById('dots'),
+        reset: document.getElementById('reset')
+      };
+
+      function correctCount() {
+        var n = 0;
+        for (var i = 0; i < QUESTIONS.length; i++) {
+          if (state.answers[i] === QUESTIONS[i].correct) n++;
+        }
+        return n;
+      }
+
+      function bandFor(n) {
+        for (var i = 0; i < BANDS.length; i++) {
+          if (n >= BANDS[i].max) return BANDS[i].text;
+        }
+        return BANDS[BANDS.length - 1].text;
+      }
+
+      function render() {
+        var i = state.idx;
+        var q = QUESTIONS[i];
+
+        els.score.textContent = correctCount();
+
+        var dots = '';
+        for (var d = 0; d < QUESTIONS.length; d++) {
+          var cls = 'dot';
+          var a = state.answers[d];
+          if (a === QUESTIONS[d].correct) cls += ' right';
+          else if (a !== null) cls += ' wrong';
+          dots += '<span class="' + cls + '"></span>';
+        }
+        els.dots.innerHTML = dots;
+
+        if (i === 0) {
+          els.back.setAttribute('disabled', 'disabled');
+        } else {
+          els.back.removeAttribute('disabled');
+        }
+
+        var answered = state.answers[i] !== null;
+        if (answered) {
+          els.next.removeAttribute('disabled');
+        } else {
+          els.next.setAttribute('disabled', 'disabled');
+        }
+        els.next.textContent = (i === QUESTIONS.length - 1) ? 'See score' : 'Next';
+
+        if (i === QUESTIONS.length - 1 && state.answers[QUESTIONS.length - 1] !== null && state._showResults) {
+          els.stage.style.display = 'none';
+          els.results.style.display = 'block';
+          els.status.textContent = 'Results';
+          var n = correctCount();
+          els.finalScore.textContent = 'You scored ' + n + ' / ' + QUESTIONS.length;
+          els.band.textContent = bandFor(n);
+          var bd = '';
+          for (var k = 0; k < QUESTIONS.length; k++) {
+            var ok = state.answers[k] === QUESTIONS[k].correct;
+            bd += '<span class="' + (ok ? 'ok' : 'no') + '">Q' + (k + 1) + ' ' + (ok ? 'right' : 'wrong') + '</span>';
+          }
+          els.breakdown.innerHTML = bd;
+          fit();
+          return;
+        }
+
+        els.stage.style.display = 'block';
+        els.results.style.display = 'none';
+        els.status.textContent = 'Q' + (i + 1) + ' of ' + QUESTIONS.length + '. Classify the prompt below.';
+        els.quoteText.textContent = q.prompt;
+
+        [els.btnAmp, els.btnSub].forEach(function (b) {
+          b.classList.remove('picked', 'muted');
+          b.removeAttribute('disabled');
+        });
+
+        els.verdict.className = 'verdict';
+        els.verdict.innerHTML = '';
+
+        if (answered) {
+          var choice = state.answers[i];
+          var isRight = choice === q.correct;
+          var pickedBtn = (choice === 'amp') ? els.btnAmp : els.btnSub;
+          var otherBtn = (choice === 'amp') ? els.btnSub : els.btnAmp;
+          pickedBtn.classList.add('picked');
+          otherBtn.classList.add('muted');
+          els.btnAmp.setAttribute('disabled', 'disabled');
+          els.btnSub.setAttribute('disabled', 'disabled');
+
+          els.verdict.className = 'verdict ' + (isRight ? 'correct' : 'wrong');
+          var label = isRight ? 'Correct' : 'Not quite';
+          var correctLabel = q.correct === 'amp' ? 'Amplifier' : 'Substitute';
+          els.verdict.innerHTML =
+            '<span class="label">' + label + '. Answer: ' + correctLabel + '.</span>' +
+            '<span class="body">' + q.explanation + '</span>';
+        }
+
+        fit();
+      }
+
+      function answer(choice) {
+        if (state.answers[state.idx] !== null) return;
+        state.answers[state.idx] = choice;
+        render();
+      }
+
+      function next() {
+        if (state.idx === QUESTIONS.length - 1) {
+          state._showResults = true;
+          render();
+        } else {
+          state.idx++;
+          render();
+        }
+      }
+
+      function back() {
+        if (state.idx > 0) {
+          if (state._showResults) {
+            state._showResults = false;
+          } else {
+            state.idx--;
+          }
+          render();
+        }
+      }
+
+      function reset() {
+        state.idx = 0;
+        state.answers = [null, null, null, null, null];
+        state._showResults = false;
+        render();
+      }
+
+      els.btnAmp.addEventListener('click', function () { answer('amp'); });
+      els.btnSub.addEventListener('click', function () { answer('sub'); });
+      els.next.addEventListener('click', next);
+      els.back.addEventListener('click', back);
+      els.reset.addEventListener('click', reset);
+
+      function fit() {
+        try {
+          var f = window.frameElement;
+          f.style.height = '0px';
+          f.style.height = document.body.scrollHeight + 'px';
+        } catch (e) {}
+      }
+
+      render();
+    })();
+  </script>
+</body>
+</html>
