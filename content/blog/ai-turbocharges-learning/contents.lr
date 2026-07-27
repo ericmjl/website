@@ -4,15 +4,11 @@ author: Eric J. Ma
 ---
 body:
 
-I've used AI to study twice this year, and the two experiences couldn't have been more different. In March, facing a deadline, I pasted a paper into a chatbot and asked it to summarize. It produced a clean summary. I read it. I nodded. Two days later I couldn't recall the paper's central claim. In June, facing a different paper, I opened the same model and typed, "Here is what I think this paper argues. Tell me where I'm wrong." The model pushed back. I defended. It found a hole. I patched it. Two weeks later I could still reconstruct the argument from memory.
+I've been sitting on a question since SciPy this year. Daniel Chen and I get together every conference to talk about education, it's our shared obsession, and this time the big one was: AI shortcuts everything now. How do we show people the patterns for learning deeply with it rather than letting it replace the learning? I didn't have a good answer. So I went and read the research. This post is what I found.
 
-Same tool. Same model. Opposite outcomes. The difference, I've come to believe, is the whole conversation.
+The finding, repeated in every paper and every story: AI doesn't help or harm learning on its own. **It amplifies whatever cognitive habits you bring to it.** Bring good study habits and the tool multiplies them. Bring passivity and it multiplies that too.
 
-This post is a survey of the research and the practice on learning with AI. I spent the summer reading the studies and the first-person accounts, and what I want to do here is map where the field has landed. The shape of the map is one finding, repeated in every paper and every story: AI doesn't help or harm learning on its own. **It amplifies whatever cognitive habits you bring to it.** Bring good study habits and the tool multiplies them. Bring passivity and it multiplies that too.
-
-The techniques that actually work aren't new. Retrieval practice, spaced repetition, elaboration, the Socratic method, these are decades-old learning science. What's new is that AI can finally run all of them for one learner at a time, at a scale no human tutor can match.
-
-I'm going to quiz you on this. Three questions up front, to surface what you already think, and five at the end to check what landed. (Yes, I'm quizzing you on a post about why quizzes work. I couldn't resist.)
+None of the techniques are new. Retrieval practice, spaced repetition, elaboration, the Socratic method, they've been around for decades. What's new is that AI can finally run all of them for one learner at a time, at a scale no human tutor can match.
 
 ## Before you read
 
@@ -20,19 +16,17 @@ Before you read on, I'd like to invite you to try these three, even if you're ju
 
 <iframe src="before-you-read.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-Hold your answers. Let's see where the field has landed.
-
 ## The central distinction: amplifier or substitute
 
-The cleanest version of the thesis comes from a 2025 study out of Turkey, run by [Bastani and colleagues](https://hamsabastani.github.io/education_llm.pdf) and published in PNAS. They split roughly a thousand students learning math into two groups. Both groups used GPT-4. Same model. Same content. Same kids. The only thing that changed was the prompt.
+The cleanest version of the thesis comes from a 2025 study out of Turkey, run by [Bastani and colleagues](https://hamsabastani.github.io/education_llm.pdf) and published in PNAS. They split roughly a thousand students learning math into two groups. Both groups used GPT-4, with the same content and the same kids. The only thing that changed was the prompt.
 
-The first group got plain ChatGPT. They asked it questions, it answered, they copied. On the final exam they scored 17 percent worse than students who studied without any AI at all. The second group got a hinted, grounded tutor: the model was instructed to withhold answers, ask leading questions, and only reveal solutions after the student attempted the problem. During practice they performed 127 percent better than the no-AI control. The exam harm vanished.
+The first group got plain ChatGPT, asked questions, and copied answers. It felt productive during practice. But when the AI was taken away for the final exam, they scored 17 percent worse than students who never had AI at all. They had used it as a crutch and never built the skill. The second group got a hinted, grounded tutor instead, one that withheld answers and asked leading questions. During practice they performed 127 percent better, and when the AI was taken away, they held their ground.
 
-The authors call this the Dual-Mechanism Model. Generative AI can amplify cognition, when the interaction is structured to make the learner do the thinking. It can substitute for cognition, when the learner hands the thinking over. **The same tool, used two ways, produces opposite results, and the difference is always whether the AI does the thinking or you do.**
+The authors call this the Dual-Mechanism Model. AI can amplify your thinking when the interaction forces you to do it, or substitute for it when you hand it over. **The same tool, used two ways, produces opposite results, and the difference is always whether the AI does the thinking or you do.**
 
 Here's an example of that distinction. A student two weeks before her organic chemistry final types, "Explain SN1 and SN2 reactions to me." The model produces a beautiful explanation. She reads it, feels that she understands the material, but actually doesn't. The problem? Familiarity is not the same as understanding, and similarly, recognition is not retrieval. Two weeks later, walking into the exam, she can't tell the two mechanisms apart under pressure.
 
-The same student, with the same model, types instead: "Here is what I think distinguishes SN1 from SN2. SN1 has a carbocation intermediate and unimolecular rate-determining step. SN2 is a concerted backside attack. What am I missing?" Now she is retrieving. The model can correct her, surface the edge cases she didn't mention (solvent effects, stereochemistry, rearrangements), and quiz her on them. She's doing the thinking, and the model is the infinitely patient examiner. That's the whole game in one prompt swap!
+Flip the prompt and everything changes. Instead of "explain X to me," she types: "Here is what I think distinguishes SN1 from SN2. SN1 has a carbocation intermediate and unimolecular rate-determining step. SN2 is a concerted backside attack. What am I missing?" Now she's retrieving. The model can correct her, surface the edge cases she didn't mention (solvent effects, stereochemistry, rearrangements), and quiz her on them. She's doing the thinking, and the model is the infinitely patient examiner. That's the whole game in one prompt swap!
 
 To see if you got the idea, try the little quiz below. Decide for each whether the learner is amplifying their thinking or substituting for it.
 
@@ -44,7 +38,7 @@ If you noticed the pattern, there's really only one question that matters: who's
 
 But that's one study. The harder question is whether the whole literature agrees, and on that we finally have meta-analyses. Four large reviews, published in 2025 and 2026, together covering well over a hundred studies and tens of thousands of learners.
 
-Across [36 controlled studies and 7,229 participants](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1758670/full), On average, AI helps learning. The effect size is g = 0.499, which sounds modest until you realize most education interventions hover near zero. This is medium-to-large.
+On average, AI helps learning. Across [36 controlled studies and 7,229 participants](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1758670/full), the effect size is g = 0.499, which sounds modest until you realize most education interventions hover near zero. This is medium-to-large.
 
 But the average is hiding the interesting part. When the researchers dug into what predicted the biggest gains, one variable dwarfed everything else: how the AI was used. Collaborative, structured, Socratic use hit g = 1.026. Traditional, unguided use limped to g = 0.470. **The teaching method wrapped around the AI is what produces that 2x gap.**
 
@@ -78,7 +72,7 @@ The second principle, spacing, is counterintuitive: letting a memory almost fade
 
 The third principle is the testing effect, and it's what happens when retrieval practice compounds. Each additional retrieval, especially under slight variations of the question, builds the memory further, in a way a single exposure never could. Every medical school Anki deck runs on this principle.
 
-Here is the forgetting curve, made interactive. Pick a study strategy and watch what happens to retention over the next two weeks.
+Want to see the forgetting curve in action? Pick a strategy below and watch what happens to retention over two weeks.
 
 <iframe src="forgetting-curve.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
