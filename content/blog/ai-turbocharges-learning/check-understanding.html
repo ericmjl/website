@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check your understanding</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: monospace;
+      background: #fff;
+      padding: 16px;
+      color: #333;
+    }
+    .card {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #0066cc;
+    }
+    .score {
+      font-size: 12px;
+      color: #666;
+    }
+    .status {
+      font-size: 12px;
+      color: #888;
+      min-height: 16px;
+      margin-bottom: 12px;
+    }
+    .stage { display: block; }
+    .question {
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      color: #333;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .option {
+      text-align: left;
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+    .option:hover:not(.locked) {
+      background: #eef4fb;
+      border-color: #0066cc;
+    }
+    .option.locked { cursor: default; }
+    .option.correct {
+      background: #e7f6ee;
+      border-color: #1a9e5b;
+      color: #1a9e5b;
+      font-weight: bold;
+    }
+    .option.wrong {
+      background: #fdecea;
+      border-color: #e85d3a;
+      color: #e85d3a;
+      font-weight: bold;
+    }
+    .rationale {
+      font-size: 12px;
+      line-height: 1.5;
+      background: #f4f4f4;
+      border-left: 3px solid #0066cc;
+      padding: 10px 12px;
+      border-radius: 0 4px 4px 0;
+      color: #444;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .rationale.show { display: block; }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #eee;
+      padding-top: 12px;
+    }
+    .nav-btn {
+      font-family: monospace;
+      font-size: 13px;
+      padding: 7px 14px;
+      border: 1px solid #0066cc;
+      border-radius: 6px;
+      background: #fff;
+      color: #0066cc;
+      cursor: pointer;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: #0066cc;
+      color: #fff;
+    }
+    .nav-btn:disabled {
+      border-color: #ccc;
+      color: #aaa;
+      cursor: not-allowed;
+      background: #f5f5f5;
+    }
+    .dots {
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+    .dot.green { background: #1a9e5b; }
+    .dot.amber { background: #c77d00; }
+    .results {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    .results.show { display: block; }
+    .results-band {
+      font-size: 14px;
+      font-weight: bold;
+      color: #0066cc;
+      margin-bottom: 8px;
+    }
+    .results-msg {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #444;
+    }
+    .reset-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+    .reset-btn {
+      font-family: monospace;
+      font-size: 12px;
+      padding: 6px 12px;
+      border: 1px solid #999;
+      border-radius: 6px;
+      background: #fff;
+      color: #666;
+      cursor: pointer;
+    }
+    .reset-btn:hover {
+      background: #f0f0f0;
+      border-color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="title">Check your understanding</div>
+      <div class="score" id="score">Score: 0 / 5</div>
+    </div>
+    <div class="status" id="status">Question 1 of 5. Pick the best answer.</div>
+    <div class="stage" id="stage">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <div class="rationale" id="rationale"></div>
+    </div>
+    <div class="results" id="results">
+      <div class="results-band" id="results-band"></div>
+      <div class="results-msg" id="results-msg"></div>
+    </div>
+    <div class="footer">
+      <button class="nav-btn" id="back">Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="nav-btn" id="next" disabled>Next</button>
+    </div>
+    <div class="reset-wrap">
+      <button class="reset-btn" id="reset">Reset</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      'use strict';
+
+      var questions = [
+        {
+          prompt: "In the Bastani Turkey study, what determined whether GPT-4 helped or harmed math learning?",
+          options: [
+            "The model version used",
+            "The prompt design (plain ChatGPT vs a hinted tutor)",
+            "The students' prior grades",
+            "The subject difficulty"
+          ],
+          correct: 1,
+          rationale: "Same model, same content, same kids. The only variable was the prompt. Plain ChatGPT scored -17% on the exam; the hinted tutor performed 127% better in practice."
+        },
+        {
+          prompt: "What is 'cognitive surrender' (Ethan Mollick's term)?",
+          options: [
+            "Forgetting what you studied last week",
+            "A type of AI hallucination",
+            "Stopping your own thinking and letting the AI drive, even when it is wrong",
+            "Trusting AI too much on factual lookup"
+          ],
+          correct: 2,
+          rationale: "You feel productive because words are appearing, but the learning is not happening. The model is producing, you are copying."
+        },
+        {
+          prompt: "Which single prompt swap best embodies the central thesis of the survey?",
+          options: [
+            "Add 'be detailed and thorough' to any prompt",
+            "Switch from a cheap model to a more expensive one",
+            "Ask for three examples before the explanation",
+            "Change 'explain X to me' to 'here is what I think X is, am I missing anything?'"
+          ],
+          correct: 3,
+          rationale: "The first version asks the model to recognize and produce. The second forces you to retrieve, and asks the model to correct. That is the amplifier-vs-substitute distinction in one sentence."
+        },
+        {
+          prompt: "A 2025 meta-analysis found self-regulated learners gained g = 0.863 with AI, while low-self-regulation learners gained g = 0.284. What is the most accurate reading?",
+          options: [
+            "AI only helps already-smart people",
+            "The studies were biased",
+            "Self-regulation is irrelevant; only the tool matters",
+            "AI amplifies the study habits you bring to it"
+          ],
+          correct: 3,
+          rationale: "Same tool, same task. The gap between the two groups is larger than the average effect of AI itself. Bring good habits and the tool multiplies them; bring passivity and it multiplies that too."
+        },
+        {
+          prompt: "Why does spaced retrieval beat cramming, according to the survey?",
+          options: [
+            "Spacing reduces total study time",
+            "Cramming tires the brain",
+            "Reactivating a memory just before it decays strengthens the encoding more than rereading does",
+            "Spaced practice uses less effort per session"
+          ],
+          correct: 2,
+          rationale: "This is the desirable difficulty. The effort of retrieving is what builds the memory. Rereading at full strength produces familiarity, not retention."
+        }
+      ];
+
+      var state = {
+        idx: 0,
+        answers: questions.map(function () { return { answered: false, correct: false }; }),
+        score: 0
+      };
+
+      var els = {
+        score: document.getElementById('score'),
+        status: document.getElementById('status'),
+        question: document.getElementById('question'),
+        options: document.getElementById('options'),
+        rationale: document.getElementById('rationale'),
+        results: document.getElementById('results'),
+        resultsBand: document.getElementById('results-band'),
+        resultsMsg: document.getElementById('results-msg'),
+        back: document.getElementById('back'),
+        next: document.getElementById('next'),
+        dots: document.getElementById('dots'),
+        reset: document.getElementById('reset')
+      };
+
+      function fit() {
+        try {
+          var f = window.frameElement;
+          f.style.height = '0px';
+          f.style.height = document.body.scrollHeight + 'px';
+        } catch (e) {}
+      }
+
+      function renderQuestion() {
+        var q = questions[state.idx];
+        els.question.textContent = q.prompt;
+        els.options.innerHTML = '';
+        for (var i = 0; i < q.options.length; i++) {
+          var btn = document.createElement('button');
+          btn.className = 'option';
+          btn.textContent = q.options[i];
+          (function (i) {
+            btn.addEventListener('click', function () { choose(i); });
+          })(i);
+          els.options.appendChild(btn);
+        }
+        var ans = state.answers[state.idx];
+        els.rationale.classList.remove('show');
+        els.rationale.textContent = '';
+        if (ans.answered) {
+          reveal(ans.choice, q, false);
+        }
+        els.status.textContent = 'Question ' + (state.idx + 1) + ' of 5. Pick the best answer.';
+        els.back.disabled = (state.idx === 0);
+        els.next.disabled = !ans.answered;
+        if (state.idx === questions.length - 1) {
+          els.next.textContent = 'See score';
+        } else {
+          els.next.textContent = 'Next';
+        }
+        renderDots();
+        els.results.classList.remove('show');
+        fit();
+      }
+
+      function renderDots() {
+        els.dots.innerHTML = '';
+        for (var i = 0; i < questions.length; i++) {
+          var d = document.createElement('div');
+          d.className = 'dot';
+          var a = state.answers[i];
+          if (a.answered) {
+            d.className += a.correct ? ' green' : ' amber';
+          }
+          els.dots.appendChild(d);
+        }
+      }
+
+      function choose(i) {
+        var ans = state.answers[state.idx];
+        if (ans.answered) return;
+        var q = questions[state.idx];
+        ans.answered = true;
+        ans.choice = i;
+        ans.correct = (i === q.correct);
+        if (ans.correct) state.score++;
+        reveal(i, q, true);
+        els.score.textContent = 'Score: ' + state.score + ' / 5';
+        els.next.disabled = false;
+        renderDots();
+        fit();
+      }
+
+      function reveal(choice, q, animate) {
+        var btns = els.options.querySelectorAll('.option');
+        for (var i = 0; i < btns.length; i++) {
+          btns[i].classList.add('locked');
+          if (i === q.correct) {
+            btns[i].classList.add('correct');
+          }
+          if (i === choice && choice !== q.correct) {
+            btns[i].classList.add('wrong');
+          }
+        }
+        els.rationale.textContent = q.rationale;
+        els.rationale.classList.add('show');
+      }
+
+      function showResults() {
+        var s = state.score;
+        var band, msg;
+        if (s === 5) {
+          band = '5 / 5';
+          msg = "Five for five. You have the whole survey. The next time you open a model, you know the move: state what you think, ask it to correct you, do the retrieving yourself.";
+        } else if (s >= 3) {
+          band = s + ' / 5';
+          msg = "Solid. Reread the sections on the central distinction and on self-regulated learning; those are where the leverage is.";
+        } else {
+          band = s + ' / 5';
+          msg = "Worth a reread. The interactive widgets above let you re-test the concepts in your browser.";
+        }
+        els.resultsBand.textContent = band;
+        els.resultsMsg.textContent = msg;
+        els.results.classList.add('show');
+        els.stage.style.display = 'none';
+        fit();
+      }
+
+      function next() {
+        if (state.idx === questions.length - 1) {
+          showResults();
+          els.next.disabled = true;
+          return;
+        }
+        state.idx++;
+        renderQuestion();
+      }
+
+      function back() {
+        if (state.idx > 0) {
+          state.idx--;
+          renderQuestion();
+        }
+      }
+
+      function reset() {
+        state.idx = 0;
+        state.score = 0;
+        state.answers = questions.map(function () { return { answered: false, correct: false }; });
+        els.score.textContent = 'Score: 0 / 5';
+        renderQuestion();
+      }
+
+      els.next.addEventListener('click', next);
+      els.back.addEventListener('click', back);
+      els.reset.addEventListener('click', reset);
+
+      renderQuestion();
+    })();
+  </script>
+</body>
+</html>

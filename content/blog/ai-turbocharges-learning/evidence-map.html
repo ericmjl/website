@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidence map</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: monospace; background:#fff; padding:16px; color:#333; font-size:13px; line-height:1.45; }
+.card { background:#fafafa; border:1px solid #ddd; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); max-width:640px; margin:0 auto; padding:18px; }
+.header { margin-bottom:12px; }
+.title { font-size:15px; font-weight:bold; color:#0066cc; }
+.meta { font-size:11.5px; color:#888; margin-top:3px; }
+.toggle { display:flex; gap:8px; margin-bottom:12px; }
+.btn { font-family:monospace; font-size:11.5px; padding:5px 10px; border:1px solid #ddd; border-radius:5px; background:#fff; color:#666; cursor:pointer; }
+.btn.active { background:#0066cc; color:#fff; border-color:#0066cc; }
+.list { display:flex; flex-direction:column; gap:8px; }
+.study { background:#fff; border:1px solid #e5e5e5; border-radius:6px; overflow:hidden; }
+.row { display:flex; align-items:center; gap:10px; padding:9px 11px; cursor:pointer; }
+.row:hover { background:#f5f8ff; }
+.left { flex:0 0 170px; min-width:0; }
+.name { font-size:12px; font-weight:bold; color:#333; }
+.venue { font-size:11px; color:#888; margin-top:2px; }
+.mid { flex:1; min-width:0; }
+.track { position:relative; height:14px; background:#f0f0f0; border-radius:3px; }
+.zero { position:absolute; top:0; left:50%; width:1px; height:100%; background:#bbb; }
+.fill { position:absolute; top:0; height:100%; border-radius:2px; }
+.right { flex:0 0 120px; text-align:right; font-size:11.5px; font-weight:bold; white-space:nowrap; }
+.detail { display:none; padding:11px 12px; border-top:1px solid #eee; background:#fafafa; font-size:11.5px; color:#444; }
+.detail.open { display:block; }
+.full { font-weight:bold; color:#333; margin-bottom:6px; }
+.line { margin-bottom:4px; }
+.label { color:#888; }
+.take { color:#333; font-weight:bold; margin-top:7px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="title">Evidence map</div>
+    <div class="meta" id="meta">8 studies · click to expand · sorted by effect size</div>
+  </div>
+  <div class="toggle">
+    <button class="btn active" id="btn-effect">By effect size</button>
+    <button class="btn" id="btn-scaffold">By scaffold strength</button>
+  </div>
+  <div class="list" id="list"></div>
+</div>
+<script>
+(function(){
+  'use strict';
+
+  var studies = [
+    {
+      short:'Bastani Turkey (tutored arm)',
+      full:'Bastani et al., Turkey math trial (GPT-4 tutor arm)',
+      venue:'PNAS 2025', n:'~1000 students',
+      effect:1.3, effLabel:'+127% practice',
+      scaffold:'strong', scaffoldRank:3,
+      scaffoldText:'Strong: Socratic, hint-first, withheld answers.',
+      design:'Randomized ~1000 students to plain ChatGPT vs a hinted tutor. Same model, same content, same kids.',
+      take:'\u2192 Same model, opposite outcomes. The prompt design was the only variable that mattered.'
+    },
+    {
+      short:'Bastani Turkey (plain arm)',
+      full:'Bastani et al., Turkey math trial (plain ChatGPT arm)',
+      venue:'PNAS 2025', n:'~1000 students',
+      effect:-0.4, effLabel:'-17% exam',
+      scaffold:'absent', scaffoldRank:1,
+      scaffoldText:'Absent: free use, no guidance.',
+      design:'Same trial as above. The plain-ChatGPT arm scored 17% worse on the exam than students who studied with no AI at all.',
+      take:'\u2192 Free-use ChatGPT was worse than nothing. The harm was real.'
+    },
+    {
+      short:'Harvard physics tutor',
+      full:'Harvard active-learning physics with AI tutor',
+      venue:'2024 (working paper)', n:'194 students',
+      effect:1.0, effLabel:'+1.0 SD',
+      scaffold:'strong', scaffoldRank:3,
+      scaffoldText:'Strong: expert-designed tutor prompts, in-class active learning.',
+      design:'Randomized intro physics students to AI tutor vs active-learning control. Learned roughly double in less time.',
+      take:'\u2192 When experts design the tutor interaction, the effect is comparable to one-on-one human tutoring.'
+    },
+    {
+      short:'Nigeria Copilot (World Bank)',
+      full:'World Bank trial, Nigerian afterschool program with Microsoft Copilot',
+      venue:'2025', n:'~800 students',
+      effect:0.31, effLabel:'+0.31 SD',
+      scaffold:'scaffolded', scaffoldRank:2,
+      scaffoldText:'Scaffolded: tutors grounded AI in curriculum, 6-week structure.',
+      design:'Afterschool program where tutors paired free Copilot with curriculum-grounded practice.',
+      take:'\u2192 1.5 to 2 years of normal schooling compressed into six weeks. The scaffold was the tutor, not the AI.'
+    },
+    {
+      short:'UniDistance MAGMA semester',
+      full:'UniDistance BRIDGE/MAGMA, semester-long personalized AI tutor',
+      venue:'2024', n:'51 students',
+      effect:0.5, effLabel:'+15 pct',
+      scaffold:'strong', scaffoldRank:3,
+      scaffoldText:'Strong: per-student grasp model, spaced retrieval, desirable difficulty.',
+      design:'Per-student neural network modeled mastery of each concept and served questions at each student\u2019s moment of near-forgetting.',
+      take:'\u2192 Spacing, retrieval, and personalization, all automated. The boring learning science works.'
+    },
+    {
+      short:'Taipei problem sequencing',
+      full:'Taipei personalized problem sequencing with AI tutor',
+      venue:'2024', n:'770 students',
+      effect:0.15, effLabel:'+0.15 SD',
+      scaffold:'scaffolded', scaffoldRank:2,
+      scaffoldText:'Scaffolded: only the ORDER of problems was personalized; tutor content identical.',
+      design:'Randomized only the sequencing of practice problems. Content, chatbot, and curriculum identical across arms.',
+      take:'\u2192 Even reordering problems helps. The scaffold around the chatbot may matter more than the chatbot itself.'
+    },
+    {
+      short:'MIT EEG (Your brain on ChatGPT)',
+      full:'MIT, Your brain on ChatGPT (EEG + essay recall)',
+      venue:'2025', n:'54 students',
+      effect:-0.8, effLabel:'83% failed recall',
+      scaffold:'absent', scaffoldRank:1,
+      scaffoldText:'Absent: free ChatGPT use for essay writing.',
+      design:'Students wrote essays across sessions with ChatGPT, search, or no tool. LLM group recalled their own essay worst and showed weakest EEG connectivity.',
+      take:'\u2192 Outsourcing the writing means you do not even encode it. Read the brain-connectivity claim cautiously; the recall claim is solid.'
+    },
+    {
+      short:'Frontiers 2026 meta-analysis',
+      full:'Frontiers, meta-analysis of AI in learning (controlled studies)',
+      venue:'2026', n:'36 studies, 7229 participants',
+      effect:0.499, effLabel:'g = 0.499',
+      scaffold:'moderator', scaffoldRank:1.5,
+      scaffoldText:'Moderator analysis: scaffold is the moderator (the whole point).',
+      design:'Meta-analysis of 36 controlled studies. Teaching method was the only significant moderator.',
+      take:'\u2192 AI helps learning on average. The teaching method wrapped around the AI roughly doubles the effect.'
+    }
+  ];
+
+  function color(s){
+    if(s==='strong' || s==='scaffolded') return '#1a9e5b';
+    if(s==='moderator') return '#c77d00';
+    return '#e85d3a';
+  }
+
+  var currentSort = 'effect';
+  var list = document.getElementById('list');
+
+  function render(){
+    var sorted = studies.slice().sort(function(a,b){
+      return currentSort==='effect' ? b.effect - a.effect : b.scaffoldRank - a.scaffoldRank;
+    });
+    list.innerHTML = '';
+    sorted.forEach(function(s){
+      var c = color(s.scaffold);
+      var halfPct = (Math.abs(s.effect) / 1.5) * 50;
+      var fillStyle = s.effect >= 0
+        ? 'left:50%; width:' + halfPct + '%; background:' + c + ';'
+        : 'left:' + (50 - halfPct) + '%; width:' + halfPct + '%; background:' + c + ';';
+      var study = document.createElement('div');
+      study.className = 'study';
+      study.innerHTML =
+        '<div class="row">' +
+          '<div class="left">' +
+            '<div class="name">' + s.short + '</div>' +
+            '<div class="venue">' + s.venue + '</div>' +
+          '</div>' +
+          '<div class="mid">' +
+            '<div class="track">' +
+              '<div class="zero"></div>' +
+              '<div class="fill" style="' + fillStyle + '"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="right" style="color:' + c + ';">' + s.effLabel + '</div>' +
+        '</div>' +
+        '<div class="detail">' +
+          '<div class="full">' + s.full + '</div>' +
+          '<div class="line"><span class="label">N:</span> ' + s.n + '</div>' +
+          '<div class="line"><span class="label">Design:</span> ' + s.design + '</div>' +
+          '<div class="line"><span class="label">Scaffold:</span> ' + s.scaffoldText + '</div>' +
+          '<div class="take">' + s.take + '</div>' +
+        '</div>';
+      list.appendChild(study);
+    });
+  }
+
+  list.addEventListener('click', function(e){
+    var row = e.target.closest('.row');
+    if(!row) return;
+    var detail = row.nextElementSibling;
+    var isOpen = detail.classList.contains('open');
+    var all = list.querySelectorAll('.detail.open');
+    for(var i = 0; i < all.length; i++){ all[i].classList.remove('open'); }
+    if(!isOpen) detail.classList.add('open');
+    fit();
+  });
+
+  var btnEffect = document.getElementById('btn-effect');
+  var btnScaffold = document.getElementById('btn-scaffold');
+  var meta = document.getElementById('meta');
+
+  btnEffect.addEventListener('click', function(){
+    currentSort = 'effect';
+    btnEffect.classList.add('active');
+    btnScaffold.classList.remove('active');
+    meta.textContent = '8 studies · click to expand · sorted by effect size';
+    render();
+    fit();
+  });
+
+  btnScaffold.addEventListener('click', function(){
+    currentSort = 'scaffold';
+    btnScaffold.classList.add('active');
+    btnEffect.classList.remove('active');
+    meta.textContent = '8 studies · click to expand · sorted by scaffold strength';
+    render();
+    fit();
+  });
+
+  function fit(){
+    try {
+      var f = window.frameElement;
+      f.style.height = '0px';
+      f.style.height = document.body.scrollHeight + 'px';
+    } catch(e){}
+  }
+
+  render();
+  fit();
+})();
+</script>
+</body>
+</html>
