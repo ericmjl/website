@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entanglement Pairs: Independent vs Entangled Coins</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #222;
+    background: transparent;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 14px 16px;
+  }
+  .card h1 {
+    font-size: 15px;
+    margin: 0 0 4px 0;
+    color: #0066cc;
+  }
+  .sub {
+    font-size: 11.5px;
+    color: #999;
+    margin: 0 0 12px 0;
+  }
+  .seg {
+    display: inline-flex;
+    border: 1px solid #0066cc;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .seg button {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 5px 12px;
+    border: none;
+    background: #fff;
+    color: #0066cc;
+    cursor: pointer;
+    border-right: 1px solid #0066cc;
+  }
+  .seg button:last-child { border-right: none; }
+  .seg button.on { background: #0066cc; color: #fff; }
+  .seg button:focus { outline: none; }
+  .ctrl { margin-bottom: 10px; }
+  .ctrl label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 3px;
+    color: #444;
+  }
+  .ctrl .val { color: #0066cc; font-weight: bold; }
+  .ctrl input[type=range] { width: 100%; accent-color: #0066cc; }
+  .row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .btn {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 6px 14px;
+    border: 1px solid #0066cc;
+    border-radius: 5px;
+    background: #0066cc;
+    color: #fff;
+    cursor: pointer;
+  }
+  .btn.ghost { background: #fff; color: #0066cc; }
+  .btn:focus { outline: none; }
+  .latest {
+    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: 5px;
+    margin-bottom: 12px;
+    background: #e7f6ee;
+    color: #1a9e5b;
+    border: 1px solid #bfe6d0;
+  }
+  .latest.zero { background: #fdecea; color: #e85d3a; border-color: #f5c9bf; }
+  .latest b { color: inherit; }
+  .tally-title {
+    font-size: 12px;
+    margin: 0 0 6px 0;
+    color: #444;
+  }
+  .bins { display: flex; flex-direction: column; gap: 5px; margin-bottom: 4px; }
+  .bin { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .bin .lab { width: 28px; color: #555; }
+  .barwrap {
+    flex: 1;
+    height: 14px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar { height: 100%; background: #999; width: 0%; transition: width 0.12s; }
+  .bin .count { width: 40px; text-align: right; color: #666; }
+  .caption {
+    font-size: 11.5px;
+    color: #666;
+    margin: 12px 0 0 0;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    line-height: 1.45;
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Entanglement Pairs</h1>
+  <p class="sub">Two coins, A and B. Compare independent flips with an entangled pair.</p>
+
+  <div class="seg" id="modeSeg">
+    <button type="button" data-mode="independent" class="on">Independent</button>
+    <button type="button" data-mode="entangled">Entangled</button>
+  </div>
+
+  <!-- Independent controls -->
+  <div id="indepBox">
+    <div class="ctrl">
+      <label>Bias of coin A &mdash; p(A = 1) = <span class="val" id="pAv">0.50</span></label>
+      <input type="range" id="pAIndep" min="0" max="1" step="0.01" value="0.5">
+    </div>
+    <div class="ctrl">
+      <label>Bias of coin B &mdash; p(B = 1) = <span class="val" id="pBv">0.50</span></label>
+      <input type="range" id="pB" min="0" max="1" step="0.01" value="0.5">
+    </div>
+  </div>
+
+  <!-- Entangled controls -->
+  <div id="entBox" class="hidden">
+    <div class="ctrl">
+      <label>Bias of coin A &mdash; p(A = 1) = <span class="val" id="pAvE">0.50</span></label>
+      <input type="range" id="pAEnt" min="0" max="1" step="0.01" value="0.5">
+    </div>
+    <label style="display:block;font-size:12px;margin-bottom:3px;color:#444;">Correlation type</label>
+    <div class="seg" id="corrSeg">
+      <button type="button" data-corr="match" class="on">Always match (B = A)</button>
+      <button type="button" data-corr="opposite">Always opposite (B = 1 &minus; A)</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" class="btn" id="measureBtn">Measure</button>
+    <button type="button" class="btn ghost" id="resetBtn">Reset tallies</button>
+  </div>
+
+  <div class="latest zero" id="latest">No measurements yet.</div>
+
+  <p class="tally-title">Joint outcome tally</p>
+  <div class="bins" id="bins"></div>
+
+  <p class="caption" id="caption"></p>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var state = {
+    mode: 'independent',
+    corr: 'match',
+    pAIndep: 0.5,
+    pB: 0.5,
+    pAEnt: 0.5,
+    bins: { '00': 0, '01': 0, '10': 0, '11': 0 }
+  };
+  var BIN_ORDER = ['00', '01', '10', '11'];
+
+  function fit(){
+    var f = window.frameElement;
+    if(!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  function fmt(p){ return Number(p).toFixed(2); }
+
+  function $(id){ return document.getElementById(id); }
+
+  function bernoulli(p){ return (Math.random() < p) ? 1 : 0; }
+
+  function renderBins(){
+    var container = $('bins');
+    container.innerHTML = '';
+    var max = 1;
+    for(var i=0;i<BIN_ORDER.length;i++){ if(state.bins[BIN_ORDER[i]]>max) max = state.bins[BIN_ORDER[i]]; }
+    for(var j=0;j<BIN_ORDER.length;j++){
+      var key = BIN_ORDER[j];
+      var cnt = state.bins[key];
+      var pct = (cnt / max) * 100;
+      var row = document.createElement('div');
+      row.className = 'bin';
+      row.innerHTML =
+        '<span class="lab">A,B=' + key[0] + key[1] + '</span>' +
+        '<span class="barwrap"><span class="bar" style="width:' + pct + '%;"></span></span>' +
+        '<span class="count">' + cnt + '</span>';
+      container.appendChild(row);
+    }
+  }
+
+  function renderLatest(a, b){
+    var el = $('latest');
+    if(a === null){
+      el.className = 'latest zero';
+      el.textContent = 'No measurements yet.';
+      return;
+    }
+    el.className = 'latest';
+    el.innerHTML = 'Latest: <b>A=' + a + ', B=' + b + '</b>';
+  }
+
+  function renderCaption(){
+    var el = $('caption');
+    if(state.mode === 'independent'){
+      el.textContent = 'The two outcomes are independent; the joint distribution factorizes into P(A)\u00B7P(B).';
+    } else {
+      el.textContent = 'Measuring A instantly determines B. The outcomes are NOT independent.';
+    }
+  }
+
+  function measure(){
+    var a, b;
+    if(state.mode === 'independent'){
+      a = bernoulli(state.pAIndep);
+      b = bernoulli(state.pB);
+    } else {
+      a = bernoulli(state.pAEnt);
+      if(state.corr === 'match'){ b = a; } else { b = 1 - a; }
+    }
+    var key = '' + a + b;
+    state.bins[key] += 1;
+    renderLatest(a, b);
+    renderBins();
+    fit();
+  }
+
+  function reset(){
+    for(var i=0;i<BIN_ORDER.length;i++){ state.bins[BIN_ORDER[i]] = 0; }
+    renderLatest(null);
+    renderBins();
+    fit();
+  }
+
+  function setMode(m){
+    state.mode = m;
+    var btns = $('modeSeg').children;
+    for(var i=0;i<btns.length;i++){ btns[i].classList.toggle('on', btns[i].getAttribute('data-mode')===m); }
+    $('indepBox').classList.toggle('hidden', m !== 'independent');
+    $('entBox').classList.toggle('hidden', m !== 'entangled');
+    renderCaption();
+    fit();
+  }
+
+  function setCorr(c){
+    state.corr = c;
+    var btns = $('corrSeg').children;
+    for(var i=0;i<btns.length;i++){ btns[i].classList.toggle('on', btns[i].getAttribute('data-corr')===c); }
+    fit();
+  }
+
+  // Wire up
+  var modeBtns = $('modeSeg').children;
+  for(var mi=0;mi<modeBtns.length;mi++){
+    (function(btn){
+      btn.addEventListener('click', function(){ setMode(btn.getAttribute('data-mode')); });
+    })(modeBtns[mi]);
+  }
+  var corrBtns = $('corrSeg').children;
+  for(var ci=0;ci<corrBtns.length;ci++){
+    (function(btn){
+      btn.addEventListener('click', function(){ setCorr(btn.getAttribute('data-corr')); });
+    })(corrBtns[ci]);
+  }
+
+  $('pAIndep').addEventListener('input', function(){
+    state.pAIndep = parseFloat(this.value);
+    $('pAv').textContent = fmt(state.pAIndep);
+    fit();
+  });
+  $('pB').addEventListener('input', function(){
+    state.pB = parseFloat(this.value);
+    $('pBv').textContent = fmt(state.pB);
+    fit();
+  });
+  $('pAEnt').addEventListener('input', function(){
+    state.pAEnt = parseFloat(this.value);
+    $('pAvE').textContent = fmt(state.pAEnt);
+    fit();
+  });
+
+  $('measureBtn').addEventListener('click', measure);
+  $('resetBtn').addEventListener('click', reset);
+
+  // Init
+  renderBins();
+  renderLatest(null);
+  renderCaption();
+  fit();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qubit Measurement Widget</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    background: #fff;
+    color: #222;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  label.slider-label {
+    font-weight: bold;
+    color: #0066cc;
+    min-width: 84px;
+  }
+  input[type="range"] {
+    flex: 1;
+    min-width: 160px;
+    accent-color: #0066cc;
+  }
+  .pval {
+    font-weight: bold;
+    min-width: 86px;
+    color: #222;
+  }
+  button {
+    font-family: monospace;
+    font-size: 13px;
+    padding: 6px 12px;
+    border: 1px solid #0066cc;
+    border-radius: 4px;
+    background: #fff;
+    color: #0066cc;
+    cursor: pointer;
+    line-height: 1.2;
+    transition: background 0.1s, color 0.1s;
+  }
+  button:hover {
+    background: #0066cc;
+    color: #fff;
+  }
+  button.reset {
+    border-color: #e85d3a;
+    color: #e85d3a;
+  }
+  button.reset:hover {
+    background: #e85d3a;
+    color: #fff;
+  }
+  /* Histogram */
+  .hist {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 48px;
+    height: 180px;
+    padding: 12px 12px 0 12px;
+    margin: 12px 0 8px 0;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+  }
+  .bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 90px;
+    height: 100%;
+  }
+  .bar {
+    width: 70px;
+    transition: height 0.25s ease;
+    border-radius: 4px 4px 0 0;
+  }
+  .bar.zero { background: #999; }
+  .bar.one  { background: #0066cc; }
+  .bar-label {
+    margin-top: 6px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #222;
+    text-align: center;
+  }
+  .bar-count {
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+  }
+  /* Readout */
+  .readout {
+    margin: 8px 0;
+    padding: 8px 10px;
+    background: #e7f6ee;
+    border: 1px solid #bfe6d1;
+    border-radius: 4px;
+    color: #1a9e5b;
+    font-size: 13px;
+  }
+  .readout .theory {
+    color: #555;
+    margin-left: 6px;
+  }
+  .caption {
+    margin-top: 10px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    color: #555;
+    border-top: 1px dashed #ddd;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="row">
+    <label class="slider-label" for="pslider">p (prob of 1):</label>
+    <input type="range" id="pslider" min="0" max="1" step="0.01" value="0.70">
+    <span class="pval" id="pval">p = 0.70</span>
+  </div>
+
+  <div class="row">
+    <button id="btnOnce">Measure once</button>
+    <button id="btnHundred">Measure 100&times;</button>
+    <button class="reset" id="btnReset">Reset</button>
+  </div>
+
+  <div class="hist">
+    <div class="bar-col">
+      <div class="bar zero" id="bar0" style="height:0px;"></div>
+      <div class="bar-label">0</div>
+      <div class="bar-count" id="count0">0</div>
+    </div>
+    <div class="bar-col">
+      <div class="bar one" id="bar1" style="height:0px;"></div>
+      <div class="bar-label">1</div>
+      <div class="bar-count" id="count1">0</div>
+    </div>
+  </div>
+
+  <div class="readout" id="readout">
+    fraction of 1s = &mdash;
+    <span class="theory" id="theory">(expected p = 0.70)</span>
+  </div>
+
+  <div class="caption">
+    A qubit in superposition has no definite value. Each measurement collapses it to 0 or 1; repeat, and the underlying distribution appears.
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var state = { count0: 0, count1: 0, p: 0.70 };
+  var MAX_HIST_PX = 150; // max bar height in px (leaves headroom inside .hist)
+
+  // Elements
+  var slider   = document.getElementById('pslider');
+  var pval     = document.getElementById('pval');
+  var btnOnce  = document.getElementById('btnOnce');
+  var btnHund  = document.getElementById('btnHundred');
+  var btnReset = document.getElementById('btnReset');
+  var bar0     = document.getElementById('bar0');
+  var bar1     = document.getElementById('bar1');
+  var count0el = document.getElementById('count0');
+  var count1el = document.getElementById('count1');
+  var readout  = document.getElementById('readout');
+  var theory   = document.getElementById('theory');
+
+  // IFRAME RESIZE: reset to 0px first, then set to scrollHeight (mandatory).
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  function fmtP(p) {
+    return p.toFixed(2);
+  }
+
+  function updateSliderReadout() {
+    state.p = parseFloat(slider.value);
+    pval.textContent = 'p = ' + fmtP(state.p);
+    theory.textContent = '(expected p = ' + fmtP(state.p) + ')';
+  }
+
+  function updateFraction() {
+    var total = state.count0 + state.count1;
+    if (total === 0) {
+      readout.innerHTML = 'fraction of 1s = &mdash; <span class="theory" id="theory">(expected p = ' + fmtP(state.p) + ')</span>';
+      theory = document.getElementById('theory');
+      return;
+    }
+    var frac = state.count1 / total;
+    readout.innerHTML = 'fraction of 1s = ' + frac.toFixed(3) +
+      ' <span class="theory" id="theory">(expected p = ' + fmtP(state.p) + ')</span>';
+    theory = document.getElementById('theory');
+  }
+
+  function render() {
+    var total = state.count0 + state.count1;
+    var h0, h1;
+    if (total === 0) {
+      h0 = 0; h1 = 0;
+    } else {
+      // Scale so the taller bar fills MAX_HIST_PX
+      var max = Math.max(state.count0, state.count1);
+      h0 = Math.round((state.count0 / max) * MAX_HIST_PX);
+      h1 = Math.round((state.count1 / max) * MAX_HIST_PX);
+    }
+    bar0.style.height = h0 + 'px';
+    bar1.style.height = h1 + 'px';
+    count0el.textContent = state.count0;
+    count1el.textContent = state.count1;
+    updateFraction();
+    fit();
+  }
+
+  // Bernoulli(p) draw: Math.random() < p  => 1, else 0
+  function drawOne(p) {
+    return Math.random() < p ? 1 : 0;
+  }
+
+  function measure(n) {
+    var p = state.p;
+    for (var i = 0; i < n; i++) {
+      if (drawOne(p) === 1) {
+        state.count1 += 1;
+      } else {
+        state.count0 += 1;
+      }
+    }
+    render();
+  }
+
+  function reset() {
+    state.count0 = 0;
+    state.count1 = 0;
+    render();
+  }
+
+  // Wire up events
+  slider.addEventListener('input', function () {
+    updateSliderReadout();
+    updateFraction();
+    fit();
+  });
+  btnOnce.addEventListener('click', function () { measure(1); });
+  btnHund.addEventListener('click', function () { measure(100); });
+  btnReset.addEventListener('click', reset);
+
+  // Init
+  updateSliderReadout();
+  render();
+  fit();
+})();
+</script>
+</body>
+</html>

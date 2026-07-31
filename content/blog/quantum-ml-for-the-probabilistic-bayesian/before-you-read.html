@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before you read</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #222;
+    background: transparent;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .card h2 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: #0066cc;
+  }
+  .intro {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: #555;
+  }
+  ol.qs {
+    list-style: none;
+    counter-reset: q;
+    padding: 0;
+    margin: 0;
+  }
+  ol.qs li {
+    position: relative;
+    padding: 10px 12px 10px 42px;
+    margin: 0 0 8px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    counter-increment: q;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #333;
+  }
+  ol.qs li::before {
+    content: counter(q);
+    position: absolute;
+    left: 10px;
+    top: 9px;
+    width: 24px;
+    height: 24px;
+    background: #0066cc;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 11px;
+    font-weight: bold;
+  }
+  .foot {
+    margin-top: 10px;
+    font-size: 11.5px;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Before you read</h2>
+  <p class="intro">Hold these three questions in mind as you read. The post is built to answer them.</p>
+  <ol class="qs">
+    <li>If a qubit can come out as 0 or 1, what actually makes it different from an ordinary bit?</li>
+    <li>Entanglement gets called &ldquo;spooky action,&rdquo; but what is it, concretely, for someone who thinks in probabilities?</li>
+    <li>I already wrestle with sampling and combinatorial spaces. Where might a quantum computer genuinely help me?</li>
+  </ol>
+  <div class="foot">Come back to these at the end and see how your answers sharpen.</div>
+</div>
+<script>
+(function () {
+  'use strict';
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>
