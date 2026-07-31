@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check your understanding</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #222;
+    background: transparent;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .card h2 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    color: #0066cc;
+  }
+  .progress {
+    font-size: 11.5px;
+    color: #888;
+    margin: 0 0 12px;
+  }
+  .prompt {
+    font-weight: bold;
+    margin: 0 0 10px;
+    font-size: 12.5px;
+    color: #222;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .opt {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+    transition: border-color 0.1s ease;
+    width: 100%;
+  }
+  .opt:hover { border-color: #0066cc; }
+  .opt.correct {
+    background: #e7f6ee;
+    color: #1a9e5b;
+    border-color: #1a9e5b;
+  }
+  .opt.wrong {
+    background: #fdecea;
+    color: #e85d3a;
+    border-color: #e85d3a;
+  }
+  .why {
+    display: none;
+    margin: 2px 0 0;
+    padding: 6px 10px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    border-radius: 0 4px 4px 0;
+  }
+  .why.show { display: block; }
+  .why-c {
+    color: #1a9e5b;
+    background: #e7f6ee;
+    border-left: 3px solid #1a9e5b;
+  }
+  .why-w {
+    color: #c0392b;
+    background: #fdecea;
+    border-left: 3px solid #e85d3a;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    gap: 8px;
+  }
+  .nav button {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 7px 14px;
+    border: 1px solid #0066cc;
+    background: #fff;
+    color: #0066cc;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .nav button:hover:not(:disabled) {
+    background: #0066cc;
+    color: #fff;
+  }
+  .nav button:disabled {
+    opacity: 0.4;
+    cursor: default;
+    border-color: #bbb;
+    color: #999;
+  }
+  .results {
+    display: none;
+    margin-top: 4px;
+    padding: 12px;
+    background: #eef4ff;
+    border: 1px solid #cfe0ff;
+    border-radius: 6px;
+    color: #0066cc;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .results.show { display: block; }
+  .results .sub {
+    color: #555;
+    font-size: 11.5px;
+    margin-top: 4px;
+    font-weight: normal;
+  }
+  .results .again {
+    margin-top: 10px;
+    font-family: monospace;
+    font-size: 12px;
+    padding: 7px 14px;
+    border: 1px solid #0066cc;
+    background: #fff;
+    color: #0066cc;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .results .again:hover { background: #0066cc; color: #fff; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Check your understanding</h2>
+  <div id="progress" class="progress"></div>
+  <div id="qbody"></div>
+  <div id="results" class="results"></div>
+  <div id="nav" class="nav">
+    <button id="back">&larr; Back</button>
+    <button id="next">Next &rarr;</button>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  var QUESTIONS = [
+    {
+      prompt: "A qubit in superposition is best described as...",
+      options: [
+        { text: "a probabilistic bit that takes a definite value only when measured", correct: true,
+          why: "A qubit holds a probability distribution over 0 and 1; measuring collapses it to one outcome." },
+        { text: "a bit that is secretly 0 until someone looks", correct: false,
+          why: "A qubit isn't hiding a definite value. Before measurement its state is genuinely probabilistic, not merely unknown." },
+        { text: "two classical bits compressed into one", correct: false,
+          why: "One qubit represents a distribution over two states, not two independently stored bits." }
+      ]
+    },
+    {
+      prompt: "Two qubits are entangled. This means...",
+      options: [
+        { text: "their measurement outcomes are not independent", correct: true,
+          why: "Entanglement is non-independence: one outcome is correlated with the other." },
+        { text: "they are physically far apart", correct: false,
+          why: "Distance has nothing to do with it. Entanglement is about correlation between outcomes, not location." },
+        { text: "they always both read 0", correct: false,
+          why: "Entangled qubits can be correlated in many ways (always match, always oppose); they are not forced to both be 0." }
+      ]
+    },
+    {
+      prompt: "Why is sampling hard over combinatorial spaces?",
+      options: [
+        { text: "the number of configurations grows exponentially with size", correct: true,
+          why: "The state space is exponentially large, so enumeration is hopeless and you must sample." },
+        { text: "computers are too slow at arithmetic", correct: false,
+          why: "The bottleneck is the size of the space, not the speed of arithmetic." },
+        { text: "probability theory does not apply", correct: false,
+          why: "Probability applies fine. The hard part is reaching the relevant regions of a huge space." }
+      ]
+    },
+    {
+      prompt: "In the Bayesian view used here, a quantum computer's distinctive strength is...",
+      options: [
+        { text: "sampling from distributions over spaces too large to enumerate", correct: true,
+          why: "The post frames the quantum computer as a specialized sampler for huge combinatorial spaces." },
+        { text: "doing arithmetic faster than a laptop", correct: false,
+          why: "The advantage isn't raw arithmetic speed; it's a sampling structure that classical machines lack." },
+        { text: "storing more bits per chip", correct: false,
+          why: "The point isn't density of storage; it's holding and sampling a superposition over many states." }
+      ]
+    }
+  ];
+
+  function shuffleOptions() {
+    QUESTIONS.forEach(function (q) {
+      for (var i = q.options.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = q.options[i]; q.options[i] = q.options[j]; q.options[j] = t;
+      }
+    });
+  }
+  shuffleOptions();
+
+  var idx = 0;
+  var answers = QUESTIONS.map(function () { return null; });
+
+  var progressEl = document.getElementById('progress');
+  var bodyEl = document.getElementById('qbody');
+  var navEl = document.getElementById('nav');
+  var backBtn = document.getElementById('back');
+  var nextBtn = document.getElementById('next');
+  var resultsEl = document.getElementById('results');
+
+  function clearNode(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+  function scoreCount() {
+    var c = 0;
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      var a = answers[i];
+      if (a !== null && QUESTIONS[i].options[a].correct) c++;
+    }
+    return c;
+  }
+
+  function render() {
+    clearNode(bodyEl);
+    resultsEl.classList.remove('show');
+
+    if (idx >= QUESTIONS.length) {
+      progressEl.textContent = 'Results';
+      navEl.style.display = 'none';
+      var c = scoreCount();
+      resultsEl.innerHTML = '';
+      var line = document.createElement('div');
+      line.textContent = 'You got ' + c + ' of ' + QUESTIONS.length + ' correct.';
+      resultsEl.appendChild(line);
+      var sub = document.createElement('div');
+      sub.className = 'sub';
+      if (c === QUESTIONS.length) sub.textContent = 'A clean sweep. Nicely done.';
+      else if (c >= Math.ceil(QUESTIONS.length / 2)) sub.textContent = 'Solid. Use Back to revisit the ones you missed.';
+      else sub.textContent = 'Worth another pass. Hit "try again" and review the explanations.';
+      resultsEl.appendChild(sub);
+      var again = document.createElement('button');
+      again.className = 'again';
+      again.textContent = 'Try again';
+      again.addEventListener('click', function () {
+        for (var i = 0; i < answers.length; i++) answers[i] = null;
+        idx = 0;
+        render();
+      });
+      resultsEl.appendChild(again);
+      resultsEl.classList.add('show');
+      fit();
+      return;
+    }
+
+    navEl.style.display = '';
+    progressEl.textContent = 'Question ' + (idx + 1) + ' of ' + QUESTIONS.length;
+
+    var q = QUESTIONS[idx];
+    var answered = answers[idx] !== null;
+
+    var prompt = document.createElement('div');
+    prompt.className = 'prompt';
+    prompt.textContent = q.prompt;
+    bodyEl.appendChild(prompt);
+
+    var options = document.createElement('div');
+    options.className = 'options';
+
+    q.options.forEach(function (opt, oi) {
+      var btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.textContent = opt.text;
+      btn.addEventListener('click', function () {
+        answers[idx] = oi;
+        render();
+      });
+      if (answered) {
+        if (oi === answers[idx]) {
+          btn.classList.add(opt.correct ? 'correct' : 'wrong');
+        } else if (opt.correct) {
+          btn.classList.add('correct');
+        }
+      }
+      options.appendChild(btn);
+
+      var why = document.createElement('div');
+      why.className = 'why ' + (opt.correct ? 'why-c' : 'why-w');
+      why.textContent = opt.why;
+      if (answered && oi === answers[idx]) why.classList.add('show');
+      options.appendChild(why);
+    });
+    bodyEl.appendChild(options);
+
+    backBtn.disabled = (idx === 0);
+    nextBtn.disabled = !answered;
+    nextBtn.textContent = (idx === QUESTIONS.length - 1) ? 'See results' : 'Next';
+    fit();
+  }
+
+  backBtn.addEventListener('click', function () {
+    if (idx > 0) { idx--; render(); }
+  });
+  nextBtn.addEventListener('click', function () {
+    if (answers[idx] === null) return;
+    idx++;
+    render();
+  });
+
+  render();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>

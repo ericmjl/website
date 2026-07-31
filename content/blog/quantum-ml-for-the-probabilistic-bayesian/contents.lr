@@ -1,0 +1,84 @@
+title: Quantum ML, for the Probabilistic Bayesian
+---
+author: Eric J. Ma
+---
+body:
+
+This is a post I have been wanting to write for a while. As of 2026, I have been working much more closely with my teammate Alexey Galda, and part of that has been one-on-one tutoring on the foundations of quantum computing. (To be able to learn from someone well-trained, in a one-on-one setting, is a real privilege!)
+
+Because I learn best by teaching, and because retrieval practice is the best way to make knowledge stick, I decided to write up what I have absorbed so far. I will readily admit that plenty of details are still beyond my grasp. Even so, I want to leave you with enough of a "[fat marker sketch](https://basecamp.com/shapeup/1.3-chapter-04#fat-marker-sketches)" of the ideas to reason about where quantum computing might genuinely help.
+
+Here is the angle I am going to take. I have been doing Bayesian modeling for years, which means I have spent a lot of time thinking about probability distributions, sampling, and inference over spaces too big to enumerate. That turns out to be a surprisingly good lens for quantum computing. So that is how I am going to explain it: quantum mechanics as seen by a probabilistic Bayesian.
+
+If you're ready for the ride, here we go!
+
+<iframe src="before-you-read.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+## Qubits
+
+### The fundamentals
+
+Let's start with the basic vocabulary. If you're already comfortable with qubits and superposition, feel free to skip ahead.
+
+Qubits are the building blocks of quantum computing. They are analogous to bits, except that they are probabilistic entities: a qubit can represent a *superposition* of both 0 and 1 until it is measured, at which point it "collapses" to a readout of either 0 or 1. (How superposition actually arises, and how qubits are physically realized on hardware, is outside what I currently understand.)
+
+To make this concrete: a single qubit represents a superposition over two states, and collapses to one of them when measured. Two qubits span a space of four states, and collapse to one of four. Put into a table for maximum explicitness:
+
+| Number of qubits | Total possible states | Example states                         |
+| ---------------- | --------------------- | -------------------------------------- |
+| 1                | 2                     | 0, 1                                   |
+| 2                | 4                     | 00, 01, 10, 11                         |
+| 3                | 8                     | 000, 001, 010, 011, 100, 101, 110, 111 |
+| n                | 2^n                   | All binary strings of length n         |
+
+If you looked only at that table, you'd be tempted to say, "yeah, but a von Neumann computer can do all of that too... so what's the difference?"
+
+The difference is in the probabilities.
+
+### Probabilistic bits
+
+My current mental model is that qubits are *probabilistic* bits. And while you can set them up to act independently, you can also design them to be non-independent, which is where things get interesting.
+
+A useful analogy is coin flips. Each qubit is a coin. Imagine we are in a weightless environment and we flip a coin. A coin that is spinning is like a qubit in superposition: there is some probability it lands heads and some probability it lands tails. Measuring the qubit is me reaching out and catching the coin mid-spin, revealing a heads or a tails drawn from its probability distribution.
+
+The natural extension is two coins spinning, each with its own distribution. Then three. Then *n*.
+
+<iframe src="qubit-measurement.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+### Entanglement
+
+Entanglement, in this framing, is when the state of one qubit cannot be described independently of another. When two qubits are entangled, measuring one instantly tells you something about the other, no matter how far apart they are. This non-local correlation is a key resource in quantum computing, and it has no clean classical analogue. For a probabilistic Bayesian, think of it as two coins where reading one immediately tells you what the other shows.
+
+<iframe src="entanglement-pairs.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+This is the point where the Bayesian in me perks up. The core problem in Bayesian inference never changes: your posterior may be intractable, so you sample. But sampling is hard! Your chains may not mix, or there may be divergences, and if part of your problem lives in a combinatorial space, good luck with the approximations.
+
+What if you didn't have to enumerate a combinatorial space at all, but instead let your sampler live in superposition over the whole of it?
+
+That's the quantum computer's party trick. It isn't a magical exponential speedup for everything. But it can be viewed as an MCMC sampler, purpose-built for exactly the kind of problem we already wrestle with: inference over spaces too big to enumerate classically.
+
+<iframe src="check-understanding.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+## The takeaway
+
+Strip away the physics and here is the picture I want you to walk away with. A qubit is a probabilistic bit. A register of qubits is a joint probability distribution over a very large space of bitstrings. Entanglement is non-independence between those bits. And the quantum computer's distinctive move is that it can sit in a state spread over that whole combinatorial space at once, and then be sampled from.
+
+If you're a probabilistic Bayesian, none of that should sound alien. It should sound like a sampler. Not a faster laptop, and not a magic box that solves everything; a device that is very good at exactly the thing we already struggle with classically, representing and sampling from distributions over spaces too big to enumerate.
+
+Many details here are still beyond my grasp. But holding this mental model has already changed how I read about quantum computing. Where I used to see mysterious physics, I now see sampling problems, clever encodings, and the same old fight against combinatorial explosion, just on different hardware. I hope it does the same for you.
+---
+pub_date: 2026-07-30
+---
+twitter_handle: ericmjl
+---
+summary: I have been learning quantum computing from a colleague, and the best way I have found to make it stick is to explain it through the lens I know best: probability and sampling. In this post I treat qubits as probabilistic bits, entanglement as non-independence, and the quantum computer as a specialized sampler over combinatorial spaces too big to enumerate classically. If you have ever fought with an MCMC sampler, a lot of this will sound familiar.
+---
+tags:
+
+qubits
+entanglement
+sampling
+probability
+quantum
+machine learning
+bayesian
