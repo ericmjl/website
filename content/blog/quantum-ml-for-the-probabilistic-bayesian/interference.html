@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interference</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: monospace; font-size: 13px; line-height: 1.5;
+    color: #222; background: transparent;
+  }
+  .card {
+    background: #fafafa; border: 1px solid #ddd; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px; margin: 0 auto; padding: 16px;
+  }
+  .card h1 { font-size: 15px; margin: 0 0 4px; color: #0066cc; }
+  .sub { font-size: 11.5px; color: #999; margin: 0 0 12px; }
+  .seg { display: inline-flex; border: 1px solid #0066cc; border-radius: 5px; overflow: hidden; margin: 0 0 12px; }
+  .seg button {
+    font-family: monospace; font-size: 11.5px; padding: 5px 10px;
+    border: none; background: #fff; color: #0066cc; cursor: pointer;
+    border-right: 1px solid #0066cc;
+  }
+  .seg button:last-child { border-right: none; }
+  .seg button.on { background: #0066cc; color: #fff; }
+  .seg button:focus { outline: none; }
+  .ctrl { margin-bottom: 12px; }
+  .ctrl label { display: block; font-size: 12px; margin-bottom: 3px; color: #444; }
+  .ctrl .val { color: #0066cc; font-weight: bold; }
+  .ctrl input[type=range] { width: 100%; accent-color: #0066cc; }
+  .legend { font-size: 11px; color: #666; margin: 0 0 6px; }
+  .legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin: 0 3px 0 8px; }
+  .sw.b { background: #0066cc; } .sw.r { background: #e85d3a; }
+  .rowtitle { font-size: 11.5px; color: #555; margin: 10px 0 4px; }
+  .hist {
+    display: flex; align-items: flex-end; justify-content: center; gap: 8px;
+    height: 120px; padding: 10px 6px 0; margin: 0 0 6px;
+    background: #fff; border: 1px solid #eee; border-radius: 6px;
+  }
+  .bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; flex: 1 1 0; min-width: 0; }
+  .bar { width: 80%; max-width: 38px; transition: height 0.2s ease; border-radius: 4px 4px 0 0; }
+  .bar.b { background: #0066cc; } .bar.r { background: #e85d3a; }
+  .bar.empty { background: #e8e8e8; }
+  .bar-label { margin-top: 5px; font-weight: bold; font-size: 11px; color: #222; }
+  .bar-num { font-size: 10px; color: #777; }
+  .caption { font-size: 11.5px; color: #555; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Interference: shaping a 3-qubit distribution</h1>
+  <p class="sub">Path 1 adds a flat +1 to every outcome. Path 2 adds a signed pattern, scaled by &alpha;. Where they agree they reinforce; where they oppose they cancel.</p>
+
+  <div class="seg" id="presetSeg">
+    <button type="button" data-preset="parity" class="on">parity pattern</button>
+    <button type="button" data-preset="firstbit">first-bit split</button>
+    <button type="button" data-preset="spotlight">spotlight on 000</button>
+  </div>
+
+  <div class="ctrl">
+    <label>Path 2 strength &alpha; = <span class="val" id="alphaV">0.00</span> &nbsp;<span id="alphaNote" style="color:#999;">(0 = Path 2 off; +1 reinforce / &minus;1 cancel)</span></label>
+    <input type="range" id="alpha" min="-1" max="1" step="0.01" value="0">
+  </div>
+
+  <div class="legend"><span class="sw b"></span>paths reinforce (same sign)<span class="sw r"></span>paths cancel (opposite sign)</div>
+
+  <div class="rowtitle">Combined amplitude (1 + &alpha;&middot;sign)</div>
+  <div class="hist" id="histA"></div>
+
+  <div class="rowtitle">Probability = amplitude&sup2;</div>
+  <div class="hist" id="histP"></div>
+
+  <p class="caption">Probability is the squared amplitude, so canceled outcomes vanish entirely. Sweep &alpha; across zero and watch the red (opposite-sign) outcomes disappear while the blue ones brighten, then swap as you cross to the other side. Classical probabilities cannot cancel; only signed amplitudes can. That is interference, and it is how a quantum program concentrates probability on the answer.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  var MAX_A = 100; // amplitude bar px (amplitude ranges 0..2)
+  var MAX_P = 100; // probability bar px (normalized to current max)
+
+  function popcount(x) { var c = 0; while (x) { c += x & 1; x >>= 1; } return c; }
+
+  var PRESETS = {
+    parity: function (i) { return (popcount(i) % 2 === 0) ? 1 : -1; },
+    firstbit: function (i) { return (i < 4) ? 1 : -1; },
+    spotlight: function (i) { return (i === 0) ? 1 : -1; }
+  };
+
+  var state = { preset: 'parity', alpha: 0 };
+
+  function labels() {
+    var arr = [];
+    for (var i = 0; i < 8; i++) arr.push(i.toString(2).padStart(3, '0'));
+    return arr;
+  }
+
+  function compute() {
+    var sfn = PRESETS[state.preset];
+    var amps = [], probs = [], sum2 = 0;
+    for (var i = 0; i < 8; i++) {
+      var s = sfn(i);
+      var a = 1 + state.alpha * s;
+      amps.push({ a: a, s: s });
+      sum2 += a * a;
+    }
+    for (var j = 0; j < 8; j++) probs.push(amps[j].a * amps[j].a / sum2);
+    return { amps: amps, probs: probs };
+  }
+
+  function bar(parent, heightPx, cls) {
+    var col = document.createElement('div');
+    col.className = 'bar-col';
+    var b = document.createElement('div');
+    b.className = 'bar ' + cls;
+    b.style.height = heightPx + 'px';
+    col.appendChild(b);
+    return col;
+  }
+
+  function render() {
+    var r = compute();
+    var labs = labels();
+    var histA = document.getElementById('histA');
+    var histP = document.getElementById('histP');
+    histA.innerHTML = '';
+    histP.innerHTML = '';
+    var maxProb = 0;
+    for (var m = 0; m < 8; m++) if (r.probs[m] > maxProb) maxProb = r.probs[m];
+
+    for (var i = 0; i < 8; i++) {
+      var s = r.amps[i].s;
+      var aCls = s === 1 ? 'b' : 'r';
+      // amplitude height: a in [0,2] -> 0..MAX_A
+      var ah = Math.round((r.amps[i].a / 2) * MAX_A);
+      if (ah < 1) ah = 1;
+      var colA = bar(histA, ah, aCls);
+      var labA = document.createElement('div'); labA.className = 'bar-label'; labA.textContent = labs[i]; colA.appendChild(labA);
+      histA.appendChild(colA);
+
+      var ph = (maxProb > 0) ? Math.round((r.probs[i] / maxProb) * MAX_P) : 0;
+      var pCls = (r.probs[i] < 1e-9) ? 'empty' : (s === 1 ? 'b' : 'r');
+      var colP = bar(histP, ph, pCls);
+      var labP = document.createElement('div'); labP.className = 'bar-label'; labP.textContent = labs[i]; colP.appendChild(labP);
+      var numP = document.createElement('div'); numP.className = 'bar-num'; numP.textContent = (r.probs[i] * 100).toFixed(0) + '%'; colP.appendChild(numP);
+      histP.appendChild(colP);
+    }
+    fit();
+  }
+
+  document.getElementById('alpha').addEventListener('input', function () {
+    state.alpha = parseFloat(this.value);
+    document.getElementById('alphaV').textContent = state.alpha.toFixed(2);
+    render();
+  });
+
+  var pbtns = document.getElementById('presetSeg').children;
+  for (var k = 0; k < pbtns.length; k++) {
+    (function (btn) {
+      btn.addEventListener('click', function () {
+        state.preset = btn.getAttribute('data-preset');
+        for (var i = 0; i < pbtns.length; i++) pbtns[i].classList.toggle('on', pbtns[i] === btn);
+        render();
+      });
+    })(pbtns[k]);
+  }
+
+  render();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>

@@ -7,83 +7,68 @@
 <style>
   * { box-sizing: border-box; }
   html, body {
-    margin: 0;
-    padding: 0;
-    font-family: monospace;
-    font-size: 13px;
-    line-height: 1.5;
-    color: #222;
-    background: transparent;
+    margin: 0; padding: 0;
+    font-family: monospace; font-size: 13px; line-height: 1.5;
+    color: #222; background: transparent;
   }
   .card {
-    background: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background: #fafafa; border: 1px solid #ddd; border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 16px;
+    max-width: 640px; margin: 0 auto; padding: 16px;
   }
-  .card h2 {
-    margin: 0 0 6px;
-    font-size: 15px;
-    color: #0066cc;
+  .card h2 { margin: 0 0 4px; font-size: 15px; color: #0066cc; }
+  .kicker { font-size: 11.5px; color: #888; margin: 0 0 12px; }
+  .progress { font-size: 11.5px; color: #888; margin: 0 0 12px; }
+  .prompt { font-weight: bold; margin: 0 0 10px; font-size: 12.5px; color: #222; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    display: block; width: 100%; text-align: left;
+    padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;
+    background: #fff; color: #333; cursor: pointer;
+    font-family: monospace; font-size: 12px; line-height: 1.45;
+    transition: border-color 0.1s ease;
   }
-  .intro {
-    margin: 0 0 12px;
-    font-size: 12.5px;
-    color: #555;
+  .opt:hover { border-color: #0066cc; }
+  .opt.sel { border-color: #0066cc; background: #eef4ff; color: #0066cc; }
+  .fb {
+    display: none; margin: 2px 0 0; padding: 6px 10px;
+    font-size: 11.5px; line-height: 1.45; color: #0066cc;
+    background: #eef4ff; border-left: 3px solid #0066cc; border-radius: 0 4px 4px 0;
   }
-  ol.qs {
-    list-style: none;
-    counter-reset: q;
-    padding: 0;
-    margin: 0;
+  .fb.show { display: block; }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 8px; }
+  .nav button {
+    font-family: monospace; font-size: 12px; padding: 7px 14px;
+    border: 1px solid #0066cc; background: #fff; color: #0066cc;
+    border-radius: 6px; cursor: pointer;
   }
-  ol.qs li {
-    position: relative;
-    padding: 10px 12px 10px 42px;
-    margin: 0 0 8px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    counter-increment: q;
-    font-size: 12.5px;
-    line-height: 1.5;
-    color: #333;
+  .nav button:hover:not(:disabled) { background: #0066cc; color: #fff; }
+  .nav button:disabled { opacity: 0.4; cursor: default; border-color: #bbb; color: #999; }
+  .closing {
+    display: none; margin-top: 4px; padding: 12px;
+    background: #eef4ff; border: 1px solid #cfe0ff; border-radius: 6px;
+    color: #0066cc; font-size: 13px;
   }
-  ol.qs li::before {
-    content: counter(q);
-    position: absolute;
-    left: 10px;
-    top: 9px;
-    width: 24px;
-    height: 24px;
-    background: #0066cc;
-    color: #fff;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 24px;
-    font-size: 11px;
-    font-weight: bold;
+  .closing.show { display: block; }
+  .closing .csub { color: #555; font-size: 11.5px; margin-top: 4px; }
+  .closing .again {
+    margin-top: 10px; font-family: monospace; font-size: 12px; padding: 7px 14px;
+    border: 1px solid #0066cc; background: #fff; color: #0066cc; border-radius: 6px; cursor: pointer;
   }
-  .foot {
-    margin-top: 10px;
-    font-size: 11.5px;
-    color: #888;
-  }
+  .closing .again:hover { background: #0066cc; color: #fff; }
 </style>
 </head>
 <body>
 <div class="card">
   <h2>Before you read</h2>
-  <p class="intro">Hold these three questions in mind as you read. The post is built to answer them.</p>
-  <ol class="qs">
-    <li>If a qubit can come out as 0 or 1, what actually makes it different from an ordinary bit?</li>
-    <li>Entanglement gets called &ldquo;spooky action,&rdquo; but what is it, concretely, for someone who thinks in probabilities?</li>
-    <li>I already wrestle with sampling and combinatorial spaces. Where might a quantum computer genuinely help me?</li>
-  </ol>
-  <div class="foot">Come back to these at the end and see how your answers sharpen.</div>
+  <p class="kicker">A quick warm-up. Pick the answer that feels closest. None of them is the whole story.</p>
+  <div id="progress" class="progress"></div>
+  <div id="qbody"></div>
+  <div id="closing" class="closing"></div>
+  <div id="nav" class="nav">
+    <button id="back">&larr; Back</button>
+    <button id="next">Next &rarr;</button>
+  </div>
 </div>
 <script>
 (function () {
@@ -94,6 +79,133 @@
     f.style.height = '0px';
     f.style.height = document.body.scrollHeight + 'px';
   }
+
+  var QUESTIONS = [
+    {
+      prompt: "What makes a qubit different from a classical bit?",
+      options: [
+        { text: "It can be 0 and 1 at the same time.",
+          fb: "You have the superposition idea, but 'at the same time' oversells it. A qubit holds a probability over 0 and 1, and collapses to one on measurement. The post sharpens this." },
+        { text: "It holds a probability distribution over 0 and 1.",
+          fb: "Close, and for a single qubit this is basically right. What it leaves out is the real payoff: many qubits form a joint distribution. Read on." },
+        { text: "It's just a bit that's faster to compute with.",
+          fb: "This is the common 'quantum equals faster' instinct, and it misses the point. The difference is probabilistic state, not raw speed." },
+        { text: "It's a bit we're simply uncertain about.",
+          fb: "You are reaching for probability, but a qubit is not just unknown-to-us classical uncertainty. Its pre-measurement state is genuinely probabilistic." }
+      ]
+    },
+    {
+      prompt: "What is entanglement, in plain terms?",
+      options: [
+        { text: "A spooky link that acts instantly across any distance.",
+          fb: "That is the pop-sci framing, and the instant correlation is real. But 'spooky' hides the substance: non-independence between outcomes." },
+        { text: "Two qubits that always give the same result.",
+          fb: "That is one flavor of entanglement. It is incomplete though: entangled qubits can also be set to always oppose. The essence is correlation, not always-equal." },
+        { text: "A connection that lets you send information faster than light.",
+          fb: "Tempting, but no. Entanglement cannot transmit information. The post clarifies what it does and does not let you do." },
+        { text: "A statistical dependence between qubit outcomes.",
+          fb: "That is the right statistical instinct. What is missing is that this particular dependence has no classical analogue, which the post explains." }
+      ]
+    },
+    {
+      prompt: "If you already do Bayesian sampling (MCMC and friends), where might a quantum computer actually help?",
+      options: [
+        { text: "It runs your MCMC chains faster.",
+          fb: "The 'faster' instinct is natural, but a quantum computer is not a speedier MCMC. It samples over combinatorial spaces in a fundamentally different way." },
+        { text: "It can hold and sample a distribution over a space too big to enumerate.",
+          fb: "This is the core of the post's argument. What is still incomplete is the 'how', plus the honest caveat that it is not magic for every problem." },
+        { text: "It replaces the need for sampling entirely.",
+          fb: "This overstates it. A quantum computer does not remove sampling; it changes which distributions are reachable." },
+        { text: "It's mainly useful for cryptography, not statistics.",
+          fb: "Cryptography is the famous use case, but it is not the whole story. This post makes a statistical, sampling-flavored case." }
+      ]
+    }
+  ];
+
+  var idx = 0;
+  var answers = QUESTIONS.map(function () { return null; });
+
+  var progressEl = document.getElementById('progress');
+  var bodyEl = document.getElementById('qbody');
+  var navEl = document.getElementById('nav');
+  var backBtn = document.getElementById('back');
+  var nextBtn = document.getElementById('next');
+  var closingEl = document.getElementById('closing');
+
+  function clearNode(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+  function render() {
+    clearNode(bodyEl);
+    closingEl.classList.remove('show');
+    closingEl.innerHTML = '';
+
+    if (idx >= QUESTIONS.length) {
+      progressEl.textContent = 'Onward';
+      navEl.style.display = 'none';
+      var top = document.createElement('div');
+      top.textContent = 'Nice, you have taken a first pass.';
+      closingEl.appendChild(top);
+      var sub = document.createElement('div');
+      sub.className = 'csub';
+      sub.textContent = 'Every option above was partly right and subtly incomplete by design; that is the point. Read on, and watch each gap get filled in.';
+      closingEl.appendChild(sub);
+      var again = document.createElement('button');
+      again.className = 'again';
+      again.textContent = 'Start over';
+      again.addEventListener('click', function () {
+        for (var i = 0; i < answers.length; i++) answers[i] = null;
+        idx = 0;
+        render();
+      });
+      closingEl.appendChild(again);
+      closingEl.classList.add('show');
+      fit();
+      return;
+    }
+
+    navEl.style.display = '';
+    progressEl.textContent = 'Warm-up question ' + (idx + 1) + ' of ' + QUESTIONS.length;
+
+    var q = QUESTIONS[idx];
+    var answered = answers[idx] !== null;
+
+    var prompt = document.createElement('div');
+    prompt.className = 'prompt';
+    prompt.textContent = q.prompt;
+    bodyEl.appendChild(prompt);
+
+    var options = document.createElement('div');
+    options.className = 'options';
+    q.options.forEach(function (opt, oi) {
+      var btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.textContent = opt.text;
+      btn.addEventListener('click', function () { answers[idx] = oi; render(); });
+      if (answered && oi === answers[idx]) btn.classList.add('sel');
+      options.appendChild(btn);
+
+      var fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.textContent = opt.fb;
+      if (answered && oi === answers[idx]) fb.classList.add('show');
+      options.appendChild(fb);
+    });
+    bodyEl.appendChild(options);
+
+    backBtn.disabled = (idx === 0);
+    nextBtn.disabled = !answered;
+    nextBtn.textContent = (idx === QUESTIONS.length - 1) ? 'Finish' : 'Next';
+    fit();
+  }
+
+  backBtn.addEventListener('click', function () { if (idx > 0) { idx--; render(); } });
+  nextBtn.addEventListener('click', function () {
+    if (answers[idx] === null) return;
+    idx++;
+    render();
+  });
+
+  render();
   fit();
   window.addEventListener('load', fit);
 })();
