@@ -51,7 +51,19 @@ Entanglement, in this framing, is when the state of one qubit cannot be describe
 
 <iframe src="entanglement-pairs.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-This is the point where the Bayesian in me perks up. The core problem in Bayesian inference never changes: your posterior may be intractable, so you sample. But sampling is hard! Your chains may not mix, or there may be divergences, and if part of your problem lives in a combinatorial space, good luck with the approximations.
+### Interference
+
+Here is the part that genuinely breaks from classical probability. I have been quietly treating a qubit's weights as probabilities. They are not. They are *amplitudes*, and amplitudes can be negative. The probability of an outcome is the square of the size of its amplitude.
+
+Because amplitudes have sign, different paths to the same outcome can reinforce or cancel. Two positive probabilities can only add; two amplitudes of opposite sign can subtract all the way to zero. That cancellation is *interference*, and it has no classical analogue. Classical probability distributions are built from non-negative numbers that pile up; quantum states are built from signed amplitudes that can interfere.
+
+This is the engine that does the work. A quantum program is a sequence of gates whose whole job is to arrange interference, reinforcing the amplitudes of outcomes you want and canceling the ones you do not. The result is a probability distribution deliberately shaped so that the good answers are likely and the bad ones have vanished.
+
+If you are a Bayesian, frame it like this. Your prior and likelihood shape a posterior; a quantum circuit's gates shape amplitudes. Then, to read the answer out, you measure, and measurement is just drawing a sample from that shaped distribution. That is the bridge to everything that follows.
+
+<iframe src="interference.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+And here is where it finally clicks for me, because sampling is already the bottleneck in my own work. The core problem in Bayesian inference never changes: your posterior may be intractable, so you sample. But sampling is hard! Your chains may not mix, or there may be divergences, and if part of your problem lives in a combinatorial space, good luck with the approximations.
 
 What if you didn't have to enumerate a combinatorial space at all, but instead let your sampler live in superposition over the whole of it?
 
