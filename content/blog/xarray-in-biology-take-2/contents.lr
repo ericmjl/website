@@ -6,7 +6,7 @@ body:
 
 One year ago at SciPy 2025 I wrote [a post](https://ericmjl.github.io/blog/2025/7/15/how-to-use-xarray-for-unified-laboratory-data-storage/) arguing that laboratory data should live in a single xarray `Dataset`, with sample IDs as the shared coordinate system. The spark for that post was [Ian Hunt-Isaak's SciPy 2025 talk](https://cfp.scipy.org/scipy2025/talk/AARA39/) on xarray across biology. The hunch back then was this: store measurements, features, model outputs, and train/test splits in one labeled n-dimensional container, and the index-matching tax disappears.
 
-At this year's SciPy 2026, I closed the loop! During the tutorial, I wrote an [`xarray-linked-data` skill](https://github.com/ericmjl/scientific-python-skills/tree/main/skills/xarray-linked-data) for Ian's `scientific-python-skills` repo. That hunch from a year ago has now become an agent skill, with Marimo notebook examples to steer agents in the right direction on novel situations. Developing the skill has clarified where the thesis holds and where it still needs work, and that's what I'd like to document here.
+At this year's SciPy 2026, I closed the loop! During the tutorial, I wrote an [`xarray-linked-data` skill](https://github.com/ericmjl/scientific-python-skills/blob/add-xarray-linked-data-skill/skills/xarray-linked-data/SKILL.md) for Ian's `scientific-python-skills` repo. That hunch from a year ago has now become an agent skill, with Marimo notebook examples to steer agents in the right direction on novel situations. Developing the skill has clarified where the thesis holds and where it still needs work, and that's what I'd like to document here.
 
 ## The thesis, restated
 
@@ -34,7 +34,7 @@ Real biology rarely is. A nanoparticle characterization campaign produces data o
 
 Forcing those into one flat `Dataset` means padding every array to a shared shape, or splitting into multiple files and losing the single-artifact property. Both options give up what made the pattern attractive in the first place.
 
-`xr.DataTree` is the fix. Each assay becomes a node in a tree. Each node keeps its own grid, but can also inherit a shared coordinate from the root; all nodes inherit the `molecule_id` coordinate from the root, so selection by molecule propagates everywhere. Here is the pattern from the skill's [cross-experiment-linking reference](https://github.com/ericmjl/scientific-python-skills/blob/main/skills/xarray-linked-data/references/cross-experiment-linking.md):
+`xr.DataTree` is the fix. Each assay becomes a node in a tree. Each node keeps its own grid, but can also inherit a shared coordinate from the root; all nodes inherit the `molecule_id` coordinate from the root, so selection by molecule propagates everywhere. Here is the pattern from the skill's [cross-experiment-linking reference](https://github.com/ericmjl/scientific-python-skills/blob/add-xarray-linked-data-skill/skills/xarray-linked-data/references/cross-experiment-linking.md):
 
 ```python
 import xarray as xr
@@ -78,7 +78,7 @@ That's the contract. One file, every assay on its natural grid.
 
 ## Custom indexes - slice by what you actually mean
 
-Coordinating by `molecule_id` is the easy case. The skill's [custom indexes](https://github.com/ericmjl/scientific-python-skills/blob/main/skills/xarray-linked-data/references/custom-indexes.md) are where Ian's own [linked-indexes work](https://ianhuntisaak.com/xarray-linked-indexes/) does the heavy lifting.
+Coordinating by `molecule_id` is the easy case. The skill's [custom indexes](https://github.com/ericmjl/scientific-python-skills/blob/add-xarray-linked-data-skill/skills/xarray-linked-data/references/custom-indexes.md) are where Ian's own [linked-indexes work](https://ianhuntisaak.com/xarray-linked-indexes/) does the heavy lifting.
 
 Consider a dose-escalation time course. You administer 1 nM, then 10 nM, then 100 nM, then 1000 nM, each over its own time window. Response is measured continuously across the whole experiment. Every wet-lab scientist who has run one of these knows the question that comes next: what was the response during the 100 nM phase?
 
@@ -113,7 +113,7 @@ This is the layer that turns xarray from "labeled arrays" into "a coordinate sys
 
 In [February 2025 I argued](https://ericmjl.github.io/blog/2025/2/23/reliable-biological-data-requires-physical-quantities-not-statistical-artifacts/) that archival biological data should be physical quantities with Bayesian uncertainty, not statistical artifacts like p-values. The data package is where that argument lands.
 
-The skill's [real-world example](https://github.com/ericmjl/scientific-python-skills/blob/main/skills/xarray-linked-data/references/cross-experiment-linking.md#real-world) puts it directly into practice. The same DataTree holds the raw ELISA OD readings in `/bioassays/raw` and the Bayesian-derived estimates in `/bioassays/derived`:
+The skill's [real-world example](https://github.com/ericmjl/scientific-python-skills/blob/add-xarray-linked-data-skill/skills/xarray-linked-data/references/cross-experiment-linking.md#real-world) puts it directly into practice. The same DataTree holds the raw ELISA OD readings in `/bioassays/raw` and the Bayesian-derived estimates in `/bioassays/derived`:
 
 ```python
 derived = xr.Dataset(
