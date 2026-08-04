@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two qubits: independence and entanglement</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: monospace; font-size: 13px; line-height: 1.5; color: #222; background: transparent; }
+  .card { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 640px; margin: 0 auto; padding: 16px; }
+  .card h1 { font-size: 15px; margin: 0 0 4px; color: #0066cc; }
+  .sub { font-size: 11.5px; color: #999; margin: 0 0 10px; }
+  .circs { display: flex; justify-content: center; gap: 24px; margin: 4px 0 8px; flex-wrap: wrap; }
+  .q { text-align: center; }
+  .q .qlab { font-size: 12px; color: #555; margin-bottom: 2px; }
+  svg { width: 150px; height: 150px; display: block; touch-action: none; cursor: grab; }
+  svg:active { cursor: grabbing; }
+  .q .qang { font-size: 11px; color: #0066cc; margin-top: 2px; }
+  .row { font-size: 11.5px; color: #555; margin: 8px 0 3px; }
+  .srow { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .srow label { font-size: 11.5px; color: #555; min-width: 110px; }
+  .srow input[type=range] { flex: 1; accent-color: #0066cc; }
+  .srow .v { font-size: 11px; color: #0066cc; min-width: 70px; text-align: right; }
+  .presets { margin: 8px 0 2px; }
+  .presets button { font-family: monospace; font-size: 11.5px; padding: 4px 9px; margin-right: 5px; border: 1px solid #aaa; border-radius: 4px; background: #fff; color: #444; cursor: pointer; }
+  .presets button:hover { border-color: #0066cc; color: #0066cc; }
+  .strip { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 96px; }
+  .col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .track { width: 60%; min-height: 60px; position: relative; }
+  .midline { position: absolute; left: 0; right: 0; top: 30px; border-top: 1px solid #ddd; }
+  .sbar { position: absolute; left: 20%; right: 20%; border-radius: 3px; }
+  .sbar.up { bottom: 30px; background: #0066cc; }
+  .sbar.dn { top: 30px; background: #e85d3a; }
+  .lab { margin-top: 3px; font-weight: bold; font-size: 11px; color: #222; }
+  .av { font-size: 10px; color: #666; }
+  .bars { display: flex; align-items: flex-end; justify-content: center; gap: 10px; min-height: 70px; padding: 6px 4px 0; background: #fff; border: 1px solid #eee; border-radius: 6px; }
+  .pcol { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .bar { width: 70%; max-width: 30px; border-radius: 4px 4px 0 0; background: #0066cc; transition: height 0.12s; }
+  .bar.g { background: #d9d9d9; }
+  .num { font-size: 10px; color: #777; margin-top: 2px; }
+  .meter { margin: 10px 0 4px; padding: 8px 10px; background: #eef4ff; border: 1px solid #cfe0ff; border-radius: 6px; color: #0066cc; font-size: 12px; }
+  .meter b { font-size: 13px; }
+  .caption { font-size: 11.5px; color: #555; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Two qubits: independence and entanglement</h1>
+  <p class="sub">Two dials set the qubits as if they were independent (a product state). The entanglement dial mixes in correlation. Watch the joint amplitudes stop factorizing.</p>
+
+  <div class="circs">
+    <div class="q">
+      <div class="qlab">qubit A</div>
+      <svg id="circA" viewBox="0 0 140 140">
+        <line x1="20" y1="70" x2="120" y2="70" stroke="#ccc" stroke-width="1"/>
+        <line x1="70" y1="20" x2="70" y2="120" stroke="#ccc" stroke-width="1"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="124" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="62" y="16" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowA" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipA" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="qang" id="angA">0&deg;</div>
+    </div>
+    <div class="q">
+      <div class="qlab">qubit B</div>
+      <svg id="circB" viewBox="0 0 140 140">
+        <line x1="20" y1="70" x2="120" y2="70" stroke="#ccc" stroke-width="1"/>
+        <line x1="70" y1="20" x2="70" y2="120" stroke="#ccc" stroke-width="1"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="124" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="62" y="16" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowB" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipB" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="qang" id="angB">0&deg;</div>
+    </div>
+  </div>
+
+  <div class="srow">
+    <label>entanglement &eta;:</label>
+    <input type="range" id="eta" min="0" max="45" step="1" value="0">
+    <span class="v" id="etaV">0&deg; (independent)</span>
+  </div>
+
+  <div class="presets" id="presets"></div>
+
+  <div class="row">Joint amplitudes (sign matters)</div>
+  <div class="strip" id="amps"></div>
+
+  <div class="row">Joint probabilities = amplitude&sup2;</div>
+  <div class="bars" id="probs"></div>
+
+  <div class="meter" id="meter">entanglement (concurrence) = <b>0.00</b> &mdash; the two circles tell the whole story (independent).</div>
+
+  <p class="caption">The two circles set qubit A and qubit B as if each lived on its own unit circle. At &eta; = 0 that is the whole state, a product, and the joint probabilities factor into P(A)&middot;P(B). Turn up &eta; and you mix in correlation: the joint state can no longer be split into "qubit A" and "qubit B," the probabilities stop factorizing, and the concurrence rises from 0 (independent) toward 1 (maximally entangled). That non-factorizability is entanglement.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function fit() { var f = window.frameElement; if (!f) return; f.style.height = '0px'; f.style.height = document.body.scrollHeight + 'px'; }
+
+  var C = 70, R = 46;
+  var state = { thA: 0, thB: 0, eta: 0 }; // radians; eta in [0, pi/4]
+
+  // Schmidt form: |psi> = cos(eta)|u0 v0> + sin(eta)|u1 v1>, with
+  // u0 = (cos thA, sin thA), u1 = (-sin thA, cos thA); same for B. Returns 4 joint amplitudes.
+  function amps() {
+    var cA = Math.cos(state.thA), sA = Math.sin(state.thA);
+    var cB = Math.cos(state.thB), sB = Math.sin(state.thB);
+    var ce = Math.cos(state.eta), se = Math.sin(state.eta);
+    var a00 = ce * cA * cB + se * sA * sB;
+    var a01 = ce * cA * sB - se * sA * cB;
+    var a10 = ce * sA * cB - se * cA * sB;
+    var a11 = ce * sA * sB + se * cA * cB;
+    return [a00, a01, a10, a11];
+  }
+
+  function setArrow(arrowId, tipId, th) {
+    var x = C + Math.cos(th) * R, y = C - Math.sin(th) * R;
+    var ar = document.getElementById(arrowId);
+    ar.setAttribute('x2', x); ar.setAttribute('y2', y);
+    var t = document.getElementById(tipId); t.setAttribute('cx', x); t.setAttribute('cy', y);
+  }
+
+  function signedStrip(parent, values) {
+    parent.innerHTML = '';
+    var L = ['00', '01', '10', '11'];
+    var maxAbs = 0; values.forEach(function (v) { if (Math.abs(v) > maxAbs) maxAbs = Math.abs(v); });
+    if (maxAbs < 1e-9) maxAbs = 1;
+    values.forEach(function (v, i) {
+      var col = document.createElement('div'); col.className = 'col';
+      var track = document.createElement('div'); track.className = 'track';
+      var mid = document.createElement('div'); mid.className = 'midline'; track.appendChild(mid);
+      var bar = document.createElement('div');
+      bar.style.height = Math.max(1, Math.abs(v) / maxAbs * 28) + 'px';
+      bar.className = 'sbar ' + (v >= 0 ? 'up' : 'dn');
+      track.appendChild(bar); col.appendChild(track);
+      var av = document.createElement('div'); av.className = 'av'; av.textContent = v.toFixed(2); col.appendChild(av);
+      var lb = document.createElement('div'); lb.className = 'lab'; lb.textContent = L[i]; col.appendChild(lb);
+      parent.appendChild(col);
+    });
+  }
+
+  function probBars(parent, probs) {
+    parent.innerHTML = '';
+    var L = ['00', '01', '10', '11'];
+    var maxP = 0; probs.forEach(function (p) { if (p > maxP) maxP = p; });
+    if (maxP < 1e-9) maxP = 1;
+    probs.forEach(function (p, i) {
+      var col = document.createElement('div'); col.className = 'pcol';
+      var h = Math.max(1, p / maxP * 50);
+      var bar = document.createElement('div'); bar.className = 'bar ' + (p < 1e-9 ? 'g' : ''); bar.style.height = h + 'px'; col.appendChild(bar);
+      var lb = document.createElement('div'); lb.className = 'lab'; lb.textContent = L[i]; col.appendChild(lb);
+      var n = document.createElement('div'); n.className = 'num'; n.textContent = (p * 100).toFixed(0) + '%'; col.appendChild(n);
+      parent.appendChild(col);
+    });
+  }
+
+  function render() {
+    setArrow('arrowA', 'tipA', state.thA);
+    setArrow('arrowB', 'tipB', state.thB);
+    document.getElementById('angA').textContent = Math.round(state.thA * 180 / Math.PI) + '\u00b0';
+    document.getElementById('angB').textContent = Math.round(state.thB * 180 / Math.PI) + '\u00b0';
+    var a = amps();
+    signedStrip(document.getElementById('amps'), a);
+    probBars(document.getElementById('probs'), a.map(function (x) { return x * x; }));
+    var conc = 2 * Math.abs(a[0] * a[3] - a[1] * a[2]);
+    var meter = document.getElementById('meter');
+    var label = conc < 0.01 ? 'the two circles tell the whole story (independent)' :
+                (conc > 0.99 ? 'maximally entangled' : 'entangled &mdash; the two circles no longer capture it');
+    meter.innerHTML = 'entanglement (concurrence) = <b>' + conc.toFixed(2) + '</b> &mdash; ' + label + '.';
+    var etaDeg = Math.round(state.eta * 180 / Math.PI);
+    document.getElementById('etaV').textContent = etaDeg + '\u00b0 ' + (etaDeg === 0 ? '(independent)' : (etaDeg === 45 ? '(maximally entangled)' : ''));
+    fit();
+  }
+
+  // drag handlers for the two circles
+  function setupDrag(svgId, which) {
+    var svg = document.getElementById(svgId);
+    function phi(e) {
+      var r = svg.getBoundingClientRect();
+      var sx = (e.clientX - r.left) / r.width * 140;
+      var sy = (e.clientY - r.top) / r.height * 140;
+      var a = (sx - C) / R, b = (C - sy) / R;
+      var L = Math.hypot(a, b); if (L < 1e-9) return null;
+      var p = Math.atan2(b / L, a / L); if (p < 0) p += 2 * Math.PI; return p;
+    }
+    var dragging = false;
+    svg.addEventListener('pointerdown', function (e) { dragging = true; svg.setPointerCapture(e.pointerId); var p = phi(e); if (p !== null) { state[which] = p; render(); } });
+    svg.addEventListener('pointermove', function (e) { if (!dragging) return; var p = phi(e); if (p !== null) { state[which] = p; render(); } });
+    svg.addEventListener('pointerup', function () { dragging = false; });
+    svg.addEventListener('pointercancel', function () { dragging = false; });
+  }
+  setupDrag('circA', 'thA');
+  setupDrag('circB', 'thB');
+
+  document.getElementById('eta').addEventListener('input', function () {
+    state.eta = parseFloat(this.value) * Math.PI / 180; render();
+  });
+
+  // presets: [label, thA(deg), thB(deg), eta(deg)]
+  var PRESETS = [['|00>', 0, 0, 0], ['|++>', 45, 45, 0], ['Bell (|00>+|11>)/sqrt2', 0, 0, 45], ['|01>', 0, 90, 0]];
+  var pbox = document.getElementById('presets');
+  PRESETS.forEach(function (pr) {
+    var b = document.createElement('button'); b.textContent = pr[0];
+    b.addEventListener('click', function () {
+      state.thA = pr[1] * Math.PI / 180; state.thB = pr[2] * Math.PI / 180; state.eta = pr[3] * Math.PI / 180;
+      document.getElementById('eta').value = String(pr[3]);
+      render();
+    });
+    pbox.appendChild(b);
+  });
+
+  render();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>

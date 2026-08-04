@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qubit state on the unit circle</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: monospace; font-size: 13px; line-height: 1.5; color: #222; background: transparent; }
+  .card { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 640px; margin: 0 auto; padding: 16px; }
+  .card h1 { font-size: 15px; margin: 0 0 4px; color: #0066cc; }
+  .sub { font-size: 11.5px; color: #999; margin: 0 0 10px; }
+  .top { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+  .stage { flex: 2 1 0; min-width: 120px; }
+  svg { width: 100%; height: auto; display: block; touch-action: none; cursor: grab; }
+  svg:active { cursor: grabbing; }
+  .side { flex: 3 1 0; min-width: 160px; }
+  .read { font-size: 12px; color: #333; margin: 2px 0; }
+  .read b { color: #0066cc; }
+  .name { font-size: 13px; font-weight: bold; color: #1a9e5b; margin: 4px 0 6px; min-height: 18px; }
+  .pbar { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 11.5px; }
+  .pbar .pl { width: 40px; color: #555; }
+  .pbar .ptrack { flex: 1; height: 12px; background: #eee; border-radius: 3px; overflow: hidden; }
+  .pbar .pfill { display: block; height: 100%; background: #0066cc; transition: width 0.12s; }
+  .pbar .pv { width: 46px; text-align: right; color: #444; }
+  .row { margin: 8px 0 4px; }
+  .srow { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .srow label { font-size: 11.5px; color: #555; min-width: 46px; }
+  .srow input[type=range] { flex: 1; accent-color: #0066cc; }
+  .srow .v { font-size: 11px; color: #0066cc; min-width: 40px; text-align: right; }
+  .presets { margin: 6px 0 2px; }
+  .presets button { font-family: monospace; font-size: 11.5px; padding: 4px 9px; margin-right: 5px; border: 1px solid #aaa; border-radius: 4px; background: #fff; color: #444; cursor: pointer; }
+  .presets button:hover { border-color: #0066cc; color: #0066cc; }
+  .measure { margin-top: 10px; }
+  .mhead { font-size: 11.5px; color: #555; margin: 4px 0 2px; }
+  .btns { display: flex; gap: 8px; margin-top: 6px; }
+  .btn { font-family: monospace; font-size: 12px; padding: 8px 10px; flex: 1 1 0; border: 1px solid #0066cc; border-radius: 5px; background: #fff; color: #0066cc; cursor: pointer; }
+  .btn:hover { background: #0066cc; color: #fff; }
+  .btn.warn { border-color: #e85d3a; color: #e85d3a; }
+  .btn.warn:hover { background: #e85d3a; color: #fff; }
+  .tally { font-size: 12px; color: #333; margin-top: 6px; }
+  .tally b { color: #0066cc; }
+  .flash { font-size: 13px; font-weight: bold; color: #1a9e5b; margin: 4px 0; min-height: 18px; }
+  .caption { font-size: 11.5px; color: #555; margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Qubit state on the unit circle</h1>
+  <p class="sub">A one-qubit state (with real amplitudes) is an arrow of length 1. Drag the tip, or use the angle. Its projections onto the axes are the amplitudes; their squares are the probabilities.</p>
+
+  <div class="top">
+    <div class="stage">
+      <svg id="circle" viewBox="0 0 300 300">
+        <!-- axes -->
+        <line x1="30" y1="150" x2="270" y2="150" stroke="#bbb" stroke-width="1"/>
+        <line x1="150" y1="30" x2="150" y2="270" stroke="#bbb" stroke-width="1"/>
+        <!-- unit circle -->
+        <circle cx="150" cy="150" r="110" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <!-- axis labels -->
+        <text x="276" y="154" fill="#0066cc" font-size="13" font-family="monospace">|0></text>
+        <text x="140" y="24" fill="#0066cc" font-size="13" font-family="monospace">|1></text>
+        <!-- projections (dashed) -->
+        <line id="projX" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line id="projY" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <!-- projection ticks on axes -->
+        <circle id="tickX" r="4" fill="#9fb8d8"/>
+        <circle id="tickY" r="4" fill="#9fb8d8"/>
+        <text id="labX" fill="#555" font-size="10" font-family="monospace" text-anchor="middle"></text>
+        <text id="labY" fill="#555" font-size="10" font-family="monospace" text-anchor="middle"></text>
+        <!-- state arrow -->
+        <line id="arrow" x1="150" y1="150" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tip" r="8" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="side">
+      <div class="name" id="nameBox"></div>
+      <div class="read">&alpha; (amp of |0>) = <b id="avA">1.00</b></div>
+      <div class="read">&beta; (amp of |1>) = <b id="avB">0.00</b></div>
+      <div class="row" style="margin-top:8px;"><b>Probabilities = amplitude&sup2;</b></div>
+      <div class="pbar"><span class="pl">P(|0>)</span><span class="ptrack"><span class="pfill" id="pfill0" style="width:100%"></span></span><span class="pv" id="pv0">1.00</span></div>
+      <div class="pbar"><span class="pl">P(|1>)</span><span class="ptrack"><span class="pfill" id="pfill1" style="width:0%"></span></span><span class="pv" id="pv1">0.00</span></div>
+    </div>
+  </div>
+
+  <div class="measure">
+    <div class="mhead"><b>Measure</b> &mdash; collapses the arrow to one axis, chosen by the squared-projection probabilities</div>
+    <div class="btns">
+      <button class="btn" id="measureBtn">Measure once</button>
+      <button class="btn" id="manyBtn">Measure 50&times;</button>
+      <button class="btn warn" id="resetBtn">Reset tally</button>
+    </div>
+    <div class="flash" id="flash"></div>
+    <div class="tally" id="tally">tally: |0> = 0, |1> = 0</div>
+  </div>
+
+  <div class="srow" style="margin-top:10px;">
+    <label>angle:</label>
+    <input type="range" id="angle" min="0" max="360" step="1" value="0">
+    <span class="v" id="anglev">0&deg;</span>
+  </div>
+  <div class="presets" id="presets"></div>
+
+  <p class="caption">The arrow is the state; its length is always 1, so its tip lives on the circle. The dashed lines drop to each axis: those are the amplitudes &alpha; and &beta;. Square them and you get the probability of measuring |0> or |1>. Hit Measure and the arrow snaps to one axis, chosen with those squared-projection probabilities; over many shots the tally converges to them.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function fit() { var f = window.frameElement; if (!f) return; f.style.height = '0px'; f.style.height = document.body.scrollHeight + 'px'; }
+
+  var C = 150, R = 110;
+  var state = { phi: 0 };          // phi in radians, state = (cos phi, sin phi)
+  var tally = { 0: 0, 1: 0 };
+  var collapsing = false, collapseToken = 0;
+
+  var arrow = document.getElementById('arrow');
+  var tip = document.getElementById('tip');
+  var projX = document.getElementById('projX');
+  var projY = document.getElementById('projY');
+  var tickX = document.getElementById('tickX');
+  var tickY = document.getElementById('tickY');
+  var labX = document.getElementById('labX');
+  var labY = document.getElementById('labY');
+
+  function deg(phi) { var d = phi * 180 / Math.PI; return Math.round(d); }
+
+  function stateName(phi) {
+    var d = deg(phi);
+    var near = function (t) { return Math.abs(((d - t) % 360 + 540) % 360 - 180) <= 2; };
+    if (near(0)) return '|0>';
+    if (near(90)) return '|1>';
+    if (near(45)) return '|+>';
+    if (near(315)) return '|->';
+    if (near(135)) return '-|->';      // (-1/sqrt2, 1/sqrt2) up to global sign
+    if (near(180)) return '-|0>';      // global phase of |0>
+    return '';
+  }
+
+  function render(phi) {
+    var a = Math.cos(phi), b = Math.sin(phi);
+    var tx = C + a * R, ty = C - b * R;
+    arrow.setAttribute('x2', tx); arrow.setAttribute('y2', ty);
+    tip.setAttribute('cx', tx); tip.setAttribute('cy', ty);
+    // projection onto |0> axis (x): vertical drop from tip to y=C
+    projX.setAttribute('x1', tx); projX.setAttribute('y1', ty); projX.setAttribute('x2', tx); projX.setAttribute('y2', C);
+    tickX.setAttribute('cx', tx); tickX.setAttribute('cy', C);
+    // projection onto |1> axis (y): horizontal drop from tip to x=C
+    projY.setAttribute('x1', tx); projY.setAttribute('y1', ty); projY.setAttribute('x2', C); projY.setAttribute('y2', ty);
+    tickY.setAttribute('cx', C); tickY.setAttribute('cy', ty);
+    // labels
+    labX.setAttribute('x', tx); labY.setAttribute('x', C + 14);
+    labX.setAttribute('y', C + 14); labY.setAttribute('y', ty + 3);
+    labX.textContent = a.toFixed(2); labY.textContent = b.toFixed(2);
+
+    var p0 = a * a, p1 = b * b;
+    document.getElementById('avA').textContent = a.toFixed(2);
+    document.getElementById('avB').textContent = b.toFixed(2);
+    document.getElementById('pfill0').style.width = (p0 * 100) + '%';
+    document.getElementById('pfill1').style.width = (p1 * 100) + '%';
+    document.getElementById('pv0').textContent = p0.toFixed(2);
+    document.getElementById('pv1').textContent = p1.toFixed(2);
+    var nm = stateName(phi);
+    document.getElementById('nameBox').textContent = nm ? 'state: ' + nm : '';
+    document.getElementById('angle').value = String(((deg(phi) % 360) + 360) % 360);
+    document.getElementById('anglev').textContent = deg(phi) + '\u00b0';
+    fit();
+  }
+
+  function renderTally() {
+    var total = tally[0] + tally[1];
+    var e0 = total > 0 ? (tally[0] / total) : 0;
+    var e1 = total > 0 ? (tally[1] / total) : 0;
+    document.getElementById('tally').innerHTML = 'tally: |0> = <b>' + tally[0] + '</b>, |1> = <b>' + tally[1] + '</b>' +
+      (total > 0 ? ' &nbsp;(empirical ' + e0.toFixed(2) + ' / ' + e1.toFixed(2) + ')' : '');
+  }
+
+  function setPhiFromAngle(degVal) { state.phi = degVal * Math.PI / 180; render(state.phi); }
+
+  document.getElementById('angle').addEventListener('input', function () {
+    setPhiFromAngle(parseFloat(this.value));
+  });
+
+  // drag on the SVG to set the direction
+  var svg = document.getElementById('circle');
+  function pointerToPhi(e) {
+    var rect = svg.getBoundingClientRect();
+    var sx = (e.clientX - rect.left) / rect.width * 300;
+    var sy = (e.clientY - rect.top) / rect.height * 300;
+    var a = (sx - C) / R, b = (C - sy) / R;   // math coords, y up
+    var L = Math.hypot(a, b);
+    if (L < 1e-9) return null;
+    var phi = Math.atan2(b / L, a / L);
+    if (phi < 0) phi += 2 * Math.PI;
+    return phi;
+  }
+  var dragging = false;
+  svg.addEventListener('pointerdown', function (e) {
+    if (collapsing) return;
+    dragging = true; svg.setPointerCapture(e.pointerId);
+    var p = pointerToPhi(e); if (p !== null) { state.phi = p; render(state.phi); }
+  });
+  svg.addEventListener('pointermove', function (e) {
+    if (!dragging || collapsing) return;
+    var p = pointerToPhi(e); if (p !== null) { state.phi = p; render(state.phi); }
+  });
+  svg.addEventListener('pointerup', function () { dragging = false; });
+  svg.addEventListener('pointercancel', function () { dragging = false; });
+
+  // presets
+  var PRESETS = [['|0>', 0], ['|1>', 90], ['|+>', 45], ['|->', 315]];
+  var pbox = document.getElementById('presets');
+  PRESETS.forEach(function (pr) {
+    var btn = document.createElement('button'); btn.textContent = pr[0];
+    btn.addEventListener('click', function () { if (collapsing) return; setPhiFromAngle(pr[1]); });
+    pbox.appendChild(btn);
+  });
+
+  // measure
+  function collapseTo(outcome) {
+    collapsing = true;
+    var token = ++collapseToken;
+    var phiAxis = outcome === 0 ? 0 : Math.PI / 2;
+    render(phiAxis);
+    document.getElementById('flash').textContent = 'measured: ' + (outcome === 0 ? '|0>' : '|1>');
+    setTimeout(function () {
+      if (token !== collapseToken) return; // superseded
+      collapsing = false;
+      document.getElementById('flash').textContent = '';
+      render(state.phi);
+    }, 700);
+  }
+  function measure(n) {
+    var a = Math.cos(state.phi);
+    var p0 = a * a;
+    if (n === 1) {
+      var o = Math.random() < p0 ? 0 : 1;
+      tally[o]++;
+      renderTally();
+      collapseTo(o);
+    } else {
+      for (var i = 0; i < n; i++) tally[Math.random() < p0 ? 0 : 1]++;
+      renderTally();
+    }
+  }
+  document.getElementById('measureBtn').addEventListener('click', function () { measure(1); });
+  document.getElementById('manyBtn').addEventListener('click', function () { measure(50); });
+  document.getElementById('resetBtn').addEventListener('click', function () { tally = { 0: 0, 1: 0 }; renderTally(); });
+
+  render(state.phi);
+  renderTally();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>
