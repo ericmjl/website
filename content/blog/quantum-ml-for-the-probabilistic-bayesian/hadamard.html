@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feel the Hadamard gate</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: monospace; font-size: 13px; line-height: 1.5; color: #222; background: transparent; }
+  .card { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 640px; margin: 0 auto; padding: 16px; }
+  .card h1 { font-size: 15px; margin: 0 0 4px; color: #0066cc; }
+  .sub { font-size: 11.5px; color: #999; margin: 0 0 10px; }
+  .legend { font-size: 11px; color: #666; margin: 0 0 10px; }
+  .legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin: 0 3px 0 10px; }
+  .sw.b { background: #0066cc; } .sw.r { background: #e85d3a; }
+  .seg { display: inline-flex; border: 1px solid #0066cc; border-radius: 5px; overflow: hidden; margin: 0 0 10px; }
+  .seg button { font-family: monospace; font-size: 12px; padding: 5px 12px; border: none; background: #fff; color: #0066cc; cursor: pointer; border-right: 1px solid #0066cc; }
+  .seg button:last-child { border-right: none; }
+  .seg button.on { background: #0066cc; color: #fff; }
+  #controls { margin: 0 0 6px; }
+  .srow { display: flex; align-items: center; gap: 8px; margin: 4px 0; flex-wrap: wrap; }
+  .srow label { font-size: 11.5px; color: #555; min-width: 150px; }
+  .srow input[type=range] { flex: 1; min-width: 160px; accent-color: #0066cc; }
+  .srow .v { font-size: 11px; color: #0066cc; min-width: 38px; text-align: right; }
+  .signbtn { font-family: monospace; font-size: 14px; font-weight: bold; width: 38px; height: 28px; border: 1px solid #0066cc; border-radius: 5px; background: #fff; color: #0066cc; cursor: pointer; }
+  .signbtn:hover { background: #0066cc; color: #fff; }
+  .small { font-size: 10.5px; color: #999; }
+  .presets { margin: 6px 0 2px; }
+  .presets button { font-family: monospace; font-size: 11.5px; padding: 4px 9px; margin-right: 5px; border: 1px solid #aaa; border-radius: 4px; background: #fff; color: #444; cursor: pointer; }
+  .presets button:hover { border-color: #0066cc; color: #0066cc; }
+  .rowtitle { font-size: 11.5px; color: #555; margin: 10px 0 4px; }
+  .rowtitle .hint { color: #999; }
+  .strip { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 104px; }
+  .col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .track { width: 70%; min-height: 68px; position: relative; }
+  .midline { position: absolute; left: 0; right: 0; top: 34px; border-top: 1px solid #ddd; }
+  .sbar { position: absolute; left: 22%; right: 22%; border-radius: 3px; transition: height 0.15s; }
+  .sbar.up { bottom: 34px; background: #0066cc; }
+  .sbar.dn { top: 34px; background: #e85d3a; }
+  .av { font-size: 10.5px; color: #444; margin-top: 3px; }
+  .lab { font-weight: bold; font-size: 11.5px; color: #222; }
+  .frm { font-size: 9.5px; color: #888; margin-top: 1px; }
+  .bars { display: flex; align-items: flex-end; justify-content: center; gap: 10px; min-height: 82px; padding: 8px 4px 0; background: #fff; border: 1px solid #eee; border-radius: 6px; }
+  .pcol { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .bar { width: 70%; max-width: 34px; border-radius: 4px 4px 0 0; background: #0066cc; transition: height 0.15s; }
+  .bar.g { background: #d9d9d9; }
+  .num { font-size: 10px; color: #777; margin-top: 2px; }
+  .caption { font-size: 11.5px; color: #555; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Feel the Hadamard gate</h1>
+  <p class="sub">The Hadamard splits each basis state into an equal mix, with one minus sign. All amplitudes here are normalized.</p>
+  <div class="legend"><span class="sw b"></span>positive amplitude<span class="sw r"></span>negative amplitude (the minus sign)</div>
+
+  <div class="seg" id="modeSeg">
+    <button type="button" data-mode="1" class="on">1 qubit</button>
+    <button type="button" data-mode="2">2 qubits</button>
+  </div>
+
+  <div id="controls"></div>
+
+  <div class="rowtitle">Input amplitudes <span class="hint">(normalized)</span></div>
+  <div class="strip" id="inAmps"></div>
+
+  <div class="rowtitle">After the Hadamard &mdash; amplitudes <span class="hint">(sign matters here)</span></div>
+  <div class="strip" id="outAmps"></div>
+
+  <div class="rowtitle">Probabilities = amplitude&sup2;</div>
+  <div class="bars" id="probs"></div>
+
+  <p class="caption" id="caption"></p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function fit() { var f = window.frameElement; if (!f) return; f.style.height = '0px'; f.style.height = document.body.scrollHeight + 'px'; }
+
+  var HALF = 32;     // |amplitude| = 1 fills this many px
+  var MAXP = 60;     // probability = 1 (100%) fills this many px
+  var SQRT2 = Math.sqrt(2);
+  function popcount(x) { var c = 0; while (x) { c += x & 1; x >>= 1; } return c; }
+  function kernel(j, k) { return (popcount(j & k) % 2 === 0) ? 1 : -1; }
+  function H1(a) { return [(a[0] + a[1]) / SQRT2, (a[0] - a[1]) / SQRT2]; }
+  function H2(a) { var out = []; for (var k = 0; k < 4; k++) { var s = 0; for (var j = 0; j < 4; j++) s += kernel(j, k) * a[j]; out.push(s / 2); } return out; }
+  function labs(m) { return m === 1 ? ['0', '1'] : ['00', '01', '10', '11']; }
+
+  function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+
+  var PRESETS2 = [['|00>', [1, 0, 0, 0]], ['|01>', [0, 1, 0, 0]], ['|11>', [0, 0, 0, 1]], ['|++>', [0.5, 0.5, 0.5, 0.5]]];
+  var state = { mode: 1, theta: 0, sign: 1, preset2: 0 };
+
+  function syncMode() {
+    var btns = document.getElementById('modeSeg').children;
+    for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('on', parseInt(btns[i].getAttribute('data-mode'), 10) === state.mode);
+  }
+
+  function buildControls() {
+    var box = document.getElementById('controls');
+    box.innerHTML = '';
+    if (state.mode === 1) {
+      var deg = Math.round(state.theta * 180 / Math.PI);
+      var r = el('div', 'srow');
+      var lb = el('label'); lb.textContent = 'mix \u03b8 (|0> \u2194 |1>):'; r.appendChild(lb);
+      var inp = el('input'); inp.type = 'range'; inp.min = '0'; inp.max = '180'; inp.step = '1'; inp.value = String(deg);
+      var v = el('span', 'v'); v.textContent = deg + '\u00b0';
+      inp.addEventListener('input', function () {
+        state.theta = parseFloat(inp.value) * Math.PI / 180;
+        v.textContent = inp.value + '\u00b0';
+        render();
+      });
+      r.appendChild(inp); r.appendChild(v); box.appendChild(r);
+
+      var r2 = el('div', 'srow');
+      var lb2 = el('label'); lb2.textContent = 'sign of |1>:'; r2.appendChild(lb2);
+      var sb = el('button', 'signbtn'); sb.textContent = (state.sign === 1 ? '+' : '\u2212');
+      sb.addEventListener('click', function () { state.sign *= -1; buildControls(); render(); });
+      r2.appendChild(sb);
+      var sm = el('span', 'small'); sm.textContent = '(at 90\u00b0 this flips |+> \u2194 |->)'; r2.appendChild(sm);
+      box.appendChild(r2);
+
+      var p = el('div', 'presets');
+      [['|0>', 0, 1], ['|1>', 180, 1], ['|+>', 90, 1], ['|->', 90, -1]].forEach(function (pr) {
+        var b = el('button'); b.textContent = pr[0];
+        b.addEventListener('click', function () { state.theta = pr[1] * Math.PI / 180; state.sign = pr[2]; buildControls(); render(); });
+        p.appendChild(b);
+      });
+      box.appendChild(p);
+    } else {
+      var p2 = el('div', 'presets');
+      PRESETS2.forEach(function (pr, idx) {
+        var b = el('button'); b.textContent = pr[0];
+        b.addEventListener('click', function () { state.preset2 = idx; render(); });
+        p2.appendChild(b);
+      });
+      box.appendChild(p2);
+    }
+  }
+
+  function signedStrip(parent, values, formulas) {
+    parent.innerHTML = '';
+    var L = labs(state.mode);
+    values.forEach(function (val, i) {
+      var col = el('div', 'col');
+      var track = el('div', 'track'); var mid = el('div', 'midline'); track.appendChild(mid);
+      var bar = el('div');
+      bar.style.height = Math.max(1, Math.abs(val) * HALF) + 'px';
+      bar.className = 'sbar ' + (val >= 0 ? 'up' : 'dn');
+      track.appendChild(bar); col.appendChild(track);
+      var av = el('div', 'av'); av.textContent = val.toFixed(2); col.appendChild(av);
+      var lb = el('div', 'lab'); lb.textContent = L[i]; col.appendChild(lb);
+      if (formulas) { var f = el('div', 'frm'); f.innerHTML = formulas[i]; col.appendChild(f); }
+      parent.appendChild(col);
+    });
+  }
+
+  function probBars(parent, probs) {
+    parent.innerHTML = '';
+    var L = labs(state.mode);
+    probs.forEach(function (p, i) {
+      var col = el('div', 'pcol');
+      var h = (p < 1e-9) ? 2 : Math.max(2, Math.round(p * MAXP));
+      var bar = el('div', 'bar ' + (p < 1e-9 ? 'g' : '')); bar.style.height = h + 'px'; col.appendChild(bar);
+      var lb = el('div', 'lab'); lb.textContent = L[i]; col.appendChild(lb);
+      var n = el('div', 'num'); n.textContent = (p * 100).toFixed(0) + '%'; col.appendChild(n);
+      parent.appendChild(col);
+    });
+  }
+
+  function render() {
+    var input, out, formulas;
+    if (state.mode === 1) {
+      var a0 = Math.cos(state.theta / 2);
+      var a1 = state.sign * Math.sin(state.theta / 2);
+      input = [a0, a1];
+      out = H1(input);
+      formulas = ['(a0+a1)/&radic;2', '(a0&minus;a1)/&radic;2'];
+    } else {
+      input = PRESETS2[state.preset2][1].slice();
+      out = H2(input);
+      formulas = null;
+    }
+    var probs = out.map(function (x) { return x * x; });
+
+    signedStrip(document.getElementById('inAmps'), input, null);
+    signedStrip(document.getElementById('outAmps'), out, formulas);
+    probBars(document.getElementById('probs'), probs);
+
+    var cap = document.getElementById('caption');
+    if (state.mode === 1) {
+      cap.textContent = 'Drag the mix to rotate between |0> and |1>; the sign toggles |+> and |->. H|0> and H|1> come out 50/50; at 90\u00b0 the sign decides whether the output is |0> (+) or |1> (-), because that is where the minus sign cancels one side.';
+    } else {
+      cap.textContent = 'Two Hadamards, one on each wire. |00> spreads into an equal superposition of all four outcomes; |++> recombines straight back to |00>. Every amplitude is normalized, so each value is a valid, no-more-than-1 quantity.';
+    }
+    fit();
+  }
+
+  var mb = document.getElementById('modeSeg').children;
+  for (var i = 0; i < mb.length; i++) {
+    (function (btn) {
+      btn.addEventListener('click', function () {
+        var newMode = parseInt(btn.getAttribute('data-mode'), 10);
+        if (newMode === state.mode) return;
+        state.mode = newMode;
+        state.theta = 0; state.sign = 1; state.preset2 = 0;
+        syncMode(); buildControls(); render();
+      });
+    })(mb[i]);
+  }
+
+  syncMode(); buildControls(); render();
+  fit(); window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>
