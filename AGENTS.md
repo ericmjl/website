@@ -26,6 +26,10 @@ recent published blog posts for sentence rhythm and flow when editing.
 When drafting or editing blog posts and content in my voice, apply these
 habits so the result matches how I would write it:
 
+- Prefer **direct, first-person, agent-explicit** phrasing: name the real
+  actor as the subject ("we assumed", "we chose"), not an inanimate thing
+  ("the picture assumed", "the model suggests"). Avoid agent-effacing and
+  anthropomorphized constructions; they read as stiff and unaccountable.
 - Make logical links explicit (e.g. "this meant …" when clarifying what
   something implies). State stakes or consequences before giving advice.
 - Break up long paragraphs; give key takeaways their own sentence and use
