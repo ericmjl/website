@@ -14,40 +14,38 @@ If you're ready for the ride, here we go!
 
 <iframe src="before-you-read.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-## Qubits
+## The fundamentals
 
-Start with the most fundamental object in quantum computing: the state of a single qubit. A one-qubit state is an arrow of length 1 in a two-dimensional space whose axes are the two basic states |0> and |1>. The arrow's coordinates along those axes are its amplitudes.
+Start with the most fundamental object in quantum computing: the state of a single qubit. A one-qubit state is an arrow of length 1 in a two-dimensional space whose axes are the two basic states |0> and |1>. The arrow's coordinates along those axes are its amplitudes. Because the arrow has length 1, its tip sits on a unit circle, a slice of the Bloch sphere (the standard name for the full qubit state space).
 
 <iframe src="bloch-circle.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Drag the arrow above. Its projections onto the |0> and |1> axes are the amplitudes, and the squares of those projections are the probabilities of measuring |0> or |1>. That squaring is the bridge into your world as a probabilistic Bayesian, and it is the lens we will use for the rest of the post. The new ingredient, with no analogue in classical probability, is that amplitudes carry a sign: the arrow can point anywhere on the circle, including where a coordinate is negative. That signedness stays quiet for a single measurement, but it is the seed of everything quantum that follows.
 
-### The fundamentals
+### Many qubits, exponentially many amplitudes
 
-Let's start with the basic vocabulary. If you're already comfortable with qubits and superposition, feel free to skip ahead.
+That picture was for one qubit, which lives in two dimensions. Add a second qubit and the state now has four basis states (|00>, |01>, |10>, |11>), so the arrow lives in four dimensions, with one amplitude per basis state. Add a third and you get eight. The number of amplitudes doubles with every qubit:
 
-Qubits are the building blocks of quantum computing. They are analogous to bits, except that they are probabilistic entities: a qubit can represent a *superposition* of both 0 and 1 until it is measured, at which point it "collapses" to a readout of either 0 or 1. (How superposition actually arises, and how qubits are physically realized on hardware, is outside what I currently understand.)
+| Number of qubits | Basis states (= amplitudes) | Examples                                |
+| ---------------- | --------------------------- | ---------------------------------------- |
+| 1                | 2                           | 0, 1                                     |
+| 2                | 4                           | 00, 01, 10, 11                           |
+| 3                | 8                           | 000, 001, 010, 011, 100, 101, 110, 111   |
+| n                | 2^n                         | All binary strings of length n           |
 
-To make this concrete: a single qubit represents a superposition over two states, and collapses to one of them when measured. Two qubits span a space of four states, and collapse to one of four. Put into a table for maximum explicitness:
+Play with the doubling below: one qubit gives two amplitudes, two qubits give four, three give eight.
 
-| Number of qubits | Total possible states | Example states                         |
-| ---------------- | --------------------- | -------------------------------------- |
-| 1                | 2                     | 0, 1                                   |
-| 2                | 4                     | 00, 01, 10, 11                         |
-| 3                | 8                     | 000, 001, 010, 011, 100, 101, 110, 111 |
-| n                | 2^n                   | All binary strings of length n         |
+<iframe src="many-qubits.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-If you looked only at that table, you'd be tempted to say, "yeah, but a von Neumann computer can do all of that too... so what's the difference?"
+This is the first place quantum computing leaves classical intuition behind, and it leaves fast. A 50-qubit register has 2^50 amplitudes, more than a quadrillion; you cannot write them all down, let alone store the state on a classical machine. Measuring collapses that whole arrow to a single bitstring, drawn with probability equal to its amplitude squared, the many-qubit version of what the Bloch circle showed.
 
-The difference is in the probabilities.
+We should clarify one assumption: in the interactive diagrams above, we treated the qubits as independent. The general n-qubit state is a single arrow in 2^n dimensions, and most such arrows cannot be split into one circle per qubit. That non-splitting is entanglement, which has its own section below.
 
-### Probabilistic bits
+Before we move on, we should make this picture second nature. Drag the circles until it is obvious how each independent qubit maps to one circle, how the joint amplitudes are the products of their coordinates, and how the probabilities factor. That clean correspondence is the foothold we will want when entanglement arrives and the one-circle-per-qubit picture stops working.
 
-My current mental model is that qubits are *probabilistic* bits. And while you can set them up to act independently, you can also design them to be non-independent, which is where things get interesting.
+### The probability view (coins)
 
-A useful analogy is coin flips. Each qubit is a coin. Imagine we are in a weightless environment and we flip a coin. A coin that is spinning is like a qubit in superposition: there is some probability it lands heads and some probability it lands tails. Measuring the qubit is me reaching out and catching the coin mid-spin, revealing a heads or a tails drawn from its probability distribution.
-
-The natural extension is two coins spinning, each with its own distribution. Then three. Then *n*.
+Step back from amplitudes for a moment. If you only care about what a measurement will tell you, a qubit behaves like a biased coin, and a register of qubits like a pile of coins. That is the probabilistic-Bayesian lens I promised in the intro, and I will lean on it for the rest of the post; the widget below lets you flip 1, 2, or 3 and watch the outcomes follow the distribution. Just remember the coin view is a simplification, the shadow the amplitudes cast on a measurement, and it hides the signs that the interference section later puts to work.
 
 <iframe src="qubit-measurement.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 

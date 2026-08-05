@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Many qubits, exponentially many amplitudes</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: monospace; font-size: 13px; line-height: 1.5; color: #222; background: transparent; }
+  .card { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 640px; margin: 0 auto; padding: 16px; }
+  .card h1 { font-size: 15px; margin: 0 0 4px; color: #0066cc; }
+  .sub { font-size: 11.5px; color: #999; margin: 0 0 10px; }
+  .seg { display: inline-flex; border: 1px solid #0066cc; border-radius: 5px; overflow: hidden; margin: 0 0 8px; }
+  .seg button { font-family: monospace; font-size: 12px; padding: 5px 12px; border: none; background: #fff; color: #0066cc; cursor: pointer; border-right: 1px solid #0066cc; }
+  .seg button:last-child { border-right: none; }
+  .seg button.on { background: #0066cc; color: #fff; }
+  .head { font-size: 13px; color: #0066cc; margin: 4px 0 8px; }
+  .head b { font-size: 15px; }
+  .circs { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 4px 0 8px; }
+  .q { text-align: center; }
+  .q .qlab { font-size: 11.5px; color: #555; margin-bottom: 2px; }
+  svg { width: 130px; height: 130px; display: block; touch-action: none; cursor: grab; }
+  svg:active { cursor: grabbing; }
+  .q .qang { font-size: 10.5px; color: #0066cc; margin-top: 2px; }
+  .presets { margin: 8px 0 2px; }
+  .presets button { font-family: monospace; font-size: 11.5px; padding: 4px 9px; margin-right: 5px; border: 1px solid #aaa; border-radius: 4px; background: #fff; color: #444; cursor: pointer; }
+  .presets button:hover { border-color: #0066cc; color: #0066cc; }
+  .row { font-size: 11.5px; color: #555; margin: 10px 0 3px; }
+  .strip { display: flex; align-items: center; justify-content: center; gap: 8px; height: 100px; }
+  .col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .track { width: 60%; min-height: 60px; position: relative; }
+  .midline { position: absolute; left: 0; right: 0; top: 30px; border-top: 1px solid #ddd; }
+  .sbar { position: absolute; left: 20%; right: 20%; border-radius: 3px; }
+  .sbar.up { bottom: 30px; background: #0066cc; }
+  .sbar.dn { top: 30px; background: #e85d3a; }
+  .lab { margin-top: 3px; font-weight: bold; font-size: 10.5px; color: #222; }
+  .av { font-size: 9px; color: #777; }
+  .bars { display: flex; align-items: flex-end; justify-content: center; gap: 8px; height: 90px; padding: 6px 4px 0; background: #fff; border: 1px solid #eee; border-radius: 6px; }
+  .pcol { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .bar { width: 70%; max-width: 24px; border-radius: 4px 4px 0 0; background: #0066cc; }
+  .bar.g { background: #d9d9d9; }
+  .num { font-size: 9px; color: #777; margin-top: 2px; }
+  .caption { font-size: 11.5px; color: #555; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Many qubits, exponentially many amplitudes</h1>
+  <p class="sub">For now, assume the qubits are independent. Each is its own circle; drag any of them. The joint amplitudes are the products, and the number of them doubles with every qubit.</p>
+
+  <div class="seg" id="tabs">
+    <button type="button" data-n="1" class="on">1 qubit</button>
+    <button type="button" data-n="2">2 qubits</button>
+    <button type="button" data-n="3">3 qubits</button>
+  </div>
+
+  <div class="head" id="head"></div>
+
+  <div class="circs" id="circs">
+    <div class="q" id="qA">
+      <div class="qlab">qubit A</div>
+      <svg id="circA" viewBox="0 0 130 130">
+        <line x1="18" y1="65" x2="112" y2="65" stroke="#ccc" stroke-width="1"/>
+        <line x1="65" y1="18" x2="65" y2="112" stroke="#ccc" stroke-width="1"/>
+        <circle cx="65" cy="65" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="116" y="69" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="58" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowA" x1="65" y1="65" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipA" r="6" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="qang" id="angA">0&deg;</div>
+    </div>
+    <div class="q" id="qB">
+      <div class="qlab">qubit B</div>
+      <svg id="circB" viewBox="0 0 130 130">
+        <line x1="18" y1="65" x2="112" y2="65" stroke="#ccc" stroke-width="1"/>
+        <line x1="65" y1="18" x2="65" y2="112" stroke="#ccc" stroke-width="1"/>
+        <circle cx="65" cy="65" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="116" y="69" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="58" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowB" x1="65" y1="65" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipB" r="6" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="qang" id="angB">0&deg;</div>
+    </div>
+    <div class="q" id="qC">
+      <div class="qlab">qubit C</div>
+      <svg id="circC" viewBox="0 0 130 130">
+        <line x1="18" y1="65" x2="112" y2="65" stroke="#ccc" stroke-width="1"/>
+        <line x1="65" y1="18" x2="65" y2="112" stroke="#ccc" stroke-width="1"/>
+        <circle cx="65" cy="65" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="116" y="69" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="58" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowC" x1="65" y1="65" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipC" r="6" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="qang" id="angC">0&deg;</div>
+    </div>
+  </div>
+
+  <div class="presets" id="presets"></div>
+
+  <div class="row">Joint amplitudes (products of the per-qubit amplitudes)</div>
+  <div class="strip" id="amps"></div>
+
+  <div class="row">Joint probabilities = amplitude&sup2; (they factor)</div>
+  <div class="bars" id="probs"></div>
+
+  <p class="caption">Each circle is one independent qubit, so the joint state is just the product. Two qubits give four amplitudes, three give eight, and the count doubles every time. Notice the joint probabilities factor: P(00) = P_A(0)&middot;P_B(0). This clean picture holds only while the qubits are independent. When they are entangled, it breaks, and no set of circles can capture the state. That is the next section.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function fit() { var f = window.frameElement; if (!f) return; f.style.height = '0px'; f.style.height = document.body.scrollHeight + 'px'; }
+
+  var C = 65, R = 46;
+  var state = { n: 1, th: [0, 0, 0] }; // th[i] = angle (rad) of qubit i
+
+  function N(n) { return 1 << n; }
+  function labels(n) { var a = []; for (var i = 0; i < N(n); i++) a.push(i.toString(2).padStart(n, '0')); return a; }
+
+  // joint amplitudes = products of per-qubit amplitudes (independent qubits)
+  function amps() {
+    var n = state.n, out = [], nn = N(n);
+    for (var k = 0; k < nn; k++) {
+      var bs = k.toString(2).padStart(n, '0'), a = 1;
+      for (var i = 0; i < n; i++) {
+        a *= (bs[i] === '1') ? Math.sin(state.th[i]) : Math.cos(state.th[i]);
+      }
+      out.push(a);
+    }
+    return out;
+  }
+
+  function setArrow(which, th) {
+    var x = C + Math.cos(th) * R, y = C - Math.sin(th) * R;
+    document.getElementById('arrow' + which).setAttribute('x2', x);
+    document.getElementById('arrow' + which).setAttribute('y2', y);
+    document.getElementById('tip' + which).setAttribute('cx', x);
+    document.getElementById('tip' + which).setAttribute('cy', y);
+  }
+
+  function signedStrip(parent, values) {
+    parent.innerHTML = '';
+    var L = labels(state.n);
+    values.forEach(function (v, i) {
+      var col = document.createElement('div'); col.className = 'col';
+      var track = document.createElement('div'); track.className = 'track';
+      var mid = document.createElement('div'); mid.className = 'midline'; track.appendChild(mid);
+      var bar = document.createElement('div');
+      bar.style.height = Math.max(1, Math.abs(v) * 28) + 'px';   // absolute scale: |amp|=1 fills
+      bar.className = 'sbar ' + (v >= 0 ? 'up' : 'dn');
+      track.appendChild(bar); col.appendChild(track);
+      var av = document.createElement('div'); av.className = 'av'; av.textContent = v.toFixed(2); col.appendChild(av);
+      var lb = document.createElement('div'); lb.className = 'lab'; lb.textContent = L[i]; col.appendChild(lb);
+      parent.appendChild(col);
+    });
+  }
+
+  function probBars(parent, probs) {
+    parent.innerHTML = '';
+    var L = labels(state.n);
+    probs.forEach(function (p, i) {
+      var col = document.createElement('div'); col.className = 'pcol';
+      var h = Math.max(1, p * 50);                              // absolute scale: 100% fills
+      var bar = document.createElement('div'); bar.className = 'bar ' + (p < 1e-9 ? 'g' : ''); bar.style.height = h + 'px'; col.appendChild(bar);
+      var lb = document.createElement('div'); lb.className = 'lab'; lb.textContent = L[i]; col.appendChild(lb);
+      var nm = document.createElement('div'); nm.className = 'num'; nm.textContent = (p * 100).toFixed(0) + '%'; col.appendChild(nm);
+      parent.appendChild(col);
+    });
+  }
+
+  function render() {
+    var n = state.n, nn = N(n);
+    document.getElementById('head').innerHTML = n + ' independent qubits &rarr; 2<sup>' + n + '</sup> = <b>' + nn + '</b> amplitudes';
+    document.getElementById('qA').style.display = n >= 1 ? '' : 'none';
+    document.getElementById('qB').style.display = n >= 2 ? '' : 'none';
+    document.getElementById('qC').style.display = n >= 3 ? '' : 'none';
+    var names = ['A', 'B', 'C'];
+    for (var i = 0; i < 3; i++) {
+      if (i < n) {
+        setArrow(names[i], state.th[i]);
+        document.getElementById('ang' + names[i]).textContent = Math.round(state.th[i] * 180 / Math.PI) + '\u00b0';
+      }
+    }
+    var a = amps();
+    signedStrip(document.getElementById('amps'), a);
+    probBars(document.getElementById('probs'), a.map(function (x) { return x * x; }));
+    buildPresets();
+    fit();
+  }
+
+  function buildPresets() {
+    var box = document.getElementById('presets'); box.innerHTML = '';
+    var P;
+    if (state.n === 1) P = [['|0>', [0]], ['|1>', [90]], ['|+>', [45]]];
+    else if (state.n === 2) P = [['|00>', [0, 0]], ['|++>', [45, 45]], ['|11>', [90, 90]]];
+    else P = [['|000>', [0, 0, 0]], ['|+++', [45, 45, 45]], ['|111>', [90, 90, 90]]];
+    P.forEach(function (pr) {
+      var b = document.createElement('button'); b.textContent = pr[0];
+      b.addEventListener('click', function () {
+        for (var i = 0; i < state.n; i++) state.th[i] = pr[1][i] * Math.PI / 180;
+        render();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  // tabs
+  var tb = document.getElementById('tabs').children;
+  for (var i = 0; i < tb.length; i++) {
+    (function (btn) {
+      btn.addEventListener('click', function () {
+        state.n = parseInt(btn.getAttribute('data-n'), 10);
+        for (var k = 0; k < 3; k++) state.th[k] = 0;
+        for (var m = 0; m < tb.length; m++) tb[m].classList.toggle('on', tb[m] === btn);
+        render();
+      });
+    })(tb[i]);
+  }
+
+  // drag handlers for each circle
+  function setupDrag(svgId, idx) {
+    var svg = document.getElementById(svgId);
+    function phi(e) {
+      var r = svg.getBoundingClientRect();
+      var sx = (e.clientX - r.left) / r.width * 130, sy = (e.clientY - r.top) / r.height * 130;
+      var a = (sx - C) / R, b = (C - sy) / R;
+      var L = Math.hypot(a, b); if (L < 1e-9) return null;
+      var p = Math.atan2(b / L, a / L); if (p < 0) p += 2 * Math.PI; return p;
+    }
+    var dragging = false;
+    svg.addEventListener('pointerdown', function (e) { dragging = true; svg.setPointerCapture(e.pointerId); var p = phi(e); if (p !== null) { state.th[idx] = p; render(); } });
+    svg.addEventListener('pointermove', function (e) { if (!dragging) return; var p = phi(e); if (p !== null) { state.th[idx] = p; render(); } });
+    svg.addEventListener('pointerup', function () { dragging = false; });
+    svg.addEventListener('pointercancel', function () { dragging = false; });
+  }
+  setupDrag('circA', 0);
+  setupDrag('circB', 1);
+  setupDrag('circC', 2);
+
+  render();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>
