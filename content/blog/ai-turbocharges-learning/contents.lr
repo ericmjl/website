@@ -14,7 +14,7 @@ None of the techniques are new. Retrieval practice, spaced repetition, elaborati
 
 Before you read on, I'd like to invite you to try these three, even if you're just guessing. Recalling first is what makes the rest of the post stick. Then keep reading. By the end, you'll know which of your answers the evidence supports.
 
-<iframe src="before-you-read.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="before-you-read.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ## The central distinction: amplifier or substitute
 
@@ -30,7 +30,7 @@ Flip the prompt and everything changes. Instead of "explain X to me," she types:
 
 To see if you got the idea, try the little quiz below. Decide for each whether the learner is amplifying their thinking or substituting for it.
 
-<iframe src="prompt-inspector.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="prompt-inspector.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 If you noticed the pattern, there's really only one question that matters: who's generating the thinking, and thus the words? Every study and every story below comes back to that.
 
@@ -46,7 +46,7 @@ A [second meta-analysis](https://www.frontiersin.org/journals/psychology/article
 
 To help you see the pattern for yourself, I collated the studies into the map below. Click any one for the design, the sample, and the effect size. Here's what to observe: scaffold the AI and the effects are large; leave it unguided and they flip.
 
-<iframe src="evidence-map.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="evidence-map.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Two studies in that map are worth slowing down for. One shows what a good scaffold buys you; the other shows what happens when you don't use one. At the strong end, a [World Bank trial in Nigeria](https://documents1.worldbank.org/curated/en/099548105192529324/pdf/IDU-c09f40d8-9ff8-42dc-b315-591157499be7.pdf) gave roughly 800 students free Microsoft Copilot alongside a six-week afterschool program, with tutors grounding the AI in the curriculum. The result was a 0.31 standard deviation gain, which the authors translate into roughly 1.5 to 2 years of business-as-usual schooling in Nigeria compressed into six weeks.
 
@@ -74,7 +74,7 @@ The third principle is the testing effect, and it's what happens when retrieval 
 
 Want to see the forgetting curve in action? Pick a strategy below and watch what happens to retention over two weeks.
 
-<iframe src="forgetting-curve.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="forgetting-curve.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 The [UniDistance study](https://doi.org/10.48550/arxiv.2309.13060) is the cleanest field test of all three principles at once. Researchers gave 51 students a semester-long AI tutor (the MAGMA Learning app) that used a neural network to model each student's grasp of every concept, then served questions at each student's moment of near-forgetting, and visualized mastery as a 3D "learnet" whose brightness tracked grasp. Spacing, retrieval, and personalization, all automated.
 
@@ -112,7 +112,7 @@ AI amplifies what you bring. If you already know how to study, it supercharges y
 
 Bloom's lower levels (remember, understand, apply) are commoditized. The model does them faster than you. Value has moved up to analyze, evaluate, create. **The differentiator is what you do on top of having the information.** The meta-skill that compounds is driving higher-order questioning and judgment.
 
-<iframe src="blooms-taxonomy.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="blooms-taxonomy.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 So what's the counter to "brain rot"? Self-directed learning. The people who thrive with AI are the ones who drive the questioning the model won't generate on its own, check the output against their own understanding, and treat the model as a coach rather than an oracle. It's a habit of mind, not a feature you can toggle.
 
@@ -120,7 +120,7 @@ So what's the counter to "brain rot"? Self-directed learning. The people who thr
 
 Those three questions I invited you to try at the top? You now have the evidence to answer every one. Here's a five-question quiz to check what stuck.
 
-<iframe src="check-understanding.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="check-understanding.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Here's my parting advice: take the prompt swap. Next time you open a model to learn, tell it what you think and ask where you're wrong. The model won't be any different. You will.
 

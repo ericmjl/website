@@ -14,7 +14,7 @@ One warning, and a promise. The worry has a name now, and the people working on 
 
 These aren't graded, and the cards won't tell you if you're right. Pick your honest answer for each, notice your assumptions, then read on. The survey revisits every one.
 
-<iframe src="before-you-read.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="before-you-read.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Hold your answers. Let's see where the field has landed.
 
@@ -36,7 +36,7 @@ The diagnosis bites hardest at the pull request, because that's the moment the t
 
 Here is what that looks like in practice: a clean diff, and the five checks a reviewer actually has to run.
 
-<iframe src="ai-pr-no-smell.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="ai-pr-no-smell.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Every checklist I read hits the same failure modes. [GitHub's engineering team](https://github.blog/ai-and-ml/generative-ai/agent-pull-requests-are-everywhere-heres-how-to-review-them/) published guidance in May 2026 built around the insight that agents optimize for surface plausibility, not semantic correctness. Their data is striking: GitHub Copilot code review has processed over 60 million reviews, more than one in five code reviews on GitHub now involve an agent, and a January 2026 study found agent-generated code introduces more redundancy and quiet debt per change than human-written code. The playbook targets the specific ways agents slip: gaming CI to go green, reimplementing utilities that already exist, hallucinating imports that resolve to the wrong symbol, and writing tests that pass without verifying anything.
 
@@ -70,7 +70,7 @@ If understanding is the bottleneck, how do we cross it faster? Litt's move is to
 
 Toggle between the two for the same change:
 
-<iframe src="literate-diff.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="literate-diff.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 This is where reviewing big PRs with agents pays off most, since the bigger the change, the more the raw diff fails and the explainer earns its keep. Nested inside every explainer is a second device Litt borrowed from Andy Matuschak: a five-question quiz you answer before you approve. His rule is one I've adopted wholesale; he won't send code to a teammate until he can pass the quiz, and he does the same when he reviews theirs. The agent loop runs faster than the speed of human understanding, and the quiz is the mechanical brake that asks whether you actually get it. (This post is my own attempt at that brake; the widget at the end is the quiz, built from [Matuschak's argument](https://andymatuschak.org/books/) that "books don't work" and the spaced-repetition pattern he and Nielsen embedded in Quantum Country.)
 
@@ -108,7 +108,7 @@ Read down the table and you can see the conversation's shape: a diagnosis (under
 
 Here's the quiz. Five cards, instant feedback, and a live score. This is the speed-regulator technique, turned back on the post itself.
 
-<iframe src="check-understanding.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="check-understanding.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 If you missed any, that's the spot where your mental model and the field's are still diverging, and it's exactly where cognitive debt would quietly accrue. Ask, find the gap, close it, and ask again. That loop is the whole point.
 ---

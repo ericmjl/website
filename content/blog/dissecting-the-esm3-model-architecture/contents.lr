@@ -201,7 +201,7 @@ I did this deep dive to give us a geometric intuition of what's happening in vec
 
 Let's revisit the ESM model architecture once again. It looks like this:
 
-<iframe src="https://link.excalidraw.com/readonly/iQTxShs9tZzKqNczk6ps" width="100%" height="100%" style="border: none;"></iframe>
+<iframe src="https://link.excalidraw.com/readonly/iQTxShs9tZzKqNczk6ps" width="100%" height="100%"></iframe>
 
 Each modality is in red, green, or blue (apologies for the colour-blind; I am using Excalidraw's default colours). Modalities are masked to different degrees, represented by cross-hatched positions (you may need to zoom into the figure to see them). Summation happens after we calculate the per-modality embeddings for each sample, giving us an array of shape `(sequence_length, model_dimension)` per sample. It is passed through the Transformer block before decoding, where the decoder is nothing more than a feed-forward neural network that is applied to each position independently.
 
