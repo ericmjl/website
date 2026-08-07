@@ -95,14 +95,17 @@ pub_date: 2026-08-07
 ---
 twitter_handle: ericmjl
 ---
-summary: I have been learning quantum computing from a colleague, and the best way I have found to make it stick is to explain it through the lens I know best: probability and sampling. In this post I treat qubits as probabilistic bits, entanglement as non-independence, and the quantum computer as a specialized sampler over combinatorial spaces too big to enumerate classically. If you have ever fought with an MCMC sampler, a lot of this will sound familiar.
+summary: In this post, I share what I've learned about quantum computing from the perspective of a probabilistic Bayesian. I strip away the physics to reveal a familiar picture: qubits as amplitude vectors whose squares are probabilities, gates that shape distributions through interference, and measurement as sampling. The parallel to Bayesian inference is striking. Our priors and likelihoods shape posteriors; quantum gates shape amplitudes. What if the quantum computer isn't a magic box, but a sampler purpose-built for the combinatorial spaces we already struggle to navigate classically?
 ---
 tags:
 
+quantum computing
+bayesian
+probability
 qubits
 entanglement
+interference
+superposition
 sampling
-probability
-quantum
-machine learning
-bayesian
+inference
+amplitudes
