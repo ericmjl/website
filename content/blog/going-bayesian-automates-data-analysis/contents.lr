@@ -35,7 +35,7 @@ For every curve, there's usually a point or two that looks off. The standard wor
 
 For one curve, it'll be seconds, but multiply this over dozens of plates and you have an unbounded amount of time spent clicking on a UI (if one's lucky) or switching between two applications, Excel and GraphPad Prism (if one is unlucky).
 
-<iframe src="outlier-dance.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="outlier-dance.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Are you really going to hire more research assistants to click through curves? That approach collapses under its own weight.
 
@@ -53,7 +53,7 @@ The first is reproducibility. What's your rule for calling something an outlier?
 
 Here is curve 11 from the demo above, reviewed by two different analysts. Dilution 4 reads 100%, which looks like it belongs to the upper plateau. But the transition zone expects something closer to 73% at that dilution. Analyst A keeps it; Analyst B removes it. Toggle between them and watch the ID50 shift.
 
-<iframe src="two-analysts.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="two-analysts.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Same data, same software, different ID50. The point at dilution 4 sits right at the inflection of the curve, so keeping or removing it swings the estimate of where the curve crosses 50%. Which analyst is right? Both think they are, and without a principled criterion, neither can prove the other wrong.
 
@@ -75,7 +75,7 @@ And critically, the point is never deleted. It still contributes to the fit, jus
 
 Enough theory. Let me show you what this actually looks like on a dose-response curve with a real outlier.
 
-<iframe src="bayesian_curves_demo.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="bayesian_curves_demo.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 The blue curve is the Normal likelihood fit; the orange dashed curve is the Student-t. Dotted vertical lines mark each model's ID50 estimate. Shaded bands are 94% credible intervals from 4,000 posterior draws (PyMC/NUTS, 4 chains). The buttons go from nu=1 (the Student-t at its heaviest-tailed, most forgiving of outliers) to nu=30 (nearly indistinguishable from the Normal, least forgiving).
 
@@ -91,7 +91,7 @@ This is where hierarchical modeling earns its keep. Instead of fitting each curv
 
 The philosophy mirrors the heavy tails, just one level up. Heavy tails down-weight weird points. Hierarchy regularizes weird curves. It's the same idea, merely applied at different scales.
 
-<iframe src="hierarchy-demo.html" width="100%" scrolling="no" style="border: 1px solid #ddd; border-radius: 6px;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="hierarchy-demo.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Six curves from the same experiment. Five came out clean; curve 3 had a bad day with noisy wells. Toggle between independent fits (curve 3 flails) and hierarchical fits (curve 3 borrows strength from the population and snaps into shape). The faint dashed line on curve 3 shows where the population says it should sit.
 

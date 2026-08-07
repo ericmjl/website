@@ -16,6 +16,11 @@ body {
   font-family: 'Berkeley Mono', monospace;
 }
 
+/* Strip borders from every iframe site-wide so embeds sit flush with the page. */
+iframe {
+  border: none;
+}
+
 .blog-summary {
   padding-top: 2em;
 }

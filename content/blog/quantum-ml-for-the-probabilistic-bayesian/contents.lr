@@ -12,13 +12,13 @@ Here is the angle I am going to take. I have been doing Bayesian modeling for ye
 
 If you're ready for the ride, here we go!
 
-<iframe src="before-you-read.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="before-you-read.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ## The fundamentals
 
 Start with the most fundamental object in quantum computing: the state of a single qubit. A one-qubit state is an arrow of length 1 in a two-dimensional space whose axes are the two basic states |0> and |1>. The arrow's coordinates along those axes are its amplitudes. Because the arrow has length 1, its tip sits on a unit circle, a slice of the Bloch sphere (the standard name for the full qubit state space).
 
-<iframe src="bloch-circle.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="bloch-circle.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Drag the arrow above. Its projections onto the |0> and |1> axes are the amplitudes, and the squares of those projections are the probabilities of measuring |0> or |1>. That squaring is the bridge into your world as a probabilistic Bayesian, and it is the lens we will use for the rest of the post. The new ingredient, with no analogue in classical probability, is that amplitudes carry a sign: the arrow can point anywhere on the circle, including where a coordinate is negative. That signedness stays quiet for a single measurement, but it is the seed of everything quantum that follows.
 
@@ -35,7 +35,7 @@ That picture was for one qubit, which lives in two dimensions. Add a second qubi
 
 Play with the doubling below: one qubit gives two amplitudes, two qubits give four, three give eight.
 
-<iframe src="many-qubits.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="many-qubits.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 This is the first place quantum computing leaves classical intuition behind, and it leaves fast. A 50-qubit register has 2^50 amplitudes, more than a quadrillion; you cannot write them all down, let alone store the state on a classical machine. Measuring collapses that whole arrow to a single bitstring, drawn with probability equal to its amplitude squared, the many-qubit version of what the Bloch circle showed.
 
@@ -47,7 +47,7 @@ Before we move on, we should make this picture second nature. Drag the circles u
 
 Step back from amplitudes for a moment. If you only care about what a measurement will tell you, a qubit behaves like a biased coin, and a register of qubits like a pile of coins. That is the probabilistic-Bayesian lens I promised in the intro, and I will lean on it for the rest of the post; the widget below lets you flip 1, 2, or 3 and watch the outcomes follow the distribution. Just remember the coin view is a simplification, the shadow the amplitudes cast on a measurement, and it hides the signs that the interference section later puts to work.
 
-<iframe src="qubit-measurement.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="qubit-measurement.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ### Entanglement
 
@@ -55,7 +55,7 @@ Entanglement, in this framing, is when the state of one qubit cannot be describe
 
 Here is that idea made geometric. Two dials below set the qubits as if they were independent; the entanglement dial mixes in correlation. Watch the joint amplitudes stop factorizing, and the concurrence climb from 0 (independent) toward 1 (maximally entangled).
 
-<iframe src="two-qubit-entanglement.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="two-qubit-entanglement.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ### Interference
 
@@ -63,7 +63,7 @@ An amplitude's sign is easy to ignore, because a single measurement only sees th
 
 One tool that does the mixing is the Hadamard gate. It takes any input state and produces a specific output by blending the two input amplitudes together, with a minus sign baked into one of the blends. The widget below lets you drag the input arrow and watch the output respond. The butterfly diagram in the middle traces each input amplitude as it splits into contributions at each output, so you can see exactly where reinforcement and cancellation happen.
 
-<iframe src="hadamard-gate.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="hadamard-gate.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Drag the input to the diagonal (45 degrees, the |+> state) and look at the butterfly. Two contributions arrive at each output. At output |0>, both are positive, so they reinforce, and the output arrow swings hard toward |0>. At output |1>, one is positive and one is negative, so they cancel, and |1> vanishes. That is interference made visible: the minus sign killed one output while boosting the other. Now drag to other angles and watch how the balance between reinforcement and cancellation shifts. When only one input amplitude is nonzero (try |0> or |1>), there is only one path through the gate, so nothing cancels.
 
@@ -81,7 +81,7 @@ What if you didn't have to enumerate a combinatorial space at all, but instead l
 
 That's the quantum computer's party trick. It isn't a magical exponential speedup for everything. But it can be viewed as an MCMC sampler, purpose-built for exactly the kind of problem we already wrestle with: inference over spaces too big to enumerate classically.
 
-<iframe src="check-understanding.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="check-understanding.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ## The takeaway
 
