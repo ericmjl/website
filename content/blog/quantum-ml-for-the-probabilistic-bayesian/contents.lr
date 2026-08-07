@@ -57,23 +57,25 @@ Here is that idea made geometric. Two dials below set the qubits as if they were
 
 <iframe src="two-qubit-entanglement.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-<iframe src="entanglement-pairs.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
-
 ### Interference
 
-An amplitude's sign is easy to ignore, because a single measurement only sees the squared size, which is just a probability. The sign earns its keep only when amplitudes combine: two amplitudes of the same sign reinforce, and two of opposite sign can subtract all the way to zero. That cancellation is *interference*, and it has no classical analogue. Classical probability distributions are built from non-negative numbers that pile up; quantum states are built from signed amplitudes that can interfere.
+An amplitude's sign is easy to ignore, because a single measurement only sees the squared size, which is just a probability. The sign only matters when amplitudes combine: two amplitudes of the same sign reinforce, and two of opposite sign can subtract all the way to zero. That cancellation is *interference*, and it has no classical analogue. Classical probability distributions are built from non-negative numbers that pile up; quantum states are built from signed amplitudes that can interfere.
 
-The tool that does the mixing is the Hadamard gate. On a single qubit it is almost trivial: it turns the 0 state into an equal mix of 0 and 1, and the 1 state into the same mix but with a minus sign on the 1 part. (In symbols, H|0> = (|0>+|1>)/sqrt(2), and H|1> = (|0>-|1>)/sqrt(2).) That one minus sign is the whole lever. Two Hadamards in a row undo each other precisely because the minus signs cancel on the way back. On *n* qubits you apply a Hadamard to each wire; that is how a uniform superposition gets built in the first place, and how it gets recombined later so the signs can interfere. Try it on one qubit, then two, just below.
+One tool that does the mixing is the Hadamard gate. It takes any input state and produces a specific output by blending the two input amplitudes together, with a minus sign baked into one of the blends. The widget below lets you drag the input arrow and watch the output respond. The butterfly diagram in the middle traces each input amplitude as it splits into contributions at each output, so you can see exactly where reinforcement and cancellation happen.
 
-<iframe src="hadamard.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="hadamard-gate.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-This is the engine that does the work. A quantum program is a sequence of gates that arranges interference to concentrate amplitude on the good answers and cancel the rest. Nobody has to know the good answer ahead of time; the gates encode a way to score candidates, like an oracle or a cost function, and interference amplifies whatever scores well. A phase flip on its own changes nothing you can measure, because probability is amplitude squared and a sign vanishes; phases only matter once a gate like the Hadamard recombines the amplitudes, and that recombining is where the cancellation happens. The result is a probability distribution deliberately shaped so that the good answers are likely and the bad ones have vanished.
+Drag the input to the diagonal (45 degrees, the |+> state) and look at the butterfly. Two contributions arrive at each output. At output |0>, both are positive, so they reinforce, and the output arrow swings hard toward |0>. At output |1>, one is positive and one is negative, so they cancel, and |1> vanishes. That is interference made visible: the minus sign killed one output while boosting the other. Now drag to other angles and watch how the balance between reinforcement and cancellation shifts. When only one input amplitude is nonzero (try |0> or |1>), there is only one path through the gate, so nothing cancels.
 
-If you are a Bayesian, frame it like this. Your prior and likelihood shape a posterior; a quantum circuit's gates shape amplitudes. Then, to read the answer out, you measure, and measurement is just drawing a sample from that shaped distribution. That is the bridge to everything that follows.
+Two Hadamards in a row undo each other precisely because the minus signs cancel on the way back. On *n* qubits you apply a Hadamard to each wire; that is how a uniform superposition gets built in the first place, and how it gets recombined later so the signs can interfere.
 
-<iframe src="interference.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+### From interference to answers
 
-And here is where it finally clicks for me, because sampling is already the bottleneck in my own work. The core problem in Bayesian inference never changes: your posterior may be intractable, so you sample. But sampling is hard! Your chains may not mix, or there may be divergences, and if part of your problem lives in a combinatorial space, good luck with the approximations.
+A quantum program is an arrangement of gates that concentrates amplitude on the qubit configurations representing the solution to a problem, and cancels the rest. The gates do not need to know the answer ahead of time; they encode a way to score candidates, and interference amplifies whatever scores well. The result is a probability distribution deliberately shaped so that the solution is likely and the noise has vanished.
+
+If you are a Bayesian, this should sound familiar. Your prior and likelihood shape a posterior; a quantum circuit's gates shape amplitudes. Then, to read the answer out, you measure, and measurement is just drawing a sample from that shaped distribution.
+
+And here is where it finally clicks for me, because in my own work building Bayesian models, sampling is the bottleneck. The core problem in Bayesian inference never changes: your posterior may be intractable, so you sample. But sampling is hard! Your chains may not mix, or there may be divergences, and if part of your problem lives in a combinatorial space, good luck with the approximations.
 
 What if you didn't have to enumerate a combinatorial space at all, but instead let your sampler live in superposition over the whole of it?
 
@@ -83,13 +85,13 @@ That's the quantum computer's party trick. It isn't a magical exponential speedu
 
 ## The takeaway
 
-Strip away the physics and here is the picture I want you to walk away with. A qubit is a probabilistic bit. A register of qubits is a joint probability distribution over a very large space of bitstrings. Entanglement is non-independence between those bits. And the quantum computer's distinctive move is that it can sit in a state spread over that whole combinatorial space at once, and then be sampled from.
+In this blog post, we stripped away much of the physics of quantum computing to give you the following picture to walk away with. A qubit is an arrow on a unit circle; its coordinates are amplitudes, and their squares are probabilities. A register of *n* qubits is a single arrow in 2^n dimensions, one amplitude per possible bitstring. Entanglement is when that arrow cannot be split into one circle per qubit. Interference is what happens when signed amplitudes combine through gates: same signs reinforce, opposite signs cancel, and the quantum program uses this to concentrate amplitude on the configurations that represent solutions. Measurement is drawing a sample from the resulting distribution.
 
-If you're a probabilistic Bayesian, none of that should sound alien. It should sound like a sampler. Not a faster laptop, and not a magic box that solves everything; a device that is very good at exactly the thing we already struggle with classically, representing and sampling from distributions over spaces too big to enumerate.
+If you are a probabilistic Bayesian, the parallel is exact. Your prior and likelihood shape a posterior; a quantum circuit's gates shape amplitudes. You sample from your posterior; you measure from the quantum state. The quantum computer is not a faster laptop or a magic box. It is a device that is very good at exactly the thing we already struggle with classically: representing and sampling from distributions over spaces too big to enumerate.
 
-Many details here are still beyond my grasp. But holding this mental model has already changed how I read about quantum computing. Where I used to see mysterious physics, I now see sampling problems, clever encodings, and the same old fight against combinatorial explosion, just on different hardware. I hope it does the same for you.
+Many details here are still beyond my grasp. But holding this mental model has already changed how I read about quantum computing. Where I used to see mysterious physics, I now see amplitude vectors, clever encodings, and interference doing the heavy lifting, all on hardware built for exactly that. I hope it does the same for you.
 ---
-pub_date: 2026-07-30
+pub_date: 2026-08-07
 ---
 twitter_handle: ericmjl
 ---
