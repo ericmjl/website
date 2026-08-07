@@ -20,7 +20,7 @@
   .srow { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
   .srow label { font-size: 11.5px; color: #555; min-width: 110px; }
   .srow input[type=range] { flex: 1; accent-color: #0066cc; }
-  .srow .v { font-size: 11px; color: #0066cc; min-width: 70px; text-align: right; }
+  .srow .v { font-size: 11px; color: #0066cc; min-width: 170px; text-align: right; white-space: nowrap; }
   .presets { margin: 8px 0 2px; }
   .presets button { font-family: monospace; font-size: 11.5px; padding: 4px 9px; margin-right: 5px; border: 1px solid #aaa; border-radius: 4px; background: #fff; color: #444; cursor: pointer; }
   .presets button:hover { border-color: #0066cc; color: #0066cc; }
@@ -32,14 +32,15 @@
   .sbar.up { bottom: 30px; background: #0066cc; }
   .sbar.dn { top: 30px; background: #e85d3a; }
   .lab { margin-top: 3px; font-weight: bold; font-size: 11px; color: #222; }
-  .av { font-size: 10px; color: #666; }
+  .av { font-size: 11px; color: #666; }
   .bars { display: flex; align-items: flex-end; justify-content: center; gap: 10px; min-height: 70px; padding: 6px 4px 0; background: #fff; border: 1px solid #eee; border-radius: 6px; }
   .pcol { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
   .bar { width: 70%; max-width: 30px; border-radius: 4px 4px 0 0; background: #0066cc; transition: height 0.12s; }
   .bar.g { background: #d9d9d9; }
-  .num { font-size: 10px; color: #777; margin-top: 2px; }
+  .num { font-size: 11px; color: #777; margin-top: 2px; }
   .meter { margin: 10px 0 4px; padding: 8px 10px; background: #eef4ff; border: 1px solid #cfe0ff; border-radius: 6px; color: #0066cc; font-size: 12px; }
   .meter b { font-size: 13px; }
+  .schmidt { font-size: 12px; color: #555; margin: 6px 0; padding: 8px 10px; background: #eef4ff; border: 1px solid #cfe0ff; border-radius: 4px; line-height: 1.6; }
   .caption { font-size: 11.5px; color: #555; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
 </style>
 </head>
@@ -52,11 +53,12 @@
     <div class="q">
       <div class="qlab">qubit A</div>
       <svg id="circA" viewBox="0 0 140 140">
-        <line x1="20" y1="70" x2="120" y2="70" stroke="#ccc" stroke-width="1"/>
-        <line x1="70" y1="20" x2="70" y2="120" stroke="#ccc" stroke-width="1"/>
+        <line x1="20" y1="70" x2="120" y2="70" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="70" y1="20" x2="70" y2="120" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
         <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
-        <text x="124" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="118" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
         <text x="62" y="16" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="u1arrowA" x1="70" y1="70" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
         <line id="arrowA" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
         <circle id="tipA" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
       </svg>
@@ -65,11 +67,12 @@
     <div class="q">
       <div class="qlab">qubit B</div>
       <svg id="circB" viewBox="0 0 140 140">
-        <line x1="20" y1="70" x2="120" y2="70" stroke="#ccc" stroke-width="1"/>
-        <line x1="70" y1="20" x2="70" y2="120" stroke="#ccc" stroke-width="1"/>
+        <line x1="20" y1="70" x2="120" y2="70" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="70" y1="20" x2="70" y2="120" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
         <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
-        <text x="124" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="118" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
         <text x="62" y="16" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="u1arrowB" x1="70" y1="70" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
         <line id="arrowB" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
         <circle id="tipB" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
       </svg>
@@ -83,6 +86,8 @@
     <span class="v" id="etaV">0&deg; (independent)</span>
   </div>
 
+  <div class="schmidt" id="schmidt"></div>
+
   <div class="presets" id="presets"></div>
 
   <div class="row">Joint amplitudes (sign matters)</div>
@@ -93,7 +98,7 @@
 
   <div class="meter" id="meter">entanglement (concurrence) = <b>0.00</b> &mdash; the two circles tell the whole story (independent).</div>
 
-  <p class="caption">The two circles set qubit A and qubit B as if each lived on its own unit circle. At &eta; = 0 that is the whole state, a product, and the joint probabilities factor into P(A)&middot;P(B). Turn up &eta; and you mix in correlation: the joint state can no longer be split into "qubit A" and "qubit B," the probabilities stop factorizing, and the concurrence rises from 0 (independent) toward 1 (maximally entangled). That non-factorizability is entanglement.</p>
+  <p class="caption">The solid arrow on each circle is u0 (the direction you drag); the dashed arrow is u1 (90&deg; rotated). Both arrows' lengths are Schmidt coefficients: solid = cos &eta; (weight of "both at u0"), dashed = sin &eta; (weight of "both at u1"). At &eta; = 0 the solid is full and the dashed is gone: the state is purely "both at u0," a product. Turn up &eta; and weight flows from solid to dashed: the state becomes a mix of "both at u0" and "both at u1." At &eta; = 45&deg; both arrows are equally long (0.71 each): maximally entangled. The formula above shows the same numbers; the arrows are its visual.</p>
 </div>
 
 <script>
@@ -117,24 +122,28 @@
     return [a00, a01, a10, a11];
   }
 
-  function setArrow(arrowId, tipId, th) {
-    var x = C + Math.cos(th) * R, y = C - Math.sin(th) * R;
+  function setArrow(arrowId, tipId, th, scale) {
+    var x = C + Math.cos(th) * R * scale, y = C - Math.sin(th) * R * scale;
     var ar = document.getElementById(arrowId);
     ar.setAttribute('x2', x); ar.setAttribute('y2', y);
     var t = document.getElementById(tipId); t.setAttribute('cx', x); t.setAttribute('cy', y);
   }
 
+  function setU1Arrow(arrowId, th, scale) {
+    var x = C + Math.cos(th + Math.PI / 2) * R * scale, y = C - Math.sin(th + Math.PI / 2) * R * scale;
+    document.getElementById(arrowId).setAttribute('x2', x);
+    document.getElementById(arrowId).setAttribute('y2', y);
+  }
+
   function signedStrip(parent, values) {
     parent.innerHTML = '';
     var L = ['00', '01', '10', '11'];
-    var maxAbs = 0; values.forEach(function (v) { if (Math.abs(v) > maxAbs) maxAbs = Math.abs(v); });
-    if (maxAbs < 1e-9) maxAbs = 1;
     values.forEach(function (v, i) {
       var col = document.createElement('div'); col.className = 'col';
       var track = document.createElement('div'); track.className = 'track';
       var mid = document.createElement('div'); mid.className = 'midline'; track.appendChild(mid);
       var bar = document.createElement('div');
-      bar.style.height = Math.max(1, Math.abs(v) / maxAbs * 28) + 'px';
+      bar.style.height = Math.max(1, Math.abs(v) * 28) + 'px';
       bar.className = 'sbar ' + (v >= 0 ? 'up' : 'dn');
       track.appendChild(bar); col.appendChild(track);
       var av = document.createElement('div'); av.className = 'av'; av.textContent = v.toFixed(2); col.appendChild(av);
@@ -159,18 +168,22 @@
   }
 
   function render() {
-    setArrow('arrowA', 'tipA', state.thA);
-    setArrow('arrowB', 'tipB', state.thB);
-    document.getElementById('angA').textContent = Math.round(state.thA * 180 / Math.PI) + '\u00b0';
-    document.getElementById('angB').textContent = Math.round(state.thB * 180 / Math.PI) + '\u00b0';
+    var ce = Math.cos(state.eta), se = Math.sin(state.eta);
+    setArrow('arrowA', 'tipA', state.thA, ce);
+    setArrow('arrowB', 'tipB', state.thB, ce);
+    setU1Arrow('u1arrowA', state.thA, se);
+    setU1Arrow('u1arrowB', state.thB, se);
+    document.getElementById('angA').innerHTML = 'u0: ' + ce.toFixed(2) + ' &middot; u1: ' + se.toFixed(2);
+    document.getElementById('angB').innerHTML = 'u0: ' + ce.toFixed(2) + ' &middot; u1: ' + se.toFixed(2);
     var a = amps();
     signedStrip(document.getElementById('amps'), a);
     probBars(document.getElementById('probs'), a.map(function (x) { return x * x; }));
+    document.getElementById('schmidt').innerHTML = 'state = <b>' + ce.toFixed(2) + '</b> &middot; |u0 v0> + <b>' + se.toFixed(2) + '</b> &middot; |u1 v1><br><span style="font-size:11px;color:#888;">solid arrow length = cos &eta; (weight of u0); dashed arrow length = sin &eta; (weight of u1).</span>';
     var conc = 2 * Math.abs(a[0] * a[3] - a[1] * a[2]);
     var meter = document.getElementById('meter');
-    var label = conc < 0.01 ? 'the two circles tell the whole story (independent)' :
-                (conc > 0.99 ? 'maximally entangled' : 'entangled &mdash; the two circles no longer capture it');
-    meter.innerHTML = 'entanglement (concurrence) = <b>' + conc.toFixed(2) + '</b> &mdash; ' + label + '.';
+    var label = conc < 0.01 ? 'independent: only u0 is present' :
+                (conc > 0.99 ? 'maximally entangled: u0 and u1 equally weighted' : 'partially entangled: u0 still dominates');
+    meter.innerHTML = 'concurrence = <b>' + conc.toFixed(2) + '</b>. ' + label + '.';
     var etaDeg = Math.round(state.eta * 180 / Math.PI);
     document.getElementById('etaV').textContent = etaDeg + '\u00b0 ' + (etaDeg === 0 ? '(independent)' : (etaDeg === 45 ? '(maximally entangled)' : ''));
     fit();

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Hadamard gate on one qubit</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: monospace; font-size: 13px; line-height: 1.5; color: #222; background: transparent; }
+  .card { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 640px; margin: 0 auto; padding: 16px; }
+  .card h1 { font-size: 15px; margin: 0 0 4px; color: #0066cc; }
+  .sub { font-size: 11.5px; color: #999; margin: 0 0 10px; }
+  .gate { display: flex; align-items: flex-start; justify-content: center; gap: 0; flex-wrap: wrap; }
+  .side { width: 200px; text-align: center; }
+  .side .qlab { font-size: 12px; color: #555; margin-bottom: 2px; }
+  svg.bloch { width: 140px; height: 140px; display: block; margin: 0 auto; touch-action: none; }
+  #inCirc { cursor: grab; }
+  #inCirc:active { cursor: grabbing; }
+  .hmid { width: 200px; display: flex; flex-direction: column; align-items: center; }
+  svg.butterfly { width: 200px; height: auto; display: block; }
+  .motif-title { font-size: 11px; color: #999; margin: 6px 0 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ampstrip { display: flex; justify-content: center; gap: 20px; min-height: 82px; }
+  .amp-col { display: flex; flex-direction: column; align-items: center; }
+  .amp-track { width: 26px; height: 50px; position: relative; }
+  .amp-mid { position: absolute; left: 0; right: 0; top: 25px; border-top: 1px solid #ddd; }
+  .amp-bar { position: absolute; left: 5px; right: 5px; border-radius: 3px; }
+  .amp-bar.up { bottom: 25px; background: #0066cc; }
+  .amp-bar.dn { top: 25px; background: #e85d3a; }
+  .amp-val { font-size: 11px; color: #555; margin-top: 4px; }
+  .amp-lab { font-size: 11px; font-weight: bold; color: #222; }
+  .pbar { display: flex; align-items: center; gap: 5px; margin: 2px auto; font-size: 11px; max-width: 180px; }
+  .pbar .pl { width: 40px; color: #666; text-align: right; }
+  .pbar .ptrack { flex: 1; height: 10px; background: #eee; border-radius: 2px; overflow: hidden; }
+  .pbar .pfill { display: block; height: 100%; background: #0066cc; transition: width 0.12s; }
+  .pbar .pv { width: 32px; color: #444; }
+  .formula { font-size: 11px; color: #555; margin: 10px 0 6px; padding: 8px 10px; background: #eef4ff; border: 1px solid #cfe0ff; border-radius: 4px; text-align: center; line-height: 1.6; }
+  .formula b { color: #0066cc; }
+  .presets { margin: 8px 0 2px; text-align: center; }
+  .presets button { font-family: monospace; font-size: 11.5px; padding: 4px 9px; margin: 0 3px; border: 1px solid #aaa; border-radius: 4px; background: #fff; color: #444; cursor: pointer; }
+  .presets button:hover { border-color: #0066cc; color: #0066cc; }
+  .caption { font-size: 11.5px; color: #555; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>The Hadamard gate, visually</h1>
+  <p class="sub">Drag the input arrow. Trace each amplitude through the H gate to see how it splits and combines at the outputs.</p>
+
+  <div class="gate">
+    <!-- INPUT SIDE -->
+    <div class="side">
+      <div class="qlab">input</div>
+      <svg class="bloch" id="inCirc" viewBox="0 0 140 140">
+        <line x1="18" y1="70" x2="122" y2="70" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="70" y1="18" x2="70" y2="122" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="118" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="60" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="iProjX" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line id="iProjY" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle id="iTickX" r="3.5" fill="#9fb8d8"/>
+        <circle id="iTickY" r="3.5" fill="#9fb8d8"/>
+        <line id="iArrow" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="iTip" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="motif-title">amplitudes</div>
+      <div class="ampstrip" id="iAmps"></div>
+      <div class="motif-title">probabilities</div>
+      <div class="pbar"><span class="pl">P(|0>)</span><span class="ptrack"><span class="pfill" id="iP0" style="width:100%"></span></span><span class="pv" id="iP0v">1.00</span></div>
+      <div class="pbar"><span class="pl">P(|1>)</span><span class="ptrack"><span class="pfill" id="iP1" style="width:0%"></span></span><span class="pv" id="iP1v">0.00</span></div>
+    </div>
+
+    <!-- H GATE MIDDLE (butterfly) -->
+    <div class="hmid">
+      <div style="height:183px;"></div>
+      <svg class="butterfly" viewBox="0 0 220 120">
+        <!-- input dots + labels -->
+        <text x="2" y="20" font-size="14" fill="#555" font-family="monospace" dominant-baseline="central">α</text>
+        <circle cx="12" cy="20" r="3" fill="#0066cc"/>
+        <text x="2" y="100" font-size="14" fill="#555" font-family="monospace" dominant-baseline="central">β</text>
+        <circle cx="12" cy="100" r="3" fill="#0066cc"/>
+
+        <!-- straight lines (α→α', β→β') -->
+        <line x1="15" y1="20" x2="205" y2="20" stroke="#0066cc" stroke-width="1.5"/>
+        <line x1="15" y1="100" x2="205" y2="100" stroke="#0066cc" stroke-width="1.5"/>
+        <!-- crossing lines (α→β', β→α') -->
+        <line x1="15" y1="20" x2="205" y2="100" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <line x1="15" y1="100" x2="205" y2="20" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="3 2"/>
+
+        <!-- H box at center crossing -->
+        <rect x="98" y="50" width="24" height="20" fill="#fafafa" stroke="#0066cc" stroke-width="1.5" rx="3"/>
+        <text x="110" y="60" font-size="16" fill="#0066cc" font-family="monospace" text-anchor="middle" dominant-baseline="central" font-weight="bold">H</text>
+
+        <!-- OPERATIONS at x=65 (left of H, 56×20 rounded rects behind) -->
+        <rect x="37" y="10" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text x="65" y="20" font-size="14" fill="#0066cc" font-family="monospace" text-anchor="middle" dominant-baseline="central">×1/√2</text>
+        <rect x="37" y="31" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text x="65" y="41" font-size="14" fill="#9fb8d8" font-family="monospace" text-anchor="middle" dominant-baseline="central">×1/√2</text>
+        <rect x="37" y="69" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text x="65" y="79" font-size="14" fill="#9fb8d8" font-family="monospace" text-anchor="middle" dominant-baseline="central">×1/√2</text>
+        <rect x="37" y="90" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text x="65" y="100" font-size="14" fill="#e85d3a" font-family="monospace" text-anchor="middle" dominant-baseline="central">×−1/√2</text>
+
+        <!-- VALUES at x=155 (right of H, 56×20 rounded rects behind) -->
+        <rect x="127" y="10" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text id="pi_a0" x="155" y="20" font-size="14" fill="#0066cc" font-family="monospace" text-anchor="middle" dominant-baseline="central">+0.71</text>
+        <rect x="127" y="31" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text id="pi_b0" x="155" y="41" font-size="14" fill="#9fb8d8" font-family="monospace" text-anchor="middle" dominant-baseline="central">+0.00</text>
+        <rect x="127" y="69" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text id="pi_a1" x="155" y="79" font-size="14" fill="#9fb8d8" font-family="monospace" text-anchor="middle" dominant-baseline="central">+0.71</text>
+        <rect x="127" y="90" width="56" height="20" rx="3" fill="#fafafa"/>
+        <text id="pi_b1" x="155" y="100" font-size="14" fill="#e85d3a" font-family="monospace" text-anchor="middle" dominant-baseline="central">−0.00</text>
+
+        <!-- output dots + labels (inside viewBox, not truncated) -->
+        <circle cx="208" cy="20" r="3" fill="#0066cc"/>
+        <text x="214" y="20" font-size="14" fill="#555" font-family="monospace" dominant-baseline="central">α'</text>
+        <circle cx="208" cy="100" r="3" fill="#0066cc"/>
+        <text x="214" y="100" font-size="14" fill="#555" font-family="monospace" dominant-baseline="central">β'</text>
+      </svg>
+    </div>
+
+    <!-- OUTPUT SIDE -->
+    <div class="side">
+      <div class="qlab">after H</div>
+      <svg class="bloch" id="outCirc" viewBox="0 0 140 140">
+        <line x1="18" y1="70" x2="122" y2="70" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="70" y1="18" x2="70" y2="122" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="118" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="60" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="oProjX" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line id="oProjY" stroke="#9fb8d8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle id="oTickX" r="3.5" fill="#9fb8d8"/>
+        <circle id="oTickY" r="3.5" fill="#9fb8d8"/>
+        <line id="oArrow" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="oTip" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="motif-title">amplitudes</div>
+      <div class="ampstrip" id="oAmps"></div>
+      <div class="motif-title">probabilities</div>
+      <div class="pbar"><span class="pl">P(|0>)</span><span class="ptrack"><span class="pfill" id="oP0" style="width:50%"></span></span><span class="pv" id="oP0v">0.50</span></div>
+      <div class="pbar"><span class="pl">P(|1>)</span><span class="ptrack"><span class="pfill" id="oP1" style="width:50%"></span></span><span class="pv" id="oP1v">0.50</span></div>
+    </div>
+  </div>
+
+  <div class="formula" id="formula"></div>
+  <div class="presets" id="presets"></div>
+
+  <p class="caption">Each input amplitude splits through H into both outputs. The solid lines show the "straight" paths (α to α', β to β'); the dashed lines show the crossing paths (α to β', β to α'). The coefficients are fixed: ×1/√2 everywhere except β to β', which gets ×−1/√2 (the minus sign). At each output, two contributions arrive and add. The values near the output dots show the pre-interference contributions; the output amplitude bars show their sum.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function fit() { var f = window.frameElement; if (!f) return; f.style.height = '0px'; f.style.height = document.body.scrollHeight + 'px'; }
+
+  var C = 70, R = 46, SQRT2 = Math.sqrt(2);
+  var state = { th: 0 };
+
+  function setCircle(pfx, th) {
+    var x = C + Math.cos(th) * R, y = C - Math.sin(th) * R;
+    document.getElementById(pfx + 'Arrow').setAttribute('x2', x);
+    document.getElementById(pfx + 'Arrow').setAttribute('y2', y);
+    document.getElementById(pfx + 'Tip').setAttribute('cx', x);
+    document.getElementById(pfx + 'Tip').setAttribute('cy', y);
+    var px = document.getElementById(pfx + 'ProjX');
+    px.setAttribute('x1', x); px.setAttribute('y1', y); px.setAttribute('x2', x); px.setAttribute('y2', C);
+    var py = document.getElementById(pfx + 'ProjY');
+    py.setAttribute('x1', x); py.setAttribute('y1', y); py.setAttribute('x2', C); py.setAttribute('y2', y);
+    document.getElementById(pfx + 'TickX').setAttribute('cx', x);
+    document.getElementById(pfx + 'TickX').setAttribute('cy', C);
+    document.getElementById(pfx + 'TickY').setAttribute('cx', C);
+    document.getElementById(pfx + 'TickY').setAttribute('cy', y);
+  }
+
+  function renderAmps(containerId, a, b) {
+    var c = document.getElementById(containerId);
+    c.innerHTML = '';
+    [['|0>', a], ['|1>', b]].forEach(function (item) {
+      var col = document.createElement('div'); col.className = 'amp-col';
+      var track = document.createElement('div'); track.className = 'amp-track';
+      var mid = document.createElement('div'); mid.className = 'amp-mid'; track.appendChild(mid);
+      var bar = document.createElement('div');
+      bar.className = 'amp-bar ' + (item[1] >= 0 ? 'up' : 'dn');
+      bar.style.height = Math.max(1, Math.abs(item[1]) * 22) + 'px';
+      track.appendChild(bar); col.appendChild(track);
+      var v = document.createElement('div'); v.className = 'amp-val'; v.textContent = item[1].toFixed(2); col.appendChild(v);
+      var l = document.createElement('div'); l.className = 'amp-lab'; l.textContent = item[0]; col.appendChild(l);
+      c.appendChild(col);
+    });
+  }
+
+  function fmt(v) { return (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2); }
+
+  function render() {
+    var a = Math.cos(state.th), b = Math.sin(state.th);
+    var oa = (a + b) / SQRT2, ob = (a - b) / SQRT2;
+    var oth = Math.atan2(ob, oa);
+
+    setCircle('i', state.th);
+    setCircle('o', oth);
+    renderAmps('iAmps', a, b);
+    renderAmps('oAmps', oa, ob);
+
+    var ip0 = a * a, ip1 = b * b, op0 = oa * oa, op1 = ob * ob;
+    document.getElementById('iP0').style.width = (ip0 * 100) + '%';
+    document.getElementById('iP1').style.width = (ip1 * 100) + '%';
+    document.getElementById('iP0v').textContent = ip0.toFixed(2);
+    document.getElementById('iP1v').textContent = ip1.toFixed(2);
+    document.getElementById('oP0').style.width = (op0 * 100) + '%';
+    document.getElementById('oP1').style.width = (op1 * 100) + '%';
+    document.getElementById('oP0v').textContent = op0.toFixed(2);
+    document.getElementById('oP1v').textContent = op1.toFixed(2);
+
+    // butterfly pre-interference contributions
+    var ca0 = a / SQRT2, cb0 = b / SQRT2, ca1 = a / SQRT2, cb1 = -b / SQRT2;
+    document.getElementById('pi_a0').textContent = fmt(ca0);
+    document.getElementById('pi_b0').textContent = fmt(cb0);
+    document.getElementById('pi_a1').textContent = fmt(ca1);
+    document.getElementById('pi_b1').textContent = fmt(cb1);
+
+    document.getElementById('formula').innerHTML =
+      'H(' + a.toFixed(2) + ', ' + b.toFixed(2) + ') = (<b>' + oa.toFixed(2) + '</b>, <b>' + ob.toFixed(2) + '</b>) = (' + a.toFixed(2) + '+' + b.toFixed(2) + ')/&radic;2, (' + a.toFixed(2) + '-' + b.toFixed(2) + ')/&radic;2';
+    fit();
+  }
+
+  // drag on input circle
+  var svg = document.getElementById('inCirc');
+  function phi(e) {
+    var r = svg.getBoundingClientRect();
+    var sx = (e.clientX - r.left) / r.width * 140, sy = (e.clientY - r.top) / r.height * 140;
+    var aa = (sx - C) / R, bb = (C - sy) / R;
+    var L = Math.hypot(aa, bb); if (L < 1e-9) return null;
+    var p = Math.atan2(bb / L, aa / L); if (p < 0) p += 2 * Math.PI; return p;
+  }
+  var dragging = false;
+  svg.addEventListener('pointerdown', function (e) { dragging = true; svg.setPointerCapture(e.pointerId); var p = phi(e); if (p !== null) { state.th = p; render(); } });
+  svg.addEventListener('pointermove', function (e) { if (!dragging) return; var p = phi(e); if (p !== null) { state.th = p; render(); } });
+  svg.addEventListener('pointerup', function () { dragging = false; });
+  svg.addEventListener('pointercancel', function () { dragging = false; });
+
+  // presets
+  var PRESETS = [['|0>', 0], ['|1>', 90], ['|+>', 45], ['|->', 315]];
+  var pbox = document.getElementById('presets');
+  PRESETS.forEach(function (pr) {
+    var btn = document.createElement('button'); btn.textContent = pr[0];
+    btn.addEventListener('click', function () { state.th = pr[1] * Math.PI / 180; render(); });
+    pbox.appendChild(btn);
+  });
+
+  render();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>

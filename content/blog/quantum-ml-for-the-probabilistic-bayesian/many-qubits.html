@@ -19,9 +19,9 @@
   .circs { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 4px 0 8px; }
   .q { text-align: center; }
   .q .qlab { font-size: 11.5px; color: #555; margin-bottom: 2px; }
-  svg { width: 130px; height: 130px; display: block; touch-action: none; cursor: grab; }
+  svg { width: 140px; height: 140px; display: block; touch-action: none; cursor: grab; }
   svg:active { cursor: grabbing; }
-  .q .qang { font-size: 10.5px; color: #0066cc; margin-top: 2px; }
+  .q .qang { font-size: 11px; color: #0066cc; margin-top: 2px; }
   .presets { margin: 8px 0 2px; }
   .presets button { font-family: monospace; font-size: 11.5px; padding: 4px 9px; margin-right: 5px; border: 1px solid #aaa; border-radius: 4px; background: #fff; color: #444; cursor: pointer; }
   .presets button:hover { border-color: #0066cc; color: #0066cc; }
@@ -33,13 +33,13 @@
   .sbar { position: absolute; left: 20%; right: 20%; border-radius: 3px; }
   .sbar.up { bottom: 30px; background: #0066cc; }
   .sbar.dn { top: 30px; background: #e85d3a; }
-  .lab { margin-top: 3px; font-weight: bold; font-size: 10.5px; color: #222; }
-  .av { font-size: 9px; color: #777; }
+  .lab { margin-top: 3px; font-weight: bold; font-size: 11px; color: #222; }
+  .av { font-size: 11px; color: #777; }
   .bars { display: flex; align-items: flex-end; justify-content: center; gap: 8px; height: 90px; padding: 6px 4px 0; background: #fff; border: 1px solid #eee; border-radius: 6px; }
   .pcol { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
   .bar { width: 70%; max-width: 24px; border-radius: 4px 4px 0 0; background: #0066cc; }
   .bar.g { background: #d9d9d9; }
-  .num { font-size: 9px; color: #777; margin-top: 2px; }
+  .num { font-size: 11px; color: #777; margin-top: 2px; }
   .caption { font-size: 11.5px; color: #555; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #ddd; line-height: 1.5; }
 </style>
 </head>
@@ -59,40 +59,40 @@
   <div class="circs" id="circs">
     <div class="q" id="qA">
       <div class="qlab">qubit A</div>
-      <svg id="circA" viewBox="0 0 130 130">
-        <line x1="18" y1="65" x2="112" y2="65" stroke="#ccc" stroke-width="1"/>
-        <line x1="65" y1="18" x2="65" y2="112" stroke="#ccc" stroke-width="1"/>
-        <circle cx="65" cy="65" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
-        <text x="116" y="69" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
-        <text x="58" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
-        <line id="arrowA" x1="65" y1="65" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
-        <circle id="tipA" r="6" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      <svg id="circA" viewBox="0 0 140 140">
+        <line x1="18" y1="70" x2="122" y2="70" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="70" y1="18" x2="70" y2="122" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="118" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="60" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowA" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipA" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
       </svg>
       <div class="qang" id="angA">0&deg;</div>
     </div>
     <div class="q" id="qB">
       <div class="qlab">qubit B</div>
-      <svg id="circB" viewBox="0 0 130 130">
-        <line x1="18" y1="65" x2="112" y2="65" stroke="#ccc" stroke-width="1"/>
-        <line x1="65" y1="18" x2="65" y2="112" stroke="#ccc" stroke-width="1"/>
-        <circle cx="65" cy="65" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
-        <text x="116" y="69" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
-        <text x="58" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
-        <line id="arrowB" x1="65" y1="65" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
-        <circle id="tipB" r="6" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      <svg id="circB" viewBox="0 0 140 140">
+        <line x1="18" y1="70" x2="122" y2="70" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="70" y1="18" x2="70" y2="122" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="118" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="60" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowB" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipB" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
       </svg>
       <div class="qang" id="angB">0&deg;</div>
     </div>
     <div class="q" id="qC">
       <div class="qlab">qubit C</div>
-      <svg id="circC" viewBox="0 0 130 130">
-        <line x1="18" y1="65" x2="112" y2="65" stroke="#ccc" stroke-width="1"/>
-        <line x1="65" y1="18" x2="65" y2="112" stroke="#ccc" stroke-width="1"/>
-        <circle cx="65" cy="65" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
-        <text x="116" y="69" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
-        <text x="58" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
-        <line id="arrowC" x1="65" y1="65" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
-        <circle id="tipC" r="6" fill="#0066cc" stroke="#fff" stroke-width="2"/>
+      <svg id="circC" viewBox="0 0 140 140">
+        <line x1="18" y1="70" x2="122" y2="70" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="70" y1="18" x2="70" y2="122" stroke="#ccc" stroke-width="1" stroke-dasharray="2 2"/>
+        <circle cx="70" cy="70" r="46" fill="none" stroke="#dde6f5" stroke-width="2"/>
+        <text x="118" y="74" fill="#0066cc" font-size="11" font-family="monospace">|0></text>
+        <text x="60" y="14" fill="#0066cc" font-size="11" font-family="monospace">|1></text>
+        <line id="arrowC" x1="70" y1="70" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+        <circle id="tipC" r="7" fill="#0066cc" stroke="#fff" stroke-width="2"/>
       </svg>
       <div class="qang" id="angC">0&deg;</div>
     </div>
@@ -114,7 +114,7 @@
   'use strict';
   function fit() { var f = window.frameElement; if (!f) return; f.style.height = '0px'; f.style.height = document.body.scrollHeight + 'px'; }
 
-  var C = 65, R = 46;
+  var C = 70, R = 46;
   var state = { n: 1, th: [0, 0, 0] }; // th[i] = angle (rad) of qubit i
 
   function N(n) { return 1 << n; }
@@ -225,7 +225,7 @@
     var svg = document.getElementById(svgId);
     function phi(e) {
       var r = svg.getBoundingClientRect();
-      var sx = (e.clientX - r.left) / r.width * 130, sy = (e.clientY - r.top) / r.height * 130;
+      var sx = (e.clientX - r.left) / r.width * 140, sy = (e.clientY - r.top) / r.height * 140;
       var a = (sx - C) / R, b = (C - sy) / R;
       var L = Math.hypot(a, b); if (L < 1e-9) return null;
       var p = Math.atan2(b / L, a / L); if (p < 0) p += 2 * Math.PI; return p;

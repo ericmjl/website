@@ -7,144 +7,79 @@
 <style>
   * { box-sizing: border-box; }
   html, body {
-    margin: 0;
-    padding: 0;
-    font-family: monospace;
-    font-size: 13px;
-    line-height: 1.5;
-    color: #222;
-    background: transparent;
+    margin: 0; padding: 0;
+    font-family: monospace; font-size: 13px; line-height: 1.5;
+    color: #222; background: transparent;
   }
   .card {
-    background: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background: #fafafa; border: 1px solid #ddd; border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 16px;
+    max-width: 640px; margin: 0 auto; padding: 16px;
   }
   .card h2 {
-    margin: 0 0 4px;
-    font-size: 15px;
-    color: #0066cc;
+    margin: 0 0 4px; font-size: 15px; color: #0066cc;
   }
   .progress {
-    font-size: 11.5px;
-    color: #888;
-    margin: 0 0 12px;
+    font-size: 11.5px; color: #888; margin: 0 0 12px;
   }
   .prompt {
-    font-weight: bold;
-    margin: 0 0 10px;
-    font-size: 12.5px;
-    color: #222;
+    font-weight: bold; margin: 0 0 10px; font-size: 12.5px; color: #222;
   }
   .options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: flex; flex-direction: column; gap: 8px;
   }
   .opt {
-    display: block;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background: #fff;
-    color: #333;
-    cursor: pointer;
-    font-family: monospace;
-    font-size: 12px;
-    line-height: 1.45;
-    text-align: left;
+    display: block; width: 100%; text-align: left;
+    padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;
+    background: #fff; color: #333; cursor: pointer;
+    font-family: monospace; font-size: 12px; line-height: 1.45;
     transition: border-color 0.1s ease;
-    width: 100%;
   }
   .opt:hover { border-color: #0066cc; }
   .opt.correct {
-    background: #e7f6ee;
-    color: #1a9e5b;
-    border-color: #1a9e5b;
+    background: #e7f6ee; color: #1a9e5b; border-color: #1a9e5b;
   }
   .opt.wrong {
-    background: #fdecea;
-    color: #e85d3a;
-    border-color: #e85d3a;
+    background: #fdecea; color: #e85d3a; border-color: #e85d3a;
   }
   .why {
-    display: none;
-    margin: 2px 0 0;
-    padding: 6px 10px;
-    font-size: 11.5px;
-    line-height: 1.45;
-    border-radius: 0 4px 4px 0;
+    display: none; margin: 2px 0 0; padding: 6px 10px;
+    font-size: 11.5px; line-height: 1.45; border-radius: 0 4px 4px 0;
   }
   .why.show { display: block; }
   .why-c {
-    color: #1a9e5b;
-    background: #e7f6ee;
-    border-left: 3px solid #1a9e5b;
+    color: #1a9e5b; background: #e7f6ee; border-left: 3px solid #1a9e5b;
   }
   .why-w {
-    color: #c0392b;
-    background: #fdecea;
-    border-left: 3px solid #e85d3a;
+    color: #c0392b; background: #fdecea; border-left: 3px solid #e85d3a;
   }
   .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 14px;
-    gap: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 14px; gap: 8px;
   }
   .nav button {
-    font-family: monospace;
-    font-size: 12px;
-    padding: 7px 14px;
-    border: 1px solid #0066cc;
-    background: #fff;
-    color: #0066cc;
-    border-radius: 6px;
-    cursor: pointer;
+    font-family: monospace; font-size: 12px; padding: 7px 14px;
+    border: 1px solid #0066cc; background: #fff; color: #0066cc;
+    border-radius: 6px; cursor: pointer;
   }
   .nav button:hover:not(:disabled) {
-    background: #0066cc;
-    color: #fff;
+    background: #0066cc; color: #fff;
   }
   .nav button:disabled {
-    opacity: 0.4;
-    cursor: default;
-    border-color: #bbb;
-    color: #999;
+    opacity: 0.4; cursor: default; border-color: #bbb; color: #999;
   }
   .results {
-    display: none;
-    margin-top: 4px;
-    padding: 12px;
-    background: #eef4ff;
-    border: 1px solid #cfe0ff;
-    border-radius: 6px;
-    color: #0066cc;
-    font-size: 13px;
-    font-weight: bold;
+    display: none; margin-top: 4px; padding: 12px;
+    background: #eef4ff; border: 1px solid #cfe0ff; border-radius: 6px;
+    color: #0066cc; font-size: 13px; font-weight: bold;
   }
   .results.show { display: block; }
   .results .sub {
-    color: #555;
-    font-size: 11.5px;
-    margin-top: 4px;
-    font-weight: normal;
+    color: #555; font-size: 11.5px; margin-top: 4px; font-weight: normal;
   }
   .results .again {
-    margin-top: 10px;
-    font-family: monospace;
-    font-size: 12px;
-    padding: 7px 14px;
-    border: 1px solid #0066cc;
-    background: #fff;
-    color: #0066cc;
-    border-radius: 6px;
-    cursor: pointer;
+    margin-top: 10px; font-family: monospace; font-size: 12px; padding: 7px 14px;
+    border: 1px solid #0066cc; background: #fff; color: #0066cc; border-radius: 6px; cursor: pointer;
   }
   .results .again:hover { background: #0066cc; color: #fff; }
 </style>
@@ -171,62 +106,223 @@
     f.style.height = document.body.scrollHeight + 'px';
   }
 
-  var QUESTIONS = [
+  var BANK = [
     {
-      prompt: "A qubit in superposition is best described as...",
+      prompt: "A qubit's state is best described as...",
       options: [
-        { text: "a probabilistic bit that takes a definite value only when measured", correct: true,
-          why: "A qubit holds a probability distribution over 0 and 1; measuring collapses it to one outcome." },
-        { text: "a bit that is secretly 0 until someone looks", correct: false,
-          why: "A qubit isn't hiding a definite value. Before measurement its state is genuinely probabilistic, not merely unknown." },
-        { text: "two classical bits compressed into one", correct: false,
-          why: "One qubit represents a distribution over two states, not two independently stored bits." }
+        { text: "an arrow on a unit circle, with signed coordinates called amplitudes", correct: true,
+          why: "A qubit state is a vector of amplitudes; the arrow visualizes them geometrically on the Bloch circle." },
+        { text: "a probabilistic bit that is 0 with some probability and 1 with the rest", correct: false,
+          why: "This drops the amplitude structure entirely. Probabilities are derived (squared amplitudes), not primary." },
+        { text: "a classical bit whose definite value is hidden until you measure", correct: false,
+          why: "This is the hidden-variable view. The qubit's pre-measurement state is genuinely a superposition, not a hidden definite value." },
+        { text: "two classical bits stored simultaneously", correct: false,
+          why: "One qubit is not two bits. It is a single amplitude-weighted state that collapses to one classical bit on measurement." }
       ]
     },
     {
-      prompt: "Two qubits are entangled. This means...",
+      prompt: "The probability of measuring |0> is...",
       options: [
-        { text: "their measurement outcomes are not independent", correct: true,
-          why: "Entanglement is non-independence: one outcome is correlated with the other." },
-        { text: "they are physically far apart", correct: false,
-          why: "Distance has nothing to do with it. Entanglement is about correlation between outcomes, not location." },
-        { text: "they always both read 0", correct: false,
-          why: "Entangled qubits can be correlated in many ways (always match, always oppose); they are not forced to both be 0." }
+        { text: "the square of the amplitude on |0>", correct: true,
+          why: "Probability = amplitude squared. This is the Born rule, the bridge from amplitudes to the Bayesian's familiar probabilities." },
+        { text: "equal to the amplitude on |0>", correct: false,
+          why: "Amplitudes are not probabilities. You must square them. An amplitude of 0.5 gives a probability of 0.25, not 0.5." },
+        { text: "always 50% when the qubit is in superposition", correct: false,
+          why: "Superposition means the qubit has nonzero amplitude on both outcomes, but the split can be any ratio, not just 50/50." },
+        { text: "determined by the sign of the amplitude", correct: false,
+          why: "The sign vanishes when you square. A negative amplitude gives the same probability as a positive one of the same magnitude." }
       ]
     },
     {
-      prompt: "Why is sampling hard over combinatorial spaces?",
+      prompt: "The unit circle (Bloch circle) represents...",
       options: [
-        { text: "the number of configurations grows exponentially with size", correct: true,
-          why: "The state space is exponentially large, so enumeration is hopeless and you must sample." },
-        { text: "computers are too slow at arithmetic", correct: false,
-          why: "The bottleneck is the size of the space, not the speed of arithmetic." },
-        { text: "probability theory does not apply", correct: false,
-          why: "Probability applies fine. The hard part is reaching the relevant regions of a huge space." }
+        { text: "all possible pure states of a single qubit with real amplitudes", correct: true,
+          why: "Every point on the circle is a valid pure state; the coordinates are the amplitudes (cos and sin of the angle)." },
+        { text: "all possible probability distributions over {0, 1}", correct: false,
+          why: "Probability distributions over two outcomes form a line segment (p can be anything from 0 to 1), not a circle. The circle includes sign information." },
+        { text: "the qubit's physical location in 2D space", correct: false,
+          why: "The circle is a state-space diagram, not a physical position. The qubit might be an ion in a trap or a spin in a crystal." },
+        { text: "the set of possible measurement outcomes", correct: false,
+          why: "Measurement outcomes are just 0 and 1, two points. The circle is the space of states BEFORE measurement." }
       ]
     },
     {
-      prompt: "In the Bayesian view used here, a quantum computer's distinctive strength is...",
+      prompt: "A register of 3 qubits has how many amplitudes?",
       options: [
-        { text: "sampling from distributions over spaces too large to enumerate", correct: true,
-          why: "The post frames the quantum computer as a specialized sampler for huge combinatorial spaces." },
-        { text: "doing arithmetic faster than a laptop", correct: false,
-          why: "The advantage isn't raw arithmetic speed; it's a sampling structure that classical machines lack." },
-        { text: "storing more bits per chip", correct: false,
-          why: "The point isn't density of storage; it's holding and sampling a superposition over many states." }
+        { text: "8 (one per possible bitstring)", correct: true,
+          why: "Each qubit doubles the count: 2, 4, 8. Each of the 8 bitstrings (000 through 111) gets its own amplitude." },
+        { text: "3 (one per qubit)", correct: false,
+          why: "This misses the exponential growth. Individual qubit states do not capture the joint state when entangled." },
+        { text: "6 (two per qubit)", correct: false,
+          why: "Two amplitudes per qubit is right for independent qubits, but the joint state has 2^n amplitudes, not 2 times n." },
+        { text: "9 (three squared)", correct: false,
+          why: "The formula is 2^n, not n squared. For 3 qubits: 2^3 = 8." }
+      ]
+    },
+    {
+      prompt: "When we say qubits are 'independent,' we mean...",
+      options: [
+        { text: "the joint state factors into a product of per-qubit states, so N circles suffice", correct: true,
+          why: "Independent qubits factor: the joint amplitudes are products of individual amplitudes. N circles tell the whole story." },
+        { text: "the qubits are not connected by physical wires", correct: false,
+          why: "Physical connectivity is irrelevant. Even connected qubits can be in an independent (product) state." },
+        { text: "the qubits all have the same amplitude values", correct: false,
+          why: "Independence means factorizability, not uniformity. Independent qubits can each point at different angles." },
+        { text: "the qubits cannot affect each other through gates", correct: false,
+          why: "Gates can create dependence (entanglement). 'Independent' describes the current state, not a permanent restriction." }
+      ]
+    },
+    {
+      prompt: "Entanglement is best described as...",
+      options: [
+        { text: "the joint state cannot be factored into individual qubit states", correct: true,
+          why: "When the amplitude vector does not factor, no set of individual qubit circles can represent it. That is entanglement." },
+        { text: "the qubits are physically close together", correct: false,
+          why: "Physical distance is irrelevant. Entangled qubits can be light-years apart and still be entangled." },
+        { text: "the qubits always produce the same measurement outcome", correct: false,
+          why: "That is one specific type of correlation (maximally entangled, same-basis). Entanglement is more general: it means non-factorizability." },
+        { text: "the qubits share a classical random seed", correct: false,
+          why: "Classical shared randomness produces correlation, but not the kind that violates Bell inequalities. Entanglement is stronger." }
+      ]
+    },
+    {
+      prompt: "When two qubits become maximally entangled, each qubit's arrow...",
+      options: [
+        { text: "shrinks to the center of its circle (maximally mixed individually)", correct: true,
+          why: "Maximum entanglement means each qubit alone is maximally uncertain. The arrow length (Schmidt coefficient) goes to zero." },
+        { text: "rotates to a new angle on the circle", correct: false,
+          why: "Entanglement changes the arrow's LENGTH (how mixed the qubit is), not its direction. The Schmidt basis stays fixed." },
+        { text: "stays at full length on the circle", correct: false,
+          why: "A full-length arrow means the qubit is pure and independent. Entanglement reduces individual purity." },
+        { text: "splits into two arrows pointing at u0 and u1", correct: false,
+          why: "There is still one arrow per qubit. It gets shorter (more mixed), not duplicated." }
+      ]
+    },
+    {
+      prompt: "Can two unit circles always represent a 2-qubit state?",
+      options: [
+        { text: "No. Only independent (product) states factor into two circles; entangled states need the full joint vector.", correct: true,
+          why: "Two circles work when the state factors. Entangled states like the Bell state cannot be split, so two circles are insufficient." },
+        { text: "Yes. Two circles always describe any pair of qubits.", correct: false,
+          why: "This misses entanglement entirely. The Bell state (|00>+|11>)/sqrt(2) cannot be written as a product of two single-qubit states." },
+        { text: "Yes, but only for pure states, not mixed ones.", correct: false,
+          why: "Entangled states ARE pure (the joint state is a single vector). The issue is factorizability, not purity." },
+        { text: "No, you always need four circles for two qubits.", correct: false,
+          why: "Overcomplicating. Two circles suffice for product states. The issue is that they do not suffice for ALL states." }
+      ]
+    },
+    {
+      prompt: "Interference happens when...",
+      options: [
+        { text: "signed amplitudes combine: same signs reinforce, opposite signs cancel", correct: true,
+          why: "This is the definition. Two positive amplitudes add to a bigger one; a positive and negative can subtract to zero." },
+        { text: "two qubits measure the same value", correct: false,
+          why: "That is correlation (possibly from entanglement), not interference. Interference is about amplitudes combining within a single state." },
+        { text: "probabilities add up to more than 1", correct: false,
+          why: "Probabilities always sum to 1. Interference operates on amplitudes (which can cancel), not on probabilities (which cannot)." },
+        { text: "a gate creates entanglement between qubits", correct: false,
+          why: "Gates can create entanglement, but that is a different phenomenon. Interference is about signed amplitudes combining within one qubit's state." }
+      ]
+    },
+    {
+      prompt: "Why can amplitudes cancel but probabilities cannot?",
+      options: [
+        { text: "amplitudes are signed (can be negative), while probabilities are non-negative", correct: true,
+          why: "A +0.5 and a -0.5 cancel to zero. Probabilities are always >= 0, so they can only pile up, never subtract." },
+        { text: "because amplitudes are complex numbers", correct: false,
+          why: "Complex amplitudes do enable richer interference, but even real amplitudes cancel (a +1 and a -1). The key property is the sign, not complexity." },
+        { text: "because amplitudes are always smaller than probabilities", correct: false,
+          why: "Magnitude is irrelevant. A +1 amplitude and a -1 amplitude are both magnitude 1, but they cancel while two probability-1 values would sum to 2." },
+        { text: "because quantum mechanics violates conservation of probability", correct: false,
+          why: "Probability is always conserved. Amplitudes cancel, but the squared amplitudes (probabilities) always sum to 1." }
+      ]
+    },
+    {
+      prompt: "The Hadamard gate...",
+      options: [
+        { text: "blends both input amplitudes into each output, with a minus sign on one blend", correct: true,
+          why: "H takes (a, b) to ((a+b)/sqrt(2), (a-b)/sqrt(2)). Both inputs contribute to both outputs; the minus sign enables cancellation." },
+        { text: "flips the qubit from |0> to |1>", correct: false,
+          why: "That is the X (NOT) gate. The Hadamard does not flip; it creates a superposition." },
+        { text: "measures the qubit and reports the result", correct: false,
+          why: "H is a unitary gate (reversible), not a measurement. Measurement collapses the state; H transforms it." },
+        { text: "creates entanglement between two qubits", correct: false,
+          why: "H is a single-qubit gate. It acts on one qubit's amplitudes. Entangling gates (like CNOT) act on two qubits." }
+      ]
+    },
+    {
+      prompt: "How does a quantum program concentrate amplitude on the solution without knowing it ahead of time?",
+      options: [
+        { text: "the gates encode a way to score candidates, and interference amplifies whatever scores well", correct: true,
+          why: "Nobody pre-programs the answer. The circuit structure creates interference patterns that happen to reinforce good configurations and cancel bad ones." },
+        { text: "the quantum computer tries all answers in parallel and picks the best", correct: false,
+          why: "This is the 'parallel universes' myth. The quantum computer does not try all answers independently; interference shapes a single distribution." },
+        { text: "a human pre-programs the correct answer into the circuit design", correct: false,
+          why: "If you already knew the answer, you would not need a quantum computer. The circuit encodes a scoring function, not the answer." },
+        { text: "random chance eventually lands on the solution", correct: false,
+          why: "The process is structured (interference), not random. Random sampling would be classical Monte Carlo, not quantum computing." }
+      ]
+    },
+    {
+      prompt: "In the Bayesian framing, measurement is analogous to...",
+      options: [
+        { text: "drawing a sample from the posterior distribution", correct: true,
+          why: "Measurement collapses the state to one outcome, drawn with probability equal to the squared amplitude. That is sampling." },
+        { text: "computing the maximum a posteriori (MAP) estimate", correct: false,
+          why: "MAP gives the most likely single answer. Measurement gives a random sample, which might not be the most likely outcome." },
+        { text: "updating the prior with new evidence", correct: false,
+          why: "That is what gates do (shape the distribution). Measurement reads out, it does not update." },
+        { text: "computing the marginal likelihood (evidence)", correct: false,
+          why: "Measurement produces a single bitstring, not an integral over all possibilities. It is a draw, not a calculation." }
+      ]
+    },
+    {
+      prompt: "Why compare a quantum computer to a sampler?",
+      options: [
+        { text: "because it holds a distribution over a huge space and produces samples from it", correct: true,
+          why: "The quantum state IS a probability distribution (squared amplitudes), and measurement draws from it. For combinatorial spaces, this parallels MCMC." },
+        { text: "because quantum computers are just random number generators", correct: false,
+          why: "RNGs produce uniform noise. Quantum computers hold a deliberately shaped distribution (via gates and interference) and sample from it." },
+        { text: "because sampling is the only thing quantum computers can do", correct: false,
+          why: "Quantum computers also simulate quantum systems, enable secure communication, and more. The sampler analogy is one powerful framing, not the only capability." },
+        { text: "because both happen to use probability theory", correct: false,
+          why: "Probability theory is used everywhere. The specific parallel is: gates shape amplitudes (like priors shape posteriors), then you sample. That structural match is the point." }
+      ]
+    },
+    {
+      prompt: "The parallel between Bayesian inference and quantum computing is: gates are to amplitudes as ___ are to the posterior.",
+      options: [
+        { text: "prior and likelihood", correct: true,
+          why: "Prior and likelihood combine to shape the posterior. Gates combine (via interference) to shape the amplitude distribution. Measurement then samples from it." },
+        { text: "MCMC chains", correct: false,
+          why: "MCMC chains are the sampler, not the shaper. The parallel to MCMC is measurement, not gates." },
+        { text: "measurement outcomes", correct: false,
+          why: "Measurement outcomes are the result of sampling, not the thing that shapes the distribution. Gates shape; measurement reads." },
+        { text: "hyperparameters", correct: false,
+          why: "Hyperparameters tune the model structure. Gates directly transform the amplitude vector; they are operational, not meta-level." }
       ]
     }
   ];
 
-  function shuffleOptions() {
-    QUESTIONS.forEach(function (q) {
-      for (var i = q.options.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var t = q.options[i]; q.options[i] = q.options[j]; q.options[j] = t;
-      }
-    });
+  // pick 5 random questions from the bank of 15
+  function pickN(arr, n) {
+    var copy = arr.slice();
+    for (var i = copy.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = copy[i]; copy[i] = copy[j]; copy[j] = t;
+    }
+    return copy.slice(0, n);
   }
-  shuffleOptions();
+
+  var QUESTIONS = pickN(BANK, 5);
+
+  // shuffle options within each question
+  QUESTIONS.forEach(function (q) {
+    for (var i = q.options.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = q.options[i]; q.options[i] = q.options[j]; q.options[j] = t;
+    }
+  });
 
   var idx = 0;
   var answers = QUESTIONS.map(function () { return null; });
@@ -265,13 +361,20 @@
       sub.className = 'sub';
       if (c === QUESTIONS.length) sub.textContent = 'A clean sweep. Nicely done.';
       else if (c >= Math.ceil(QUESTIONS.length / 2)) sub.textContent = 'Solid. Use Back to revisit the ones you missed.';
-      else sub.textContent = 'Worth another pass. Hit "try again" and review the explanations.';
+      else sub.textContent = 'Worth another pass. Hit "try again" for a fresh set of 5 questions.';
       resultsEl.appendChild(sub);
       var again = document.createElement('button');
       again.className = 'again';
-      again.textContent = 'Try again';
+      again.textContent = 'Try again (new questions)';
       again.addEventListener('click', function () {
-        for (var i = 0; i < answers.length; i++) answers[i] = null;
+        QUESTIONS = pickN(BANK, 5);
+        QUESTIONS.forEach(function (q) {
+          for (var i = q.options.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = q.options[i]; q.options[i] = q.options[j]; q.options[j] = t;
+          }
+        });
+        answers = QUESTIONS.map(function () { return null; });
         idx = 0;
         render();
       });
@@ -299,10 +402,7 @@
       var btn = document.createElement('button');
       btn.className = 'opt';
       btn.textContent = opt.text;
-      btn.addEventListener('click', function () {
-        answers[idx] = oi;
-        render();
-      });
+      btn.addEventListener('click', function () { answers[idx] = oi; render(); });
       if (answered) {
         if (oi === answers[idx]) {
           btn.classList.add(opt.correct ? 'correct' : 'wrong');
@@ -326,9 +426,7 @@
     fit();
   }
 
-  backBtn.addEventListener('click', function () {
-    if (idx > 0) { idx--; render(); }
-  });
+  backBtn.addEventListener('click', function () { if (idx > 0) { idx--; render(); } });
   nextBtn.addEventListener('click', function () {
     if (answers[idx] === null) return;
     idx++;
