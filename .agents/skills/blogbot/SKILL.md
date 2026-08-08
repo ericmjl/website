@@ -8,6 +8,18 @@ description: Generate social media posts and blog content from local blog posts,
 Generate social media posts and blog content from your local blog posts, and
 schedule them to Buffer.
 
+> **Worktree usage — always run via the RELATIVE path from inside the worktree.**
+> Every script's `find_repo_root()` walks up from `Path(__file__).parent` to find
+> `.git`. If you run a script via the MAIN REPO's **absolute** path
+> (`uv run /Users/ericmjl/github/website/.agents/.../summary.py <slug>`) while
+> editing a blog post that only exists in a git worktree (`website-quantum-ml`),
+> `__file__` anchors in the main repo and `find_repo_root()` resolves to the main
+> repo (on `main`) — which does not have the worktree's blog post, so you get a
+> `FileNotFoundError`. Instead `cd` into the worktree and run the **relative**
+> path shown in each example below (`uv run .agents/skills/blogbot/scripts/...`);
+> `__file__` then resolves to the worktree's own copy and `find_repo_root()` finds
+> the worktree's `.git` file correctly.
+
 ## Available Scripts
 
 ### Social Media Posts
@@ -80,6 +92,65 @@ uv run .agents/skills/blogbot/scripts/banner.py a-practical-guide-to-securing-se
 
 Run any script without arguments to see a list of available blog posts.
 
+## Drafting Social Posts for Review (options-first)
+
+When the user asks to DRAFT social posts for a blog post (as distinct from
+running a script once and scheduling the output), the workflow is
+OPTIONS-FIRST, and the posts must follow BOTH the tuned template structure
+AND the marketing-copy lens. This is the iteration loop the user uses to
+refine this skill itself.
+
+Stated 2026-07-27: "options + samples for each please, and then we're going
+to use the feedback to update the blogbot skill." Recurring theme (2026-06-16):
+"I have tuned the post content and structure (especially on LinkedIn) to
+follow a pattern that works" — respect the tuned structure, do not hand-write
+freeform posts that bypass the template.
+
+### 1. Follow the pydantic template structure verbatim
+
+Whether the post comes from a script or is hand-drafted as a review variant,
+it MUST conform to the schemas the scripts use:
+
+- **LinkedIn** (`linkedin_post.py` → `LinkedInPost`): a 3-line `hook`
+  (line1 context-lean setup <60 chars; line2 scroll-stop interjection;
+  line3 curiosity gap), `authority_elements` (each: story_type + content +
+  specific_example), `main_content` sections (content + section_type),
+  `call_to_action`, `ending_question`, `hashtags` (max 5).
+- **BlueSky** (`bluesky_post.py` → `BlueSkyPost`): `strong_hook`,
+  `clear_stance`, `value_delivery`, optional `call_to_action` (no URL),
+  `hashtags` (max 2), `url` (defaults to the post URL). Total body
+  (without URL) must be 100-283 chars; the pydantic validator enforces this
+  and will reject longer output.
+
+Present multiple OPTIONS (typically 2-3) per platform, each filling these
+fields, so the user can pick a direction before anything is scheduled.
+
+### 2. Treat promotional social posts as MARKETING COPY
+
+A social post that promotes a blog post exists to earn CLICKS, not to
+showcase authorial voice-credentials. Apply the `marketing-copy` skill
+lens (load it if available):
+
+- Lead with the READER's self-interest / pain, not the author's origin
+  story or the evidence's credentials.
+- Problem-agitation BEFORE solution: name what the reader is doing wrong
+  (using AI to "learn" but retaining nothing) before the fix.
+- Sell BENEFITS, not features: "test the concepts in your browser so they
+  stick", not "6 interactive widgets".
+- End strong: punchy close, no hedging, no caveats that undermine the thesis.
+- Plain language; plausible CTA; rhetorical questions so the reader self-inserts.
+
+This is the social-post sibling of the self-interest framing rule (memory
+#104 for landing/guide pages). Pair with the em-dash-scrubbing and
+write-like-eric voice rules already in this skill — marketing STRUCTURE
+governs persuasion; those govern voice and mechanics respectively.
+
+### 3. Close the loop into the skill
+
+After the user picks a direction and gives feedback, treat that feedback as
+an input to UPDATE this skill (prompt tweaks, template field adjustments,
+post-processing guards). The options-first loop is how this skill evolves.
+
 ## CRITICAL: Run Scripts Sequentially, Never in Parallel
 
 All blogbot generation scripts (linkedin_post.py, bluesky_post.py,
@@ -126,6 +197,32 @@ Connects to: pub_date is coupled to the post URL via Lektor slug_format,
 and already-scheduled Buffer posts embed that URL, so the audit also
 surfaces any post whose pub_date has since moved and whose Buffer links
 would now be stale.
+
+## Social Post Quality: Marketing-Copy Principles
+
+The blogbot scripts (linkedin_post.py, bluesky_post.py) now embed marketing-copy
+principles in their prompts. The generated posts should:
+
+1. **Lead with the reader's pain** (problem-agitation), not the author's origin story or credentials. "You asked ChatGPT to explain something. Two days later you couldn't recall it." beats "I spent the summer reading research."
+2. **Sell benefits, not features.** "You can practice this in your browser" beats "6 interactive widgets."
+3. **Make the CTA plausible.** Name a specific action the reader can take today: "Try the prompt swap on one thing you're studying." beats "Read my post."
+4. **End with a self-insertion question** that makes the reader feel the benefit: "Could you reproduce that explanation from memory right now?"
+5. **No em dashes.** Scrub them from all generated social copy.
+
+## Options-First Workflow (present before scheduling)
+
+When generating social posts for a blog post, present 3 options per platform
+(LinkedIn, BlueSky) in the chat BEFORE scheduling. Let the user pick which angle
+works. This mirrors the write-like-eric paragraph-by-paragraph vibe loop:
+voice and angle decisions are the user's to make, not the agent's.
+
+Each option should take a **genuinely different angle**:
+- Option A: Problem-agitation (reader's pain first)
+- Option B: Self-interest (one-swap / one-benefit framing)
+- Option C: Stakes / audience-specific (for educators, managers, etc.)
+
+After the user picks, schedule via `addToQueue` to both channels. Do not
+schedule before the user has chosen.
 
 ## One-Click Scheduling to Buffer
 
