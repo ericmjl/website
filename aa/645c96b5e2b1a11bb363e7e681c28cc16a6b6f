@@ -1,0 +1,25 @@
+.agents/skills/blogbot/SKILL.md
+  s_4ed7ec86e20819::t_28a1ac7f9576cd 11-22,95-153,201-226
+.agents/skills/blogbot/scripts/bluesky_post.py
+  s_4ed7ec86e20819::t_cf199e1be2a780 81,90-93,104-109
+.agents/skills/blogbot/scripts/linkedin_post.py
+  s_4ed7ec86e20819::t_182d88119cdd63 96,105-109,120-127
+.agents/skills/blogbot/scripts/summary.py
+  s_4ed7ec86e20819::t_2bd43d69b1b876 69-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "aa645c96b5e2b1a11bb363e7e681c28cc16a6b6f",
+  "prompts": {},
+  "sessions": {
+    "s_4ed7ec86e20819": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04a5da7eeffevMXrBmEQEYzyYm",
+        "model": "glm-5.2"
+      },
+      "human_author": "Eric Ma <ericmajinglong@gmail.com>"
+    }
+  }
+}
