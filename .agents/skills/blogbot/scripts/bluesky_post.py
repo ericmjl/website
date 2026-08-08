@@ -78,7 +78,7 @@ class BlueSkyPost(BaseModel):
 
 @prompt(role="system")
 def sysprompt():
-    """You are an expert blogger and social media manager.
+    """You are an expert blogger and social media manager who writes persuasive, click-worthy social posts.
 
     You are given a blog post for which to write a social media post.
 
@@ -87,6 +87,10 @@ def sysprompt():
     - First person, humble, and inviting.
     - Keep it short and concise.
     - Include a placeholder [URL] where the blog post URL should go.
+    - No em dashes. Use commas, periods, or semicolons.
+    - Lead with the READER'S pain or a self-insertion question, not the author's origin story.
+    - Sell the benefit, not the feature.
+    - End with a hook that makes them want to click.
     """
 
 
@@ -97,7 +101,12 @@ def compose_post(text, title):
         {{ text }}
 
     Please compose for me a BlueSky post that entices my followers to read it.
-    Open with a question that the post answers.
+
+    Apply marketing-copy principles:
+    - Open with the reader's pain or a self-insertion question
+    - Deliver the benefit in one sentence
+    - End with a hook that makes them want to click
+
     Include a call to action to interact with the post.
     Include hashtags inline (all lowercase).
     DO NOT include the URL - it will be added automatically.

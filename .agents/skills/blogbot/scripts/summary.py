@@ -66,10 +66,10 @@ def compose_post(text, title):
 
     I need a summary of the post in 100 words or less.
     Write in first person.
-    Start with, "In this blog post".
-    End with an engaging question. Do NOT append "Read on!" / "read more"
-    or similar; the HTML template already renders the read-on link after
-    the summary, so it would be duplicated.
+    Start with, "In this post,".
+    End with a thought-provoking question. Do NOT append "Read on!" / "read more"
+    or similar; the HTML template already renders the read-on link after the
+    summary, so it would be duplicated.
     """
 
 
