@@ -16,11 +16,11 @@ If you're ready for the ride, here we go!
 
 ## The fundamentals
 
-Start with the most fundamental object in quantum computing: the state of a single qubit. A one-qubit state is an arrow of length 1 in a two-dimensional space whose axes are the two basic states |0> and |1>. The arrow's coordinates along those axes are its amplitudes. Because the arrow has length 1, its tip sits on a unit circle, a slice of the Bloch sphere (the standard name for the full qubit state space).
+Start with the most fundamental object in quantum computing: the state of a single qubit. A one-qubit state is an arrow of length 1 in a two-dimensional space whose axes are the two basic states |0> and |1>. The arrow's coordinates along those axes are its amplitudes, which in general are complex numbers. The full one-qubit state space is the Bloch sphere, a unit sphere; when both amplitudes are real, the arrow's tip sits on a unit circle, one great circle of that sphere. That is the slice this post lives on: the signs you can see on it are the drawable case of the complex phases I am leaving out.
 
 <iframe src="bloch-circle.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-Drag the arrow above. Its projections onto the |0> and |1> axes are the amplitudes, and the squares of those projections are the probabilities of measuring |0> or |1>. That squaring is the bridge into your world as a probabilistic Bayesian, and it is the lens we will use for the rest of the post. The new ingredient, with no analogue in classical probability, is that amplitudes carry a sign: the arrow can point anywhere on the circle, including where a coordinate is negative. That signedness stays quiet for a single measurement, but it is the seed of everything quantum that follows.
+Drag the arrow above. Its projections onto the |0> and |1> axes are the amplitudes, and the squared magnitudes of those projections, |amplitude|², are the probabilities of measuring |0> or |1>. That squaring is the bridge into your world as a probabilistic Bayesian, and it is the lens we will use for the rest of the post. The new ingredient, with no analogue in classical probability, is that amplitudes carry phase, which on our circle is just a sign: the arrow can point anywhere on the circle, including where a coordinate is negative. That phase stays quiet for a single measurement, but it is the seed of everything quantum that follows.
 
 ### Many qubits, exponentially many amplitudes
 
@@ -37,7 +37,7 @@ Play with the doubling below: one qubit gives two amplitudes, two qubits give fo
 
 <iframe src="many-qubits.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-This is the first place quantum computing leaves classical intuition behind, and it leaves fast. A 50-qubit register has 2^50 amplitudes, more than a quadrillion; you cannot write them all down, let alone store the state on a classical machine. Measuring collapses that whole arrow to a single bitstring, drawn with probability equal to its amplitude squared, the many-qubit version of what the Bloch circle showed.
+This is the first place quantum computing leaves classical intuition behind, and it leaves fast. A 50-qubit register has 2^50 amplitudes, more than a quadrillion; you cannot write them all down, let alone store the state on a classical machine. Measuring collapses that whole arrow to a single bitstring, drawn with probability equal to its squared magnitude, the many-qubit version of what the unit circle showed.
 
 We should clarify one assumption: in the interactive diagrams above, we treated the qubits as independent. The general n-qubit state is a single arrow in 2^n dimensions, and most such arrows cannot be split into one circle per qubit. That non-splitting is entanglement, which has its own section below.
 
@@ -51,7 +51,7 @@ Step back from amplitudes for a moment. If you only care about what a measuremen
 
 ### Entanglement
 
-Entanglement, in this framing, is when the state of one qubit cannot be described independently of another. When two qubits are entangled, measuring one instantly tells you something about the other, no matter how far apart they are. This non-local correlation is a key resource in quantum computing, and it has no clean classical analogue. For a probabilistic Bayesian, think of it as two coins where reading one immediately tells you what the other shows.
+Entanglement, in this framing, is when the state of one qubit cannot be described independently of another. When two qubits are entangled, their measurement outcomes are correlated, no matter how far apart they are. No information travels between them: each outcome is random on its own, and the correlation only shows up when you compare results over an ordinary classical channel. This non-local correlation is a key resource in quantum computing, and it has no clean classical analogue. For a probabilistic Bayesian, think of it as two coins whose flips look random individually but line up once you compare records.
 
 Here is that idea made geometric. Two dials below set the qubits as if they were independent; the entanglement dial mixes in correlation. Watch the joint amplitudes stop factorizing, and the concurrence climb from 0 (independent) toward 1 (maximally entangled).
 
@@ -79,13 +79,13 @@ And here is where it finally clicks for me, because in my own work building Baye
 
 What if you didn't have to enumerate a combinatorial space at all, but instead let your sampler live in superposition over the whole of it?
 
-That's the quantum computer's party trick. It isn't a magical exponential speedup for everything. But it can be viewed as an MCMC sampler, purpose-built for exactly the kind of problem we already wrestle with: inference over spaces too big to enumerate classically.
+That's the quantum computer's party trick. It isn't a magical exponential speedup for everything. But calling it an MCMC sampler goes too far; generic circuits evolve amplitudes coherently rather than stepping through a Markov chain, and true quantum MCMC algorithms are special cases rather than the norm. View it instead as a sampler purpose-built for exactly the kind of problem we already wrestle with, inference over spaces too big to enumerate classically.
 
 <iframe src="check-understanding.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ## The takeaway
 
-In this blog post, we stripped away much of the physics of quantum computing to give you the following picture to walk away with. A qubit is an arrow on a unit circle; its coordinates are amplitudes, and their squares are probabilities. A register of *n* qubits is a single arrow in 2^n dimensions, one amplitude per possible bitstring. Entanglement is when that arrow cannot be split into one circle per qubit. Interference is what happens when signed amplitudes combine through gates: same signs reinforce, opposite signs cancel, and the quantum program uses this to concentrate amplitude on the configurations that represent solutions. Measurement is drawing a sample from the resulting distribution.
+In this blog post, we stripped away much of the physics of quantum computing to give you the following picture to walk away with. A qubit is an arrow on a unit circle, the real slice of the Bloch sphere; its coordinates are amplitudes, and their squared magnitudes are probabilities. A register of *n* qubits is a single arrow in 2^n dimensions, one amplitude per possible bitstring. Entanglement is when that arrow cannot be split into one circle per qubit. Interference is what happens when signed amplitudes combine through gates: same signs reinforce, opposite signs can cancel, and the quantum program uses this to concentrate amplitude on the configurations that represent solutions. Measurement is drawing a sample from the resulting distribution.
 
 If you are a probabilistic Bayesian, the parallel is exact. Your prior and likelihood shape a posterior; a quantum circuit's gates shape amplitudes. You sample from your posterior; you measure from the quantum state. The quantum computer is not a faster laptop or a magic box. It is a device that is very good at exactly the thing we already struggle with classically: representing and sampling from distributions over spaces too big to enumerate.
 
@@ -95,7 +95,7 @@ pub_date: 2026-08-07
 ---
 twitter_handle: ericmjl
 ---
-summary: In this post, I share what I've learned about quantum computing from the perspective of a probabilistic Bayesian. I strip away the physics to reveal a familiar picture: qubits as amplitude vectors whose squares are probabilities, gates that shape distributions through interference, and measurement as sampling. The parallel to Bayesian inference is striking. Our priors and likelihoods shape posteriors; quantum gates shape amplitudes. What if the quantum computer isn't a magic box, but a sampler purpose-built for the combinatorial spaces we already struggle to navigate classically?
+summary: In this post, I share what I've learned about quantum computing from the perspective of a probabilistic Bayesian. I strip away the physics to reveal a familiar picture: qubits as amplitude vectors whose squared magnitudes are probabilities, gates that shape distributions through interference, and measurement as sampling. The parallel to Bayesian inference is striking. Our priors and likelihoods shape posteriors; quantum gates shape amplitudes. What if the quantum computer isn't a magic box, but a sampler purpose-built for the combinatorial spaces we already struggle to navigate classically?
 ---
 tags:
 
