@@ -4,6 +4,12 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, model_validator
 
+LEARN_ANYTHING_PS_BLOCK = (
+    "Daniel Chen and I are organizing a retreat on how to learn anything "
+    "with AI, February 2027. Applications open to the waitlist first: "
+    "https://learn-anything.nonlinearlabs.ai/"
+)
+
 
 class LinkedInPostSection(BaseModel):
     content: str = Field(
@@ -88,6 +94,18 @@ class LinkedInPost(BaseModel):
         ),
     )
 
+    ps_bridge: str = Field(
+        ...,
+        description=(
+            "ONE sentence that bridges this post's specific topic to the "
+            "thesis of a retreat Eric is co-teaching: the skill that survives "
+            "AI is the ability to walk into a foreign field and own it, using "
+            "AI as coach, not oracle. Connect the post's theme to that thesis. "
+            "Do NOT mention retreat details or the URL here; those are appended "
+            "automatically."
+        ),
+    )
+
     # Enhanced hashtag strategy
     hashtags: List[str] = Field(
         ...,
@@ -148,6 +166,9 @@ class LinkedInPost(BaseModel):
 
         # Add ending question
         post_content += f"{self.ending_question}\n\n"
+
+        # Add P.S. promoting the learn-anything retreat
+        post_content += f"P.S. {self.ps_bridge} {LEARN_ANYTHING_PS_BLOCK}\n\n"
 
         # Add hashtags
         post_content += " ".join([hashtag.lower() for hashtag in self.hashtags])
@@ -415,6 +436,18 @@ class SubstackPost(BaseModel):
         ),
     )
 
+    ps_bridge: str = Field(
+        ...,
+        description=(
+            "ONE sentence bridging this post's specific topic to the thesis "
+            "of a retreat Eric is co-teaching: the skill that survives AI is "
+            "the ability to walk into a foreign field and own it, using AI as "
+            "coach, not oracle. Connect the post's theme to that thesis. Do "
+            "NOT mention retreat details or the URL here; those are appended "
+            "automatically."
+        ),
+    )
+
     # Substack best practices metadata
     tone_authenticity: str = Field(
         default="authentic_and_genuine",
@@ -469,6 +502,12 @@ class SubstackPost(BaseModel):
         post_content += f"{self.engagement_question}\n\n"
         post_content += f"*{self.call_to_action}*\n\n"
         post_content += f"{self.signoff}"
+
+        # Add P.S. promoting the learn-anything retreat
+        post_content += (
+            f"\n\n---\n\n**P.S.** {self.ps_bridge} {LEARN_ANYTHING_PS_BLOCK}"
+        )
+
         return post_content
 
 

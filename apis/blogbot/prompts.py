@@ -26,6 +26,11 @@ def compose_linkedin_post(text, url):
     It came from the following url: {{ url }}.
 
     Please compose for me a LinkedIn post that follows the provided JSON structure.
+
+    The ps_bridge field: write ONE sentence connecting this post's specific
+    topic to the learn-anything retreat thesis (the skill that survives AI
+    is the ability to walk into a foreign field and own it). Do NOT mention
+    the retreat details or URL in ps_bridge; those are appended automatically.
     """
 
 
@@ -121,6 +126,11 @@ def compose_substack_post(text, url):
     - Use authentic sign-off: "Cheers, Eric" or "Happy Coding, Eric" (for coding posts)
 
     Focus on creating a post that's clear, honest, thoughtfully structured, and written with real people in mind. Make it part of a conversation, not just a broadcast.
+
+    The ps_bridge field: write ONE sentence connecting this post's specific
+    topic to the learn-anything retreat thesis (the skill that survives AI
+    is the ability to walk into a foreign field and own it). Do NOT mention
+    the retreat details or URL in ps_bridge; those are appended automatically.
     """  # noqa: E501
 
 

@@ -2,6 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = ["llamabot", "pydantic", "rich"]
 # ///
+# ruff: noqa: E501
 """
 Generate a LinkedIn post from a blog post slug.
 
@@ -38,6 +39,12 @@ def _get_omlx_api_key() -> str:
 
 console = Console()
 
+LEARN_ANYTHING_PS_BLOCK = (
+    "Daniel Chen and I are organizing a retreat on how to learn anything "
+    "with AI, February 2027. Applications open to the waitlist first: "
+    "https://learn-anything.nonlinearlabs.ai/"
+)
+
 
 class LinkedInPostSection(BaseModel):
     content: str = Field(..., description="Section content")
@@ -66,6 +73,21 @@ class LinkedInPost(BaseModel):
     main_content: List[LinkedInPostSection] = Field(..., description="Main sections")
     call_to_action: str = Field(..., description="Call to action")
     ending_question: str = Field(..., description="Question to generate discussion")
+    ps_bridge: str = Field(
+        ...,
+        description=(
+            "ONE sentence that bridges this post's specific topic to the "
+            "thesis of a retreat Eric is co-teaching: the skill that survives "
+            "AI is the ability to walk into a foreign field and own it, using "
+            "AI as coach, not oracle. Connect the post's theme to that thesis. "
+            "Examples by post type: (a) learning/AI post: 'This post is the "
+            "research behind a retreat we are running.' (b) technique post: "
+            "'This came from one of my own domain jumps.' (c) tools/workflow "
+            "post: 'Tools change; the ability to learn any field on demand "
+            "does not.' (d) fallback: 'The skill that survives AI is the "
+            "ability to walk into a foreign field and master it.'"
+        ),
+    )
     hashtags: List[str] = Field(..., max_items=5, description="Hashtags with #")
 
     @model_validator(mode="after")
@@ -87,6 +109,7 @@ class LinkedInPost(BaseModel):
             post_content += f"{section.content}\n\n"
         post_content += f"{self.call_to_action}\n\n"
         post_content += f"{self.ending_question}\n\n"
+        post_content += f"P.S. {self.ps_bridge} {LEARN_ANYTHING_PS_BLOCK}\n\n"
         post_content += " ".join([h.lower() for h in self.hashtags])
         return post_content
 
@@ -124,6 +147,11 @@ def compose_post(text, title):
     - Main content: sell the benefit (what the reader gets), not the feature (what the post contains)
     - CTA: name a specific, plausible action the reader can take today
     - Ending question: a self-insertion question that makes the reader click
+
+    The ps_bridge field: write ONE sentence connecting this post's specific
+    topic to the learn-anything retreat thesis (the skill that survives AI
+    is the ability to walk into a foreign field and own it). Do NOT mention
+    the retreat details or URL in ps_bridge; those are appended automatically.
 
     Include [URL] as a placeholder for the blog post link.
     """
