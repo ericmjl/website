@@ -113,7 +113,7 @@
         { text: "an arrow on a unit circle, with signed coordinates called amplitudes", correct: true,
           why: "A qubit state is a vector of amplitudes; the arrow visualizes them geometrically on the Bloch circle." },
         { text: "a probabilistic bit that is 0 with some probability and 1 with the rest", correct: false,
-          why: "This drops the amplitude structure entirely. Probabilities are derived (squared amplitudes), not primary." },
+          why: "This drops the amplitude structure entirely. Probabilities are derived (squared magnitudes of the amplitudes), not primary." },
         { text: "a classical bit whose definite value is hidden until you measure", correct: false,
           why: "This is the hidden-variable view. The qubit's pre-measurement state is genuinely a superposition, not a hidden definite value." },
         { text: "two classical bits stored simultaneously", correct: false,
@@ -123,8 +123,8 @@
     {
       prompt: "The probability of measuring |0> is...",
       options: [
-        { text: "the square of the amplitude on |0>", correct: true,
-          why: "Probability = amplitude squared. This is the Born rule, the bridge from amplitudes to the Bayesian's familiar probabilities." },
+        { text: "the squared magnitude of the amplitude on |0>", correct: true,
+          why: "Probability = the amplitude's squared magnitude. This is the Born rule, the bridge from amplitudes to the Bayesian's familiar probabilities." },
         { text: "equal to the amplitude on |0>", correct: false,
           why: "Amplitudes are not probabilities. You must square them. An amplitude of 0.5 gives a probability of 0.25, not 0.5." },
         { text: "always 50% when the qubit is in superposition", correct: false,
@@ -267,7 +267,7 @@
       prompt: "In the Bayesian framing, measurement is analogous to...",
       options: [
         { text: "drawing a sample from the posterior distribution", correct: true,
-          why: "Measurement collapses the state to one outcome, drawn with probability equal to the squared amplitude. That is sampling." },
+          why: "Measurement collapses the state to one outcome, drawn with probability equal to the squared magnitude of the amplitude. That is sampling." },
         { text: "computing the maximum a posteriori (MAP) estimate", correct: false,
           why: "MAP gives the most likely single answer. Measurement gives a random sample, which might not be the most likely outcome." },
         { text: "updating the prior with new evidence", correct: false,
@@ -280,7 +280,7 @@
       prompt: "Why compare a quantum computer to a sampler?",
       options: [
         { text: "because it holds a distribution over a huge space and produces samples from it", correct: true,
-          why: "The quantum state IS a probability distribution (squared amplitudes), and measurement draws from it. For combinatorial spaces, this parallels MCMC." },
+          why: "The quantum state carries amplitudes; their squared magnitudes form a probability distribution, and measurement draws from it. For combinatorial spaces, this parallels what MCMC gives you classically." },
         { text: "because quantum computers are just random number generators", correct: false,
           why: "RNGs produce uniform noise. Quantum computers hold a deliberately shaped distribution (via gates and interference) and sample from it." },
         { text: "because sampling is the only thing quantum computers can do", correct: false,
