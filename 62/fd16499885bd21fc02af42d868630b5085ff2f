@@ -1,0 +1,48 @@
+apis/blogbot/models.py
+  s_aaec42f7c287b6::t_ee99ea8738ec4f 507-509
+  s_aaec42f7c287b6::t_602a2cd6d1b189 170-172
+  s_aaec42f7c287b6::t_d8ac399b1344e1 97-108
+  s_aaec42f7c287b6::t_d77ba3c401effd 7-12
+  s_aaec42f7c287b6::t_57d3f7b4aec689 439-450
+  s_aaec42f7c287b6::t_2fc8166bac9b0d 505-506,510
+apis/blogbot/prompts.py
+  s_aaec42f7c287b6::t_6c8817a0952491 29-33
+  s_aaec42f7c287b6::t_8c2b7c15ef2a7e 129-133
+content/contents.lr
+  s_aaec42f7c287b6::t_6b9c99bdbc9ac0 27-31
+.agents/skills/blogbot/scripts/generate_social.py
+  s_aaec42f7c287b6::t_38f8bd1081c1d5 37-42
+  s_aaec42f7c287b6::t_df70a31c4874b4 290
+  s_aaec42f7c287b6::t_7152c6bc4e4cc7 147-151
+  s_aaec42f7c287b6::t_4a818cb38b32a1 435-450,455-459
+  s_aaec42f7c287b6::t_f739b1ce0ae992 83-87
+  s_aaec42f7c287b6::t_11e99c5729e7d3 234-249
+.agents/skills/blogbot/SKILL.md
+  s_aaec42f7c287b6::t_e385a9336b10c1 366-401
+  s_aaec42f7c287b6::t_3d472dafd5fc5a 439-442
+templates/macros/blog.html
+  s_aaec42f7c287b6::t_16e704e70b865f 161-164
+  s_aaec42f7c287b6::t_035e61788bc25b 160
+.agents/skills/blogbot/scripts/linkedin_post.py
+  s_aaec42f7c287b6::t_eba8a9828b8966 112
+  s_aaec42f7c287b6::t_549b5bd908a8b1 5
+  s_aaec42f7c287b6::t_437fdf46e78876 42-47
+  s_aaec42f7c287b6::t_af23a1942d4ed6 151-155
+  s_aaec42f7c287b6::t_396992bdda4513 76-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "62fd16499885bd21fc02af42d868630b5085ff2f",
+  "prompts": {},
+  "sessions": {
+    "s_aaec42f7c287b6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0050c29f8ffeHTlKkJ3Qd2RStq",
+        "model": "glm-5.2"
+      },
+      "human_author": "Eric Ma <ericmajinglong@gmail.com>"
+    }
+  }
+}
