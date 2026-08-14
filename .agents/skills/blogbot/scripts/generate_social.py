@@ -34,6 +34,12 @@ from pydantic import BaseModel, Field, model_validator
 
 load_dotenv()
 
+LEARN_ANYTHING_PS_BLOCK = (
+    "Daniel Chen and I are organizing a retreat on how to learn anything "
+    "with AI, February 2027. Applications open to the waitlist first: "
+    "https://learn-anything.nonlinearlabs.ai/"
+)
+
 
 # ---------------------------------------------------------------------------
 # Prompts (duplicated verbatim from apis/blogbot/prompts.py)
@@ -74,6 +80,11 @@ def compose_linkedin_post(text, url):
     It came from the following url: {{ url }}.
 
     Please compose for me a LinkedIn post that follows the provided JSON structure.
+
+    The ps_bridge field: write ONE sentence connecting this post's specific
+    topic to the learn-anything retreat thesis (the skill that survives AI
+    is the ability to walk into a foreign field and own it). Do NOT mention
+    the retreat details or URL in ps_bridge; those are appended automatically.
     """
 
 
@@ -133,6 +144,11 @@ def compose_substack_post(text, title, url):
     - Write in first person, conversational, like writing to a colleague.
     - 300-500 words.
     - End with a themed sign-off (e.g. "Happy modeling, Eric").
+
+    The ps_bridge field: write ONE sentence connecting this post's specific
+    topic to the learn-anything retreat thesis (the skill that survives AI
+    is the ability to walk into a foreign field and own it). Do NOT mention
+    the retreat details or URL in ps_bridge; those are appended automatically.
     """
 
 
@@ -215,6 +231,22 @@ class LinkedInPost(BaseModel):
         ...,
         description="Specific question designed to generate thoughtful comments and discussion",
     )
+    ps_bridge: str = Field(
+        ...,
+        description=(
+            "ONE sentence that bridges this post's specific topic to the "
+            "thesis of a retreat Eric is co-teaching: the skill that survives "
+            "AI is the ability to walk into a foreign field and own it, using "
+            "AI as coach, not oracle. Connect the post's theme to that thesis. "
+            "Do NOT mention retreat details or the URL here; those are appended "
+            "automatically. Examples: (a) learning/AI post: 'This post is the "
+            "research behind a retreat we are running.' (b) technique post: "
+            "'This came from one of my own domain jumps.' (c) tools post: "
+            "'Tools change; the ability to learn any field on demand does not.' "
+            "(d) fallback: 'The skill that survives AI is the ability to walk "
+            "into a foreign field and master it.'"
+        ),
+    )
     hashtags: List[str] = Field(
         ...,
         max_items=5,
@@ -255,6 +287,7 @@ class LinkedInPost(BaseModel):
             post_content += f"{section.content}\n\n"
         post_content += f"{self.call_to_action}\n\n"
         post_content += f"{self.ending_question}\n\n"
+        post_content += f"P.S. {self.ps_bridge} {LEARN_ANYTHING_PS_BLOCK}\n\n"
         post_content += " ".join([hashtag.lower() for hashtag in self.hashtags])
         return post_content
 
@@ -399,11 +432,31 @@ class SubstackPost(BaseModel):
             "Vary based on topic (e.g. 'Happy modeling, Eric')."
         ),
     )
+    ps_bridge: str = Field(
+        ...,
+        description=(
+            "ONE sentence bridging this post's specific topic to the thesis "
+            "of a retreat Eric is co-teaching: the skill that survives AI is "
+            "the ability to walk into a foreign field and own it, using AI as "
+            "coach, not oracle. Connect the post's theme to that thesis. Do "
+            "NOT mention retreat details or the URL here; those are appended "
+            "automatically. Examples: (a) learning/AI post: 'This post is the "
+            "research behind a retreat we are running.' (b) technique post: "
+            "'This came from one of my own domain jumps.' (c) tools post: "
+            "'Tools change; the ability to learn any field on demand does not.' "
+            "(d) fallback: 'The skill that survives AI is the ability to walk "
+            "into a foreign field and master it.'"
+        ),
+    )
 
     def format_post(self, title: str, url: str) -> str:
         """Format the full Substack post, wrapping 'this post' in a hyperlink."""
         body = self.body.replace("this post", f"[this post]({url})")
-        return f"# {title}\n\n## {self.subtitle}\n\n{self.greeting}\n\n{body}\n\n{self.signoff}"
+        ps = f"**P.S.** {self.ps_bridge} {LEARN_ANYTHING_PS_BLOCK}"
+        return (
+            f"# {title}\n\n## {self.subtitle}\n\n"
+            f"{self.greeting}\n\n{body}\n\n{self.signoff}\n\n---\n\n{ps}"
+        )
 
 
 # ---------------------------------------------------------------------------
