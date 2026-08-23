@@ -3,13 +3,13 @@ title: Bayesian Statistical Analysis with Python | PyCon 2017
 body:
 
 #### description ####
-text: At PyCon 2017, I illustrate, using four statistical analysis problems, how to do parameter estimation and case/control comparison (A/B testing) with PyMC3 code.
+text: You've got data, and now you want to analyze it with Python. Do you do the t-test? The chi-squared test? How do you decide? In this PyCon 2017 talk, I show you how to take common statistical decision problems, formulate them as Bayesian estimation problems, and use PyMC3 as the workhorse. Four worked examples cover parameter estimation and case/control (A/B) comparisons. The talk is math-light and code-heavy, and the accompanying notebooks give you a template for your own Bayesian analyses.
 #### youtube ####
 url: https://www.youtube.com/watch?v=p1IB4zWq9C8
 #### notebooks ####
 url: https://github.com/ericmjl/bayesian-stats-talk
 ---
-summary: How to do parameter estimation and case/control comparison in PyMC3, delivered at PyCon 2017.
+summary: Turn "which statistical test do I use?" into Bayesian estimation problems, with PyMC3 as the workhorse.
 ---
 category: Grad School
 ---

@@ -3,15 +3,13 @@ title: Beyond Two Groups: Generalized A/B[/C/D/E...] Testing | PyCon 2019
 body:
 
 #### description ####
-text:
-
-At PyCon 2019, I delivered my rant against canned statistical procedures (and more generally, canned modelling), showing cases where one might use the t-test but run into wrong inferences as a result.
+text: Bayesian A/B testing has gained popularity over the years, but the examples always seem to stop at two groups. Shouldn't we be able to compare three, four, five groups? In this PyCon 2019 talk, I use life-like simulated examples, inspired by my work and by meeting others at conferences, to generalize A/B testing beyond rigid two-group, case/control comparisons: Bayesian estimation on website click data, and 4-parameter dose-response curves. The natural extension turns out to be plain Bayesian estimation: with a probabilistic programming language like PyMC3, going beyond two groups is trivial, and you get to think in terms of the generative model for your data. There's plenty of code from the modern PyData stack, including PyMC3, pandas, and HoloViews.
 #### youtube ####
 url: https://www.youtube.com/watch?v=Pt37qA351yk
 #### slides ####
 url: https://ericmjl.github.io/bayesian-generalized-abcde-testing
 ---
-summary: My rant against canned statistical procedures, delivered at PyCon 2019.
+summary: My PyCon 2019 rant against canned statistical procedures, and how Bayesian estimation with PyMC3 extends A/B testing beyond two groups.
 ---
 category: Work
 ---

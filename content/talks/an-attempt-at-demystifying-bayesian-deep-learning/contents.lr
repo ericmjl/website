@@ -7,13 +7,13 @@ resource: Slides
 body:
 
 #### description ####
-text: At PyData NYC 2017, I presented a talk on the intuition behind Deep Learning (DL) and Bayesian DL, using mostly pictures and code, and with as little math as possible.
+text: Deep learning is, at its core, matrix multiplications with weights learned by gradient descent. Bayesian deep learning is what you get when you put priors on those weights. That's the whole mystery! In this PyData NYC 2017 talk, I build the intuition with mostly pictures and PyMC3/Theano code, with as little math as possible, and show how to construct Bayesian neural networks and visualize the uncertainty in their predictions.
 #### youtube ####
 url: https://www.youtube.com/watch?v=s0S6HFdPtlA
 #### slides ####
 url: http://ericmjl.github.io/bayesian-deep-learning-demystified
 ---
-summary: In which I tell you why Bayesian deep learning is nothing really special, delivered at PyData NYC 2017.
+summary: In which I show that Bayesian deep learning is nothing special: priors on the weights, explained with pictures and PyMC3 code.
 ---
 category: Grad School
 ---
