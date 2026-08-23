@@ -1,0 +1,23 @@
+title: Agentic Data Science with Marimo Pair
+---
+body:
+
+#### youtube ####
+url: https://www.youtube.com/watch?v=DvSxrCcfWFs
+
+#### description ####
+
+text: In this live demo, I show how to use Marimo notebooks with Cursor and Marimo Pair for agentic exploratory data analysis, with Marimo as the analysis canvas and Cursor as the coding agent that can manipulate a live Python kernel. I walk through setup from my GitHub repo, start a Marimo server in sandbox mode, and load two protein engineering datasets (activity/conversion and chiral selectivity) into Polars. We build an interactive Plotly scatter plot for single-point mutations, dropdown-controlled line charts comparing mean vs. max mutational effects by position, and an anywidget 3Dmol.js viewer that maps residue-level effects onto the protein ribbon. The key observation: beneficial mutations are often distal to the active site.
+
+---
+_model: project
+---
+summary: Marimo as the analysis canvas and Cursor as the coding agent: live notebook EDA and 3D protein visualization.
+---
+pub_date: 2026-05-14
+---
+category: Work
+---
+visible:
+
+Visible
