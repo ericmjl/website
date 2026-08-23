@@ -4,12 +4,14 @@ body:
 
 #### youtube ####
 url: https://www.youtube.com/watch?v=EQgklFqumGI
+#### description ####
+text: Reproducibility matters across science, data science, ML, and AI, and Pixi helps keep environments consistent. In this live demo and discussion with Hugo Bowne-Anderson, we clone the LlamaBot project, configure multiple environments, and run JupyterLab and documentation builds on the back of Pixi's lock file functionality. We also explore containerization, creating and running CUDA-enabled environments inside Docker containers with Pixi, and real-world use cases that show why this all matters.
 ---
 category: Work
 ---
 lead: No
 ---
-summary: In this video, Hugo Bowne-Anderson and I chat about the revolutionary package manager Pixi. We discuss myexperiences with Pixi, emphasizing its advantages in package management, reproducibility, and collaboration within data science teams. Key topics include the benefits of lock files, simplifying Docker and GPU environments, and the impact of Pixi on reproducibility and developer efficiency.
+summary: A live demo with Hugo Bowne-Anderson: Pixi lock files, multi-environment workflows, and CUDA-enabled Docker containers for reproducible data science.
 ---
 pub_date: 2024-10-01
 ---

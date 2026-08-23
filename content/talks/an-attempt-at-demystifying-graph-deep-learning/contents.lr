@@ -4,6 +4,8 @@ body:
 
 #### youtube ####
 url: https://youtu.be/cSN-DqPJzY0
+#### description ####
+text: Graph deep learning sounds exotic, but the core ideas are picture-friendly. This talk follows four parts: how graphs can be represented as arrays, what message passing is (and its linear algebra interpretation), how embedding message passing inside a neural network gives you message passing neural networks, with graph Laplacian and graph attention networks as variations on a theme, and the learning tasks that involve graphs, such as node label prediction and edge prediction. Lots of pictures, a minimum number of equations. If you've used neural networks but never built a graph neural network, you'll leave ready to implement your own GNN layers instead of relying on black box APIs.
 #### slides ####
 url: https://ericmjl.github.io/graph-deep-learning-demystified/#/title-slide
 #### github ####
@@ -13,7 +15,7 @@ category: Work
 ---
 lead: Yes
 ---
-summary: In this talk, inspired by my 2017 attempt at demystifying Bayesian deep learning, I now attempt to demystify graph deep learning.
+summary: Graphs as arrays, message passing, and how they add up to message passing neural networks, explained with lots of pictures and a minimum number of equations.
 ---
 pub_date: 2022-01-08
 ---

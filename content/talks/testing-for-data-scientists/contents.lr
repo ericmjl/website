@@ -3,15 +3,15 @@ title: Testing for Data Scientists | PyData Ann Arbor 2020
 body:
 
 #### description ####
-text: In this talk, I use two examples to illustrate how testing can be better incorporated into a data scientist's workflow. At the same time, I also introduce two libraries, [Hypothesis](hypothesis.readthedocs.io) and [Great Expectations](https://greatexpectations.io/), which can help with testing code and data.
+text: Code written in a programming language is the most flexible way to accomplish your data science work, and every line we write is technical debt. In this PyData Ann Arbor talk, I use two worked examples to show how testing fits into a data scientist's workflow, and introduce two libraries that help: [Hypothesis](https://hypothesis.readthedocs.io/) for property-based testing of your code, and [Great Expectations](https://greatexpectations.io/) for validating your data. You'll leave with a practical sense of which tests to write and when.
 #### slides ####
 url: https://ericmjl.github.io/testing-for-data-scientists/
 #### youtube ####
-url: https://www.youtube.com/v=5RKuHvZERLY
+url: https://www.youtube.com/watch?v=5RKuHvZERLY
 ---
 category: Work
 ---
-summary: How data scientists can incorporate testing into their development, delivered at PyData Ann Arbor in Jan 2020.
+summary: How data scientists can incorporate testing into their workflow, with Hypothesis for code and Great Expectations for data.
 ---
 visible: Visible
 ---
