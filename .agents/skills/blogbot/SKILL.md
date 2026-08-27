@@ -445,6 +445,25 @@ Then hand the user the Title and Subtitle as plain text for the separate
 fields; they paste the clipboard into the body and save/publish by hand. The
 banner URL is the LIVE logo.webp, so the post must be merged + URL-200 first.
 
+### TERMINAL FALLBACK when Substack rejects the formatted paste: plain text + manual punch-list
+
+2026-08-21: the HTML-flavor clipboard paste was REJECTED by the Substack editor
+mid-edit ("substack isn't allowing that either!") while patching new paragraphs
+(Terrana) into an already-formatted post. When the editor refuses the formatted
+paste, do NOT iterate more clipboard formats — drop straight to the terminal
+fallback:
+
+1. pbcopy the content as PLAIN TEXT (no HTML, no markdown; report word count).
+2. Give a short manual-formatting punch-list: exactly which phrases to bold,
+   which phrase(s) to hyperlink and to where, and the insertion point
+   (e.g. "goes after the Ormoni paragraph").
+3. Include the knock-on consistency edits (intro counts, closer geographic
+   claims, subtitle) so the manual patch does not silently falsify the post.
+
+Eric accepted this fallback without friction and finished the post by hand; his
+frustration attaches to repeated failed format attempts, not to doing two or
+three bold/link touches himself.
+
 SUBSTACK POST TYPES — know the difference:
 - "notes" = short-form (tweet-like, shown in the Substack feed). The "New post"
   button in the Substack nav opens a NOTE composer, NOT the long-form editor.
