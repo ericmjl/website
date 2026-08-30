@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The retreat week, day by day</title>
+<style>
+  body {
+    font-family: monospace;
+    background: #fff;
+    padding: 16px;
+    color: #333;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 18px;
+  }
+  .stage {
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+  }
+  .day-label {
+    font-size: 12px;
+    color: #0066cc;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .day-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+  }
+  .panel p {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+  }
+  .panel p:last-child { margin-bottom: 0; }
+  .closing {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .closing p {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 14px 0;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .controls.final { visibility: hidden; }
+  .controls.no-back #back {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  button {
+    font-family: monospace;
+    font-size: 13px;
+    padding: 6px 14px;
+    border: 1px solid #0066cc;
+    border-radius: 4px;
+    background: #fff;
+    color: #0066cc;
+    cursor: pointer;
+  }
+  button:hover { background: #eef5fc; }
+  .dots {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid #0066cc;
+    background: #fff;
+    cursor: pointer;
+    padding: 0;
+  }
+  .dot:hover { background: #eef5fc; }
+  .dot.on { background: #0066cc; }
+  .counter {
+    font-size: 12px;
+    color: #777;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .link-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    color: #0066cc;
+    text-decoration: underline;
+  }
+  .link-btn:hover { background: none; color: #004a99; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="stage" id="stage">
+    <div class="panel" data-step="0">
+      <div class="day-label">Day 0</div>
+      <div class="day-title">Sunday. Arrive and settle in.</div>
+      <p>Everyone moves into the same retreat center. No sessions yet, just shared dinner and getting to know the people you will be learning beside.</p>
+    </div>
+    <div class="panel hidden" data-step="1">
+      <div class="day-label">Days 1-3</div>
+      <div class="day-title">The science of learning.</div>
+      <p>Dan Chen teaches how people actually learn and retain: the stuff nobody taught us in undergrad or grad school. Short practice sessions pull you into applying it.</p>
+      <p>You picked a field that is foreign to you before arriving, and you start working in it. You see where AI fits each step, like having AI generate flashcards for retrieval practice, or getting AI to build small adaptive study tools.</p>
+    </div>
+    <div class="panel hidden" data-step="2">
+      <div class="day-label">Day 4</div>
+      <div class="day-title">The build day.</div>
+      <p>Unstructured by design. You build the teaching material you will use tomorrow: the artifact that proves you learned it.</p>
+      <p>Eric and Dan check in with each person once or twice during the day, as coaches.</p>
+    </div>
+    <div class="panel hidden" data-step="3">
+      <div class="day-label">Day 5</div>
+      <div class="day-title">The festival of teaching.</div>
+      <p>Everyone teaches what they learned to the rest of the room. Twenty-some first reps in one day.</p>
+      <p>Teaching is where the learning consolidates: it is wonderfully uncomfortable, and it works.</p>
+    </div>
+    <div class="closing hidden" id="closing">
+      <p>Five days, one house, one skill: learning how to learn, with AI as the accelerator.</p>
+      <button type="button" class="link-btn" id="reset">Back to the start</button>
+    </div>
+  </div>
+  <div class="controls no-back" id="controls">
+    <button type="button" id="back">Back</button>
+    <div class="dots" id="dots" role="group" aria-label="Choose a step"></div>
+    <div class="counter" id="counter"></div>
+    <button type="button" id="next">Next</button>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+
+  var TOTAL = 4;
+  var idx = 0;
+  var final = false;
+
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+  var stage = document.getElementById('stage');
+  var closing = document.getElementById('closing');
+  var controls = document.getElementById('controls');
+  var backBtn = document.getElementById('back');
+  var nextBtn = document.getElementById('next');
+  var counter = document.getElementById('counter');
+  var dotsWrap = document.getElementById('dots');
+  var resetBtn = document.getElementById('reset');
+
+  var dots = [];
+  for (var d = 0; d < TOTAL; d++) {
+    var dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'dot';
+    dot.setAttribute('aria-label', 'Go to step ' + (d + 1) + ' of ' + TOTAL);
+    dot.setAttribute('data-index', String(d));
+    dotsWrap.appendChild(dot);
+    dots.push(dot);
+  }
+
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  var measureProbe = null;
+  function floorStageToTallest() {
+    if (!measureProbe) {
+      measureProbe = document.createElement('div');
+      measureProbe.style.position = 'absolute';
+      measureProbe.style.visibility = 'hidden';
+      measureProbe.style.left = '-9999px';
+      measureProbe.style.top = '0';
+      document.body.appendChild(measureProbe);
+    }
+    measureProbe.style.width = stage.clientWidth + 'px';
+    measureProbe.innerHTML = '';
+    var maxH = 0;
+    var all = panels.concat([closing]);
+    for (var k = 0; k < all.length; k++) {
+      var clone = all[k].cloneNode(true);
+      clone.classList.remove('hidden');
+      measureProbe.appendChild(clone);
+      if (clone.offsetHeight > maxH) maxH = clone.offsetHeight;
+    }
+    stage.style.minHeight = Math.max(maxH, 240) + 'px';
+  }
+
+  function render() {
+    panels.forEach(function (p, n) {
+      p.classList.toggle('hidden', final || n !== idx);
+    });
+    closing.classList.toggle('hidden', !final);
+    controls.classList.toggle('final', final);
+    if (final) return;
+    dots.forEach(function (dot, n) {
+      dot.classList.toggle('on', n === idx);
+      dot.setAttribute('aria-current', n === idx ? 'true' : 'false');
+    });
+    backBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
+    backBtn.style.pointerEvents = idx === 0 ? 'none' : 'auto';
+    controls.classList.toggle('no-back', idx === 0);
+    nextBtn.textContent = idx === TOTAL - 1 ? "That's the week" : 'Next';
+    counter.textContent = 'Day ' + (idx + 1) + ' of ' + TOTAL;
+  }
+
+  function go(n) {
+    if (n < 0 || n > TOTAL - 1) return;
+    idx = n;
+    render();
+    fit();
+  }
+
+  function openClosing() {
+    final = true;
+    render();
+    fit();
+  }
+
+  function reset() {
+    final = false;
+    idx = 0;
+    render();
+    fit();
+  }
+
+  window.addEventListener('resize', function () { floorStageToTallest(); fit(); });
+
+  backBtn.addEventListener('click', function () { go(idx - 1); });
+
+  nextBtn.addEventListener('click', function () {
+    if (idx < TOTAL - 1) { go(idx + 1); } else { openClosing(); }
+  });
+
+  dotsWrap.addEventListener('click', function (e) {
+    var t = e.target.closest('.dot');
+    if (!t) return;
+    go(parseInt(t.getAttribute('data-index'), 10));
+  });
+
+  resetBtn.addEventListener('click', reset);
+
+  floorStageToTallest();
+  render();
+  fit();
+})();
+</script>
+</body>
+</html>
