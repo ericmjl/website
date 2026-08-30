@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Does this resonate?</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: monospace; background: #fff; padding: 16px; color: #333; }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 18px;
+  }
+  .hd {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hd h1 {
+    margin: 0;
+    font-size: 16px;
+    flex: 1;
+    white-space: nowrap;
+  }
+  .chip {
+    flex: 0 0 132px;
+    font-size: 12px; line-height: 1.2; white-space: nowrap; text-align: center;
+    color: #0066cc; border: 1px solid #0066cc; border-radius: 999px;
+    padding: 3px 0; background: #eef4fc;
+  }
+  .intro {
+    margin: 10px 0 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #555;
+  }
+  .rows { border-bottom: 1px solid #e6e6e6; }
+  .row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    border-top: 1px solid #e6e6e6;
+  }
+  .tgl {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+  .switch {
+    position: relative; flex: 0 0 40px; height: 22px; border-radius: 11px;
+    background: #ccc; cursor: pointer; transition: background 0.15s ease;
+  }
+  .switch:hover { background: #bdbdbd; }
+  .tgl:checked + .switch,
+  .tgl:checked + .switch:hover { background: #0066cc; }
+  .knob {
+    position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
+    border-radius: 50%; background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25); transition: transform 0.15s ease;
+  }
+  .tgl:checked + .switch .knob { transform: translateX(18px); }
+  .tgl:focus-visible + .switch {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+  }
+  .stmt {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.35;
+    cursor: pointer;
+  }
+  .result {
+    display: none; margin-top: 14px; padding: 12px 14px;
+    border: 1px solid #0066cc; border-left-width: 4px; border-radius: 6px;
+    background: #eef4fc;
+  }
+  .result.show { display: block; }
+  .rlabel {
+    font-size: 12px;
+    font-weight: bold;
+    color: #0066cc;
+  }
+  .result p {
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  #flink { display: none; margin: 8px 0 0; }
+  #flink.on { display: block; }
+  .result a { color: #0066cc; }
+  .ft {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 24px;
+    margin-top: 12px;
+  }
+  .ft span { font-size: 12px; color: #777; }
+  .linklike {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: monospace;
+    font-size: 12px;
+    color: #0066cc;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="hd">
+    <h1>Does this resonate?</h1>
+    <span class="chip" id="chip">0 of 5 resonate</span>
+  </div>
+  <p class="intro">Turn on each statement that rings true; leave off what doesn't. Nothing is scored and nothing is graded. Once all five have been touched, you get a plain reading of how close you sit to the person this retreat is being built for.</p>
+  <div class="rows">
+    <div class="row">
+      <input type="checkbox" id="s1" class="tgl">
+      <label class="switch" for="s1" aria-hidden="true"><span class="knob"></span></label>
+      <label class="stmt" for="s1">I've felt the models pull ahead of what I can keep up with.</label>
+    </div>
+    <div class="row">
+      <input type="checkbox" id="s2" class="tgl">
+      <label class="switch" for="s2" aria-hidden="true"><span class="knob"></span></label>
+      <label class="stmt" for="s2">There's a field I keep meaning to learn, and never start.</label>
+    </div>
+    <div class="row">
+      <input type="checkbox" id="s3" class="tgl">
+      <label class="switch" for="s3" aria-hidden="true"><span class="knob"></span></label>
+      <label class="stmt" for="s3">Some AI-assisted days leave my brain fried with nothing retained.</label>
+    </div>
+    <div class="row">
+      <input type="checkbox" id="s4" class="tgl">
+      <label class="switch" for="s4" aria-hidden="true"><span class="knob"></span></label>
+      <label class="stmt" for="s4">I miss talking shop with people who aren't selling anything.</label>
+    </div>
+    <div class="row">
+      <input type="checkbox" id="s5" class="tgl">
+      <label class="switch" for="s5" aria-hidden="true"><span class="knob"></span></label>
+      <label class="stmt" for="s5">I'd take a small bet on myself if the conditions were right.</label>
+    </div>
+  </div>
+  <div class="result" id="panel">
+    <div class="rlabel">Your read</div>
+    <p id="rcopy"></p>
+    <p id="flink"><a href="https://learn-anything.nonlinearlabs.ai/" target="_blank" rel="noopener">the Learn Anything with AI retreat</a></p>
+  </div>
+  <div class="ft">
+    <span>No wrong answers here.</span>
+    <button class="linklike" id="reset" type="button">Reset</button>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.tgl'));
+  var touched = {};
+  var chip = document.getElementById('chip');
+  var panel = document.getElementById('panel');
+  var rcopy = document.getElementById('rcopy');
+  var flink = document.getElementById('flink');
+  var TIERS = [
+    "The retreat might be a season or two away. The ideas in this post are still yours to use today. If the premise pulled at you, that pull is worth trusting.",
+    "You're gesturing at something real. The retreat is built for people mid-swing, exactly this mix of pulled ahead and not yet started.",
+    "You are the exact personality the room is being curated for. The next step is the retreat site itself."
+  ];
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+  function update() {
+    var on = boxes.filter(function (b) { return b.checked; }).length;
+    var allTouched = boxes.every(function (b) { return touched[b.id]; });
+    chip.textContent = on + ' of 5 resonate';
+    if (allTouched) {
+      var tier = on <= 1 ? 0 : (on <= 3 ? 1 : 2);
+      panel.classList.add('show');
+      rcopy.textContent = TIERS[tier];
+      flink.classList.toggle('on', tier === 2);
+    } else {
+      panel.classList.remove('show');
+      flink.classList.remove('on');
+    }
+    fit();
+  }
+  boxes.forEach(function (b) {
+    b.addEventListener('change', function () {
+      touched[b.id] = true;
+      update();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    touched = {};
+    update();
+  });
+  update();
+})();
+</script>
+</body>
+</html>

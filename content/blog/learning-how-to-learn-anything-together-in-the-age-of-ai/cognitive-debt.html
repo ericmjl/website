@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cognitive debt: the 3-month bill</title>
+<style>
+  body {
+    font-family: monospace;
+    background: #fff;
+    padding: 16px;
+    color: #333;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 18px;
+  }
+  h2 {
+    font-size: 15px;
+    margin: 0 0 8px 0;
+  }
+  p { margin: 0; }
+  .explainer { margin-bottom: 10px; }
+  .disclaimer {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 14px;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .slider-row label {
+    white-space: nowrap;
+  }
+  .slider-row input[type="range"] {
+    flex: 1;
+    accent-color: #0066cc;
+  }
+  #week-readout {
+    width: 64px;
+    white-space: nowrap;
+    text-align: right;
+  }
+  .summary { margin-bottom: 12px; }
+  .pct-red { color: #e85d3a; font-weight: bold; }
+  .pct-green { color: #1a9e5b; font-weight: bold; }
+  .cap-red { color: #e85d3a; }
+  .cap-green { color: #1a9e5b; }
+  .axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  .track-block { margin-bottom: 10px; }
+  .track-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .track-label {
+    white-space: nowrap;
+  }
+  .track-pct {
+    width: 56px;
+    white-space: nowrap;
+    text-align: right;
+  }
+  /* Fixed track height so the iframe height never changes across the sweep. */
+  .track {
+    position: relative;
+    height: 22px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #eee;
+  }
+  .track-red { background: #fdecea; }
+  .track-green { background: #e7f6ee; }
+  .bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    transition: width 120ms linear;
+  }
+  .bar-red { background: #e85d3a; }
+  .bar-green { background: #1a9e5b; }
+  .tick {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: #333;
+  }
+  .bill {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Cognitive debt: the 3-month bill</h2>
+  <p class="explainer">Same cram at the start. What happens after depends on what you did with it: nothing, or practiced it and taught it.</p>
+  <p class="disclaimer">A simplified illustration of a well-documented effect: memory decays without practice. The curves below are illustrative, not measured data.</p>
+
+  <div class="slider-row">
+    <label for="week">Weeks since you learned it</label>
+    <input type="range" id="week" min="0" max="12" step="1" value="4">
+    <span id="week-readout">Week 4</span>
+  </div>
+
+  <p class="summary">Week <span id="sum-week">4</span>: collected answers ~<span class="pct-red" id="sum-c">6.9%</span> recall, deliberate learning ~<span class="pct-green" id="sum-d">56.5%</span> recall.</p>
+
+  <div class="axis">
+    <span>No practice</span>
+    <span>With practice + teach</span>
+  </div>
+
+  <div class="track-block">
+    <div class="track-header">
+      <span class="track-label cap-red">Collect answers</span>
+      <span class="track-pct cap-red" id="collect-pct">6.9%</span>
+    </div>
+    <div class="track track-red">
+      <div class="bar bar-red" id="collect-bar"></div>
+      <div class="tick" title="Week 12, the 3-month bill"></div>
+    </div>
+  </div>
+
+  <div class="track-block">
+    <div class="track-header">
+      <span class="track-label cap-green">Learn deliberately, then teach it</span>
+      <span class="track-pct cap-green" id="delib-pct">56.5%</span>
+    </div>
+    <div class="track track-green">
+      <div class="bar bar-green" id="delib-bar"></div>
+      <div class="tick" title="Week 12, the 3-month bill"></div>
+    </div>
+  </div>
+
+  <p class="bill" id="bill"></p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var CEILING = 100;      // domain ceiling: recall tops out at 100%
+  var TAU_COLLECT = 1.5;  // how fast memory fades with no practice, in weeks
+  var TAU_DELIB = 7;      // how fast memory fades after practice + teaching, in weeks
+
+  function recall(weeks, tau) {
+    return CEILING * Math.exp(-weeks / tau);
+  }
+
+  function fmt(v) {
+    if (v >= 10) return v.toFixed(0);
+    if (v >= 1) return v.toFixed(1);
+    return v.toFixed(2);
+  }
+
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  var slider = document.getElementById('week');
+  var readout = document.getElementById('week-readout');
+  var sumWeek = document.getElementById('sum-week');
+  var sumC = document.getElementById('sum-c');
+  var sumD = document.getElementById('sum-d');
+  var collectBar = document.getElementById('collect-bar');
+  var collectPct = document.getElementById('collect-pct');
+  var delibBar = document.getElementById('delib-bar');
+  var delibPct = document.getElementById('delib-pct');
+  var bill = document.getElementById('bill');
+
+  var w12c = recall(12, TAU_COLLECT);
+  var w12d = recall(12, TAU_DELIB);
+  bill.textContent =
+    'Revisiting what you learned over the weeks is what keeps the green bar alive. ' +
+    'Tick at the right edge: week 12, the 3-month bill. ' +
+    'Collected answers ~' + fmt(w12c) + '% recall, deliberate learning ~' + fmt(w12d) + '% recall.';
+
+  function render() {
+    var w = parseInt(slider.value, 10);
+    readout.textContent = 'Week ' + w;
+    sumWeek.textContent = w;
+
+    var c = recall(w, TAU_COLLECT);
+    var d = recall(w, TAU_DELIB);
+
+    // Absolute bar scale: width fraction = recall / 100, the fixed ceiling.
+    // Never normalized against the current values.
+    collectBar.style.width = (c / CEILING) * 100 + '%';
+    delibBar.style.width = (d / CEILING) * 100 + '%';
+
+    collectPct.textContent = fmt(c) + '%';
+    delibPct.textContent = fmt(d) + '%';
+    sumC.textContent = fmt(c) + '%';
+    sumD.textContent = fmt(d) + '%';
+
+    fit();
+  }
+
+  slider.addEventListener('input', render);
+  window.addEventListener('resize', fit);
+  render();
+})();
+</script>
+</body>
+</html>
