@@ -1,0 +1,67 @@
+title: Learning how to learn anything, together, in the age of AI
+---
+author: Eric J. Ma
+---
+body:
+
+Dan Chen and I have a tradition: every year at [SciPy](https://conference.scipy.org), we find a corner of the venue, grab coffee, and nerd out about teaching, talking through how people learn, how to teach better, and what actually sticks. The past two years, the conversation has actually taken a pretty sharp turn. Students can now get every answer from AI the moment they sit down with an AI tool, so what is a teacher even for? After sitting with that question for a while, we soon realized the flip side was equally interesting: if someone is genuinely motivated to learn something new, how do they point AI at that goal for maximum leverage?
+
+That flip is why Dan and I are running [the Learn Anything with AI retreat](https://learn-anything.nonlinearlabs.ai/): a five day, in person retreat from the 14th to the 20th of February 2027, with a small, handpicked cohort of people, in the United States. If you click on the link, you'll see the logistics and the details. I want to use this blog post to explain why I want to do this retreat. Here goes.
+
+## We opened Pandora's box
+
+Here's the assumption we're working from: everything related to the boom in AI that we've seen over the past two, three years, they're here to stay. Pandora's box is open. I actually don't see a realistic path back to a world without AI, short of some catastrophe happening. So what's interesting for us as individuals is, what do we do with it? And given that AI is here for good, how do we thrive with it?
+
+My answer, and Dan's answer as well, is the entire premise of this retreat: to get really good at learning how to learn anything, and how to use AI as the accelerator in that process. If used wrongly, AI will hand you answers without you learning anything. If used correctly, AI can help you build understanding. Because understanding still needs to be built in your head, and that part is the part that people are quietly skipping when they just ask AI for answers. So the people who learn how to learn, with AI's leverage, are going to compound what they know how to do over an entire decade and more. And the people who just collect answers are going to wonder why nothing's stuck. I want to spend five days with a small group of people to explore how we can use AI for the betterment of ourselves.
+
+The cost of this really needs to be addressed; earlier this year I paid it. I was pumping out stuff using AI models, and by the end of each of those days my brain was fried. I couldn't remember anything I was doing! I was operating faster than the speed of thought, and so I was building what we would call cognitive debt: the equivalent of just cramming for an exam. You cram the inputs in, you skip the deliberate practice, and after the push, the bill arrives in the form of not remembering anything from what you've learned. The antidote is deliberate learning, where we learn it properly, we retain it, and we teach it. And as Dan and I studied and experimented with how to teach and how to learn, here's what we realized: AI can unlock new tools to help us with our understanding, and that turned out to be the real premise of the retreat.
+
+## The sea of change
+
+The clearest way I can show you this premise is through my own history. I used to be a lab scientist. Then, after an advisor change during graduate school, I made the choice: I really wanted to move into computing. I knew I had a knack with computers, I just never had the space and time, and this was the perfect space and time to go and make that change for myself. So I flipped the switch on computing. I picked up Python on my own, picked up machine learning on my own, with a little help from some classes, picked up computational biology and the general methods, and soon taught myself network science through books and others' work. I also learned Bayesian statistics in graduate school, self-taught. Throughout that process, something clicked for me: my ability to learn those topics was greatly facilitated by knowing how to do programming. Once I understood programming, I could do math. It wasn't the other way around.
+
+Most other people, most CS folks, probably get good at math first, and then programming comes as a natural consequence. For me it was the other way around, and I had to learn that about myself. So my ability to learn anything came partly from computing arriving in my life as a tool. But even then, I had some limitations. I couldn't build interactive visualizations for myself. I just didn't understand that paradigm, and building them took too much effort for stuff I wanted to learn, so I just didn't do it and had to find other ways around that limitation. Now with AI, I can have an HTML canvas and build these beautiful visuals that help me understand what's going on, in a Marimo notebook or inside an HTML page. AI can do that heavy lifting for me now. Computing was my first great learning accelerator, and AI is the second. That's the sea of change worth shouting about.
+
+Here's what that first accelerator looked like up close. David Duvenaud taught me the backpropagation algorithm in 2016, and how it was really just the chain rule. I'd learned the chain rule in high school, but it didn't really stick for me until graduate school, where the chain rule could be written in Python with NumPy. And once you have the machinery in the form of autograd, you have a way of differentiating through almost any mathematical program you can think of and write. That was really fun. I had to re-derive backprop for myself, starting from linear regression, to really understand how it extends to a larger neural net model very naturally, just by chaining up more functions. That's all a neural net was: chained-up functions. And it was very tedious to get there. But nothing really stuck until I deployed my knowledge in the form of teaching.
+
+When I committed to teach network analysis as a tutorial at the scientific Python conference, that commitment was the greatest accelerator of my learning journey. There was one crazy year where I did three tutorials, deep learning fundamentals, Bayesian statistics, and network analysis, and I had to solo two of the three because my co-presenters couldn't make it. It was chaotic, and it was a blast. The moment I agreed to teach each of those subjects, I found exactly which parts I had just been hand-waving and never pushed on with real curiosity. It's wonderfully uncomfortable, and it works! That's why the retreat ends with what we call a festival of teaching: everybody teaches what they've learned to the rest of the room, to get that first real rep in.
+
+## In person, on purpose
+
+Beyond the cognitive cost, there's a social one: interacting with AI can be incredibly isolating, because you're sitting alone with a screen, asking questions, and not really interacting with another human. But the whole point of a learning community is other people. One guy I talked with about this retreat put it plainly: he lives in a tech hub, and whenever he goes to networking events, there's always a pitch. There's just no one to interact with in a normal way. So this room we're building, this group of people we're inviting, is essentially a space where you can nerd out with other people, and nobody's selling anything.
+
+The format is intentionally human centered. We all physically stay together in a retreat center. There are lectures about learning theory, good pedagogy, and how people make things stick, but there's also enough space to duck out when you're peopled out; I'm an introvert, so these escape hatches matter. We're keeping the cohort really small, and we want it to hold a real diversity of knowledge fields. And sharing meals together, five days of shared hallways, is how hallway conversations compound into friendships, just like the SciPy hallway track did for me with Dan Chen. If we run this with overlapping groups, I think this community could grow into one of the more valuable things that any one of us has.
+
+## The shape of the week
+
+Days one through three are the learning science days, and they're Dan's home turf. Being a professional educator, he has read widely about the science of learning. He's taught multiple classrooms of data science master's students at the University of British Columbia in Vancouver, and he's deeply attuned to how people actually learn and retain stuff, the stuff we were never taught in grad school, or even undergrad. Interspersed throughout those days are sessions to put into practice what you're learning, and practical guidance on where AI slots into each step. As a small example: if you need to generate flashcards for retrieval practice, AI can help you with that. You can even get it to build adaptive systems for your own learning. We'll show you ways to build tools like these for yourself. Everyone arrives having picked a field that's genuinely foreign to them, and starts applying what the days teach to that field, deliberately.
+
+Day four is more unstructured by design. This is where you home in on prepping to teach the topic you've spent the week learning: you take everything you've absorbed and build the teaching material you'll use to teach someone else the concepts, with plenty of space for creative freedom. And throughout the day, Dan and I will check in with each person once or twice, to see how things are developing and where you're stuck, acting as coaches to push and challenge you toward the day five festival of teaching.
+
+Day five is the festival of teaching: twenty-some first reps, all in one day. This whole week is a microcosm of what I had to do when I was learning my way through new fields, and here's the goal of it: if one week of deliberate methodology gets you teachable depth in a brand new field, imagine what stacking those weeks consistently will do, month after month, even if you've got kids and a day job. That compounding will massively accelerate what you can learn.
+
+One more source of inspiration for the retreat design: [the book *Who Not How*](https://whonothow.com/). We always encourage you to find a who in your life who can act as the subject matter expert for whatever field you're learning, someone you can tap when you have questions, and who you trust to be the ultimate arbiter of whether you've really learned that field. You do want to approach that person with respect for their time. And AI can help you level up your knowledge to the point where you're engaging with that person as a peer, or close to it, rather than in a coach-mentee relationship.
+
+## Why I keep calling it a learning retreat
+
+So really, this isn't an AI retreat, and it's not one of those feel-the-spirit kind of retreats either. It's a very practical retreat. The science of learning is the main content. And the main motivation is to bring people together: to build a group of people who are genuinely interested in improving themselves, as I've been able to taste over the past decade of teaching myself multiple things. That's why I keep calling it a learning retreat: the learning comes first, and AI accelerates it.
+
+If this resonates with you, [come take a look at the retreat](https://learn-anything.nonlinearlabs.ai/). We're keeping it small on purpose and making it exclusive: not to a particular demographic, but to a type of personality. Dan and I really hope that we can see you there in February. I think the friends you make in that retreat might be the part that compounds the longest.
+
+And I'd really love for you to take a small bet on yourself.
+---
+pub_date: 2026-08-30
+---
+twitter_handle: ericmjl
+---
+summary:
+
+The heart-to-heart why behind the Learn Anything with AI retreat: learning how to learn anything, with AI as the accelerator, and learning it together in person. AI is here to stay; the interesting question is how to thrive with it. Curious what convinced me to organize a five day learning retreat with Dan Chen? Read on to find out!
+---
+tags:
+
+learning
+teaching
+ai
+retreat
+community
