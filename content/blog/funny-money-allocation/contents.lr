@@ -1,0 +1,77 @@
+title: Funny Money Allocation: A Decision-Making Trick
+---
+author: Eric J. Ma
+---
+body:
+
+A while back, I was part of a team that was going in circles. We had three options in front of us, and every discussion round ended the same way: people advocating for their preferred option in words, others pushing back in words, and no convergence in sight. There was no slam dunk benefit to any one option, hence the loop. As a team member (not the team lead), I started to feel that we needed a different way to decide than continuing to talk in qualitative terms. The Bayesian in me piped up: let's express our beliefs as probability distributions, and decide from there.
+
+I'm pretty sure I'm not the inventor of this trick; someone out there has probably formalized it under a fancier name. But I did arrive at it that day while watching my team talk past each other, and it worked well enough that I've wanted to write it up ever since. I call it funny money allocation.
+
+## The mechanics
+
+Here is what I did. I gave every person 1,000 points of funny money, effectively \$1,000 each, and laid out the ground rules:
+
+- There are three options on the table.
+- Allocate your 1,000 points across them however you like: all of it on one outcome, or any split you want.
+- There's a fourth outcome too: keep some or all of your points. If you're genuinely unsure, abstain and defer to the people with better expertise.
+
+That fourth outcome matters more than it looks. "I don't know" is a legitimate epistemic state, and the design makes room for it instead of forcing it to hide inside a pick. In a vote, uncertainty gets collapsed into a choice. Here, it gets its own allocation.
+
+One ground rule, baked into the setup, does all the work: your total allocation can't exceed 1,000 points. Words are unbounded; declaring "I strongly prefer option two!" costs nothing. Points are capped. The moment you have to take points away from one option to fund another, you have to rank your own convictions. And once you divide each allocation by 1,000, you have exactly what I was after: a probability distribution over the outcomes, one per person.
+
+## What the bets revealed
+
+When the points came in, the exercise turned out to be very revealing.
+
+I bet small: 70 points out of my 1,000, keeping the other 930. I genuinely wasn't knowledgeable about the underlying biology separating the outcomes, and my allocation said so out loud. Others bet big: 900 points on one option, leaving just 100 split between the remaining two. Where I was shrugging, they were leaning hard.
+
+That 70-versus-900 spread was exactly the information we needed. Pool everyone's allocations and you get the team's collective distribution: which option had the most support, how concentrated that support was, and who held it. The people with the deepest expertise had put their (funny) money where their mouths were, and their bets helped us see very clearly where the team's preferences lay.
+
+This is the same move my former colleague [Clayton Springer](https://www.linkedin.com/in/clayton-springer-5a48072/) would have prescribed. His version: state your hypothesis in the form of a molecule. Ours: state your beliefs in the form of a funny money distribution. Either way, the point is to make your belief inspectable.
+
+## From bets to a decision
+
+The distributions made the real discussion possible. Once they were on the table, the argument shifted from "my adjectives vs. your adjectives" to "why did you allocate that way?", and the second question is much more productive. The exercise also surfaced something we hadn't articulated: there was more than one legitimate way to converge.
+
+Consensus was the path we took. We talked through the distributions and rounded off some of the numbers to make the final call easier to act on. A second legitimate path: the person who actually owns the decision takes the team's allocations as input, weighs them alongside everything else, and makes the call. A third was appointing a dictator and being done with it; we passed on that one. Naming the paths explicitly was itself clarifying, because it turned our decision-making process into a choice rather than a default.
+
+## Why this beats voting
+
+I think this trick has real advantages over an outright vote.
+
+A vote collapses your belief into a single choice: one person, one bit. Funny money lets me express the strength of my conviction. When I want to say "I lean this way, but only slightly", I bet 200 points instead of 900. Degree of opinion survives the aggregation instead of getting flattened into a binary.
+
+Funny money also separates confidence from preference, which voting mashes together. "Low confidence, mild preference" looks like 150 points on my preferred option and the rest in my pocket. "High confidence" looks like a big, concentrated bet. Those are genuinely different epistemic states, and they deserve different representations.
+
+And abstention is built in rather than awkward. Keeping your points is a visible, legitimate stance: "I'm deferring to the experts." You can participate honestly while genuinely uncertain, and your honesty stays visible in the pooled distribution.
+
+## If you run one
+
+A few practical notes, based on one successful run and some reflection since:
+
+- Keep the money funny. Nothing real is at stake, so what you measure is preferences, free of the strategic games that real stakes invite. For a team decision, honest preferences are exactly what you want on the table.
+- Collect allocations independently before sharing them. Anchoring is real: once the first big bet lands, everyone else's distribution shifts toward it.
+- Sum the allocations publicly, then talk. The pooled distribution tells you where the room stands; the conversation after the reveal is where the decision actually gets made.
+
+That last point is the heart of it, because the trick's real value is in what it replaces: a qualitative shouting match becomes a set of quantitative statements of belief, and the team argues about the thing that actually matters, which is why we believe what we believe. It's the same instinct as [going Bayesian with your data analysis](/blog/2026/7/23/going-bayesian-automates-data-analysis/): qualitative hand-flagging of opinions, like qualitative hand-flagging of outliers, gives way to something principled. Next time your team is going in circles, hand out a thousand points of funny money and see what distributions show up. I suspect you'll be surprised!
+---
+pub_date: 2026-09-11
+---
+twitter_handle: ericmjl
+---
+summary:
+
+When my team was stuck talking past each other with no slam dunk option in sight, I had everyone bet 1,000 points of funny money across the options, and the allocations revealed the team's collective belief distribution. It beats voting because it captures preference strength and confidence separately. Curious how a 70-point bet and a 900-point bet unblocked the discussion?
+---
+tags:
+
+decision-making
+bayesian
+probability
+consensus
+teams
+facilitation
+collaboration
+uncertainty
+belief elicitation
