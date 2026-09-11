@@ -51,6 +51,7 @@ Abstention, or rather deferring to experts, is built into the design of funny mo
 A few practical notes, based on four or five successful runs and some reflection since:
 
 - Collect allocations independently before sharing them. Anchoring is real: once the first big bet lands, everyone else's distribution shifts toward it.
+- Have whoever spent the fewest points kick off the reveal, then build upwards to the folks with the most conviction, because anchoring will happen. Power dynamics matter too: anyone in a position of authority should go absolutely last.
 - Sum the allocations publicly, then talk. The pooled distribution tells you where the room stands; the conversation after the reveal is where the decision actually gets made.
 
 The second point gets to the heart of the problem. A qualitative shouting match becomes a set of quantitative statements of belief, and the team can begin listening to why someone has a certain strength of belief. It's the same instinct as [going Bayesian with your data analysis](/blog/2026/7/23/going-bayesian-automates-data-analysis/): qualitative hand-flagging of opinions, like qualitative hand-flagging of outliers, gives way to something more principled. Next time your team is going in circles, hand out a thousand points of funny money and see what distributions show up. I suspect you'll be surprised!
