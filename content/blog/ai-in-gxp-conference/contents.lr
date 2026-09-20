@@ -1,0 +1,168 @@
+title: A data scientist walks into a GxP conference
+---
+author: Eric J. Ma
+---
+body:
+
+I spent September 15 and 16 in Raleigh at a conference on AI in GxP. Three months ago that acronym meant almost nothing to me, and I want to fix that for anyone else who grew up on the research side of science, because I needed this map last week. My world is exploratory analysis, notebooks, and prototypes, where the deliverable is insight and the constraint is my own rigor. GxP is the other side of the house, the body of practice that keeps medicines and medical devices safe for the people who take them. This post is my first pass at a map of that world, drawn from two days of talks and hallway conversations.
+
+## What GxP is for
+
+GxP stands for "good *something* practice". Examples include: GMP for manufacturing, GLP for laboratories, GCP for clinical trials. The common thread, as I now understand it, is a **promise**: A company making a regulated product commits to making it safely and reliably for patients, and it keeps that promise by writing its own procedures and then following them in a way that is documented and unambiguous.
+
+That last part surprised me. I had previously assumed an external rulebook issued from on high. Instead, the company authors its own SOPs and then has to live up to them. The regulation demands that a documented process exists and is followed; the company decides what the process says.
+
+## Regulations set principles, and companies write the procedures
+
+As things turn out, the rules surrounding manufacturing processes are less prescriptive than I expected. They state principles rather than recipes, out of a recognition that different products have fundamentally different manufacturing processes; the process for a small molecule drug looks nothing like the one for a cell-based therapy. So the principles stay product-agnostic. Whatever you make, the process has to be documented with enough precision that two trained people would execute it the same way, it has to be justifiable with data and reasoning, and it has to be verifiable when someone comes to audit. One speaker's version: the regulators specify the what, and the how belongs to you.
+
+That flexibility, however, comes with accountability.
+
+## Inspectors are professionals with a method
+
+Prior to the conference, I had implicitly (in my head) cast inspectors as villains. The conference replaced that caricature with a picture that is more reassuring and more demanding at the same time: inspectors are trained people who show up with a method. They review the documentation of how things should be done, the SOPs and work instructions. They ask for evidence that work was executed the way the SOP says: records, logbooks, audit trails. And when something deviated from the SOP, they ask for the investigation that followed: the root cause analysis and the remediation.
+
+Over lunch I talked with someone who has spent years on the industry side of medical device audits, and he walked me through what a serious inspection looks like from the inside. The inspection arrives announced, with an agenda. Each SOP names the specific operator who demonstrates it, and that operator performs it live while a quality lead facilitates. Companies run a war room during the inspection: a facilitator relays questions to subject matter experts watching from a back room, a scribe transcribes the whole day, and the team predicts where the investigator will go next so the documents are pulled before they're requested. The teams that handle regulators well rehearse with mock audits, often staffed by former FDA and EMA auditors, at least once a year per functional area. All of that preparation, he said, rests on one rule: the single unforgivable move during an inspection is making something up.
+
+## Validation becomes a range of acceptable behavior
+
+When it comes to generative AI, and more importantly, inherently stochastic systems that need to be validated, things get more challenging. Classic software validation assumes determinism: same input, same output, every time, so you write the expected result and check against it, pass or fail. Generative AI breaks that assumption on purpose. For example, the same prompt can produce different answers, several of them good.
+
+One speaker, an IT risk and compliance lead, offered the reframe I keep thinking about: when you validate an AI system, you are really validating a *measurement system* for the AI. Instead of pass/fail on a single output, **you define a range of acceptable behavior**. In practice that means naming the population of test cases, declaring a threshold for how well the system must do across them, pinning the evaluation harness at a specific commit to do the measuring, and documenting the deviation route for what happens when a case fails. His own project used about a hundred labeled examples over a corpus of regulations and inspection letters, seeded with traps: distractors that were 90 percent similar across drug and device categories, follow-up questions, and prompts whose correct answer was "this falls outside the ingested corpus".
+
+The evidence changes too. The evidence needed is no longer a screenshot; instead, it is a run record: metrics, outcome distributions, per-call provenance, dated and attributable. And because model versions change under you, prompts get tweaked, and corpora grow, the evidence expires. One speaker quoted a line that captured the whole day for me: "Validation isn't an event. Validation is data."
+
+The SOP implications followed, and speaker after speaker made the same argument from different directions: AI needs its own SOPs, kept separate from the software-development ones, covering dataset development, model development, testing, and validation. The classic procedure assumes you can write the expected result, run the test, compare, and sign. Force a generative system into that template and every clause fights reality: single expected results, one-time executions, screenshots as evidence. The most fully spelled-out version called for separate AI model validation SOPs alongside the traditional computerized system validation ones, on the argument that the classic risk categories were built for deterministic systems and don't transfer. A separate procedure is what gives the range-of-acceptable-behavior logic a legal home: versioned test sets under change control, run records as evidence, and scheduled requalification when a trigger fires.
+
+## Where the whole room agreed
+
+Lots of speakers at the conference agreed on the following five threads, which ran through nearly every talk:
+
+1. **Evidence has a shelf life.** One speaker described running nightly GMP releases inside a three-million-line codebase and passing three FDA inspections on 99.9 percent proven test coverage; his team cut validation costs about 65 percent within eighteen months with zero headcount cuts. The line he quoted: **"Validation isn't an event. Validation is data."**
+2. **Human gates have to be real.** The enforcement data says the failures are human: 303 FDA warning letters last fiscal year, up 15.9 percent, with the most-cited regulation aimed at quality-unit oversight. The first AI-related CGMP warning letter, issued in April 2026 to a cosmetics lab, turned on exactly that: the company's explanation was "AI did not tell us", which is the sound of nobody reviewing what the AI produced. One speaker's closer deserves a frame on the wall: "untrained humans fail inspections, and untrained AI fails patients." Another warned that "human oversight" can become camouflage for rubber-stamping, the kind of wording inspectors eventually pull on. And when someone asked how to relieve the burden of human review, the compliance lead's answer was blunt: "AI is not gonna get sued. It's the human that is gonna get sued."
+3. **Attribution extends to the AI itself.** ALCOA+ survives the AI era intact. One quality-systems veteran put it crisply: "AI doesn't change the requirements; it just changes the enforcement surface." Her prescription: every autonomous agent gets its own scoped, logged identity instead of hiding inside shared service accounts, and agents become access-control subjects the way people are. The honest open question she left the room with: "Do I need to put my AI agent in Workday?"
+4. **Intended use is the master lever.** The same underlying model reads as high risk when its intended use says it "categorizes and assigns severity to incoming deviations" and as low risk when it "drafts preliminary deviation summaries for QA review". Wording sets the validation burden. Bounding the inputs works the same way: one computer-vision system drew only from fixed cameras under standardized lighting; that constraint turned a potentially years-long validation into a months-long one.
+
+5. **Evaluation sets need unhappy paths.** Models trained on happy-path data give happy-path answers, and they fail silently when reality shows up with something training never covered. The agreed practice: golden test sets seeded with the ugly cases, graders layered from simple code checks to model checks to human subject-matter experts, and an LLM judge whose agreement with humans is calibrated and monitored over time.
+
+## Where the room split
+
+The disagreements were just as informative.
+
+**Speed versus defensibility.** One speaker exulted in efficiency; the 65 percent cost cut came with "get rid of your consultants" energy. Another speaker's entire talk was about specifying approval gates and immutable audit trails. Both got nods, and yet nobody reconciled them on stage.
+
+**Is nondeterminism a solved problem?** The head of data at a validation-documents company argued the field has moved past the worry: "maybe it's stochastic... that's pretty much debunked now. It's been done several times before." A manufacturing consultant pushed back from the same stage: "unless you have a frozen AI model that doesn't change, that means that the evolution of the process has to change." A working compromise surfaced in the hallways: treat the LLM as a drafting engine, pin the corpus it draws from, and verify every output against that corpus.
+
+**Consolidation means different things to different functions.** Merging manufacturing, IT, and QA into one team succeeded once in ten projects at one consultancy; the working pattern there keeps the functions separate and plants IT business partners inside them as translators. At the data layer, the prescription flips: consolidate the estate, one governed dataset validated once and reused by every model and agent. Same word, different layers.
+
+**Inspection craft versus inspection polish.** The war room is performance craft, aimed squarely at the auditor's experience. Another speaker's critique cuts at the same target from a different angle: most GxP systems are optimized to be inspection-ready and are lousy at generating insight, which is exactly why AI pilots stall there. The two views cohere only when execution really does match the SOPs; otherwise the war room is polish over a hollow core.
+
+**The ROI math.** "95 percent accurate" doesn't mean 95 percent time savings: you still review 100 percent of the output, and the missing 5 percent is where all the time goes. One panelist reported the industry has a name for the alternative, pilotitis, an addiction to pilots. Another, from a company that is genuinely good at this, said it flatly: "We're in POC hell."
+
+## The playbooks people shared
+
+Day two doubled down on the practical, and the recommendations clustered into a pattern: nearly every policy exists to make AI behavior inspectable.
+
+**On usage:** prohibit public AI tools for GxP data and confidential information, disclose when AI touched a document, keep an inventory of every AI system in the company including the shadow ones, and run AI purchases through a GxP and risk assessment before the contract is signed. One speaker went further and treated agents like hires: defined scope, approved training sources only, a CV of versions and validation history, retraining whenever the SOPs change. A pharmacovigilance team runs agent personas this way, one for IT compliance work and one for drug safety.
+
+**On procedure:** the separate-SOP argument grew from two voices to a chorus, with calls for dedicated procedures covering dataset development, model development, AI testing, and AI validation, plus a mock audit by a subject matter expert before any formal one.
+
+**On verification:** the motto was "Never Trust! Always Verify!" It has a regulatory root in 21 CFR 211.68(c), the rule requiring a human check that automated equipment performed properly. The operational pattern: AI drafts, a named human verifies explicitly and separately, and the time AI saves gets budgeted toward that verification. One team's whole pipeline fit in a line I wrote down verbatim: controlled evidence in, fixed prompts, AI analysis, evidence plus rationale out, human review, approved output with an audit trail.
+
+**On honesty:** when evidence is missing, the system says "unable to verify" rather than guessing; findings carry openable citations; regression means three consecutive runs against unchanged evidence with the deltas displayed. And regulators have started saying the same thing out loud: the MHRA's inspectorate blogged in June that companies own the accuracy of AI-drafted submissions regardless of the drafting tool.
+
+## What data scientists can bring
+
+This is the part I care most about, because it is where my field has something to offer.
+
+**Model cards should be standard practice.** In the Q&A after one talk, I asked a speaker whether intended use statements and model cards, the documentation format Google popularized for recording what a model is, what it does, how it was trained, and where it fails, could be one artifact. The speaker's answer: keep the intended use statement as the governance object, and attach the model card as an appendix to the SOP governing that model's use. Model cards are "not exactly perfect in terms of the GxP context, but it adds so much clarity", and they let end users actually risk-assess the model they've been handed. I left convinced. With AI help, the barrier to producing this document is dramatically lowered, and the regulated setting gives us a reason to make it standard.
+
+**AI can lower the documentation lift, carefully.** Validation documentation is expensive to produce, and this is where ML teams have an unfair advantage: we already know how to make AI write things from source. In a hallway conversation, the acceptance-criteria speaker described using an LLM over an ingested regulatory corpus to draft candidate acceptance-criteria statements, then checking every draft against the corpus to confirm each statement traces to real text. The same pattern applies to model cards: let an AI scour the training pipeline's source code and draft the card, then have a named human review and sign it. The warning that keeps this honest came up more than once: documents nobody reviews are how you earn a warning letter, and as one speaker put it, "nobody genuinely reviews a hundred AI-generated documents". So the real design problem is the review workflow, and the writing was never the hard part.
+
+**Our vocabulary is the compliance vocabulary now.** Precision, recall, calibration, thresholds, versioning, commit hashes: these were the words of the day. Regulators set principles and deliberately leave the numbers to the companies, and one speaker observed that "none of the regulators can give us that number", so the threshold is ours to justify. Data scientists are unusually well trained for exactly that kind of justification.
+
+**Prompts are records, and prompts are weak controls.** Hash and version your prompts, log which model version served each call, and treat a prompt instruction as a request rather than a guarantee. The robust controls are the ones a model has no way to argue with: numeric thresholds and system boundaries.
+
+## The talks and speakers
+
+Here's a list of the talks that I dropped in on. I made sure to double-check the names against the [conference agenda compendium](https://kenx.org/wp-content/uploads/2026/09/AI-in-GxP-2026-Agenda-Compendium-Raleigh.pdf).
+
+Day one, September 15:
+
+| Time        | Session                                                                                           | Speaker(s)                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 8:20-9:00   | Harness the Power: AI-Driven Decision-Making, Data Integrity, and Continuous Validation (keynote) | William Gargano, Group SVP, RCM Life Sciences and IT                                                                                |
+| 9:00-10:00  | From Idea to Proof of Concept: How Enterprises Pilot AI in GxP (panel)                            | Dori Gonzalez-Acevedo, ProcellaRx (moderator); Tim Roy Kirkelie, Genari AI; Gaurav Walia, PQE Group; Anant Agrawal, CIMCON Software |
+| 10:20-11:00 | Reducing Human Risk in GxP: Building Inspection-Ready AI Systems                                  | Bharanitharan Rajendran, CTO, Validfor                                                                                              |
+| 11:10-11:50 | Trust Is Not a Framework: Building Observable, Evaluated AI Systems in GxP                        | Rosalind Beasley, Co-Founder & CEO, Genari AI                                                                                   |
+| 12:00-12:40 | Building a Scalable, Governable Data Estate for AI (virtual)                                      | Shelly LaPointe, Quality Systems Director, Stealth Startup                                                                          |
+| 1:40-2:20   | Unite IT, QA, and Manufacturing to Drive Intelligent GxP Operations                               | Ganesh Muralidharan, Global Delivery Head, Vaisesika Systems Consulting                                                             |
+| 2:30-3:10   | Defining Acceptance Criteria for AI Validation                                                    | Abhishek Bachchan, Associate Director, IT Security, Risk and Quality, Gilead                                                        |
+| 4:10-4:50   | "Intended Use" as the Corporate Governance Foundation for GxP AI                                  | Ben O'Brien, Business Development Partner, Phanero                                                                                  |
+| 5:00-5:40   | Turn Quality Metrics into Action with Predictive Dashboards                                       | Gaurav Walia, VP of CSV/CSA/DI & Digital Governance & Local Equity Partner, PQE Group                                       |
+
+Day two, September 16:
+
+| Time        | Session                                                                           | Speaker(s)                                                                                                                        |
+| ----------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 9:10-9:50   | Align Intelligent Systems with FDA, EMA, and Annex 11/22 Expectations             | Gaurav Walia, VP of CSV/CSA/DI & Digital Governance & Local Equity Partner, PQE Group                                     |
+| 9:10-9:50   | Expert panel: AI, digital transformation, and the future of the modern laboratory | Abhishek Bachchan, Gilead (moderator); Steve Ferrell, Valkit.ai; Madhavi Ganesan, PSC Biotech; Joe Ault, Thermo Fisher Scientific |
+| 10:10-10:40 | Using AI to Modernize Internal Audits and Document Review                         | Vivekram Apparsundaram, Head of CQV Practice, Zifo Technologies                                                                   |
+| 11:00-11:40 | 10 Steps to Achieving AI Regulatory Compliance                                    | Robert (Bob) Wherry, VP, AI Compliance, QACV Consulting                                                                           |
+| 11:50-12:30 | AI GxP Practice: What's Working, What's Not, and What We Should Do Differently    | Binesh Prabhakar, Founder, One Vector                                                                                             |
+| 1:30-2:10   | Establish Continuous Validation Through Real-time Monitoring                      | Carolyn Troiano, RiskCortex Limited                                                                                               |
+| 2:20-3:00   | Minimum Viable Product (MVP) for AI in GxP (panel)                                | Bryan Ennis, Sware; Robin Stolzberg, Sapio Sciences; Courtney Steele, DeepHow                                                     |
+| 3:20-4:00   | Strengthening AI Systems with Built-In Cybersecurity and Access Control           | Aarti (Amy) Arora, Principal, RxT                                                                                                 |
+| 4:10-4:50   | From Installation to Validation: Testing Local AI Against GxP Requirements        | Yari Fontebasso, PhD, Principal, AI Governance & IT Compliance, Systera Solutions                                             |
+
+## The patients at the end of it
+
+The moderator of the morning panel closed with a story. At a keynote in June, she was prepping for her next meeting on her phone and mindlessly raised her hand when the speaker asked who lives with a chronic illness. She turned out to be the only one of six hundred people who had, and got pulled on stage. She told the room she's bipolar. "That's who I am," she said, and then reminded a conference hall full of quality and compliance professionals that they are all patients too.
+
+That's what GxP is for. Somewhere down the line a person takes the product, and the procedures, records, and audits are the mechanism by which the promise to that person gets kept. My instincts developed over nearly two decades in research read all of that as bureaucracy. After a day in that room, I read it as engineering discipline with a patient at the end of it, and I think data science has a lot to contribute!
+
+## A glossary
+
+Half the day's difficulty was vocabulary, so here is the pocket glossary I wish I'd had at 8am.
+
+| Term                 | What it means                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------ |
+| GxP                  | The umbrella for "good practice" regulations: GMP (manufacturing), GLP (laboratories), GCP (clinical trials) |
+| SOP                  | Standard operating procedure. The company's own written, approved how-to for a process                       |
+| Work instruction     | Step-level detail beneath an SOP, for a single task                                                          |
+| Deviation            | Any departure from an SOP or specification. Triggers a documented investigation                              |
+| CAPA                 | Corrective and preventive action: the fix, plus the fix that keeps it from recurring                         |
+| Root cause analysis  | The structured investigation into why a deviation happened                                                   |
+| Change control       | The approved process for changing a document, system, or process                                             |
+| Validation           | Documented evidence that a system does what it's meant to do, for its intended use                           |
+| CSV / CSA            | Computerized system validation, and its risk-based successor, computer software assurance                    |
+| GAMP 5               | The industry's risk-based framework for validating computerized systems                                      |
+| 21 CFR Part 11       | The FDA rules for electronic records and signatures                                                          |
+| ALCOA+               | Data integrity: Attributable, Legible, Contemporaneous, Original, Accurate, Complete, Enduring, Available    |
+| Audit trail          | The immutable record of who did what, when                                                                   |
+| 483 / warning letter | FDA inspection observations, and the escalation when the response falls short                                |
+| Intended use         | The documented statement of what a system is for, and where its boundaries sit                               |
+| Acceptance criteria  | The pre-declared bar a system must clear to count as validated                                               |
+| Mock audit           | A rehearsal inspection, ideally staffed by former regulators                                                 |
+| War room             | The live command center supporting the company during a real inspection                                      |
+---
+pub_date: 2026-09-20
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this post, I share what I learned at a conference on AI in GxP, the regulations keeping medicines and devices safe, arriving from the research side where the acronym meant nothing to me three months ago. I sketch a map of SOPs, validation, and inspections, and how stochastic AI systems force a rethink: defining a range of acceptable behavior instead of pass/fail checks. I close with what data scientists can offer, from model cards to evaluation harnesses. If regulators set the principles but leave the numbers to us, who gets to decide what "good enough" means?
+---
+tags:
+
+gxp
+ai
+validation
+compliance
+fda
+pharmaceuticals
+biotech
+machine learning
+data science
+quality assurance
