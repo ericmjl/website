@@ -1,0 +1,52 @@
+title: Reviewing the PLAUD Note Pro
+---
+author: Eric J. Ma
+---
+body:
+
+I rarely review hardware on this blog. The PLAUD Note Pro is an exception. I got it shipped from Amazon just about a day or two before I flew out to a conference on a topic I was brand new to.
+
+## Why I bought it
+
+I'm new to the GxP world, the quality and regulatory regime that governs life-science labs and manufacturing. I was walking into a two-day conference on AI in GxP knowing I had to absorb as much as I could. Listening alone would leave nothing behind. So I planned the trip around capture: record every talk, photograph the slides in the companion app as they came up (each photo timestamped against the audio), and once home, have my agents crawl the whole corpus and help me consolidate it. Two days of other people transmitting verbal knowledge is a vast corpus. I needed a capture device that would disappear into that workflow instead of demanding attention during it.
+
+## Two days, no charger
+
+The first test arrived before the first talk. I landed in North Carolina and realized I'd left the charging cable at home. I went online, nervous, and checked the spec sheet: 30 hours of continuous recording in the mode I was running (Endurance mode stretches it to 50, at reduced microphone range). Two days of talks later, the battery sat at about 45 percent. I never borrowed a cable, and I finished the conference well outside the danger zone.
+
+## One button in the room
+
+My in-room workflow settled into something simple. As a speaker began, I long-pressed the single button to start recording. While they talked, I photographed slides and jotted quick notes in the companion app. The feature that won me over is highlights: a short press on the device, or a tap in the app, marks the moment, and PLAUD banks what was just said as a quote or a near-verbatim reconstruction of it. So my full attention stayed on the talk, and a one-button gesture captured the moments that mattered.
+
+## After the conference
+
+PLAUD ships an MCP server, so my agents can pull recordings, transcripts, and notes straight from my account. Over the two days I had recorded twenty-odd talks in the background while taking notes on my phone; once I was home, I got the agents to ingest every transcript into my Obsidian vault just like nobody's business. I also deeply appreciate the vision-language models that turn the slide photos into well-crafted summaries and highlights of each talk.
+
+I'm now building that corpus into a knowledge graph I can query and reason about. It's practice material that helps me understand why GxP is the way it is, and it's an archive I can share with colleagues when I'm back in Cambridge.
+
+The hardware itself is a plastic slab the size of a credit card, three millimeters thin, with one button. That constraint is the design. When a device has one button, the interface collapses to the one job to be done: long-press to record, short-press to highlight, long-press again to stop. Mid-talk, the button did everything. I think that simplicity is exactly why it works so well.
+
+## Verdict
+
+The short version: very, very impressive. It costs $189. If you treat conferences as raw material for an agent pipeline, this thing belongs in your pocket. It did its one job for two straight days and finished with 45 percent still in the tank.
+---
+pub_date: 2026-09-20
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this post, I share my hands-on review of the PLAUD Note Pro, a credit-card-sized recorder that carried me through a two-day conference on AI in GxP. I describe how it captured twenty-odd talks, survived two days without a charger, and let me highlight key moments with a single button press. I also walk through feeding the transcripts and slide photos into my agent pipeline and Obsidian vault. If a device this simple can disappear into a workflow and quietly do one job well, what else might we be overcomplicating?
+---
+tags:
+
+hardware
+review
+ai
+conference
+notes
+obsidian
+agents
+recorder
+productivity
+gxp
