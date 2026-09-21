@@ -752,3 +752,12 @@ body.dark-mode .loading {
 .error {
   color: #dc3545;
 }
+
+/* terminal.css draws list markers as inline pseudo-elements on li.
+   A block-level <p> inside an <li> (markdown "loose" lists) orphans the
+   marker on its own line. Render the first paragraph inline so loose
+   items match tight ones. */
+#post_body li > p:first-child {
+  display: inline;
+  margin: 0;
+}
