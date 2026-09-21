@@ -761,3 +761,17 @@ body.dark-mode .loading {
   display: inline;
   margin: 0;
 }
+
+/* terminal.css renders ol markers as in-flow inline pseudo-elements, so
+   wrapped lines align under the number instead of the text. Give ordered
+   lists a proper hanging indent: the number hangs in the margin and every
+   text line aligns at the same edge. Excludes the dotted terminal-toc
+   lists, which position their own markers on the right. */
+ol:not(.terminal-toc) li {
+  padding-left: 2.5em;
+}
+ol:not(.terminal-toc) li::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
