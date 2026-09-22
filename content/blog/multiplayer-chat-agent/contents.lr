@@ -10,7 +10,7 @@ body:
 
 I've been building and testing a Discord bot for the private community around the [Learn Anything with AI retreat](https://learn-anything.nonlinearlabs.ai). It's called Sage, and its job is to be a growable knowledge assistant for the community. It answers the questions that come up over and over (when is the retreat, what does the week look like, what's the deposit policy), points people at the right resources, and does it all in a consistent voice. As the community grows, the knowledge it answers from grows with it.
 
-I had a second goal with this build, and it's the one I care about more. Almost all the energy in coding agents right now goes toward one-on-one use: you at a terminal with your agent. I wanted to find out how hard it is to build the multiplayer version, an agent that an entire community can talk to. I expected that to be the hard part. It's the easy part. Stick a coding agent inside a container, wrap an API around it, and connect it to a chat platform. That's the whole idea. Everything else is detail. The idea I want you to take from this: you can use very simple tech to build genuinely useful AI applications.
+I had a second goal with this build, and it's the one I care about more. Almost all the energy in coding agents right now goes toward one-on-one use: you at a terminal with your agent. I wanted to find out how hard it is to build the multiplayer version, an agent that an entire community can talk to. I expected that to be the hard part. It's the easy part. Stick a coding agent inside a container, wrap an API around it, and connect it to a chat platform. That's the whole idea. Everything else is detail. You can use very simple tech to build genuinely useful AI applications.
 
 ## What "multiplayer" changes
 
@@ -91,9 +91,9 @@ Modal bills per second, and a small container idling at default resources costs 
 
 I extracted the pattern into a standalone repo, stripped of everything retreat-specific: [github.com/ericmjl/sage-pattern](https://github.com/ericmjl/sage-pattern).
 
-Inside you'll find the Modal deployment code, a dummy knowledge base you can swap for your own, a README explaining the architecture, an AGENTS.md written for coding agents, and a paste-ready prompt you can hand to your own agent to test-drive the deployment against your Discord server and Modal account. If you have a community and a Discord, deploy it and see for yourself.
+Inside you'll find the Modal deployment code, a dummy knowledge base you can swap for your own, a README explaining the architecture, an AGENTS.md written for coding agents, and a paste-ready prompt you can hand to your own agent to test-drive the deployment against your Discord server and Modal account.
 
-The models get the headlines. What makes this buildable for one person is that the surrounding tech got boring. An agent your whole community can talk to is one container, one subprocess, and one markdown file away. Go build one!
+The models get the headlines. What makes this buildable for one person is that the surrounding tech got boring: one container holding a websocket, one subprocess doing the searching, one markdown file holding what your community knows. Pick a community and go build one!
 
 ---
 
