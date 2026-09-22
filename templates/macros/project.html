@@ -1,3 +1,88 @@
+{#- Collection front page macros: featured artifact + year-ruled archive. -#}
+
+{% macro _artifact_kind(project) -%}
+{%- set ns = namespace(k='none') -%}
+{% for blk in project.body.blocks -%}
+{%- if blk._flowblock == 'youtube' and ns.k == 'none' -%}{%- set ns.k = 'poster' -%}{%- endif -%}
+{%- if blk._flowblock == 'book' and ns.k == 'none' and 'leanpub.com/' in (blk.url | string) -%}{%- set ns.k = 'cover' -%}{%- endif -%}
+{%- endfor -%}
+{{ ns.k }}
+{%- endmacro %}
+
+{% macro _artifact_thumb(project) -%}
+{%- set ns = namespace(yt='', slug='') -%}
+{% for blk in project.body.blocks -%}
+{%- if blk._flowblock == 'youtube' and not ns.yt -%}{%- set ns.yt = blk.url | string | trim -%}{%- endif -%}
+{%- if blk._flowblock == 'book' and not ns.slug and 'leanpub.com/' in (blk.url | string) -%}{%- set ns.slug = (blk.url | string | trim).split('leanpub.com/')[1].split('/')[0].split('?')[0] -%}{%- endif -%}
+{%- endfor %}
+{%- if ns.yt -%}
+{%- set vid = (ns.yt.split('v=')[1].split('&')[0].split('?')[0] if 'v=' in ns.yt else ns.yt.split('youtu.be/')[1].split('/')[0].split('?')[0]) | trim -%}
+<img src="https://i.ytimg.com/vi/{{ vid }}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy">
+{%- elif ns.slug -%}
+<img class="artwork-cover-img" src="https://d2sofvawe08yqg.cloudfront.net/{{ ns.slug }}/s_hero2x" alt="" width="640" height="828" loading="lazy" onerror="this.style.display='none'">
+{%- else -%}
+{%- set words = project.title.split(' | ')[0].split(' ') -%}
+<span class="plate-fallback" aria-hidden="true">{{ ((words[0][0] ~ (words[1][0] if words|length > 1 else '')) | upper) }}</span>
+{%- endif -%}
+{%- endmacro %}
+
+{% macro _artifact_actions(project) -%}
+{%- set ns = namespace(yt_done=false) -%}
+{%- set items = [] -%}
+{% for blk in project.body.blocks -%}
+{%- if blk._flowblock == 'youtube' and not ns.yt_done -%}{%- set _ = items.append(('watch', blk.url | string | trim)) -%}{%- set ns.yt_done = true -%}
+{%- elif blk._flowblock == 'slides' -%}{%- set _ = items.append(('slides', blk.url | string | trim)) -%}
+{%- elif blk._flowblock == 'github' -%}{%- set _ = items.append(('github', blk.url | string | trim)) -%}
+{%- elif blk._flowblock == 'notebooks' -%}{%- set _ = items.append(('notebooks', blk.url | string | trim)) -%}
+{%- elif blk._flowblock == 'book' -%}{%- set _ = items.append(('book', blk.url | string | trim)) -%}
+{%- elif blk._flowblock == 'resource' and blk.label -%}{%- set _ = items.append((blk.label|lower, blk.url | string | trim)) -%}
+{%- endif -%}
+{%- endfor -%}
+{%- for it in items -%}
+<li><a href="{{ it[1] }}" rel="noopener"{% if loop.first %} class="action-primary"{% endif %}>{{ it[0] }}</a></li>
+{%- endfor -%}
+<li><a href="{{ project|url }}">details</a></li>
+{%- endmacro %}
+
+{% macro render_collection_grid(page) %}
+{%- set ns = namespace(count=0) -%}
+{% for p in page.children -%}
+{%- if p.visible == 'Visible' -%}{%- set ns.count = ns.count + 1 -%}{%- endif -%}
+{%- endfor %}
+<section class="collection-front">
+<header class="collection-head">
+<h1 class="collection-title">{{ page.title }}</h1>
+<span class="collection-count">{{ ns.count }} artifact{{ 's' if ns.count != 1 else '' }}</span>
+</header>
+
+<div class="collection-grid">
+{%- for p in page.children if p.visible == 'Visible' %}
+{%- set parts = p.title.split(' | ') -%}
+{%- set ctitle = parts[0] -%}
+{%- set cvenue = parts[1] if parts|length > 1 else none -%}
+{%- set cmeta = [] -%}
+{%- if cvenue -%}{%- set _ = cmeta.append(cvenue) -%}{%- endif -%}
+{%- if p.pub_date -%}{%- set _ = cmeta.append(p.pub_date.strftime('%B %Y')) -%}
+{%- elif p.category -%}{%- set _ = cmeta.append(p.category) -%}{%- endif -%}
+{%- set kind = _artifact_kind(p)|trim -%}
+<article class="artifact-card">
+<a class="card-artwork{% if kind == 'cover' %} artwork-cover{% endif %}" href="{{ p|url }}" tabindex="-1" aria-hidden="true">
+{{ _artifact_thumb(p) }}
+</a>
+<div class="card-body">
+<h2 class="card-title"><a href="{{ p|url }}">{{ ctitle }}</a></h2>
+{% if cmeta %}<p class="card-meta">{{ cmeta|join(' · ') }}</p>{% endif %}
+<div class="card-summary">{{ p.summary | striptags }}</div>
+<ul class="front-actions card-actions">
+{{ _artifact_actions(p) }}
+</ul>
+</div>
+</article>
+{% endfor %}
+</div>
+</section>
+{% endmacro %}
+
 {% macro render_project_card(project) %}
 <div class="terminal-card">
   <header class="card-title">{{ project.title }}</header>
