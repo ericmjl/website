@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-20T21:40:00-04:00",
+  "title": "Design System: Eric J Ma's Website",
+  "extensions": {
+    "colorMeta": {
+      "signal-blue": {
+        "role": "primary",
+        "displayName": "Terminal Signal Blue",
+        "canonical": "#1a95e0",
+        "tonalRamp": [
+          "#1a95e0",
+          "#62c4ff"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Lab Ledger Ink",
+        "canonical": "#151515",
+        "tonalRamp": [
+          "#151515",
+          "#e8e9ed"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#ffffff",
+          "#e8eff2",
+          "#222225"
+        ]
+      },
+      "quiet-gray": {
+        "role": "neutral",
+        "displayName": "Quiet Gray",
+        "canonical": "#727578",
+        "tonalRamp": [
+          "#727578",
+          "#a3abba"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Berkeley Mono Display",
+        "purpose": "Collection mastheads only."
+      },
+      "label": {
+        "displayName": "Berkeley Mono Label",
+        "purpose": "Meta lines, counts, dates, year rules, prompt-style action links."
+      }
+    },
+    "shadows": [
+      {
+        "name": "physical-cover",
+        "value": "0 6px 24px rgba(0, 0, 0, 0.18)",
+        "purpose": "Under a depicted physical book cover on the tinted artwork zone; the only sanctioned shadow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "grid-rise",
+        "value": "400ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "One entrance per page: the card grid rises as a whole. Disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "ease-state",
+        "value": "140ms ease-out",
+        "purpose": "Hover/focus state transitions (card border, title color)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "featured-stack",
+        "value": "900px"
+      },
+      {
+        "name": "row-compress",
+        "value": "600px"
+      }
+    ],
+    "hairlines": {
+      "light": {
+        "standard": "rgba(21,21,21,0.18)",
+        "structural": "rgba(21,21,21,0.34)"
+      },
+      "dark": {
+        "standard": "rgba(232,233,237,0.16)",
+        "structural": "rgba(232,233,237,0.32)"
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Artifact Card",
+      "kind": "card",
+      "refersTo": "artifact-card",
+      "description": "Equal-emphasis card: real artwork top (poster cover-fill, cover contained on tinted tile, or initials tile), ink title, meta line, 3-line clamped summary, prompt actions on a shared baseline.",
+      "html": "<article class=\"artifact-card\"><a class=\"card-artwork\" href=\"\"><img src=\"https://i.ytimg.com/vi/VIDEO_ID/hqdefault.jpg\" alt=\"\" width=\"480\" height=\"360\" loading=\"lazy\"></a><div class=\"card-body\"><h2 class=\"card-title\"><a href=\"\">Title</a></h2><p class=\"card-meta\">Venue · Month YYYY</p><div class=\"card-summary\">Summary text.</div><ul class=\"front-actions card-actions\"><li><a href=\"\">watch</a></li><li><a href=\"\">details</a></li></ul></div></article>",
+      "css": ".artifact-card { display: flex; flex-direction: column; border: 1px solid var(--hairline-strong); background: var(--background-color); transition: border-color 140ms ease-out; } .artifact-card:hover { border-color: var(--primary-color); } .card-artwork { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--hairline); } .card-artwork img { width: 100%; height: 100%; object-fit: cover; display: block; } .card-title a { color: var(--font-color); text-decoration: none; background: transparent; } .card-title a:hover { color: var(--primary-color); background: transparent; } .card-summary { color: var(--secondary-color); font-size: 0.9rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; } .card-actions { margin-top: auto; padding-top: 0.75rem; }"
+    },
+    {
+      "name": "Action Row",
+      "kind": "custom",
+      "refersTo": "front-actions",
+      "description": "Prompt-style lowercase links separated by middots; hovers underline, never paint a block.",
+      "html": "<ul class=\"front-actions\"><li><a href=\"\">watch</a></li><li><a href=\"\">details</a></li></ul>",
+      "css": ".front-actions { list-style: none; display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: 0; } .front-actions li { display: flex; align-items: center; padding-left: 0; } .front-actions li::before, .front-actions li::after { content: none; } .front-actions li:not(:last-child)::after { content: \"·\"; position: static; top: auto; left: auto; margin: 0 0.6em; color: var(--secondary-color); } .front-actions a { color: var(--primary-color); text-decoration: none; background: transparent; } .front-actions a:hover { text-decoration: underline; background: transparent; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Wall of Equals",
+    "overview": "A terminal that publishes. The collection pages read as a wall of equals: every artifact is one identical card in a uniform responsive grid. Real artwork is linked at the source, never duplicated, never fabricated.",
+    "keyCharacteristics": [
+      "One accent per theme; titles stay ink in both modes",
+      "Square corners, 1px hairlines, flat surfaces",
+      "Equal emphasis: identical cards, actions on a shared baseline",
+      "Real artifacts are the only large imagery",
+      "Link hovers shift color, never paint a background block"
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "The accent blue appears only on interactive elements; titles are ink in both themes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Prompt Case Rule",
+        "body": "Action links are lowercase shell-command style, separated by middot pseudo-elements positioned static.",
+        "section": "typography"
+      },
+      {
+        "name": "The Physical Object Rule",
+        "body": "A shadow is reserved for depicted physical objects; UI chrome never casts one.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Equal Wall Rule",
+        "body": "Every artifact gets one identical card; nothing is featured, nothing is a footnote.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "Do hotlink artwork from its source (ytimg CDN, Leanpub CDN)",
+      "Do strip terminal.css list markers and 20px li padding inside restyled lists",
+      "Do keep card heights equal per row (flex column + margin-top: auto)"
+    ],
+    "donts": [
+      "Don't copy artwork files into the repo",
+      "Don't feature one artifact above the others",
+      "Don't let link hovers paint a background block",
+      "Don't fabricate imagery for artifacts that lack it"
+    ]
+  }
+}
