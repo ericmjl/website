@@ -2,7 +2,7 @@ title: A Multiplayer Chat Agent Is Just a Coding Agent in a Container
 ---
 author: Eric J. Ma
 ---
-pub_date: 2026-09-22
+pub_date: 2026-09-25
 ---
 summary: In this post, I share how I built Sage, a community-wide Discord chat agent, by simply wrapping a standard coding agent inside a persistent container. I'll walk you through the surprisingly straightforward architecture: a websocket, a subprocess, and a single hand-curated markdown file. We'll explore how multiplayer settings shift the rules around grounding, consistency, and cost, and why keeping the stack boring actually makes it more reliable. If you've ever wondered how to scale an AI assistant beyond a single user without overcomplicating things, what's the simplest way you could start building one for your own community?
 ---
@@ -10,15 +10,15 @@ body:
 
 I've been building and testing a Discord bot for the private community around the [Learn Anything with AI retreat](https://learn-anything.nonlinearlabs.ai). It's called Sage, and its job is to be a growable knowledge assistant for the community. It answers the questions that come up over and over (when is the retreat, what does the week look like, what's the deposit policy), points people at the right resources, and does it all in a consistent voice. As the community grows, the knowledge it answers from grows with it.
 
-I had a second goal with this build, and it's the one I care about more. Almost all the energy in coding agents right now goes toward one-on-one use: you, a terminal, your agent. I wanted to find out how hard it is to build the multiplayer version, an agent that an entire community can talk to. The answer surprised me with its simplicity. Stick a coding agent inside a container, wrap an API around it, and connect it to a chat platform. That's the whole idea. Everything else is detail, and the details are where the fun is. By the end of this post I think you'll see that you can build genuinely useful AI applications with very simple tech.
+I had a second goal with this build, and it's the one I care about more. Almost all the energy in coding agents right now goes toward one-on-one use: you at a terminal with your agent. I wanted to find out how hard it is to build the multiplayer version, an agent that an entire community can talk to. I expected that to be the hard part. It's the easy part. Stick a coding agent inside a container, wrap an API around it, and connect it to a chat platform. That's the whole idea. Everything else is detail. The idea I want you to take from this: you can use very simple tech to build genuinely useful AI applications.
 
 ## What "multiplayer" changes
 
-Talk to your own coding agent and the conversation is private: your context, your files, your call. A community agent plays a different game, and the multiplayer setting changes the requirements.
+Talk to your own coding agent and the conversation is private: your context, your files. A community agent has to work for everyone at once, and that changes the requirements.
 
-Grounding has to be shared. If I ask Sage about the deposit policy today and you ask tomorrow, we should get the same answer, drawn from the same source of truth. The voice has to stay consistent, because the bot is speaking for the community, not for itself. Spending has to be bounded, because one enthusiastic member shouldn't be able to run up anyone's bill. And the answers happen in public, which is quietly the most powerful constraint of all: anyone can scroll up and check what the bot said, so accuracy and honesty become social guarantees, enforced by the whole room.
+Grounding has to be shared. If I ask Sage about the deposit policy today and you ask tomorrow, we should get the same answer, drawn from the same source of truth. The voice has to stay consistent, because the bot is speaking for the community, not for itself. Spending has to be bounded, because one enthusiastic member shouldn't be able to run up anyone's bill. And the answers happen in public. Anyone can scroll up and check what the bot said, so wrong answers get caught by the room, not by a test suite.
 
-That list sounds like a lot, but every item on it is enforced with plain code: allowlists, budgets, and post-filters you could write in an afternoon.
+Every one of those requirements is plain code: an allowlist, a budget counter, a reply post-filter. Nothing there takes more than an afternoon to write.
 
 ## The architecture: a coding agent in a container
 
@@ -49,17 +49,17 @@ result = subprocess.run(
 reply = post_filter(result.stdout)
 ```
 
-The whole stack is a websocket, a subprocess, and a markdown file. If you've wired up a Discord bot before, you'll recognize every piece. The only new part is that the message handler is a full coding agent with search tools, and that part you get for free.
+The whole stack is a websocket, a subprocess, and a markdown file. If you've wired up a Discord bot before, you'll recognize every piece. The only new part is the handler: instead of writing request-matching logic yourself, you install a full coding agent and let it do the searching.
 
 ## The typing indicator, a chef's kiss detail
 
 Discord shows a little "Sage is typing..." indicator while it works, and getting it right was my favorite implementation detail of the entire build.
 
-The typing indicator has a quirk. You trigger it by hitting Discord's typing endpoint, and it expires 10 seconds after the last trigger. But an agentic answer takes somewhere between 15 seconds and 2 minutes, because the agent runs several model turns: search, read, think, draft. Fire the trigger once and members get 10 seconds of typing followed by a long, worrying silence.
+The typing indicator has a quirk. You trigger it by hitting Discord's typing endpoint, and it expires 10 seconds after the last trigger. But an agentic answer takes somewhere between 15 seconds and 2 minutes, because the agent runs several model turns: search, read, think, draft. Fire the trigger once and members get 10 seconds of typing, then silence while the agent keeps working.
 
 The fix is to re-fire the endpoint on a loop until the answer is ready. discord.py ships a `typing()` context manager that does exactly this: it holds the loop open for as long as your code runs inside the context, re-firing the trigger every 5 seconds (comfortably inside the 10-second expiry), then closes it out when the reply posts. In Sage, the entire answer path runs inside that context, and the wrapper swallows failures, because a cosmetic indicator must never be the thing that breaks a reply.
 
-Why do I care this much about a cosmetic detail? Because 60 seconds of silence reads like the bot is broken. 60 seconds of typing reads like the bot is thinking. Perceived latency is trust, and in a multiplayer setting, trust is the whole product.
+Sixty seconds of silence reads like the bot is broken. Sixty seconds of typing reads like the bot is thinking. Perceived latency is trust.
 
 ## The knowledge base is one hand-curated markdown file
 
@@ -79,21 +79,21 @@ When the facts change, I edit the file and redeploy. When the same question keep
 
 The agent answers by searching this file with grep and reading whole sections, deriving search terms from the entire conversation. That matters for follow-ups. If someone asks "when is the retreat" and then says "yeah, tell me more about the build day", the agent works out from context what "the build day" refers to and searches for that.
 
-One rule is baked into the system prompt: if the notes don't ground the answer, Sage falls back to its honesty line. The real one reads: "I don't have that in my community notes yet, so I'd rather not guess. Eric or Daniel will know." For a community assistant this is the correct default! A confident hallucination about a refund policy is how you torch trust in a single message, and "go ask a human" costs nothing.
+One rule is baked into the system prompt: if the notes don't ground the answer, Sage falls back to its honesty line. The real one reads: "I don't have that in my community notes yet, so I'd rather not guess. Eric or Daniel will know." For a community assistant that's the right default. A confident hallucination about the refund policy loses the room in one message; "go ask a human" costs nothing.
 
-Worth saying: this is the same pattern I keep seeing show up in enterprise AI work. Hand-curated context, agentic search over it, and an honesty rule. The KB stays small enough that grep finds everything instantly, and if it ever outgrows one file, the agent searches a directory of files the same way. The simple tech scales further than you'd think.
+The same pattern keeps showing up in enterprise AI: hand-curated context, agentic search over it, and an honesty rule. The KB stays small enough that grep finds everything instantly, and if it ever outgrows one file, the agent searches a directory of files the same way.
 
 ## What it costs
 
-Modal bills per second, and a small container idling at default resources costs about 20 cents a day. I checked the actual billing numbers for this post: Sage's entire metered cost through three weeks of September is 95 cents, on pace for about $5 a month. Modal's Starter plan hands out $30 a month in free credits, so my out-of-pocket cost is $0, and every invoice this year confirms it. The model calls cost pennies on top, because Sage runs on a cheap, fast model and short grounded answers don't need a frontier model. A knowledge assistant for an entire community, for less than a coffee per month.
+Modal bills per second, and a small container idling at default resources costs about 20 cents a day. I checked the actual billing numbers for this post: Sage's entire metered cost through three weeks of September is 95 cents, on pace for about $5 a month. Modal's Starter plan hands out $30 a month in free credits, so my out-of-pocket cost is $0, and every invoice this year confirms it. The model calls cost pennies on top, because Sage runs on a cheap, fast model and short grounded answers don't need a frontier model. That's an always-on knowledge assistant for an entire community, fully covered by free-tier credits.
 
 ## Kick the tires
 
 I extracted the pattern into a standalone repo, stripped of everything retreat-specific: [github.com/ericmjl/sage-pattern](https://github.com/ericmjl/sage-pattern).
 
-Inside you'll find the Modal deployment code, a dummy knowledge base you can swap for your own, a README explaining the architecture, an AGENTS.md written for coding agents, and a paste-ready prompt you can hand to your own agent to test-drive the deployment against your Discord server and Modal account. If you have a community and a Discord, you're one prompt away from finding out how easy this is.
+Inside you'll find the Modal deployment code, a dummy knowledge base you can swap for your own, a README explaining the architecture, an AGENTS.md written for coding agents, and a paste-ready prompt you can hand to your own agent to test-drive the deployment against your Discord server and Modal account. If you have a community and a Discord, deploy it and see for yourself.
 
-The barrier to building useful AI software keeps dropping, and it's dropping because the surrounding tech got boring. An agent your whole community can talk to is one container, one subprocess, and one markdown file away. Go build one!
+The models get the headlines. What makes this buildable for one person is that the surrounding tech got boring. An agent your whole community can talk to is one container, one subprocess, and one markdown file away. Go build one!
 
 tags:
 
