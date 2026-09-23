@@ -93,7 +93,7 @@ When the facts change, I edit the file and redeploy. When the same question keep
 
 The agent answers by searching this file with grep and reading whole sections, deriving search terms from the entire conversation. That matters for follow-ups. If someone asks "when is the retreat" and then says "yeah, tell me more about the build day", the agent works out from context what "the build day" refers to and searches for that.
 
-One rule is baked into the system prompt: if the notes don't ground the answer, Sage falls back to its honesty line. The real one reads: "I don't have that in my community notes yet, so I'd rather not guess. Eric or Daniel will know." For a community assistant that's the right default. A confident hallucination about the refund policy loses the room in one message; "go ask a human" costs nothing.
+One rule is baked into the system prompt: if the notes don't ground the answer, Sage replies, "I don't have that in my community notes yet, so I'd rather not guess. Eric or Daniel will know." For a community assistant that's the right default. A confident hallucination about the refund policy loses the room in one message; "go ask a human" costs nothing.
 
 The same pattern keeps showing up in enterprise AI: hand-curated context, agentic search over it, and an honesty rule. The KB stays small enough that grep finds everything instantly, and if it ever outgrows one file, the agent searches a directory of files the same way.
 
