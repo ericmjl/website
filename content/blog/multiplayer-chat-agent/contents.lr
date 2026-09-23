@@ -10,13 +10,13 @@ body:
 
 I've been building and testing a Discord bot for the private community around the [Learn Anything with AI retreat](https://learn-anything.nonlinearlabs.ai). It's called Sage, and its job is to be a growable knowledge assistant for the community. It answers the questions that come up over and over (when is the retreat, what does the week look like, what's the deposit policy), points people at the right resources, and does it all in a consistent voice. As the community grows, the knowledge it answers from grows with it.
 
-I had a second goal with this build, and it's the one I care about more. Almost all the energy in coding agents right now goes toward one-on-one use: you at a terminal with your agent. I wanted to find out how hard it is to build the multiplayer version, an agent that an entire community can talk to. I expected that to be the hard part. It's the easy part. Stick a coding agent inside a container, wrap an API around it, and connect it to a chat platform. That's the whole idea. Everything else is detail. You can use very simple tech to build genuinely useful AI applications.
+I had a second goal with this build, and it's the one I care about more. Almost all the energy in coding agents right now goes toward one-on-one use: you at a terminal with your agent. I wanted to find out how hard it is to build the multiplayer version, an agent that an entire community can talk to. I expected that to be the hard part, but it's actually the easy part: just stick a coding agent inside a container, wrap an API around it, and connect it to a chat platform. That's the whole idea. Everything else is detail. You can use very simple tech to build genuinely useful AI applications.
 
-## What "multiplayer" changes
+## One agent, a whole community
 
 Talk to your own coding agent and the conversation is private: your context, your files. A community agent has to work for everyone at once, and that changes the requirements.
 
-Grounding has to be shared. If I ask Sage about the deposit policy today and you ask tomorrow, we should get the same answer, drawn from the same source of truth. The voice has to stay consistent, because the bot is speaking for the community, not for itself. Spending has to be bounded, because one enthusiastic member shouldn't be able to run up anyone's bill. And the answers happen in public. Anyone can scroll up and check what the bot said, so wrong answers get caught by the room, not by a test suite.
+Grounding has to be shared. If I ask Sage about the deposit policy today and you ask tomorrow, we should get the same answer, drawn from the same source of truth. The voice has to stay consistent, because the bot is speaking for the community, not for itself. Spending has to be bounded, because one enthusiastic member shouldn't be able to run up anyone's bill. And the answers happen in public. Anyone can scroll up and check what the bot said, so wrong answers get caught by everyone, every participant in the chat room.
 
 Every one of those requirements is plain code: an allowlist, a budget counter, a reply post-filter. Nothing there takes more than an afternoon to write.
 
@@ -29,6 +29,18 @@ Sage runs as a single warm container on [Modal](https://modal.com). Warm means a
 3. The [pi coding agent](https://github.com/earendil-works/pi-coding-agent), installed with npm exactly like you'd install it on your own laptop.
 
 When a member @mentions Sage, here's the entire path their message travels. Discord delivers it over the websocket to the container. A handful of checks run in plain code: is this channel on the allowlist, is this member under their daily ask budget, is the cap on simultaneous agent runs intact. If the checks pass, the question is piped into the pi coding agent over stdin, with its working directory set to the knowledge base and its tools limited to read, grep, find, and ls. The agent searches the notes itself and drafts an answer. A few more lines of plain code post-filter the draft (strip @everyone pings, cap the word count, check for prompt-leak artifacts), and the container posts the reply back to the channel.
+
+<div class="mermaid">
+graph TD
+    A["member @mentions Sage"] --> B{"channel allowlisted?"}
+    B -- "no" --> Z["stay silent"]
+    B -- "yes" --> C{"under the member's daily budget?"}
+    C -- "no" --> Z
+    C -- "yes" --> D["typing indicator on"]
+    D --> E["one pi agent run: grep the KB, draft an answer"]
+    E --> F["post-filters: strip pings, cap length"]
+    F --> G["reply posts; typing off"]
+</div>
 
 Here is the actual agent invocation, trimmed to the essentials:
 
@@ -48,6 +60,8 @@ result = subprocess.run(
 )
 reply = post_filter(result.stdout)
 ```
+
+Notice what Sage doesn't do: keep its own copy of the conversation. When a question comes in, Sage rebuilds the context on the spot: it walks up the reply chain through Discord's message references, and it reads the recent exchange in the channel straight from Discord's API, capped at a few thousand characters. That context rides along with the question, and once the reply posts, Sage keeps nothing. Discord is already the database of the conversation; replicating it would just mean a second copy to keep in sync. It's the same principle HTMX preaches: use the application state you already have as the data storage.
 
 The whole stack is a websocket, a subprocess, and a markdown file. If you've wired up a Discord bot before, you'll recognize every piece. The only new part is the handler: instead of writing request-matching logic yourself, you install a full coding agent and let it do the searching.
 
@@ -85,7 +99,7 @@ The same pattern keeps showing up in enterprise AI: hand-curated context, agenti
 
 ## What it costs
 
-Modal bills per second, and a small container idling at default resources costs about 20 cents a day. I checked the actual billing numbers for this post: Sage's entire metered cost through three weeks of September is 95 cents, on pace for about \$5 a month. Modal's Starter plan hands out \$30 a month in free credits, so my out-of-pocket cost is \$0, and every invoice this year confirms it. The model calls cost pennies on top, because Sage runs on a cheap, fast model and short grounded answers don't need a frontier model. That's an always-on knowledge assistant for an entire community, fully covered by free-tier credits.
+Modal bills per second, and a small container idling at default resources meters about 17 cents a day. I pulled the actual billing rows for this post: Sage went live on September 16, and its container has metered about a dollar in the six days since, which paces to about \$5 a month. Modal's Starter plan hands out \$30 a month in free credits, so my out-of-pocket cost is \$0, and every invoice this year confirms it. The model calls cost pennies on top, because Sage runs on a cheap, fast model and short grounded answers don't need a frontier model. That's an always-on knowledge assistant for an entire community, fully covered by free-tier credits.
 
 ## Kick the tires
 
