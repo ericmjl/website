@@ -859,15 +859,32 @@ body.dark-mode .collection-front {
   display: block;
 }
 
-/* Book covers are portrait: contain them on a quiet tile. */
-.card-artwork.artwork-cover {
+/* Book covers are portrait objects: shelf cards lay the cover out at its
+   natural ratio beside the content instead of letterboxing it in 16:9. */
+.artifact-card.artifact-book {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.artifact-card.artifact-book .card-artwork {
+  width: 38%;
+  flex: 0 0 38%;
+  aspect-ratio: auto;
+  border-bottom: none;
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
   background: var(--code-bg-color, #e8eff2);
 }
 
-.card-artwork.artwork-cover img.artwork-cover-img {
+.artifact-card.artifact-book .card-artwork img.artwork-cover-img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  padding: 1rem;
-  box-sizing: border-box;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
 }
 
@@ -875,6 +892,58 @@ body.dark-mode .card-artwork.artwork-cover {
   background: #2a2a2d;
 }
 
+/* Shelves run wider so the cover and the text breathe side by side. */
+.grid-shelf {
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+}
+
+@media (max-width: 980px) {
+  .grid-shelf {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Command plates: artifacts without artwork show the real command that
+   opens or clones them, set as a terminal prompt on the quiet tile. */
+.command-plate {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: 1.25rem;
+  background: var(--code-bg-color, #e8eff2);
+}
+
+body.dark-mode .command-plate {
+  background: #2a2a2d;
+}
+
+.command-line {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--font-color);
+  overflow-wrap: anywhere;
+}
+
+.command-prompt {
+  color: var(--secondary-color);
+  margin-right: 0.4em;
+}
+
+.command-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 0.3em;
+  vertical-align: -0.18em;
+  background: var(--primary-color);
+}
+
+.artifact-card:hover .command-caret {
+  animation: cursor-blink 1.1s steps(1) infinite;
+}
+
+/* Ultimate fallback for artifacts with no link at all. */
 .plate-fallback {
   display: flex;
   align-items: center;
@@ -1013,8 +1082,18 @@ body.dark-mode .card-title a:hover {
   }
 }
 
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .collection-grid {
+    animation: none;
+  }
+
+  .artifact-card:hover .command-caret {
     animation: none;
   }
 }

@@ -79,6 +79,10 @@
       {
         "name": "row-compress",
         "value": "600px"
+      },
+      {
+        "name": "shelf-stack",
+        "value": "980px"
       }
     ],
     "hairlines": {
@@ -97,9 +101,9 @@
       "name": "Artifact Card",
       "kind": "card",
       "refersTo": "artifact-card",
-      "description": "Equal-emphasis card: real artwork top (poster cover-fill, cover contained on tinted tile, or initials tile), ink title, meta line, 3-line clamped summary, prompt actions on a shared baseline.",
+      "description": "Equal-emphasis card: real artwork top (poster cover-fill, book cover on shelf layout, or a command plate carrying the real clone/open command), ink title, meta line, 3-line clamped summary, prompt actions on a shared baseline.",
       "html": "<article class=\"artifact-card\"><a class=\"card-artwork\" href=\"\"><img src=\"https://i.ytimg.com/vi/VIDEO_ID/hqdefault.jpg\" alt=\"\" width=\"480\" height=\"360\" loading=\"lazy\"></a><div class=\"card-body\"><h2 class=\"card-title\"><a href=\"\">Title</a></h2><p class=\"card-meta\">Venue · Month YYYY</p><div class=\"card-summary\">Summary text.</div><ul class=\"front-actions card-actions\"><li><a href=\"\">watch</a></li><li><a href=\"\">details</a></li></ul></div></article>",
-      "css": ".artifact-card { display: flex; flex-direction: column; border: 1px solid var(--hairline-strong); background: var(--background-color); transition: border-color 140ms ease-out; } .artifact-card:hover { border-color: var(--primary-color); } .card-artwork { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--hairline); } .card-artwork img { width: 100%; height: 100%; object-fit: cover; display: block; } .card-title a { color: var(--font-color); text-decoration: none; background: transparent; } .card-title a:hover { color: var(--primary-color); background: transparent; } .card-summary { color: var(--secondary-color); font-size: 0.9rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; } .card-actions { margin-top: auto; padding-top: 0.75rem; }"
+      "css": ".artifact-card { display: flex; flex-direction: column; border: 1px solid var(--hairline-strong); background: var(--background-color); transition: border-color 140ms ease-out; } .artifact-card:hover { border-color: var(--primary-color); } .card-artwork { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--hairline); } .card-artwork img { width: 100%; height: 100%; object-fit: cover; display: block; } .card-title a { color: var(--font-color); text-decoration: none; background: transparent; } .card-title a:hover { color: var(--primary-color); background: transparent; } .card-summary { color: var(--secondary-color); font-size: 0.9rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; } .card-actions { margin-top: auto; padding-top: 0.75rem; } .artifact-card.artifact-book { flex-direction: row; } .artifact-card.artifact-book .card-artwork { width: 38%; aspect-ratio: auto; display: flex; align-items: center; justify-content: center; padding: 1.25rem; background: var(--code-bg-color, #e8eff2); } .artifact-card.artifact-book .card-artwork img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 6px 24px rgba(0,0,0,0.18); } .command-plate { display: flex; align-items: flex-end; width: 100%; height: 100%; padding: 1.25rem; background: var(--code-bg-color, #e8eff2); } .command-line { font-size: 0.9rem; color: var(--font-color); overflow-wrap: anywhere; } .command-prompt { color: var(--secondary-color); margin-right: 0.4em; } .command-caret { display: inline-block; width: 0.55em; height: 1.05em; margin-left: 0.3em; vertical-align: -0.18em; background: var(--primary-color); } .artifact-card:hover .command-caret { animation: cursor-blink 1.1s steps(1) infinite; }"
     },
     {
       "name": "Action Row",
@@ -118,7 +122,8 @@
       "Square corners, 1px hairlines, flat surfaces",
       "Equal emphasis: identical cards, actions on a shared baseline",
       "Real artifacts are the only large imagery",
-      "Link hovers shift color, never paint a background block"
+      "Link hovers shift color, never paint a background block",
+      "Artwork-less artifacts show their real command as a terminal prompt, not a placeholder"
     ],
     "rules": [
       {

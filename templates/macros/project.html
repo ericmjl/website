@@ -21,6 +21,32 @@
 {%- elif ns.slug -%}
 <img class="artwork-cover-img" src="https://d2sofvawe08yqg.cloudfront.net/{{ ns.slug }}/s_hero2x" alt="" width="640" height="828" loading="lazy" onerror="this.style.display='none'">
 {%- else -%}
+{{ _artifact_command(project) }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro _artifact_command(project) -%}
+{%- set ns = namespace(cmd='') -%}
+{% for blk in project.body.blocks -%}
+{%- if not ns.cmd and blk._flowblock == 'github' and 'github.com/' in (blk.url | string) -%}
+{%- set path = ((blk.url | string | trim).split('github.com/')[1]).rstrip('/') -%}
+{%- set ns.cmd = 'git clone ' ~ path -%}
+{%- endif -%}
+{%- if not ns.cmd and blk._flowblock in ('resource', 'book', 'notebooks') -%}
+{%- set u = (blk.url | string | trim).rstrip('/') -%}
+{%- if u.startswith('http') -%}
+{%- set bare = u.split('://')[1] -%}
+{%- if 'github.com/' in bare -%}
+{%- set ns.cmd = 'git clone ' ~ bare.split('github.com/')[1] -%}
+{%- else -%}
+{%- set ns.cmd = 'open ' ~ bare -%}
+{%- endif -%}
+{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+{%- if ns.cmd -%}
+<span class="command-plate" aria-hidden="true"><span class="command-line"><span class="command-prompt">$</span> {{ ns.cmd }}<span class="command-caret"></span></span></span>
+{%- else -%}
 {%- set words = project.title.split(' | ')[0].split(' ') -%}
 <span class="plate-fallback" aria-hidden="true">{{ ((words[0][0] ~ (words[1][0] if words|length > 1 else '')) | upper) }}</span>
 {%- endif -%}
@@ -55,7 +81,11 @@
 <span class="collection-count">{{ ns.count }} artifact{{ 's' if ns.count != 1 else '' }}</span>
 </header>
 
-<div class="collection-grid">
+{%- set wall = namespace(shelf=false) -%}
+{%- for p in page.children if p.visible == 'Visible' -%}
+{%- if _artifact_kind(p)|trim == 'cover' -%}{%- set wall.shelf = true -%}{%- endif -%}
+{%- endfor %}
+<div class="collection-grid{% if wall.shelf %} grid-shelf{% endif %}">
 {%- for p in page.children if p.visible == 'Visible' %}
 {%- set parts = p.title.split(' | ') -%}
 {%- set ctitle = parts[0] -%}
@@ -65,7 +95,7 @@
 {%- if p.pub_date -%}{%- set _ = cmeta.append(p.pub_date.strftime('%B %Y')) -%}
 {%- elif p.category -%}{%- set _ = cmeta.append(p.category) -%}{%- endif -%}
 {%- set kind = _artifact_kind(p)|trim -%}
-<article class="artifact-card">
+<article class="artifact-card{% if kind == 'cover' %} artifact-book{% endif %}">
 <a class="card-artwork{% if kind == 'cover' %} artwork-cover{% endif %}" href="{{ p|url }}" tabindex="-1" aria-hidden="true">
 {{ _artifact_thumb(p) }}
 </a>
