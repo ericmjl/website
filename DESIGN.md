@@ -80,6 +80,7 @@ This site is a terminal that publishes. The committed world is terminal.css 0.7.
 - Lowercase, prompt-style action links separated by middots.
 - Depth appears exactly once: a soft shadow under a physical book cover.
 - Equal emphasis: identical cards, aligned artwork, actions on a shared baseline.
+- Artwork-less artifacts show their real command as a terminal prompt, not a placeholder.
 
 ## Colors
 
@@ -145,10 +146,14 @@ Square corners (radius 0) across the collection system. Borders are 1px hairline
 
 ### Artifact Card (the system's core component)
 - **Shape:** flex column, 1px structural hairline border, square corners, equal heights per grid row.
-- **Artwork zone:** 16:9, full card width, hairline bottom rule. Video posters `object-fit: cover` (hqdefault's letterbox bars crop away exactly). Book covers `object-fit: contain` on the tinted tile with 1rem padding and the physical-cover shadow. Artwork-less artifacts get a typographic initials tile (Artifact Initial size, Quiet Gray on Code Wash).
+- **Artwork zone — poster (default):** 16:9, full card width, hairline bottom rule; video posters `object-fit: cover` (hqdefault's letterbox bars crop away exactly).
+- **Artwork zone — command plate (no artwork):** the quiet tile carries the artifact's real command set as a terminal prompt — `$ git clone ericmjl/<repo>` for repos, `$ open <host>/<path>` for sites — in Body Small, `$` in Quiet Gray, command in Ink, with the Signal Blue block caret after it (blinks on card hover; static under `prefers-reduced-motion`). Monospace is used here for actual commands, never as costume.
 - **Body:** title (Title, ink, links to the artifact), meta line (Label: venue · month year, or category), summary (Body Small, clamped to 3 lines), action row pinned to the card bottom.
 - **Hover:** card border → Signal Blue, 140ms ease-out. Nothing lifts, nothing grows.
 - **Behavior:** artwork zone is one link, `tabindex="-1" aria-hidden="true"` — the title link is the accessible entry.
+
+### Book Shelf Variant
+Cover-bearing artifacts (books) render as **horizontal shelf cards** on a wider grid (`minmax(440px, 1fr)`, single column under 980px): the cover sits at its natural portrait ratio on the tinted tile (38% card width, 1.25rem padding, physical-cover shadow) with the content beside it. A portrait cover is never letterboxed into a 16:9 zone.
 
 ### Action Row
 - **Shape:** horizontal prompt list; lowercase links in Signal Blue, `·` separators via `li:not(:last-child)::after` with `position: static`.
@@ -172,4 +177,5 @@ Square corners (radius 0) across the collection system. Borders are 1px hairline
 - **Don't** feature one artifact above the others — every item gets one identical card (user constraint, 2026).
 - **Don't** let a link hover paint a background block. terminal.css's `a:hover` inverts links with a solid primary background; within this system every hover is `background: transparent` plus a color shift. A title hover that lands on the primary background is unreadable.
 - **Don't** animate layout properties (`max-height`, `height`); use `grid-template-rows` or static clamps.
-- **Don't** fabricate imagery for artifacts that lack it — use the initials tile.
+- **Don't** fabricate imagery for artifacts that lack it — use the command plate.
+- **Don't** letterbox a portrait cover into a landscape zone; give covers the shelf layout.
