@@ -1,0 +1,35 @@
+name: Blog post live - socials bundle pending
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/blog/**/contents.lr"
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  socials-pending:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Detect newly added blog posts
+        id: slugs
+        run: |
+          NEW=$(git diff --name-only --diff-filter=A 'HEAD~1' 'HEAD' -- 'content/blog/*/contents.lr' | sed 's|content/blog/||; s|/contents.lr||' | paste -sd ',' -)
+          echo "slugs=$NEW" >> "$GITHUB_OUTPUT"
+      - name: Open a socials-pending issue
+        if: steps.slugs.outputs.slugs != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SLUGS: ${{ steps.slugs.outputs.slugs }}
+        run: |
+          gh issue create \
+            --title "Blog post live, socials bundle pending: $SLUGS" \
+            --body "New blog post(s) hit main: **$SLUGS**.
+
+          Run the post-merge socials bundle (see \`.agents/skills/website-blog-publishing\` -> 'Post-merge socials bundle'): Buffer LinkedIn + BlueSky queued and date-reconciled, Substack edition scheduled at the same instant. Verify the public URL returns 200 first."

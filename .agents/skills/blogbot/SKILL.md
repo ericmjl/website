@@ -168,6 +168,11 @@ retry succeeds because there is no longer contention).
 
 ## Audit Before Queueing (decide what to schedule next)
 
+TRIGGER (2026-09-24): this audit-and-fill runs AUTOMATICALLY right after
+every blog post merge - do not wait to be asked. The full procedure lives in
+the website-blog-publishing skill under "Post-merge socials bundle
+(AUTO-TRIGGER)"; the Substack half is the section below.
+
 Before generating or queueing NEW social posts, FIRST audit Buffer's current
 state to ground the decision in what is already scheduled/sent. This is a
 PRE-scheduling AUDIT and is distinct from the POST-scheduling VERIFICATION
