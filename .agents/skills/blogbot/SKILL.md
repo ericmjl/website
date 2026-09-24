@@ -1,6 +1,6 @@
 ---
 name: blogbot
-description: Generate social media posts and blog content from local blog posts, and schedule posts to Buffer via the buffer MCP server. Use when asked to create LinkedIn posts, BlueSky posts, Substack posts, summaries, tags, or DALL-E banner images for blog posts, or to schedule/share a blog post to social media through Buffer. The banner is automatically saved as logo.webp in the blog post directory. Works with blog post slugs from content/blog/. Triggers: "generate a linkedin post", "create a bluesky post", "substack post for", "summarize this blog", "get tags for blog", "create a banner for", "schedule a post", "share my blog post", "add to buffer".
+description: Generate social media posts and blog content from local blog posts, and schedule posts to Buffer via the buffer MCP server. Use when asked to create LinkedIn posts, BlueSky posts, Substack posts, summaries, tags, or DALL-E banner images for blog posts, or to schedule/share a blog post to social media through Buffer. Also sync the Substack newsletter schedule with Buffer (every Buffer blog promo gets a same-instant scheduled Substack edition). The banner is automatically saved as logo.webp in the blog post directory. Works with blog post slugs from content/blog/. Triggers: "generate a linkedin post", "create a bluesky post", "substack post for", "summarize this blog", "get tags for blog", "create a banner for", "schedule a post", "share my blog post", "add to buffer", "sync substack with buffer", "sync my substack schedule".
 ---
 
 # Blogbot
@@ -541,6 +541,58 @@ Banner image: the toolbar image tool opens a file dialog (no insert-by-URL),
 so for a URL-based banner (logo.webp) insert an `<img>` tag through the same
 insertHTML path at the top of the body instead.
 
+## Substack Schedule Sync (Buffer ↔ Substack)
+
+Merged from the standalone buffer-substack-sync skill (2026-09-24). The rule:
+**every Buffer blog promo gets a corresponding Substack newsletter edition
+scheduled at the SAME instant as the Buffer post's `dueAt`.** Buffer is the
+source of truth; never move a Buffer post to match Substack. Validated
+against the real calendar: editions go out the same day at ~11:00-11:03Z
+(7 AM EDT), and hand-made schedules sit at exactly the Buffer `dueAt`.
+
+Workflow:
+
+1. Audit Buffer (see "Audit Before Queueing") and build sync units: group
+   scheduled posts by `dueAt` date (LinkedIn + Bluesky mirrors = ONE unit);
+   a unit is a blog promo when its text contains an
+   `ericmjl.github.io/blog/YYYY/M/D/<slug>/` URL, otherwise it is an
+   announcement (report, skip).
+2. Audit Substack: `uv run .agents/skills/blogbot/scripts/substack_sync.py
+   drafts` (scheduled + true drafts, with blog slugs extracted from draft
+   bodies) and `published`. A unit is COVERED when a scheduled draft's
+   `blog_slugs` contains the slug, or a published post's title matches.
+3. Fill gaps: compose the edition per the "Publishing to Substack" format
+   above (banner markdown image, greeting, teaser with "this post" link,
+   sign-off, P.S. block), then
+   `uv run .agents/skills/blogbot/scripts/substack_sync.py create --title T
+   --subtitle S --body-file /tmp/buffer-substack-sync/<slug>.md
+   --schedule-at <buffer dueAt ISO> --yes` (dry-run without `--yes`).
+4. Verify: re-run `drafts`; confirm one scheduled draft per slug at the
+   matching instant; hand Eric the edit URLs to eyeball before trigger time.
+   Idempotency: never create a second draft for a slug that already has one.
+5. Backfill: sent Buffer promos (last ~30d) with no published edition are
+   MISSED editions — report only; publishing emails subscribers, Eric
+   decides whether to backfill.
+
+Authentication: Substack's password login is captcha-gated; the script uses
+a session-cookie file at `~/.config/buffer-substack-sync/cookies.json`
+(flat `{name: value}` dict, chmod 0600). To (re)build it: copy Chrome's
+`Cookies` DB, decrypt the `substack.*` cookies with the "Chrome Safe
+Storage" keychain secret (PBKDF2-SHA1 1003 iters, salt `saltysalt`, AES-128-CBC
+IV=16 spaces; strip the `v10` prefix AND the 32-byte sha256(host_key) prefix
+before the value; skip `v20` app-bound blobs), keeping every value out of
+chat output. If `whoami` returns 401, the session expired: log into
+dspn.substack.com in Chrome and re-extract.
+
+Substack API quirks (learned 2026-09-24): list responses use the key
+`posts`; `limit` must be <= 20; schedule state lives in `scheduled_at`
+(`post_date` stays null until it fires); the UNFILTERED `/drafts` endpoint
+returns the whole published archive oldest-first, so always use the
+`filter=scheduled` / `filter=draft` forms the script wraps; `draft_body` is
+omitted from list payloads (fetched per draft for slug matching);
+`create_draft_from_markdown`'s response may arrive wrapped under a `draft`
+key (the script unwraps it).
+
 ## Model Configuration (GLM-5.2 and oMLX Fallback)
 
 blogbot scripts use two different code paths for LLM generation. Understanding
@@ -610,6 +662,8 @@ helpers are duplicated per script so each can run independently with `uv run`).
 - `scripts/linkedin_post.py` - LinkedIn post generator
 - `scripts/bluesky_post.py` - BlueSky post generator
 - `scripts/substack_post.py` - Substack post generator
+- `scripts/generate_social.py` - LinkedIn + BlueSky + Substack generator in one shot (GLM-routed)
+- `scripts/substack_sync.py` - Substack draft/schedule CLI (see Substack Schedule Sync)
 - `scripts/summary.py` - Summary generator
 - `scripts/tags.py` - Tag generator
 - `scripts/banner.py` - DALL-E banner generator
