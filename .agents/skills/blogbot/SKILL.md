@@ -567,6 +567,16 @@ Workflow:
    `uv run .agents/skills/blogbot/scripts/substack_sync.py create --title T
    --subtitle S --body-file /tmp/buffer-substack-sync/<slug>.md
    --schedule-at <buffer dueAt ISO> --yes` (dry-run without `--yes`).
+   Markdown gotcha: a plain newline inside the sign-off collapses into one
+   line ("Happy coding, Eric"); end the first line with a backslash
+   ("Happy coding,\") for a hard break so it renders on two lines.
+   The markdown banner converts to a captionedImage node with the external
+   URL intact (verified 2026-09-24), and `--schedule-at` accepts the Buffer
+   `dueAt` verbatim. Observed same day: `edit_post` on Buffer rejects with
+   "Post must have either text or media" unless the full text is carried
+   forward, and `addToQueue` can land the same post on different dates per
+   channel when one channel has an extra announcement queued; reconcile by
+   editing the desynced channel to the other's date with the full text.
 4. Verify: re-run `drafts`; confirm one scheduled draft per slug at the
    matching instant; hand Eric the edit URLs to eyeball before trigger time.
    Idempotency: never create a second draft for a slug that already has one.
