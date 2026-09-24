@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quartet encoding — constraints emerge from the representation</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #222;
+    background: transparent;
+    padding: 10px;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 14px 16px 12px;
+  }
+  .title { font-size: 14px; font-weight: bold; margin-bottom: 2px; color: #0066cc; }
+  .hint { font-size: 11.5px; color: #888; margin-bottom: 10px; }
+  .readout { font-size: 12.5px; margin-bottom: 10px; color: #444; }
+  .readout .in { color: #1a9e5b; font-weight: bold; }
+  .readout .blk { color: #e85d3a; font-weight: bold; }
+  .stage { display: flex; flex-direction: column; align-items: center; }
+  .arcs { display: block; width: 512px; height: 150px; }
+  .seq { display: flex; width: 512px; }
+  .pos { width: 64px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .pos .n { font-size: 11px; color: #999; }
+  .pos .b { font-size: 14px; font-weight: bold; color: #333; margin-top: 1px; }
+  .legend { font-size: 11px; color: #666; margin: 12px 0 4px; text-align: center; }
+  .legend .sw { display: inline-block; width: 11px; height: 11px; border-radius: 6px; vertical-align: -1px; margin: 0 3px 0 10px; border: 1px solid; }
+  .legend .on { background: #0066cc; border-color: #0066cc; }
+  .legend .off { background: #fff; border-color: #bbb; }
+  .legend .dis { background: #eee; border-color: #ccc; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 8px 0 10px; }
+  .chip {
+    font-family: monospace;
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border: 1px solid #0066cc;
+    border-radius: 14px;
+    background: #fff;
+    color: #0066cc;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+  }
+  .chip:hover { background: #eaf2fb; }
+  .chip.on { background: #0066cc; color: #fff; }
+  .chip.on:hover { background: #005bb5; }
+  .chip.off { border-color: #bbb; color: #555; }
+  .chip.disabled {
+    background: #eee; border-color: #ccc; color: #999; cursor: not-allowed;
+  }
+  .chip.disabled:hover { background: #eee; }
+  .caption {
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: #555;
+    border-top: 1px solid #eee;
+    padding-top: 9px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="title">mRNA fold encoding — constraints emerge from the representation</div>
+  <div class="hint">A line of 8 nucleotides, 7 candidate base pairs. Click a chip to include it.</div>
+  <div class="readout" id="readout"></div>
+  <div class="stage">
+    <svg class="arcs" id="arcs" viewBox="0 0 512 150" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="seq" id="seq"></div>
+  </div>
+  <div class="legend">
+    <span class="sw on"></span>in fold
+    <span class="sw off"></span>available
+    <span class="sw dis"></span>blocked by constraint
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="caption">
+    Each arc is a candidate base pair; click to include it. A pair is blocked when it would share a nucleotide (one partner per nucleotide) or cross an included arc (no pseudoknots). In the real encoding, two consecutive base pairs are grouped into a single "quartet" qubit; this widget shows the constraint logic underneath. The rules aren't added by the solver, they emerge from how the variables are defined.
+  </div>
+</div>
+<script>
+(function(){ 'use strict';
+
+  var BASES = ['A','U','G','C','A','U','G','C'];
+  var PAIRS = [[1,8],[2,7],[3,6],[4,5],[2,3],[1,4],[5,8]];
+  var SP = 64, BASELINE = 146;
+
+  var on = {};
+
+  function key(p){ return p[0] + '-' + p[1]; }
+  function isOn(p){ return !!on[key(p)]; }
+
+  // a<b and c<d assumed. Returns conflict info or null.
+  function conflictInfo(p, q){
+    var a=p[0], b=p[1], c=q[0], d=q[1];
+    if (a===c || a===d || b===c || b===d) {
+      var shared = (a===c || a===d) ? a : b;
+      return { type:'share', n:shared };
+    }
+    if (a < c && c < b && b < d) return { type:'cross' };
+    if (c < a && a < d && d < b) return { type:'cross' };
+    return null;
+  }
+
+  function blockedBy(p){
+    for (var i=0;i<PAIRS.length;i++){
+      var q = PAIRS[i];
+      if (isOn(q)) {
+        var info = conflictInfo(p, q);
+        if (info) return { q:q, info:info };
+      }
+    }
+    return null;
+  }
+
+  function xOf(i){ return (i - 0.5) * SP; }
+
+  function arcPath(p){
+    var x1 = xOf(p[0]), x2 = xOf(p[1]);
+    var span = p[1] - p[0];
+    var h = 20 + span * 13;
+    var cy = BASELINE - 2 * h;
+    return 'M ' + x1 + ' ' + BASELINE + ' Q ' + ((x1+x2)/2) + ' ' + cy + ' ' + x2 + ' ' + BASELINE;
+  }
+
+  var seqEl = document.getElementById('seq');
+  var arcsEl = document.getElementById('arcs');
+  var chipsEl = document.getElementById('chips');
+  var readEl = document.getElementById('readout');
+
+  (function buildSeq(){
+    var html = '';
+    for (var i=1;i<=8;i++){
+      html += '<div class="pos"><div class="n">' + i + '</div><div class="b">' + BASES[i-1] + '</div></div>';
+    }
+    seqEl.innerHTML = html;
+  })();
+
+  (function buildChips(){
+    var html = '';
+    for (var i=0;i<PAIRS.length;i++){
+      var p = PAIRS[i];
+      html += '<div class="chip off" data-k="' + key(p) + '">' + p[0] + '-' + p[1] + '</div>';
+    }
+    chipsEl.innerHTML = html;
+  })();
+
+  chipsEl.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t.classList || !t.classList.contains('chip')) return;
+    if (t.classList.contains('disabled')) return;
+    var k = t.getAttribute('data-k');
+    if (on[k]) delete on[k]; else on[k] = true;
+    render();
+  });
+
+  function render(){
+    var onList = [];
+    for (var i=0;i<PAIRS.length;i++) if (isOn(PAIRS[i])) onList.push(PAIRS[i]);
+    onList.sort(function(a,b){ return (b[1]-b[0]) - (a[1]-a[0]); });
+
+    var svg = '';
+    for (var j=0;j<onList.length;j++){
+      var p = onList[j];
+      svg += '<path d="' + arcPath(p) + '" stroke="#0066cc" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
+      svg += '<circle cx="' + xOf(p[0]) + '" cy="' + BASELINE + '" r="2.6" fill="#0066cc"/>';
+      svg += '<circle cx="' + xOf(p[1]) + '" cy="' + BASELINE + '" r="2.6" fill="#0066cc"/>';
+    }
+    arcsEl.innerHTML = svg;
+
+    var inFold = 0, blocked = 0;
+    for (var c=0;c<PAIRS.length;c++){
+      var pr = PAIRS[c];
+      var el = chipsEl.querySelector('[data-k="' + key(pr) + '"]');
+      el.classList.remove('on','off','disabled');
+      if (isOn(pr)) {
+        el.classList.add('on');
+        el.title = 'included in fold';
+        inFold++;
+      } else {
+        var blk = blockedBy(pr);
+        if (blk) {
+          el.classList.add('disabled');
+          var reason = blk.info.type === 'share'
+            ? 'shares nucleotide ' + blk.info.n + ' with arc ' + key(blk.q)
+            : 'crosses arc ' + key(blk.q);
+          el.title = 'blocked: ' + reason;
+          blocked++;
+        } else {
+          el.classList.add('off');
+          el.title = 'click to include this base pair';
+        }
+      }
+    }
+
+    readEl.innerHTML = 'candidate pairs: ' + PAIRS.length +
+      ' &nbsp;|&nbsp; in fold: <span class="in">' + inFold + '</span>' +
+      ' &nbsp;|&nbsp; blocked by constraints: <span class="blk">' + blocked + '</span>';
+
+    fit();
+  }
+
+  function fit(){ var f = window.frameElement; if(!f) return; f.style.height='0px'; f.style.height=document.body.scrollHeight+'px'; }
+
+  render();
+
+})();
+</script>
+</body>
+</html>
