@@ -3,7 +3,6 @@ title: Swapping the judge in a judgment language
 author: Eric J. Ma
 ---
 body:
-
 In late September, kavehmz published [Seems](https://github.com/kavehmz/seems-lang), a programming language that is Python plus a few words. In a Seems program, a condition can be plain English, and a decision model answers it with a probability:
 
 ```python
@@ -15,13 +14,13 @@ unsure:
 
 `ticket.amount > 500` runs in Python. `ticket.text asks for a refund` goes to a decision model. TypeSafe's Jev reads the text and returns a probability. Below 0.25 the judgment is no, above 0.75 it's yes, and in between it's unsure. `unsure:` is a real branch of `if`, so a program that isn't sure enough routes to a human instead of acting on a guess.
 
-I loved it. I also had two questions the README couldn't answer for me. Does this work outside its Docker container, in a regular Python session? And what does the language feel like when the judge is an open-weight judge running on my own machine?
+I loved it. I also had two questions the README couldn't answer for me. Does this work outside its Docker container, in a regular Python session? And what does the language feel like when the judge is an open-weight model running on my own machine?
 
 So I forked the idea and the code. The result is [seems-laya](https://github.com/ericmjl/seems-laya), where every judgment is answered by [Laya](https://github.com/NandhaKishorM/laya), Convai Innovations' open-weight decision model.
 
 ## The swap was one seam
 
-Upstream's architecture made this easier than it sounds. Every judgment in Seems funnels through a single client call: hand it a state and a bundle of typed questions, get back an envelope of answers with probabilities. Jev and Laya, rivals launched three days apart, happen to speak almost the same contract (noul for yes or no, choice for picking among options, score for rating on a scale). So the swap lives in one file. `seems/client.py` used to post to TypeSafe's endpoint; now it loads a Laya checkpoint in-process, or posts to a Laya server on your network if you'd rather keep the model on a GPU box.
+Upstream's architecture made this easier than it sounds. Every judgment in Seems funnels through a single client call: hand it a state and a bundle of typed questions, get back an envelope of answers with probabilities. Jev and Laya, rivals launched three days apart, happen to speak a near-identical contract (noul for yes or no, choice for picking among options, score for rating on a scale). So the swap lives in one file. `seems/client.py` used to post to TypeSafe's endpoint; now it loads a Laya checkpoint in-process, or posts to a Laya server on your network if you'd rather keep the model on a GPU box.
 
 ## Three doors into plain Python
 
@@ -33,28 +32,28 @@ Four things, and each taught me something about the machinery underneath Python.
 
 - **Concurrency.** Laya crashed the process under simultaneous requests on macOS, an MPS command-buffer race. The runtime already batches same-state questions into one request, so serializing inference cost almost nothing. A hosted API parallelizes for you; a local model asks you to serialize.
 - **Calibration.** One upstream example now raises `Unsure` where Jev was confident enough to act. The base Laya checkpoint spreads probability more diffusely, and the language's `unsure:` branch caught it, exactly as designed. Weaker judge, same safety net.
-- **Namespaces.** My first version injected the runtime's names into every imported module. Torch's config machinery asserts that its own module namespaces are clean, and the process died on import. The fix, injecting names only where the compiled code actually references them, is the kind of humility third-party ecosystems force on you.
+- **Namespaces.** My first version injected the runtime's names into every imported module. Torch's config machinery asserts that its own module namespaces are clean, and the process died on import. The fix was to inject names only where the compiled code actually references them.
 - **The bytecode cache.** Translated code validated against untouched source files, so a warm cache would keep running judgment syntax even after you turned the hook off. Translated files never write bytecode now.
 
 The numbers: warm, the six example programs finish in 0.2 to 0.9 seconds, where upstream measured 1 to 4 seconds against the hosted API. The marginal cost is $0.00 and the answers are deterministic. The language's own test suite, 82 tests, passes with no model and no network.
 
 ## A thank-you, and a license
 
-None of this exists without kavehmz's language. The variant repo credits him on every surface, and its first commit is his tree untouched. Because the upstream repo has no LICENSE file yet, I filed an issue asking for one, MIT if he's comfortable with it. Until that lands, seems-laya stays off PyPI. That's the right order of operations. The language is his; I only swapped the judge.
+None of this exists without kavehmz's language. The variant repo credits him on every surface, and its first commit is his tree untouched. Because the upstream repo has no LICENSE file yet, I filed an issue asking for one, MIT if he's comfortable with it. Until that lands, seems-laya stays off PyPI. The language is his; I only swapped the judge.
 
-## The soapbox: was any of this creative?
+## The soapbox - was any of this creative?
 
 Here's the part I keep thinking about. I've been writing Python for many years. I maintain libraries, I teach data science, Python pays my salary. And almost nothing in this project was within my range of knowledge.
 
-When the notebook kernel died with a Metal command-buffer assertion, I had no idea where to start looking. The agent recognized the signature of concurrent inference on Apple silicon and serialized the client before I had finished reading the traceback. When torch's config machinery choked on an injected name, the agent explained why third-party code introspects module dictionaries and moved the injection to where it belonged. When marimo's kernel turned out to be a spawned subprocess, the fix was an environment variable and a startup file we already had. Each fix sits at the intersection of three domains I don't work in: Apple's GPU driver behavior, importlib's cache semantics, and marimo's process architecture.
+When the notebook kernel died with a Metal command-buffer assertion, I had no idea where to start looking. The agent recognized the signature of concurrent inference on Apple silicon and serialized the client before I had finished reading the traceback. When torch's config machinery choked on an injected name, the agent explained why third-party code introspects module dictionaries and moved the injection to where it belonged. The third surprise was marimo: its kernel turned out to be a spawned subprocess, so the fix was an environment variable and a startup file we already had. Each fix sits at the intersection of three domains I don't work in: Apple's GPU driver behavior, importlib's cache semantics, and marimo's process architecture.
 
 If I had hired a human engineer with that exact combination of knowledge, I would call the work creative. As far as I know, the moves weren't written down anywhere. Somebody had to see that a judgment language, an import hook, and a compiler patch belonged in the same program.
 
 But "as far as I know" is doing a lot of work in that sentence. A language model trains on a corpus so much larger than my reading history that I have no way to audit its influences. Every fix the agent made might be interpolation over some GitHub thread I've never read. My sense that it was creative could just be a measure of how small my corpus is. That's the uncomfortable version: apparent creativity, original only from where I stand.
 
-There's a concrete wrinkle too. Laya was published three days after Jev, the model it benchmarks against, and Laya's author has said in public that the architecture is his own earlier work, relaunched by a better-funded company. I can't adjudicate that claim, and that's the point. It's the same question at company scale. When the corpus is shared and the tools are powerful, two teams can pull the same thread and each experience the pull as invention.
+There's a concrete wrinkle too. Laya was published three days after Jev, the model it benchmarks against, and Laya's author has said in public that the architecture is his own earlier work, relaunched by a better-funded company. I can't adjudicate that claim. It's the same question at company scale. When the corpus is shared and the tools are powerful, two teams can pull the same thread and each experience the pull as invention.
 
-So, will AI be truly creative? My honest answer is that I can't tell the difference from my chair, and I doubt the difference is observable from inside a single career. Maybe creativity was always interpolation over a corpus, with taste deciding what to combine. Maybe the model is doing exactly that with a corpus the size of civilization. The test I keep coming back to is watching for the day a machine combines ideas in a way nobody can source, and the combination still works. Until then, I'll keep my position humble. I got nerd-sniped by a beautiful language, my tools interpolated faster than I could, and the least I can do is be honest about who did what.
+So, will AI be truly creative? I can't tell the difference from my chair, and I doubt the difference is observable from inside a single career. Maybe creativity was always interpolation over a corpus, with taste deciding what to combine. Maybe the model is doing exactly that with a corpus the size of civilization. The test I keep coming back to is watching for the day a machine combines ideas in a way nobody can source, and the combination still works. Until then, I'll stay humble. I got nerd-sniped by a beautiful language, my tools interpolated faster than I could, and the least I can do is be honest about who did what.
 ---
 pub_date: 2026-09-25
 ---
