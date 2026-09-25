@@ -43,7 +43,7 @@ None of this exists without kavehmz's language. The variant repo credits him on 
 
 ## The soapbox - was any of this creative?
 
-Here's the part I keep thinking about. I've been writing Python for many years. I maintain libraries, I teach data science, Python pays my salary. And almost nothing in this project was within my range of knowledge.
+I've been writing Python for many years. I maintain libraries, I teach data science, Python pays my salary. And almost nothing in this project was within my range of knowledge.
 
 When the notebook kernel died with a Metal command-buffer assertion, I had no idea where to start looking. The agent recognized the signature of concurrent inference on Apple silicon and serialized the client before I had finished reading the traceback. When torch's config machinery choked on an injected name, the agent explained why third-party code introspects module dictionaries and moved the injection to where it belonged. The third surprise was marimo: its kernel turned out to be a spawned subprocess, so the fix was an environment variable and a startup file we already had. Each fix sits at the intersection of three domains I don't work in: Apple's GPU driver behavior, importlib's cache semantics, and marimo's process architecture.
 
