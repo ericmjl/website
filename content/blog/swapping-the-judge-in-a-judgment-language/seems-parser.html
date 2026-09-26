@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How the Seems parser reads one line</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: monospace;
+    background: #ffffff;
+    padding: 8px;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 12px;
+  }
+  /* ---- the source line ---- */
+  .srcline {
+    background: #ffffff;
+    border: 1px solid #e2e6ea;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .srcline .kw { color: #555; font-weight: bold; }
+  .srcline .tok { border-bottom: 1px dashed transparent; padding: 2px 1px; transition: background 0.3s, color 0.3s, opacity 0.3s, border-color 0.3s; border-radius: 3px; }
+  .srcline.tokenized .tok { border-bottom-color: #c3cdd4; }
+  /* parse discovery lifecycle: tokens render plain until the parser reaches them */
+  .srcline .tok.t-py:not(.lit)   { background: transparent; color: inherit; }
+  .srcline .tok.t-verb:not(.lit) { background: transparent; color: inherit; }
+  .srcline .tok.t-state:not(.lit){ background: transparent; color: inherit; }
+  .srcline .tok.t-q:not(.lit)    { background: transparent; color: inherit; }
+  .chip.verb, .t-verb  { --glow: 0,102,204; }
+  .chip.state, .t-state{ --glow: 26,122,75; }
+  .chip.q, .t-q        { --glow: 160,90,12; }
+  .chip.py, .t-py      { --glow: 71,85,105; }
+  @keyframes tok-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(var(--glow), 0); }
+    40%      { box-shadow: 0 0 0 5px rgba(var(--glow), 0.5); }
+  }
+  .tok.pulse, .chip.pulse { animation: tok-pulse 1.1s ease-in-out infinite; }
+  @keyframes line-pulse {
+    0%, 100% { background: #ffffff; }
+    40%      { background: #eef4ff; }
+  }
+  .srcline.pulse-line { animation: line-pulse 0.9s ease-out 1; }
+  @keyframes box-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,102,204,0); }
+    40%      { box-shadow: 0 0 0 4px rgba(0,102,204,0.25); }
+  }
+  .rewrite.pulse { animation: box-pulse 1.1s ease-in-out infinite; }
+  /* ---- legend ---- */
+  .legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #eceff2; color: #8a97a3; transition: background 0.3s, color 0.3s; }
+  .chip.lit.state { background: #e7f6ee; color: #1a7a4b; }
+  .chip.lit.verb { background: #0066cc; color: #ffffff; }
+  .chip.lit.q { background: #fdf3e3; color: #a05a0c; }
+  .chip.lit.py { background: #eef1f4; color: #475569; }
+  /* ---- annotation panel: FIXED height so the frame never jitters ---- */
+  .note {
+    margin-top: 12px;
+    height: 96px;
+    background: #eef4ff;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #1f2a36;
+  }
+  .note .step-label { font-weight: bold; color: #0066cc; display: block; margin-bottom: 2px; font-size: 13px; }
+  /* ---- rewritten code (final step) ---- */
+  .rewrite {
+    display: none;
+    margin-top: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e6ea;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .rewrite.show { display: block; }
+  .rewrite .t-verb { padding: 1px 3px; }
+  .rewrite .t-state { padding: 1px 3px; }
+  .rewrite .t-q { padding: 1px 3px; }
+  /* ---- controls ---- */
+  .controls {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  button {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid #0066cc;
+    background: #ffffff;
+    color: #0066cc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover { background: #0066cc; color: #ffffff; }
+  button:disabled { border-color: #ccc; color: #aaa; background: #fafafa; cursor: default; }
+  .dots { display: flex; gap: 5px; margin-left: auto; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #d5dbe0; }
+  .dot.on { background: #0066cc; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="title">How the Seems parser reads one line</div>
+
+  <div class="srcline" id="src"><span class="tok kw">if&nbsp;</span><span class="tok t-py" id="tok-py">ticket.amount&nbsp;&gt;&nbsp;500</span><span class="tok kw">&nbsp;and&nbsp;</span><span class="tok t-state" id="tok-state">ticket.text</span>&nbsp;<span class="tok t-verb" id="tok-verb">asks</span>&nbsp;<span class="tok t-q" id="tok-q">for&nbsp;a&nbsp;refund</span><span class="tok kw">:</span></div>
+
+  <div class="legend">
+    <span class="chip py" id="chip-py">Python answers this exactly</span>
+    <span class="chip state" id="chip-state">expression &rarr; state</span>
+    <span class="chip verb" id="chip-verb">judgment verb</span>
+    <span class="chip q" id="chip-q">English &rarr; question</span>
+  </div>
+
+  <div class="note" id="note"><span class="step-label" id="note-label"></span><span id="note-text"></span></div>
+
+  <div class="rewrite" id="rewrite"><span class="kw">__seems__.</span><span class="t-verb">noul('asks'</span>, (<span class="t-state">ticket.text</span>), <span class="t-state">'ticket.text'</span>, <span class="t-q">'for a refund'</span>)</div>
+
+  <div class="controls">
+    <button id="back" type="button">&larr; Back</button>
+    <button id="next" type="button">Next &rarr;</button>
+    <button id="replay" type="button">Replay</button>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var STEPS = [
+    {
+      label: 'A line from a Seems program',
+      text: 'This is ordinary Python with one extra sentence in the middle: \u201cticket.text asks for a refund\u201d. The question is how the parser knows where that sentence starts and ends.',
+      state: [], tokenized: false
+    },
+    {
+      label: 'Step 1 \u00b7 Tokenize',
+      text: 'The translator runs the line through Python\u2019s own tokenizer, the same code that compiles every .py file. No model reads your source.',
+      state: [], tokenized: true
+    },
+    {
+      label: 'Step 2 \u00b7 Find the verb',
+      text: 'It scans the tokens for a small, fixed list of judgment verbs: seems, sounds, asks, contradicts, and a few more. \u201casks\u201d is on the list, so this line holds a judgment.',
+      state: ['verb'], tokenized: true
+    },
+    {
+      label: 'Step 3 \u00b7 The expression before it becomes the state',
+      text: 'The code before the verb is an expression. Here that is ticket.text, and it becomes the state: the thing the question is about.',
+      state: ['verb', 'state'], tokenized: true
+    },
+    {
+      label: 'Step 4 \u00b7 The English after it becomes the question',
+      text: 'The English after the verb runs up to the colon, and the colon stops it. \u201cfor a refund\u201d becomes the question text.',
+      state: ['verb', 'state', 'q'], tokenized: true
+    },
+    {
+      label: 'Step 5 \u00b7 Rewrite',
+      text: 'The judgment becomes one call into the Seems runtime, with the state and question as arguments. Meanwhile ticket.amount > 500 never leaves Python. The runtime batches judgment calls and sends them to Jev as one request.',
+      state: ['verb', 'state', 'q', 'py'], tokenized: true,
+      rewrite: true
+    }
+  ];
+
+  var step = 0;
+  var timer = null;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var srcEl = document.getElementById('src');
+  var labelEl = document.getElementById('note-label');
+  var textEl = document.getElementById('note-text');
+  var rewriteEl = document.getElementById('rewrite');
+  var backBtn = document.getElementById('back');
+  var nextBtn = document.getElementById('next');
+  var replayBtn = document.getElementById('replay');
+  var dotsEl = document.getElementById('dots');
+
+  var dots = [];
+  for (var i = 0; i < STEPS.length; i++) {
+    var d = document.createElement('span');
+    d.className = 'dot';
+    dotsEl.appendChild(d);
+    dots.push(d);
+  }
+
+  var ROLE_IDS = {
+    verb:  ['tok-verb', 'chip-verb'],
+    state: ['tok-state', 'chip-state'],
+    q:     ['tok-q', 'chip-q'],
+    py:    ['tok-py', 'chip-py']
+  };
+  var prevActive = null;
+  var wasTokenized = false;
+
+  function retrigger(el, cls) {
+    el.classList.remove(cls);
+    void el.offsetWidth; /* force reflow so the animation restarts */
+    el.classList.add(cls);
+  }
+
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  function stopTimer() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  function render() {
+    var s = STEPS[step];
+    labelEl.textContent = s.label;
+    textEl.textContent = s.text;
+    srcEl.classList.toggle('tokenized', s.tokenized);
+    rewriteEl.classList.toggle('show', !!s.rewrite);
+
+    var active = {};
+    for (var i = 0; i < s.state.length; i++) { active[s.state[i]] = true; }
+    for (var role in ROLE_IDS) {
+      var pair = ROLE_IDS[role];
+      var lit = !!active[role];
+      var tok = document.getElementById(pair[0]);
+      var chip = document.getElementById(pair[1]);
+      tok.classList.toggle('lit', lit);
+      chip.classList.toggle('lit', lit);
+      var newly = lit && !(prevActive && prevActive[role]);
+      if (newly && !reduceMotion) {
+        retrigger(tok, 'pulse');
+        retrigger(chip, 'pulse');
+      } else {
+        tok.classList.remove('pulse');
+        chip.classList.remove('pulse');
+      }
+    }
+    if (s.tokenized && !wasTokenized && !reduceMotion) {
+      retrigger(srcEl, 'pulse-line');
+    }
+    wasTokenized = s.tokenized;
+    if (s.rewrite && !reduceMotion) {
+      retrigger(rewriteEl, 'pulse');
+    }
+
+    backBtn.disabled = (step === 0);
+    nextBtn.disabled = (step === STEPS.length - 1);
+    for (var j = 0; j < dots.length; j++) {
+      dots[j].className = 'dot' + (j <= step ? ' on' : '');
+    }
+    prevActive = active;
+    fit();
+  }
+
+  function go(n) {
+    stopTimer();
+    step = Math.max(0, Math.min(STEPS.length - 1, n));
+    render();
+  }
+
+  function play() {
+    step = 0;
+    prevActive = null;
+    wasTokenized = false;
+    render();
+    if (reduceMotion) return; // step through manually
+    stopTimer();
+    timer = setInterval(function() {
+      if (step < STEPS.length - 1) { step += 1; render(); }
+      else { stopTimer(); }
+    }, 2600);
+  }
+
+  backBtn.addEventListener('click', function() { go(step - 1); });
+  nextBtn.addEventListener('click', function() { go(step + 1); });
+  replayBtn.addEventListener('click', play);
+
+  play();
+})();
+</script>
+</body>
+</html>

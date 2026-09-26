@@ -3,7 +3,7 @@ title: Swapping the judge in a judgment language
 author: Eric J. Ma
 ---
 body:
-In late September, kavehmz published [Seems](https://github.com/kavehmz/seems-lang), a programming language that is Python plus a few words. In a Seems program, a condition can be plain English, and a decision model answers it with a probability:
+In late September, [@kavehmz](https://github.com/kavehmz) published [Seems](https://github.com/kavehmz/seems-lang), a programming language that is Python *plus a few words*. In a Seems program, a condition can be plain English, and a decision model answers it with a probability:
 
 ```python
 if ticket.amount > 500 and ticket.text asks for a refund:
@@ -14,48 +14,44 @@ unsure:
 
 `ticket.amount > 500` runs in Python. `ticket.text asks for a refund` goes to a decision model. TypeSafe's Jev reads the text and returns a probability. Below 0.25 the judgment is no, above 0.75 it's yes, and in between it's unsure. `unsure:` is a real branch of `if`, so a program that isn't sure enough routes to a human instead of acting on a guess.
 
-I loved it. I also had two questions the README couldn't answer for me. Does this work outside its Docker container, in a regular Python session? And what does the language feel like when the judge is an open-weight model running on my own machine?
+Under the hood, there is no AI in the language itself. A Seems program is a `.seems` file, and a translator rewrites it into plain Python using Python's own tokenizer and a fixed list of judgment verbs (`seems`, `sounds`, `asks`, `contradicts`, and a few more). The rule is mechanical: an expression, then a verb, then English up to the next comma or colon. The expression becomes the state, the English becomes the question, and the whole judgment becomes a call into a small runtime that batches questions and caches answers. Everything else in the file passes through byte for byte, line numbers untouched. The one thing the translator cannot do locally is answer: judgments leave as a single HTTP call to TypeSafe's hosted Jev endpoint, billed to an API key.
 
-So I forked the idea and the code. The result is [seems-laya](https://github.com/ericmjl/seems-laya), where every judgment is answered by [Laya](https://github.com/NandhaKishorM/laya), Convai Innovations' open-weight decision model.
+<iframe src="seems-parser.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+The project ships as a Docker container. There is no wheel to install. The import hook that understands `.seems` files only switches on inside the project's own entry points, so a regular Python session has no path to any of it: `import` has never heard of the `.seems` suffix, and a script you run directly bypasses the import system entirely. Hence the compose file, the playground, the demo desk app, and a README whose setup section is one command, `docker compose up --build -d`.
+
+I loved it! And I had two questions the README couldn't answer for me. Can this work outside its Docker container, in a regular Python session? And the one I cared about more, the reason I built anything at all: every judgment in this language is billed to a closed hosted model. Could the whole idea run on open weights instead, on my own machine, with no API key and no meter running?
+
+So I forked the idea and the code. The result is [`seems-laya`](https://github.com/ericmjl/seems-laya), where every judgment is answered by [Laya](https://github.com/NandhaKishorM/laya), Convai Innovations' open-weight decision model. The language is kavehmz's; I only swapped the judge. He added an MIT license the same week, which unblocks a PyPI release for the variant.
 
 ## The swap was one seam
 
-Upstream's architecture made this easier than it sounds. Every judgment in Seems funnels through a single client call: hand it a state and a bundle of typed questions, get back an envelope of answers with probabilities. Jev and Laya, rivals launched three days apart, happen to speak a near-identical contract (noul for yes or no, choice for picking among options, score for rating on a scale). So the swap lives in one file. `seems/client.py` used to post to TypeSafe's endpoint; now it loads a Laya checkpoint in-process, or posts to a Laya server on your network if you'd rather keep the model on a GPU box.
+The architecture [@kavehmz](https://github.com/kavehmz) shipped made this easier than it sounds. Every judgment in Seems funnels through a single client call: give it a state and a list of questions, and it returns an answer with a probability for each one. Jev and Laya, rivals launched three days apart, turned out to ask questions in an identical format (noul for yes or no, choice for picking among options, score for rating on a scale, each with instructions and optional criteria). Everything around the questions differs: Jev wants an API key and bills per token; Laya runs locally for free. So I only had to rewrite one file. `seems/client.py` used to post to TypeSafe's endpoint; now it loads a Laya checkpoint in-process, or posts to a Laya server on your network if you'd rather keep the model on a GPU box.
 
 ## Three doors into plain Python
 
-Seems ships as an import hook. The wheel installs a startup file, so any plain `.py` file on your machine can contain judgment syntax and a normal `import` runs it through the translator. Flask apps, workers, pytest files: anything that imports your package gets judgments. Two boundaries needed extra work. CPython compiles the file you run directly below the import system, so scripts go through a launcher, `seems run script.py`. And marimo compiles notebook cells itself, so the project ships a wrapper, `seems-marimo`, that teaches marimo's compiler the same trick. A cell can now hold the `if` / `unsure:` branch directly, reactive over widgets.
+[`seems-laya`](https://github.com/ericmjl/seems-laya) ships as an import hook. The wheel installs a startup file, so any plain `.py` file on your machine can contain judgment syntax and a normal `import` runs it through the translator. You never create a `.seems` file: write an ordinary `.py` file, judgment syntax included, and the hook translates the files that carry judgment verbs. Original `.seems` files still load, so programs written for the language as published keep working, but nothing generates them either. Flask apps, workers, pytest files: anything that imports your package gets judgments. Two boundaries needed extra work. CPython compiles the file you run directly below the import system, so scripts go through a launcher, `seems run script.py`. And marimo compiles notebook cells itself, so the project ships a wrapper, `seems-marimo`, that teaches marimo's compiler the same trick. A cell can now hold the `if` / `unsure:` branch directly, reactive over widgets.
 
-## What broke, and what it taught
+<iframe src="import-hook.html" width="100%" scrolling="no" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
-Four things, and each taught me something about the machinery underneath Python.
+## What broke
 
-- **Concurrency.** Laya crashed the process under simultaneous requests on macOS, an MPS command-buffer race. The runtime already batches same-state questions into one request, so serializing inference cost almost nothing. A hosted API parallelizes for you; a local model asks you to serialize.
-- **Calibration.** One upstream example now raises `Unsure` where Jev was confident enough to act. The base Laya checkpoint spreads probability more diffusely, and the language's `unsure:` branch caught it, exactly as designed. Weaker judge, same safety net.
+- **Concurrency.** Laya crashed the process under simultaneous requests on macOS. Turns out, it was due to an MPS command-buffer race. The runtime already batches same-state questions into one request, so serializing inference cost almost nothing. A hosted API parallelizes for you; a local model asks you to serialize.
+- **Calibration.** Example 06 in the original repo now raises `Unsure` where Jev was confident enough to act. In it, `intent is one of leave, complain` scores 0.64 under Laya against the 0.75 bar, and the example has no `unsure:` branch there. So the program stops with an `Unsure` error instead of acting on the 0.64 answer. The base Laya checkpoint spreads probability more diffusely than Jev, and programs written against Jev's calibration can need explicit `unsure:` branches under Laya.
 - **Namespaces.** My first version injected the runtime's names into every imported module. Torch's config machinery asserts that its own module namespaces are clean, and the process died on import. The fix was to inject names only where the compiled code actually references them.
 - **The bytecode cache.** Translated code validated against untouched source files, so a warm cache would keep running judgment syntax even after you turned the hook off. Translated files never write bytecode now.
 
-The numbers: warm, the six example programs finish in 0.2 to 0.9 seconds, where upstream measured 1 to 4 seconds against the hosted API. The marginal cost is $0.00 and the answers are deterministic. The language's own test suite, 82 tests, passes with no model and no network.
+Here is the performance of seems-laya. Warm, the six example programs finish in 0.2 to 0.9 seconds; upstream measured 1 to 4 seconds against the hosted API. Inference runs on my machine, so the marginal cost is $0.00, and the answers are deterministic.
 
-## A thank-you, and a license
+## Was any of this *actually* creative?
 
-None of this exists without kavehmz's language. The variant repo credits him on every surface, and its first commit is his tree untouched. Because the upstream repo has no LICENSE file yet, I filed an issue asking for one, MIT if he's comfortable with it. Until that lands, seems-laya stays off PyPI. The language is his; I only swapped the judge.
+I've been writing Python for many years. I maintain libraries, I teach data science, Python pays my salary. And almost nothing in this project was within my range of knowledge. When the notebook kernel died with a Metal command-buffer assertion, I hadn't finished reading the traceback before the agent had serialized the client. When torch's config machinery choked on an injected name, the agent moved the injection where third-party introspection wouldn't see it. When marimo's kernel turned out to be a spawned subprocess, the fix was an environment variable and a startup file we already had. All told, GLM-5.3-Flash running in Pi went from kavehmz's untouched tree to the working notebook in about 90 minutes and five commits.
 
-## The soapbox - was any of this creative?
+If I had hired a human engineer with that exact combination of knowledge, I would call the engineer creative. But I have no way to audit the model's reading. Every fix it made might be interpolation over some GitHub thread I've never read; my sense that it was creative could just measure how small my corpus is. There's a company-scale version of the same question: Laya shipped three days after Jev, and Laya's author has said in public that the architecture is his own earlier work, relaunched by a better-funded company. When everyone reads the same papers and builds with the same tools, two teams can pull the same thread and each experience the pull as invention.
 
-I've been writing Python for many years. I maintain libraries, I teach data science, Python pays my salary. And almost nothing in this project was within my range of knowledge.
-
-When the notebook kernel died with a Metal command-buffer assertion, I had no idea where to start looking. The agent recognized the signature of concurrent inference on Apple silicon and serialized the client before I had finished reading the traceback. When torch's config machinery choked on an injected name, the agent explained why third-party code introspects module dictionaries and moved the injection to where it belonged. The third surprise was marimo: its kernel turned out to be a spawned subprocess, so the fix was an environment variable and a startup file we already had. Each fix sits at the intersection of three domains I don't work in: Apple's GPU driver behavior, importlib's cache semantics, and marimo's process architecture.
-
-If I had hired a human engineer with that exact combination of knowledge, I would call the work creative. As far as I know, the moves weren't written down anywhere. Somebody had to see that a judgment language, an import hook, and a compiler patch belonged in the same program.
-
-But "as far as I know" is doing a lot of work in that sentence. A language model trains on a corpus so much larger than my reading history that I have no way to audit its influences. Every fix the agent made might be interpolation over some GitHub thread I've never read. My sense that it was creative could just be a measure of how small my corpus is. That's the uncomfortable version: apparent creativity, original only from where I stand.
-
-There's a concrete wrinkle too. Laya was published three days after Jev, the model it benchmarks against, and Laya's author has said in public that the architecture is his own earlier work, relaunched by a better-funded company. I can't adjudicate that claim. It's the same question at company scale. When the corpus is shared and the tools are powerful, two teams can pull the same thread and each experience the pull as invention.
-
-So, will AI be truly creative? I can't tell the difference from my chair, and I doubt the difference is observable from inside a single career. Maybe creativity was always interpolation over a corpus, with taste deciding what to combine. Maybe the model is doing exactly that with a corpus the size of civilization. The test I keep coming back to is watching for the day a machine combines ideas in a way nobody can source, and the combination still works. Until then, I'll stay humble. I got nerd-sniped by a beautiful language, my tools interpolated faster than I could, and the least I can do is be honest about who did what.
+So, will AI be truly creative, at least in the sense of going beyond its own training set boundaries? Most of what I can find says not yet. [Demis Hassabis proposed the cleanest test](https://www.nature.com/articles/d41586-026-02804-x): train a model on everything known before 1900 and ask it to derive relativity, the way Einstein did. The attempts so far mostly fail. One experiment found that a searcher trained on pre-1905 physics was over a million times less likely to propose the Lorentz factor than a blind one; everything it had read pointed at Newton, and the right answer violated everything it knew. And yet, [in 2026, one paper showed](https://arxiv.org/abs/2603.17019) that in a setting where interpolation provably scores zero, a transformer learns the hidden rule anyway, and other teams have coaxed frontier models into original proofs of open conjectures. I can't tell the difference from my chair. Maybe creativity was always interpolation over a corpus, with taste deciding what to combine; maybe the model is doing exactly that with a corpus the size of civilization. Or maybe creativity is in the eye of the beholder, expanding the beholder's sense of what's possible. I'll believe it the day a machine combines ideas into something that works, and nobody can trace where it came from: not to a paper, not to a repository, not to anything in its training data.
 ---
-pub_date: 2026-09-25
+pub_date: 2026-09-26
 ---
 twitter_handle: ericmjl
 ---
@@ -71,7 +67,6 @@ ai
 agents
 creativity
 inference
-licensing
 open source
 decision models
 machine learning
