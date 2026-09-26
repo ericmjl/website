@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>What actually happens on import desk</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: monospace;
+    background: #ffffff;
+    padding: 8px;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 12px;
+  }
+  /* ---- the diagram canvas ---- */
+  .canvas-wrap { overflow-x: auto; }
+  .canvas {
+    position: relative;
+    width: 600px;
+    height: 344px;
+    margin: 0 auto;
+  }
+  .wires { position: absolute; left: 0; top: 0; }
+  .wire {
+    fill: none;
+    stroke: #c3cdd4;
+    stroke-width: 1.5;
+    opacity: 0.25;
+  }
+  .wire.on {
+    stroke: #0066cc;
+    stroke-width: 2;
+    stroke-dasharray: 7 5;
+    opacity: 1;
+    animation: march 0.7s linear infinite;
+  }
+  @keyframes march { to { stroke-dashoffset: -12; } }
+  .wire-label {
+    font-family: monospace;
+    font-size: 12px;
+    fill: #b3bcc4;
+  }
+  .wire-label.on { fill: #0066cc; font-weight: bold; }
+  .node {
+    position: absolute;
+    height: 60px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1.5px solid #8a97a3;
+    border-radius: 6px;
+    padding: 5px 8px;
+    transition: opacity 0.3s, background 0.3s;
+  }
+  .node.ghost { opacity: 0.35; }
+  .node.lit { background: #eef4ff; }
+  .own-you   { border-color: #a05a0c; }
+  .own-py    { border-color: #8a97a3; }
+  .own-seems { border-color: #0066cc; }
+  .own-laya  { border-color: #1a9e5b; }
+  .n-label { font-size: 12px; font-weight: bold; color: #1f2a36; white-space: nowrap; }
+  .n-cap { font-size: 12px; color: #6b7785; line-height: 1.25; }
+  @keyframes node-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,102,204,0); }
+    40%      { box-shadow: 0 0 0 5px rgba(0,102,204,0.35); }
+  }
+  .node.pulse { animation: node-pulse 1.1s ease-in-out infinite; }
+  /* ---- ownership legend ---- */
+  .legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #eceff2; color: #475569; border: 1.5px solid transparent; }
+  .chip.you   { border-color: #a05a0c; }
+  .chip.py    { border-color: #8a97a3; }
+  .chip.seems { border-color: #0066cc; }
+  .chip.laya  { border-color: #1a9e5b; }
+  /* ---- note panel: FIXED height so the frame never jitters ---- */
+  .note {
+    margin-top: 12px;
+    height: 104px;
+    background: #eef4ff;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #1f2a36;
+  }
+  .note .step-label { font-weight: bold; color: #0066cc; display: block; margin-bottom: 2px; font-size: 13px; }
+  /* ---- controls ---- */
+  .controls {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  button {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid #0066cc;
+    background: #ffffff;
+    color: #0066cc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover { background: #0066cc; color: #ffffff; }
+  button:disabled { border-color: #ccc; color: #aaa; background: #fafafa; cursor: default; }
+  .dots { display: flex; gap: 5px; margin-left: auto; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #d5dbe0; }
+  .dot.on { background: #0066cc; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="title">What actually happens on <span style="white-space:nowrap">import&nbsp;desk</span></div>
+
+  <div class="canvas-wrap">
+    <div class="canvas">
+      <svg class="wires" width="600" height="344">
+        <defs>
+          <marker id="m-gray" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#c3cdd4"></path>
+          </marker>
+          <marker id="m-blue" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#0066cc"></path>
+          </marker>
+        </defs>
+        <path id="w-install"  class="wire" d="M 160 46 H 226" marker-end="url(#m-gray)"></path>
+        <text id="t-install"  class="wire-label" x="193" y="30" text-anchor="middle">seems.<tspan x="193" dy="13">install()</tspan></text>
+        <path id="w-import"   class="wire" d="M 85 140 V 108 H 300 V 76" marker-end="url(#m-gray)"></path>
+        <text id="t-import"   class="wire-label" x="192" y="102" text-anchor="middle">import desk</text>
+        <path id="w-ask"      class="wire" d="M 370 46 H 451" marker-end="url(#m-gray)"></path>
+        <text id="t-ask"      class="wire-label" x="412" y="38" text-anchor="middle">asks</text>
+        <path id="w-claim"    class="wire" d="M 525 76 V 136" marker-end="url(#m-gray)"></path>
+        <text id="t-claim"    class="wire-label" x="517" y="112" text-anchor="end">desk.seems</text>
+        <path id="w-src"      class="wire" d="M 455 162 H 374" marker-end="url(#m-gray)"></path>
+        <text id="t-src"      class="wire-label" x="414" y="156" text-anchor="middle">source</text>
+        <path id="w-out"      class="wire" d="M 370 182 H 451" marker-end="url(#m-gray)"></path>
+        <text id="t-out"      class="wire-label" x="412" y="198" text-anchor="middle">plain<tspan x="412" dy="13">Python</tspan></text>
+        <path id="w-exec"     class="wire" d="M 525 200 V 230 H 300 V 260" marker-end="url(#m-gray)"></path>
+        <text id="t-exec"     class="wire-label" x="412" y="224" text-anchor="middle">compile + exec</text>
+        <path id="w-return"   class="wire" d="M 230 286 H 85 V 204" marker-end="url(#m-gray)"></path>
+        <text id="t-return"   class="wire-label" x="157" y="280" text-anchor="middle">module</text>
+        <path id="w-askmodel" class="wire" d="M 370 286 H 451" marker-end="url(#m-gray)"></path>
+        <text id="t-askmodel" class="wire-label" x="412" y="280" text-anchor="middle">questions</text>
+        <path id="w-ans"      class="wire" d="M 455 302 H 374" marker-end="url(#m-gray)"></path>
+        <text id="t-ans"      class="wire-label" x="412" y="318" text-anchor="middle">answers</text>
+      </svg>
+
+      <div class="node own-you"   id="n-program"   style="left:10px;  top:140px; width:150px"><div class="n-label">your program</div><div class="n-cap">app.py &middot; Flask &middot; pytest</div></div>
+      <div class="node own-seems" id="n-pth"       style="left:10px;  top:16px;  width:150px"><div class="n-label">.pth startup file</div><div class="n-cap">added by the wheel</div></div>
+      <div class="node own-py"    id="n-machinery" style="left:230px; top:16px;  width:140px"><div class="n-label">import system</div><div class="n-cap">sys.path_hooks</div></div>
+      <div class="node own-seems" id="n-finder"    style="left:455px; top:16px;  width:140px"><div class="n-label">finder</div><div class="n-cap">claims *.seems files</div></div>
+      <div class="node own-seems" id="n-translator" style="left:230px; top:140px; width:140px"><div class="n-label">translator</div><div class="n-cap">tokenizer + verb list</div></div>
+      <div class="node own-seems" id="n-loader"   style="left:455px; top:140px; width:140px"><div class="n-label">loader</div><div class="n-cap">source to code</div></div>
+      <div class="node own-seems" id="n-module"   style="left:230px; top:264px; width:140px"><div class="n-label">module: desk</div><div class="n-cap">+ __seems__, Unsure</div></div>
+      <div class="node own-laya"  id="n-laya"     style="left:455px; top:264px; width:140px"><div class="n-label">Laya</div><div class="n-cap">local, open weights</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="chip you">your code</span>
+    <span class="chip py">Python&#8217;s own</span>
+    <span class="chip seems">seems-laya</span>
+    <span class="chip laya">Laya</span>
+  </div>
+
+  <div class="note" id="note"><span class="step-label" id="note-label"></span><span id="note-text"></span></div>
+
+  <div class="controls">
+    <button id="back" type="button">&larr; Back</button>
+    <button id="next" type="button">Next &rarr;</button>
+    <button id="replay" type="button">Replay</button>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var STEPS = [
+    {
+      label: 'The whole machine, cold',
+      text: 'On the left, your program: a Flask app, a pytest file, a worker. It wants to import desk, and desk is written in Seems, not Python. Everything dimmed here is the machinery that makes that one line work.',
+      nodes: ['program'], wires: []
+    },
+    {
+      label: 'Before your first line',
+      text: 'Installing the wheel dropped a startup file into site-packages. At interpreter startup it calls seems.install(), which registers one more finder inside Python\u2019s import system.',
+      nodes: ['pth', 'machinery'], wires: ['install']
+    },
+    {
+      label: 'The import statement runs',
+      text: 'Now your program executes import desk. The statement goes to the import system, the part of Python that decides who gets to build each module.',
+      nodes: ['program', 'machinery'], wires: ['imports']
+    },
+    {
+      label: 'The finder claims the file',
+      text: 'The machinery asks each finder in turn who can load desk. The Seems finder recognizes the .seems suffix and takes the job; a plain .py import would fall through to Python\u2019s own finders.',
+      nodes: ['machinery', 'finder', 'loader'], wires: ['ask', 'claim']
+    },
+    {
+      label: 'The loader calls the translator',
+      text: 'A loader\u2019s job is turning source into code. Ours hands the source to the translator first, which rewrites judgment lines into plain Python calls and leaves every other byte alone.',
+      nodes: ['loader', 'translator'], wires: ['src', 'out']
+    },
+    {
+      label: 'The module comes alive',
+      text: 'The loader compiles the rewritten source and executes it with two extra names injected: __seems__, the runtime, and Unsure, the third answer. The finished module object returns to your program.',
+      nodes: ['loader', 'module', 'program'], wires: ['exec', 'returns']
+    },
+    {
+      label: 'Later: the first judgment',
+      text: 'When an if condition actually evaluates, the runtime batches its questions and sends them to Laya, which answers locally and free. Above 0.75 yes, below 0.25 no, in between unsure.',
+      nodes: ['module', 'laya'], wires: ['askmodel', 'ans']
+    }
+  ];
+
+  var NODE_IDS = {
+    program: 'n-program', pth: 'n-pth', machinery: 'n-machinery', finder: 'n-finder',
+    translator: 'n-translator', loader: 'n-loader', module: 'n-module', laya: 'n-laya'
+  };
+  var WIRE_IDS = {
+    install: 'w-install', tinstall: 't-install',
+    imports: 'w-import', timports: 't-import',
+    ask: 'w-ask', task: 't-ask',
+    claim: 'w-claim', tclaim: 't-claim',
+    src: 'w-src', tsrc: 't-src',
+    out: 'w-out', tout: 't-out',
+    exec: 'w-exec', texec: 't-exec',
+    returns: 'w-return', treturns: 't-return',
+    askmodel: 'w-askmodel', taskmodel: 't-askmodel',
+    ans: 'w-ans', tans: 't-ans'
+  };
+
+  var prevLitNodes = null;
+  var step = 0;
+  var timer = null;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var labelEl = document.getElementById('note-label');
+  var textEl = document.getElementById('note-text');
+  var backBtn = document.getElementById('back');
+  var nextBtn = document.getElementById('next');
+  var replayBtn = document.getElementById('replay');
+  var dotsEl = document.getElementById('dots');
+
+  var dots = [];
+  for (var i = 0; i < STEPS.length; i++) {
+    var d = document.createElement('span');
+    d.className = 'dot';
+    dotsEl.appendChild(d);
+    dots.push(d);
+  }
+
+  function retrigger(el, cls) {
+    el.classList.remove(cls);
+    void el.offsetWidth; /* force reflow so the animation restarts */
+    el.classList.add(cls);
+  }
+
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  function stopTimer() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  function render() {
+    var s = STEPS[step];
+    labelEl.textContent = s.label;
+    textEl.textContent = s.text;
+
+    /* a node is seen once any step up to and including this one has used it */
+    var lit = {};
+    for (var i = 0; i < s.nodes.length; i++) { lit[s.nodes[i]] = true; }
+    var seen = {};
+    for (var j = 0; j <= step; j++) {
+      for (var k = 0; k < STEPS[j].nodes.length; k++) { seen[STEPS[j].nodes[k]] = true; }
+    }
+    for (var key in NODE_IDS) {
+      var el = document.getElementById(NODE_IDS[key]);
+      el.classList.toggle('ghost', !seen[key]);
+      el.classList.toggle('lit', !!lit[key]);
+      var newly = !!lit[key] && !(prevLitNodes && prevLitNodes[key]);
+      if (newly && !reduceMotion) {
+        retrigger(el, 'pulse');
+      } else {
+        el.classList.remove('pulse');
+      }
+    }
+
+    var litWires = {};
+    for (var m = 0; m < s.wires.length; m++) { litWires[s.wires[m]] = true; }
+    for (var name in litWires) {
+      var p = document.getElementById(WIRE_IDS[name]);
+      var t = document.getElementById(WIRE_IDS['t' + name]);
+      if (p) {
+        p.classList.add('on');
+        p.setAttribute('marker-end', 'url(#m-blue)');
+      }
+      if (t) t.classList.add('on');
+    }
+    for (var name2 in { install:1, imports:1, ask:1, claim:1, src:1, out:1, exec:1, returns:1, askmodel:1, ans:1 }) {
+      if (!litWires[name2]) {
+        var p2 = document.getElementById(WIRE_IDS[name2]);
+        var t2 = document.getElementById(WIRE_IDS['t' + name2]);
+        if (p2) {
+          p2.classList.remove('on');
+          p2.setAttribute('marker-end', 'url(#m-gray)');
+        }
+        if (t2) t2.classList.remove('on');
+      }
+    }
+
+    backBtn.disabled = (step === 0);
+    nextBtn.disabled = (step === STEPS.length - 1);
+    for (var j2 = 0; j2 < dots.length; j2++) {
+      dots[j2].className = 'dot' + (j2 <= step ? ' on' : '');
+    }
+    prevLitNodes = lit;
+    fit();
+  }
+
+  function go(n) {
+    stopTimer();
+    step = Math.max(0, Math.min(STEPS.length - 1, n));
+    render();
+  }
+
+  function play() {
+    step = 0;
+    prevLitNodes = null;
+    render();
+    if (reduceMotion) return; /* step through manually */
+    stopTimer();
+    timer = setInterval(function() {
+      if (step < STEPS.length - 1) { step += 1; render(); }
+      else { stopTimer(); }
+    }, 2800);
+  }
+
+  backBtn.addEventListener('click', function() { go(step - 1); });
+  nextBtn.addEventListener('click', function() { go(step + 1); });
+  replayBtn.addEventListener('click', play);
+
+  play();
+})();
+</script>
+</body>
+</html>
