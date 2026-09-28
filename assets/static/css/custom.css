@@ -1121,3 +1121,108 @@ body.dark-mode .card-title a:hover {
     animation: none;
   }
 }
+
+/* Retreat prompt: the persistent, understated callout for the Learn
+   Anything with AI retreat (issue #311). One line of site chrome in the
+   footer that reads as a terminal command; hovering or focusing
+   "executes" it after a short beat and prints its output lines. Remove
+   after 2027-02-20 (see templates/macros/retreat.html). Ink colors are
+   the quiet-gray tokens from DESIGN.md; everything else reuses
+   terminal.css variables. */
+.retreat-prompt {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.5rem auto 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  text-align: left;
+  color: #727578;
+  background: transparent;
+  text-decoration: none;
+  transition: color 140ms ease-out;
+}
+
+body.dark-mode .retreat-prompt {
+  color: #a3abba;
+}
+
+/* Hovering is "the command about to run": the line brightens to the
+   accent, and the caret stops blinking. terminal.css paints every
+   a:hover with a solid primary background; the invert-block must never
+   land here. */
+.retreat-prompt:hover,
+.retreat-prompt:focus {
+  color: var(--primary-color);
+  background: transparent;
+  text-decoration: none;
+}
+
+.retreat-command {
+  display: block;
+}
+
+/* The caret reuses the .command-caret geometry and the cursor-blink
+   keyframe; here it blinks while idle, like a terminal waiting for
+   input. */
+.retreat-prompt .command-caret {
+  animation: cursor-blink 1.1s steps(1) infinite;
+}
+
+.retreat-prompt.is-typing .command-caret,
+.retreat-prompt:hover .command-caret,
+.retreat-prompt:focus .command-caret {
+  animation: none;
+}
+
+/* Output reveal: grid-template-rows 0fr -> 1fr in normal flow, never
+   max-height. width: 0 with min-width: 100% gives the collapsed output
+   zero intrinsic footprint, so the resting box is sized by the command
+   alone and stays centered; expanded, the output spans exactly the
+   command's width. The 350ms delay on the open state is the beat while
+   the command "executes"; closing has no delay so it gets out of the
+   way immediately. */
+.retreat-output {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 0;
+  min-width: 100%;
+  color: var(--font-color);
+  transition: grid-template-rows 220ms ease-out;
+}
+
+.retreat-output-inner {
+  display: block;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.retreat-prompt:hover .retreat-output,
+.retreat-prompt:focus .retreat-output {
+  grid-template-rows: 1fr;
+  transition-delay: 350ms;
+}
+
+.retreat-output-line {
+  display: block;
+  padding-left: 1.4em;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retreat-prompt .command-caret {
+    animation: none;
+  }
+
+  .retreat-prompt,
+  .retreat-output {
+    transition: none;
+  }
+}
+
+/* Blog-footer easter egg: the retreat as a stray dev comment, replacing
+   the prose paragraph once the footer prompt is site-wide. */
+.blog-todo-comment {
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+}
