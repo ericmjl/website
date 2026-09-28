@@ -1,0 +1,81 @@
+{#
+  The retreat prompt: a persistent, understated callout for the
+  Learn Anything with AI retreat (issue #311). One line of site chrome
+  that behaves like a terminal, not an advertisement:
+
+      $ learn anything --with ai --feb 2027█
+
+  Hovering (or keyboard focus) "executes" the command after a short beat
+  and prints its output lines; a tap simply runs it, because the whole
+  block is a link. The typing-once motion and the reveal are progressive
+  enhancement: without JS this is a plain link with the full command text,
+  and with prefers-reduced-motion the text is static and the caret
+  does not blink.
+
+  REMOVAL NOTE: Lektor's Jinja environment exposes no now(), so expiry is
+  manual. When the retreat is over (it ends 2027-02-20), delete the
+  retreat_prompt() call in templates/layout.html and this file. That is
+  the entire removal.
+#}
+{% macro retreat_prompt() %}
+<!-- RETREAT-CALLOUT: remove after the retreat ends 2027-02-20; see templates/macros/retreat.html -->
+<a class="retreat-prompt"
+   href="https://learn-anything.nonlinearlabs.ai/"
+   aria-label="Learn Anything with AI: a five-day, in-person retreat co-taught with Daniel Chen, February 14-20, 2027">
+    <span class="retreat-command">
+        <span class="command-prompt" aria-hidden="true">$</span>
+        <span class="retreat-command-text">learn anything --with ai --feb 2027</span>
+        <span class="command-caret" aria-hidden="true"></span>
+    </span>
+    <span class="retreat-output">
+        <span class="retreat-output-inner">
+            <span class="retreat-output-line">&rarr; 5 days &middot; in person &middot; a small cohort</span>
+            <span class="retreat-output-line">&rarr; feb 14-20, 2027 &middot; learn-anything.nonlinearlabs.ai</span>
+        </span>
+    </span>
+</a>
+<script>
+(function () {
+  var prompt = document.querySelector('.retreat-prompt');
+  if (!prompt) return;
+
+  // The element's performance is observable from day one.
+  prompt.addEventListener('click', function () {
+    if (window.posthog) posthog.capture('retreat_prompt_click');
+  });
+
+  // Reduced motion: no typing, static caret (CSS handles the rest).
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var textEl = prompt.querySelector('.retreat-command-text');
+  var full = textEl.textContent;
+  var typed = false;
+
+  function type() {
+    if (typed) return;
+    typed = true;
+    prompt.classList.add('is-typing');
+    var i = 0;
+    var timer = setInterval(function () {
+      i += 1;
+      textEl.textContent = full.slice(0, i);
+      if (i >= full.length) {
+        clearInterval(timer);
+        prompt.classList.remove('is-typing');
+      }
+    }, 28);
+  }
+
+  if (!('IntersectionObserver' in window)) { type(); return; }
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        observer.disconnect();
+        type();
+      }
+    });
+  }, { threshold: 0.5 });
+  observer.observe(prompt);
+})();
+</script>
+{% endmacro %}

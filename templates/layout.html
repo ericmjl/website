@@ -132,6 +132,8 @@
 
 </head>
 
+{% from "macros/retreat.html" import retreat_prompt %}
+
 <title>{% block title %}Welcome{% endblock %} - Eric J. Ma's Personal Site</title>
 
 <body>
@@ -187,6 +189,10 @@
                 </ul>
             </nav>
         </div>
+
+        <!-- Retreat prompt: persistent, understated callout (issue #311).
+             Sits after the footer link list; remove after 2027-02-20. -->
+        {{ retreat_prompt() }}
 
     </div>
 
