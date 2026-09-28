@@ -3,6 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
+    <script>document.documentElement.classList.add('js');</script>
     <link rel="icon" href="/favicon.ico" sizes="32x32">
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.webp">
@@ -138,7 +139,6 @@
 
 <body>
     <div class="container">
-        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
         <h1 class="logo">
             <a href="/">
                 Eric J Ma's Website
@@ -146,28 +146,39 @@
         </h1>
         <!-- Top Navigation (local links) -->
 
-        <div class="terminal-nav">
-            <nav class="terminal-menu" id="local-links">
-                <ul>
-                    {% for link in bag('nav')['header'] %}
-                    <li class="menu-item">
-                        <!-- Set blinking cursor correctly on navigation -->
-                        {% set path_root = this.path|string %}
-                        {% set path_root = path_root.split("@")[0] %}
-                        {% set path_root = path_root.split("/")[1] + "/" %}
-                        {% set link_root = link["href"].split("/")[1] + "/" %}
-                        {% if link_root == path_root %}
-                        <a class="terminal-prompt" href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title']
-                            }}</a>
-                        {% else %}
-                        <a href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                    <li class="menu-item">
-                        <a href="#" id="search-button" title="Search (Ctrl+K)">Search</a>
-                    </li>
-                </ul>
+        <div class="terminal-nav nav-header">
+            <div class="nav-bar">
+                <button type="button" class="nav-toggle" aria-expanded="false"
+                        aria-controls="nav-menu-header" aria-label="Toggle site menu">
+                    <span class="command-prompt" aria-hidden="true">$</span>
+                    <span class="nav-toggle-label">menu</span>
+                    <span class="command-caret" aria-hidden="true"></span>
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+            <nav class="terminal-menu">
+                <div class="menu-collapse" id="nav-menu-header">
+                    <ul>
+                        {% for link in bag('nav')['header'] %}
+                        <li class="menu-item">
+                            <!-- Set blinking cursor correctly on navigation -->
+                            {% set path_root = this.path|string %}
+                            {% set path_root = path_root.split("@")[0] %}
+                            {% set path_root = path_root.split("/")[1] + "/" %}
+                            {% set link_root = link["href"].split("/")[1] + "/" %}
+                            {% if link_root == path_root %}
+                            <a class="terminal-prompt" href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title']
+                                }}</a>
+                            {% else %}
+                            <a href="{{ link['href'] }}" rel="{{ link['rel'] }}">{{ link['title'] }}</a>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                        <li class="menu-item">
+                            <a href="#" id="search-button" title="Search (Ctrl+K)">Search</a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
         </div>
 
@@ -177,16 +188,26 @@
         </div>
 
         <!-- Bottom Navigation (external links) -->
-        <div class="terminal-nav">
-            <nav class="terminal-menu" id="local-links">
-                <ul>
-                    {% for link in bag('nav')['footer'] %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}">
-                            {{ link['title'] }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+        <div class="terminal-nav nav-footer">
+            <div class="nav-bar">
+                <button type="button" class="nav-toggle" aria-expanded="false"
+                        aria-controls="nav-menu-footer" aria-label="Toggle footer links">
+                    <span class="command-prompt" aria-hidden="true">$</span>
+                    <span class="nav-toggle-label">links</span>
+                    <span class="command-caret" aria-hidden="true"></span>
+                </button>
+            </div>
+            <nav class="terminal-menu">
+                <div class="menu-collapse" id="nav-menu-footer">
+                    <ul>
+                        {% for link in bag('nav')['footer'] %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ link['href'] }}" rel="{{ link['rel'] }}">
+                                {{ link['title'] }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </nav>
         </div>
 
@@ -243,6 +264,52 @@
                 setTimeout(() => setGiscusTheme('light'), 500);
             }
         });
+    </script>
+
+    <!-- Collapsing mobile navigation: the toggles render only below 900px
+         and only when JS is present (html.js); without JS both menus stay
+         expanded, exactly as they were before. -->
+    <script>
+        (function () {
+            var mq = window.matchMedia('(max-width: 900px)');
+            var toggles = Array.prototype.slice.call(document.querySelectorAll('.nav-toggle'));
+
+            function panelFor(toggle) {
+                return document.getElementById(toggle.getAttribute('aria-controls'));
+            }
+
+            function setOpen(toggle, open) {
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                panelFor(toggle).classList.toggle('is-open', open);
+            }
+
+            toggles.forEach(function (toggle) {
+                toggle.addEventListener('click', function () {
+                    setOpen(toggle, toggle.getAttribute('aria-expanded') !== 'true');
+                });
+                // Navigating or opening search should not leave the panel open behind it.
+                panelFor(toggle).addEventListener('click', function (e) {
+                    if (e.target.closest('a')) setOpen(toggle, false);
+                });
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Escape') return;
+                toggles.forEach(function (toggle) {
+                    if (toggle.getAttribute('aria-expanded') === 'true') {
+                        setOpen(toggle, false);
+                        toggle.focus();
+                    }
+                });
+            });
+
+            // Leaving the mobile breakpoint restores the resting (closed) state.
+            if (mq.addEventListener) {
+                mq.addEventListener('change', function (e) {
+                    if (!e.matches) toggles.forEach(function (t) { setOpen(t, false); });
+                });
+            }
+        })();
     </script>
 
     <!-- Search functionality -->
