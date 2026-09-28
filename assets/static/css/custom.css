@@ -1226,3 +1226,125 @@ body.dark-mode .retreat-prompt {
   color: var(--secondary-color);
   font-size: 0.9rem;
 }
+
+/* Collapsing navigation: below 900px the header menu does not fit on one
+   row, and terminal.css's justify-content: flex-end pushes the overflow
+   off-screen to the LEFT, silently hiding the first items. So on small
+   screens both navs collapse behind a prompt-line toggle that behaves
+   like a command: "$ menu" / "$ links". The caret blinks while closed
+   (secondary color; the primary blue caret stays unique to the retreat
+   prompt), goes solid while open, and the menu prints below it with the
+   same grid-template-rows 0fr -> 1fr reveal as the retreat output.
+   Without JS (html.js absent) the toggles never render and both menus
+   stay expanded, as they always were. */
+.nav-toggle {
+  display: none;
+}
+
+/* Desktop: the bar wrapper disappears from the layout (display: contents);
+   its only visible child, the theme button, stays absolutely positioned
+   against the container exactly as before. */
+.nav-bar {
+  display: contents;
+}
+
+@media (max-width: 900px) {
+  /* The absolute theme button no longer floats over the title on small
+     screens; it joins the menu bar instead, so the 70px body headroom
+     reserved for it is no longer needed. */
+  body {
+    padding-top: 1.25rem;
+  }
+
+  .nav-header,
+  .nav-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .theme-toggle {
+    position: static;
+    padding: 0.45rem 0.9rem;
+  }
+
+  html.js .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem 0;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: color 140ms ease-out;
+  }
+
+  html.js .nav-toggle:hover {
+    color: var(--font-color);
+    background: transparent;
+  }
+
+  html.js .nav-toggle:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+
+  .nav-toggle .command-caret {
+    background: var(--secondary-color);
+    animation: cursor-blink 1.1s steps(1) infinite;
+  }
+
+  .nav-toggle:hover .command-caret,
+  .nav-toggle[aria-expanded="true"] .command-caret {
+    animation: none;
+  }
+
+  html.js .menu-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 220ms ease-out;
+  }
+
+  html.js .menu-collapse.is-open {
+    grid-template-rows: 1fr;
+  }
+
+  /* The panel list: one command per line, comfortable touch rows. */
+  .menu-collapse > ul {
+    min-height: 0;
+    overflow: hidden;
+    margin: 0; /* the UA's ul margin-bottom would leak into the 0fr track */
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 0;
+  }
+
+  .menu-collapse > ul li {
+    margin: 0 0 0.35em 0;
+    width: 100%;
+  }
+
+  .menu-collapse > ul li a {
+    padding: 0.55em 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .menu-collapse {
+    transition: none;
+  }
+
+  .nav-toggle .command-caret {
+    animation: none;
+  }
+}
