@@ -1,0 +1,95 @@
+title: I stress-tested Laya, an open decision model, on pharma surveillance
+---
+author: Eric J. Ma
+---
+pub_date: 2026-09-24
+---
+summary: Laya is an open-source decision model that answers structured questions in a single forward pass, no text generation involved. I ran it through email triage, multilingual postmarket surveillance, real pharma document classification, a fine-tuning experiment, and a Modal deployment to see where it shines, where it breaks, and what its probabilities are really worth. Curious whether a 421M-parameter model can do the boring 90% of an AI pipeline cheaper than a giant LLM? Read on to find out!
+---
+body:
+
+When a closed vendor ships an AI product with no papers and no weights, my instinct is to look for the open replica. Earlier this month I found a good one: [Laya](https://huggingface.co/convaiinnovations/laya), released under Apache 2.0 by ConvAI Innovations. It is an explicit open answer to Jev, TypeSafe's closed "decision model" API. The claim I wanted to verify for myself: a 421M-parameter model answering structured questions with calibrated probabilities in a single forward pass, roughly 33 milliseconds, no text generation.
+
+So I gave it a week of evenings and a pharma-shaped workload. I ran email triage, multilingual postmarket surveillance, real document classification at two corpus sizes, a fine-tuning experiment, a calibration deep-dive, and finally a serverless deployment. This post walks through what worked, what broke, and what I'd tell you before you build on it. A companion [marimo notebook](https://raw.githubusercontent.com/ericmjl/website/main/content/blog/stress-testing-laya-pharma-surveillance/laya_pharma_walkthrough.py) carries the actual numbers; you can open it with `uvx marimo edit --sandbox` and every figure re-renders from inlined experiment results.
+
+## What a decision model actually is
+
+Laya is the philosophical opposite of an LLM. You hand it a state (an email, a support ticket, a JSON blob) plus a set of typed questions, and it returns typed answers with probability distributions in one forward pass. Three primitives cover a shocking amount of ground: `choice` picks from a schema you define at request time, `score` places the input on an ordinal rubric, and `noul` returns a calibrated probability that a yes/no statement holds. Because the output space is numeric, there is nothing to parse and nothing to hallucinate. Under the hood it is a ModernBERT-large encoder, fully fine-tuned, with a decision head that scores each answer option at its own mask token.
+
+The training recipe is where the calibration claim comes from. Laya is trained with RLCD, reinforcement learning where the reward is a strictly proper scoring rule. Proper scoring rules have a lovely property: the only way to maximize the expected reward is to report honest probabilities. Calibration falls straight out of the training objective.
+
+## First contact: email triage in 40 milliseconds
+
+The quickstart worked on the first try on my M4 Max. One support email, four questions (which department, how urgent, is this phishing, is the customer about to churn), one forward pass, 40 milliseconds. The obvious phishing email scored P(phishing) = 1.000; a customer threatening to cancel scored churn at 0.75. Then I translated the same billing complaint into ten more languages. The multilingual checkpoint stayed consistent across Spanish, Hindi, Chinese, Japanese, and Arabic, and routed about twice as fast as the English one.
+
+The multilingual demo also surfaced my favorite cautionary tale from the model card, and I reproduced it live. Feed the English checkpoint Khmer text and it returns confident nonsense, 0.952 confidence at essentially random accuracy. The library ships a Router that detects the script before the forward pass precisely because the confidence score cannot warn you. That design decision, putting the check before the model rather than trusting the model to self-report confusion, turned out to preview the theme of the whole week.
+
+## Postmarket surveillance, and a bug that was my fault
+
+Next I built the pharmacovigilance scenario: 50 synthetic social media posts about a fictional drug, in 13 languages, with ground-truth labels I authored myself. For each post Laya answered four questions in one pass: is this an adverse event report, which body system, how severe, and does it meet seriousness criteria.
+
+My first run detected 0 of 38 adverse events, with every one of them scoring near zero.
+
+The pipeline was fine; my question was broken. I had written the detection question with a helpful exclusion clause: "Exclude posts about price, availability, praise, or news." That negatively-phrased instruction inverted the yes/no head. Adverse event posts collapsed to P = 0.01, and a glowing praise post jumped to 0.66. When I cut the question down to a short, positively-phrased sentence, detection jumped to 30 of 38 with zero false alarms, and all 12 chatter posts archived cleanly. The English checkpoint was just as sensitive to the same phrasing. I now treat question schemas like code; they deserve review discipline before they ship, because a clause that reads like helpful context to a human acts like a polarity flip on this model.
+
+## Real documents, from 50 to 265
+
+Synthetic posts prove mechanics. For the real test I scraped actual pharma documents: FDA warning letters, Drug Safety Communications, Federal Register notices, PubMed abstracts, DOJ False Claims Act settlements, FiercePharma articles, vendor press releases, 10-K risk factors, and real docket-comment letters from PhRMA, BIO, and Public Citizen. On the first 50 documents, zero-shot, Laya classified 100% correctly across the four operational categories that matter most: regulatory guidance, inspection findings, safety communications, and scientific publications. Where it struggled was genre-versus-content collisions (a Fierce Pharma article about a warning letter reads as a warning letter) and spam, which mostly dressed itself up as one of the real categories.
+
+Fifty documents felt thin, so I wrote a set of script-side fetchers against the Federal Register API, PubMed E-utilities, FDA's listing pages, SEC EDGAR full-text search, and FiercePharma's RSS, and scaled the corpus to 265 documents. This is where doing the fetching in code rather than through a chat assistant paid off: the ingestion is reproducible, and the corpus file is just a JSON artifact with source URLs.
+
+## The fine-tuning experiment: before and after
+
+Then came the experiment I cared about most. Using the training utilities Laya ships in its repo, I reimplemented the RLCD loop at laptop scale. The pieces: group-relative policy gradients with Gaussian logit noise, a strictly proper scoring reward (log score, spherical score, plus ranked probability score for ordinal questions), and a full encoder fine-tune. Three epochs over 212 training documents took about 20 minutes on my laptop.
+
+Held-out results on 53 test documents, before and after:
+
+| question | accuracy before | accuracy after | Brier before | Brier after |
+|---|---|---|---|---|
+| document type (10-way) | 0.58 | 0.94 | 0.58 | 0.16 |
+| secondary type (11-way) | 0.04 | 0.96 | 1.42 | 0.30 |
+| owning team (8-way) | 0.26 | 0.89 | 0.96 | 0.27 |
+| action required (yes/no) | 0.43 | 0.91 | 0.95 | 0.28 |
+| urgency (3-way) | 0.36 | 0.89 | 0.73 | 0.10 |
+
+Accuracy is the headline, but the probability metrics moved by 3-7x, and they are the ones I want you to watch. Twenty minutes of fine-tuning on 212 labeled documents took this model from "interesting demo" to "I would let it draft triage decisions for review."
+
+## What calibrated probabilities actually mean
+
+A probability is calibrated when things it calls 80% actually happen about 80% of the time. Expected Calibration Error (ECE) measures the gap. This is the one axis where Laya's model card admits the closed competitor ships better numbers out of the box: Jev reports ECE 0.144 on its benchmark against Laya's 0.213 raw.
+
+The comparison misses two things, and my experiments put both on the table. Temperature scaling divides a model's logits by one scalar per question-type bucket, fitted on your own labeled data, and it is the standard calibration repair. On my document corpus the base Laya model was so over-confident that the fitted temperature pegged my search ceiling at T = 100. The honest fix flattens its opinions almost to uniform, which achieves calibration by destroying most of the signal. After fine-tuning with proper scoring rules, the fitted temperatures landed at 0.11 to 0.73 on their own, far from the base model's double digits. Raw ECE dropped from 0.46 to 0.26, and a final per-bucket refit brought both models to about 0.07, better than Jev's shipped number. That matches Laya's model card, which reports 0.466 to 0.081 with the same procedure. Calibration has two steps: fine-tuning on proper scoring rules does the heavy lifting in-domain, and a cheap one-parameter-per-bucket refit on your labels finishes the job. And temperature scaling never changes which answer ranks first; it only corrects how much you trust it.
+
+Two configuration notes worth carrying home. First, the yes/no head is so sensitive to question phrasing that schema review belongs in your pull request checklist. Second, the context budget is runtime-configurable: Laya reads its 512-token default from a config dictionary at every call. The ModernBERT encoder tops out at 8,192 positions, and state truncation happens from the right. In one demo, raising the budget from 512 to 1,024 tokens changed the routing decision on an 800-token document, because the warning letter sitting at the end of the bundle finally made it into the model.
+
+## Deploying the cheap version
+
+I wrapped the English checkpoint as a serverless API on Modal, deployed exclusively through GitHub Actions on the nll-ai workspace, with weights baked into the image and both profiles scaling to zero. The economics came out cleaner than I expected:
+
+| profile | cold start | p50 latency | billable | cost per 1M requests |
+|---|---|---|---|---|
+| CPU, 1 core, 3 GiB | 3.5 s | 3.31 s | \$0.071/hour | \$17-68 |
+| T4 GPU, 2 cores, 8 GiB | 44.3 s | 0.48 s | \$0.749/hour | \$26-115 |
+
+Server-side inference is 49 milliseconds on the T4, same class as the model card's claims, and about 2.9 seconds on CPU. For batch triage the CPU profile wins on cost at every concurrency I measured; the GPU earns its keep only when latency matters. Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploys from a push to main, and CI smoke-tests both profiles against live endpoints before declaring green.
+
+## What I'd tell you before you build on it
+
+Take the model card's self-assessment seriously: Laya is a fast base to specialize. Zero-shot, it handled the operational document categories perfectly and fumbled the edges (press articles about safety, spam dressed as science). After 20 minutes and 212 labels, those edges mostly disappeared on held-out data. The lever you want is labeled examples from your own distribution, and the training loop runs on free Kaggle GPUs.
+
+Mind the shipped calibration. The multilingual checkpoint ships with no fitted temperatures at all, and one English bucket shipped a temperature so extreme the library clamps it at load and warns you the bucket is uncalibrated. Fit temperatures on your own labels before you wire any confidence gate to an automated action; a P = 0.9 threshold only means 90% precision if the refit says it does.
+
+And keep a human on the funnel. In every configuration I tested, the confidence score stayed silent while the model was confidently wrong, whether that was a business-email-compromise scam scoring P(phishing) = 0.000 or spam reading like a legitimate press release. Laya earns its place as the fast, cheap, auditable front half of a pipeline. The back half, the part that catches what the fast model cannot see, still needs a System 2.
+---
+tags:
+
+laya
+decision models
+pharmacovigilance
+fine-tuning
+calibration
+modal
+marimo
+machine learning
+open source
+pharma
