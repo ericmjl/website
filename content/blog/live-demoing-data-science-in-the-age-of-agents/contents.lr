@@ -1,0 +1,85 @@
+title: Live-demoing data science in the age of agents
+---
+author: Eric J. Ma
+---
+body:
+On October 2, I stood up in a lecture hall at UMass Chan Medical School and ran a live research demo in front of a room full of scientists, with more watching on Zoom. My friend Alper Kucukural, who leads the bioinformatics core there, invited me to teach the third session of their AI bioinformatics bootcamp. John Damask opened the afternoon with a hands-on session on building personal knowledge bases with coding agents. My job was to show what it looks like when an agent joins the analysis loop itself, on real data, unrehearsed.
+
+I had a talk prepared. Then marimo launch week happened. Earlier in the week the [marimo](https://marimo.io) team announced marimo Lens and marimo Studio, and I watched [Vincent Warmerdam](https://koaning.io) demo them online. I was so excited that I decided the day of the talk to fold both of them into the demo. Took a bit of guts to change the plan that late. It paid off, and I want to tell you about it.
+
+## The demo: one enzyme, one hour
+
+The subject was IRED-88, an imine reductase I helped engineer during my Novartis days. We published that campaign in [ACS Catalysis in 2021](https://pubs.acs.org/doi/abs/10.1021/acscatal.1c02786), and I wrote [a post about it back then](/blog/2021/9/12/machine-directed-evolution/). The data: a deep mutational scan covering 4,720 single mutants, doubles and triples of the best ones, a 1.9 angstrom crystal structure ([PDB 7OG3](https://www.rcsb.org/structure/7OG3)), and an ESMFold structure prediction. Around it all sits a small knowledge base of six papers. I packaged everything into a repo called [`ired-88-research-copilot`](https://github.com/ericmjl/ired-88-research-copilot) and gave it one driving question: where do activity-improving mutations of this enzyme come from, and could we have seen them coming?
+
+The plan was to re-run, in about an hour, analysis that took a year and a half the first time around, with a coding agent doing the typing and me steering. If you want to know what data science looks like in the age of agents, this was my honest attempt to show it, warts included.
+
+## Pairing an agent with a notebook
+
+Everything ran in a [marimo](https://marimo.io) notebook. If you have used Jupyter, you are most of the way there: markdown for prose, code cells, outputs. The difference is that marimo notebooks are reactive. Change one cell and every cell downstream re-runs. I came to this after being burnt in Jupyter more than once: I looked at a plot that was quietly stale, wrote down a conclusion, and only later realized my conclusion belonged to a previous version of the data. I don't want to be duped by my own notebook.
+
+The trick I wanted to show off is marimo's pair-with-agent feature. You paste one line into a coding agent, and the agent reaches into the notebook's Python process directly. It writes code into cells, reads your variables, and executes them while you watch. On the day, the agent was Cursor driving Grok. Talk-to-your-data stops being a chat app off to the side; it's two programs you already run on your machine, sharing one runtime. For the demo I dictated most of my prompts, which kept my hands free and my pace honest. And for the person who asked about cost: the demo had burned roughly 30,000 tokens by the midpoint, against a plan I pay $60 a month for.
+
+First ask: load the deep mutational scan, focus on conversion percentage. Then a heat map, and this prompt I made deliberately precise. Position on the x axis, mutant letter on the y axis, amino acids grouped by biochemical property and alphabetized within each group, subtle gaps between the groups so the groupings read visually without the gaps masquerading as data. When I know exactly what I want, I specify it exactly.
+
+## marimo Lens: point at what you mean
+
+The heat map came back and patterns popped. So I did something new. I asked the room where they saw interesting regions, and people called out positions: somewhere around 110 to 120, something near 150, the 200-plus region. With marimo Lens I drew a box around each answer, right on the notebook, and marimo turned my scribbles into annotations S1 through S4.
+
+Then I turned to the agent and said, basically: with Lens annotations S1 through S4, do a deep dive on those positions. Notice how loose that prompt is compared to the heat map ask. I was riffing, and the annotations carried the precision for me. I didn't spell out what the deep dive should look like, and the agent took some liberty: it came back with a chart of every position rank-ordered by the best mutant's activity, with the wild type as a dashed line, the median as an open dot, and the best mutant as a filled dot. That's a chart I would never have asked for by name, and it was exactly the next thing I wanted to see.
+
+This is the part of Lens that I think is genuinely new. Commenting on an analysis used to mean describing in words the thing you're looking at, and hoping the other party pictures the same region. With Lens, showing the agent what I'm looking at is one gesture. Draw a box, send it, and the drill-down starts from exactly where my eyes are.
+
+## Structure tells a different story than the sequence
+
+Next we went from biochemistry to structural biology. I asked for a 3D viewer of IRED-88 built on 3Dmol.js, with a dropdown that recolors the structure by mean activity at each position, or by each residue's distance to the NADP sitting in the catalytic pocket. One mid-demo correction shows how small the steering usually is: "color both chains, please."
+
+Flipping between the two colorings surfaced the demo's first scientific payoff. The positions that tolerate, and even benefit from, mutation are nowhere near the catalytic pocket. None of the top 50 singles sits within 6 angstroms of the NADP. They're distal, allosteric sites. Someone with decades of enzymology might shrug at that. Coming from bioengineering, I found it delightful, and it surfaced live from data I know well, just by flipping between two dropdowns.
+
+## The epistasis story, or where the agent fell short
+
+Then came the section I most wanted people to see, and the one where Murphy's law showed up right on cue. I had promised the room it would.
+
+I asked the agent to take the top 50 single mutants and work out whether doubles and triples of them behave additively or epistatically. I know this answer. My colleagues and I published it in 2021, and the paper lives in the repo's knowledge base. For this round I forbade the agent from reading the paper or anything citing it. The question on the table was whether it could get there from the data alone.
+
+First attempt: it added conversion percentages arithmetically and produced expected conversions above 100%. Conversion is a percentage; nothing converts more than fully. Wrong, and visibly so.
+
+Second attempt: log-odds additivity, summing gains on the logit scale. Now the predictions stayed between zero and one, which made them look plausible. Also wrong.
+
+At this point I stepped in, from memory: take one minus conversion, and add up effects in that transformed space. And because my memory is not ground truth either, I unlocked the paper and told the agent to fact-check me while it worked. Even then, the on-stage result didn't match what I remembered. Is this what I remember? It is not, and I said so in front of everyone.
+
+The resolution came from working the notebook slowly. The paper's transform is log(1 - conversion), the log of the fraction unconverted. A logarithm, not a logit. And logit(1 - conversion) equals -logit(conversion), which is why the log-odds panel kept looking so close. All three analyses now sit side by side in the notebook, the two wrong ones kept as a record; my rule for agent-written analysis is that you show the wrong work, you don't quietly fix it. On the paper's scale, 30 of the 39 combinations built from the top 50 fall short of the additive prediction, with a median shortfall of 0.25 in conversion. Doubles fall short by 0.13 at the median, triples by 0.27. Negative epistasis, quantified, the same shape we published.
+
+The agent had the data the entire time, and the paper sat in its knowledge base too. And it still never produced the right transform on its own, in three tries with me steering. That gap is the job. The obvious moves are what these models are trained on, so the obvious moves are also where they'll take you. Getting to log(1 - conversion) took my colleagues and me weeks of wrangling in 2021, because the right move was counterintuitive. Human creativity and judgment are still the scarce resource in the age of agents. When I believe a result is sitting in the data, I sit down, work two or three small examples by hand, and only then hand the verified method to the agent to generalize across the rest. It writes that code faster than I ever could. The conviction, the persistence, and the verification are mine.
+
+## marimo Studio: the second artifact
+
+While the epistasis analysis ran in the background, I flipped to the other new thing: marimo Studio. I picked a handful of cells from the notebook, the heat map, the position deep dive, the structure viewer, and Studio assembled them into an HTML slide deck. The deck pulls straight from the notebook, and its charts update as the notebook moves.
+
+This is the other thing that made me want to write this post. Exploratory work and presentation live in different registers, and historically the bridge between them has been copy-paste and staleness. With Studio, the deck is a projection of the notebook, so it can't quietly drift out of date. Explore in one artifact, present from the same source. For a data scientist, that's a real upgrade to the daily workflow, and marimo keeps defining what better tooling looks like for us.
+
+## What I want to keep from this hour
+
+A few practices made the hour work, and they generalize. My repo's AGENTS.md requires every agent-written code cell to be sandwiched between two markdown cells, one explaining what's about to happen and one recording what we observed, so the notebook stays readable for the next human, including future me. You can't review every line the agent writes, so your domain expertise becomes the smoke detector; I have caught agents because a dataset came out sparser than I knew it should be. Two prompt registers help too: precise when I know the spec, loose when I'm riffing, and Lens makes the loose register useful. And the fundamentals compound. Terminal, git, and statistics are what let you steer and verify. I picked up computing after 2013, on the side of a wet-lab upbringing, and it was worth every hour, because your expertise is exactly what the agent amplifies.
+
+If the post reads like I'm excited, I am. marimo Lens and marimo Studio are the first tools in a while that made me change a talk the day of, and I'd do it again. I'm planning to record a video walkthrough of this demo; when it ships, I'll link it here. And if you take one thing from the hour: agents will speed you up, and they will still get your science wrong in exactly the places where your judgment is the point. That's where the practice of scientific discovery lives now.
+---
+pub_date: 2026-10-02
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this post, I recount live-demoing an hour-long reanalysis of my published IRED-88 enzyme data at UMass Chan, pairing a coding agent with a reactive marimo notebook. New tools marimo Lens and Studio let me point at plots and project slides straight from the notebook. The agent flew through charts but stumbled on the epistasis transform I knew from hard-won experience. It's a candid look at data science in the age of agents. When machines master the obvious moves, how do we cultivate the judgment that remains ours?
+---
+tags:
+
+marimo
+notebooks
+coding agents
+bioinformatics
+epistasis
+enzymes
+research
+data science
+structure
+live demo
