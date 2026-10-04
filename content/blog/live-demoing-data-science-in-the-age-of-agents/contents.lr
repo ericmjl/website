@@ -21,7 +21,7 @@ The way marimo notebooks connect to agents is the pair-with-agent feature, calle
 
 The first ask I had was to load the deep mutational scan data with a focus on conversion percentage. Then I asked for a heat map, using a prompt I made extremely precise. Position on the x axis, mutant letter on the y axis, amino acids grouped by biochemical property and alphabetized within each group, subtle gaps between the groups so the groupings read visually without the gaps masquerading as data. When I know exactly what I want, I specify it exactly.
 
-> **Screenshot placeholder** (`./dms-activity-heatmap.webp`): the deep mutational scan heat map in marimo, positions on the x axis, amino acids grouped by biochemical property.
+![The IRED-88 deep mutational scan heat map in marimo: single-mutant conversion by position and mutant residue, amino acids grouped by biochemical property.](./dms-activity-heatmap.webp)
 
 ## marimo Lens: point at what you mean
 
@@ -31,7 +31,7 @@ The heat map came back and patterns popped. So I did something new. I asked the 
 
 Then I turned to the agent and said, basically: with Lens annotations S1 through S4, do a deep dive on those positions. Notice how loose that prompt is compared to the heat map ask. I was riffing, and the annotations carried the precision for me. I didn't spell out what the deep dive should look like, and the agent took some liberty: it came back with a chart of every position rank-ordered by the best mutant's activity, with the wild type as a dashed line, the median as an open dot, and the best mutant as a filled dot. That's a chart I would never have asked for by name, and it was exactly the next thing I wanted to see.
 
-> **Screenshot placeholder** (`./position-deep-dive.webp`): the rank-ordered position chart, wild type as a dashed line, median as an open dot, best mutant as a filled dot.
+![The position deep dive the agent built from the Lens annotations: wild type as a dashed line, median as an open dot, best mutant as a filled dot, rank-ordered by best-mutant activity.](./position-deep-dive.webp)
 
 This is the part of Lens that I think is genuinely new. Commenting on an analysis used to mean describing in words the thing you're looking at, and hoping the other party pictures the same region. With Lens, showing the agent what I'm looking at is one gesture. Draw a box, send it, and the drill-down starts from exactly where my eyes are.
 
@@ -39,7 +39,7 @@ This is the part of Lens that I think is genuinely new. Commenting on an analysi
 
 Next we went from biochemistry to structural biology. I asked for a 3D viewer of IRED-88 built on 3Dmol.js, with a dropdown that recolors the structure by mean activity at each position, or by each residue's distance to the NADP sitting in the catalytic pocket. One mid-demo correction shows how small the steering usually is: "color both chains, please."
 
-> **Screenshot placeholder** (`./structure-viewer-nadp.webp`): the 3D structure viewer, recolored by mean activity at each position or by distance to the NADP in the catalytic pocket.
+![The IRED-88 structure viewer recolored by per-position mean activity, both chains, with NADP in sticks.](./structure-viewer-nadp.webp)
 
 Flipping between the two colorings surfaced the demo's first scientific payoff. The positions that tolerate, and even benefit from, mutation are nowhere near the catalytic pocket. None of the top 50 singles sits within 6 angstroms of the NADP. They're distal, allosteric sites. Someone with decades of enzymology might shrug at that. Coming from bioengineering, I found it delightful, and it surfaced live from data I know well, just by flipping between two dropdowns.
 
@@ -51,7 +51,7 @@ I asked the agent to take the top 50 single mutants and work out whether doubles
 
 Its first attempt was to add the conversion percentages arithmetically, which produced expected conversions above 100%. Conversion is a percentage, and nothing converts more than fully, so that answer was visibly wrong. Its second attempt was log-odds additivity, summing gains on the logit scale. Those predictions stayed between zero and one, which made them look plausible, and they turned out to be wrong too.
 
-> **Screenshot placeholder** (`./epistasis-wrong-arithmetic.webp`): the first additive attempt, expected conversion plotted above 100%, kept on the page as the wrong work.
+![The arithmetic additivity attempt: expected conversions running past 100%, kept on the page as the wrong work.](./epistasis-wrong-arithmetic.webp)
 
 At this point I stepped in, from memory: take one minus conversion, and add up effects in that transformed space. And because my memory is not ground truth either, I unlocked the paper and told the agent to fact-check me while it worked. That third attempt didn't work either. The hour ended with the question open, and I wrapped the segment by explaining, from memory, what we had published: the combinations behave differently depending on where the mutations sit relative to the active site, and getting to that result took my colleagues and me weeks of wrangling in 2021, precisely because the right mathematical move was counterintuitive. My rule for agent-written analysis is that the wrong work stays on the page as a record.
 
@@ -61,7 +61,7 @@ The agent had the data the entire time, and the paper sat in its knowledge base 
 
 While the epistasis analysis ran in the background, I flipped to the other new thing: marimo Studio. I picked a handful of cells from the notebook, the heat map, the position deep dive, the structure viewer, and Studio assembled them into an HTML slide deck. The deck pulls straight from the notebook, and its charts update as the notebook moves.
 
-> **Screenshot placeholder** (`./marimo-studio-slides.webp`): the marimo Studio slide deck beside the live notebook, showing the charts pulling straight from the cells.
+![The marimo Studio slide deck beside the live notebook, the heat map pulling straight from the notebook cells.](./marimo-studio-slides.webp)
 
 This is the other thing that made me want to write this post. Exploratory work and presentation live in different registers, and historically the bridge between them has been copy-paste and staleness. With Studio, the deck is a projection of the notebook, so it can't quietly drift out of date. Explore in one artifact, present from the same source. For a data scientist, that's a real upgrade to the daily workflow, and marimo keeps defining what better tooling looks like for us.
 
