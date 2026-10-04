@@ -17,9 +17,9 @@ Why tear it down? Because marimo launch week had just happened. Earlier in the w
 
 ## The IRED-88 demo
 
-At 2:34 pm I took the stage. The subject was IRED-88, an imine reductase I helped engineer during my Novartis days; my colleagues and I published that campaign in [ACS Catalysis in 2021](https://pubs.acs.org/doi/abs/10.1021/acscatal.1c02786), and I wrote [a post about it back then](/blog/2021/9/12/machine-directed-evolution/). The repo I built for the demo, [`ired-88-research-copilot`](https://github.com/ericmjl/ired-88-research-copilot), holds the paper's deep mutational scan covering 4,720 single mutants, doubles and triples of the best ones, a 1.9 angstrom crystal structure ([PDB 7OG3](https://www.rcsb.org/structure/7OG3)), a small knowledge base of six papers, and my own curation on top of all of it. One driving question: where do activity-improving mutations of this enzyme come from, and could we have seen them coming?
+I took the stage after the break. The subject was IRED-88, an imine reductase I helped engineer during my Novartis days; my colleagues and I published that campaign in [ACS Catalysis in 2021](https://pubs.acs.org/doi/abs/10.1021/acscatal.1c02786), and I wrote [a post about it back then](/blog/2021/9/12/machine-directed-evolution/). The repo I built for the demo, [`ired-88-research-copilot`](https://github.com/ericmjl/ired-88-research-copilot), holds the paper's deep mutational scan covering 4,720 single mutants, doubles and triples of the best ones, a 1.9 angstrom crystal structure ([PDB 7OG3](https://www.rcsb.org/structure/7OG3)), a small knowledge base of six papers, and my own curation on top of all of it. One driving question: where do activity-improving mutations of this enzyme come from, and could we have seen them coming?
 
-At 2:41 pm, in front of the room, I dictated the first live prompt: "start a marimo server for me, we are going to do an analysis of the IRED88 dataset." Two minutes later, after pasting the pair invitation into Cursor, the agent sent a toast into the notebook: ready to pair on IRED-88. The identical ritual had run at 9:48 that morning, which the room didn't know. The mechanics were rehearsed. The analysis was not.
+In front of the room, I dictated the first live prompt: "start a marimo server for me, we are going to do an analysis of the IRED88 dataset." Two minutes later, after pasting the pair invitation into Cursor, the agent sent a toast into the notebook: ready to pair on IRED-88. The identical ritual had run that morning, which the room didn't know. The mechanics were rehearsed. The analysis was not.
 
 John asked why marimo. Part of the answer is [a post I wrote last year](/blog/2025/4/8/wow-marimo/): marimo notebooks are fully reactive, so changing one cell re-runs everything downstream of it, and each notebook carries its own dependencies in-file. The rest of the answer is scar tissue. I told the room about the stale output I once carried into a meeting; I caught it only hours beforehand, and it still caused me a lot of anxiety. Stale cells lie, and I don't want to be duped by my own notebook.
 
@@ -27,7 +27,7 @@ The way agents connect to marimo notebooks is the pair-with-agent feature, calle
 
 ## A heat map, specified to the pixel
 
-At 2:45 pm I loaded the deep mutational scan, conversion percentage only. At 2:48 pm I told the room about a convention baked into this repo's AGENTS.md: every agent-written code cell gets sandwiched between two markdown cells, one explaining what's about to happen, one recording what we observed, so the notebook stays readable for the next human, including future me. And at 2:50 pm, the heat map:
+First I loaded the deep mutational scan, conversion percentage only. Along the way I told the room about a convention baked into this repo's AGENTS.md: every agent-written code cell gets sandwiched between two markdown cells, one explaining what's about to happen, one recording what we observed, so the notebook stays readable for the next human, including future me. And then, the heat map:
 
 > Now I want you to create for me a heat map that visualizes the deep mutational scan activity data. Plot the mean column as value, x-axis as position, y-axis is mutant letter. On the y-axis, I also want you to group the amino acids by biochemical property. So, and and then within each group I want them to be ordered alphabetically. Between groups, there should be a bit of a white space gap so that it's easy for us to visualize. And they should, that white space gap should be subtle and it should not look like an actual height of one of the heat map heat map cells so that we can distinguish it from the rest of the heat map. Our goal is to visualize the activity values as described by the mean column, and so that we can like try to see what kind of visual patterns are present.
 
@@ -49,15 +49,15 @@ Then I turned to the agent. Dictated, verbatim:
 
 > So with Marimo lens annotations S1 through S4, I think we identified some positions that could be potentially interesting. I want you to do a bit of a deep dive onto those positions. Not every single one of them. I was a little bit coarse-grained with the annotations. Basically I just want to see what what the top performing positions are and maybe with a little bit of focus on the positions that I kind of highlighted over there.
 
-Notice how loose that ask is compared to the heat map prompt. I was riffing, and the annotations carried the precision for me. The agent took some liberty and came back with a chart of every position rank-ordered by the best mutant's activity, with the wild type as a dashed line, the median as an open dot, and the best mutant as a filled dot.
+Notice how loose that ask is compared to the heat map prompt. I was riffing, and the annotations carried the precision for me. The agent took some liberty: it kept the strongest position in each Lens box, plus the strongest positions outside the boxes, and ranked the set by the best mutant's activity, with the wild type as a dashed line, the median as an open dot, and the best mutant as a filled dot.
 
-![The position deep dive the agent built from the Lens annotations: wild type as a dashed line, median as an open dot, best mutant as a filled dot, rank-ordered by best-mutant activity.](./position-deep-dive.webp)
+![The standout positions figure in the rebuilt report: for each Lens-marked position, the open point is the median substitution and the filled point the best, colored by Lens box, against the dashed wild-type line.](./position-deep-dive.webp)
 
 Someone asked what this costs. One line of an answer: a $60 a month plan, and the demo had burned about 30,000 tokens by then. Then someone asked about combining mutations, and I told the room the truth: I actually know that answer, and when you see me prompt it, I'm going to prompt it as if I don't.
 
 ## Structure, with one small correction
 
-The biochemical angle needed the structural one. At 3:07 pm:
+The biochemical angle needed the structural one. The prompt, verbatim:
 
 > I'd like you to look for the cell down below in which we ask to in which we what we want to do is we want to like show a 3D viewer of the structure of iRED 88, the PDB structure ID is 7OG3 letter O, not zero, seven O G3. What I want you to use is 3D mold.js behind the scenes so that we have native JavaScript. And I want you to wrap it inside in any widget so we can potentially add interactivity later as for example to click on a residue and get that information out as a variable in Python. One of the things that I want you to do is I want you to give me a drop-down box that allows me to visualize a few things. One is the mean activity on the surface of the the ribbon cartoon of the protein structure. the second one that I want is distance to the catalytic pocket. So there is an NADPH molecule that is in that is inside the structure. I want you to give, I want you to have a second view where we can color the residue by its distance to the catalytic pocket. and we'll start with that first because I can't remember what the third one is.
 
@@ -69,7 +69,7 @@ Flipping between the two colorings surfaced the demo's first scientific payoff. 
 
 ## The epistasis section, live and unscripted
 
-At 3:13 pm I told the room: "I didn't prepare to talk about this, but I haven't actually rehearsed this session at all yet. So we're going to see this live." I knew the cheat existed. Inject the answer, guarantee a clean ending. "If I cheat and inject this in now, we're gonna be able to finish the demo. If I don't cheat, there's a risk that we might not, and I'm gonna take that risk. By the way, it's 3:14, so happy pi day." Someone in the room called out: don't cheat it. Then the prompt, verbatim:
+I told the room: "I didn't prepare to talk about this, but I haven't actually rehearsed this session at all yet. So we're going to see this live." I knew the cheat existed. Inject the answer, guarantee a clean ending. "If I cheat and inject this in now, we're gonna be able to finish the demo. If I don't cheat, there's a risk that we might not, and I'm gonna take that risk. By the way, it's 3:14, so happy pi day." Someone in the room called out: don't cheat it. Then the prompt, verbatim:
 
 > All right. we're gonna skip to the additive versus epistatic section. one of the things that we've kind of known from enzyme catalysis is that if you mutate the active site of the enzyme, it's potentially that you'll get epistasis. But most of it might be negative epistasis, right? But we also kind of want to see whether positive epistasis might happen. But I'm also not sure what happens if we take advantage of the data that lives in sites that are distal to the active site, right? What do you call those? Allosteric sites, right? So if we think about the allosteric sites, maybe that's a different story. So one of the things that I want you to try to look at is because we have double and triple mutational data, I want you to take the top 50 performing single-point mutations, and I want you to come up with different ways of looking at those numbers to see whether we get negative or positive epistasis or simple additivity. Now because I've published the paper and the paper is actually in the knowledge base, you are not allowed to look at the papers that are in the knowledge base.  Or anything that cites it.
 
@@ -77,7 +77,7 @@ Its first attempt added conversion percentages arithmetically, which produced ex
 
 ![The arithmetic additivity attempt: expected conversions running past 100%, kept on the page as the wrong work.](./epistasis-wrong-arithmetic.webp)
 
-At 3:24 pm I stepped in. Dictated, verbatim:
+So I stepped in. Dictated, verbatim:
 
 > the math for doing additive calculation, whether it's correct or not, is actually done a different way. it's in the paper. I'm going from memory, so I want you to fact check me so you can look at the paper now. the idea is you take one minus the conversion, and then you logit transform that, and then you do the math and you convert back to expected activity. And so that's what I want you to do, and show that as a third plot in addition to the two plots that you gave me, which were actually incorrect. The other context you need to know is that the value from 0 to 1 represents percentage conversion. So that first plot, in which you have values, additive expectation going beyond 100% was completely wrong. You just need to note that, you don't need to fix the plot, we need to show the wrong work so that we have that as a record for the future.
 
@@ -87,17 +87,17 @@ Alper told a war story of his own right after: Claude kept applying one logarith
 
 ## Four minutes left
 
-At 3:26 pm I looked at the clock and called it: four minutes left, two things running, one decision to make. The epistasis story stayed honest, and the remaining time went to the knowledge base. At 3:28 pm I dictated a scramble: S220 and A296 were the two strongest single mutants in the campaign, so search the literature for anyone who has studied them, check the knowledge base for homolog papers, fold a homolog with ESMFold, overlay it on IRED-88, highlight both positions. The knowledge base stopped being a props department and became a partner: literature, structure prediction, and the DMS table, all pointed at two positions.
+I looked at the clock and called it: four minutes left, two things running, one decision to make. The epistasis story stayed honest, and the remaining time went to the knowledge base. I dictated a scramble: S220 and A296 were the two strongest single mutants in the campaign, so search the literature for anyone who has studied them, check the knowledge base for homolog papers, fold a homolog with ESMFold, overlay it on IRED-88, highlight both positions. The knowledge base stopped being a props department and became a partner: literature, structure prediction, and the DMS table, all pointed at two positions.
 
 ## Studio, rebuilt live
 
-The third thread ran underneath everything: marimo Studio. At 3:34 pm I dictated: "I recently just created a research report view and I hate what I'm seeing. Absolutely hate it." The agent rebuilt it to spec. Three slides, minimal text: the heat map, verbatim from the notebook; the standout positions figure; the structure viewer, "so that I can live narrate when I'm presenting exactly which positions we should be focusing our energies on for the next round campaign."
+The third thread ran underneath everything: marimo Studio. I dictated: "I recently just created a research report view and I hate what I'm seeing. Absolutely hate it." The agent rebuilt it to spec. Three slides, minimal text: the heat map, verbatim from the notebook; the standout positions figure; the structure viewer, "so that I can live narrate when I'm presenting exactly which positions we should be focusing our energies on for the next round campaign."
 
 ![The marimo Studio slide deck beside the live notebook, the heat map pulling straight from the notebook cells.](./marimo-studio-slides.webp)
 
 Exploratory work and presentation live in different registers, and historically the bridge between them has been copy-paste and staleness. With Studio, the deck is a projection of the notebook, so it can't quietly drift out of date. Explore in one artifact, present from the same source. And when the NES.css theme showed up in the deck during Q&A, complete with a Mario cursor, the room got the point I make about tooling everywhere else: have a little bit of fun while you do this stuff.
 
-At 4:02 pm, as the room drained, the last prompt of the hour: "help me commit and push the notebook that we've been iterating on, as well as any other things that are not yet committed." The 1:06 pm reset and the 4:02 pm commit are the same git, pointed in opposite directions. The morning saves the scaffolding. The hour saves the science.
+As the room drained, the last prompt of the hour: "help me commit and push the notebook that we've been iterating on, as well as any other things that are not yet committed." The morning reset and the final commit are the same git, pointed in opposite directions. The morning saves the scaffolding. The hour saves the science.
 
 ## What the hour taught me
 
