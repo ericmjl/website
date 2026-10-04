@@ -51,7 +51,7 @@ Then I turned to the agent. Dictated, verbatim:
 
 Notice how loose that ask is compared to the heat map prompt. I was riffing, and the annotations carried the precision for me. The agent took some liberty: it kept the strongest position in each Lens box, plus the strongest positions outside the boxes, and ranked the set by the best mutant's activity, with the wild type as a dashed line, the median as an open dot, and the best mutant as a filled dot.
 
-![The standout positions figure in the rebuilt report: for each Lens-marked position, the open point is the median substitution and the filled point the best, colored by Lens box, against the dashed wild-type line.](./position-deep-dive.webp)
+![The standout positions figure: for each Lens-marked position, the open point is the median substitution and the filled point the best, colored by Lens box, against the dashed wild-type line.](./position-deep-dive.webp)
 
 Someone asked what this costs. One line of an answer: a $60 a month plan, and the demo had burned about 30,000 tokens by then. Then someone asked about combining mutations, and I told the room the truth: I actually know that answer, and when you see me prompt it, I'm going to prompt it as if I don't.
 
@@ -63,7 +63,7 @@ The biochemical angle needed the structural one. The prompt, verbatim:
 
 Somewhere in there, the agent also opened Chrome on its own. "It's gonna do something for me. I'm not sure what it is yet." And when the structure rendered with only one chain colored, I intercepted: "One little correction, I want you to color both chains, please. Don't just color one chain."
 
-![The IRED-88 structure viewer recolored by per-position mean activity, both chains, with NADP in sticks.](./structure-viewer-nadp.webp)
+![The IRED-88 structure viewer with both chains colored by each residue's distance to NADP: red at the catalytic pocket, fading to blue with distance, NADP shown in sticks.](./structure-viewer-nadp.webp)
 
 Flipping between the two colorings surfaced the demo's first scientific payoff. The positions that tolerate, and even benefit from, mutation are nowhere near the catalytic pocket; none of the top 50 singles sits within 6 angstroms of the NADP. They're distal, allosteric sites. Someone with decades of enzymology might have said "dude, that's obvious." Coming from bioengineering, I found it delightful, and it surfaced live, just by flipping between two dropdowns.
 
