@@ -103,17 +103,17 @@ As the hall drained, the last prompt of the hour: "help me commit and push the n
 
 ## Lessons from the hour
 
-**Use two prompt registers: precise when you know the spec, loose when you're riffing.** Lens made the loose register useful: I stay loose and let the annotations carry the precision.
+**The mechanics were rehearsed; the thinking was live.** I built the whole demo that morning, committed it, and wiped the notebook back to hints before standing up. Everything the audience saw get written was written for the first time.
 
-**Your domain expertise is the smoke detector.** You can't review every line, and you don't have to. The sparser-than-possible dataset, the prediction past 100% conversion, the plot that didn't match a memory: each one got caught by someone who knew what the data should look like. Manuel Garber's take keeps repeating in my head. Exploration mode and paper mode. Agents change the speed. The redundancy and the rigor are still yours.
+**Dictate precisely when you know what you want; riff when you don't.** "Obviously, I rehearsed this one," I said about the heat map. The Lens deep dive was different: "that's me riffing off right now... I'm giving a little bit more weight and creativity back to the agent."
 
-**Conviction plus hand verification is the method.** I believed the epistasis answer was in the data because I had published it, so I worked the small cases by hand before asking the agent to generalize. The wrong work stayed on the page, exactly as dictated.
+**Your expertise is what catches the mistakes.** You can't review every line an agent writes. I don't either. What I do is smell when something looks off, like a deep mutational scan coming out way sparser than I knew was possible. Manuel Garber gave the workflow its name from the floor: you have exploration mode, and you have paper mode. The speed changes. The redundancy and the rigor don't.
 
-**The reset is the trick.** Rehearsed mechanics, wiped state, live performance. If you ever demo agents, build the scaffolding in the morning, commit it, then perform the real thing live.
+**When you know the answer is in the data, prove it by hand, then let the agent generalize.** I believed the epistasis answer was in there because we had published it, and the agent still missed it in three tries, even with the paper in its knowledge base. So I sat down, worked the small cases by hand, and only then handed the verified method over. It writes that code faster than I ever could. Getting to that transform took my colleagues and me weeks in 2021. The conviction, the persistence, and the verification are mine.
 
-**The amplification cuts both ways.** AI amplifies what you know, and it will amplify absolutely what you don't know. One panelist said the conclusions now move faster than his comprehension of the phenomena. My honest counterweight: I'm less attached to work an agent drafted, which makes me a little more objective about it. Both are true at once, and holding them together is the actual skill.
+**Agents amplify what you know, and they amplify what you don't.** One panelist said the conclusions now move faster than his comprehension of the phenomena. My honest counterweight: I'm less attached to work an agent drafted, which makes me a little more objective about it.
 
-**Fundamentals compound, and they take years.** About four years to get comfortable at the terminal. A thesis repo on GitHub that reminds me how bad a coder I was in 2017. The tools will keep changing under us; the person steering them is the durable part.
+**And the fundamentals still take years.** About four to get comfortable at the terminal. My thesis code sits on GitHub to remind me how bad a coder I was back in 2017.
 
 I'm planning to record a video walkthrough of this demo; when it ships, I'll link it here. And if you take one thing from the hour: agents will speed you up, and they will still get your science wrong in exactly the places where your judgment is the point. That's where the practice of scientific discovery lives now.
 ---
