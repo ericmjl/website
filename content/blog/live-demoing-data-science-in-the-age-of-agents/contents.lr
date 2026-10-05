@@ -77,7 +77,7 @@ The combining-mutations question sent us here. "I didn't prepare to talk about t
 
 Its first attempt added conversion percentages arithmetically, which produced expected conversions above 100%. Conversion is a percentage, and nothing converts more than fully, so that answer was visibly wrong. Its second attempt was log-odds additivity, summing gains on the logit scale. Those predictions stayed between zero and one, which made them look plausible, and they turned out to be wrong too. I put the failure on the projector anyway. "I know the correct answer. I know I did it wrong. AI was wrong here, and that's great. I need people to see this."
 
-![The arithmetic additivity attempt: expected conversions running past 100%, kept on the page as the wrong work.](./epistasis-wrong-arithmetic.webp)
+![The additivity analysis plots on screen during the live demo.](./epistasis-wrong-arithmetic.webp)
 
 So I stepped in. Dictated, verbatim:
 
@@ -101,19 +101,19 @@ Exploratory work and presentation live in different registers, and historically 
 
 As the hall drained, the last prompt of the hour: "help me commit and push the notebook that we've been iterating on, as well as any other things that are not yet committed." The morning reset and the final commit are the same git, pointed in opposite directions. The morning saves the scaffolding. The hour saves the science.
 
-## What the hour taught me
+## Lessons from the hour
 
-Registers matter. When I know the spec, I dictate it to the pixel; when I'm riffing, I stay loose and let the annotations carry the precision. Lens made the loose register useful.
+**Use two prompt registers: precise when you know the spec, loose when you're riffing.** Lens made the loose register useful: I stay loose and let the annotations carry the precision.
 
-Your domain expertise is the smoke detector. You can't review every line, and you don't have to. The sparser-than-possible dataset, the prediction past 100% conversion, the plot that didn't match a memory: each one got caught by someone who knew what the data should look like. Manuel Garber's take keeps repeating in my head. Exploration mode and paper mode. Agents change the speed. The redundancy and the rigor are still yours.
+**Your domain expertise is the smoke detector.** You can't review every line, and you don't have to. The sparser-than-possible dataset, the prediction past 100% conversion, the plot that didn't match a memory: each one got caught by someone who knew what the data should look like. Manuel Garber's take keeps repeating in my head. Exploration mode and paper mode. Agents change the speed. The redundancy and the rigor are still yours.
 
-Conviction plus hand verification is the method. I believed the epistasis answer was in the data because I had published it, so I worked the small cases by hand before asking the agent to generalize. The wrong work stayed on the page, exactly as dictated.
+**Conviction plus hand verification is the method.** I believed the epistasis answer was in the data because I had published it, so I worked the small cases by hand before asking the agent to generalize. The wrong work stayed on the page, exactly as dictated.
 
-The reset is the trick. Rehearsed mechanics, wiped state, live performance. If you ever demo agents, build the scaffolding in the morning, commit it, then perform the real thing live.
+**The reset is the trick.** Rehearsed mechanics, wiped state, live performance. If you ever demo agents, build the scaffolding in the morning, commit it, then perform the real thing live.
 
-And the amplification cuts both ways. AI amplifies what you know, and it will amplify absolutely what you don't know. One panelist said the conclusions now move faster than his comprehension of the phenomena. My honest counterweight: I'm less attached to work an agent drafted, which makes me a little more objective about it. Both are true at once, and holding them together is the actual skill.
+**The amplification cuts both ways.** AI amplifies what you know, and it will amplify absolutely what you don't know. One panelist said the conclusions now move faster than his comprehension of the phenomena. My honest counterweight: I'm less attached to work an agent drafted, which makes me a little more objective about it. Both are true at once, and holding them together is the actual skill.
 
-Fundamentals compound, and they take years. About four years to get comfortable at the terminal. A thesis repo on GitHub that reminds me how bad a coder I was in 2017. The tools will keep changing under us; the person steering them is the durable part.
+**Fundamentals compound, and they take years.** About four years to get comfortable at the terminal. A thesis repo on GitHub that reminds me how bad a coder I was in 2017. The tools will keep changing under us; the person steering them is the durable part.
 
 I'm planning to record a video walkthrough of this demo; when it ships, I'll link it here. And if you take one thing from the hour: agents will speed you up, and they will still get your science wrong in exactly the places where your judgment is the point. That's where the practice of scientific discovery lives now.
 ---
