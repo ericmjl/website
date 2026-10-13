@@ -64,6 +64,7 @@ I had written the detection question with a helpful exclusion clause: "Exclude p
 The English checkpoint was sensitive to the phrasing too: the clause pushed three chatter posts over the detection threshold as false alarms. It shows that question schemas, which essentially are prompts, need to be treated like code; subtle changes can have an outsized effect on behaviour.
 
 ![](detection-flip.webp)
+*Figure 1: Each dot is one of the 50 posts. The x-axis shows P(adverse event) under the original prompt; the y-axis shows P(adverse event) under the rephrased prompt. Red dots are true adverse events; grey dots are chatter. The green dotted line marks the 0.5 detection threshold. Every red dot below the diagonal was suppressed by the original prompt.*
 
 ## Real documents, from 50 to 265
 
@@ -111,6 +112,7 @@ Here are the held-out results on 53 test documents, before and after fine-tuning
 Accuracy is the most important metric in this situation, but I'd like you to take note of the probability metrics: they moved by 3-9x with fine-tuning. Twenty minutes of fine-tuning on 212 labeled documents took this model from "interesting demo" to "I would let it draft triage decisions for review."
 
 ![](accuracy-before-after.webp)
+*Figure 2: Held-out accuracy across the five questions, before (slate) and after (green) RLCD fine-tuning on 212 labeled documents. The smallest gains are on doc type, which was already at 0.58 zero-shot.*
 
 ## What calibrated probabilities actually mean
 
@@ -122,22 +124,26 @@ First, the raw ECE numbers are for the base model out of the box. Fine-tuning on
 
 Second, the base Laya model was so over-confident that the fitted temperature pegged my search ceiling at T = 100. Temperature scaling at T = 100 achieves calibration by flattening opinions almost to uniform, which means you've destroyed most of the useful signal to get there. The fine-tuned model never needed that kind of extreme correction.
 
-Two configuration notes worth carrying home. First, the yes/no head is so sensitive to question phrasing that schema review belongs in your pull request checklist. Second, the context budget is runtime-configurable: Laya reads its 512-token default from a config dictionary at every call. The ModernBERT encoder tops out at 8,192 positions, and state truncation happens from the right. In one demo, raising the budget from 512 to 1,024 tokens changed the routing decision on an 800-token document, because the warning letter sitting at the end of the bundle finally made it into the model.
+There are two configuratin notes that I think you should pay attention to as well. First, the yes/no head is so sensitive to question phrasing that **you should always do evals on any schema change**. Second, **you should configure the context window at runtime**. Laya reads its 512-token default from a config dictionary at every call. The ModernBERT encoder tops out at 8,192 positions, and state truncation happens from the right. In one demo, raising the budget from 512 to 1,024 tokens changed the routing decision on an 800-token document, because the warning letter sitting at the end of the bundle finally made it into the model.
 
-## Deploying the cheap version
+## Deploying the model and benchmarking cost
 
-I wrapped the English checkpoint as a serverless API on Modal, deployed exclusively through GitHub Actions on the nll-ai workspace, with weights baked into the image and both profiles scaling to zero. The economics came out cleaner than I expected:
+I wrapped the English checkpoint as a serverless API on Modal, deployed exclusively through GitHub Actions, with weights baked into the image and both profiles scaling to zero. The economics came out cleaner than I expected:
 
 | profile | cold start | p50 latency | billable | cost per 1M requests |
 |---|---|---|---|---|
 | CPU, 1 core, 3 GiB | 3.5 s | 3.31 s | \$0.071/hour | \$17-68 |
 | T4 GPU, 2 cores, 8 GiB | 44.3 s | 0.48 s | \$0.749/hour | \$26-115 |
 
-Server-side inference is 49 milliseconds on the T4, same class as the model card's claims, and about 2.9 seconds on CPU. For batch triage the CPU profile wins on cost at every concurrency I measured; the GPU earns its keep only when latency matters.
+Server-side inference is 49 milliseconds on the T4, same class as the model card's claims, and about 2.9 seconds on CPU. For batch triage the CPU profile wins on cost at every concurrency I measured; the GPU is usefuly only when latency matters.
 
-![](cost-crossover.webp) Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploys from a push to main, and CI smoke-tests both profiles against live endpoints before declaring green.
+![](cost-crossover.webp)
+*Figure 4: Projected monthly bill as request volume grows. Both profiles bill linearly per request, so the lines never cross; the GPU is a latency purchase, not a cost decision.*
+
+Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploys from a push to main, and CI smoke-tests both profiles against live endpoints before declaring green.
 
 ![](benchmarks-five-metrics.webp)
+*Figure 3: Five measurements comparing the CPU and T4 GPU deployment profiles. The T4 wins on latency (49 ms vs 2.9 s inference) but costs 10x more per hour and takes 13x longer to cold-start.*
 
 ## What I'd tell you before you build on it
 
