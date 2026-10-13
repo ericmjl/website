@@ -83,7 +83,9 @@ I wrapped the English checkpoint as a serverless API on Modal, deployed exclusiv
 | CPU, 1 core, 3 GiB | 3.5 s | 3.31 s | \$0.071/hour | \$17-68 |
 | T4 GPU, 2 cores, 8 GiB | 44.3 s | 0.48 s | \$0.749/hour | \$26-115 |
 
-Server-side inference is 49 milliseconds on the T4, same class as the model card's claims, and about 2.9 seconds on CPU. For batch triage the CPU profile wins on cost at every concurrency I measured; the GPU earns its keep only when latency matters. Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploys from a push to main, and CI smoke-tests both profiles against live endpoints before declaring green.
+Server-side inference is 49 milliseconds on the T4, same class as the model card's claims, and about 2.9 seconds on CPU. For batch triage the CPU profile wins on cost at every concurrency I measured; the GPU earns its keep only when latency matters.
+
+![](cost-crossover.webp) Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploys from a push to main, and CI smoke-tests both profiles against live endpoints before declaring green.
 
 ![](benchmarks-five-metrics.webp)
 
