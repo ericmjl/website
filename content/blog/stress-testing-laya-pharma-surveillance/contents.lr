@@ -15,10 +15,10 @@ So I gave it a week of evenings and a pharma-shaped workload. I ran email triage
 ```bash
 git clone https://github.com/ericmjl/laya-pharma-surveillance.git
 cd laya-pharma-surveillance
-uvx marimo edit --sandbox notebooks/01-one-forward-pass.py
+uvx marimo edit --sandbox notebooks/
 ```
 
-That opens the first notebook in a sandboxed environment with its dependencies installed. The other six live alongside it: `02-the-confidence-trap`, `03-one-clause-flips-the-model`, and so on through `07-the-cheap-front-half`.
+That opens all seven notebooks in a sandboxed environment; each one carries its own dependency list, so the sandbox installs whatever the notebook you open needs.
 
 ## What a decision model actually is
 
