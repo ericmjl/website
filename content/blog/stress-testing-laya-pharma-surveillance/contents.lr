@@ -53,17 +53,21 @@ The multilingual demo also surfaced my favorite cautionary tale from the model c
 
 ## Postmarket surveillance, and a bug that was my fault
 
-Next I built the pharmacovigilance scenario: 50 synthetic social media posts about a fictional drug, in 13 languages, with ground-truth labels I authored myself. For each post Laya answered one question in a single pass: is this an adverse event report at all.
+Next I tested the model in a pharmacovigilance scenario: 50 synthetic social media posts about a fictional drug, in 13 languages, with ground-truth labels that I asked GLM-5.3-Flash to generate and for which I inspected correctness myself. (I may have gotten some labels wrong; if you check the work, do let me know if anything looks off!) For each post Laya answered one question in a single pass: is this an adverse event report at all.
 
 My first run detected 0 of 38 adverse events. Every single one of them scored below the detection threshold.
 
-The pipeline was fine; my question was broken. I had written the detection question with a helpful exclusion clause: "Exclude posts about price, availability, refills, general questions, praise, news, or community chat." That negatively-phrased instruction inverted the yes/no head. Adverse event posts collapsed to a median P = 0.03, and a glowing praise post jumped to 0.66. When I cut the question down to a short, positively-phrased sentence, detection jumped to 30 of 38 with zero false alarms, and all 12 chatter posts archived cleanly. The English checkpoint was sensitive to the phrasing too: the clause pushed three chatter posts over the detection threshold as false alarms. I now treat question schemas like code; they deserve review discipline before they ship, because a clause that reads like helpful context to a human acts like a polarity flip on this model.
+As things turn out, the pipeline was fine; rather, my question was broken!
+
+I had written the detection question with a helpful exclusion clause: "Exclude posts about price, availability, refills, general questions, praise, news, or community chat." That negatively-phrased instruction inverted the yes/no head. Adverse event posts collapsed to a median P = 0.03, and a glowing praise post jumped to 0.66. When I cut the question down to a short, positively-phrased sentence, detection jumped to 30 of 38 with zero false alarms, and all 12 chatter posts archived cleanly.
+
+The English checkpoint was sensitive to the phrasing too: the clause pushed three chatter posts over the detection threshold as false alarms. It shows that question schemas, which essentially are prompts, need to be treated like code; subtle changes can have an outsized effect on behaviour.
 
 ![](detection-flip.webp)
 
 ## Real documents, from 50 to 265
 
-Synthetic posts prove mechanics. For the real test I scraped actual pharma documents from public sources:
+Now, examples benchmarked on synthetic data are useful for establishing the mechanics of working with a model. However, they lack the realism of actual examples. Thus, for the real test I scraped actual pharma documents from public sources:
 
 - FDA warning letters and Drug Safety Communications,
 - Federal Register notices,
@@ -72,19 +76,29 @@ Synthetic posts prove mechanics. For the real test I scraped actual pharma docum
 - FiercePharma articles,
 - vendor press releases,
 - 10-K risk factors, and
-- real docket-comment letters from PhRMA, BIO, and Public Citizen. On the first 50 documents, zero-shot, Laya classified 100% correctly across the four operational categories that matter most: regulatory guidance, inspection findings, safety communications, and scientific publications. Where it struggled was genre-versus-content collisions (a Fierce Pharma article about a warning letter reads as a warning letter) and spam, which mostly dressed itself up as one of the real categories.
+- real docket-comment letters from PhRMA, BIO, and Public Citizen.
 
-Fifty documents felt thin, so I wrote a set of script-side fetchers against the Federal Register API, PubMed E-utilities, FDA's listing pages, SEC EDGAR full-text search, and FiercePharma's RSS, and scaled the corpus to 265 documents. Doing the fetching in code rather than through a chat assistant paid off: the ingestion is reproducible, and the corpus file is just a JSON artifact with source URLs.
+On the first 50 documents, zero-shot, Laya classified 100% correctly across the four operational categories that matter most: **regulatory guidance, inspection findings, safety communications, and scientific publications**. Where it struggled was collisions between genre and content (a Fierce Pharma article about a warning letter reads as a warning letter) and spam, which mostly dressed itself up as one of the real categories.
+
+Fifty documents felt like a small amount, so I followed it up with a set of script-side fetchers against
+
+- the Federal Register API,
+- PubMed E-utilities,
+- FDA's listing pages,
+- SEC EDGAR full-text search, and
+- FiercePharma's RSS,
+
+In doing so, I was able to expand the corpus to 265 documents. Doing the fetching in code rather than through a chat assistant paid off: the ingestion is reproducible, and the corpus file is just a JSON artifact with source URLs. (If you're curious about performance, hang tight, we'll address it in the next section!)
 
 ## The fine-tuning experiment: before and after
 
-Then came the experiment I cared about most: reimplementing the RLCD loop at laptop scale using the training utilities Laya ships in its repo. The pieces:
+Then came the experiment I cared about most: reimplementing the RLCD loop on my M4 Max laptop using the training utilities Laya ships in its repo. This involved the following moving pieces:
 
 - group-relative policy gradients with Gaussian logit noise,
 - a strictly proper scoring reward (log score, spherical score, plus ranked probability score for ordinal questions), and
 - a full encoder fine-tune. Three epochs over 212 training documents took about 20 minutes on my laptop.
 
-Held-out results on 53 test documents, before and after:
+Here are the held-out results on 53 test documents, before and after fine-tuning:
 
 | question | accuracy before | accuracy after | Brier before | Brier after |
 |---|---|---|---|---|
@@ -94,7 +108,7 @@ Held-out results on 53 test documents, before and after:
 | action required (yes/no) | 0.43 | 0.91 | 0.95 | 0.28 |
 | urgency (3-way) | 0.36 | 0.89 | 0.73 | 0.10 |
 
-Accuracy is the headline, but the probability metrics moved by 3-9x, and they are the ones I want you to watch. Twenty minutes of fine-tuning on 212 labeled documents took this model from "interesting demo" to "I would let it draft triage decisions for review."
+Accuracy is the most important metric in this situation, but I'd like you to take note of the probability metrics: they moved by 3-9x with fine-tuning. Twenty minutes of fine-tuning on 212 labeled documents took this model from "interesting demo" to "I would let it draft triage decisions for review."
 
 ![](accuracy-before-after.webp)
 
@@ -102,7 +116,9 @@ Accuracy is the headline, but the probability metrics moved by 3-9x, and they ar
 
 A probability is calibrated when things it calls 80% actually happen about 80% of the time. Expected Calibration Error (ECE) measures the gap. This is the one axis where Laya's model card admits the closed competitor ships better numbers out of the box: Jev reports ECE 0.144 on its benchmark against Laya's 0.213 raw.
 
-The comparison misses two things, and my experiments put both on the table. Temperature scaling divides a model's logits by one scalar per question-type bucket, fitted on your own labeled data, and it is the standard calibration repair. On my document corpus the base Laya model was so over-confident that the fitted temperature pegged my search ceiling at T = 100. The honest fix flattens its opinions almost to uniform, which achieves calibration by destroying most of the signal. After fine-tuning with proper scoring rules, the fitted temperatures landed at 0.11 to 0.73 on their own, far from the base model's 2.1 to 100. Raw ECE dropped from 0.46 to 0.26, and a final per-bucket refit brought both models to about 0.07, better than Jev's shipped number. That matches Laya's model card, which reports 0.466 to 0.081 with the same procedure. Calibration has two steps: fine-tuning on proper scoring rules does the heavy lifting in-domain, and a cheap one-parameter-per-bucket refit on your labels finishes the job. And temperature scaling never changes which answer ranks first; it only corrects how much you trust it.
+The comparison, however, misses two things.
+
+Firstly, temperature scaling divides a model's logits by one scalar per question-type bucket, fitted on your own labeled data, and it is the standard calibration repair. On my document corpus the base Laya model was so over-confident that the fitted temperature pegged my search ceiling at T = 100. The fix we introduced flattens its opinions almost to uniform, which achieves calibration by destroying most of the signal. After fine-tuning with proper scoring rules, the fitted temperatures landed at 0.11 to 0.73 on their own, far from the base model's 2.1 to 100. Raw ECE dropped from 0.46 to 0.26, and a final per-bucket refit brought both models to about 0.07, better than Jev's shipped number. That matches Laya's model card, which reports 0.466 to 0.081 with the same procedure. Calibration has two steps: fine-tuning on proper scoring rules does the heavy lifting in-domain, and a cheap one-parameter-per-bucket refit on your labels finishes the job. And temperature scaling never changes which answer ranks first; it only corrects how much you trust it.
 
 Two configuration notes worth carrying home. First, the yes/no head is so sensitive to question phrasing that schema review belongs in your pull request checklist. Second, the context budget is runtime-configurable: Laya reads its 512-token default from a config dictionary at every call. The ModernBERT encoder tops out at 8,192 positions, and state truncation happens from the right. In one demo, raising the budget from 512 to 1,024 tokens changed the routing decision on an 800-token document, because the warning letter sitting at the end of the bundle finally made it into the model.
 
