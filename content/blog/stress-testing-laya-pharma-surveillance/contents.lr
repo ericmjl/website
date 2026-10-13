@@ -64,6 +64,7 @@ I had written the detection question with a helpful exclusion clause: "Exclude p
 The English checkpoint was sensitive to the phrasing too: the clause pushed three chatter posts over the detection threshold as false alarms. It shows that question schemas, which essentially are prompts, need to be treated like code; subtle changes can have an outsized effect on behaviour.
 
 ![](detection-flip.webp)
+
 *Figure 1: Each dot is one of the 50 posts. The x-axis shows P(adverse event) under the original prompt; the y-axis shows P(adverse event) under the rephrased prompt. Red dots are true adverse events; grey dots are chatter. The green dotted line marks the 0.5 detection threshold. Every red dot below the diagonal was suppressed by the original prompt.*
 
 ## Real documents, from 50 to 265
@@ -112,6 +113,7 @@ Here are the held-out results on 53 test documents, before and after fine-tuning
 Accuracy is the most important metric in this situation, but I'd like you to take note of the probability metrics: they moved by 3-9x with fine-tuning. Twenty minutes of fine-tuning on 212 labeled documents took this model from "interesting demo" to "I would let it draft triage decisions for review."
 
 ![](accuracy-before-after.webp)
+
 *Figure 2: Held-out accuracy across the five questions, before (slate) and after (green) RLCD fine-tuning on 212 labeled documents. The smallest gains are on doc type, which was already at 0.58 zero-shot.*
 
 ## What calibrated probabilities actually mean
@@ -135,17 +137,19 @@ I wrapped the English checkpoint as a serverless API on Modal, deployed exclusiv
 | CPU, 1 core, 3 GiB | 3.5 s | 3.31 s | \$0.071/hour | \$17-68 |
 | T4 GPU, 2 cores, 8 GiB | 44.3 s | 0.48 s | \$0.749/hour | \$26-115 |
 
+![](benchmarks-five-metrics.webp)
+
+*Figure 3: Five measurements comparing the CPU and T4 GPU deployment profiles. The T4 wins on latency (49 ms vs 2.9 s inference) but costs 10x more per hour and takes 13x longer to cold-start.*
+
 Server-side inference is 49 milliseconds on the T4, same class as the model card's claims, and about 2.9 seconds on CPU. For batch triage the CPU profile wins on cost at every concurrency I measured; the GPU is usefuly only when latency matters.
 
 ![](cost-crossover.webp)
+
 *Figure 4: Projected monthly bill as request volume grows. Both profiles bill linearly per request, so the lines never cross; the GPU is a latency purchase, not a cost decision.*
 
 Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploys from a push to main, and CI smoke-tests both profiles against live endpoints before declaring green.
 
-![](benchmarks-five-metrics.webp)
-*Figure 3: Five measurements comparing the CPU and T4 GPU deployment profiles. The T4 wins on latency (49 ms vs 2.9 s inference) but costs 10x more per hour and takes 13x longer to cold-start.*
-
-## What I'd tell you before you build on it
+## What you need to know to build on top of Laya
 
 Take the model card's self-assessment seriously: Laya is a fast base to specialize. Zero-shot, it handled the operational document categories perfectly and fumbled the edges (press articles about safety, spam dressed as science). After 20 minutes and 212 labels, those edges mostly disappeared on held-out data. The lever you want is labeled examples from your own distribution, and the training loop runs on free Kaggle GPUs.
 
