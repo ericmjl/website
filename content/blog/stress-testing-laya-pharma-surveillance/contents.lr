@@ -10,7 +10,15 @@ body:
 
 When a closed vendor ships an AI product with no papers and no weights, my instinct is to look for the open replica. Earlier this month I found a good one: [Laya](https://huggingface.co/convaiinnovations/laya), released under Apache 2.0 by ConvAI Innovations. It is an explicit open answer to Jev, TypeSafe's closed "decision model" API. The claim I wanted to verify for myself: a 421M-parameter model answering structured questions with calibrated probabilities in a single forward pass, tens of milliseconds, no text generation.
 
-So I gave it a week of evenings and a pharma-shaped workload. I ran email triage, multilingual postmarket surveillance, real document classification at two corpus sizes, a fine-tuning experiment, a calibration deep-dive, and finally a serverless deployment. This post walks through what worked, what broke, and what I'd tell you before you build on it. A companion [marimo notebook](https://raw.githubusercontent.com/ericmjl/website/main/content/blog/stress-testing-laya-pharma-surveillance/laya_pharma_walkthrough.py) carries the actual numbers; you can open it with `uvx marimo edit --sandbox` and every figure re-renders from inlined experiment results.
+So I gave it a week of evenings and a pharma-shaped workload. I ran email triage, multilingual postmarket surveillance, real document classification at two corpus sizes, a fine-tuning experiment, a calibration deep-dive, and finally a serverless deployment. This post walks through what worked, what broke, and what I'd tell you before you build on it. Everything here ships as a set of seven companion marimo notebooks in the [laya-pharma-surveillance](https://github.com/ericmjl/laya-pharma-surveillance) repo, one notebook per experiment, every figure re-rendering from the committed data. To run them yourself:
+
+```bash
+git clone https://github.com/ericmjl/laya-pharma-surveillance.git
+cd laya-pharma-surveillance
+uvx marimo edit --sandbox notebooks/01-one-forward-pass.py
+```
+
+That opens the first notebook in a sandboxed environment with its dependencies installed. The other six live alongside it: `02-the-confidence-trap`, `03-one-clause-flips-the-model`, and so on through `07-the-cheap-front-half`.
 
 ## What a decision model actually is
 
