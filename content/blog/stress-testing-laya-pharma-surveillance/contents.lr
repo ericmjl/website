@@ -151,11 +151,13 @@ Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploy
 
 ## What you need to know to build on top of Laya
 
-Take the model card's self-assessment seriously: Laya is a fast base to specialize. Zero-shot, it handled the operational document categories perfectly and fumbled the edges (press articles about safety, spam dressed as science). After 20 minutes and 212 labels, those edges mostly disappeared on held-out data. The lever you want is labeled examples from your own distribution, and the training loop runs on free Kaggle GPUs.
+Three things I'd flag before you start building.
 
-Mind the shipped calibration. The multilingual checkpoint ships with no fitted temperatures at all, and one English bucket shipped a temperature so extreme the library clamps it at load and warns you the bucket is uncalibrated. Fit temperatures on your own labels before you wire any confidence gate to an automated action; a P = 0.9 threshold only means 90% precision if the refit says it does.
+First, Laya is a fast base to specialize. Zero-shot, it handled the operational document categories perfectly and fumbled the edges (press articles about safety, spam dressed as science). After 20 minutes and 212 labels, those edges mostly disappeared on held-out data. The lever you want is labeled examples from your own distribution, and the training loop runs on free Kaggle GPUs.
 
-And keep a human on the funnel. In every configuration I tested, the confidence score stayed silent while the model was confidently wrong, whether that was a business-email-compromise scam scoring P(phishing) = 0.000 or spam reading like a legitimate press release. Laya earns its place as the fast, cheap, auditable front half of a pipeline. The back half, the part that catches what the fast model cannot see, still needs a System 2.
+Second, watch the shipped calibration. The multilingual checkpoint ships with no fitted temperatures at all, and one English bucket shipped a temperature so extreme the library clamps it at load and warns you the bucket is uncalibrated. Fit temperatures on your own labels before you wire any confidence gate to an automated action; a P = 0.9 threshold only means 90% precision if the refit says it does.
+
+Third, keep a human in the loop. In every configuration I tested, the confidence score stayed silent while the model was confidently wrong, whether that was a business-email-compromise scam scoring P(phishing) = 0.000 or spam reading like a legitimate press release. Laya is a great first pass over an inbox. Catching what it misses still needs a System 2.
 ---
 tags:
 
