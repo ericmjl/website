@@ -64,6 +64,8 @@ Held-out results on 53 test documents, before and after:
 
 Accuracy is the headline, but the probability metrics moved by 3-9x, and they are the ones I want you to watch. Twenty minutes of fine-tuning on 212 labeled documents took this model from "interesting demo" to "I would let it draft triage decisions for review."
 
+![](accuracy-before-after.webp)
+
 ## What calibrated probabilities actually mean
 
 A probability is calibrated when things it calls 80% actually happen about 80% of the time. Expected Calibration Error (ECE) measures the gap. This is the one axis where Laya's model card admits the closed competitor ships better numbers out of the box: Jev reports ECE 0.144 on its benchmark against Laya's 0.213 raw.
@@ -82,6 +84,8 @@ I wrapped the English checkpoint as a serverless API on Modal, deployed exclusiv
 | T4 GPU, 2 cores, 8 GiB | 44.3 s | 0.48 s | \$0.749/hour | \$26-115 |
 
 Server-side inference is 49 milliseconds on the T4, same class as the model card's claims, and about 2.9 seconds on CPU. For batch triage the CPU profile wins on cost at every concurrency I measured; the GPU earns its keep only when latency matters. Sporadic CPU traffic costs pennies under scale-to-zero. The whole thing redeploys from a push to main, and CI smoke-tests both profiles against live endpoints before declaring green.
+
+![](benchmarks-five-metrics.webp)
 
 ## What I'd tell you before you build on it
 
