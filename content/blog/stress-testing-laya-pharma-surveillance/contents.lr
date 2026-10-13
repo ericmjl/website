@@ -157,7 +157,7 @@ First, Laya is a fast base to specialize. Zero-shot, it handled the operational 
 
 Second, watch the shipped calibration! The multilingual checkpoint ships with no fitted temperatures at all. The English checkpoint does ship fitted temperatures, but one of them - the one for yes/no questions - was so extreme (T = 100) that the library clamps it at load and warns you it's uncalibrated. Fit temperatures on your own labeled data before you wire any confidence threshold to an automated action; a P = 0.9 threshold only means 90% precision if the fitted temperatures say it does.
 
-Third, keep a human in the loop. In every configuration I tested, the confidence score stayed silent while the model was confidently wrong, whether that was a business-email-compromise scam scoring P(phishing) = 0.000 or spam reading like a legitimate press release. Laya is a great first pass over an inbox. Catching what it misses still needs a System 2.
+Third, keep a human in the loop. In every failure case I found, the model was just as confident in its wrong answers as in its right ones. The business email compromise scam scored P(phishing) = 0.000; the spam press release looked like a legitimate publication. Laya is a great System 1 pass over an inbox. Catching what it misses still needs a System 2.
 ---
 tags:
 
