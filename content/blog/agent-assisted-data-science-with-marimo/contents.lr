@@ -98,7 +98,7 @@ A finished analysis needs a presentation layer, and the notebook you built is al
 
 Zoom out, and the three tools form a single loop between you and the agent. marimo-pair is the working session, where the agent lives in the notebook and you steer. marimo-lens is the feedback pass, where you point at an output and send the mark back. Marimo Studio is where the finished notebook meets its readers. One artifact runs through all three, and the way you interact with the agent stays the same from the first cell to the final slide.
 
-Everything in that loop is a plain-text artifact too. The notebook is a `.py` file, the slides are an HTML export, the app is the same notebook served somewhere, and all of it goes into git and deploys from there. How to deploy marimo notebooks deserves a post of its own; it's coming.
+Everything in that loop is a plain-text artifact too. The notebook is a `.py` file, the slides are an HTML export, the app is the same notebook served somewhere, and all of it goes into git and deploys from there. How to deploy marimo notebooks deserves a post of its own; stay tuned!
 ---
 pub_date: 2026-10-14
 ---
