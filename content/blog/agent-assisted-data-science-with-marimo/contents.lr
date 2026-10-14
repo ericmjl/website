@@ -24,10 +24,10 @@ Instruction files do the most work in this setup. Your [AGENTS.md](https://agent
 First among them is the sandwich: markdown, then code, then output, then more markdown. Every piece of code the agent writes arrives wrapped in narration, before and after, so the notebook reads like a document even while it's under construction. In the AGENTS.md, the rule reads:
 
 ```markdown
-- Write one or two sentences of markdown introducing what the next cell does.
-- Then the code cell, then run it.
-- Then one or two sentences of markdown explaining what the output shows.
-- Markdown, code, output, markdown. No naked code cells.
+- Every code cell must be sandwiched between markdown cells that
+  explain what the code does and why. A markdown cell precedes the
+  code cell to describe intent, and a markdown cell follows to
+  provide context for the results or transitions to the next step.
 ```
 
 The agent comes back with a sentence of setup, the code cell, the chart, and a one-line read of what the chart shows.
@@ -35,14 +35,14 @@ The agent comes back with a sentence of setup, the code cell, the chart, and a o
 Named cells are the second. When you drive a session by talking, "clean up the plotting cell" only works if the agent can find the plotting cell. So the AGENTS.md says:
 
 ```markdown
-- Give every cell a short, kebab-case name that says what it does,
-  e.g. `load-data`, `clean-prices`, `fit-model`.
-- When the user asks you to change a cell, address it by name.
+- Every cell must have a descriptive name. Use
+  `@app.cell(name="descriptive_name")` instead of bare `@app.cell`
+  or unnamed `def _()`.
 ```
 
 Names give both of you the vocabulary to point at things.
 
-Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. marimo makes the standard enforceable with the `hide_code` flag on the cell decorator:
+Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. The AGENTS.md rule is to hide all code cells unless I ask otherwise, and marimo makes that enforceable with a flag right on the cell decorator:
 
 ```python
 @app.cell(hide_code=True)
