@@ -21,23 +21,37 @@ My current ranking, fastest to slowest, is Composer 2.5, Grok 4.6 fast, GLM 5.3 
 
 Instruction files do the most work in this setup. Your [AGENTS.md](https://agents.md/) file tells the agent what a good notebook looks like, and mine holds the agent to three standards.
 
-First among them is the sandwich: markdown, then code, then output, then more markdown. Every piece of code the agent writes arrives wrapped in narration, before and after, so the notebook reads like a document even while it's under construction. A prompt like this is all it takes:
+First among them is the sandwich: markdown, then code, then output, then more markdown. Every piece of code the agent writes arrives wrapped in narration, before and after, so the notebook reads like a document even while it's under construction. In the AGENTS.md, the rule reads:
 
-```text
-add a plot of monthly rainfall and narrate it
+```markdown
+- Write one or two sentences of markdown introducing what the next cell does.
+- Then the code cell, then run it.
+- Then one or two sentences of markdown explaining what the output shows.
+- Markdown, code, output, markdown. No naked code cells.
 ```
 
 The agent comes back with a sentence of setup, the code cell, the chart, and a one-line read of what the chart shows.
 
-Named cells are the second. When you drive a session by talking, "clean up the plotting cell" only works if the agent can find the plotting cell. So every cell gets a name, and prompts become things like:
+Named cells are the second. When you drive a session by talking, "clean up the plotting cell" only works if the agent can find the plotting cell. So the AGENTS.md says:
 
-```text
-in the modeling cell, drop the interaction term and rerun
+```markdown
+- Give every cell a short, kebab-case name that says what it does,
+  e.g. `load-data`, `clean-prices`, `fit-model`.
+- When the user asks you to change a cell, address it by name.
 ```
 
 Names give both of you the vocabulary to point at things.
 
-Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. Hiding code keeps the focus on the narrative and the outputs, and you can always inspect any cell when you want to see the machinery.
+Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. marimo makes the standard enforceable with the `hide_code` flag on the cell decorator:
+
+```python
+@app.cell(hide_code=True)
+def _():
+    mo.md("This cell's narration shows; its code stays folded away.")
+    return
+```
+
+The narration and outputs stay in view, and you can always inspect any cell when you want to see the machinery.
 
 For marimo knowledge specifically, I use the official [marimo-pair](https://github.com/marimo-team/marimo-pair) skill rather than writing my own instructions from scratch. marimo maintains it, their docs call it the recommended way to collaborate with agents on notebooks, and it stays current as marimo evolves. The only maintenance I do on my copy is keeping it updated with what they ship.
 
@@ -53,13 +67,7 @@ Once the setup exists, every session has the same shape.
 2. **Pair the agent with the notebook.** Pairing gives the agent access to the live kernel: it can read cells, write cells, run them, and inspect the results, while you watch everything happen in your browser.
 3. **State the analysis goal.** I use "analysis" loosely here. Maybe the goal is understanding, and you want to slice the data a few ways before committing to anything. Maybe it's building the best model possible, and you send the agent off on an agentic loop to get there. Whatever it is, say the goal out loud first.
 4. **The agent writes a markdown blurb at the top.** With the goal stated, it drafts the notebook's opening narration, so the notebook records what you're doing and why from the very first cell.
-5. **Iterate, cell by cell.** Ask for a data table, a plot, a statistical test, or a model fit. Act on hypotheses:
-
-   ```text
-   I suspect the effect is concentrated in this subgroup; make a view that shows it
-   ```
-
-   Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
+5. **Iterate, cell by cell.** Ask for a data table, a plot, a statistical test, or a model fit. Act on hypotheses: "I suspect the effect is concentrated in this subgroup, make a view that shows it." Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
 6. **Build custom viewers when the data calls for them.** This is where you can get ambitious, and I'd encourage you to go beyond what you think is usable. With [anywidget](https://anywidget.dev), the agent can build custom data viewers for awkward data: an email viewer for inspecting eval sets, or a 3D protein viewer. A purpose-built viewer beats scrolling through a dataframe.
 
 <iframe src="protein-anywidget.html" width="100%" height="540" style="border:0;" loading="lazy" title="Anywidget 3D protein viewer running in marimo WebAssembly"></iframe>
@@ -85,6 +93,12 @@ It works in both directions, too. After the agent fixes things, it posts a messa
 ## Showing the work
 
 A finished analysis needs a presentation layer, and the notebook you built is already most of the way there. [CellTour](https://koaning.github.io/wigglystuff/reference/cell-tour/), a code tour widget from [WigglyStuff](https://koaning.github.io/wigglystuff/), walks you through the notebook one popover at a time, pointing at each cell by name. marimo also exports a notebook configured with its slides layout as a [reveal.js deck](https://docs.marimo.io/guides/apps/), and Marimo Studio builds custom apps, reports, and presentations on top of the notebook's data and outputs. The same artifact you analyzed with becomes the artifact you present, which is one of my favorite parts of this workflow.
+
+## Wrapping up
+
+Zoom out, and the three tools form a single loop between you and the agent. marimo-pair is the working session, where the agent lives in the notebook and you steer. marimo-lens is the feedback pass, where you point at an output and send the mark back. Marimo Studio is where the finished notebook meets its readers. One artifact runs through all three, and the way you interact with the agent stays the same from the first cell to the final slide.
+
+Everything in that loop is a plain-text artifact too. The notebook is a `.py` file, the slides are an HTML export, the app is the same notebook served somewhere, and all of it goes into git and deploys from there. How to deploy marimo notebooks deserves a post of its own; it's coming.
 ---
 pub_date: 2026-10-14
 ---
