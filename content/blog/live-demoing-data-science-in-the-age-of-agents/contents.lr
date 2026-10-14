@@ -25,7 +25,7 @@ John asked why marimo. Part of the answer is [a post I wrote last year](/blog/20
 
 The way agents connect to marimo notebooks is the pair-with-agent feature, called [marimo pair](https://github.com/marimo-team/marimo-pair). The agent reaches into the notebook's process directly: it writes code into cells, reads your variables, and executes them while you watch. On the day, the agent was Cursor driving Grok 4.7. Talk-to-your-data used to be a chat app off to the side. Now it's an agent you have connected to a notebook you run. I dictated most of my prompts that hour. Everything below is verbatim from the session transcript, stumbles included. The stumbles are the point: I was talking to the machine the way I talk to a colleague.
 
-## A heat map, specified to the pixel
+## The heat map
 
 With the pairing live, the analysis could start. First, I loaded the deep mutational scan data, specifically to display the conversion percentage. Along the way I shared a convention baked into this repo's AGENTS.md: **every agent-written code cell gets sandwiched between two markdown cells, one explaining what's about to happen, one recording what we observed**, so the notebook stays readable for the next human, including future me. Then, I proceeded to prompt a heatmap into existence:
 
@@ -69,7 +69,7 @@ Somewhere in there, the agent also opened Chrome on its own. "It's gonna do some
 
 The demo's first scientific payoff came when I flipped between the two dropdown colorings. The positions that tolerate, and even benefit from, mutation are nowhere near the catalytic pocket; none of the top 50 singles sits within 6 angstroms of the NADP. They're distal, allosteric sites. Someone with decades of enzymology might have said "dude, that's obvious." Coming from training in biological engineering, I found it delightful, and it surfaced live, just by flipping between two dropdowns.
 
-## The epistasis section, live and unscripted
+## The epistasis analysis
 
 With the structure story told, we moved on to the combining-mutations question. This part, unlike the heat map prompt, had no rehearsal behind it: "I didn't prepare to talk about this, but I haven't actually rehearsed this session at all yet. So we're going to see this live," I said. I knew the cheat existed: inject the answer, and you guarantee a clean ending. "If I cheat and inject this in now, we're gonna be able to finish the demo. If I don't cheat, there's a risk that we might not, and I'm gonna take that risk. By the way, it's 3:14, so happy pi o'clock!" Then I dictated the prompt, verbatim:
 
@@ -83,7 +83,7 @@ So I stepped in and dictated this, verbatim:
 
 > the math for doing additive calculation, whether it's correct or not, is actually done a different way. it's in the paper. I'm going from memory, so I want you to fact check me so you can look at the paper now. the idea is you take one minus the conversion, and then you logit transform that, and then you do the math and you convert back to expected activity. And so that's what I want you to do, and show that as a third plot in addition to the two plots that you gave me, which were actually incorrect. The other context you need to know is that the value from 0 to 1 represents percentage conversion. So that first plot, in which you have values, additive expectation going beyond 100% was completely wrong. You just need to note that, you don't need to fix the plot, we need to show the wrong work so that we have that as a record for the future.
 
-That third attempt didn't work either. Is this what I remember? It's not, and I said so in front of everyone. Murphy's law reared its ugly head. The agent had the data the entire time, and the paper sat in its knowledge base too. **It never produced the right transform on its own, and even with me steering, three tries came up empty.** The obvious moves are what these models are trained on, so the obvious moves are also where they'll take you. Getting to the right transform took my colleagues and me weeks of wrangling in 2021, precisely because it was counterintuitive. When I have a deep conviction that something is sitting in the data, I sit down, work two or three small examples by hand, and only then hand the verified method to the agent to generalize across the rest. It writes that code faster than I ever could. The conviction and the verification are mine.
+That third attempt didn't work either. Is this what I remember? It's not, and I said so in front of everyone. Murphy's law reared its ugly head. The agent had the data the entire time, and the paper sat in its knowledge base too. **It never produced the right transform on its own, and even with me steering, three tries came up empty.** The obvious moves are what these models are trained on, so the obvious moves are also where they'll take you. Getting to the right transform took me weeks of wrangling the data and looking at it through different mathematical transforms in 2021, precisely because it was counterintuitive. For me, the lesson from this demo was clear. If we have a deep conviction that something is sitting in the data, it really behooves us to sit down, work two or three small examples by hand, and only then hand the verified method to the agent to generalize across the rest. It writes that code faster than I ever could. The conviction and the verification are mine.
 
 Alper told a war story of his own right after: Claude kept applying one logarithm where the paper's math meant another, and a second model got it right. Sometimes you have to sit down with pen and paper.
 
@@ -91,19 +91,17 @@ Alper told a war story of his own right after: Claude kept applying one logarith
 
 That unscripted detour had cost us time. I looked at the clock and called it: four minutes left, two things still running. The epistasis story stayed honest, and the remaining time went to the knowledge base. I dictated a scramble: S220 and A296 were the two strongest single mutants in the campaign, so search the literature for anyone who has studied them, check the knowledge base for homolog papers, fold a homolog with ESMFold, overlay it on IRED-88, highlight both positions. The knowledge base did real work at that point: the literature, structure prediction, and the DMS table all pointed at two positions.
 
-## Studio, rebuilt live
+## Rebuilding the slides in Studio
 
 The knowledge base was the second thread. The third was marimo Studio, which ran underneath everything else. I dictated: "I recently just created a research report view and I hate what I'm seeing. Absolutely hate it." The agent rebuilt it to spec. It gave me three slides with minimal text: the heat map, verbatim from the notebook; the standout positions figure; and the structure viewer, "so that I can live narrate when I'm presenting exactly which positions we should be focusing our energies on for the next round campaign."
 
 ![The marimo Studio slide deck beside the live notebook, the heat map pulling straight from the notebook cells.](./marimo-studio-slides.webp)
 
-Exploring and presenting are different registers, and historically the bridge between them was copy-paste, which is how decks went stale. With Studio, the deck is a projection of the notebook, so it can't quietly drift out of date. I get to explore in one artifact and present from the same source. And yes, that's the NES.css theme in the deck, Mario cursor included. Have a little bit of fun while you do this stuff.
+Exploring and presenting are two different kinds of work, and historically the bridge between them was copy-paste, which is how decks went stale. With Studio, the deck is a projection of the notebook, so it can't quietly drift out of date. I get to explore in one artifact and present from the same source. And yes, that's the [NES.css](https://nostalgic-css.github.io/NES.css/) theme in the deck, Mario cursor included. Have a little bit of fun while you do this stuff. 🙂
 
-As the hall drained, I dictated the last prompt of the hour: "help me commit and push the notebook that we've been iterating on, as well as any other things that are not yet committed." The morning reset and the final commit are the same git, pointed in opposite directions. The morning saves the scaffolding, and the hour saves the science.
 
-## Lessons from the hour
+## Lessons
 
-**The mechanics were rehearsed; the thinking was live.** I built the whole demo that morning, committed it, and wiped the notebook back to hints before standing up. Everything the audience saw get written was written for the first time.
 
 **Data science runs in two modes: exploration and paper.** Manuel Garber named them from the floor during the demo. I dictate to the pixel in paper mode. In exploration mode, I riff and let the Lens annotations carry the precision.
 
