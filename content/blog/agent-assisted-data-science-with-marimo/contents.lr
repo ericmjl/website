@@ -1,0 +1,86 @@
+title: Agent-assisted data science with marimo notebooks
+---
+author: Eric J. Ma
+---
+body:
+People keep asking me how I do agentic data science with [marimo](https://marimo.io) notebooks. Recently I stood at a whiteboard and drew the whole system out: the setup, the tools, the loop you work in with the agent. The drawing came out clean, so I took a photo of it. It's becoming a YouTube video and eventually a much deeper course, and this post is the written version.
+
+The whole system comes down to one idea: agents do their best data science work when you structure the environment around them. You pick a harness and a model, write instruction files that hold the agent to your standards, and give the whole thing a sandboxed environment. Then you pair the agent with a live notebook and spend the session in a loop where you think out loud and the agent types. I've written about [how to do agentic data science](https://ericmjl.github.io/blog/2026/2/1/how-to-do-agentic-data-science/) before, and about [why marimo won me over](https://ericmjl.github.io/blog/2025/4/8/wow-marimo/). This one is the concrete, marimo-specific walkthrough.
+
+## The setup
+
+Three things need to exist before the analysis starts.
+
+### A harness and a model
+
+The harness is whichever coding agent you like. Codex, Claude Code, Copilot, they all work. The more interesting choice is the model behind it. You want speed, so the session stays conversational, and you want intelligence, so you're not dealing with dumb mistakes the agent makes along the way. It's a very tough balance to strike.
+
+My current ranking, fastest to slowest, is Composer 2.5, Grok 4.6 fast, GLM 5.3 Flash, and GPT 5.6 on medium effort. The further down the list you go, the more work the model can handle in one shot, and the more prompting it needs to keep moving. For interactive notebook sessions, I lean toward the fast end of that list.
+
+### Instruction files
+
+Instruction files do the most work in this setup. Your AGENTS.md file tells the agent what a good notebook looks like, and mine holds the agent to three standards.
+
+First among them is the sandwich: markdown, then code, then output, then more markdown. Every piece of code the agent writes arrives wrapped in narration, before and after, so the notebook reads like a document even while it's under construction.
+
+Named cells are the second. When you drive a session by talking, a request like "clean up the plotting cell" only works if the agent can find the plotting cell. Names give both of you the vocabulary to point at things.
+
+Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. Hiding code keeps the focus on the narrative and the outputs, and you can always inspect any cell when you want to see the machinery.
+
+For marimo knowledge specifically, I use the official [marimo-pair](https://github.com/marimo-team/marimo-pair) skill rather than writing my own instructions from scratch. marimo maintains it, their docs call it the recommended way to collaborate with agents on notebooks, and it stays current as marimo evolves.
+
+### A sandboxed environment
+
+Run marimo through a fast environment tool like [uv](https://docs.astral.sh/uv/) or [pixi](https://pixi.sh), in sandbox mode. Sandbox mode is the piece that makes environments a non-issue: marimo records the notebook's dependencies into the notebook file itself, as [PEP 723](https://peps.python.org/pep-0723/) inline script metadata, and prepares an isolated environment from those requirements. Every `.py` notebook then carries its own environment with it, so when the agent installs what an analysis needs, the notebook file records it, and anyone opening that notebook later gets the same setup.
+
+## The workflow
+
+Once the setup exists, every session has the same shape.
+
+1. **Fire up marimo.** Usually that's `uvx marimo edit --sandbox notebook.py`, or the pixi equivalent.
+2. **Pair the agent with the notebook.** Pairing gives the agent access to the live kernel: it can read cells, write cells, run them, and inspect the results, while you watch everything happen in your browser.
+3. **State the analysis goal.** I use "analysis" loosely here. Maybe the goal is understanding, and you want to slice the data a few ways before committing to anything. Maybe it's building the best model possible, and you send the agent off on an agentic loop to get there. Whatever it is, say the goal out loud first.
+4. **The agent writes a markdown blurb at the top.** With the goal stated, it drafts the notebook's opening narration, so the notebook records what you're doing and why from the very first cell.
+5. **Iterate, cell by cell.** Ask for a data table, a plot, a statistical test, or a model fit. Act on hypotheses: "I suspect the effect is concentrated in this subgroup, make a view that shows it." Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
+6. **Build custom viewers when the data calls for them.** This is where you can get ambitious, and I'd encourage you to go beyond what you think is usable. With [anywidget](https://anywidget.dev), the agent can build custom data viewers for awkward data: an email viewer for inspecting eval sets, or a 3D protein viewer. A purpose-built viewer beats scrolling through a dataframe.
+
+Sometimes the right move is to step out of the loop for a moment and set up a separate notebook that trains in the background while you keep iterating in the foreground.
+
+Domain skills plug in here too. When an analysis needs R2D2, which puts the prior on model fit itself, I have a skill with the R2D2 papers baked in, alongside PyMC implementation examples, so the agent works from the primary sources instead of its memory of them. (I've written about [why R2D2 is worth your attention](https://ericmjl.github.io/blog/2025/8/6/stop-guessing-at-priors-r2d2s-automated-approach-to-bayesian-modeling/) before.)
+
+This loop is interactive by design. You iterate with the agent, in plain language, and marimo's reactivity re-runs whatever depends on the cell you just changed. The creative work happens inside that loop, and it's deeply problem-dependent. I can show anyone the moves: a table, a plot, a custom viewer. What comes next depends entirely on your problem.
+
+## Giving feedback with marimo-lens
+
+Notebooks need editing like any draft. When mine needs sprucing up, I use [marimo-lens](https://marimo-team.github.io/marimo-lens/): point at a cell's output, say a bar in a chart or a row in a table, drop a note right there, and keep reading. Lens hands the agent your selection together with the code and data behind it, so the agent sees what you see, revises, and brings the result back into view for you to judge. It keeps feedback attached to the output you're looking at, which is what goes missing when you say "that spike in the chart, fix it" in a chat box.
+
+## Showing the work
+
+A finished analysis needs a presentation layer, and the notebook you built is already most of the way there. marimo-lens can build a trail, an ordered walkthrough of cells the reader pages through, like a code tour of your analysis. marimo also exports a notebook configured with its slides layout as a [reveal.js deck](https://docs.marimo.io/guides/apps/), and Marimo Studio builds custom apps, reports, and presentations on top of the notebook's data and outputs. The same artifact you analyzed with becomes the artifact you present, which is one of my favorite parts of this workflow.
+
+## What's next
+
+The whiteboard in this post is the outline for a YouTube video I'm recording soon, and that material will grow into a much deeper course. I'm also curious what this looks like multiplayer: one agent, several people, a notebook updating in real time for everyone watching.
+
+Instruction files are what make the loop good. Get those right, and you're in a good spot.
+---
+pub_date: 2026-10-14
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this post, I walk through my setup for agentic data science with marimo notebooks: picking a harness and model, writing instruction files that hold the agent to my standards, sandboxing environments with uv or pixi, and pairing the agent with a live notebook in an iterative loop. I also cover custom anywidget viewers, feedback with marimo-lens, and turning the finished notebook into a presentation. It all started as a whiteboard sketch headed for a video and course. What could you discover if an agent typed while you thought out loud?
+---
+tags:
+
+marimo
+python
+agents
+notebooks
+llms
+workflows
+sandboxing
+reproducibility
+data science
+pair programming
