@@ -103,9 +103,9 @@ Exploring and presenting are two different kinds of work, and historically the b
 ## Lessons
 
 
-**Data science runs in two modes: exploration and paper.** Manuel Garber named them from the floor during the demo. I dictate to the pixel in paper mode. In exploration mode, I riff and let the Lens annotations carry the precision.
+**Data science runs in two modes: exploration and paper.** This was a point Manuel Garber raised when he addressed one of the questions from the audience. I dictate to the pixel in paper mode. In exploration mode, I riff and let the Lens annotations carry the precision.
 
-**Your expertise is what catches the mistakes.** You can't review every line an agent writes. I don't either. What I do is smell when something looks off, like a deep mutational scan coming out way sparser than I knew was possible. The redundancy and the consistency checks are still on you.
+**You need your expertise to catch mistakes.** You can't review every line an agent writes. I don't either. What I do is smell when something looks off, like a deep mutational scan coming out way sparser than I knew was possible. The redundancy and the consistency checks are still on you.
 
 **When you know the answer is in the data, prove it by hand, then let the agent generalize.** I believed the epistasis answer was in there because we had published it, and the agent still missed it in three tries, even with the paper in its knowledge base. So I sat down, worked the small cases by hand, and only then handed the verified method over.
 
