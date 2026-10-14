@@ -21,9 +21,21 @@ My current ranking, fastest to slowest, is Composer 2.5, Grok 4.6 fast, GLM 5.3 
 
 Instruction files do the most work in this setup. Your [AGENTS.md](https://agents.md/) file tells the agent what a good notebook looks like, and mine holds the agent to three standards.
 
-First among them is the sandwich: markdown, then code, then output, then more markdown. Every piece of code the agent writes arrives wrapped in narration, before and after, so the notebook reads like a document even while it's under construction. A prompt like "add a plot of monthly rainfall and narrate it" is enough. The agent comes back with a sentence of setup, the code cell, the chart, and a one-line read of what the chart shows.
+First among them is the sandwich: markdown, then code, then output, then more markdown. Every piece of code the agent writes arrives wrapped in narration, before and after, so the notebook reads like a document even while it's under construction. A prompt like this is all it takes:
 
-Named cells are the second. When you drive a session by talking, "clean up the plotting cell" only works if the agent can find the plotting cell. So every cell gets a name, and prompts become things like "in the modeling cell, drop the interaction term and rerun." Names give both of you the vocabulary to point at things.
+```text
+add a plot of monthly rainfall and narrate it
+```
+
+The agent comes back with a sentence of setup, the code cell, the chart, and a one-line read of what the chart shows.
+
+Named cells are the second. When you drive a session by talking, "clean up the plotting cell" only works if the agent can find the plotting cell. So every cell gets a name, and prompts become things like:
+
+```text
+in the modeling cell, drop the interaction term and rerun
+```
+
+Names give both of you the vocabulary to point at things.
 
 Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. Hiding code keeps the focus on the narrative and the outputs, and you can always inspect any cell when you want to see the machinery.
 
@@ -41,7 +53,13 @@ Once the setup exists, every session has the same shape.
 2. **Pair the agent with the notebook.** Pairing gives the agent access to the live kernel: it can read cells, write cells, run them, and inspect the results, while you watch everything happen in your browser.
 3. **State the analysis goal.** I use "analysis" loosely here. Maybe the goal is understanding, and you want to slice the data a few ways before committing to anything. Maybe it's building the best model possible, and you send the agent off on an agentic loop to get there. Whatever it is, say the goal out loud first.
 4. **The agent writes a markdown blurb at the top.** With the goal stated, it drafts the notebook's opening narration, so the notebook records what you're doing and why from the very first cell.
-5. **Iterate, cell by cell.** Ask for a data table, a plot, a statistical test, or a model fit. Act on hypotheses: "I suspect the effect is concentrated in this subgroup, make a view that shows it." Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
+5. **Iterate, cell by cell.** Ask for a data table, a plot, a statistical test, or a model fit. Act on hypotheses:
+
+   ```text
+   I suspect the effect is concentrated in this subgroup; make a view that shows it
+   ```
+
+   Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
 6. **Build custom viewers when the data calls for them.** This is where you can get ambitious, and I'd encourage you to go beyond what you think is usable. With [anywidget](https://anywidget.dev), the agent can build custom data viewers for awkward data: an email viewer for inspecting eval sets, or a 3D protein viewer. A purpose-built viewer beats scrolling through a dataframe.
 
 <iframe src="protein-anywidget.html" width="100%" height="540" style="border:0;" loading="lazy" title="Anywidget 3D protein viewer running in marimo WebAssembly"></iframe>
@@ -60,9 +78,9 @@ Notebooks need editing like any draft. When mine needs sprucing up, I use [marim
 
 It works in both directions, too. After the agent fixes things, it posts a message back onto the notebook right where you pointed, a small note you can review, so its answer lands next to the output it changed.
 
-![Pointing at a bar in marimo-lens](lens-select.webp)
+![marimo Lens annotations over a live heat map](marimo-lens-annotations.webp)
 
-*You point at a bar in marimo-lens, and the selection, your note, and the code behind the output go to the agent together. (Screenshot from the marimo-lens docs.)*
+*You point at a bar in marimo-lens, and the selection, your note, and the code behind the output go to the agent together. Here the selections are boxes over a live heat map. (Screenshot from the live-demoing post.)*
 
 ## Showing the work
 
