@@ -46,7 +46,7 @@ Once the setup exists, every session has the same shape.
 
 <iframe src="protein-anywidget.html" width="100%" height="540" style="border:0;" loading="lazy" title="Anywidget 3D protein viewer running in marimo WebAssembly"></iframe>
 
-*This is a true anywidget running in a marimo notebook compiled to WebAssembly: a Python class whose JavaScript side loads 3Dmol and renders the structure, the kind of viewer an agent can build for your data. It's ubiquitin (PDB 1UBQ); drag to rotate, scroll to zoom. The notebook source is protein-anywidget.py.*
+*This is a true anywidget running in a marimo notebook compiled to WebAssembly: a Python class whose JavaScript side loads 3Dmol and renders the structure, the kind of viewer an agent can build for your data. It's ubiquitin (PDB 1UBQ); drag to rotate, scroll to zoom. The notebook source is [`protein-anywidget.py`](protein-anywidget.py).*
 
 Sometimes the right move is to step out of the loop for a moment and set up a separate notebook that trains in the background while you keep iterating in the foreground.
 
