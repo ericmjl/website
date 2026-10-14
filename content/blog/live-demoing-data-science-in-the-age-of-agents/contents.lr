@@ -103,15 +103,11 @@ Exploring and presenting are two different kinds of work, and historically the b
 ## Lessons
 
 
-**Data science runs in two modes: exploration and paper.** This was a point Manuel Garber raised when he addressed one of the questions from the audience. In paper mode, I spell out exactly what I want. In exploration mode, I riff, and the Lens annotations carry the details for me.
+**The tooling now lets a coding agent work as a true pair-coding partner in scientific data analysis.** That's the through-line of marimo pair and marimo Lens working together. Pair connects the agent to the notebook's live process, so it writes into the same cells I'm looking at. Lens lets me draw a box around anything on screen and hand that region to the agent with a note attached. When the audience shouted out positions and I boxed them, the deep-dive chart that came back was built from that shared pointing, not from me describing a region in words and hoping.
 
-**You need your expertise to catch mistakes.** You can't review every line an agent writes. I don't either. What I do is smell when something looks off, like a deep mutational scan coming out way sparser than I knew was possible. The redundancy and the consistency checks are still on you.
+**Your expertise and your conviction still matter, maybe more than ever.** The epistasis question made that visceral. I couldn't prompt-and-pray my way to the answer: the agent added percentages and predicted impossible conversions, then tried log-odds and missed again. Even when I let it cheat, unlocking the paper so it could check my math, it never produced the right transform on its own. What carried the analysis was what I brought to it: the conviction that the answer was sitting in the data, the knowledge that conversion can't exceed 100%, and the habit of working two or three small cases by hand before handing the verified method to the agent to generalize. That's the part of the work that didn't shrink.
 
-**When you know the answer is in the data, prove it by hand, then let the agent generalize.** I believed the epistasis answer was in there because we had published it, and the agent still missed it in three tries, even with the paper in its knowledge base. So I sat down, worked the small cases by hand, and only then handed the verified method over.
-
-**AI amplifies our strengths _and_ our weaknesses.** One panelist said the conclusions now move faster than his comprehension of the phenomena. My counterweight is that I'm less attached to work an agent drafted, which makes me a little more objective about it.
-
-**And the fundamentals still take years.** It took me about four years to get comfortable at the terminal. My thesis code sits on GitHub to remind me how bad a coder I was back in 2017.
+**We can, and should, adjust how we use agents to amplify what we're doing.** A year ago I would have told you there was one right way to work with an agent. The demo showed something more dynamic. In exploration mode, while I'm still feeling out a problem, I use the agent loosely: riff, sketch, let the Lens annotations carry the precision I haven't spelled out. In paper mode (a term I'm happy to credit to Manuel Garber), or anywhere the stakes rise, I apply a much higher degree of critical observation, thinking, and feedback to shape the output exactly as I want it. Same agent, same data, and the dial moves deliberately.
 
 I'm planning to record a video walkthrough of this demo, and I'll link it here when it ships. And if you take one thing from the hour, it's this: agents will speed you up, and they will still get your science wrong in exactly the places where your judgment is the point.
 
