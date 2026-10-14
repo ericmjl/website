@@ -44,9 +44,9 @@ Once the setup exists, every session has the same shape.
 5. **Iterate, cell by cell.** Ask for a data table, a plot, a statistical test, or a model fit. Act on hypotheses: "I suspect the effect is concentrated in this subgroup, make a view that shows it." Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
 6. **Build custom viewers when the data calls for them.** This is where you can get ambitious, and I'd encourage you to go beyond what you think is usable. With [anywidget](https://anywidget.dev), the agent can build custom data viewers for awkward data: an email viewer for inspecting eval sets, or a 3D protein viewer. A purpose-built viewer beats scrolling through a dataframe.
 
-<iframe src="protein-viewer.html" width="100%" height="440" style="border:0;" loading="lazy" title="3D protein viewer demo"></iframe>
+<iframe src="protein-anywidget.html" width="100%" height="540" style="border:0;" loading="lazy" title="Anywidget 3D protein viewer running in marimo WebAssembly"></iframe>
 
-*This is a 3D protein viewer running right on this page, the kind of anywidget the agent can build for your data. It's ubiquitin (PDB 1UBQ); drag to rotate, scroll to zoom.*
+*This is a true anywidget running in a marimo notebook compiled to WebAssembly: a Python class whose JavaScript side loads 3Dmol and renders the structure, the kind of viewer an agent can build for your data. It's ubiquitin (PDB 1UBQ); drag to rotate, scroll to zoom. The notebook source is protein-anywidget.py.*
 
 Sometimes the right move is to step out of the loop for a moment and set up a separate notebook that trains in the background while you keep iterating in the foreground.
 
