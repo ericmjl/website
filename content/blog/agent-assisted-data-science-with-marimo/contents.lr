@@ -5,11 +5,11 @@ author: Eric J. Ma
 body:
 People keep asking me how I do agentic data science with [marimo](https://marimo.io) notebooks. Recently I stood at a whiteboard and drew the whole system out: the setup, the tools, the loop you work in with the agent. The drawing came out clean, so I took a photo of it.
 
-The whole system comes down to one idea: agents do their best data science work when you structure the environment around them. You pick a harness and a model, write instruction files that hold the agent to your standards, and give the whole thing a sandboxed environment. Then you pair the agent with a live notebook and spend the session in a loop where you think out loud and the agent types. I've written about [how to do agentic data science](https://ericmjl.github.io/blog/2026/2/1/how-to-do-agentic-data-science/) before, and about [why marimo won me over](https://ericmjl.github.io/blog/2025/4/8/wow-marimo/). This one is the concrete, marimo-specific walkthrough.
+The whole system comes down to one idea: agents do their best data science work when you structure the environment around them. You pick a harness and a model, write instruction files that hold the agent to your standards, load a skill that teaches it the marimo specifics, and give the whole thing a sandboxed environment. Then you pair the agent with a live notebook and spend the session in a loop where you think out loud and the agent types. I've written about [how to do agentic data science](https://ericmjl.github.io/blog/2026/2/1/how-to-do-agentic-data-science/) before, and about [why marimo won me over](https://ericmjl.github.io/blog/2025/4/8/wow-marimo/). This one is the concrete, marimo-specific walkthrough.
 
 ## The setup
 
-Three things need to exist before the analysis starts.
+Four things need to exist before the analysis starts.
 
 ### A harness and a model
 
@@ -30,7 +30,7 @@ First among them is the sandwich: markdown, then code, then output, then more ma
   provide context for the results or transitions to the next step.
 ```
 
-The agent comes back with a sentence of setup, the code cell, the chart, and a one-line read of what the chart shows.
+Upon prompting, the agent comes back with a sentence of setup, the code cell, the chart, and a one-line read of what the chart shows.
 
 Named cells are the second. When you drive a session by talking, "clean up the plotting cell" only works if the agent can find the plotting cell. So the AGENTS.md says:
 
@@ -53,7 +53,17 @@ def _():
 
 The narration and outputs stay in view, and you can always inspect any cell when you want to see the machinery.
 
-For marimo knowledge specifically, I use the official [marimo-pair](https://github.com/marimo-team/marimo-pair) skill rather than writing my own instructions from scratch. marimo maintains it, their docs call it the recommended way to collaborate with agents on notebooks, and it stays current as marimo evolves. The only maintenance I do on my copy is keeping it updated with what they ship.
+### The marimo-pair skill
+
+For marimo knowledge specifically, I use the official [marimo-pair](https://github.com/marimo-team/marimo-pair) skill rather than writing my own instructions from scratch. The marimo team maintains it, their docs call it the recommended way to collaborate with agents on notebooks, and it stays current as marimo evolves. The reason it's so useful is that pairing is a skill on the agent's side too: marimo-pair teaches the agent how to drive a live notebook according to marimo's own best practices. I was curious how well the skill held up across models, so I [benchmarked it across a stack of LLMs](https://ericmjl.github.io/blog/2026/4/8/benchmarking-llms-with-marimo-pair/), measuring cost, task progress, and instruction adherence for each one.
+
+Install it with:
+
+```bash
+npx skills add marimo-team/marimo-pair
+```
+
+My recommendation: install it into each repository where you do data science, rather than globally. The skills CLI asks you to choose a scope when you add a skill, so pick the project there. Every installed skill carries a description that gets surfaced to the agent at the start of a session, so a growing pile of global skills bloats every session, including the ones where you're using the agent for non-data-science work. Keeping marimo-pair scoped to the repos where the notebooks live keeps everything else lean.
 
 ### A sandboxed environment
 
@@ -63,11 +73,11 @@ Run marimo through a fast environment tool like [uv](https://docs.astral.sh/uv/)
 
 Once the setup exists, every session has the same shape.
 
-1. **Fire up marimo.** Usually that's `uvx marimo edit --sandbox notebook.py`, or the pixi equivalent.
+1. **Fire up marimo.** Usually that's `uvx marimo edit --sandbox notebook.py`, or `pixi exec marimo edit --sandbox notebook.py` for the pixi equivalent.
 2. **Pair the agent with the notebook.** Pairing gives the agent access to the live kernel: it can read cells, write cells, run them, and inspect the results, while you watch everything happen in your browser.
 3. **State the analysis goal.** I use "analysis" loosely here. Maybe the goal is understanding, and you want to slice the data a few ways before committing to anything. Maybe it's building the best model possible, and you send the agent off on an agentic loop to get there. Whatever it is, say the goal out loud first.
 4. **The agent writes a markdown blurb at the top.** With the goal stated, it drafts the notebook's opening narration, so the notebook records what you're doing and why from the very first cell.
-5. **Iterate, cell by cell.** Ask for a data table, a plot, a statistical test, or a model fit. Act on hypotheses: "I suspect the effect is concentrated in this subgroup, make a view that shows it." Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
+5. **Iterate, one idea unit at a time.** An idea unit is one plot, one table view, one statistical test, or one model fit. Keep each unit small, small enough that you can imagine what the code might look like, because that's what makes the agent's work reviewable. Act on hypotheses: "I suspect the effect is concentrated in this subgroup, make a view that shows it." Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
 6. **Build custom viewers when the data calls for them.** This is where you can get ambitious, and I'd encourage you to go beyond what you think is usable. With [anywidget](https://anywidget.dev), the agent can build custom data viewers for awkward data: an email viewer for inspecting eval sets, or a 3D protein viewer. A purpose-built viewer beats scrolling through a dataframe.
 
 <iframe src="protein-anywidget.html" width="100%" height="540" style="border:0;" loading="lazy" title="Anywidget 3D protein viewer running in marimo WebAssembly"></iframe>
@@ -96,7 +106,7 @@ A finished analysis needs a presentation layer, and the notebook you built is al
 
 ## Wrapping up
 
-Zooming out, the three tools are part of a loop between you and the agent. `marimo-pair` is how you get the agent to work within the notebook. `marimo-lens` is how you give feedback to the agent. And `marimo-studio` is how you take what you need from the notebook and deliver it to your audience. All three of them interact with that one artifact, the `.py` file, and you only have to interact with an intelligent and fast agent, from first cell to final slide.
+Zooming out, the three marimo tools are part of a loop between you and the agent. `marimo-pair` is how you get the agent to work within the notebook. `marimo-lens` is how you give feedback to the agent. And `marimo-studio` is how you take what you need from the notebook and deliver it to your audience. All three of them interact with that one artifact, the `.py` file, and you only have to interact with an intelligent and fast agent, from first cell to final slide.
 
 Best of all, everything in that loop is a plain-text artifact too! The notebook is a `.py` file, the slides are an HTML export, the app is the same notebook served somewhere, and all of it goes into git and deploys from there. How to deploy marimo notebooks deserves a post of its own; stay tuned!
 ---
