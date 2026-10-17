@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check your understanding</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #222;
+    background: transparent;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .card h2 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    color: #0066cc;
+  }
+  .progress {
+    font-size: 11.5px;
+    color: #888;
+    margin: 0 0 12px;
+  }
+  .prompt {
+    font-weight: bold;
+    margin: 0 0 10px;
+    font-size: 12.5px;
+    color: #222;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .opt {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+    transition: border-color 0.1s ease;
+    width: 100%;
+  }
+  .opt:hover { border-color: #0066cc; }
+  .opt.correct {
+    background: #e7f6ee;
+    color: #1a9e5b;
+    border-color: #1a9e5b;
+  }
+  .opt.wrong {
+    background: #fdecea;
+    color: #e85d3a;
+    border-color: #e85d3a;
+  }
+  .why {
+    display: none;
+    margin: 2px 0 0;
+    padding: 6px 10px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    border-radius: 0 4px 4px 0;
+  }
+  .why.show { display: block; }
+  .why-c {
+    color: #1a9e5b;
+    background: #e7f6ee;
+    border-left: 3px solid #1a9e5b;
+  }
+  .why-w {
+    color: #c0392b;
+    background: #fdecea;
+    border-left: 3px solid #e85d3a;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    gap: 8px;
+  }
+  .nav button {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 7px 14px;
+    border: 1px solid #0066cc;
+    background: #fff;
+    color: #0066cc;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .nav button:hover:not(:disabled) {
+    background: #0066cc;
+    color: #fff;
+  }
+  .nav button:disabled {
+    opacity: 0.4;
+    cursor: default;
+    border-color: #bbb;
+    color: #999;
+  }
+  .results {
+    display: none;
+    margin-top: 4px;
+    padding: 12px;
+    background: #eef4ff;
+    border: 1px solid #cfe0ff;
+    border-radius: 6px;
+    color: #0066cc;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .results.show { display: block; }
+  .results .sub {
+    color: #555;
+    font-size: 11.5px;
+    margin-top: 4px;
+    font-weight: normal;
+  }
+  .results .again {
+    margin-top: 10px;
+    font-family: monospace;
+    font-size: 12px;
+    padding: 7px 14px;
+    border: 1px solid #0066cc;
+    background: #fff;
+    color: #0066cc;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .results .again:hover { background: #0066cc; color: #fff; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Check your understanding</h2>
+  <div id="progress" class="progress"></div>
+  <div id="qbody"></div>
+  <div id="results" class="results"></div>
+  <div id="nav" class="nav">
+    <button id="back">&larr; Back</button>
+    <button id="next">Next &rarr;</button>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  var QUESTIONS = [
+    {
+      prompt: "Encoding mRNA folding as a choice of which structural elements are present turns it into an optimization over...",
+      options: [
+        { text: "binary variables (a QUBO)", correct: true,
+          why: "Each element is a 0/1 variable, so a fold is a bitstring and its energy is a quadratic function of it: a QUBO." },
+        { text: "continuous temperatures", correct: false,
+          why: "The variables are on/off (is this pair present?), not continuous temperatures." },
+        { text: "a single integer", correct: false,
+          why: "A fold is a whole configuration of many present/absent pairs, not one number." }
+      ]
+    },
+    {
+      prompt: "The quartet encoding's main benefit is that it...",
+      options: [
+        { text: "shrinks the variable count and bakes in the biological constraints", correct: true,
+          why: "Grouping consecutive base pairs into quartets cuts the number of variables, and the one-partner / no-crossing rules fall out of the representation." },
+        { text: "runs faster on a laptop", correct: false,
+          why: "The benefit is about the size and structure of the variable space, not classical runtime." },
+        { text: "avoids using any qubits", correct: false,
+          why: "Quartets are still encoded as qubits, just fewer of them." }
+      ]
+    },
+    {
+      prompt: "CVaR loss is used because RNA molecules fold into...",
+      options: [
+        { text: "their lowest-energy states, so we optimize the low-energy tail, not the average", correct: true,
+          why: "RNA seeks stable low-energy folds, so CVaR focuses the optimizer on the low-energy tail of samples." },
+        { text: "random states, so we optimize the average", correct: false,
+          why: "RNA doesn't fold randomly; it seeks stable low-energy structures, so the average is the wrong target." },
+        { text: "high-energy states", correct: false,
+          why: "High energy means unstable. Biology wants the low-energy folds." }
+      ]
+    },
+    {
+      prompt: "In the IQP workflow, what does the quantum computer actually do?",
+      options: [
+        { text: "samples the output distribution; training is done classically", correct: true,
+          why: "IQP circuits have classically-computable expectations (used for training) but hard-to-sample outputs (delegated to quantum)." },
+        { text: "trains the parameters by gradient descent on hardware", correct: false,
+          why: "Training uses classically-computable expectations; the hardware's job is sampling, not gradient descent." },
+        { text: "stores the mRNA sequence", correct: false,
+          why: "The sequence is encoded into the problem's structure; the quantum computer doesn't 'store' it as data." }
+      ]
+    },
+    {
+      prompt: "The largest problem run on real hardware in the paper used...",
+      options: [
+        { text: "156 qubits, for about 60 nucleotides", correct: true,
+          why: "156 qubits / 60 nucleotides ran on IBM Heron r2 (ibm_marrakesh)." },
+        { text: "16 qubits, for 4 nucleotides", correct: false,
+          why: "The paper pushed to 156 qubits and 60 nucleotides, far beyond a toy 16-qubit run." },
+        { text: "354 qubits on hardware", correct: false,
+          why: "354 qubits was a noiseless tensor-network simulation, not real hardware." }
+      ]
+    }
+  ];
+
+  function shuffleOptions() {
+    QUESTIONS.forEach(function (q) {
+      for (var i = q.options.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = q.options[i]; q.options[i] = q.options[j]; q.options[j] = t;
+      }
+    });
+  }
+  shuffleOptions();
+
+  var idx = 0;
+  var answers = QUESTIONS.map(function () { return null; });
+
+  var progressEl = document.getElementById('progress');
+  var bodyEl = document.getElementById('qbody');
+  var navEl = document.getElementById('nav');
+  var backBtn = document.getElementById('back');
+  var nextBtn = document.getElementById('next');
+  var resultsEl = document.getElementById('results');
+
+  function clearNode(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+  function scoreCount() {
+    var c = 0;
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      var a = answers[i];
+      if (a !== null && QUESTIONS[i].options[a].correct) c++;
+    }
+    return c;
+  }
+
+  function render() {
+    clearNode(bodyEl);
+    resultsEl.classList.remove('show');
+
+    if (idx >= QUESTIONS.length) {
+      progressEl.textContent = 'Results';
+      navEl.style.display = 'none';
+      var c = scoreCount();
+      resultsEl.innerHTML = '';
+      var line = document.createElement('div');
+      line.textContent = 'You got ' + c + ' of ' + QUESTIONS.length + ' correct.';
+      resultsEl.appendChild(line);
+      var sub = document.createElement('div');
+      sub.className = 'sub';
+      if (c === QUESTIONS.length) sub.textContent = 'A clean sweep. Nicely done.';
+      else if (c >= Math.ceil(QUESTIONS.length / 2)) sub.textContent = 'Solid. Use Back to revisit the ones you missed.';
+      else sub.textContent = 'Worth another pass. Hit "try again" and review the explanations.';
+      resultsEl.appendChild(sub);
+      var again = document.createElement('button');
+      again.className = 'again';
+      again.textContent = 'Try again';
+      again.addEventListener('click', function () {
+        for (var i = 0; i < answers.length; i++) answers[i] = null;
+        idx = 0;
+        render();
+      });
+      resultsEl.appendChild(again);
+      resultsEl.classList.add('show');
+      fit();
+      return;
+    }
+
+    navEl.style.display = '';
+    progressEl.textContent = 'Question ' + (idx + 1) + ' of ' + QUESTIONS.length;
+
+    var q = QUESTIONS[idx];
+    var answered = answers[idx] !== null;
+
+    var prompt = document.createElement('div');
+    prompt.className = 'prompt';
+    prompt.textContent = q.prompt;
+    bodyEl.appendChild(prompt);
+
+    var options = document.createElement('div');
+    options.className = 'options';
+
+    q.options.forEach(function (opt, oi) {
+      var btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.textContent = opt.text;
+      btn.addEventListener('click', function () {
+        answers[idx] = oi;
+        render();
+      });
+      if (answered) {
+        if (oi === answers[idx]) {
+          btn.classList.add(opt.correct ? 'correct' : 'wrong');
+        } else if (opt.correct) {
+          btn.classList.add('correct');
+        }
+      }
+      options.appendChild(btn);
+
+      var why = document.createElement('div');
+      why.className = 'why ' + (opt.correct ? 'why-c' : 'why-w');
+      why.textContent = opt.why;
+      if (answered && oi === answers[idx]) why.classList.add('show');
+      options.appendChild(why);
+    });
+    bodyEl.appendChild(options);
+
+    backBtn.disabled = (idx === 0);
+    nextBtn.disabled = !answered;
+    nextBtn.textContent = (idx === QUESTIONS.length - 1) ? 'See results' : 'Next';
+    fit();
+  }
+
+  backBtn.addEventListener('click', function () {
+    if (idx > 0) { idx--; render(); }
+  });
+  nextBtn.addEventListener('click', function () {
+    if (answers[idx] === null) return;
+    idx++;
+    render();
+  });
+
+  render();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVaR vs Mean</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #333;
+    background: transparent;
+  }
+  .card {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px; padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  .badge {
+    background: #e7f6ee; color: #1a9e5b;
+    font-size: 11px; font-weight: bold;
+    padding: 2px 8px; border-radius: 4px; letter-spacing: 0.5px;
+  }
+  .card-title { font-size: 15px; font-weight: bold; color: #0066cc; margin: 0; }
+  .intro { margin: 0 0 12px 0; color: #555; }
+  .intro .term { color: #1a9e5b; font-weight: bold; }
+  .ctrl-label {
+    font-size: 11px; color: #888;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  button {
+    font-family: monospace; font-size: 12px;
+    padding: 6px 10px; border: 1px solid #ccc;
+    background: #fff; color: #333; border-radius: 4px; cursor: pointer;
+  }
+  button.active { background: #0066cc; color: #fff; border-color: #0066cc; }
+  .slider-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #444; }
+  .slider-row .alpha-readout { min-width: 188px; color: #666; }
+  input[type=range] { flex: 1; cursor: pointer; }
+  .slider-row.dimmed { opacity: 0.45; }
+  .chart-wrap { display: flex; margin: 6px 0 4px 0; }
+  .yaxis { width: 34px; position: relative; height: 220px; font-size: 10px; color: #888; }
+  .yaxis .ytick { position: absolute; right: 4px; transform: translateY(-50%); white-space: nowrap; }
+  .plot {
+    flex: 1; position: relative; height: 220px;
+    border-left: 1px solid #bbb; border-bottom: 1px solid #bbb;
+  }
+  .zero-line { position: absolute; left: 0; right: 0; border-top: 1px dashed #aaa; }
+  .zero-line .zero-label { position: absolute; right: 2px; top: -13px; font-size: 10px; color: #888; }
+  .bars-row {
+    position: absolute; inset: 0;
+    display: flex; align-items: stretch; padding: 0 2px;
+  }
+  .col { flex: 1; position: relative; margin: 0 1px; }
+  .bar {
+    position: absolute; left: 2px; right: 2px;
+    background: #999; border-radius: 2px 2px 0 0;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .bar.hi { background: #0066cc; }
+  .bar.dim { opacity: 0.35; }
+  .xaxis-note { font-size: 10px; color: #888; text-align: center; margin: 4px 0 0 0; }
+  .xaxis-note .lo { color: #1a9e5b; }
+  .xaxis-note .hi { color: #e85d3a; }
+  .readout { margin: 12px 0 0 0; }
+  .obj-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 10px; margin-bottom: 6px;
+    background: #fff; border: 1px solid #eee; border-radius: 6px;
+    font-size: 12px; color: #555;
+  }
+  .obj-row .num { font-weight: bold; color: #333; font-size: 13px; }
+  .obj-row .tag { font-size: 10px; color: #999; margin-left: 6px; }
+  .obj-row.active { background: #e7f6ee; border-color: #1a9e5b; color: #1a9e5b; }
+  .obj-row.active .num, .obj-row.active .tag { color: #1a9e5b; }
+  .caption {
+    margin: 12px 0 0 0; padding: 8px 12px;
+    background: #fdecea; border-left: 3px solid #e85d3a;
+    border-radius: 4px; color: #b3462b; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <span class="badge">ENERGY</span>
+      <h2 class="card-title">CVaR vs Mean: which samples matter?</h2>
+    </div>
+    <p class="intro">
+      Twenty sampled folding energies, sorted from lowest (most stable) on the
+      left to highest on the right. Pick the objective the optimizer should
+      minimize, then watch which bars it actually cares about. Lower energy is
+      better; here a <span class="term">lower mean energy</span> and a
+      <span class="term">lower CVaR</span> (mean of the low-energy tail) are
+      both "good", but they pull the optimizer in different directions.
+    </p>
+
+    <div class="controls">
+      <div class="ctrl-label">Objective</div>
+      <div class="btn-row">
+        <button id="btnMean" type="button">Minimize mean (all samples)</button>
+        <button id="btnCvar" type="button">Minimize CVaR (lowest-energy tail)</button>
+      </div>
+      <div class="ctrl-label">CVaR fraction (alpha)</div>
+      <div class="slider-row" id="sliderRow">
+        <input id="alpha" type="range" min="0" max="2" step="1" value="1">
+        <span class="alpha-readout" id="alphaReadout">alpha = 20%, k = 4</span>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="yaxis" id="yaxis"></div>
+      <div class="plot" id="plot">
+        <div class="zero-line" id="zeroLine"><span class="zero-label">0</span></div>
+        <div class="bars-row" id="bars"></div>
+      </div>
+    </div>
+    <div class="xaxis-note">
+      <span class="lo">more stable (lower energy)</span>
+      &nbsp;|&nbsp; 20 samples, sorted by energy &nbsp;|&nbsp;
+      <span class="hi">less stable (higher energy)</span>
+    </div>
+
+    <div class="readout">
+      <div class="obj-row" id="meanRow">
+        <span>mean energy (all 20 samples)</span>
+        <span><span class="num" id="meanVal">-</span><span class="tag" id="meanTag"></span></span>
+      </div>
+      <div class="obj-row" id="cvarRow">
+        <span><span id="cvarText">CVaR</span></span>
+        <span><span class="num" id="cvarVal">-</span><span class="tag" id="cvarTag"></span></span>
+      </div>
+    </div>
+
+    <p class="caption">
+      Mean chases the average sample. CVaR focuses on the low-energy tail,
+      pushing the optimizer to make stable, low-energy folds more likely. RNA
+      folds into low-energy states, so CVaR matches what biology actually cares
+      about.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // Fixed data, sorted ascending (lower = more stable).
+      var DATA = [
+        -8.2, -7.5, -6.9, -6.3, -5.8, -5.1, -4.6, -4.0, -3.5, -3.0,
+        -2.4, -1.9, -1.3, -0.8, -0.2, 0.5, 1.1, 1.8, 2.6, 3.4
+      ];
+      var N = DATA.length;
+      var ALPHAS = [0.05, 0.20, 0.40]; // slider index 0,1,2
+
+      // Plot scaling (fixed so layout is predictable inside the iframe).
+      var VMAX = 3.4, VMIN = -8.2, SPAN = VMAX - VMIN; // SPAN = 11.6
+      var ZERO_TOP_PCT = VMAX / SPAN * 100; // 0-line position from top
+
+      // State.
+      var mode = "mean"; // "mean" | "cvar"
+      var alphaIdx = 1; // default alpha = 20%
+
+      // Round to 3 decimals and trim trailing zeros (shows -7.225, -8.2, -6.05).
+      function fmt(x) { return String(Math.round(x * 1000) / 1000); }
+      function ceilK(alpha) { return Math.ceil(alpha * N); }
+
+      // Mean is constant.
+      var sumAll = 0;
+      for (var i = 0; i < N; i++) { sumAll += DATA[i]; }
+      var MEAN = sumAll / N; // -2.605
+
+      var YAXIS_TICKS = [-8, -4, 0, 2];
+
+      // DOM refs.
+      var btnMean = document.getElementById("btnMean");
+      var btnCvar = document.getElementById("btnCvar");
+      var alphaEl = document.getElementById("alpha");
+      var alphaReadout = document.getElementById("alphaReadout");
+      var sliderRow = document.getElementById("sliderRow");
+      var barsEl = document.getElementById("bars");
+      var yaxisEl = document.getElementById("yaxis");
+      var zeroLine = document.getElementById("zeroLine");
+      var meanVal = document.getElementById("meanVal");
+      var cvarVal = document.getElementById("cvarVal");
+      var cvarText = document.getElementById("cvarText");
+      var meanRow = document.getElementById("meanRow");
+      var cvarRow = document.getElementById("cvarRow");
+      var meanTag = document.getElementById("meanTag");
+      var cvarTag = document.getElementById("cvarTag");
+
+      // Build the bars once; store refs for re-highlighting on each render.
+      var barRefs = [];
+      function buildBars() {
+        barsEl.innerHTML = "";
+        barRefs = [];
+        for (var i = 0; i < N; i++) {
+          var v = DATA[i];
+          var col = document.createElement("div");
+          col.className = "col";
+          var bar = document.createElement("div");
+          bar.className = "bar";
+          var heightPct = Math.abs(v) / SPAN * 100;
+          if (heightPct < 1) { heightPct = 1; } // keep near-zero bars visible
+          bar.style.height = heightPct + "%";
+          if (v <= 0) {
+            bar.style.top = ZERO_TOP_PCT + "%"; // hangs below the 0-line
+          } else {
+            bar.style.bottom = (100 - ZERO_TOP_PCT) + "%"; // sits above it
+          }
+          col.appendChild(bar);
+          barsEl.appendChild(col);
+          barRefs.push(bar);
+        }
+      }
+
+      function buildYAxis() {
+        yaxisEl.innerHTML = "";
+        for (var t = 0; t < YAXIS_TICKS.length; t++) {
+          var val = YAXIS_TICKS[t];
+          var span = document.createElement("span");
+          span.className = "ytick";
+          span.textContent = val;
+          span.style.top = (VMAX - val) / SPAN * 100 + "%";
+          yaxisEl.appendChild(span);
+        }
+      }
+
+      function placeZeroLine() { zeroLine.style.top = ZERO_TOP_PCT + "%"; }
+
+      // Render everything from current state. fit() is called at the end so the
+      // iframe resizes on every mode toggle and slider change.
+      function render() {
+        var alpha = ALPHAS[alphaIdx];
+        var k = ceilK(alpha);
+
+        // CVaR = mean of the lowest k values (data is already sorted ascending).
+        var tailSum = 0;
+        for (var i = 0; i < k; i++) { tailSum += DATA[i]; }
+        var cvar = tailSum / k;
+
+        // Readouts: always show BOTH so the contrast is visible.
+        meanVal.textContent = fmt(MEAN);
+        cvarVal.textContent = fmt(cvar);
+        cvarText.textContent = "CVaR (alpha = " + (alpha * 100) + "%, k = " + k + " lowest)";
+        alphaReadout.textContent = "alpha = " + (alpha * 100) + "%, k = " + k + " of " + N;
+
+        // Highlight bars: mean mode -> all; CVaR mode -> only the lowest k.
+        for (var j = 0; j < N; j++) {
+          var highlighted = mode === "mean" ? true : (j < k);
+          barRefs[j].className = "bar" + (highlighted ? " hi" : " dim");
+        }
+
+        // Active objective emphasis + "<-- minimized" tag.
+        if (mode === "mean") {
+          meanRow.className = "obj-row active";
+          cvarRow.className = "obj-row";
+          meanTag.textContent = "<-- minimized";
+          cvarTag.textContent = "";
+          sliderRow.className = "slider-row dimmed";
+        } else {
+          meanRow.className = "obj-row";
+          cvarRow.className = "obj-row active";
+          meanTag.textContent = "";
+          cvarTag.textContent = "<-- minimized";
+          sliderRow.className = "slider-row";
+        }
+        btnMean.className = mode === "mean" ? "active" : "";
+        btnCvar.className = mode === "cvar" ? "active" : "";
+
+        fit();
+      }
+
+      // iframe auto-resize. Reset to 0px first, then set to content height.
+      function fit() {
+        var f = window.frameElement;
+        if (!f) return;
+        f.style.height = "0px";
+        f.style.height = document.body.scrollHeight + "px";
+      }
+
+      // Wire events (each triggers a render -> fit()).
+      btnMean.addEventListener("click", function () { mode = "mean"; render(); });
+      btnCvar.addEventListener("click", function () { mode = "cvar"; render(); });
+      alphaEl.addEventListener("input", function () {
+        alphaIdx = parseInt(alphaEl.value, 10);
+        render();
+      });
+
+      // Init.
+      buildYAxis();
+      placeZeroLine();
+      buildBars();
+      render();
+      window.addEventListener("load", fit);
+      if (document.readyState === "complete") { fit(); }
+    })();
+  </script>
+</body>
+</html>
