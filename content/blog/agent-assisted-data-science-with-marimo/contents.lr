@@ -40,7 +40,7 @@ Third, code stays hidden by default. I've tried keeping all the code visible, an
 marimo makes that enforceable with a flag right on the cell decorator:
 
 ```python
-@app.cell(name="narration_demo", hide_code=True)
+@app.cell(hide_code=True)
 def narration_demo():
     mo.md("This cell's narration shows; its code stays folded away.")
     return
