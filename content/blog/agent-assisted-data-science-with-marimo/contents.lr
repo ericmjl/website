@@ -23,39 +23,30 @@ Instruction files do the most work in this setup. Your [AGENTS.md](https://agent
 
 First among them is the sandwich: markdown, then code, then output, then more markdown. Every piece of code the agent writes arrives wrapped in narration, before and after, so the notebook reads like a document even while it's under construction. In the AGENTS.md, the rule reads:
 
-```markdown
-- Every code cell must be sandwiched between markdown cells that
-  explain what the code does and why. A markdown cell precedes the
-  code cell to describe intent, and a markdown cell follows to
-  provide context for the results or transitions to the next step.
-```
+<iframe src="sandwich-prompt-card.html" title="Prompt card: Sandwich every code cell" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Upon prompting, the agent comes back with a sentence of setup, the code cell, the chart, and a one-line read of what the chart shows.
 
 Named cells are the second. When you drive a session by talking, "clean up the plotting cell" only works if the agent can find the plotting cell. So the AGENTS.md says:
 
-```markdown
-- Every cell must have a descriptive name. Use
-  `@app.cell(name="descriptive_name")` instead of bare `@app.cell`
-  or unnamed `def _()`.
-```
+<iframe src="named-cells-prompt-card.html" title="Prompt card: Name every cell" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 Names give both of you the vocabulary to point at things.
 
-Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. The AGENTS.md rule is to hide all code cells unless I ask otherwise, and marimo makes that enforceable with a flag right on the cell decorator:
+Third, code stays hidden by default. I've tried keeping all the code visible, and man, the notebook gets hard to read fast. The AGENTS.md rule is to hide all code cells unless I ask otherwise:
+
+<iframe src="hide-code-prompt-card.html" title="Prompt card: Hide code by default" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+marimo makes that enforceable with a flag right on the cell decorator:
 
 ```python
-@app.cell(hide_code=True)
-def _():
+@app.cell(name="narration_demo", hide_code=True)
+def narration_demo():
     mo.md("This cell's narration shows; its code stays folded away.")
     return
 ```
 
 The narration and outputs stay in view, and you can always inspect any cell when you want to see the machinery.
-
-Here are the three rules as a prompt card, ready for your own `AGENTS.md`:
-
-<iframe src="notebook-rules-prompt-card.html" title="Prompt card: Set your notebook rules" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ### The marimo-pair skill
 
