@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prompt card · Set your notebook rules</title>
+<title>Prompt card · Name every cell</title>
 <style>
 /* ==========================================================================
    Prompt card styles (from the prompt-card skill)
@@ -97,19 +97,18 @@ body { margin: 0; padding: 16px; background: #ffffff; }
 .prompt-card .pc-copy.ok { background: #1a9e5b; }
 .prompt-card .pc-hint-below { margin: 6px 0 0; }
 @media print { body { padding: 0; } .prompt-card { box-shadow: none; } .prompt-card .pc-copy { display: none; } }
+.pc-template{overflow-wrap:anywhere;word-break:break-word}
 </style>
 </head>
 <body>
 <article class="prompt-card" aria-labelledby="pc-title">
-<div class="pc-head"><div class="pc-titles"><h1 class="pc-title" id="pc-title">Set your notebook rules</h1><span class="pc-eyebrow">prompt card</span></div><button type="button" class="pc-copy" id="pc-copy">Copy blank template</button></div>
-<div class="pc-template">- <span class="pc-slot pc-s1" tabindex="0" title="The markdown before and after each code cell keeps the notebook reading like a document while it&#x27;s still being built. Leave this out and you end up with a stack of bare code cells to decode later."><span class="pc-tag">1</span>Every code cell must be sandwiched between markdown cells<span class="pc-pop" style="display:none"><b>Every code cell must be sandwiched between markdown cells</b>The markdown before and after each code cell keeps the notebook reading like a document while it&#x27;s still being built. Leave this out and you end up with a stack of bare code cells to decode later.</span></span> that explain what the code does and why. A markdown cell precedes the code cell to describe intent, and a markdown cell follows to provide context for the results or transitions to the next step.<br>- <span class="pc-slot pc-s2" tabindex="0" title="Names give you and the agent words to point at cells, so &quot;clean up the plotting cell&quot; finds the plotting cell. Without names, the agent has to guess which cell you mean."><span class="pc-tag">2</span>Every cell must have a descriptive name.<span class="pc-pop" style="display:none"><b>Every cell must have a descriptive name.</b>Names give you and the agent words to point at cells, so &quot;clean up the plotting cell&quot; finds the plotting cell. Without names, the agent has to guess which cell you mean.</span></span> Use `@app.cell(name=&quot;descriptive_name&quot;)` instead of bare `@app.cell` or unnamed `def _()`.<br>- <span class="pc-slot pc-s3" tabindex="0" title="With code folded away, the narration and outputs stay in view, and you can still open any cell to see its code. With every cell&#x27;s code showing, the notebook gets hard to read fast."><span class="pc-tag">3</span>Hide all code cells unless I ask otherwise.<span class="pc-pop" style="display:none"><b>Hide all code cells unless I ask otherwise.</b>With code folded away, the narration and outputs stay in view, and you can still open any cell to see its code. With every cell&#x27;s code showing, the notebook gets hard to read fast.</span></span> Use `@app.cell(hide_code=True)`.</div>
+<div class="pc-head"><div class="pc-titles"><h1 class="pc-title" id="pc-title">Name every cell</h1><span class="pc-eyebrow">prompt card</span></div><button type="button" class="pc-copy" id="pc-copy">Copy blank template</button></div>
+<div class="pc-template">- <span class="pc-slot pc-s1" tabindex="0" title="Names give you and the agent words to point at cells, so &quot;clean up the plotting cell&quot; finds the plotting cell. Without names, the agent has to guess which cell you mean."><span class="pc-tag">1</span>Every cell must have a descriptive name.<span class="pc-pop" style="display:none"><b>Every cell must have a descriptive name.</b>Names give you and the agent words to point at cells, so &quot;clean up the plotting cell&quot; finds the plotting cell. Without names, the agent has to guess which cell you mean.</span></span> Use `@app.cell(name=&quot;descriptive_name&quot;)` instead of bare `@app.cell` or unnamed `def _()`.</div>
 <p class="pc-hint pc-hint-below">Hover or tab to a highlight to see why it matters.</p>
-<div class="pc-interacts"><div class="pc-interacts-title">Interacts with</div><p class="pc-interacts-text">This is a standing instruction, so it goes in the <code>AGENTS.md</code> of each repository where you do data science, and your agent reads it at the start of every session. The marimo-pair skill does the work inside your live <a href="https://marimo.io">marimo</a> notebook. Install it with <code>npx skills add marimo-team/marimo-pair</code>.</p><div class="pc-chips"><a class="pc-chip" href="https://agents.md/">AGENTS.md</a><span class="pc-op">+</span><a class="pc-chip" href="https://github.com/marimo-team/marimo-pair">marimo-pair skill</a></div></div>
+<div class="pc-interacts"><div class="pc-interacts-title">Interacts with</div><p class="pc-interacts-text">Put this rule in the same <code>AGENTS.md</code> as the sandwich rule. With names in place, you can ask for changes to a cell by name, and the marimo-pair skill makes them in your live <a href="https://marimo.io">marimo</a> notebook. Install it with <code>npx skills add marimo-team/marimo-pair</code>.</p><div class="pc-chips"><a class="pc-chip" href="https://agents.md/">AGENTS.md</a><span class="pc-op">+</span><a class="pc-chip" href="https://github.com/marimo-team/marimo-pair">marimo-pair skill</a></div></div>
 <div class="pc-foot">prompt card · v0.2 · Oct 22, 2026</div>
 <!-- Plain-text prompt the Copy button puts on the clipboard. Escape angle brackets. -->
-<textarea id="pc-plain" hidden readonly>- Every code cell must be sandwiched between markdown cells that explain what the code does and why. A markdown cell precedes the code cell to describe intent, and a markdown cell follows to provide context for the results or transitions to the next step.
-- Every cell must have a descriptive name. Use `@app.cell(name=&quot;descriptive_name&quot;)` instead of bare `@app.cell` or unnamed `def _()`.
-- Hide all code cells unless I ask otherwise. Use `@app.cell(hide_code=True)`.</textarea>
+<textarea id="pc-plain" hidden readonly>- Every cell must have a descriptive name. Use `@app.cell(name=&quot;descriptive_name&quot;)` instead of bare `@app.cell` or unnamed `def _()`.</textarea>
 </article>
 <script>
 (function () {
