@@ -89,6 +89,16 @@
 .prompt-card .pc-foot { margin-top: 10px; font-size: 12px; color: var(--pc-faint); }
 /* ==================== end prompt card ==================== */
 
+/* copy button */
+.prompt-card .pc-copy { padding: 6px 14px; font-family: var(--font-monospace, monospace); font-size: 12px; border-radius: 6px; cursor: pointer; background: #0066cc; color: #fff; border: none; white-space: nowrap; }
+.prompt-card .pc-copy:hover { background: #0052a3; }
+.prompt-card .pc-copy:focus-visible { outline: 2px solid #0066cc; outline-offset: 2px; }
+.prompt-card .pc-copy.ok { background: #1a9e5b; }
+.prompt-card .pc-copy.fail { background: #a05a0c; }
+.prompt-card .pc-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.prompt-card .pc-hint-below { margin: 6px 0 0; }
+@media print { .prompt-card .pc-copy { display: none; } }
+
 /* embedded widget page */
 html, body { margin: 0; }
 body { padding: 16px; background: #ffffff; }
@@ -97,10 +107,13 @@ body { padding: 16px; background: #ffffff; }
 </head>
 <body>
 <div class="prompt-card">
-<div class="pc-head"><div class="pc-titles"><span class="pc-title">Keep the structure intact</span><span class="pc-eyebrow">prompt card</span></div><span class="pc-hint">Hover a highlight to see why it matters</span></div>
+<div class="pc-head"><div class="pc-titles"><span class="pc-title">Keep the structure intact</span><span class="pc-eyebrow">prompt card</span></div><button type="button" class="pc-copy" id="pc-copy" aria-label="Copy blank template to clipboard">Copy blank template</button><span class="pc-sr" id="pc-copy-status" role="status" aria-live="polite"></span></div>
 <div class="pc-template">Keep the structure of this vault intact. Index.md stays at the root, and <span class="pc-slot pc-s1" tabindex="0" title="With no subfolders, there's no filing decision to get wrong, and you always know where a note lives. Without this line, an agent may start making subfolders as the vault grows."><span class="pc-tag">1</span>raw/, MOCs/, and evergreen/ stay flat, with no subfolders<span class="pc-pop" style="display:none"><b>raw/, MOCs/, and evergreen/ stay flat, with no subfolders</b>With no subfolders, there's no filing decision to get wrong, and you always know where a note lives. Without this line, an agent may start making subfolders as the vault grows.</span></span>. When notes belong together, <span class="pc-slot pc-s2" tabindex="0" title="A note can only be in one folder, but you can link it from as many maps as you like, so a map can group notes and leave every file where it is."><span class="pc-tag">2</span>link them into a map of content instead of making a new folder<span class="pc-pop" style="display:none"><b>link them into a map of content instead of making a new folder</b>A note can only be in one folder, but you can link it from as many maps as you like, so a map can group notes and leave every file where it is.</span></span>. <span class="pc-slot pc-s3" tabindex="0" title="Moving or renaming files makes it hard to see what an agent changed, and a move made outside Obsidian can break your links."><span class="pc-tag">3</span>Leave files where they are<span class="pc-pop" style="display:none"><b>Leave files where they are</b>Moving or renaming files makes it hard to see what an agent changed, and a move made outside Obsidian can break your links.</span></span>, and don't rename them or move folders. <span class="pc-slot pc-s4" tabindex="0" title="You stay in charge of how your vault is organized. When something doesn't fit, the agent brings it to you and you decide what changes." style="background:#eef1f4;border-bottom-color:#475569;color:#475569"><span class="pc-tag" style="background:#475569">4</span>If you think the structure needs to change, ask me first<span class="pc-pop pc-pop-end" style="display:none;border-left-color:#475569"><b style="color:#475569">If you think the structure needs to change, ask me first</b>You stay in charge of how your vault is organized. When something doesn't fit, the agent brings it to you and you decide what changes.</span></span>.</div>
+<p class="pc-hint pc-hint-below">Hover or tab to a highlight to see why it matters.</p>
 <div class="pc-interacts"><div class="pc-interacts-title">Interacts with</div><p class="pc-interacts-text">This is a standing instruction, so it goes in the <code>AGENTS.md</code> at the root of your vault, where every agent reads it before touching a file. With this instruction in place, your other prompts and any vault skill you use for ingesting sources or making maps can stay short.</p><div class="pc-chips"><span class="pc-chip">AGENTS.md</span><span class="pc-op">+</span><span class="pc-chip">vault skill</span></div></div>
 <div class="pc-foot">prompt card · v0.1 · Oct 22, 2026</div>
+<!-- Plain-text prompt the Copy button puts on the clipboard. Escape angle brackets. -->
+<textarea id="pc-plain" hidden readonly>Keep the structure of this vault intact. Index.md stays at the root, and raw/, MOCs/, and evergreen/ stay flat, with no subfolders. When notes belong together, link them into a map of content instead of making a new folder. Leave files where they are, and don't rename them or move folders. If you think the structure needs to change, ask me first.</textarea>
 </div>
 <script>
 (function () {
@@ -151,6 +164,55 @@ body { padding: 16px; background: #ffffff; }
       f.style.height = '0px';
       f.style.height = document.body.scrollHeight + 'px';
     } catch (e) {}
+  }
+  // Copy button. Copies the plain prompt from #pc-plain (no tags or notes).
+  // Tries the Clipboard API first, then falls back to a temporary textarea
+  // and execCommand, which still works in iframes that block the API.
+  var btn = document.getElementById('pc-copy');
+  var plain = document.getElementById('pc-plain');
+  var status = document.getElementById('pc-copy-status');
+  var label = btn ? btn.textContent : '';
+  var timer = null;
+  function show(ok) {
+    btn.textContent = ok ? 'Copied' : 'Copy failed';
+    btn.classList.toggle('ok', ok);
+    btn.classList.toggle('fail', !ok);
+    if (status) status.textContent = ok ? 'Prompt copied to the clipboard.' : 'Copy failed. Select the prompt and copy it by hand.';
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      btn.textContent = label;
+      btn.classList.remove('ok', 'fail');
+      if (status) status.textContent = '';
+    }, 1600);
+  }
+  function legacyCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.setAttribute('aria-hidden', 'true');
+    ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    btn.focus();
+    return ok;
+  }
+  if (btn && plain) {
+    btn.addEventListener('click', function () {
+      var text = plain.value;
+      if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(
+          function () { show(true); },
+          function () { show(legacyCopy(text)); }
+        );
+      } else {
+        show(legacyCopy(text));
+      }
+    });
   }
   window.addEventListener('load', fit);
   window.addEventListener('resize', fit);
