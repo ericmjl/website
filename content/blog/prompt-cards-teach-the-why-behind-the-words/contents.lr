@@ -4,7 +4,7 @@ author: Eric J. Ma
 ---
 body:
 
-People share prompts with me all the time, and I share mine too. But a prompt on its own is a strange thing to hand someone. It looks like a sentence, so it reads as if every word carries the same weight. In practice, a few words do almost all the work, and the person receiving the prompt has no way to tell which ones.
+Whenever we share how we use AI, we end up sharing prompts too. But a prompt on its own is a strange thing to hand someone. It looks like a sentence, so it reads as if every word carries the same weight. In practice, a few words do almost all the work, and the person receiving the prompt has no way to tell which ones.
 
 That becomes a problem the moment they try to use it for something slightly different. If you don't know which words do the work, you can't adapt the prompt. You either copy it word for word and hope, or you rewrite it and accidentally drop the part that made it work. Zamfirescu-Pereira and colleagues found a version of this problem in [Why Johnny Can't Prompt](https://dl.acm.org/doi/10.1145/3544548.3581388), where people new to prompting struggled to understand why a prompt worked and tended to overgeneralize from what they saw.
 
@@ -128,7 +128,7 @@ twitter_handle: ericmjl
 ---
 summary:
 
-In this post, I introduce prompt cards: small cards, inspired by Model Cards, that teach one prompt I actually use. Each card numbers the parts of the prompt that matter, explains why each part matters when you hover over it, and names any skill or AGENTS.md instructions the prompt relies on. I explain why I think this works as a teaching tool for working with AI, walk through one card part by part, and show how you can make your own with my prompt-card skill. When you share a prompt, are you also sharing why it works?
+In this post, I introduce prompt cards: small digital cards, inspired by Model Cards, that teach one prompt I actually use. Each card numbers the parts of the prompt that matter, explains why each part matters when you hover over it, and names any skill or AGENTS.md instructions the prompt relies on. I explain why I think this works as a teaching tool for working with AI, walk through one card part by part, and show how you can make your own with my prompt-card skill. When you share a prompt, are you also sharing why it works?
 ---
 tags:
 
