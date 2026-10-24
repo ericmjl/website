@@ -1348,3 +1348,11 @@ body.dark-mode .retreat-prompt {
     animation: none;
   }
 }
+
+/* Embedded widget iframes (prompt cards, giscus, notebook embeds) must never be
+   selected as scroll anchors. Chrome anchors to these frames, and each upward
+   scroll near them then fires a phantom anchor adjustment that cancels the
+   user's scroll, so the page refuses to scroll up until you reload. */
+iframe {
+  overflow-anchor: none;
+}
