@@ -13,6 +13,10 @@ scripts call litellm directly. The same approach is used by generate_social.py.
 A Z.ai coding-plan key only works via the Anthropic-compatible endpoint
 (https://api.z.ai/api/anthropic); the zai/ PaaS endpoint
 (api.z.ai/api/paas/v4) returns "insufficient balance".
+
+The fallback model and API base are overridable via BLOGBOT_FALLBACK_MODEL
+and BLOGBOT_FALLBACK_API_BASE, so a local-server model rename no longer
+requires a code change (the hardcoded Qwen3.36 name broke that way).
 """
 
 import json
@@ -66,8 +70,12 @@ def generate_structured(
     api_base = os.environ.get("BLOGBOT_API_BASE", "https://api.z.ai/api/anthropic")
     model = os.environ.get("BLOGBOT_MODEL", "anthropic/glm-5.2")
 
-    fallback_api_base = "http://localhost:8426/v1"
-    fallback_model = "openai/Qwen3.36-35B-A3B-8bit"
+    fallback_api_base = os.environ.get(
+        "BLOGBOT_FALLBACK_API_BASE", "http://localhost:8426/v1"
+    )
+    fallback_model = os.environ.get(
+        "BLOGBOT_FALLBACK_MODEL", "openai/Qwen3.6-35B-A3B-8bit"
+    )
     fallback_api_key = _omlx_fallback_key()
 
     schema = json.dumps(model_cls.model_json_schema(), ensure_ascii=False)
