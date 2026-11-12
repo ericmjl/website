@@ -10,13 +10,9 @@ For weeks I kept hitting the same wall when I shared prompts or taught people ho
 
 I am thrilled to share [GlossCard](https://glosscard.nonlinearlabs.ai/prompt-card/), a small thing I made for the same job. It shares a prompt card: a short explainer with the fill-ins marked and notes on why each blank matters. Someone opening your link should see how you think about the task, where they need to supply context, and what "done" looks like. The next person gets the text and the rationale together.
 
-![GlossCard landing page with the headline and the start of an example prompt card](./glosscard-landing-intro.webp)
-
-*The GlossCard page is the UI. Your agent still does the work of turning a session into a card.*
-
 Here is the kind of annotated card I mean. This is the ingest prompt from [my prompt cards post](/blog/2026/10/23/prompt-cards/), shown in the same teach-the-why style:
 
-![Prompt card for ingesting a raw source into an Obsidian vault, with numbered highlights on Ingest, a file placeholder, and the vault name](./ingest-raw-source-prompt-card.webp)
+<iframe src="ingest-raw-source-prompt-card.html" title="Prompt card: Ingest a raw source" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ## You drive it with your agent
 
@@ -24,7 +20,7 @@ A prompt card is meant to be teachable. The part that still makes me smile is th
 
 When you finish a workflow, open [the card page](https://glosscard.nonlinearlabs.ai/prompt-card/) and copy the starter prompt. The page is the UI; your agent still does the work of turning the session into a card. Tell your agent to read the instructions at `https://glosscard.nonlinearlabs.ai/prompt-card/instructions.txt`, study your chat history and what it remembers from the session, and build a prompt card someone else can use to learn that workflow. Open the preview URL it gives you, sanity-check the highlights, then send the link to whoever you want to teach. The live page also walks through a meta example called Make a prompt card if you want to tap through one before you build your own.
 
-![Meta prompt card titled Make a prompt card, with numbered highlights on the workflow description, the instructions URL, and the preview URL](./make-a-prompt-card-example.webp)
+<iframe src="make-a-prompt-card-prompt-card.html" title="Prompt card: Make a prompt card" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 *This is the meta example on the GlossCard site. You use the same pattern for your own workflow.*
 
@@ -33,8 +29,6 @@ When you finish a workflow, open [the card page](https://glosscard.nonlinearlabs
 The share URL looks like `https://glosscard.nonlinearlabs.ai/prompt-card#v1.<payload>`. Everything after the `#` is the compressed card. Your browser unpacks it and draws the page. The server only serves the shell; it never looks up your card. The address bar looks long because the lesson rode along in the link, not because I stored it somewhere and handed you a short pointer. If you still have an old `agentindex.nonlinearlabs.ai` link, that host should keep working. A redirect to the glosscard host is planned.
 
 Opening that link shows the same card your recipient will see:
-
-![Make a prompt card viewed from a GlossCard share URL, with intended use, template, worked example, and limitations sections](./prompt-card-from-share-link.webp)
 
 ## The link holds the card
 
