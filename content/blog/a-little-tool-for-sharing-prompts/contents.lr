@@ -1,0 +1,67 @@
+title: A little tool for sharing prompts
+---
+author: Eric J. Ma
+---
+body:
+
+For weeks I kept hitting the same wall when I shared prompts or taught people how to use AI tools. I could paste the prompt into chat or drop it in a doc, and they still would not know how to use it. The words were there. The lesson was not. I wrote about that gap in [an earlier post](/blog/2026/10/23/prompt-cards/). This one is about the little tool that grew out of it.
+
+## A little tool called GlossCard
+
+I am thrilled to share [GlossCard](https://glosscard.nonlinearlabs.ai/prompt-card/), a small thing I made for the same job. It shares a prompt card: a short explainer with the fill-ins marked and notes on why each blank matters. Someone opening your link should see how you think about the task, where they need to supply context, and what "done" looks like. The next person gets the text and the rationale together.
+
+![GlossCard landing page with the headline and the start of an example prompt card](./glosscard-landing-intro.webp)
+
+*The GlossCard page is the UI. Your agent still does the work of turning a session into a card.*
+
+Here is the kind of annotated card I mean. This is the ingest prompt from [my prompt cards post](/blog/2026/10/23/prompt-cards/), shown in the same teach-the-why style:
+
+![Prompt card for ingesting a raw source into an Obsidian vault, with numbered highlights on Ingest, a file placeholder, and the vault name](./ingest-raw-source-prompt-card.webp)
+
+## You drive it with your agent
+
+A prompt card is meant to be teachable. The part that still makes me smile is that the instructions for making one are themselves a prompt card. You drive GlossCard with your agent, not with a form on my server.
+
+When you finish a workflow, open [the card page](https://glosscard.nonlinearlabs.ai/prompt-card/) and copy the starter prompt. The page is the UI; your agent still does the work of turning the session into a card. Tell your agent to read the instructions at `https://glosscard.nonlinearlabs.ai/prompt-card/instructions.txt`, study your chat history and what it remembers from the session, and build a prompt card someone else can use to learn that workflow. Open the preview URL it gives you, sanity-check the highlights, then send the link to whoever you want to teach. The live page also walks through a meta example called Make a prompt card if you want to tap through one before you build your own.
+
+![Meta prompt card titled Make a prompt card, with numbered highlights on the workflow description, the instructions URL, and the preview URL](./make-a-prompt-card-example.webp)
+
+*This is the meta example on the GlossCard site. You use the same pattern for your own workflow.*
+
+## How the link is built
+
+The share URL looks like `https://glosscard.nonlinearlabs.ai/prompt-card#v1.<payload>`. Everything after the `#` is the compressed card. Your browser unpacks it and draws the page. The server only serves the shell; it never looks up your card. The address bar looks long because the lesson rode along in the link, not because I stored it somewhere and handed you a short pointer. If you still have an old `agentindex.nonlinearlabs.ai` link, that host should keep working. A redirect to the glosscard host is planned.
+
+Opening that link shows the same card your recipient will see:
+
+![Make a prompt card viewed from a GlossCard share URL, with intended use, template, worked example, and limitations sections](./prompt-card-from-share-link.webp)
+
+## The link holds the card
+
+I care about privacy here. I did not want a database of other people's prompts, so I designed the format so the URL carries what the page needs. Nothing about your card lives on my side.
+
+The instructions file is part of that design. It deliberately steers your agent toward a good card, and I published the full text in `instructions.txt` so you can read exactly what it says. I am fine calling that a mild prompt injection as long as it stays in the open.
+
+Anyone with the link can read the card. You decide who gets the link. That is the trade you make when you share a lesson instead of asking me to host the prompt.
+
+When the work is done, ask your agent for the card and send the link to the person you want to teach. They get a short explainer they can reuse. I never see the prompt, and I have nothing to delete later. That is the small tool I wanted on the days I was the one trying to explain it.
+---
+pub_date: 2026-11-12
+---
+twitter_handle: ericmjl
+---
+summary:
+
+I built GlossCard to share annotated prompts so others see the rationale. You make a prompt card with your agent after a workflow. The whole card lives in the URL hash. I do not store your prompt. You choose who gets the link.
+---
+tags:
+
+glosscard
+prompt card
+prompt
+privacy
+teaching
+agent
+workflow
+sharing
+ai tools
