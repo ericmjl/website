@@ -12,7 +12,7 @@ I am thrilled to share [GlossCard](https://glosscard.nonlinearlabs.ai/prompt-car
 
 Here is the kind of annotated card I mean. This is the ingest prompt from [my prompt cards post](/blog/2026/10/23/prompt-cards/), shown in the same teach-the-why style:
 
-<iframe src="ingest-raw-source-prompt-card.html" title="Prompt card: Ingest a raw source" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="ingest-raw-source-prompt-card.html" title="Prompt card: Ingest a raw source" width="100%" scrolling="no" style="border: 0;" allow="clipboard-write" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 ## You drive it with your agent
 
@@ -20,15 +20,13 @@ A prompt card is meant to be teachable. The part that still makes me smile is th
 
 When you finish a workflow, open [the card page](https://glosscard.nonlinearlabs.ai/prompt-card/) and copy the starter prompt. The page is the UI; your agent still does the work of turning the session into a card. Tell your agent to read the instructions at `https://glosscard.nonlinearlabs.ai/prompt-card/instructions.txt`, study your chat history and what it remembers from the session, and build a prompt card someone else can use to learn that workflow. Open the preview URL it gives you, sanity-check the highlights, then send the link to whoever you want to teach. The live page also walks through a meta example called Make a prompt card if you want to tap through one before you build your own.
 
-<iframe src="make-a-prompt-card-prompt-card.html" title="Prompt card: Make a prompt card" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+<iframe src="make-a-prompt-card-prompt-card.html" title="Prompt card: Make a prompt card" width="100%" scrolling="no" style="border: 0;" allow="clipboard-write" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
 
 *This is the meta example on the GlossCard site. You use the same pattern for your own workflow.*
 
 ## How the link is built
 
-The share URL looks like `https://glosscard.nonlinearlabs.ai/prompt-card#v1.<payload>`. Everything after the `#` is the compressed card. Your browser unpacks it and draws the page. The server only serves the shell; it never looks up your card. The address bar looks long because the lesson rode along in the link, not because I stored it somewhere and handed you a short pointer. If you still have an old `agentindex.nonlinearlabs.ai` link, that host should keep working. A redirect to the glosscard host is planned.
-
-Opening that link shows the same card your recipient will see:
+The share URL looks like `https://glosscard.nonlinearlabs.ai/prompt-card#v1.<payload>`. Everything after the `#` is the compressed card. Your browser unpacks it and draws the page. The server only serves the shell; it never looks up your card. The address bar looks long because the lesson rode along in the link, not because I stored it somewhere and handed you a short pointer. Your recipient sees the same card you previewed. If you still have an old `agentindex.nonlinearlabs.ai` link, that host should keep working. A redirect to the GlossCard host is planned.
 
 ## The link holds the card
 
@@ -39,6 +37,16 @@ The instructions file is part of that design. It deliberately steers your agent 
 Anyone with the link can read the card. You decide who gets the link. That is the trade you make when you share a lesson instead of asking me to host the prompt.
 
 When the work is done, ask your agent for the card and send the link to the person you want to teach. They get a short explainer they can reuse. I never see the prompt, and I have nothing to delete later. That is the small tool I wanted on the days I was the one trying to explain it.
+
+## Host your own
+
+You do not have to use my host. Anyone can run their own GlossCard, because the whole card lives in the link. Any static host works. You do not need a server that looks up cards or a database on the back end.
+
+Hand your coding agent the prompt card below. It can build the site from scratch and deploy it to GitHub Pages, Vercel, Netlify, Cloudflare Pages, or a similar static host.
+
+<iframe src="build-your-own-glosscard.html" title="Prompt card: Build and deploy your own GlossCard" width="100%" scrolling="no" style="border: 0;" allow="clipboard-write" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+If you want your own domain, you still only serve static files. The cards stay in the links you share, just like on mine.
 ---
 pub_date: 2026-11-12
 ---
