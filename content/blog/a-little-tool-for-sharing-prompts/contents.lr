@@ -54,16 +54,17 @@ twitter_handle: ericmjl
 ---
 summary:
 
-I built GlossCard to share annotated prompts so others see the rationale. You make a prompt card with your agent after a workflow. The whole card lives in the URL hash. I do not store your prompt. You choose who gets the link.
+In this post, I share GlossCard, a little tool I built for handing someone a prompt along with the lesson behind it. It makes a short explainer with the fill-ins marked and notes on why each blank matters. You drive it with your own agent, the whole card lives inside the link itself, and nothing is stored on my servers. You can even host your own copy on any static site. It made me wonder: when the lesson can ride along in the URL, what else could we share without ever needing a database?
 ---
 tags:
 
 glosscard
-prompt card
-prompt
-privacy
+prompts
+ai
 teaching
-agent
-workflow
-sharing
+privacy
+workflows
+hosting
+prompt cards
 ai tools
+link sharing
