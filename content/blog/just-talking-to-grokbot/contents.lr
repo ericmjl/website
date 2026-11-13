@@ -32,7 +32,7 @@ The ones I can name off the top include Google Calendar, Convex, Stripe, Notion,
 
 The convention I followed was to call the first bot chief of staff and let it start doing things for me. Chief of staff is where I dump everything. If I need a calendar event added, I dictate it to the chief of staff. If I need an email drafted, I tell the chief of staff. One bot is one thing in my life that I need to keep track of. The chief of staff is the dumping ground for everything else. It is more like a secretary or assistant. Chief of staff is a nice name for that, a glorified assistant.
 
-I do not leverage bot-to-bot communication very much, but I know it is a cool feature and I have used it a few times. I have a chief of staff and another bot specialized for my personal email that knows some of the quirks of how I organize that mail. When the chief of staff needs to know something about my personal email, it goes to the personal email bot.
+I do not leverage bot-to-bot communication very much, but I know it is a cool feature and I have used it a few times. I have a chief of staff and another bot specialized for my personal email that knows some of the quirks of how I organize that mail. When the chief of staff needs to know something about my personal email, I have it ask the personal email bot.
 
 I can also group bots. I have bots for the Learn Anything Retreat. My open source projects have one bot per project, and those bots dispatch Cursor agents for each pull request. I also set up bots whose job is to monitor something I do not want to forget. The bike repair is one of those.
 
@@ -42,19 +42,19 @@ I do not use the Slack connection. I do not think I need it with teams of people
 
 Grokbot is connected to my Cursor account, so I can spin up Cursor agents from the chat. I say, "Spin up the cursor agent," and it does it. There is no clicking around. The same instruction can be spoken.
 
-Here is an example. I built a small expense app, secured in a way I will not bore you with. Vercel hosts the website, Convex is the database, Modal covers some on-demand AI features I want, and Resend handles email in and out. I gave one bot the whole expense app. I tell it what I want, and I keep the discipline of one feature at a time so I do not overwhelm it. I also gave it a rule: it is not supposed to handle the coding, because coding really consumes my Grokbot allowance very quickly. It can spin up subagents via Cursor cloud agents instead.
+Here is an example. I built a small expense app, secured in a way I will not bore you with. I host the site on Vercel, I use Convex for the database, Modal for some on-demand AI features I want, and Resend for email in and out. I gave one bot the whole expense app. I tell it what I want, and I keep the discipline of one feature at a time so I do not overwhelm it. I also gave it a rule: that bot must not handle the coding, because coding really consumes my Grokbot allowance very quickly. Instead it spins up subagents via Cursor cloud agents.
 
-My laptop can be off and I can be on my phone. I instructed Grokbot that it must prove the work to my satisfaction by sending screenshots, ideally, or links where that is the right proof. If something is off, the screenshots tell me quickly. I say what I want changed and the work keeps going in the background while I go about my life.
+My laptop can be off and I can be on my phone. I instructed Grokbot that it must prove the work to my satisfaction by sending screenshots, ideally, or links where that is the right proof. If something is off, the screenshots tell me quickly. I say what I want changed, and the agents keep working in the background while I go about my life.
 
-I like this because of notifications on my phone and on my watch. I can fire and forget until my brain is in the right state of mind for looking at a thing. If it is not, I need the discipline to say no and not look at my phone. Stuff still happens in the background.
+I like this because of notifications on my phone and on my watch. I can fire and forget until my brain is in the right state of mind for looking at a thing. If it is not, I need the discipline to say no and not look at my phone. The work still runs in the background.
 
-Dispatching to a Cursor agent works well. Grokbot chooses the model the Cursor agent should use. The coding work does not clutter the Grokbot conversation, which is great.
+Dispatching to a Cursor agent works well. Grokbot chooses the model the Cursor agent should use. Cursor agent work stays out of the Grokbot conversation, which I like.
 
 ## A desktop in the background
 
 When Grokbot's computer is running, I can take control if I want. I thought at first that I could not paste from my own machine into Grokbot's computer. I took control, tried it, and learned I can copy or cut on my computer and paste into Grokbot's computer.
 
-I take control when I do not want passwords sitting with the bot, or when Grokbot is having trouble with its secure password form. That form does not store my password. It passes the password through into the UI. I can take control from my phone too. It is almost like having a cloud computer, a fully fledged desktop that runs in the background. That desktop is how Grokbot takes screenshots. The Cursor agent can take screenshots too.
+I take control when I do not want passwords sitting with the bot, or when Grokbot is having trouble with its secure password form. That form does not store my password. It passes the password through into the UI. I can take control from my phone too. It is almost like having a cloud computer, a fully fledged desktop that runs in the background. Grokbot uses that desktop to take screenshots. The Cursor agent can take screenshots too.
 
 ## Short enough for a phone
 
