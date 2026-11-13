@@ -6,91 +6,57 @@ body:
 
 ## I know who owns it
 
-Grokbot has been all the rage. I have my own issues with billionaires buying elections and the like, and yes, I know this is a product by a company owned by a billionaire. I want to set that aside for a moment.
+Grokbot has been all the rage. I have my own issues with billionaires buying elections and the like, so I'll say the awkward part plainly. I know this is a product by a company owned by a billionaire. I'm setting that aside for a moment.
 
-Still, Grokbot turned personal agents into something really darn easy. The real power, I think, comes from simplicity. I have to give it to the team. I did not appreciate simplicity until Grokbot.
+I'm a coder. I'm used to environment variables and hand-tweaking models, and doing that much gets tiring. Grokbot is where personal agents got really darn easy for me. I talk to it. That's the part I did not appreciate until I had it in front of me.
 
 ## You only see the chat
 
-I am a coder. I am used to environment variables, hand-tweaking my models, and the like. At some point that gets tiring. A bit of simplicity is refreshing.
+When I'm chatting with Grokbot, I don't see much. I see the chat window. I talk to a bot. That's all it is.
 
-When I chat with Grokbot I do not see much. I see the chat window. I talk to a bot. That is all it is.
+A harness like pi puts the model and the other settings in front of me. T3 Code, which I've recently started using, does the same kind of thing. So does Cursor when I'm configuring everything by hand. Grokbot hides that complexity, and I start chatting as if I were talking with another human. It's extremely simplifying. There's one less thing to worry about. I have to give it to the team for that. A chat this empty only works if the actual work can happen somewhere else, through connections and the bots I'll describe next. I think that's the bet they made: I just want to get the thing done.
 
-A harness like pi puts the model and the other settings in front of you. T3 Code, which I have recently started using, does the same kind of thing. So does Cursor when I am configuring everything by hand. Grokbot hides that complexity. I start chatting as if I were talking with another human. That is extremely simplifying. There is one less thing to worry about. My read of the bet here is that you just want to accomplish your stuff.
+## A photo is enough to start
 
-## Start with something small
+Once I had my first bot, I started simple. I chatted and got used to it, and I handed over tasks I was comfortable with. As a consumer product, trusting that companies won't use our data is too naive.
 
-Once I had my first bot, I started simple. I chatted and got used to it. I handed over tasks I was comfortable with. As a consumer product, trusting that companies will not use our data is too naive. Way too naive. I was still willing to try.
+Calendaring was one of the first things I handed over, because I'm too lazy to create a calendar invite myself. I take a photo of something I need to remember, send it over, and say, "Make a calendar invite for me." Grokbot does the right thing. That photo only works because Google Calendar is connected, and wiring that up is where the rest of the story starts.
 
-Calendaring was one of the first things I handed over, because I am too lazy to create a calendar invite myself. I take a photo of something I need to remember, send it to Grokbot, and say, "Make a calendar invite for me." Grokbot does the right thing. That is how I built trust before I asked for heavier workflows.
+## One bot for each thing I keep track of
 
-## About twenty-five connections
+I get things done by asking Grokbot to connect services. When I counted, I had twenty-five connected. The ones I can name off the top include Google Calendar, Convex, Stripe, Notion, Calendly, Google Docs, Google Sheets, Google Slides, Buffer, Mercury, Cloudflare, Resend, Vercel, GitHub, Gmail, and 1Password. I do a lot of my personal projects with Convex, and I use Buffer because I do social media stuff. I connect those pieces and suddenly I can do a whole boatload of stuff.
 
-I get things done by asking Grokbot to wire up services. Gmail and Google Calendar were early ones. For personal projects I kept adding more. When I counted, I had about twenty-five connected. So many of them.
+The convention I followed is to call the first bot chief of staff and let it start doing things for me. Chief of staff is where I dump everything else, a glorified assistant. One bot is one thing in my life I need to keep track of. If I need an email drafted, I tell the chief of staff.
 
-The ones I can name off the top include Google Calendar, Convex, Stripe, Notion, Calendly, Google Docs, Google Sheets, Google Slides, Buffer, Mercury, Cloudflare, Resend, Vercel, GitHub, Gmail, and 1Password. I do a lot of my personal projects with Convex. I use Buffer because I do social media stuff. I connect those pieces and suddenly I can do a whole boatload of stuff. I find that really empowering.
+I don't leverage bot-to-bot communication very much, but I've used it a few times. I have another bot specialized for my personal email that knows some of the quirks of how I organize that mail. When the chief of staff needs something from that world, it actually goes to the personal email bot.
 
-## A chief of staff and a bot per thing
+That personal-email bot still checks every day at noon. I forget the exact setup because I tell it what I want in natural language and it creates the automation on its own. At noon it checks my email, prepares drafts of responses, and takes advantage of the bubbling feature in Hey. Anything bubbled up means I need to respond. If I've replied, it pops that item from the bubble. I think the check should move to 11 a.m., because at lunch I'm usually busy and have no time for personal email, let alone answering it. I edit the drafts, and the bot learns from that. I say I only check personal email once a day. That's the state I'm moving toward, not a habit I've finished. I can't triage every email anymore. I have to use AI agents as a buffer. There's too much info flying around.
 
-The convention I followed was to call the first bot chief of staff and let it start doing things for me. Chief of staff is where I dump everything. If I need a calendar event added, I dictate it to the chief of staff. If I need an email drafted, I tell the chief of staff. One bot is one thing in my life that I need to keep track of. The chief of staff is the dumping ground for everything else. It is more like a secretary or assistant. Chief of staff is a nice name for that, a glorified assistant.
+My Lectric electric bike needed a rear wheel, and the repair has been a long-running, low-humming thing on the back burner of my life. It's stressful to keep hold of. I have a bike repair bot whose lifespan matches the repair. The wheel broke after it had already been replaced once, and I wanted a warranty replacement of that replacement. Lectric's policies don't allow that. They were kind enough to discount a rear wheel purchase, and I was happy to go with that. The bot drafted the emails so I wouldn't have the stress of drafting them myself. I put a rule inside the bot: if Lectric doesn't respond within two business days, it follows up. I don't want to remember that. When I delegate these boring, dumb little things that I don't want to talk about or do, I'm taking stress off my life.
 
-I do not leverage bot-to-bot communication very much, but I know it is a cool feature and I have used it a few times. I have a chief of staff and another bot specialized for my personal email that knows some of the quirks of how I organize that mail. When the chief of staff needs to know something about my personal email, I have it ask the personal email bot.
+I've grouped bots for the Learn Anything Retreat and for open source work. My open source projects have one bot per project, and each of those bots dispatches Cursor agents for each pull request.
 
-I can also group bots. I have bots for the Learn Anything Retreat. My open source projects have one bot per project, and those bots dispatch Cursor agents for each pull request. I also set up bots whose job is to monitor something I do not want to forget. The bike repair is one of those.
+## I do this from my phone
 
-I do not use the Slack connection. I do not think I need it with teams of people just yet.
+Grokbot is connected to my Cursor account, so I can spin up Cursor agents from the chat. I say, "Spin up the cursor agent," and there's no clicking around. I can say it out loud.
 
-## The coding runs on Cursor
+Here is an example. I built my own expense app, with Vercel for the website, Convex for the database, Modal for some on-demand AI features I want, and Resend for email in and out. I gave one bot the whole app. I tell it what I want, one feature at a time, so I don't overwhelm it. That bot isn't supposed to handle the coding, because coding really consumes my Grokbot allowance very quickly. Instead it spins up subagents via Cursor cloud agents.
 
-Grokbot is connected to my Cursor account, so I can spin up Cursor agents from the chat. I say, "Spin up the cursor agent," and it does it. There is no clicking around. The same instruction can be spoken.
+My laptop can be off. I'm on my phone, and the proof comes back as a screenshot, ideally, or a link where that's relevant to the implementation. If something's off, the screenshot tells me immediately, and I say what I want changed while the work keeps going in the background. Notifications hit my phone and my watch, so I can fire and forget until my brain is in the right state of mind for looking at a thing. If it's not, I need the discipline to say no and not look at my phone. Grokbot chooses the model the Cursor agent should use, and the coding stays out of the Grokbot conversation.
 
-Here is an example. I built a small expense app, secured in a way I will not bore you with. I host the site on Vercel, I use Convex for the database, Modal for some on-demand AI features I want, and Resend for email in and out. I gave one bot the whole expense app. I tell it what I want, and I keep the discipline of one feature at a time so I do not overwhelm it. I also gave it a rule: that bot must not handle the coding, because coding really consumes my Grokbot allowance very quickly. Instead it spins up subagents via Cursor cloud agents.
+Behind that work, Grokbot's computer runs in the background, a fully fledged desktop, almost like a cloud computer. I can take control from my phone when I don't want passwords sitting with the bot, or when Grokbot is having trouble with its secure password form. That form doesn't store my password. It passes the password through into the UI. I can copy or cut on my machine and paste into Grokbot's computer. Grokbot takes the screenshots on that machine. The Cursor agent can take screenshots too.
 
-My laptop can be off and I can be on my phone. I instructed Grokbot that it must prove the work to my satisfaction by sending screenshots, ideally, or links where that is the right proof. If something is off, the screenshots tell me quickly. I say what I want changed, and the agents keep working in the background while I go about my life.
+Grokbot likes to be very verbose unless I tell it otherwise. As soon as I see walls of text on my phone, I tell that bot: you gotta be more concise. Your messages have to be easily viewable on a mobile phone. If a long answer is actually necessary, I ask it to walk me through the thing one by one. Then I can swipe right and reply to one issue at a time.
 
-I like this because of notifications on my phone and on my watch. I can fire and forget until my brain is in the right state of mind for looking at a thing. If it is not, I need the discipline to say no and not look at my phone. The work still runs in the background.
-
-Dispatching to a Cursor agent works well. Grokbot chooses the model the Cursor agent should use. Cursor agent work stays out of the Grokbot conversation, which I like.
-
-## A desktop in the background
-
-When Grokbot's computer is running, I can take control if I want. I thought at first that I could not paste from my own machine into Grokbot's computer. I took control, tried it, and learned I can copy or cut on my computer and paste into Grokbot's computer.
-
-I take control when I do not want passwords sitting with the bot, or when Grokbot is having trouble with its secure password form. That form does not store my password. It passes the password through into the UI. I can take control from my phone too. It is almost like having a cloud computer, a fully fledged desktop that runs in the background. Grokbot uses that desktop to take screenshots. The Cursor agent can take screenshots too.
-
-## Short enough for a phone
-
-I like that I can focus on where my top-level stuff is. If I forget something, I type it and get a quick confirmation. The Grokbot models are fast, so they respond quickly.
-
-Tuning matters. The chief of staff needs to be able to coordinate, and my bots need instructions to respond in a shortened, concise way. Without that, Grokbot likes to be very verbose. As soon as I see walls of text, especially on my phone, I tell that bot: you gotta be more concise. Your messages have to be easily viewable on a mobile phone. If a long answer is unavoidable, I ask it to walk me through the thing one by one. That makes it easier to review what comes back and easier to swipe right and reply to one issue at a time.
-
-I can have hands-free voice conversations. I have done that while biking, while scootering, and while cooking. I created a chef bot to help when I cook. If I need proportions right, I instructed it to rely on the best reliable information: how much salt, how much to weigh, portion sizes. I can store feedback too, like when a recipe it found was a dud, and have it remember. The point is not that it gets it perfect from the first time. The point is that it becomes a learning and adaptive system that adjusts to my preferences. Hands free, it can still call tools, including coding agents. I have been on five-minute and ten-minute calls just to hash something out.
-
-## Personal email once a day
-
-I have used Grokbot to fill out forms, coordinate coding tasks, and draft emails. The heavier personal-email workflow lives in its own bot. That bot still has a routine that checks every day at noon. I forget the exact setup because I tell it what I want in natural language and it creates the automation.
-
-At noon the personal email bot checks my mail, prepares drafts of responses, and bubbles them up. Anything bubbled up means I need to respond. If I have replied, the bot pops the item from the bubble. I think the check should move to 11 a.m., because I am usually busy at lunch and have no time to check personal email, let alone answer it. The draft is a first pass. I edit, and I have the bot learn from that. I really only check personal email once a day now, or rather, that is an ideal state I am moving toward. I know I cannot triage every email. I have to use AI agents as a buffer. There is too much info flying around.
-
-## A bot for the bike repair
-
-My bike rear wheel broke recently, and the repair has been a long-running, low-humming project on the back burner of my life. It is stressful to keep hold of. I have a bike repair bot whose lifespan matches the repair.
-
-I was trying to get Lectric, the brand behind my electric bike, to warranty-replace the rear wheel. The wheel broke after it had already been replaced once, and I wanted a warranty replacement of that replacement. Lectric's policies do not allow that. They were kind enough to discount a rear wheel purchase, and I was happy to go with that. The bot drafted the emails so I would not have the stress of drafting them myself.
-
-I put a rule inside the bot: if Lectric does not respond within two business days, follow up. I do not want to remember little nitty gritty things like that. Grokbot can set recurrent reminders and update them as I steer the bot. When I delegate these boring, dumb little things that I do not want to talk about or do, my confidence goes up. I end up in a better position because I am taking stress off my life.
+I've also had hands-free voice conversations while biking, while scootering, and while cooking. I created a chef bot for that. It's instructed to rely on the best reliable information when I don't know how much salt to add, or how much to weigh, including portion sizes. I can tell it a recipe was a dud and have it remember. It's not perfect from the first time. It becomes a learning system that adjusts to my preferences, and hands free it can still call tools, including coding agents. I've been on five-minute and ten-minute calls just to hash something out.
 
 ## The sixty-dollar plan gives me pause
 
-What is not so good right now is the economics. The limits changed recently, and in three days I burned through thirty percent of my Cursor credits, which are combined with Grokbot. That is ridiculous. That used to be roughly what I would spend with Claude, and I am on the sixty-dollar-a-month plan.
+What changed recently is the economics. I'm not sure which limit moved, or why, but in three days I burned through thirty percent of my Cursor credits, which are combined with Grokbot. That's ridiculous. That used to be what I would spend with Claude. I'm on the sixty-dollar-a-month plan, and I used to be very comfortable there. The unit economics of token spend have fundamentally changed on the more expensive plans. I'm doing a double take.
 
-Something changed about the economics, and I am not sure what it was. That is one reason I am considering deploying OpenBot for myself, which is running on my Mac right now by the Copilot Kit group, as well as looking at other ways of doing remote work. T3 Code has remote capabilities as long as my Mac is online, and I can get stuff done that way, but it does not have the same kind of computer isolation I am used to with Grokbot. I need to keep that tradeoff in mind.
+Something changed, and I'm not sure what it was. That's one reason I'm considering deploying OpenBot for myself, which is running on my Mac right now by the Copilot Kit group, as well as looking at other ways of doing remote work. T3 Code, the same T3 Code I mentioned earlier, can do remote work as long as my Mac is online. I can get stuff done that way, but it doesn't have the same kind of computer isolation I'm used to with Grokbot. I need to keep that tradeoff in mind.
 
-The only thing giving me pause is that the unit economics of token spend have fundamentally changed on the more expensive plans. Previously I was very comfortable within my sixty-dollar-a-month plan. Now not so much, and it is making me do a double take. I wanted to put that out there.
-
-## Just talking, and easy connections
-
-Grokbot is setting a cool pattern for how to work with AI agents. I liked the simplicity of the first touch, and I liked that I could grow into it from there. The two things I wanted to highlight are the simplicity of just talking with it, coupled with the power of very easy connectivity. That is the shape I would copy elsewhere.
+I still think Grokbot is setting a cool pattern for how to work with agents. I talk to it, and the connections do the rest: a photo becomes a calendar invite, a noon check becomes a draft, a two-day silence from Lectric becomes a follow-up, and the coding runs while my laptop is off. The simplicity of just talking with it, and how little work it is to connect the thing I'm talking about, are the two things I wanted to get down.
 ---
 pub_date: 2026-11-13
 ---
