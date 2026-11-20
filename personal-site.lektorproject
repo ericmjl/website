@@ -2,6 +2,8 @@
 name = Eric J. Ma's Personal Website
 locale = en_US
 url = https://ericmjl.github.io/
+# Lektor skips asset names matching _*. The islands runtime has two of those.
+included_assets = _baseMerge-*, __vite-browser-external-*
 
 [servers.gh_ssh]
 name = GitHub Pages

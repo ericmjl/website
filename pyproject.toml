@@ -100,7 +100,8 @@ werkzeug = "*"
 [tool.pixi.feature.lektor.tasks]
 website = "lektor server --port 5959 --host 0.0.0.0"
 build-search-index = "python scripts/build_search_index.py"
-build = { cmd = "lektor build --output-path site/", depends-on = ["build-search-index"] }
+fetch-marimo-islands = "python scripts/fetch_marimo_islands_assets.py"
+build = { cmd = "lektor build --output-path site/", depends-on = ["fetch-marimo-islands", "build-search-index"] }
 
 [tool.pixi.feature.blogbot.tasks]
 blogbot_old = "panel serve apis/blogbot/app.ipynb --allow-websocket-origin=0.0.0.0:5006"

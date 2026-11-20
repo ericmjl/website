@@ -33,7 +33,7 @@ A blog post can inline a reactive marimo notebook instead of framing a full WebA
 uv run scripts/build_marimo_islands.py content/blog/<slug>/notebook.py
 ```
 
-Commit the notebook and the generated `notebook.islands.html`. Lektor inlines the fragment when it renders the post. The tradeoffs, asset list, and theme notes are in [docs/marimo-islands.md](docs/marimo-islands.md).
+Commit the notebook and the generated `notebook.islands.html`. Lektor inlines the fragment when it renders the post. `pixi run build` also unpacks the islands runtime into `assets/static/marimo-islands/` (that directory is gitignored; do not point the fragment at jsDelivr). The tradeoffs, asset list, and theme notes are in [docs/marimo-islands.md](docs/marimo-islands.md).
 
 ## Commenting System
 

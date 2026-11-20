@@ -29,6 +29,12 @@ from loguru import logger
 
 # Keep this aligned with the @marimo-team/islands CDN URL the generator emits.
 MARIMO_VERSION = "0.25.2"
+# jsDelivr's cached main.js for this version points at chunk hashes that 404.
+# The page loads the copy unpacked by scripts/fetch_marimo_islands_assets.py.
+ISLANDS_CDN_DIST = (
+    f"https://cdn.jsdelivr.net/npm/@marimo-team/islands@{MARIMO_VERSION}/dist"
+)
+ISLANDS_LOCAL_DIST = f"/static/marimo-islands/{MARIMO_VERSION}"
 
 app = typer.Typer(add_completion=False, no_args_is_help=True)
 
@@ -145,6 +151,25 @@ def _loading_script() -> str:
 </script>"""
 
 
+def localize_islands_runtime(fragment: str) -> str:
+    """Point the islands runtime at the self-hosted dist.
+
+    :param fragment: HTML produced by ``MarimoIslandGenerator``.
+    :returns: The same HTML with the jsDelivr dist URL replaced.
+    :raises RuntimeError: If the generator did not emit the expected URL.
+    """
+    if ISLANDS_CDN_DIST not in fragment:
+        raise RuntimeError(
+            "Islands head did not contain "
+            f"{ISLANDS_CDN_DIST}. Refusing to write a fragment that "
+            "depends on the jsDelivr cache."
+        )
+    localized = fragment.replace(ISLANDS_CDN_DIST, ISLANDS_LOCAL_DIST)
+    # A title on a stylesheet makes it a preferred stylesheet. Drop it so
+    # every browser applies the islands CSS as a normal persistent sheet.
+    return localized.replace(' title="marimo-islands"', "")
+
+
 def render_fragment(notebook: Path) -> str:
     """Render a notebook as an islands fragment for inlining into a page.
 
@@ -165,7 +190,7 @@ def render_fragment(notebook: Path) -> str:
     parts.append("</div>")
     fragment = "\n".join(parts).rstrip() + "\n"
     fragment = "\n".join(line.rstrip() for line in fragment.splitlines()) + "\n"
-    return fragment
+    return localize_islands_runtime(fragment)
 
 
 @app.command()
