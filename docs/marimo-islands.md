@@ -44,15 +44,18 @@ Generation is not part of `pixi run build`. CI publishes the committed fragment.
 
 ## Assets, theme, and page weight
 
-`render_head()` for 0.25.2 requests:
+The fragment does not load `@marimo-team/islands` from jsDelivr. That CDN caches `main.js` for a year, and the cached 0.25.2 file points at chunk hashes (the Pyodide worker included) that a later publish of the same version deleted. Those requests 404, the worker never starts, and the page stays on "Loading the interactive viewer...". Which copy you get depends on the edge cache, so one browser can render the viewer while another never starts it.
 
-- `https://cdn.jsdelivr.net/npm/@marimo-team/islands@0.25.2/dist/main.js` (about 1.0 MB)
-- `.../dist/style.css` (about 0.46 MB)
-- Google fonts (Fira Mono, Lora, PT Sans) and KaTeX CSS, which the islands stylesheet expects
+`pixi run build` runs `scripts/fetch_marimo_islands_assets.py` first. That downloads the npm tarball, checks its sha512, and unpacks `package/dist` into `assets/static/marimo-islands/0.25.2/` (gitignored). The fragment then loads:
 
-Those are not copied into the repo. The browser also downloads Pyodide and the wheels named in the notebook (`marimo`, `anywidget`, and anywidget's dependency `traitlets`), then 3Dmol from cdnjs and `1UBQ.pdb` from rcsb.org. The page has to be served over HTTP. A `file://` open will not boot the island. Same constraint as the old export.
+- `/static/marimo-islands/0.25.2/main.js`
+- `/static/marimo-islands/0.25.2/style.css`
 
-The islands stylesheet is Tailwind scoped under `.marimo`, so it does not restyle the blog. It is a preferred stylesheet (`title="marimo-islands"`). Persistent site CSS still applies. terminal.css styles `input` and `select`. It does not style `button` or `canvas`, which is why this viewer is mostly unaffected. A future island that shows a marimo slider or dropdown will pick up terminal.css control styles, and will need a host-level reset.
+`main.js` loads `./assets/worker-*.js` from that same directory, so the worker hash always matches the script that referenced it. Lektor normally skips asset filenames that start with `_`. Two islands chunks do, so `personal-site.lektorproject` lists them under `included_assets`. Google fonts and KaTeX CSS still come from their own CDNs.
+
+The browser also downloads Pyodide and the wheels named in the notebook (`marimo`, `anywidget`, and anywidget's dependency `traitlets`), then 3Dmol from cdnjs and `1UBQ.pdb` from rcsb.org. The page has to be served over HTTP. A `file://` open will not boot the island. Same constraint as the old export.
+
+The islands stylesheet is Tailwind scoped under `.marimo`, so it does not restyle the blog. The fragment drops the `title` attribute marimo puts on that stylesheet, so browsers treat it as a normal sheet rather than a preferred one. terminal.css styles `input` and `select`. It does not style `button` or `canvas`, which is why this viewer is mostly unaffected. A future island that shows a marimo slider or dropdown will pick up terminal.css control styles, and will need a host-level reset.
 
 Dark mode sets `color: #fff` on `body`. The host is pinned to a light panel in `custom.css` so the viewer matches the old light iframe and the status text stays readable. `overflow-anchor: none` is set on the host for the same scroll-anchoring reason the site already sets it on iframes.
 

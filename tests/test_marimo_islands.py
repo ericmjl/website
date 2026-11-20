@@ -20,6 +20,21 @@ class Record:
         self.source_filename = str(source_filename)
 
 
+class FragmentTests(unittest.TestCase):
+    def test_committed_fragment_does_not_use_jsdelivr(self) -> None:
+        fragment = (
+            Path(__file__).resolve().parents[1]
+            / "content"
+            / "blog"
+            / "agent-assisted-data-science-with-marimo"
+            / "protein-anywidget.islands.html"
+        )
+        text = fragment.read_text(encoding="utf-8")
+        self.assertIn("/static/marimo-islands/0.25.2/main.js", text)
+        self.assertNotIn("cdn.jsdelivr.net/npm/@marimo-team/islands", text)
+        self.assertNotIn('title="marimo-islands"', text)
+
+
 class InjectTests(unittest.TestCase):
     def test_missing_marker_is_left_alone(self) -> None:
         record = Record(Path("/tmp/contents.lr"))
