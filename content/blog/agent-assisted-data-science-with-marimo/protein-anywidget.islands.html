@@ -1,0 +1,77 @@
+<div class="marimo-islands-host">
+<p class="marimo-islands-status">Loading the interactive viewer...</p>
+<script>
+(function () {
+  var script = document.currentScript;
+  var host = script && script.closest(".marimo-islands-host");
+  if (!host) return;
+  function hasCanvas(root) {
+    if (root.querySelector("canvas, .pv-container")) return true;
+    var nodes = root.querySelectorAll("*");
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].shadowRoot && hasCanvas(nodes[i].shadowRoot)) return true;
+    }
+    return false;
+  }
+  function settle() {
+    if (!hasCanvas(host)) return;
+    var status = host.querySelector(".marimo-islands-status");
+    if (status) status.remove();
+    clearInterval(timer);
+  }
+  // The 3Dmol canvas is created inside an open shadow root, which a
+  // light-DOM MutationObserver does not see. Polling catches it.
+  var timer = setInterval(settle, 200);
+  settle();
+})();
+</script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@marimo-team/islands@0.25.2/dist/main.js"></script>
+<link
+    href="https://cdn.jsdelivr.net/npm/@marimo-team/islands@0.25.2/dist/style.css"
+    rel="stylesheet"
+    title="marimo-islands"
+    crossorigin="anonymous"
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Lora&amp;family=PT+Sans:wght@400;700&amp;display=swap" rel="stylesheet" />
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.18.5/dist/katex.min.css"
+    integrity="sha384-2dNi/m6JtSiviznrOIZ5fTiZ5As0In2QwkuXSgoqcQtCNplvJAbt+jveeN+8en73"
+    crossorigin="anonymous"
+/>
+<marimo-filename hidden></marimo-filename>
+<marimo-island
+    data-app-id="main"
+    data-cell-id="Hbol"
+    data-reactive="true"
+>
+    <marimo-cell-output>
+    </marimo-cell-output>
+    <marimo-cell-code hidden>import%20anywidget%0Aimport%20marimo%20as%20mo%0Aimport%20traitlets</marimo-cell-code>
+</marimo-island>
+<marimo-island
+    data-app-id="main"
+    data-cell-id="MJUe"
+    data-reactive="true"
+>
+    <marimo-cell-output>
+    </marimo-cell-output>
+    <marimo-cell-code hidden>class%20ProteinViewer(anywidget.AnyWidget)%3A%0A%20%20%20%20%22%22%22Render%20any%20PDB%20entry%20from%20the%20RCSB%20as%20a%203D%20cartoon.%22%22%22%0A%0A%20%20%20%20_esm%20%3D%20%22%22%22%0A%20%20%20%20function%20load3Dmol()%20%7B%0A%20%20%20%20%20%20return%20new%20Promise((resolve%2C%20reject)%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20if%20(window.%243Dmol)%20%7B%20resolve(window.%243Dmol)%3B%20return%3B%20%7D%0A%20%20%20%20%20%20%20%20const%20script%20%3D%20document.createElement(%22script%22)%3B%0A%20%20%20%20%20%20%20%20script.src%20%3D%20%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2F3Dmol%2F2.4.0%2F3Dmol-min.js%22%3B%0A%20%20%20%20%20%20%20%20script.onload%20%3D%20()%20%3D%3E%20resolve(window.%243Dmol)%3B%0A%20%20%20%20%20%20%20%20script.onerror%20%3D%20()%20%3D%3E%20reject(new%20Error(%22could%20not%20load%203Dmol.js%22))%3B%0A%20%20%20%20%20%20%20%20document.head.appendChild(script)%3B%0A%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20async%20function%20render(%7B%20model%2C%20el%20%7D)%20%7B%0A%20%20%20%20%20%20el.style.position%20%3D%20%22relative%22%3B%0A%20%20%20%20%20%20const%20status%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20status.style.cssText%20%3D%0A%20%20%20%20%20%20%20%20%22font%3A12px%20ui-monospace%2Cmonospace%3Bcolor%3A%23666%3Bpadding%3A6px%202px%3B%22%3B%0A%20%20%20%20%20%20el.appendChild(status)%3B%0A%0A%20%20%20%20%20%20async%20function%20show(pdbId)%20%7B%0A%20%20%20%20%20%20%20%20status.textContent%20%3D%20%22loading%20%22%20%2B%20pdbId%20%2B%20%22%20from%20rcsb.org...%22%3B%0A%20%20%20%20%20%20%20%20const%20%24%20%3D%20await%20load3Dmol()%3B%0A%20%20%20%20%20%20%20%20el.querySelectorAll(%22.pv-container%22).forEach((n)%20%3D%3E%20n.remove())%3B%0A%20%20%20%20%20%20%20%20const%20container%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20%20%20container.className%20%3D%20%22pv-container%22%3B%0A%20%20%20%20%20%20%20%20container.style.height%20%3D%20model.get(%22height%22)%20%2B%20%22px%22%3B%0A%20%20%20%20%20%20%20%20el.appendChild(container)%3B%0A%20%20%20%20%20%20%20%20const%20viewer%20%3D%20%24.createViewer(container%2C%20%7B%20backgroundColor%3A%20%22white%22%20%7D)%3B%0A%20%20%20%20%20%20%20%20const%20response%20%3D%20await%20fetch(%0A%20%20%20%20%20%20%20%20%20%20%22https%3A%2F%2Ffiles.rcsb.org%2Fdownload%2F%22%20%2B%20pdbId%20%2B%20%22.pdb%22%0A%20%20%20%20%20%20%20%20)%3B%0A%20%20%20%20%20%20%20%20if%20(!response.ok)%20%7B%0A%20%20%20%20%20%20%20%20%20%20status.textContent%20%3D%0A%20%20%20%20%20%20%20%20%20%20%20%20%22rcsb.org%20returned%20%22%20%2B%20response.status%20%2B%20%22%20for%20%22%20%2B%20pdbId%3B%0A%20%20%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20viewer.addModel(await%20response.text()%2C%20%22pdb%22)%3B%0A%20%20%20%20%20%20%20%20viewer.setStyle(%7B%7D%2C%20%7B%20cartoon%3A%20%7B%20color%3A%20%22spectrum%22%20%7D%20%7D)%3B%0A%20%20%20%20%20%20%20%20viewer.zoomTo()%3B%0A%20%20%20%20%20%20%20%20viewer.render()%3B%0A%20%20%20%20%20%20%20%20status.textContent%20%3D%0A%20%20%20%20%20%20%20%20%20%20pdbId%20%2B%20%22%20%5Cu00b7%20drag%20to%20rotate%2C%20scroll%20to%20zoom%22%3B%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20await%20show(model.get(%22pdb_id%22))%3B%0A%20%20%20%20%20%20model.on(%22change%3Apdb_id%22%2C%20()%20%3D%3E%20show(model.get(%22pdb_id%22)))%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20export%20default%20%7B%20render%20%7D%3B%0A%20%20%20%20%22%22%22%0A%0A%20%20%20%20pdb_id%20%3D%20traitlets.Unicode(%221UBQ%22).tag(sync%3DTrue)%0A%20%20%20%20height%20%3D%20traitlets.Int(440).tag(sync%3DTrue)</marimo-cell-code>
+</marimo-island>
+<marimo-island
+    data-app-id="main"
+    data-cell-id="vblA"
+    data-reactive="true"
+>
+    <marimo-cell-output>
+    </marimo-cell-output>
+    <marimo-cell-code hidden>protein_viewer%20%3D%20ProteinViewer(pdb_id%3D%221UBQ%22%2C%20height%3D440)%0Aprotein_viewer</marimo-cell-code>
+</marimo-island>
+<script type="application/vnd.marimo.islands+json">{"appId": "main", "cells": [{"cellId": "Hbol", "code": "import anywidget\nimport marimo as mo\nimport traitlets", "displayCode": false, "displayOutput": true, "outputHtml": "", "outputMimetype": "text/plain", "reactive": true}, {"cellId": "MJUe", "code": "class ProteinViewer(anywidget.AnyWidget):\n    \"\"\"Render any PDB entry from the RCSB as a 3D cartoon.\"\"\"\n\n    _esm = \"\"\"\n    function load3Dmol() {\n      return new Promise((resolve, reject) =\u003E {\n        if (window.$3Dmol) { resolve(window.$3Dmol); return; }\n        const script = document.createElement(\"script\");\n        script.src = \"https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.4.0/3Dmol-min.js\";\n        script.onload = () =\u003E resolve(window.$3Dmol);\n        script.onerror = () =\u003E reject(new Error(\"could not load 3Dmol.js\"));\n        document.head.appendChild(script);\n      });\n    }\n\n    async function render({ model, el }) {\n      el.style.position = \"relative\";\n      const status = document.createElement(\"div\");\n      status.style.cssText =\n        \"font:12px ui-monospace,monospace;color:#666;padding:6px 2px;\";\n      el.appendChild(status);\n\n      async function show(pdbId) {\n        status.textContent = \"loading \" + pdbId + \" from rcsb.org...\";\n        const $ = await load3Dmol();\n        el.querySelectorAll(\".pv-container\").forEach((n) =\u003E n.remove());\n        const container = document.createElement(\"div\");\n        container.className = \"pv-container\";\n        container.style.height = model.get(\"height\") + \"px\";\n        el.appendChild(container);\n        const viewer = $.createViewer(container, { backgroundColor: \"white\" });\n        const response = await fetch(\n          \"https://files.rcsb.org/download/\" + pdbId + \".pdb\"\n        );\n        if (!response.ok) {\n          status.textContent =\n            \"rcsb.org returned \" + response.status + \" for \" + pdbId;\n          return;\n        }\n        viewer.addModel(await response.text(), \"pdb\");\n        viewer.setStyle({}, { cartoon: { color: \"spectrum\" } });\n        viewer.zoomTo();\n        viewer.render();\n        status.textContent =\n          pdbId + \" \\u00b7 drag to rotate, scroll to zoom\";\n      }\n\n      await show(model.get(\"pdb_id\"));\n      model.on(\"change:pdb_id\", () =\u003E show(model.get(\"pdb_id\")));\n    }\n\n    export default { render };\n    \"\"\"\n\n    pdb_id = traitlets.Unicode(\"1UBQ\").tag(sync=True)\n    height = traitlets.Int(440).tag(sync=True)", "displayCode": false, "displayOutput": true, "outputHtml": "", "outputMimetype": "text/plain", "reactive": true}, {"cellId": "vblA", "code": "protein_viewer = ProteinViewer(pdb_id=\"1UBQ\", height=440)\nprotein_viewer", "displayCode": false, "displayOutput": true, "outputHtml": "", "outputMimetype": "text/plain", "reactive": true}], "dependencies": ["marimo", "anywidget"], "schemaVersion": 1}</script>
+</div>

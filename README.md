@@ -21,6 +21,20 @@ Note: Use the HTML syntax above rather than Markdown code fences, as Mermaid nee
 
 For more information on Mermaid.js diagram syntax, visit the [Mermaid.js documentation](https://mermaid.js.org/syntax/flowchart.html).
 
+## Marimo islands
+
+A blog post can inline a reactive marimo notebook instead of framing a full WebAssembly export. Put the notebook next to `contents.lr`, generate the fragment, and drop this placeholder where the viewer should appear:
+
+```html
+<div class="marimo-islands" data-fragment="notebook.islands.html"></div>
+```
+
+```bash
+uv run scripts/build_marimo_islands.py content/blog/<slug>/notebook.py
+```
+
+Commit the notebook and the generated `notebook.islands.html`. Lektor inlines the fragment when it renders the post. The tradeoffs, asset list, and theme notes are in [docs/marimo-islands.md](docs/marimo-islands.md).
+
 ## Commenting System
 
 This website uses [giscus](https://giscus.app/) for comments, powered by GitHub Discussions.
