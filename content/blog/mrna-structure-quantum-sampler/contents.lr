@@ -1,0 +1,101 @@
+title: Predicting mRNA Structure with a Quantum Sampler
+---
+author: Eric J. Ma
+---
+body:
+
+I work at Moderna, so mRNA is never far from my mind. mRNA is the molecule that carries genetic instructions from DNA out to the cell's protein-making machinery, and the way it folds up on itself, its *secondary structure*, controls how stable it is, how efficiently it gets translated, and ultimately how well it works as a therapeutic.
+
+Predicting that structure is hard. Really hard. A strand of *n* nucleotides can fold in a combinatorial explosion of ways, and finding the lowest-energy fold is exactly the kind of problem that makes classical algorithms sweat. (Once you allow pseudoknots, those crossing base pairs that let RNA do clever things, the problem becomes NP-complete.)
+
+This post is a walkthrough of a recent paper that takes a real swing at the problem with a quantum computer. The paper, "[Towards secondary structure prediction of longer mRNA sequences using a quantum-centric optimization scheme](https://arxiv.org/abs/2505.05782)" (arXiv 2505.05782), was co-authored by my colleagues Alexey Galda and Mihir Metkar here at Moderna, together with Vaibhaw Kumar and collaborators at IBM Quantum and Fermioniq. I won't pretend I followed every equation. What I want to give you is the shape of the approach, and why I think it's a genuinely interesting use of a quantum computer.
+
+Here is the one-line version up front: the quantum computer is used as a *sampler* over a combinatorial space, and the real ingenuity is in how the problem is encoded so that space becomes samplable at all.
+
+A quick grounding, since this stands on its own. A qubit is a probabilistic bit; a register of qubits spans a joint distribution over a large space of bitstrings; and a quantum computer's specialty is being put into a state spread over that space and then sampled from. If that framing is new, sit with it for a moment, because the rest of this post is basically one long example of it.
+
+<iframe src="before-you-read.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+## The problem: folding is a giant search
+
+RNA folds because nucleotides pair up. In mRNA the allowed pairings are A-U, U-A, C-G, G-C, and the wobble pair G-U. A folded structure is a particular choice of which pairs form, and the cell favors the low-energy ones, the stable folds.
+
+The trouble is the search space. For a sequence of length *n*, the number of ways to choose pairings grows combinatorially, and "which fold has the lowest energy?" is hard in the formal sense. Classical tools handle this with dynamic programming (the Zuker algorithm, ViennaRNA, MFold), which is elegant but leans on approximations, for example ignoring pseudoknots to stay tractable. For longer sequences, and for structures where those approximations bite, you want a different approach.
+
+This is exactly where "too big to enumerate" meets "we need to sample," and where a quantum computer enters the story.
+
+## Encoding the problem: from base pairs to qubits
+
+The first instinct might be to give every possible base pair its own qubit: 1 if the pair forms, 0 if it doesn't. For a sequence of length *n*, that's on the order of *n*² qubits, which blows up fast.
+
+The team's key move is to encode the problem at the level of *quartets* instead. A quartet is four nucleotides that could form two consecutive base pairs, stacked one on top of the other:
+
+```text
+...-A--U-...
+    |  |
+...-U--A-...
+```
+
+Now each qubit represents a whole quartet: 1 means "this stacked pairing is present in the fold," 0 means "it isn't." That is a much smaller, much better-behaved set of variables.
+
+Here is the elegant part. The biological constraints fall out of the representation for free, instead of being bolted on later. Each nucleotide can bond with only one partner, so any two quartets that share a base pair can't both be selected. And pseudoknots, those crossing pairings, correspond to quartets you simply don't allow. You don't program these rules into the solver; they're baked into how you chose the variables. The optimizer never wastes time exploring impossible folds, because impossible folds aren't representable.
+
+How much does this help? As a rough back-of-envelope, the number of candidate quartets for a length-*n* sequence is on the order of (*n*-3)(*n*-2)/2, and only a fraction are biologically valid, since both stacked pairs have to be allowed pairings. For a 60-nucleotide sequence that starts around a couple of thousand candidates and gets pruned hard. The paper itself formulates the 60-nucleotide problem as a 256-qubit problem and then applies a reduction scheme (their Appendix A) to bring it down to 156 qubits. That 156 is the number that actually runs on hardware.
+
+<iframe src="quartet-encoding.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+## The plan in one picture: a QUBO, solved by sampling
+
+Once you have your qubit variables and an energy that says how good a fold is, the problem has a standard shape: minimize a quadratic function of binary variables. That's a QUBO, a Quadratic Unconstrained Binary Optimization. The lowest-energy bitstring is your predicted structure.
+
+But "minimize over 156 binary variables" still means a space of 2^156 configurations, which nobody enumerates. So you sample. And this is where the paper offers not one but two ways to drive that sampling.
+
+## Two ways to drive the sampling
+
+### Workflow 1: a CVaR variational algorithm
+
+The first workflow is a variational quantum algorithm, or VQA. You build a parameterized quantum circuit, run it on hardware to get a batch of samples (bitstrings), score them with an objective, and hand the scores to a classical optimizer that nudges the circuit's parameters. Then repeat. The optimizer works from the sample outcomes, the function values, rather than computing gradients through the quantum circuit; to me it feels less like backprop and more like tuning a radio by ear.
+
+Two pieces of this are worth calling out. First, the objective isn't the plain average energy of the samples; it's a *Conditional Value at Risk* (CVaR) objective. RNA molecules live in their lowest-energy states, so minimizing the average energy chases middling folds you don't care about. CVaR instead asks: "averaging only over the lowest-energy tail of my samples, say the bottom 20%, how good are they?" Minimizing that pushes the circuit to make the genuinely stable, low-energy folds more likely.
+
+Second, the team wraps the hardware sampling in practical engineering: gauge transformations to compensate for hardware noise, a parameter threshold to skip pointless tweaks, and a shallow classical local search that flips individual bits to refine each sample. None of this is glamorous, but it's what makes noisy hardware samples usable.
+
+<iframe src="cvar-vs-mean.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+### Workflow 2: IQP circuits, train classically and sample on quantum
+
+The second workflow is, honestly, the one I find most interesting, and it's the part that maps cleanest onto a Bayesian intuition. It uses a family of circuits called IQP, Instantaneous Quantum Polynomial circuits, which have a curious property: the *expectation values* of a state they prepare can be computed efficiently on a classical computer, but *sampling* from their output distribution is believed to be classically hard.
+
+That split is the whole idea. You train the circuit's parameters on a classical computer, using those efficiently-computable expectation values as your guide. Then, once the parameters are good, you hand the circuit to the quantum computer and let it do the one thing it's uniquely good at: sample from that hard-to-sample distribution.
+
+For a probabilistic Bayesian this should feel familiar. Expectations are the easy part; we compute those all the time. Sampling is the hard part; it's the thing our MCMC chains burn compute trying to do. This workflow cleanly offloads the hard part to the machine that's built for it.
+
+## What they actually ran
+
+On real hardware the team ran the 127- and 156-qubit problems, corresponding to mRNA sequences of 45 and 60 nucleotides, on IBM's Eagle processor (ibm_kyiv) and Heron r2 processor (ibm_marrakesh). The circuits reached up to about 950 nonlocal gates, with circuit depths up to 112. To stress-test the CVaR approach beyond what hardware can hold today, they also simulated it on a tensor-network simulator out to 354 qubits, with no noise. These are serious, utility-scale circuits, not toy demos.
+
+<iframe src="check-understanding.html" width="100%" scrolling="no" style="border: none;" onload="this.style.height=this.contentDocument.body.scrollHeight+'px'"></iframe>
+
+## What I take away
+
+If I had to distill the paper into one sentence, it's this: the quantum computer is not doing the heavy lifting alone. It is acting as a specialized sampler over a combinatorial space that would be intractable to enumerate classically, and what makes that sampling land is the *problem representation*. Encoding mRNA structure as quartets shrinks the search space and bakes the biological constraints in, so that a current-generation quantum device can actually get its teeth into it.
+
+Neither piece works without the other. A quantum sampler pointed at a naive *n*²-encoding would drown in qubits. A clever encoding with no efficient way to explore the space would leave you stuck with classical heuristics all the same. The combination, smart representation plus quantum sampling plus classical post-processing, is where the bite is.
+
+Plenty here is still beyond me; the circuit design, the gauge transformations, and the reduction scheme are all places I'm honestly black-boxing. But the shape of the idea is clear, and it's the shape that matters: represent the problem cleverly, sample where enumerating is hopeless, and refine classically. Watching mRNA structure, the thing my company builds therapeutics out of, get predicted by a quantum sampler, is a genuinely exciting look at where this field is heading.
+---
+pub_date: 2026-07-31
+---
+twitter_handle: ericmjl
+---
+summary: A walkthrough of a recent paper (arXiv 2505.05782) co-authored by my Moderna colleagues Alexey Galda and Mihir Metkar with IBM Quantum, on predicting mRNA secondary structure with a quantum computer. The post covers the quartet encoding that shrinks the problem and bakes in biological constraints, the QUBO formulation, and the two sampling workflows the team used, a CVaR variational algorithm and an IQP scheme that trains classically and samples on quantum hardware. The punchline: the quantum computer is a specialized sampler, and clever problem representation is what makes it usable.
+---
+tags:
+
+mrna
+quantum
+qubo
+optimization
+sampling
+biology
+machine learning

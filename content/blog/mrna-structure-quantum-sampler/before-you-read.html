@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before you read</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: monospace; font-size: 13px; line-height: 1.5;
+    color: #222; background: transparent;
+  }
+  .card {
+    background: #fafafa; border: 1px solid #ddd; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 640px; margin: 0 auto; padding: 16px;
+  }
+  .card h2 { margin: 0 0 4px; font-size: 15px; color: #0066cc; }
+  .kicker { font-size: 11.5px; color: #888; margin: 0 0 12px; }
+  .progress { font-size: 11.5px; color: #888; margin: 0 0 12px; }
+  .prompt { font-weight: bold; margin: 0 0 10px; font-size: 12.5px; color: #222; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    display: block; width: 100%; text-align: left;
+    padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;
+    background: #fff; color: #333; cursor: pointer;
+    font-family: monospace; font-size: 12px; line-height: 1.45;
+    transition: border-color 0.1s ease;
+  }
+  .opt:hover { border-color: #0066cc; }
+  .opt.sel { border-color: #0066cc; background: #eef4ff; color: #0066cc; }
+  .fb {
+    display: none; margin: 2px 0 0; padding: 6px 10px;
+    font-size: 11.5px; line-height: 1.45; color: #0066cc;
+    background: #eef4ff; border-left: 3px solid #0066cc; border-radius: 0 4px 4px 0;
+  }
+  .fb.show { display: block; }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 8px; }
+  .nav button {
+    font-family: monospace; font-size: 12px; padding: 7px 14px;
+    border: 1px solid #0066cc; background: #fff; color: #0066cc;
+    border-radius: 6px; cursor: pointer;
+  }
+  .nav button:hover:not(:disabled) { background: #0066cc; color: #fff; }
+  .nav button:disabled { opacity: 0.4; cursor: default; border-color: #bbb; color: #999; }
+  .closing {
+    display: none; margin-top: 4px; padding: 12px;
+    background: #eef4ff; border: 1px solid #cfe0ff; border-radius: 6px;
+    color: #0066cc; font-size: 13px;
+  }
+  .closing.show { display: block; }
+  .closing .csub { color: #555; font-size: 11.5px; margin-top: 4px; }
+  .closing .again {
+    margin-top: 10px; font-family: monospace; font-size: 12px; padding: 7px 14px;
+    border: 1px solid #0066cc; background: #fff; color: #0066cc; border-radius: 6px; cursor: pointer;
+  }
+  .closing .again:hover { background: #0066cc; color: #fff; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Before you read</h2>
+  <p class="kicker">A quick warm-up. Pick the answer that feels closest. None of them is the whole story.</p>
+  <div id="progress" class="progress"></div>
+  <div id="qbody"></div>
+  <div id="closing" class="closing"></div>
+  <div id="nav" class="nav">
+    <button id="back">&larr; Back</button>
+    <button id="next">Next &rarr;</button>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  function fit() {
+    var f = window.frameElement;
+    if (!f) return;
+    f.style.height = '0px';
+    f.style.height = document.body.scrollHeight + 'px';
+  }
+
+  var QUESTIONS = [
+    {
+      prompt: "Why is predicting mRNA secondary structure computationally hard?",
+      options: [
+        { text: "Because RNA sequences can be very long.",
+          fb: "Length contributes, but it is not the crux. The hardness is the combinatorial explosion of possible foldings, which the post unpacks." },
+        { text: "Because RNA has many possible folding configurations.",
+          fb: "Right instinct, the configuration space is huge. What is missing is that we are hunting for the lowest-energy fold, not just any fold." },
+        { text: "Because it's an unsolved problem in biology.",
+          fb: "Not quite unsolved: classical tools like ViennaRNA exist. The real issue is the approximations they lean on, which the post covers." },
+        { text: "Because nucleotides pair up randomly.",
+          fb: "Pairings are not random; they are chemically constrained (A-U, C-G, G-U). The difficulty is combinatorial, not randomness." }
+      ]
+    },
+    {
+      prompt: "What does it mean to 'encode' the folding problem for a quantum computer?",
+      options: [
+        { text: "Translate the RNA sequence into qubits directly.",
+          fb: "You would start here, but a naive one-pair-per-qubit encoding blows up fast. The encoding trick is the whole game." },
+        { text: "Pick a representation where variables are 0/1 and the constraints fall out naturally.",
+          fb: "This is the heart of it. What is still incomplete is the specific trick, quartets, and the QUBO shape it produces." },
+        { text: "Store the energy values in quantum memory.",
+          fb: "Quantum computers do not really 'store' the problem as data like that. Energy becomes an objective to minimize over bitstrings." },
+        { text: "Convert it into a machine-learning model.",
+          fb: "This is an optimization problem, not a learned model. The post frames it as a QUBO, not as ML." }
+      ]
+    },
+    {
+      prompt: "In a hybrid quantum-classical scheme, what should the quantum computer do?",
+      options: [
+        { text: "Run everything, since it's more powerful.",
+          fb: "The 'more powerful' framing is misleading. The quantum computer is a specialist here, not a general-purpose replacement." },
+        { text: "Sample from a distribution that's hard to sample classically.",
+          fb: "Spot on as the theme. What is incomplete is the split of labor: the post gives two concrete workflows." },
+        { text: "Do the gradient calculations faster.",
+          fb: "Gradients are not the point. One workflow is gradient-free on hardware; the other trains classically. The post sorts this out." },
+        { text: "Store the mRNA sequence and fold it.",
+          fb: "It does not simulate folding like a molecular-dynamics engine. It samples configurations of a clever encoding." }
+      ]
+    }
+  ];
+
+  var idx = 0;
+  var answers = QUESTIONS.map(function () { return null; });
+
+  var progressEl = document.getElementById('progress');
+  var bodyEl = document.getElementById('qbody');
+  var navEl = document.getElementById('nav');
+  var backBtn = document.getElementById('back');
+  var nextBtn = document.getElementById('next');
+  var closingEl = document.getElementById('closing');
+
+  function clearNode(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+  function render() {
+    clearNode(bodyEl);
+    closingEl.classList.remove('show');
+    closingEl.innerHTML = '';
+
+    if (idx >= QUESTIONS.length) {
+      progressEl.textContent = 'Onward';
+      navEl.style.display = 'none';
+      var top = document.createElement('div');
+      top.textContent = 'Nice, you have taken a first pass.';
+      closingEl.appendChild(top);
+      var sub = document.createElement('div');
+      sub.className = 'csub';
+      sub.textContent = 'Every option above was partly right and subtly incomplete by design; that is the point. Read on, and watch each gap get filled in.';
+      closingEl.appendChild(sub);
+      var again = document.createElement('button');
+      again.className = 'again';
+      again.textContent = 'Start over';
+      again.addEventListener('click', function () {
+        for (var i = 0; i < answers.length; i++) answers[i] = null;
+        idx = 0;
+        render();
+      });
+      closingEl.appendChild(again);
+      closingEl.classList.add('show');
+      fit();
+      return;
+    }
+
+    navEl.style.display = '';
+    progressEl.textContent = 'Warm-up question ' + (idx + 1) + ' of ' + QUESTIONS.length;
+
+    var q = QUESTIONS[idx];
+    var answered = answers[idx] !== null;
+
+    var prompt = document.createElement('div');
+    prompt.className = 'prompt';
+    prompt.textContent = q.prompt;
+    bodyEl.appendChild(prompt);
+
+    var options = document.createElement('div');
+    options.className = 'options';
+    q.options.forEach(function (opt, oi) {
+      var btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.textContent = opt.text;
+      btn.addEventListener('click', function () { answers[idx] = oi; render(); });
+      if (answered && oi === answers[idx]) btn.classList.add('sel');
+      options.appendChild(btn);
+
+      var fb = document.createElement('div');
+      fb.className = 'fb';
+      fb.textContent = opt.fb;
+      if (answered && oi === answers[idx]) fb.classList.add('show');
+      options.appendChild(fb);
+    });
+    bodyEl.appendChild(options);
+
+    backBtn.disabled = (idx === 0);
+    nextBtn.disabled = !answered;
+    nextBtn.textContent = (idx === QUESTIONS.length - 1) ? 'Finish' : 'Next';
+    fit();
+  }
+
+  backBtn.addEventListener('click', function () { if (idx > 0) { idx--; render(); } });
+  nextBtn.addEventListener('click', function () {
+    if (answers[idx] === null) return;
+    idx++;
+    render();
+  });
+
+  render();
+  fit();
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>
