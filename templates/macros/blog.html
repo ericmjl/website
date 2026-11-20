@@ -64,7 +64,7 @@
     {% endif %}
 
     <span id="post_body" name="post_body">
-      {{ post.body }}
+      {{ post.body | inject_marimo_islands(post) }}
     </span>
 
     {% set slug = post._slug.split("/")[-1] %}

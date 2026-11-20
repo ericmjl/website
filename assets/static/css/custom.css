@@ -1353,6 +1353,30 @@ body.dark-mode .retreat-prompt {
    selected as scroll anchors. Chrome anchors to these frames, and each upward
    scroll near them then fires a phantom anchor adjustment that cancels the
    user's scroll, so the page refuses to scroll up until you reload. */
-iframe {
+iframe,
+.marimo-islands-host {
   overflow-anchor: none;
+}
+
+/* Marimo islands sit in the page, so they inherit terminal.css and dark mode.
+   The protein viewer is a light WebGL canvas. Pin the host to a light panel
+   so the caption text stays readable when the rest of the page is dark. */
+.marimo-islands-host {
+  background: #ffffff;
+  color: #222225;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  padding: 0.75rem 0.75rem 0.25rem;
+  margin: 1rem 0 1.25rem;
+}
+
+body.dark-mode .marimo-islands-host {
+  background: #ffffff;
+  color: #222225;
+  border-color: #555;
+}
+
+.marimo-islands-status {
+  margin: 0.25rem 0 0.75rem;
+  color: #444;
 }

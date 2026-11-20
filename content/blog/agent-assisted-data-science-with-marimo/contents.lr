@@ -75,9 +75,9 @@ Once the setup exists, every session has the same shape.
 5. **Iterate, one idea unit at a time.** An idea unit is one plot, one table view, one statistical test, or one model fit. Keep each unit small, small enough that you can imagine what the code might look like, because that's what makes the agent's work reviewable. Act on hypotheses: "I suspect the effect is concentrated in this subgroup, make a view that shows it." Because the AGENTS.md established the sandwich, everything the agent adds slots into the narrative.
 6. **Build custom viewers when the data calls for them.** This is where you can get ambitious, and I'd encourage you to go beyond what you think is usable. With [anywidget](https://anywidget.dev), the agent can build custom data viewers for awkward data: an email viewer for inspecting eval sets, or a 3D protein viewer. A purpose-built viewer beats scrolling through a dataframe.
 
-<iframe src="protein-anywidget.html" width="100%" height="540" style="border:0;" loading="lazy" title="Anywidget 3D protein viewer running in marimo WebAssembly"></iframe>
+<div class="marimo-islands" data-fragment="protein-anywidget.islands.html"></div>
 
-*This is a true anywidget running in a marimo notebook compiled to WebAssembly: a Python class whose JavaScript side loads 3Dmol and renders the structure, the kind of viewer an agent can build for your data. It's ubiquitin (PDB 1UBQ); drag to rotate, scroll to zoom. The notebook source is [`protein-anywidget.py`](protein-anywidget.py).*
+*This is a true anywidget running inline as a marimo island, with Python in your browser via WebAssembly: a Python class whose JavaScript side loads 3Dmol and renders the structure, the kind of viewer an agent can build for your data. It's ubiquitin (PDB 1UBQ); drag to rotate, scroll to zoom. The notebook source is [`protein-anywidget.py`](protein-anywidget.py).*
 
 Here's the prompt I use to act on a hunch, with the analysis goal stated first:
 
