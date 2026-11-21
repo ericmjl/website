@@ -8,7 +8,7 @@ On 19 and 20 November this year, I took part in snake_case 2026, organized by [P
 
 Before the event, I posted an idea in the shared attendee doc under the title "Paper to guided marimo learning notebook," and ten other attendees added their names to it. On the morning of November 19, a small group of us gathered around it, and by the end of the next day, six of us had built and tested a working agent skill from it. In this post I walk through how that happened and what I took away from two days in Austin.
 
-<!-- TODO: image file not available in this export; convert to WebP when adding. (hero): /workspace/prompt-cards/v1.5-glosscard-full.png, the prompt card for the skill -->
+![GlossCard prompt card for the paper-to-notebook skill.](./glosscard-prompt-card.webp)
 
 ## What snake_case is
 
@@ -46,14 +46,13 @@ Friday was mostly about making the notebooks better for the person reading them.
 
 Then came the widgets. `ExplainLevels` was Howard's idea, built on his five reader levels, and I did a bit of work to turn it into a widget (widgetization, a new term I learned at snake_case), so that a reader can choose the level that fits them. I added `TangleLatex`, which lets readers drag a variable inside a real LaTeX equation and watch the result update. All I did there was point to what was already in [`wigglystuff`](https://github.com/koaning/wigglystuff), and I have [Konstantin Taletskiy](https://github.com/ktaletsk) to thank for reminding me that it existed. The methods flowchart that Howard started on Day 1 became a diagram that you can pan and step through.
 
-<!-- TODO: image file not available in this export; convert to WebP when adding. /workspace/p2n-shots/pr23-full-undergrad.png (ExplainLevels widget at the undergrad level) -->
+![ExplainLevels widget at the undergrad level.](./explain-levels-undergrad.webp)
 
 We also paid attention to the writing. The prose checks came out of feedback on the notebooks that I collected from the group. That morning I had written a processing-friendly prose skill in [my public skills repo](https://github.com/ericmjl/skills), and I pulled it into the project along with a script that checks the notebook prose. I also added a rule that a flagged sentence is "a sentence to look at again, not a sentence that must be rewritten."
 
 Howard reworked the explanation levels so that each one centers on the paper's main point (the question, what the authors did, what they found, why it matters, and its limits), grounded only in the paper, with a one-line summary on top. [Leland McInnes](https://github.com/lmcinnes) had told us that our first version focused too much on mechanics and missed the main point, and that we should start at the expert level and simplify from there. The quiz changed alongside the levels. Readers now get five questions matched to the level they picked. Isabel then fixed a problem where the correct answer was too often the longest one. When I ran the skill on the UMAP paper, I hit the same problem, because always picking the longest option scored five out of five. [Maneesha](https://github.com/maneesha) tested the skill further and reminded us of what goes into designing a good assessment.
 
-<!-- TODO: image file not available in this export; convert to WebP when adding. /workspace/p2n-shots/pr23-tabs-true-summary.png (one-line summary + level tabs) -->
-<!-- TODO: image file not available in this export; convert to WebP when adding. side-by-side of /workspace/p2n-shots/pr23-tabs-false-child.png, pr23-tabs-false-undergrad.png, pr23-tabs-false-expert.png (same paper at three levels) -->
+![One-line summary and explanation-level tabs.](./one-line-summary-level-tabs.webp)
 
 On Friday afternoon I gave our two-minute demo, representing the group: Howard, Daina, Ben, Maneesha, Isabel, and me. We didn't record the demo session, so I'll leave it at that. As of November 21, the repo has 98 commits on main and 25 pull requests.
 
@@ -69,16 +68,7 @@ What's next is open, and there are lots of ideas. Ben Lear is cooking up the ide
 
 If you want to try it, the skill lives at [`paper-to-notebook-skill`](https://github.com/ericmjl/paper-to-notebook-skill). The easiest way in is the [prompt card](https://glosscard.nonlinearlabs.ai/prompt-card#v1.zVfvj9NGEP1XRv7QgOQE7oCqOj5RKAW1qKdyiCIOVWt7Ey9Z74bd9flSxP_eN7OOL5dyFUVqVQkIjnfn53tvJh-Li-LkqCyc6nRxUjzzAyVPfdSUWk0btdFhnvzc-aQr79fzuDbWkvxblMWFDtF4h4tHiwd4blRiK8d3j7-dHx3Nj-_iu3z25OPOxQ02cbIPOFe0KW3iyZ07K5PavlrUvrujg6m79_bOTVc_lYUKySxVnWDgkSPjkg54MhearI7RO1KV7xN5NyZFtxR1KpjO087YbaSscGSjXYQF2vo-0KArqoIfog67XOLvKE9TnLz9N1Mqi8r2ocLlsz4gHg486KhVqNsxAyTpSdGqN41udmkOcEEbqxC_vsSnUwkNiiUtzaoP6CqSwpOimPRmXm3n_ElL64e6RQ3JL6XxnU6tb-QgPM-tgfvYd6jYlpRrrsAxiygjnG08wiGUj98ErRrjVojpQluuI21MvS6vtUV_6HehsUEE1Hr4_9CbPxbFp3dlwYcdMuNqowxPfcDBLddhaD0NyqUoUMWZEBPb-EyNBm1tKUXh7g_BJI4Ldqj2jV7QqUL-iNlE2gTfbVKuKifx6DmpGA2bTpKDspzXlslRohjwoSI9tqpv8PwY0Pnx9Az_QX19KAnhPoaLyzG9lBQuTGVb0BtYXOlElarXyH5snyCQndUWFcNj8P2q_RwaF4BI0h1azJQDFpO-ZPS_-hLq8uUWvP9UTvfO3bkr9p6fLyWOxrtZolahYwaR6cRdRE1gyYzFksj84LLpSFGnHpBCOemfA7_k4J0IkEljmMcHYTIjxp7tE2Gks0X_HXd5Z_iE9vN6e9gK7tRGYGCAKCB9_S67vbd3a8F-n8-666YYiIIMEIu7POy6t4PK2vlhtHb_0NpjD_W8bo9jgk07RiYgynGGERXiiZVstPrg0Oprrp5JoCU6B1yumGtdhsSuINACmwNOoAfelqIGVG3ls6Q2TwFWQu4ycNkxYbpNnxh4zM6h3WYFlOkxRvCThhVpzOCDKEDMXFIrDRJZr5oozyMIOXgYOP6Mgaw4-7dH2O0Z4IZpuySz5Cgbr-MBVicP9yYPZ7i87HF3rDBqQu_7mHVLVTGxPi3okYCEM-DvT5885YzWkSod00OmK2DC3flZnenfEGcfaly3CFjOTY7vT47fMEuY7CtQGqUHpRUt9SCligv6YbFa0EyRg35kiWuV5MN9BLYh69E4eGkNBCHWrfd2Nvl5MPnhCd6xOLGMaSSxM30ArhmHP5PUn-bRcDzLrdWXCrKiv1hLhBr_B7X4Km2Qvku3MUS50bde1M-d05hLz7SyW_qGXmh7AWegyfHdo-9KOi9evXh0el7cnlRB7XeFKuOtX21z-XkI5WaS08z4pNbayQDG_IvJ1BFij0mzJwoHrfrPiF0W1nQm5bkMemfQXk1Bp3UjQ7dirljeJij0TmapuA16J60y6h0DQEgMXYS_WrkJD1cs5otVb2xzLZcFvfRIj-lEqq7BGZ73ubuY8VhUlgvKsAtRyI9JG9cZX6rpjON8fpn2Pf6bhyyuIRrhFrtNtAQTgr4wemBodLwdyJ3I-4wH59iSRPMexp2yPIejSRp6YD3GdAM8i7hNEe0VDUnDE8-D_Ialo5yuTPoiebCa7a0LeQK-hkBIZyMPGjYmi8JYvhlrZcxyRy-ZeVeTDZhTYnxpsCKxrTNmBv6gEaAC0D1u8At64nt0dA7AIqG13kKIukpqsFLcs73dpYBIuKw232sUT8guHczinMtcHhYC3cFgaLFZIjRWi0G-BQKWfBAGAwK-9ZWL6v62e7XI53345iXW8do54DVKweZYa5fj1L1pi83r6hL8m3_oMQ_gUdbW26yoYikCKwviUcPfs3ijrPFvjD7kGcYPaCkPQA-AX1_fhflY9rXDBm2zXW4LzAnorprOSrO3XJuU51IH2ckhcHORZ9xfx4WmecNw1ASFHXkEQF5sOIMx_tiDMuiBW2kG3BZyyD3M_ejOizGVWRAuo-BBC-Ok2qxaMa9IWawGyZV_RxG2ffndtdhsUbxJpQRHIj2UBo9JoRkc3iK3_kKiy-KONb81iFLKiMUaU0W4S2_-wkfkY0UppgVbAJNHEVsUceX3jAfBDZROlsTc1mlbR4Q3_l7cP4rm7X58gH1CMuSThUc1qjLWJGT9K6tE3iHzkNyoOivr9d8DvGjKMJGWcQkxuv8E). Paste it into the AI assistant you already use, attach a paper, and tell it who you are and what you already know. And if you think of a way to improve it, please feel free to post an issue!
 
-<!-- TODO: images not in this export; convert to WebP when adding.
-
-Image placement suggestions (only candidates listed in the source pack):
-1. Hero, under the intro: /workspace/prompt-cards/v1.5-glosscard-full.png
-2. Day 2, after the widgets paragraph: /workspace/p2n-shots/pr23-full-undergrad.png (ExplainLevels at the undergrad level)
-3. Day 2, after the demo paragraph: /workspace/p2n-shots/pr23-tabs-true-summary.png, or a side-by-side of pr23-tabs-false-child/undergrad/expert.png
-4. What's next, beside the prompt card link: /workspace/prompt-cards/v1.5-glosscard-highlight-click.png
-5. Optional: /workspace/p2n-shots/readme-top.png near the repo link
-Skip notebooks/figures/fig1-6.webp (the TADF paper's own figures; possible copyright). No event photos were found; Eric may have some on his phone.
--->
+![GlossCard prompt card with a highlighted fill-in.](./glosscard-prompt-card-highlight.webp)
 ---
 pub_date: 2026-11-21
 ---
