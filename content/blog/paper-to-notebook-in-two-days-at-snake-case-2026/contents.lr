@@ -1,0 +1,92 @@
+title: Paper to notebook in two days at snake_case 2026
+---
+author: Eric J. Ma
+---
+body:
+
+On 19 and 20 November this year, I took part in snake_case 2026, organized by [Posit PBC](https://posit.co), [pyOpenSci](https://www.pyopensci.org), and [marimo](https://marimo.io), in Austin TX. It was a two-day hackathon intended to bring people in the open source world together to hack on absolutely _anything_ we wanted to.
+
+Before the event, I posted an idea in the shared attendee doc under the title "Paper to guided marimo learning notebook," and ten other attendees added their names to it. On the morning of November 19, a small group of us gathered around it, and by the end of the next day, six of us had built and tested a working agent skill from it. In this post I walk through how that happened and what I took away from two days in Austin.
+
+![GlossCard prompt card for the paper-to-notebook skill.](./glosscard-prompt-card.webp)
+
+## What snake_case is
+
+[snake_case](https://opensource.posit.co/events/snake-case-2026) is a small hackathon for people who build open source software for data science and scientific Python. This year was the first time it ran, on November 19 and 20, at 800 Congress in Austin, Texas. The program committee invited most of the attendees: [Hadley Wickham](https://github.com/hadley) and [Jeroen Janssens](https://github.com/jeroenjanssens) from Posit, [Akshay Agrawal](https://github.com/akshayka) from marimo, and [Leah Wasser](https://github.com/lwasser) from pyOpenSci.
+
+Most of the two days were set aside for programming, thinking about programming, and talking about programming. Around that, there were three fixed checkpoints: an icebreaker on Thursday morning, dinner with lightning talks on Thursday evening, and two-minute demos from every group on Friday afternoon. Hilariously, there were also slots on the program for "mandatory" or "optional" socialization (since nerds like us need that nudge to go and talk with others). Before the event, more than fifty of us introduced ourselves in a shared doc and posted project ideas there, so that people could sign up for each other's ideas before we met.
+
+The name snake_case suggests a Python event, but what I witnessed was much more profound. It wasn't an event about Python, and it wasn't an event about a particular AI tool. The people who attended were working in many programming languages, including Python, R, JavaScript and TypeScript, Rust, and C. Perhaps the most "Pythonic" thing about the event was that we were all gluing things together with coding agents as our tool, just as Python has long been a glue language.
+
+## Papers are hard to learn from
+
+The problem I pitched is one I feel often, and also one that I thought would be a shared pain point with many others. Research papers are dense, and they are hard to learn from on your own. When I read one alone, I tend to skim the equations and figures instead of working through them, and I remember the days when I was in grad school when I couldn't even make it past the abstract without dozing off. Moreover, at work I've had to switch between multiple domains of science independently, ranging from analytical chemistry in one meeting to immunology in the very next meeting, so catching up on what my colleagues are doing takes a lot of energy.
+
+What I pitched was a reusable AI skill that takes a paper and produces a marimo notebook. The notebook would walk a learner through the paper with plain-language explanations, interactive widgets for the key equations and figures, and checks for understanding along the way. You give it a paper, and you get back a lesson that you can work through. While many similar AI tools and skills have been developed, I wanted to take this time to (a) reinvent the wheel to learn the wheel, but also (b) improve the wheel by knowing the wheel.
+
+## Day 1: from idea to repo
+
+The group came together a little after 10 AM. [Daina Bouquin](https://github.com/dbouquin) and I spent the first part of the morning on how much an explanation depends on the field. Daina's point was that newer and interdisciplinary fields use language that varies more from paper to paper, and that makes them harder for a language model to explain well. That led us to suggest that the agent should first work out whether a paper comes from an established, an emerging, or an interdisciplinary field, and then tailor its use of vocabulary accordingly.
+
+We talked about who the notebooks were for (undergraduates, graduate students, and working professionals) and about quizzes. I remembered my undergrad instructors giving us mid-class quizzes with clickers, and perhaps such an instructional design might help with information recall.
+
+We worked together in a repo, [`paper-to-notebook-skill`](https://github.com/ericmjl/paper-to-notebook-skill). Through further discussion, everyone had picked a piece. Daina took on the evals for checking whether a notebook is any good, [Isabel Zimmerman](https://github.com/isabelizimm) became our librarian and collected papers to test on, [Ben Lear](https://github.com/ProfLear) and [Howard Chiu](https://github.com/chiuhoward) took on the figures and visualizations, and I took on the scaffolding of the skill. By the afternoon, my part was a draft scaffold with a contract and a five-step workflow.
+
+After lunch, Ben showed us the figure tool that he had built. It pulled the figures out of a chemistry paper that Ben had picked, on photocatalysis with TADF (thermally activated delayed fluorescence) molecules, by Fina and colleagues in *Chemical Science* (2026), and put each figure next to a chat window, so that you could discuss the figure with an agent. I tried the same kind of figure discussion with [marimo pair](https://github.com/marimo-team/marimo-pair), which puts an agent on the left and the notebook on the right; that's now the only way I work with notebooks. I asked the agent to go into a Socratic drill on the figures, and it pointed out a misconception that I had.
+
+On the other hand, placing annotation boxes on the figures was harder. The boxes were all offset by a certain amount, since the agent was literally just counting where the pixels were. So I asked it to overlay a 100-pixel grid on the figure and to use the grid as a reference without snapping to it. When the grid showed up, I was blown away: "Wait, wait, wait! It actually did it!" A little later, Ben got his own tool to place the boxes and explain each figure well, and his figure annotation skill, with an [anywidget](https://anywidget.dev) example, went into the repo that afternoon. That same chemistry paper also became the subject of our first full test notebook.
+
+Meanwhile, the pull requests kept coming in. Isabel's notebook validator was the first one we merged. Howard added explanations at five reader levels, modeled on WIRED's [5 Levels](https://www.wired.com/video/series/5-levels/) videos. One of his worked examples was my 2016 paper on influenza, and he explained it in a way that I would never have thought of, even after studying flu for four years. He also built a flowchart of the methods in my paper that you could step through one step at a time, and when I read it, everything in it was accurate. Daina wrote evals with [Promptfoo](https://www.promptfoo.dev), and Isabel added a five-question quiz at the end of each notebook. Daina and I also turned our morning conversation into guidance for handling a field's vocabulary.
+
+Dinner on Thursday came with lightning talks. I heard a coin-flip activity about how people guess at random sequences, a talk about how hard it is to keep shared standards going across a community, and practical advice on public records requests, which is to ask the agency for the specific records that would answer your question. There was also a talk on agent reliability, which was close to what our group was building. Over dinner, I asked Howard to open his pull request for the flowchart right away, since we only needed the bones in place and everything else was refinement. We merged it that evening, and by the end of Day 1, twelve pull requests had been merged.
+
+## Day 2: the build sprint
+
+Friday was mostly about making the notebooks better for the person reading them. The skill got a new name, install docs that work across different agent tools, and a step where the agent asks which components to include. Ben ran the skill on a real paper and found that it pulled in a lot of content that wasn't about the paper and skipped the paper's own figures, so we added a rule that the notebook has to stick to the paper. Every main-text figure now gets a walkthrough built on Ben's figure annotator.
+
+Then came the widgets. `ExplainLevels` was Howard's idea, built on his five reader levels, and I did a bit of work to turn it into a widget (widgetization, a new term I learned at snake_case), so that a reader can choose the level that fits them. I added `TangleLatex`, which lets readers drag a variable inside a real LaTeX equation and watch the result update. All I did there was point to what was already in [`wigglystuff`](https://github.com/koaning/wigglystuff), and I have [Konstantin Taletskiy](https://github.com/ktaletsk) to thank for reminding me that it existed. The methods flowchart that Howard started on Day 1 became a diagram that you can pan and step through.
+
+![ExplainLevels widget at the undergrad level.](./explain-levels-undergrad.webp)
+
+We also paid attention to the writing. The prose checks came out of feedback on the notebooks that I collected from the group. That morning I had written a processing-friendly prose skill in [my public skills repo](https://github.com/ericmjl/skills), and I pulled it into the project along with a script that checks the notebook prose. I also added a rule that a flagged sentence is "a sentence to look at again, not a sentence that must be rewritten."
+
+Howard reworked the explanation levels so that each one centers on the paper's main point (the question, what the authors did, what they found, why it matters, and its limits), grounded only in the paper, with a one-line summary on top. [Leland McInnes](https://github.com/lmcinnes) had told us that our first version focused too much on mechanics and missed the main point, and that we should start at the expert level and simplify from there. The quiz changed alongside the levels. Readers now get five questions matched to the level they picked. Isabel then fixed a problem where the correct answer was too often the longest one. When I ran the skill on the UMAP paper, I hit the same problem, because always picking the longest option scored five out of five. [Maneesha](https://github.com/maneesha) tested the skill further and reminded us of what goes into designing a good assessment.
+
+![One-line summary and explanation-level tabs.](./one-line-summary-level-tabs.webp)
+
+On Friday afternoon I gave our two-minute demo, representing the group: Howard, Daina, Ben, Maneesha, Isabel, and me. We didn't record the demo session, so I'll leave it at that. As of November 21, the repo has 98 commits on main and 25 pull requests.
+
+## What I gained
+
+What I gained from snake_case, more than any single lesson, was the chance to work with people. Some were new to me: Howard, Ben, Daina, and Maneesha. Others were old friends, like Isabel from Posit's [Positron](https://positron.posit.co) team, and Konstantin, who reminded me about `TangleLatex`.
+
+The swag was great this time, too. There were [YETI](https://www.yeti.com/) water bottles, which was a great idea, because we tend not to stay hydrated while programming. And, would you believe it, we also got marimo notebooks, as in physical paper notebooks. That's the best pun swag I've seen in a while, and kudos to [Sarah Tsai](https://www.linkedin.com/in/sarah-tsaixox) for the idea.
+
+## What's next
+
+What's next is open, and there are lots of ideas. Ben Lear is cooking up the idea of [National Science Foundation](https://www.nsf.gov) (NSF) grants to fund postdocs who would extend this work, and I love it. For my part, I may keep adapting the skill on my own while I figure out what I'd like to do with it in a professional development setting, and I may collaborate with Ben, if he's open to it.
+
+If you want to try it, the skill lives at [`paper-to-notebook-skill`](https://github.com/ericmjl/paper-to-notebook-skill). The easiest way in is the [prompt card](https://glosscard.nonlinearlabs.ai/prompt-card#v1.zVfvj9NGEP1XRv7QgOQE7oCqOj5RKAW1qKdyiCIOVWt7Ey9Z74bd9flSxP_eN7OOL5dyFUVqVQkIjnfn53tvJh-Li-LkqCyc6nRxUjzzAyVPfdSUWk0btdFhnvzc-aQr79fzuDbWkvxblMWFDtF4h4tHiwd4blRiK8d3j7-dHx3Nj-_iu3z25OPOxQ02cbIPOFe0KW3iyZ07K5PavlrUvrujg6m79_bOTVc_lYUKySxVnWDgkSPjkg54MhearI7RO1KV7xN5NyZFtxR1KpjO087YbaSscGSjXYQF2vo-0KArqoIfog67XOLvKE9TnLz9N1Mqi8r2ocLlsz4gHg486KhVqNsxAyTpSdGqN41udmkOcEEbqxC_vsSnUwkNiiUtzaoP6CqSwpOimPRmXm3n_ElL64e6RQ3JL6XxnU6tb-QgPM-tgfvYd6jYlpRrrsAxiygjnG08wiGUj98ErRrjVojpQluuI21MvS6vtUV_6HehsUEE1Hr4_9CbPxbFp3dlwYcdMuNqowxPfcDBLddhaD0NyqUoUMWZEBPb-EyNBm1tKUXh7g_BJI4Ldqj2jV7QqUL-iNlE2gTfbVKuKifx6DmpGA2bTpKDspzXlslRohjwoSI9tqpv8PwY0Pnx9Az_QX19KAnhPoaLyzG9lBQuTGVb0BtYXOlElarXyH5snyCQndUWFcNj8P2q_RwaF4BI0h1azJQDFpO-ZPS_-hLq8uUWvP9UTvfO3bkr9p6fLyWOxrtZolahYwaR6cRdRE1gyYzFksj84LLpSFGnHpBCOemfA7_k4J0IkEljmMcHYTIjxp7tE2Gks0X_HXd5Z_iE9vN6e9gK7tRGYGCAKCB9_S67vbd3a8F-n8-666YYiIIMEIu7POy6t4PK2vlhtHb_0NpjD_W8bo9jgk07RiYgynGGERXiiZVstPrg0Oprrp5JoCU6B1yumGtdhsSuINACmwNOoAfelqIGVG3ls6Q2TwFWQu4ycNkxYbpNnxh4zM6h3WYFlOkxRvCThhVpzOCDKEDMXFIrDRJZr5oozyMIOXgYOP6Mgaw4-7dH2O0Z4IZpuySz5Cgbr-MBVicP9yYPZ7i87HF3rDBqQu_7mHVLVTGxPi3okYCEM-DvT5885YzWkSod00OmK2DC3flZnenfEGcfaly3CFjOTY7vT47fMEuY7CtQGqUHpRUt9SCligv6YbFa0EyRg35kiWuV5MN9BLYh69E4eGkNBCHWrfd2Nvl5MPnhCd6xOLGMaSSxM30ArhmHP5PUn-bRcDzLrdWXCrKiv1hLhBr_B7X4Km2Qvku3MUS50bde1M-d05hLz7SyW_qGXmh7AWegyfHdo-9KOi9evXh0el7cnlRB7XeFKuOtX21z-XkI5WaS08z4pNbayQDG_IvJ1BFij0mzJwoHrfrPiF0W1nQm5bkMemfQXk1Bp3UjQ7dirljeJij0TmapuA16J60y6h0DQEgMXYS_WrkJD1cs5otVb2xzLZcFvfRIj-lEqq7BGZ73ubuY8VhUlgvKsAtRyI9JG9cZX6rpjON8fpn2Pf6bhyyuIRrhFrtNtAQTgr4wemBodLwdyJ3I-4wH59iSRPMexp2yPIejSRp6YD3GdAM8i7hNEe0VDUnDE8-D_Ialo5yuTPoiebCa7a0LeQK-hkBIZyMPGjYmi8JYvhlrZcxyRy-ZeVeTDZhTYnxpsCKxrTNmBv6gEaAC0D1u8At64nt0dA7AIqG13kKIukpqsFLcs73dpYBIuKw232sUT8guHczinMtcHhYC3cFgaLFZIjRWi0G-BQKWfBAGAwK-9ZWL6v62e7XI53345iXW8do54DVKweZYa5fj1L1pi83r6hL8m3_oMQ_gUdbW26yoYikCKwviUcPfs3ijrPFvjD7kGcYPaCkPQA-AX1_fhflY9rXDBm2zXW4LzAnorprOSrO3XJuU51IH2ckhcHORZ9xfx4WmecNw1ASFHXkEQF5sOIMx_tiDMuiBW2kG3BZyyD3M_ejOizGVWRAuo-BBC-Ok2qxaMa9IWawGyZV_RxG2ffndtdhsUbxJpQRHIj2UBo9JoRkc3iK3_kKiy-KONb81iFLKiMUaU0W4S2_-wkfkY0UppgVbAJNHEVsUceX3jAfBDZROlsTc1mlbR4Q3_l7cP4rm7X58gH1CMuSThUc1qjLWJGT9K6tE3iHzkNyoOivr9d8DvGjKMJGWcQkxuv8E). Paste it into the AI assistant you already use, attach a paper, and tell it who you are and what you already know. And if you think of a way to improve it, please feel free to post an issue!
+
+![GlossCard prompt card with a highlighted fill-in.](./glosscard-prompt-card-highlight.webp)
+---
+pub_date: 2026-11-21
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this post, I share how a one-line idea at snake_case 2026 (a two-day hackathon in Austin hosted by Posit, pyOpenSci, and marimo) grew into a working AI skill called paper-to-notebook-skill. Alongside five collaborators, I helped build an agent that turns dense research papers into guided marimo notebooks with interactive widgets, levelled explanations, quizzes, and figure walkthroughs. I also reflect on what two days of open source collaboration taught me about building with people, not just tools. What could we learn from papers if turning them into lessons took minutes instead of semesters?
+---
+tags:
+
+hackathon
+open source
+marimo
+python
+notebooks
+agents
+learning
+data science
+papers
+education
