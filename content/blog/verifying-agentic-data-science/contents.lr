@@ -1,0 +1,91 @@
+title: Lauren Tan's lessons on verifying agents, applied to data science
+---
+author: Eric J. Ma
+---
+body:
+
+On November 11, [Lauren Tan](https://github.com/poteto), a principal engineer on the Grok Bot team at [SpaceXSI](https://ai.engineer/organizations/spacexsi), gave a talk at [AI Engineer CODE 2026](https://ai.engineer/code/2026/talks/lauren-tan) called "[All Code Is Slop (Except Mine)](https://ai.engineer/talks/O_zcc6Xl12g-all-code-is-slop-except-mine)." The headline number was that she shipped 3,000 pull requests to production in the month before the talk, many of them while she slept. The number is flashy, but I found the path she took to get there more useful, and I'm glad she shared it. She spent six months investing in the environment around her agents, and she framed all of it as a question of trust: "Not blind trust, but investing in your agents' environment so you can trust that your agents are going to do the right thing."
+
+I've been chewing on the same ideas for data science, and her talk gave me a cleaner way to organize them. My hunch is that her lessons carry over almost directly, and that data science then has to go one step further.
+
+## What Lauren showed
+
+Lauren described an inverse pyramid for deciding where to spend effort. The widest layers at the top are deterministic. Good API design, architecture, and refactoring sit there, along with lint rules, type systems, compilers, and tests. In her words, these layers "constrain what agents can do and force them to do the right thing by default." Below them sits verification, both runtime and formal, which her team uses to find bugs, to check the properties that should always hold, and to check whether the agent understood what they wanted. At the narrow bottom sits "a little bit of prose": rules, skills, and [AGENTS.md](https://agents.md/) files, kept for the decisions that need judgment.
+
+Her reasoning starts from the observation that agents generate their outputs from their inputs, and the codebase is one of the largest inputs they see. She compared the codebase to a garden. She remembered going into work in 2024 and reviewing the three pull requests that her colleagues had written, and said that the number today is more like 300. At that pace, any workaround or deprecated pattern left in the repository "is now likely to be just copied by the next agent since it looks like the established pattern." Her fix is to keep the codebase clean enough that "agents are always copying the good stuff."
+
+Two practices followed from that. The first is that every correction becomes a check: "whenever you're correcting your agent, think about how you can make that a deterministic check instead of adding another line to your rules or your agents.md because it's far more reproducible when it's in code and it lets you trust it more." Her team's framework, Dune, bans React's `useEffect` in product code and uses a dependency graph analyzer plus lint rules to forbid imports between the renderer and main-process directories of their Electron app. The second is that review moved from code to evidence. She said their code review "has now really shrunk into looking at verification artifacts instead. So things like videos, screenshots, diagrams, formal verification."
+
+The results she reported were that her team shipped about 11,000 pull requests to production in a month, with about 227 people contributing at least one in October, and a revert rate that held steady at about 0.5%. In the AI Engineer write-up of the talk, the editors note that the revert rate only counts reverted pull requests, so a bug fixed in a later pull request falls outside it. She also warned against skipping the groundwork: "if your inner coding loop produces slop, then automating that loop just produces more slop."
+
+Her examples came from an Electron app written in TypeScript, but the ideas behind them are general, so I wanted to see how far they go in data science. Three of her ideas map onto things I've been writing about.
+
+## Templates give agents good patterns to copy
+
+In [my post on agentic data science](/blog/2026/2/1/how-to-do-agentic-data-science/), I wrote that "coding agents will follow the patterns you already have." Lauren's garden analogy says the same thing from the other side: agents copy the bad patterns just as faithfully as the good ones. So the first job is to make sure the first patterns an agent sees are good ones.
+
+That's what project templates do. In the [Data Science Bootstrap Notes](https://ericmjl.github.io/data-science-bootstrap-notes/), I recommend giving each project one Git repository, one environment configuration, one custom source package, one documentation source, one standard set of continuous integration (CI) pipelines, plus a data catalog and shared configuration files. I called those conventions "cognitive scaffolding" because they give the people on a team a shared mental model. My hunch is that they do the same job for agents, because with a predictable layout, the agent knows where code, tests, and data belong before it writes a single line. Scaffolding that structure by hand is tedious, so the notes walk through three ways to automate it, from GitHub template repositories to [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) templates like my [cookiecutter-python-project](https://github.com/ericmjl/cookiecutter-python-project) to custom command-line tools like [`pyds-cli`](https://github.com/ericmjl/pyds-cli). With cookiecutter or `pyds-cli`, one command gives you a fully configured project with tests, docs, and CI, and the agent inherits that structure from the first commit.
+
+Experiments benefit from the same treatment. In my [`ml-experimentation`](https://github.com/ericmjl/skills/tree/main/skills/ml-experimentation) skill, I tell the agent to put each experiment in a datetime-prefixed folder under `experiments/`, with its own README and `plots`, `data`, and `scripts` directories. AGENTS.md then carries the local norms, which I wrote about in [how to teach your coding agent with AGENTS.md](/blog/2025/10/4/how-to-teach-your-coding-agent-with-agentsmd/): run everything through `pixi run`, write tests in pytest style, and never modify a test to make it pass.
+
+Lauren's point about cleanup applies to data science repositories too. If an old notebook in the repo hardcodes a file path, or computes a normalization on the full dataset before splitting it, the next agent has every reason to treat that as how things are done here. Deleting or fixing those examples changes what the agent learns from the repository.
+
+NOTE TO ERIC: Do you have a real case where an agent copied a pattern (good or bad) from one of your templates or older notebooks? One or two sentences here would make this section concrete.
+
+## Deterministic checks wherever possible
+
+Lauren's pyramid puts prose at the bottom, and that made me look again at my own AGENTS.md files. A rule like "do not cheat by modifying tests" is prose. The agent can read it and still ignore it, and I only find out when I review the diff. A check that runs on every change catches the problem without depending on whether the agent paid attention.
+
+Data science has plenty of these checks available. A [Pandera](https://pandera.readthedocs.io/) schema can assert that a dataframe has the right columns, types, and value ranges, and it fails loudly when an upstream change breaks that. In the testing chapter of the Bootstrap Notes, I list the smoke checks for model code that I've kept green in CI: train on a tiny slice and assert that the loss has no NaNs, set loose accuracy thresholds on toy data that catch broken wiring, assert the shape and column names of predictions, and compare a saved fixture model's predictions against reference values. For notebooks, `marimo check` lints a [marimo](https://marimo.io/) notebook, and my AGENTS.md files tell agents to run it. Even the boring checks count. In [an earlier post about model feel](/blog/2026/1/25/model-feel-fast-tests-and-ai-coding-that-stays-in-flow/), I described how a single Cypress test that reloaded the page did more for my sanity than another week of switching between models.
+
+These checks help with velocity because the agent can run them on its own. When a check fails, the agent reads the error, fixes the cause, and runs it again, and I only get involved when it can't make progress. Lauren's team took this further by writing lint error messages that tell the agent to fix the root cause instead of patching around it. My guess is that the same trick works for data validation errors, because a schema failure that explains why a column must be non-negative gives the agent a better shot at a real fix than a bare assertion error.
+
+My hunch is that AGENTS.md still has a place, as the spot where a correction lands the first time I make it. When the same correction comes up again, that's the signal to turn it into a check. That matches the order Lauren gave at the end of her talk: start with a lint rule to prevent new occurrences, clean up the old examples, then make sure the agent can verify the resulting behavior.
+
+## Verify outputs and artifacts instead of reviewing code
+
+The third idea connects to several things I've written about. Reading every line of agent-written pandas code is slow, and it also misses the point, because the thing I care about is what the code produced. In my post on [staying in control during EDA with coding agents](/blog/2026/2/13/agentic-eda/), I argued for gating the work on artifacts: describe the plot or table you want, including the axes and what pattern would confirm or refute your hypothesis, and then judge the artifact the agent produces.
+
+Artifacts are also where data science errors show up. When I [built a Bayesian model live at Data-Driven Pharma](/blog/2026/6/17/agents-amplify-expertise-and-ignorance/), the agent loaded a parquet file and was ready to fit curves. I looked at the dataframe and saw that the temperature column was missing, and a melting curve analysis can't exist without it. The agent's code ran without complaint, but the data was wrong, and only the artifact showed it.
+
+A few habits make artifacts easier to review. I ask for a plot for every table in a report, and then check that the plot and the table agree, because an agent can produce both and let them drift apart. I write a short claim, evidence, and caveat note under each plot, so the reasoning sits next to the result it depends on. I also ask the agent for diagnostic plots alongside its logs, since logs are easy for the agent to read and plots are easy for me to read. Lauren's team reviewed videos, screenshots, and state diagrams for a similar reason, because those artifacts show what a change actually did.
+
+## Data science goes one step further
+
+Software has an advantage here that data science lacks. A feature either succeeds or fails, and a test can say which. In data science, an experiment produces logs and metrics, and they rarely give a clean pass or fail. An analysis can run without errors, produce a beautiful plot, and still answer the question wrongly.
+
+Lauren touched on a version of this problem. Even when every check passes, there's still the question of whether the agent understood what you wanted, and she built a statechart skill in her [pstack](https://github.com/cursor/plugins/tree/main/pstack) plugin so reviewers could see which states a user action leads to and compare that against screenshots and video. In data science, I think the equivalent goes past verification into critical discussion. Once the artifacts look right, I want to ask three questions about them, ideally with a colleague in the room.
+
+**Was this correct?** Where we can, we check the result against an answer we already know. In one machine learning experiment on synthetic data, the agent started at 25% sequence editing performance and worked its way to 100%. Because the data was synthetic, 100% was the right target, and I checked that the agent got there without cheating. Simulated data with known parameters is the general version of this trick: if a model can't recover parameters we planted, we shouldn't trust it on real data. [Simulation-based calibration](https://arxiv.org/abs/1804.06788) formalizes that idea for Bayesian models.
+
+**Is this defensible?** A result can be correct on the data and still rest on choices that a reviewer would push back on. In the melting curve demo, I told the agent to fix the upper and lower bounds of the four-parameter logistic at 1.0 and 0.0. That choice was defensible only because the fold change in that assay is normalized. In plenty of other assays, it would be wrong. Defending an analysis means being able to explain every choice like that one, and the claim, evidence, and caveat notes are where I write those explanations down.
+
+**Are there other ways to prove it, or at least build a case for it?** Lauren's team layered several techniques: [TLA+](https://lamport.azurewebsites.net/tla/tla.html) model checking, proofs in [Lean](https://lean-lang.org/), and property-based UI tests. She described formal verification as "certainly not a silver bullet" and "another layer." Data science can build its case the same way. We can try a simpler baseline model, rerun the analysis on a different slice of the data, or check the result against the methods and findings of the original paper. When several independent lines of evidence point the same way, I'm more willing to stand behind a conclusion.
+
+NOTE TO ERIC: Is there a real moment where one of these questions, asked by you or a colleague, changed an analysis? A short story here would anchor the section.
+
+These questions are harder to automate than a lint rule, and I think that's fine. When deterministic checks and artifact reviews catch the mechanical mistakes, we have more attention left for the questions that need a scientist's judgment.
+
+## Foundations first
+
+Lauren's closing advice was to fix the foundations before building automation on top of them, and I think that advice holds for data science too. She also said that agents have made good testing and verification tools far cheaper to write and maintain, which is why she called this "a golden age of software testing and verification." My hunch is that the same economics apply to data science. A Pandera schema, a set of smoke tests, or a simulation study used to cost enough time that it was easy to skip on a small analysis. With an agent doing most of the typing, building the case for correctness costs much less.
+---
+pub_date: 2026-11-25
+---
+twitter_handle: ericmjl
+---
+summary:
+
+In this post, I take lessons from Lauren Tan's AI Engineer CODE 2026 talk on verifying coding agents (deterministic checks, clean codebases, and reviewing evidence instead of code) and apply them to data science. I connect her ideas to project templates, Pandera schemas, and artifact-based review, then argue data science must go one step further: asking whether results are correct, defensible, and independently supported. When agents make verification this cheap, what's stopping us from building it into every analysis?
+---
+tags:
+
+agents
+coding
+data science
+verification
+testing
+templates
+automation
+trust
+code review
