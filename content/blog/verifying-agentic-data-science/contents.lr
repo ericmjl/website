@@ -75,5 +75,17 @@ pub_date: 2026-11-25
 twitter_handle: ericmjl
 ---
 summary:
+
+In this post, I take lessons from Lauren Tan's AI Engineer CODE 2026 talk on verifying coding agents (deterministic checks, clean codebases, and reviewing evidence instead of code) and apply them to data science. I connect her ideas to project templates, Pandera schemas, and artifact-based review, then argue data science must go one step further: asking whether results are correct, defensible, and independently supported. When agents make verification this cheap, what's stopping us from building it into every analysis?
 ---
 tags:
+
+agents
+coding
+data science
+verification
+testing
+templates
+automation
+trust
+code review
